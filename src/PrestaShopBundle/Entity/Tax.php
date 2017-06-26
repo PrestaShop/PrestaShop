@@ -47,14 +47,14 @@ class Tax
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":1})
      */
     private $active = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 

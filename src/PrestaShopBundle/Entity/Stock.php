@@ -103,7 +103,7 @@ class Stock
     /**
      * @var string
      *
-     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $priceTe = '0.000000';
 

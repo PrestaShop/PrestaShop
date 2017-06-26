@@ -47,7 +47,7 @@ class Country
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_currency", type="integer", nullable=false)
+     * @ORM\Column(name="id_currency", type="integer", nullable=false, options={"default":0})
      */
     private $idCurrency = '0';
 
@@ -61,35 +61,35 @@ class Country
     /**
      * @var integer
      *
-     * @ORM\Column(name="call_prefix", type="integer", nullable=false)
+     * @ORM\Column(name="call_prefix", type="integer", nullable=false, options={"default":0})
      */
     private $callPrefix = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="contains_states", type="boolean", nullable=false)
+     * @ORM\Column(name="contains_states", type="boolean", nullable=false, options={"default":0})
      */
     private $containsStates = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="need_identification_number", type="boolean", nullable=false)
+     * @ORM\Column(name="need_identification_number", type="boolean", nullable=false, options={"default":0})
      */
     private $needIdentificationNumber = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="need_zip_code", type="boolean", nullable=false)
+     * @ORM\Column(name="need_zip_code", type="boolean", nullable=false, options={"default":1})
      */
     private $needZipCode = '1';
 

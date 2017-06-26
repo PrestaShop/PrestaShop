@@ -61,35 +61,35 @@ class ImageType
     /**
      * @var boolean
      *
-     * @ORM\Column(name="products", type="boolean", nullable=false)
+     * @ORM\Column(name="products", type="boolean", nullable=false, options={"default":1})
      */
     private $products = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="categories", type="boolean", nullable=false)
+     * @ORM\Column(name="categories", type="boolean", nullable=false, options={"default":1})
      */
     private $categories = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="manufacturers", type="boolean", nullable=false)
+     * @ORM\Column(name="manufacturers", type="boolean", nullable=false, options={"default":1})
      */
     private $manufacturers = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="suppliers", type="boolean", nullable=false)
+     * @ORM\Column(name="suppliers", type="boolean", nullable=false, options={"default":1})
      */
     private $suppliers = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="stores", type="boolean", nullable=false)
+     * @ORM\Column(name="stores", type="boolean", nullable=false, options={"default":1})
      */
     private $stores = '1';
 

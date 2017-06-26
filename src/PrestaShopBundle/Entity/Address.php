@@ -54,28 +54,28 @@ class Address
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_customer", type="integer", nullable=false)
+     * @ORM\Column(name="id_customer", type="integer", nullable=false, options={"default":0})
      */
     private $idCustomer = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_manufacturer", type="integer", nullable=false)
+     * @ORM\Column(name="id_manufacturer", type="integer", nullable=false, options={"default":0})
      */
     private $idManufacturer = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_supplier", type="integer", nullable=false)
+     * @ORM\Column(name="id_supplier", type="integer", nullable=false, options={"default":0})
      */
     private $idSupplier = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_warehouse", type="integer", nullable=false)
+     * @ORM\Column(name="id_warehouse", type="integer", nullable=false, options={"default":0})
      */
     private $idWarehouse = '0';
 
@@ -187,14 +187,14 @@ class Address
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":1})
      */
     private $active = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 

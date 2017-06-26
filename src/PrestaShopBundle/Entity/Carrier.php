@@ -47,7 +47,7 @@ class Carrier
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_tax_rules_group", type="integer", nullable=true)
+     * @ORM\Column(name="id_tax_rules_group", type="integer", nullable=true, options={"default":0})
      */
     private $idTaxRulesGroup = '0';
 
@@ -68,56 +68,56 @@ class Carrier
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="shipping_handling", type="boolean", nullable=false)
+     * @ORM\Column(name="shipping_handling", type="boolean", nullable=false, options={"default":1})
      */
     private $shippingHandling = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="range_behavior", type="boolean", nullable=false)
+     * @ORM\Column(name="range_behavior", type="boolean", nullable=false, options={"default":0})
      */
     private $rangeBehavior = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_module", type="boolean", nullable=false)
+     * @ORM\Column(name="is_module", type="boolean", nullable=false, options={"default":0})
      */
     private $isModule = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_free", type="boolean", nullable=false)
+     * @ORM\Column(name="is_free", type="boolean", nullable=false, options={"default":0})
      */
     private $isFree = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="shipping_external", type="boolean", nullable=false)
+     * @ORM\Column(name="shipping_external", type="boolean", nullable=false, options={"default":0})
      */
     private $shippingExternal = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="need_range", type="boolean", nullable=false)
+     * @ORM\Column(name="need_range", type="boolean", nullable=false, options={"default":0})
      */
     private $needRange = '0';
 
@@ -131,49 +131,49 @@ class Carrier
     /**
      * @var integer
      *
-     * @ORM\Column(name="shipping_method", type="integer", nullable=false)
+     * @ORM\Column(name="shipping_method", type="integer", nullable=false, options={"default":0})
      */
     private $shippingMethod = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default":0})
      */
     private $position = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="max_width", type="integer", nullable=true)
+     * @ORM\Column(name="max_width", type="integer", nullable=true, options={"default":0})
      */
     private $maxWidth = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="max_height", type="integer", nullable=true)
+     * @ORM\Column(name="max_height", type="integer", nullable=true, options={"default":0})
      */
     private $maxHeight = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="max_depth", type="integer", nullable=true)
+     * @ORM\Column(name="max_depth", type="integer", nullable=true, options={"default":0})
      */
     private $maxDepth = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="max_weight", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="max_weight", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $maxWeight = '0.000000';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="grade", type="integer", nullable=true)
+     * @ORM\Column(name="grade", type="integer", nullable=true, options={"default":0})
      */
     private $grade = '0';
 

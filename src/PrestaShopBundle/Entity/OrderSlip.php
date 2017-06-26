@@ -40,7 +40,7 @@ class OrderSlip
     /**
      * @var string
      *
-     * @ORM\Column(name="conversion_rate", type="decimal", precision=13, scale=6, nullable=false)
+     * @ORM\Column(name="conversion_rate", type="decimal", precision=13, scale=6, nullable=false, options={"default":1.000000})
      */
     private $conversionRate = '1.000000';
 
@@ -87,9 +87,9 @@ class OrderSlip
     private $totalShippingTaxIncl;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="shipping_cost", type="boolean", nullable=false)
+     * @ORM\Column(name="shipping_cost", type="smallint", nullable=false, options={"default":0})
      */
     private $shippingCost = '0';
 
@@ -117,7 +117,7 @@ class OrderSlip
     /**
      * @var boolean
      *
-     * @ORM\Column(name="order_slip_type", type="boolean", nullable=false)
+     * @ORM\Column(name="order_slip_type", type="boolean", nullable=false, options={"default":0})
      */
     private $orderSlipType = '0';
 
@@ -317,7 +317,7 @@ class OrderSlip
     /**
      * Set shippingCost
      *
-     * @param boolean $shippingCost
+     * @param integer $shippingCost
      *
      * @return OrderSlip
      */
@@ -331,7 +331,7 @@ class OrderSlip
     /**
      * Get shippingCost
      *
-     * @return boolean
+     * @return integer
      */
     public function getShippingCost()
     {

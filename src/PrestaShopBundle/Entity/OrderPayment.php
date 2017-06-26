@@ -68,7 +68,7 @@ class OrderPayment
     /**
      * @var string
      *
-     * @ORM\Column(name="conversion_rate", type="decimal", precision=13, scale=6, nullable=false)
+     * @ORM\Column(name="conversion_rate", type="decimal", precision=13, scale=6, nullable=false, options={"default":1.000000})
      */
     private $conversionRate = '1.000000';
 

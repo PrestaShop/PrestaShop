@@ -54,7 +54,7 @@ class OrderCartRule
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_order_invoice", type="integer", nullable=true)
+     * @ORM\Column(name="id_order_invoice", type="integer", nullable=true, options={"default":0})
      */
     private $idOrderInvoice = '0';
 
@@ -68,21 +68,21 @@ class OrderCartRule
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="decimal", precision=17, scale=2, nullable=false)
+     * @ORM\Column(name="value", type="decimal", precision=17, scale=2, nullable=false, options={"default":0.00})
      */
     private $value = '0.00';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="value_tax_excl", type="decimal", precision=17, scale=2, nullable=false)
+     * @ORM\Column(name="value_tax_excl", type="decimal", precision=17, scale=2, nullable=false, options={"default":0.00})
      */
     private $valueTaxExcl = '0.00';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="free_shipping", type="boolean", nullable=false)
+     * @ORM\Column(name="free_shipping", type="boolean", nullable=false, options={"default":0})
      */
     private $freeShipping = '0';
 

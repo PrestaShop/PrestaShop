@@ -47,7 +47,7 @@ class ProductSupplier
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_product_attribute", type="integer", nullable=false)
+     * @ORM\Column(name="id_product_attribute", type="integer", nullable=false, options={"default":0})
      */
     private $idProductAttribute = '0';
 
@@ -68,7 +68,7 @@ class ProductSupplier
     /**
      * @var string
      *
-     * @ORM\Column(name="product_supplier_price_te", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="product_supplier_price_te", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $productSupplierPriceTe = '0.000000';
 

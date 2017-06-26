@@ -40,7 +40,7 @@ class Customization
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_product_attribute", type="integer", nullable=false)
+     * @ORM\Column(name="id_product_attribute", type="integer", nullable=false, options={"default":0})
      */
     private $idProductAttribute = '0';
 
@@ -54,21 +54,21 @@ class Customization
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity_refunded", type="integer", nullable=false)
+     * @ORM\Column(name="quantity_refunded", type="integer", nullable=false, options={"default":0})
      */
     private $quantityRefunded = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity_returned", type="integer", nullable=false)
+     * @ORM\Column(name="quantity_returned", type="integer", nullable=false, options={"default":0})
      */
     private $quantityReturned = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="in_cart", type="boolean", nullable=false)
+     * @ORM\Column(name="in_cart", type="boolean", nullable=false, options={"default":0})
      */
     private $inCart = '0';
 
@@ -102,7 +102,7 @@ class Customization
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_address_delivery", type="integer")
+     * @ORM\Column(name="id_address_delivery", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

@@ -47,21 +47,21 @@ class Cms
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default":0})
      */
     private $position = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="indexation", type="boolean", nullable=false)
+     * @ORM\Column(name="indexation", type="boolean", nullable=false, options={"default":1})
      */
     private $indexation = '1';
 

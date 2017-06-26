@@ -47,7 +47,7 @@ class Currency
     /**
      * @var string
      *
-     * @ORM\Column(name="iso_code", type="string", length=3, nullable=false)
+     * @ORM\Column(name="iso_code", type="string", length=3, nullable=false, options={"default":0})
      */
     private $isoCode = '0';
 
@@ -61,14 +61,14 @@ class Currency
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":1})
      */
     private $active = '1';
 

@@ -138,7 +138,7 @@ class Store
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 

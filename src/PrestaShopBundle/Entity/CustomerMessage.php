@@ -96,14 +96,14 @@ class CustomerMessage
     /**
      * @var boolean
      *
-     * @ORM\Column(name="private", type="boolean", nullable=false)
+     * @ORM\Column(name="private", type="boolean", nullable=false, options={"default":0})
      */
     private $private = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="read", type="boolean", nullable=false)
+     * @ORM\Column(name="read", type="boolean", nullable=false, options={"default":0})
      */
     private $read = '0';
 

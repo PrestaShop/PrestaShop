@@ -40,14 +40,14 @@ class ProductSale
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":0})
      */
     private $quantity = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="sale_nbr", type="integer", nullable=false)
+     * @ORM\Column(name="sale_nbr", type="integer", nullable=false, options={"default":0})
      */
     private $saleNbr = '0';
 

@@ -110,21 +110,21 @@ class Referrer
     /**
      * @var string
      *
-     * @ORM\Column(name="base_fee", type="decimal", precision=5, scale=2, nullable=false)
+     * @ORM\Column(name="base_fee", type="decimal", precision=5, scale=2, nullable=false, options={"default":0.00})
      */
     private $baseFee = '0.00';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="percent_fee", type="decimal", precision=5, scale=2, nullable=false)
+     * @ORM\Column(name="percent_fee", type="decimal", precision=5, scale=2, nullable=false, options={"default":0.00})
      */
     private $percentFee = '0.00';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="click_fee", type="decimal", precision=5, scale=2, nullable=false)
+     * @ORM\Column(name="click_fee", type="decimal", precision=5, scale=2, nullable=false, options={"default":0.00})
      */
     private $clickFee = '0.00';
 

@@ -41,12 +41,33 @@ class CustomerMessageSyncImap
      * @var binary
      *
      * @ORM\Column(name="md5_header", type="binary")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $md5Header;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_customer_message_sync_imap", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idCustomerMessageSyncImap;
 
+
+
+    /**
+     * Set md5Header
+     *
+     * @param binary $md5Header
+     *
+     * @return CustomerMessageSyncImap
+     */
+    public function setResetPasswordValidity($md5Header)
+    {
+        $this->md5Header = $md5Header;
+
+        return $this;
+    }
 
     /**
      * Get md5Header
@@ -56,5 +77,15 @@ class CustomerMessageSyncImap
     public function getMd5Header()
     {
         return $this->md5Header;
+    }
+
+    /**
+     * Get idCustomerMessageSyncImap
+     *
+     * @return integer
+     */
+    public function getIdCustomerMessageSyncImap()
+    {
+        return $this->idCustomerMessageSyncImap;
     }
 }

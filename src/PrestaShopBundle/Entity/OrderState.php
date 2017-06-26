@@ -40,14 +40,14 @@ class OrderState
     /**
      * @var boolean
      *
-     * @ORM\Column(name="invoice", type="boolean", nullable=true)
+     * @ORM\Column(name="invoice", type="boolean", nullable=true, options={"default":0})
      */
     private $invoice = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="send_email", type="boolean", nullable=false)
+     * @ORM\Column(name="send_email", type="boolean", nullable=false, options={"default":0})
      */
     private $sendEmail = '0';
 
@@ -75,56 +75,56 @@ class OrderState
     /**
      * @var boolean
      *
-     * @ORM\Column(name="hidden", type="boolean", nullable=false)
+     * @ORM\Column(name="hidden", type="boolean", nullable=false, options={"default":0})
      */
     private $hidden = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="logable", type="boolean", nullable=false)
+     * @ORM\Column(name="logable", type="boolean", nullable=false, options={"default":0})
      */
     private $logable = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="delivery", type="boolean", nullable=false)
+     * @ORM\Column(name="delivery", type="boolean", nullable=false, options={"default":0})
      */
     private $delivery = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="shipped", type="boolean", nullable=false)
+     * @ORM\Column(name="shipped", type="boolean", nullable=false, options={"default":0})
      */
     private $shipped = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="paid", type="boolean", nullable=false)
+     * @ORM\Column(name="paid", type="boolean", nullable=false, options={"default":0})
      */
     private $paid = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="pdf_invoice", type="boolean", nullable=false)
+     * @ORM\Column(name="pdf_invoice", type="boolean", nullable=false, options={"default":0})
      */
     private $pdfInvoice = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="pdf_delivery", type="boolean", nullable=false)
+     * @ORM\Column(name="pdf_delivery", type="boolean", nullable=false, options={"default":0})
      */
     private $pdfDelivery = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 

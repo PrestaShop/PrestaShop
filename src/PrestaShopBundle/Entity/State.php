@@ -66,16 +66,16 @@ class State
     private $isoCode;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="tax_behavior", type="smallint", nullable=false)
+     * @ORM\Column(name="tax_behavior", type="boolean", nullable=false, options={"default":0})
      */
     private $taxBehavior = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
@@ -189,7 +189,7 @@ class State
     /**
      * Set taxBehavior
      *
-     * @param integer $taxBehavior
+     * @param boolean $taxBehavior
      *
      * @return State
      */
@@ -203,7 +203,7 @@ class State
     /**
      * Get taxBehavior
      *
-     * @return integer
+     * @return boolean
      */
     public function getTaxBehavior()
     {

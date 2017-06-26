@@ -54,7 +54,7 @@ class Attachment
     /**
      * @var integer
      *
-     * @ORM\Column(name="file_size", type="bigint", nullable=false)
+     * @ORM\Column(name="file_size", type="bigint", nullable=false, options={"default":0})
      */
     private $fileSize = '0';
 

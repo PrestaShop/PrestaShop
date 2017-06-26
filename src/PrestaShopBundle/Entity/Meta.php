@@ -47,7 +47,7 @@ class Meta
     /**
      * @var boolean
      *
-     * @ORM\Column(name="configurable", type="boolean", nullable=false)
+     * @ORM\Column(name="configurable", type="boolean", nullable=false, options={"default":1})
      */
     private $configurable = '1';
 

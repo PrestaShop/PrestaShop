@@ -45,16 +45,16 @@ class CmsCategory
     private $idParent;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="level_depth", type="boolean", nullable=false)
+     * @ORM\Column(name="level_depth", type="smallint", nullable=false, options={"default":0})
      */
     private $levelDepth = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
@@ -75,7 +75,7 @@ class CmsCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default":0})
      */
     private $position = '0';
 
@@ -117,7 +117,7 @@ class CmsCategory
     /**
      * Set levelDepth
      *
-     * @param boolean $levelDepth
+     * @param integer $levelDepth
      *
      * @return CmsCategory
      */
@@ -131,7 +131,7 @@ class CmsCategory
     /**
      * Get levelDepth
      *
-     * @return boolean
+     * @return integer
      */
     public function getLevelDepth()
     {

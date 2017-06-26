@@ -38,9 +38,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Risk
 {
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="percent", type="boolean", nullable=false)
+     * @ORM\Column(name="percent", type="smallint", nullable=false)
      */
     private $percent;
 
@@ -65,7 +65,7 @@ class Risk
     /**
      * Set percent
      *
-     * @param boolean $percent
+     * @param integer $percent
      *
      * @return Risk
      */
@@ -79,7 +79,7 @@ class Risk
     /**
      * Get percent
      *
-     * @return boolean
+     * @return integer
      */
     public function getPercent()
     {

@@ -47,11 +47,19 @@ class SmartyLastFlush
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string")
+     * @ORM\Column(name="type", type="string", columnDefinition="ENUM('compile','template')")
+     */
+    private $type;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_smarty_last_flush", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $type;
+    private $idSmartyLastFlush;
+
 
 
 
@@ -80,6 +88,20 @@ class SmartyLastFlush
     }
 
     /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return SmartyLastFlush
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
      * Get type
      *
      * @return string
@@ -87,5 +109,15 @@ class SmartyLastFlush
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Get idSmartyLastFlush
+     *
+     * @return integer
+     */
+    public function getIdSmartyLastFlush()
+    {
+        return $this->idSmartyLastFlush;
     }
 }

@@ -40,7 +40,7 @@ class StockMvtReason
     /**
      * @var boolean
      *
-     * @ORM\Column(name="sign", type="boolean", nullable=false)
+     * @ORM\Column(name="sign", type="boolean", nullable=false, options={"default":1})
      */
     private $sign = '1';
 
@@ -61,7 +61,7 @@ class StockMvtReason
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 

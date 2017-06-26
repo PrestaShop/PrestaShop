@@ -40,14 +40,14 @@ class Customer
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_group", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop_group", type="integer", nullable=false, options={"default":1})
      */
     private $idShopGroup = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 
@@ -61,7 +61,7 @@ class Customer
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_default_group", type="integer", nullable=false)
+     * @ORM\Column(name="id_default_group", type="integer", nullable=false, options={"default":1})
      */
     private $idDefaultGroup = '1';
 
@@ -75,7 +75,7 @@ class Customer
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_risk", type="integer", nullable=false)
+     * @ORM\Column(name="id_risk", type="integer", nullable=false, options={"default":1})
      */
     private $idRisk = '1';
 
@@ -145,7 +145,7 @@ class Customer
     /**
      * @var boolean
      *
-     * @ORM\Column(name="newsletter", type="boolean", nullable=false)
+     * @ORM\Column(name="newsletter", type="boolean", nullable=false, options={"default":0})
      */
     private $newsletter = '0';
 
@@ -166,7 +166,7 @@ class Customer
     /**
      * @var boolean
      *
-     * @ORM\Column(name="optin", type="boolean", nullable=false)
+     * @ORM\Column(name="optin", type="boolean", nullable=false, options={"default":0})
      */
     private $optin = '0';
 
@@ -180,28 +180,28 @@ class Customer
     /**
      * @var string
      *
-     * @ORM\Column(name="outstanding_allow_amount", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="outstanding_allow_amount", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $outstandingAllowAmount = '0.000000';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="show_public_prices", type="boolean", nullable=false)
+     * @ORM\Column(name="show_public_prices", type="boolean", nullable=false, options={"default":0})
      */
     private $showPublicPrices = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="max_payment_days", type="integer", nullable=false)
+     * @ORM\Column(name="max_payment_days", type="integer", nullable=false, options={"default":60})
      */
     private $maxPaymentDays = '60';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="secure_key", type="string", length=32, nullable=false)
+     * @ORM\Column(name="secure_key", type="string", length=32, nullable=false, options={"default":-1})
      */
     private $secureKey = '-1';
 
@@ -215,21 +215,21 @@ class Customer
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_guest", type="boolean", nullable=false)
+     * @ORM\Column(name="is_guest", type="boolean", nullable=false, options={"default":0})
      */
     private $isGuest = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 

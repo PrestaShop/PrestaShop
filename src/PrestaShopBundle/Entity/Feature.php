@@ -40,7 +40,7 @@ class Feature
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default":0})
      */
     private $position = '0';
 

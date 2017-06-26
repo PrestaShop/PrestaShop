@@ -68,35 +68,35 @@ class StockAvailable
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":0})
      */
     private $quantity = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="physical_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="physical_quantity", type="integer", nullable=false, options={"default":0})
      */
     private $physicalQuantity = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="reserved_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="reserved_quantity", type="integer", nullable=false, options={"default":0})
      */
     private $reservedQuantity = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="depends_on_stock", type="boolean", nullable=false)
+     * @ORM\Column(name="depends_on_stock", type="boolean", nullable=false, options={"default":0})
      */
     private $dependsOnStock = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="out_of_stock", type="boolean", nullable=false)
+     * @ORM\Column(name="out_of_stock", type="boolean", nullable=false, options={"default":0})
      */
     private $outOfStock = '0';
 

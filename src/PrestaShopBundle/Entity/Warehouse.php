@@ -75,14 +75,14 @@ class Warehouse
     /**
      * @var string
      *
-     * @ORM\Column(name="management_type", type="string", nullable=false)
+     * @ORM\Column(name="management_type", type="string", nullable=false, columnDefinition="ENUM('WA','FIFO','LIFO')", options={"default"="WA"})
      */
     private $managementType = 'WA';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="deleted", type="boolean", nullable=false)
+     * @ORM\Column(name="deleted", type="boolean", nullable=false, options={"default":0})
      */
     private $deleted = '0';
 

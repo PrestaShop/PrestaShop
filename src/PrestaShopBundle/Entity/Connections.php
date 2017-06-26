@@ -40,14 +40,14 @@ class Connections
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_group", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop_group", type="integer", nullable=false, options={"default":1})
      */
     private $idShopGroup = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 

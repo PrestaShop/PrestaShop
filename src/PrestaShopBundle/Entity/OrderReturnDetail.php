@@ -40,7 +40,7 @@ class OrderReturnDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="product_quantity", type="integer", nullable=false, options={"default":0})
      */
     private $productQuantity = '0';
 
@@ -65,7 +65,7 @@ class OrderReturnDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_customization", type="integer")
+     * @ORM\Column(name="id_customization", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

@@ -82,21 +82,21 @@ class ProductDownload
     /**
      * @var integer
      *
-     * @ORM\Column(name="nb_downloadable", type="integer", nullable=true)
+     * @ORM\Column(name="nb_downloadable", type="integer", nullable=true, options={"default":1})
      */
     private $nbDownloadable = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":1})
      */
     private $active = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_shareable", type="boolean", nullable=false)
+     * @ORM\Column(name="is_shareable", type="boolean", nullable=false, options={"default":0})
      */
     private $isShareable = '0';
 

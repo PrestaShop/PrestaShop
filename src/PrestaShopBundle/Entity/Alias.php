@@ -54,7 +54,7 @@ class Alias
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":1})
      */
     private $active = '1';
 

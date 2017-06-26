@@ -40,14 +40,14 @@ class Cart
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_group", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop_group", type="integer", nullable=false, options={"default":1})
      */
     private $idShopGroup = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 
@@ -110,21 +110,21 @@ class Cart
     /**
      * @var string
      *
-     * @ORM\Column(name="secure_key", type="string", length=32, nullable=false)
+     * @ORM\Column(name="secure_key", type="string", length=32, nullable=false, options={"default":-1})
      */
     private $secureKey = '-1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="recyclable", type="boolean", nullable=false)
+     * @ORM\Column(name="recyclable", type="boolean", nullable=false, options={"default":1})
      */
     private $recyclable = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="gift", type="boolean", nullable=false)
+     * @ORM\Column(name="gift", type="boolean", nullable=false, options={"default":0})
      */
     private $gift = '0';
 
@@ -138,14 +138,14 @@ class Cart
     /**
      * @var boolean
      *
-     * @ORM\Column(name="mobile_theme", type="boolean", nullable=false)
+     * @ORM\Column(name="mobile_theme", type="boolean", nullable=false, options={"default":0})
      */
     private $mobileTheme = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="allow_seperated_package", type="boolean", nullable=false)
+     * @ORM\Column(name="allow_seperated_package", type="boolean", nullable=false, options={"default":0})
      */
     private $allowSeperatedPackage = '0';
 

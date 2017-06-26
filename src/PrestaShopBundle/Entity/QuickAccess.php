@@ -40,7 +40,7 @@ class QuickAccess
     /**
      * @var boolean
      *
-     * @ORM\Column(name="new_window", type="boolean", nullable=false)
+     * @ORM\Column(name="new_window", type="boolean", nullable=false, options={"default":0})
      */
     private $newWindow = '0';
 

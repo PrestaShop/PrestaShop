@@ -54,14 +54,14 @@ class WebserviceAccount
     /**
      * @var string
      *
-     * @ORM\Column(name="class_name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="class_name", type="string", length=50, nullable=false, options={"default"="WebserviceRequest"})
      */
     private $className = 'WebserviceRequest';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_module", type="boolean", nullable=false)
+     * @ORM\Column(name="is_module", type="boolean", nullable=false, options={"default":0})
      */
     private $isModule = '0';
 

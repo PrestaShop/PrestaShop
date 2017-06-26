@@ -40,7 +40,7 @@ class SearchWord
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 

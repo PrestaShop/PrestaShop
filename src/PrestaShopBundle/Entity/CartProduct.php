@@ -40,14 +40,14 @@ class CartProduct
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":0})
      */
     private $quantity = '0';
 
@@ -79,7 +79,7 @@ class CartProduct
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_product_attribute", type="integer")
+     * @ORM\Column(name="id_product_attribute", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
@@ -88,7 +88,7 @@ class CartProduct
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_customization", type="integer")
+     * @ORM\Column(name="id_customization", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
@@ -97,7 +97,7 @@ class CartProduct
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_address_delivery", type="integer")
+     * @ORM\Column(name="id_address_delivery", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

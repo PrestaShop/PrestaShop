@@ -54,7 +54,7 @@ class OrderDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_warehouse", type="integer", nullable=true)
+     * @ORM\Column(name="id_warehouse", type="integer", nullable=true, options={"default":0})
      */
     private $idWarehouse = '0';
 
@@ -82,7 +82,7 @@ class OrderDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_customization", type="integer", nullable=true)
+     * @ORM\Column(name="id_customization", type="integer", nullable=true, options={"default":0})
      */
     private $idCustomization = '0';
 
@@ -96,84 +96,84 @@ class OrderDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="product_quantity", type="integer", nullable=false, options={"default":0})
      */
     private $productQuantity = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_quantity_in_stock", type="integer", nullable=false)
+     * @ORM\Column(name="product_quantity_in_stock", type="integer", nullable=false, options={"default":0})
      */
     private $productQuantityInStock = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_quantity_refunded", type="integer", nullable=false)
+     * @ORM\Column(name="product_quantity_refunded", type="integer", nullable=false, options={"default":0})
      */
     private $productQuantityRefunded = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_quantity_return", type="integer", nullable=false)
+     * @ORM\Column(name="product_quantity_return", type="integer", nullable=false, options={"default":0})
      */
     private $productQuantityReturn = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_quantity_reinjected", type="integer", nullable=false)
+     * @ORM\Column(name="product_quantity_reinjected", type="integer", nullable=false, options={"default":0})
      */
     private $productQuantityReinjected = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="product_price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="product_price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $productPrice = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_percent", type="decimal", precision=10, scale=2, nullable=false)
+     * @ORM\Column(name="reduction_percent", type="decimal", precision=10, scale=2, nullable=false, options={"default":0.00})
      */
     private $reductionPercent = '0.00';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_amount", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="reduction_amount", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $reductionAmount = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_amount_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="reduction_amount_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $reductionAmountTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_amount_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="reduction_amount_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $reductionAmountTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="group_reduction", type="decimal", precision=10, scale=2, nullable=false)
+     * @ORM\Column(name="group_reduction", type="decimal", precision=10, scale=2, nullable=false, options={"default":0.00})
      */
     private $groupReduction = '0.00';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="product_quantity_discount", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="product_quantity_discount", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $productQuantityDiscount = '0.000000';
 
@@ -222,14 +222,14 @@ class OrderDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_tax_rules_group", type="integer", nullable=true)
+     * @ORM\Column(name="id_tax_rules_group", type="integer", nullable=true, options={"default":0})
      */
     private $idTaxRulesGroup = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="tax_computation_method", type="boolean", nullable=false)
+     * @ORM\Column(name="tax_computation_method", type="boolean", nullable=false, options={"default":0})
      */
     private $taxComputationMethod = '0';
 
@@ -243,28 +243,28 @@ class OrderDetail
     /**
      * @var string
      *
-     * @ORM\Column(name="tax_rate", type="decimal", precision=10, scale=3, nullable=false)
+     * @ORM\Column(name="tax_rate", type="decimal", precision=10, scale=3, nullable=false, options={"default":0.000})
      */
     private $taxRate = '0.000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ecotax", type="decimal", precision=21, scale=6, nullable=false)
+     * @ORM\Column(name="ecotax", type="decimal", precision=21, scale=6, nullable=false, options={"default":0.000000})
      */
     private $ecotax = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ecotax_tax_rate", type="decimal", precision=5, scale=3, nullable=false)
+     * @ORM\Column(name="ecotax_tax_rate", type="decimal", precision=5, scale=3, nullable=false, options={"default":0.000})
      */
     private $ecotaxTaxRate = '0.000';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="discount_quantity_applied", type="boolean", nullable=false)
+     * @ORM\Column(name="discount_quantity_applied", type="boolean", nullable=false, options={"default":0})
      */
     private $discountQuantityApplied = '0';
 
@@ -278,7 +278,7 @@ class OrderDetail
     /**
      * @var integer
      *
-     * @ORM\Column(name="download_nb", type="integer", nullable=true)
+     * @ORM\Column(name="download_nb", type="integer", nullable=true, options={"default":0})
      */
     private $downloadNb = '0';
 
@@ -292,63 +292,63 @@ class OrderDetail
     /**
      * @var string
      *
-     * @ORM\Column(name="total_price_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_price_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPriceTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_price_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_price_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPriceTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unit_price_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="unit_price_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $unitPriceTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unit_price_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="unit_price_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $unitPriceTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping_price_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping_price_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShippingPriceTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping_price_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping_price_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShippingPriceTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="purchase_supplier_price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="purchase_supplier_price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $purchaseSupplierPrice = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="original_product_price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="original_product_price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $originalProductPrice = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="original_wholesale_price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="original_wholesale_price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $originalWholesalePrice = '0.000000';
 

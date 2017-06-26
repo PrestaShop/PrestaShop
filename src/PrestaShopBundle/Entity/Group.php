@@ -40,21 +40,21 @@ class Group
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction", type="decimal", precision=17, scale=2, nullable=false)
+     * @ORM\Column(name="reduction", type="decimal", precision=17, scale=2, nullable=false, options={"default":0.00})
      */
     private $reduction = '0.00';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="price_display_method", type="boolean", nullable=false)
+     * @ORM\Column(name="price_display_method", type="smallint", nullable=false, options={"default":0})
      */
     private $priceDisplayMethod = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="show_prices", type="boolean", nullable=false)
+     * @ORM\Column(name="show_prices", type="boolean", nullable=false, options={"default":1})
      */
     private $showPrices = '1';
 
@@ -110,7 +110,7 @@ class Group
     /**
      * Set priceDisplayMethod
      *
-     * @param boolean $priceDisplayMethod
+     * @param integer $priceDisplayMethod
      *
      * @return Group
      */
@@ -124,7 +124,7 @@ class Group
     /**
      * Get priceDisplayMethod
      *
-     * @return boolean
+     * @return integer
      */
     public function getPriceDisplayMethod()
     {

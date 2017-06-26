@@ -40,28 +40,28 @@ class TagCount
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_lang", type="integer", nullable=false)
+     * @ORM\Column(name="id_lang", type="integer", nullable=false, options={"default":0})
      */
     private $idLang = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":0})
      */
     private $idShop = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="counter", type="integer", nullable=false)
+     * @ORM\Column(name="counter", type="integer", nullable=false, options={"default":0})
      */
     private $counter = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_group", type="integer")
+     * @ORM\Column(name="id_group", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
@@ -70,7 +70,7 @@ class TagCount
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_tag", type="integer")
+     * @ORM\Column(name="id_tag", type="integer", options={"default":0})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

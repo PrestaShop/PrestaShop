@@ -117,49 +117,49 @@ class SupplyOrder
     /**
      * @var string
      *
-     * @ORM\Column(name="total_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="total_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $totalTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_with_discount_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="total_with_discount_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $totalWithDiscountTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_tax", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="total_tax", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $totalTax = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_ti", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="total_ti", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $totalTi = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="discount_rate", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="discount_rate", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $discountRate = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="discount_value_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="discount_value_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $discountValueTe = '0.000000';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_template", type="boolean", nullable=true)
+     * @ORM\Column(name="is_template", type="boolean", nullable=true, options={"default":0})
      */
     private $isTemplate = '0';
 

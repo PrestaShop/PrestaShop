@@ -40,7 +40,7 @@ class SearchIndex
     /**
      * @var integer
      *
-     * @ORM\Column(name="weight", type="smallint", nullable=false)
+     * @ORM\Column(name="weight", type="smallint", nullable=false, options={"default":1})
      */
     private $weight = '1';
 

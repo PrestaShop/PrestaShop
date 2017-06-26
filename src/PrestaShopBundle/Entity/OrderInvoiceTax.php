@@ -54,7 +54,7 @@ class OrderInvoiceTax
     /**
      * @var string
      *
-     * @ORM\Column(name="amount", type="decimal", precision=10, scale=6, nullable=false)
+     * @ORM\Column(name="amount", type="decimal", precision=10, scale=6, nullable=false, options={"default":0.000000})
      */
     private $amount = '0.000000';
 

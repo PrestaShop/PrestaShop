@@ -47,14 +47,14 @@ class OrderDetailTax
     /**
      * @var string
      *
-     * @ORM\Column(name="unit_amount", type="decimal", precision=16, scale=6, nullable=false)
+     * @ORM\Column(name="unit_amount", type="decimal", precision=16, scale=6, nullable=false, options={"default":0.000000})
      */
     private $unitAmount = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_amount", type="decimal", precision=16, scale=6, nullable=false)
+     * @ORM\Column(name="total_amount", type="decimal", precision=16, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalAmount = '0.000000';
 

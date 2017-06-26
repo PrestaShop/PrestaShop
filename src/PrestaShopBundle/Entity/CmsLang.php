@@ -84,7 +84,7 @@ class CmsLang
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer")
+     * @ORM\Column(name="id_shop", type="integer", options={"default":1})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

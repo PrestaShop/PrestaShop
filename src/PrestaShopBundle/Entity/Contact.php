@@ -47,14 +47,14 @@ class Contact
     /**
      * @var boolean
      *
-     * @ORM\Column(name="customer_service", type="boolean", nullable=false)
+     * @ORM\Column(name="customer_service", type="boolean", nullable=false, options={"default":0})
      */
     private $customerService = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="position", type="boolean", nullable=false)
+     * @ORM\Column(name="position", type="smallint", nullable=false, options={"default":0})
      */
     private $position = '0';
 
@@ -120,7 +120,7 @@ class Contact
     /**
      * Set position
      *
-     * @param boolean $position
+     * @param integer $position
      *
      * @return Contact
      */
@@ -134,7 +134,7 @@ class Contact
     /**
      * Get position
      *
-     * @return boolean
+     * @return integer
      */
     public function getPosition()
     {

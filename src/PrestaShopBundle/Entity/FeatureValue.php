@@ -45,9 +45,9 @@ class FeatureValue
     private $idFeature;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="custom", type="boolean", nullable=true)
+     * @ORM\Column(name="custom", type="smallint", nullable=true)
      */
     private $custom;
 
@@ -89,7 +89,7 @@ class FeatureValue
     /**
      * Set custom
      *
-     * @param boolean $custom
+     * @param integer $custom
      *
      * @return FeatureValue
      */
@@ -103,7 +103,7 @@ class FeatureValue
     /**
      * Get custom
      *
-     * @return boolean
+     * @return integer
      */
     public function getCustom()
     {

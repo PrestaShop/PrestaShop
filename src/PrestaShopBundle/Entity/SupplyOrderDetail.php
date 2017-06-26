@@ -110,14 +110,14 @@ class SupplyOrderDetail
     /**
      * @var string
      *
-     * @ORM\Column(name="exchange_rate", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="exchange_rate", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $exchangeRate = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unit_price_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="unit_price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $unitPriceTe = '0.000000';
 
@@ -138,63 +138,63 @@ class SupplyOrderDetail
     /**
      * @var string
      *
-     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $priceTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="discount_rate", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="discount_rate", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $discountRate = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="discount_value_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="discount_value_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $discountValueTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price_with_discount_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="price_with_discount_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $priceWithDiscountTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tax_rate", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="tax_rate", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $taxRate = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tax_value", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="tax_value", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $taxValue = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price_ti", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="price_ti", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $priceTi = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tax_value_with_order_discount", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="tax_value_with_order_discount", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $taxValueWithOrderDiscount = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price_with_order_discount_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="price_with_order_discount_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $priceWithOrderDiscountTe = '0.000000';
 

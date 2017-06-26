@@ -47,7 +47,7 @@ class CartRuleProductRule
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="string", nullable=false)
+     * @ORM\Column(name="type", type="string", nullable=false, columnDefinition="ENUM('products','categories','attributes','manufacturers','suppliers')")
      */
     private $type;
 

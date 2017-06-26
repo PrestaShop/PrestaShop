@@ -89,42 +89,42 @@ class ProductAttribute
     /**
      * @var string
      *
-     * @ORM\Column(name="wholesale_price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="wholesale_price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $wholesalePrice = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $price = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ecotax", type="decimal", precision=17, scale=6, nullable=false)
+     * @ORM\Column(name="ecotax", type="decimal", precision=17, scale=6, nullable=false, options={"default":0.000000})
      */
     private $ecotax = '0.000000';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":0})
      */
     private $quantity = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="weight", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="weight", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $weight = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="unit_price_impact", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="unit_price_impact", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $unitPriceImpact = '0.000000';
 
@@ -138,7 +138,7 @@ class ProductAttribute
     /**
      * @var integer
      *
-     * @ORM\Column(name="minimal_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="minimal_quantity", type="integer", nullable=false, options={"default":1})
      */
     private $minimalQuantity = '1';
 

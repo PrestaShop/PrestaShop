@@ -61,7 +61,7 @@ class Guest
     /**
      * @var boolean
      *
-     * @ORM\Column(name="javascript", type="boolean", nullable=true)
+     * @ORM\Column(name="javascript", type="boolean", nullable=true, options={"default":0})
      */
     private $javascript = '0';
 
@@ -80,9 +80,9 @@ class Guest
     private $screenResolutionY;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="screen_color", type="boolean", nullable=true)
+     * @ORM\Column(name="screen_color", type="smallint", nullable=true)
      */
     private $screenColor;
 
@@ -138,7 +138,7 @@ class Guest
     /**
      * @var boolean
      *
-     * @ORM\Column(name="mobile_theme", type="boolean", nullable=false)
+     * @ORM\Column(name="mobile_theme", type="boolean", nullable=false, options={"default":0})
      */
     private $mobileTheme = '0';
 
@@ -300,7 +300,7 @@ class Guest
     /**
      * Set screenColor
      *
-     * @param boolean $screenColor
+     * @param integer $screenColor
      *
      * @return Guest
      */
@@ -314,7 +314,7 @@ class Guest
     /**
      * Get screenColor
      *
-     * @return boolean
+     * @return integer
      */
     public function getScreenColor()
     {

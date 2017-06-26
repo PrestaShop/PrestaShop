@@ -54,7 +54,7 @@ class OrderReturn
     /**
      * @var boolean
      *
-     * @ORM\Column(name="state", type="boolean", nullable=false)
+     * @ORM\Column(name="state", type="boolean", nullable=false, options={"default":1})
      */
     private $state = '1';
 

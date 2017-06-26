@@ -54,7 +54,7 @@ class ImportMatch
     /**
      * @var integer
      *
-     * @ORM\Column(name="skip", type="integer", nullable=false)
+     * @ORM\Column(name="skip", type="smallint", nullable=false)
      */
     private $skip;
 

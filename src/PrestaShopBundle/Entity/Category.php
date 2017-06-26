@@ -47,35 +47,35 @@ class Category
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_default", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop_default", type="integer", nullable=false, options={"default":1})
      */
     private $idShopDefault = '1';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="level_depth", type="boolean", nullable=false)
+     * @ORM\Column(name="level_depth", type="smallint", nullable=false, options={"default":0})
      */
     private $levelDepth = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nleft", type="integer", nullable=false)
+     * @ORM\Column(name="nleft", type="integer", nullable=false, options={"default":0})
      */
     private $nleft = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="nright", type="integer", nullable=false)
+     * @ORM\Column(name="nright", type="integer", nullable=false, options={"default":0})
      */
     private $nright = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
@@ -96,14 +96,14 @@ class Category
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="integer", nullable=false)
+     * @ORM\Column(name="position", type="integer", nullable=false, options={"default":0})
      */
     private $position = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_root_category", type="boolean", nullable=false)
+     * @ORM\Column(name="is_root_category", type="boolean", nullable=false, options={"default":0})
      */
     private $isRootCategory = '0';
 
@@ -169,7 +169,7 @@ class Category
     /**
      * Set levelDepth
      *
-     * @param boolean $levelDepth
+     * @param integer $levelDepth
      *
      * @return Category
      */
@@ -183,7 +183,7 @@ class Category
     /**
      * Get levelDepth
      *
-     * @return boolean
+     * @return integer
      */
     public function getLevelDepth()
     {

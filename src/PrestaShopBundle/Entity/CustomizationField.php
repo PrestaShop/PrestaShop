@@ -61,7 +61,7 @@ class CustomizationField
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_module", type="boolean", nullable=false)
+     * @ORM\Column(name="is_module", type="boolean", nullable=false, options={"default":0})
      */
     private $isModule = '0';
 

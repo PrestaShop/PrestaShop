@@ -40,35 +40,35 @@ class SupplyOrderState
     /**
      * @var boolean
      *
-     * @ORM\Column(name="delivery_note", type="boolean", nullable=false)
+     * @ORM\Column(name="delivery_note", type="boolean", nullable=false, options={"default":0})
      */
     private $deliveryNote = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="editable", type="boolean", nullable=false)
+     * @ORM\Column(name="editable", type="boolean", nullable=false, options={"default":0})
      */
     private $editable = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="receipt_state", type="boolean", nullable=false)
+     * @ORM\Column(name="receipt_state", type="boolean", nullable=false, options={"default":0})
      */
     private $receiptState = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="pending_receipt", type="boolean", nullable=false)
+     * @ORM\Column(name="pending_receipt", type="boolean", nullable=false, options={"default":0})
      */
     private $pendingReceipt = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="enclosed", type="boolean", nullable=false)
+     * @ORM\Column(name="enclosed", type="boolean", nullable=false, options={"default":0})
      */
     private $enclosed = '0';
 

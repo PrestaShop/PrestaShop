@@ -61,7 +61,7 @@ class Hook
     /**
      * @var boolean
      *
-     * @ORM\Column(name="position", type="boolean", nullable=false)
+     * @ORM\Column(name="position", type="boolean", nullable=false, options={"default":1})
      */
     private $position = '1';
 

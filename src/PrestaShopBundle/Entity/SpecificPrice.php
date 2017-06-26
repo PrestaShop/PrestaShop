@@ -61,7 +61,7 @@ class SpecificPrice
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 
@@ -131,14 +131,14 @@ class SpecificPrice
     /**
      * @var boolean
      *
-     * @ORM\Column(name="reduction_tax", type="boolean", nullable=false)
+     * @ORM\Column(name="reduction_tax", type="boolean", nullable=false, options={"default":1})
      */
     private $reductionTax = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_type", type="string", nullable=false)
+     * @ORM\Column(name="reduction_type", type="string", nullable=false, columnDefinition="ENUM('amount','percentage')")
      */
     private $reductionType;
 

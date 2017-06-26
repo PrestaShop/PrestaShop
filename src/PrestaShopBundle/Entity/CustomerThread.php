@@ -40,7 +40,7 @@ class CustomerThread
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 
@@ -82,7 +82,7 @@ class CustomerThread
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="string", nullable=false)
+     * @ORM\Column(name="status", type="string", nullable=false, columnDefinition="ENUM('open','closed','pending1','pending2')", options={"default"="open"})
      */
     private $status = 'open';
 

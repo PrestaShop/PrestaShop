@@ -47,7 +47,7 @@ class WebservicePermission
     /**
      * @var string
      *
-     * @ORM\Column(name="method", type="string", nullable=false)
+     * @ORM\Column(name="method", type="string", nullable=false, columnDefinition="ENUM('GET','POST','PUT','DELETE','HEAD')")
      */
     private $method;
 

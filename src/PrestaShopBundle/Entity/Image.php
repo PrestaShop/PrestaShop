@@ -47,7 +47,7 @@ class Image
     /**
      * @var integer
      *
-     * @ORM\Column(name="position", type="smallint", nullable=false)
+     * @ORM\Column(name="position", type="smallint", nullable=false, options={"default":0})
      */
     private $position = '0';
 

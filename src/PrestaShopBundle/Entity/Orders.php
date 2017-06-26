@@ -47,14 +47,14 @@ class Orders
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_group", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop_group", type="integer", nullable=false, options={"default":1})
      */
     private $idShopGroup = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop", type="integer", nullable=false, options={"default":1})
      */
     private $idShop = '1';
 
@@ -117,7 +117,7 @@ class Orders
     /**
      * @var string
      *
-     * @ORM\Column(name="secure_key", type="string", length=32, nullable=false)
+     * @ORM\Column(name="secure_key", type="string", length=32, nullable=false, options={"default":-1})
      */
     private $secureKey = '-1';
 
@@ -131,7 +131,7 @@ class Orders
     /**
      * @var string
      *
-     * @ORM\Column(name="conversion_rate", type="decimal", precision=13, scale=6, nullable=false)
+     * @ORM\Column(name="conversion_rate", type="decimal", precision=13, scale=6, nullable=false, options={"default":1.000000})
      */
     private $conversionRate = '1.000000';
 
@@ -145,14 +145,14 @@ class Orders
     /**
      * @var boolean
      *
-     * @ORM\Column(name="recyclable", type="boolean", nullable=false)
+     * @ORM\Column(name="recyclable", type="boolean", nullable=false, options={"default":0})
      */
     private $recyclable = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="gift", type="boolean", nullable=false)
+     * @ORM\Column(name="gift", type="boolean", nullable=false, options={"default":0})
      */
     private $gift = '0';
 
@@ -166,7 +166,7 @@ class Orders
     /**
      * @var boolean
      *
-     * @ORM\Column(name="mobile_theme", type="boolean", nullable=false)
+     * @ORM\Column(name="mobile_theme", type="boolean", nullable=false, options={"default":0})
      */
     private $mobileTheme = '0';
 
@@ -180,140 +180,140 @@ class Orders
     /**
      * @var string
      *
-     * @ORM\Column(name="total_discounts", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_discounts", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalDiscounts = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_discounts_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_discounts_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalDiscountsTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_discounts_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_discounts_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalDiscountsTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_paid", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_paid", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPaid = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_paid_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_paid_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPaidTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_paid_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_paid_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPaidTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_paid_real", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_paid_real", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPaidReal = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_products", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_products", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalProducts = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_products_wt", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_products_wt", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalProductsWt = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShipping = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShippingTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShippingTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="carrier_tax_rate", type="decimal", precision=10, scale=3, nullable=false)
+     * @ORM\Column(name="carrier_tax_rate", type="decimal", precision=10, scale=3, nullable=false, options={"default":0.000})
      */
     private $carrierTaxRate = '0.000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_wrapping", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_wrapping", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalWrapping = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_wrapping_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_wrapping_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalWrappingTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_wrapping_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_wrapping_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalWrappingTaxExcl = '0.000000';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="round_mode", type="boolean", nullable=false)
+     * @ORM\Column(name="round_mode", type="boolean", nullable=false, options={"default":2})
      */
     private $roundMode = '2';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="round_type", type="boolean", nullable=false)
+     * @ORM\Column(name="round_type", type="boolean", nullable=false, options={"default":1})
      */
     private $roundType = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="invoice_number", type="integer", nullable=false)
+     * @ORM\Column(name="invoice_number", type="integer", nullable=false, options={"default":0})
      */
     private $invoiceNumber = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="delivery_number", type="integer", nullable=false)
+     * @ORM\Column(name="delivery_number", type="integer", nullable=false, options={"default":0})
      */
     private $deliveryNumber = '0';
 
@@ -332,9 +332,9 @@ class Orders
     private $deliveryDate;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="valid", type="integer", nullable=false)
+     * @ORM\Column(name="valid", type="boolean", nullable=false, options={"default":0})
      */
     private $valid = '0';
 
@@ -1374,7 +1374,7 @@ class Orders
     /**
      * Set valid
      *
-     * @param integer $valid
+     * @param boolean $valid
      *
      * @return Orders
      */
@@ -1388,7 +1388,7 @@ class Orders
     /**
      * Get valid
      *
-     * @return integer
+     * @return boolean
      */
     public function getValid()
     {

@@ -68,56 +68,56 @@ class OrderInvoice
     /**
      * @var string
      *
-     * @ORM\Column(name="total_discount_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_discount_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalDiscountTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_discount_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_discount_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalDiscountTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_paid_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_paid_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPaidTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_paid_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_paid_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalPaidTaxIncl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_products", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_products", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalProducts = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_products_wt", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_products_wt", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalProductsWt = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShippingTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_shipping_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_shipping_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalShippingTaxIncl = '0.000000';
 
@@ -131,14 +131,14 @@ class OrderInvoice
     /**
      * @var string
      *
-     * @ORM\Column(name="total_wrapping_tax_excl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_wrapping_tax_excl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalWrappingTaxExcl = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="total_wrapping_tax_incl", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="total_wrapping_tax_incl", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $totalWrappingTaxIncl = '0.000000';
 

@@ -75,7 +75,7 @@ class Message
     /**
      * @var boolean
      *
-     * @ORM\Column(name="private", type="boolean", nullable=false)
+     * @ORM\Column(name="private", type="boolean", nullable=false, options={"default":1})
      */
     private $private = '1';
 

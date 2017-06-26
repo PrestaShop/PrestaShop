@@ -38,9 +38,9 @@ use Doctrine\ORM\Mapping as ORM;
 class HookModule
 {
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="position", type="boolean", nullable=false)
+     * @ORM\Column(name="position", type="smallint", nullable=false)
      */
     private $position;
 
@@ -65,7 +65,7 @@ class HookModule
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop", type="integer")
+     * @ORM\Column(name="id_shop", type="integer", options={"default":1})
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
@@ -76,7 +76,7 @@ class HookModule
     /**
      * Set position
      *
-     * @param boolean $position
+     * @param integer $position
      *
      * @return HookModule
      */
@@ -90,7 +90,7 @@ class HookModule
     /**
      * Get position
      *
-     * @return boolean
+     * @return integer
      */
     public function getPosition()
     {

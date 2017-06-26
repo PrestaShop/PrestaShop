@@ -47,7 +47,7 @@ class Employee
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_lang", type="integer", nullable=false)
+     * @ORM\Column(name="id_lang", type="integer", nullable=false, options={"default":0})
      */
     private $idLang = '0';
 
@@ -115,9 +115,9 @@ class Employee
     private $statsCompareTo;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="stats_compare_option", type="integer", nullable=false)
+     * @ORM\Column(name="stats_compare_option", type="boolean", nullable=false, options={"default":1})
      */
     private $statsCompareOption = '1';
 
@@ -152,56 +152,56 @@ class Employee
     /**
      * @var integer
      *
-     * @ORM\Column(name="default_tab", type="integer", nullable=false)
+     * @ORM\Column(name="default_tab", type="integer", nullable=false, options={"default":0})
      */
     private $defaultTab = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="bo_width", type="integer", nullable=false)
+     * @ORM\Column(name="bo_width", type="integer", nullable=false, options={"default":0})
      */
     private $boWidth = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="bo_menu", type="boolean", nullable=false)
+     * @ORM\Column(name="bo_menu", type="boolean", nullable=false, options={"default":1})
      */
     private $boMenu = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="optin", type="boolean", nullable=false)
+     * @ORM\Column(name="optin", type="boolean", nullable=false, options={"default":1})
      */
     private $optin = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_last_order", type="integer", nullable=false)
+     * @ORM\Column(name="id_last_order", type="integer", nullable=false, options={"default":0})
      */
     private $idLastOrder = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_last_customer_message", type="integer", nullable=false)
+     * @ORM\Column(name="id_last_customer_message", type="integer", nullable=false, options={"default":0})
      */
     private $idLastCustomerMessage = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_last_customer", type="integer", nullable=false)
+     * @ORM\Column(name="id_last_customer", type="integer", nullable=false, options={"default":0})
      */
     private $idLastCustomer = '0';
 
@@ -504,7 +504,7 @@ class Employee
     /**
      * Set statsCompareOption
      *
-     * @param integer $statsCompareOption
+     * @param boolean $statsCompareOption
      *
      * @return Employee
      */
@@ -518,7 +518,7 @@ class Employee
     /**
      * Get statsCompareOption
      *
-     * @return integer
+     * @return boolean
      */
     public function getStatsCompareOption()
     {

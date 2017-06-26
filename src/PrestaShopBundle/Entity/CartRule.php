@@ -40,7 +40,7 @@ class CartRule
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_customer", type="integer", nullable=false)
+     * @ORM\Column(name="id_customer", type="integer", nullable=false, options={"default":0})
      */
     private $idCustomer = '0';
 
@@ -68,28 +68,28 @@ class CartRule
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":0})
      */
     private $quantity = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity_per_user", type="integer", nullable=false)
+     * @ORM\Column(name="quantity_per_user", type="integer", nullable=false, options={"default":0})
      */
     private $quantityPerUser = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="priority", type="integer", nullable=false)
+     * @ORM\Column(name="priority", type="integer", nullable=false, options={"default":1})
      */
     private $priority = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="partial_use", type="boolean", nullable=false)
+     * @ORM\Column(name="partial_use", type="boolean", nullable=false, options={"default":0})
      */
     private $partialUse = '0';
 
@@ -103,147 +103,147 @@ class CartRule
     /**
      * @var string
      *
-     * @ORM\Column(name="minimum_amount", type="decimal", precision=17, scale=2, nullable=false)
+     * @ORM\Column(name="minimum_amount", type="decimal", precision=17, scale=2, nullable=false, options={"default":0.00})
      */
     private $minimumAmount = '0.00';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="minimum_amount_tax", type="boolean", nullable=false)
+     * @ORM\Column(name="minimum_amount_tax", type="boolean", nullable=false, options={"default":0})
      */
     private $minimumAmountTax = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="minimum_amount_currency", type="integer", nullable=false)
+     * @ORM\Column(name="minimum_amount_currency", type="integer", nullable=false, options={"default":0})
      */
     private $minimumAmountCurrency = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="minimum_amount_shipping", type="boolean", nullable=false)
+     * @ORM\Column(name="minimum_amount_shipping", type="boolean", nullable=false, options={"default":0})
      */
     private $minimumAmountShipping = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="country_restriction", type="boolean", nullable=false)
+     * @ORM\Column(name="country_restriction", type="boolean", nullable=false, options={"default":0})
      */
     private $countryRestriction = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="carrier_restriction", type="boolean", nullable=false)
+     * @ORM\Column(name="carrier_restriction", type="boolean", nullable=false, options={"default":0})
      */
     private $carrierRestriction = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="group_restriction", type="boolean", nullable=false)
+     * @ORM\Column(name="group_restriction", type="boolean", nullable=false, options={"default":0})
      */
     private $groupRestriction = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="cart_rule_restriction", type="boolean", nullable=false)
+     * @ORM\Column(name="cart_rule_restriction", type="boolean", nullable=false, options={"default":0})
      */
     private $cartRuleRestriction = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="product_restriction", type="boolean", nullable=false)
+     * @ORM\Column(name="product_restriction", type="boolean", nullable=false, options={"default":0})
      */
     private $productRestriction = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="shop_restriction", type="boolean", nullable=false)
+     * @ORM\Column(name="shop_restriction", type="boolean", nullable=false, options={"default":0})
      */
     private $shopRestriction = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="free_shipping", type="boolean", nullable=false)
+     * @ORM\Column(name="free_shipping", type="boolean", nullable=false, options={"default":0})
      */
     private $freeShipping = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_percent", type="decimal", precision=5, scale=2, nullable=false)
+     * @ORM\Column(name="reduction_percent", type="decimal", precision=5, scale=2, nullable=false, options={"default":0.00})
      */
     private $reductionPercent = '0.00';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="reduction_amount", type="decimal", precision=17, scale=2, nullable=false)
+     * @ORM\Column(name="reduction_amount", type="decimal", precision=17, scale=2, nullable=false, options={"default":0.00})
      */
     private $reductionAmount = '0.00';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="reduction_tax", type="boolean", nullable=false)
+     * @ORM\Column(name="reduction_tax", type="boolean", nullable=false, options={"default":0})
      */
     private $reductionTax = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="reduction_currency", type="integer", nullable=false)
+     * @ORM\Column(name="reduction_currency", type="integer", nullable=false, options={"default":0})
      */
     private $reductionCurrency = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="reduction_product", type="integer", nullable=false)
+     * @ORM\Column(name="reduction_product", type="integer", nullable=false, options={"default":0})
      */
     private $reductionProduct = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="reduction_exclude_special", type="boolean", nullable=false)
+     * @ORM\Column(name="reduction_exclude_special", type="boolean", nullable=false, options={"default":0})
      */
     private $reductionExcludeSpecial = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="gift_product", type="integer", nullable=false)
+     * @ORM\Column(name="gift_product", type="integer", nullable=false, options={"default":0})
      */
     private $giftProduct = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="gift_product_attribute", type="integer", nullable=false)
+     * @ORM\Column(name="gift_product_attribute", type="integer", nullable=false, options={"default":0})
      */
     private $giftProductAttribute = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="highlight", type="boolean", nullable=false)
+     * @ORM\Column(name="highlight", type="boolean", nullable=false, options={"default":0})
      */
     private $highlight = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 

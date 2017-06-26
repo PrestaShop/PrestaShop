@@ -40,7 +40,7 @@ class ModuleShop
     /**
      * @var boolean
      *
-     * @ORM\Column(name="enable_device", type="boolean", nullable=false)
+     * @ORM\Column(name="enable_device", type="boolean", nullable=false, options={"default":7})
      */
     private $enableDevice = '7';
 

@@ -47,21 +47,21 @@ class CustomizedData
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_module", type="integer", nullable=false)
+     * @ORM\Column(name="id_module", type="integer", nullable=false, options={"default":0})
      */
     private $idModule = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $price = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="weight", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="weight", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $weight = '0.000000';
 
@@ -86,7 +86,7 @@ class CustomizedData
     /**
      * @var integer
      *
-     * @ORM\Column(name="index", type="integer")
+     * @ORM\Column(name="index", type="smallint")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */

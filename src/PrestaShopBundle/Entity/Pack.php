@@ -40,7 +40,7 @@ class Pack
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":1})
      */
     private $quantity = '1';
 

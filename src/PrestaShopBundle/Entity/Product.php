@@ -61,7 +61,7 @@ class Product
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_shop_default", type="integer", nullable=false)
+     * @ORM\Column(name="id_shop_default", type="integer", nullable=false, options={"default":1})
      */
     private $idShopDefault = '1';
 
@@ -75,14 +75,14 @@ class Product
     /**
      * @var boolean
      *
-     * @ORM\Column(name="on_sale", type="boolean", nullable=false)
+     * @ORM\Column(name="on_sale", type="boolean", nullable=false, options={"default":0})
      */
     private $onSale = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="online_only", type="boolean", nullable=false)
+     * @ORM\Column(name="online_only", type="boolean", nullable=false, options={"default":0})
      */
     private $onlineOnly = '0';
 
@@ -110,35 +110,35 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="ecotax", type="decimal", precision=17, scale=6, nullable=false)
+     * @ORM\Column(name="ecotax", type="decimal", precision=17, scale=6, nullable=false, options={"default":0.000000})
      */
     private $ecotax = '0.000000';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", nullable=false, options={"default":0})
      */
     private $quantity = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="minimal_quantity", type="integer", nullable=false)
+     * @ORM\Column(name="minimal_quantity", type="integer", nullable=false, options={"default":1})
      */
     private $minimalQuantity = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $price = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="wholesale_price", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="wholesale_price", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $wholesalePrice = '0.000000';
 
@@ -152,14 +152,14 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="unit_price_ratio", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="unit_price_ratio", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $unitPriceRatio = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="additional_shipping_cost", type="decimal", precision=20, scale=2, nullable=false)
+     * @ORM\Column(name="additional_shipping_cost", type="decimal", precision=20, scale=2, nullable=false, options={"default":0.00})
      */
     private $additionalShippingCost = '0.00';
 
@@ -187,91 +187,91 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="width", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="width", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $width = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="height", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="height", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $height = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="depth", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="depth", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $depth = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="weight", type="decimal", precision=20, scale=6, nullable=false)
+     * @ORM\Column(name="weight", type="decimal", precision=20, scale=6, nullable=false, options={"default":0.000000})
      */
     private $weight = '0.000000';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="out_of_stock", type="integer", nullable=false)
+     * @ORM\Column(name="out_of_stock", type="integer", nullable=false, options={"default":2})
      */
     private $outOfStock = '2';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="quantity_discount", type="boolean", nullable=true)
+     * @ORM\Column(name="quantity_discount", type="boolean", nullable=true, options={"default":0})
      */
     private $quantityDiscount = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="customizable", type="boolean", nullable=false)
+     * @ORM\Column(name="customizable", type="smallint", nullable=false, options={"default":0})
      */
     private $customizable = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="uploadable_files", type="boolean", nullable=false)
+     * @ORM\Column(name="uploadable_files", type="smallint", nullable=false, options={"default":0})
      */
     private $uploadableFiles = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="text_fields", type="boolean", nullable=false)
+     * @ORM\Column(name="text_fields", type="smallint", nullable=false, options={"default":0})
      */
     private $textFields = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=false)
+     * @ORM\Column(name="active", type="boolean", nullable=false, options={"default":0})
      */
     private $active = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="redirect_type", type="string", nullable=false)
+     * @ORM\Column(name="redirect_type", type="string", nullable=false, columnDefinition="ENUM('','404','301-product','302-product','301-category','302-category')")
      */
     private $redirectType = '';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_type_redirected", type="integer", nullable=false)
+     * @ORM\Column(name="id_type_redirected", type="integer", nullable=false, options={"default":0})
      */
     private $idTypeRedirected = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="available_for_order", type="boolean", nullable=false)
+     * @ORM\Column(name="available_for_order", type="boolean", nullable=false, options={"default":1})
      */
     private $availableForOrder = '1';
 
@@ -285,56 +285,56 @@ class Product
     /**
      * @var boolean
      *
-     * @ORM\Column(name="show_condition", type="boolean", nullable=false)
+     * @ORM\Column(name="show_condition", type="boolean", nullable=false, options={"default":0})
      */
     private $showCondition = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="condition", type="string", nullable=false)
+     * @ORM\Column(name="condition", type="string", nullable=false, columnDefinition="ENUM('new','used','refurbished')", options={"default"="new"})
      */
     private $condition = 'new';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="show_price", type="boolean", nullable=false)
+     * @ORM\Column(name="show_price", type="boolean", nullable=false, options={"default":1})
      */
     private $showPrice = '1';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="indexed", type="boolean", nullable=false)
+     * @ORM\Column(name="indexed", type="boolean", nullable=false, options={"default":0})
      */
     private $indexed = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="visibility", type="string", nullable=false)
+     * @ORM\Column(name="visibility", type="string", nullable=false, columnDefinition="ENUM('both','catalog','search','none')", options={"default"="both"})
      */
     private $visibility = 'both';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="cache_is_pack", type="boolean", nullable=false)
+     * @ORM\Column(name="cache_is_pack", type="boolean", nullable=false, options={"default":0})
      */
     private $cacheIsPack = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="cache_has_attachments", type="boolean", nullable=false)
+     * @ORM\Column(name="cache_has_attachments", type="boolean", nullable=false, options={"default":0})
      */
     private $cacheHasAttachments = '0';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_virtual", type="boolean", nullable=false)
+     * @ORM\Column(name="is_virtual", type="boolean", nullable=false, options={"default":0})
      */
     private $isVirtual = '0';
 
@@ -362,21 +362,21 @@ class Product
     /**
      * @var boolean
      *
-     * @ORM\Column(name="advanced_stock_management", type="boolean", nullable=false)
+     * @ORM\Column(name="advanced_stock_management", type="boolean", nullable=false, options={"default":0})
      */
     private $advancedStockManagement = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="pack_stock_type", type="integer", nullable=false)
+     * @ORM\Column(name="pack_stock_type", type="integer", nullable=false, options={"default":3})
      */
     private $packStockType = '3';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="state", type="integer", nullable=false)
+     * @ORM\Column(name="state", type="integer", nullable=false, options={"default":1})
      */
     private $state = '1';
 
@@ -1042,7 +1042,7 @@ class Product
     /**
      * Set customizable
      *
-     * @param boolean $customizable
+     * @param integer $customizable
      *
      * @return Product
      */
@@ -1056,7 +1056,7 @@ class Product
     /**
      * Get customizable
      *
-     * @return boolean
+     * @return integer
      */
     public function getCustomizable()
     {
@@ -1066,7 +1066,7 @@ class Product
     /**
      * Set uploadableFiles
      *
-     * @param boolean $uploadableFiles
+     * @param integer $uploadableFiles
      *
      * @return Product
      */
@@ -1080,7 +1080,7 @@ class Product
     /**
      * Get uploadableFiles
      *
-     * @return boolean
+     * @return integer
      */
     public function getUploadableFiles()
     {
@@ -1090,7 +1090,7 @@ class Product
     /**
      * Set textFields
      *
-     * @param boolean $textFields
+     * @param integer $textFields
      *
      * @return Product
      */
@@ -1104,7 +1104,7 @@ class Product
     /**
      * Get textFields
      *
-     * @return boolean
+     * @return integer
      */
     public function getTextFields()
     {
