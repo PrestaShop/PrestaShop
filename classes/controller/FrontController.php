@@ -1313,6 +1313,8 @@ class FrontControllerCore extends Controller
         }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
+        
+        $content_only = (int) Tools::getValue('content_only');
 
         if ($overridden_layout = Hook::exec(
             'overrideLayoutTemplate',
@@ -1321,12 +1323,13 @@ class FrontControllerCore extends Controller
                 'entity' => $entity,
                 'locale' => $this->context->language->locale,
                 'controller' => $this,
+                'content_only' => (int) $content_only,
             )
         )) {
             return $overridden_layout;
         }
 
-        if ((int) Tools::getValue('content_only')) {
+        if ((int) $content_only) {
             $layout = 'layouts/layout-content-only.tpl';
         }
 
