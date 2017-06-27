@@ -8,9 +8,9 @@
         <note>Context:
 File: modules/contactform/contactform.php:48</note>
       </trans-unit>
-      <trans-unit id="1f39abbc795766424e52bdb624c6b615">
-        <source>Description for contact form module</source>
-        <target>Description for contact form module</target>
+      <trans-unit id="3d720dee87296628c1479b39b2cb6f5a">
+        <source>Adds a contact form to the "Contact us" page.</source>
+        <target>Adds a contact form to the "Contact us" page.</target>
         <note>Context:
 File: modules/contactform/contactform.php:49</note>
       </trans-unit>
