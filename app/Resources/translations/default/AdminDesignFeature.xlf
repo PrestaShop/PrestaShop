@@ -1,5 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/lang/ThemeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b2e65dd885f23af9aa18dc3485fe847b">
+        <source>Full Width</source>
+        <target>Full Width</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:40</note>
+      </trans-unit>
+      <trans-unit id="96e47382a440cf09589d723985bc0799">
+        <source>Three Columns</source>
+        <target>Three Columns</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:41</note>
+      </trans-unit>
+      <trans-unit id="31731125ea40ba9484b478dbc11a75e8">
+        <source>Two Columns, small left column</source>
+        <target>Two Columns, small left column</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:42</note>
+      </trans-unit>
+      <trans-unit id="5dd505ab4211d7fd56bf7d04cfda181c">
+        <source>Two Columns, small right column</source>
+        <target>Two Columns, small right column</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:43</note>
+      </trans-unit>
+      <trans-unit id="05559f48f0ea41ebb03f6d08b95e1e25">
+        <source>No side columns, ideal for distraction-free pages such as product pages.</source>
+        <target>No side columns, ideal for distraction-free pages such as product pages.</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:47</note>
+      </trans-unit>
+      <trans-unit id="387bf9bbb8c3c3fd021aa85970554839">
+        <source>One large central column and 2 side columns.</source>
+        <target>One large central column and 2 side columns.</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:49</note>
+      </trans-unit>
+      <trans-unit id="33bebecc4ab04bb671826d3f2ea23ee3">
+        <source>Two columns with a small left column</source>
+        <target>Two columns with a small left column</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:51</note>
+      </trans-unit>
+      <trans-unit id="4f01cd55ec25135ea6210a1f2082f7f3">
+        <source>Two columns with a small right column</source>
+        <target>Two columns with a small right column</target>
+        <note>Context:
+File: classes/lang/ThemeLang.php:53</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCmsCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="789ca3cc9e29e7ef767619e13c6b2f9e">
