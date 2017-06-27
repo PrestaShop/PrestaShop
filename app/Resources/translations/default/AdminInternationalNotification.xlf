@@ -72,27 +72,27 @@ File: classes/Language.php:731</note>
         <source>Sorry this language is not available</source>
         <target>Sorry this language is not available</target>
         <note>Context:
-File: classes/Language.php:974</note>
+File: classes/Language.php:993</note>
       </trans-unit>
       <trans-unit id="edeb9e20655b946e4bee4ac44a6c0a7f">
         <source>Server does not have permissions for writing.</source>
         <target>Server does not have permissions for writing.</target>
         <note>Context:
-File: classes/Language.php:1003
+File: classes/Language.php:1022
  Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="19429992fd747ce8d7606c7ddb7fa272">
         <source>Language pack unavailable.</source>
         <target>Language pack unavailable.</target>
         <note>Context:
-File: classes/Language.php:1030
+File: classes/Language.php:1049
  Comment: @todo Throw exception</note>
       </trans-unit>
       <trans-unit id="2e3dec4700000b6db379437f7d8d9fac">
         <source>An error occurred while creating the language: %s</source>
         <target>An error occurred while creating the language: %s</target>
         <note>Context:
-File: classes/Language.php:1076</note>
+File: classes/Language.php:1095</note>
       </trans-unit>
     </body>
   </file>

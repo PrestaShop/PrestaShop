@@ -86,79 +86,79 @@ File: modules/autoupgrade/AdminSelfUpgrade.php:4088</note>
         <source>Database upgrade completed.</source>
         <target>Database upgrade completed.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:854</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:862</note>
       </trans-unit>
       <trans-unit id="c281522a27a8e9ce71483d97f93f9681">
         <source>Disabling modules now...</source>
         <target>Disabling modules now...</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:855</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:863</note>
       </trans-unit>
       <trans-unit id="1946a60a931f7c67013eae819b42751b">
         <source>Modules successfully disabled.</source>
         <target>Modules successfully disabled.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:871</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:879</note>
       </trans-unit>
       <trans-unit id="4598df2738b72a48a5d92debdf6b2648">
         <source>Enabling modules now...</source>
         <target>Enabling modules now...</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:872</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:880</note>
       </trans-unit>
       <trans-unit id="41cf6d7c774a6f0e0e131c556272bd23">
         <source>Modules successfully enabled.</source>
         <target>Modules successfully enabled.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:884</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:892</note>
       </trans-unit>
       <trans-unit id="adc432de81c16df1d52bcdb0ae27888b">
         <source>Upgrading images now...</source>
         <target>Upgrading images now...</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:885</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:893</note>
       </trans-unit>
       <trans-unit id="5050f74dbf781812e2de8d9c89bcefb9">
         <source>Images successfully upgraded.</source>
         <target>Images successfully upgraded.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:903</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:911</note>
       </trans-unit>
       <trans-unit id="66beff6fe8199b7e380b9b86a1cfd62c">
         <source>Upgrading languages now...</source>
         <target>Upgrading languages now...</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:904</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:912</note>
       </trans-unit>
       <trans-unit id="95427ea0db7f28827968539ce09bc8ad">
         <source>Languages successfully upgraded.</source>
         <target>Languages successfully upgraded.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:917</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:925</note>
       </trans-unit>
       <trans-unit id="92cbcfa88b4123c79ff4ecc503d1f4d6">
         <source>Upgrading theme now...</source>
         <target>Upgrading theme now...</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:918</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:926</note>
       </trans-unit>
       <trans-unit id="6fef8a125435e82e3b1f4d6c0de64e18">
         <source>Theme successfully upgraded.</source>
         <target>Theme successfully upgraded.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:932</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:940</note>
       </trans-unit>
       <trans-unit id="9c7e0ba2c6ecb11af7f39843bbc18ff8">
         <source>Warning detected during upgrade.</source>
         <target>Warning detected during upgrade.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:979</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:987</note>
       </trans-unit>
       <trans-unit id="bd077be8e2cdf937e5b77300a0131f9a">
         <source>Error detected during upgrade.</source>
         <target>Error detected during upgrade.</target>
         <note>Context:
-File: src/PrestaShopBundle/Install/Upgrade.php:1008</note>
+File: src/PrestaShopBundle/Install/Upgrade.php:1016</note>
       </trans-unit>
     </body>
   </file>
