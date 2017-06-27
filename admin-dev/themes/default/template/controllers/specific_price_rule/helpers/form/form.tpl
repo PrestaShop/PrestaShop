@@ -191,7 +191,7 @@ function new_condition_group()
 	var html = '';
 
 	if (last_condition_group > 0)
-		html += '<div class="row condition_separator text-center">{l s='or'|upper d='Admin.Global'}</div><div class="clearfix">&nbsp;</div>';
+		html += '<div class="row condition_separator text-center initialism">{l s='or' d='Admin.Global'}</div><div class="clearfix">&nbsp;</div>';
 
 	last_condition_group++;
 	html += '<div id="condition_group_'+last_condition_group+'" class="panel condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group' d='Admin.Catalog.Feature'} '+last_condition_group+'</h3>';
@@ -204,7 +204,7 @@ function new_condition_group()
 function appendConditionToGroup(html)
 {
 	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='and'|upper js=1 d='Admin.Global'}</b></td></tr>');
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition initialism" colspan="3"><b>{l s='and' js=1 d='Admin.Global'}</b></td></tr>');
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 
