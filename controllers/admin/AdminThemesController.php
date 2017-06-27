@@ -707,12 +707,41 @@ class AdminThemesControllerCore extends AdminController
 
         $this->context->smarty->assign([
             'pages' => Meta::getAllMeta($this->context->language->id),
-            'default_layout' => $theme->getDefaultLayout(),
+            'default_layout' => $this->translateAttributes($theme->getDefaultLayout()),
             'page_layouts' => $theme->getPageLayouts(),
-            'available_layouts' => $theme->getAvailableLayouts(),
+            'available_layouts' => $this->translateAttributes($theme->getAvailableLayouts()),
         ]);
 
         $this->setTemplate('controllers/themes/configurelayouts.tpl');
+    }
+
+    /**
+     * Translate attributes (from yml)
+     *
+     * @param $attributes
+     * @return mixed
+     */
+    private function translateAttributes($attributes)
+    {
+        if (!empty($attributes)) {
+            foreach ($attributes as $key => &$layout) {
+                // layout can be an array of array, or just an array :/ we just translate name & description, see theme.dist.yml
+                if (is_array($layout)) {
+                    if (array_key_exists('name', $layout)) {
+                        $layout['name'] = $this->translator->trans($layout['name'], array(), 'Admin.Design.Feature');
+                    }
+                    if (array_key_exists('description', $layout)) {
+                        $layout['description'] = $this->translator->trans($layout['description'], array(), 'Admin.Design.Feature');
+                    }
+                } else {
+                    if (in_array($key, array('name', 'description'))) {
+                        $attributes[$key] = $this->translator->trans($layout, array(), 'Admin.Design.Feature');
+                    }
+                }
+            }
+        }
+
+        return $attributes;
     }
 
     public function processSubmitConfigureLayouts()
