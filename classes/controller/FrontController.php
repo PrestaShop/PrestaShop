@@ -1323,13 +1323,13 @@ class FrontControllerCore extends Controller
                 'entity' => $entity,
                 'locale' => $this->context->language->locale,
                 'controller' => $this,
-                'content_only' => (int) $content_only,
+                'content_only' => $content_only,
             )
         )) {
             return $overridden_layout;
         }
 
-        if ((int) $content_only) {
+        if ($content_only) {
             $layout = 'layouts/layout-content-only.tpl';
         }
 
