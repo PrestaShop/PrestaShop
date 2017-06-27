@@ -28,7 +28,7 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 
 /**
  * StockMvt
@@ -112,30 +112,30 @@ class StockMvt
     private $dateAdd;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="sign", type="smallint", nullable=false)
+     * @ORM\Column(name="sign", type="smallint", nullable=false, options={"default":0})
      */
     private $sign = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="price_te", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $priceTe = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="last_wa", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="last_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $lastWa = '0.000000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="current_wa", type="decimal", precision=20, scale=6, nullable=true)
+     * @ORM\Column(name="current_wa", type="decimal", precision=20, scale=6, nullable=true, options={"default":0.000000})
      */
     private $currentWa = '0.000000';
 
@@ -149,7 +149,7 @@ class StockMvt
 
     public function __construct()
     {
-        $configuration = new Configuration();
+        $configuration = new ConfigurationAdapter();
         $this->setIdStockMvtReason($this->getSign() >= 1 ? $configuration->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configuration->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION'));
     }
 
@@ -382,7 +382,7 @@ class StockMvt
     /**
      * Set sign
      *
-     * @param boolean $sign
+     * @param integer $sign
      *
      * @return StockMvt
      */
@@ -396,7 +396,7 @@ class StockMvt
     /**
      * Get sign
      *
-     * @return boolean
+     * @return integer
      */
     public function getSign()
     {
