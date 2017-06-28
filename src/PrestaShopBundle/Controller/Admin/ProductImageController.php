@@ -110,6 +110,7 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Manage form image
      *
+     * @Template
      * @param $idImage
      * @param Request $request
      * @return array|JsonResponse|Response
