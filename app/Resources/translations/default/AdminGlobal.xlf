@@ -604,15 +604,15 @@ File: admin-dev/themes/default/template/controllers/specific_price_rule/helpers/
         <note>Context:
 File: admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl:285</note>
       </trans-unit>
-      <trans-unit id="7b409ce944260d3ebf66af2086855188">
-        <source>mb_strtoupper('or', 'UTF-8')</source>
-        <target>mb_strtoupper('or', 'UTF-8')</target>
+      <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
+        <source>or</source>
+        <target>or</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl:194</note>
       </trans-unit>
-      <trans-unit id="4ef1212791d5ef31264e3258f986519c">
-        <source>mb_strtoupper('and', 'UTF-8')</source>
-        <target>mb_strtoupper('and', 'UTF-8')</target>
+      <trans-unit id="be5d5d37542d75f93a87094459f76678">
+        <source>and</source>
+        <target>and</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/specific_price_rule/helpers/form/form.tpl:207</note>
       </trans-unit>
