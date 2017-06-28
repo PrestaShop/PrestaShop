@@ -202,7 +202,7 @@ class ModuleSelfConfigurator
             }
 
             if (empty($config)) {
-                $errors = 'Parsed config file is empty';
+                $errors[] = 'Parsed config file is empty';
             }
         }
 
