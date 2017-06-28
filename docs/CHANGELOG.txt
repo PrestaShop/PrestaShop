@@ -24,6 +24,36 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.15 - (2017-06-28)
+####################################
+
+	Fixed bugs:
+    BO: Do not clutter webcaches with duplicated assets' objects
+    BO: Fix the conversion_rate in the order_payment table
+    BO: Fix the categories tree
+    BO: Display product reference in Stock management list (ASM)
+    BO: Fix available quantity for ASM items in Order_edit & FO
+    BO: Fix ASM real quantity issues when changing SupplyOrder status
+    BO: Fix subcategories pagination
+    BO: Prevent adding pack in itself
+    BO: Add the condition of SSL_ENABLED to Google Maps
+    BO: Eliminate currencies doubling in ASM currency list
+
+    FO: Apache rules for .woff2 font files
+    FO: Fix the specific price of the default combination
+    FO: Fix line endings in theme's JS files
+    FO: Fix Category Block in the Left Sidebar on Sitemap Page
+
+    CO: getBaseLink() should be public
+    CO: Fix AdminSlipController filter
+    CO: Fix wrong keys for cache
+
+    LO: Update colombian tax rate
+
+    WS: Fix preg_replace /e modifier for PHP 7.1
+
+
+####################################
 #   v1.6.1.14 - (2017-06-05)
 ####################################
 

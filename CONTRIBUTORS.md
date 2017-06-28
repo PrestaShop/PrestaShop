@@ -126,8 +126,8 @@ GitHub contributors:
 - Emilien Puget
 - emilien-puget
 - emily-d
-- Eolia
 - Emmanuel Marichal
+- Eolia
 - Eric Le Lay
 - Eric Rouvier
 - erickturcios
