@@ -99,6 +99,8 @@ class OrderHistoryCore extends ObjectModel
         // executes hook
         if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')))) {
             Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
+            //initialize invoice date
+            $order->invoice_date =date('Y-m-d H:i:s');
         }
 
         // executes hook
