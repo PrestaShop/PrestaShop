@@ -296,8 +296,8 @@ class TranslationController extends ApiController
     private function getNormalTree($lang, $type, $selected, $search = null)
     {
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
-
         $catalogue = $this->translationService->getTranslationsCatalogue($lang, $type, $selected, $search);
+
         return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
 
@@ -315,8 +315,8 @@ class TranslationController extends ApiController
         $moduleProvider->setModuleName($selected);
 
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
-
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
+
         return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
     }
 
