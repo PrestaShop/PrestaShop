@@ -1439,7 +1439,7 @@ class FrontControllerCore extends Controller
         if ($this->useMobileTheme()) {
             $this->setMobileTemplate($default_template);
         } else {
-            $template = $this->getOverrideTemplate();
+            $template = $this->getOverrideTemplate($default_template);
             if ($template) {
                 parent::setTemplate($template);
             } else {
@@ -1454,11 +1454,15 @@ class FrontControllerCore extends Controller
      * specific controller.
      *
     * @since 1.5.0.13
+    * @param string $defaul_template
     * @return string|bool
     */
-    public function getOverrideTemplate()
+    public function getOverrideTemplate($default_template)
     {
-        return Hook::exec('DisplayOverrideTemplate', array('controller' => $this));
+        return Hook::exec('DisplayOverrideTemplate', array(
+            'controller' => $this,
+            'default_template' => $default_template,
+        ));
     }
 
     /**
