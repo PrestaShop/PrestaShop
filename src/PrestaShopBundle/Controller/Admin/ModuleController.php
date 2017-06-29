@@ -704,7 +704,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         // toolbarButtons
         $toolbarButtons = array();
-        
+
         if (!in_array(
             $this->authorizationLevel($this::controller_name),
             array(
