@@ -303,12 +303,22 @@ class StockMovementRepository extends StockManagementRepository
 
     /**
      * Get type of movements from employees
+     *
+     * @param bool $grouped
      * @return mixed
      */
-    public function getTypes()
+    public function getTypes($grouped = false)
     {
+        if ($grouped) {
+            $select = 'GROUP_CONCAT(DISTINCT sm.id_stock_mvt_reason) as id_stock_mvt_reason, smrl.name AS name';
+            $groupBy = 'GROUP BY name';
+        } else {
+            $select = 'sm.id_stock_mvt_reason, smrl.name AS name';
+            $groupBy = 'GROUP BY id_stock_mvt_reason';
+        }
+
         $query = str_replace('{table_prefix}', $this->tablePrefix,
-            'SELECT sm.id_stock_mvt_reason, smrl.name AS name
+            'SELECT '.$select.'
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
             INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
@@ -316,7 +326,7 @@ class StockMovementRepository extends StockManagementRepository
               AND smrl.id_lang = :language_id)
             WHERE
             sa.id_shop = :shop_id
-            GROUP BY id_stock_mvt_reason
+            '.$groupBy.'
             ORDER BY name ASC'
         );
 
@@ -326,7 +336,12 @@ class StockMovementRepository extends StockManagementRepository
         $statement->execute();
 
         $rows = $statement->fetchAll();
-        $types = $this->castNumericToInt($rows);
+
+        if ($grouped) {
+            $types = $this->castIdsToArray($rows);
+        } else {
+            $types = $this->castNumericToInt($rows);
+        }
 
         return $types;
     }

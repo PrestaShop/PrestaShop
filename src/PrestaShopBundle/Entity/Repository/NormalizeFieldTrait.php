@@ -48,6 +48,25 @@ trait NormalizeFieldTrait
     }
 
     /**
+     * @param $rows
+     * @return mixed
+     */
+    protected function castIdsToArray($rows)
+    {
+        $castIdentifiersToArray = function (&$columnValue, $columnName) {
+            if ($this->shouldCastToInt($columnName)) {
+                $columnValue = explode(',', $columnValue);
+            }
+        };
+
+        array_walk($rows, function (&$rowColumns) use ($castIdentifiersToArray) {
+            array_walk($rowColumns, $castIdentifiersToArray);
+        });
+
+        return $rows;
+    }
+
+    /**
      * @param $columnName
      * @return bool
      */

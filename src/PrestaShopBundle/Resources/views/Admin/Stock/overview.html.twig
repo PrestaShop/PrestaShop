@@ -55,7 +55,7 @@
                 employeesUrl: '{{ url('api_stock_list_movements_employees') }}',
                 suppliersUrl: '{{ url('api_stock_list_suppliers') }}',
                 categoriesUrl: '{{ url('api_stock_list_categories') }}',
-                movementsTypesUrl: '{{ url('api_stock_list_movements_types') }}',
+                movementsTypesUrl: '{{ url('api_stock_list_movements_types', {'grouped': true}) }}',
                 translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'stock'}) }}'
             }
         </script>
