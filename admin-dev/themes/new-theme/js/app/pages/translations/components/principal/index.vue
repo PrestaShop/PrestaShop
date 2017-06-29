@@ -60,9 +60,12 @@
             <TranslationInput
               v-for="(translation, key) in translationsCatalog"
               :key="key"
+              :id="key"
               :translated="translation"
               :label="translation.default"
-              :extraInfo="getDomain(translation.tree_domain)">
+              :extraInfo="getDomain(translation.tree_domain)"
+              @isEdited="edited"
+              >
             </TranslationInput>
             <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
               {{ trans('button_save') }}
@@ -176,11 +179,10 @@
         }
       },
       getModifiedTranslations() {
-        const modifiedTranslations = [];
-
+        this.modifiedTranslations = [];
         this.translations.forEach((translation) => {
           if (translation.edited) {
-            modifiedTranslations.push({
+            this.modifiedTranslations.push({
               default: translation.default,
               edited: translation.edited,
               domain: translation.tree_domain.join(''),
@@ -190,15 +192,15 @@
           }
         });
 
-        return modifiedTranslations;
+        return this.modifiedTranslations;
       },
     },
-    data() {
-      return {
-        translations: [],
-        originalTranslations: [],
-      };
-    },
+    data: () => ({
+      translations: [],
+      originalTranslations: [],
+      modifiedTranslations: [],
+      edited: false,
+    }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {
         const translations = [];

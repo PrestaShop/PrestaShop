@@ -40,6 +40,9 @@
   export default {
     name: 'TranslationInput',
     props: {
+      id: {
+        type: Number,
+      },
       extraInfo: {
         type: String,
         required: false,
@@ -62,6 +65,7 @@
           modifiedTranslated.database = modifiedValue;
           modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
+          this.edited = modifiedValue !== '';
         },
       },
       isMissing() {
@@ -74,6 +78,17 @@
         EventBus.$emit('resetTranslation', this.translated);
       },
     },
+    watch: {
+      edited(val) {
+        EventBus.$emit('isEdited', {
+          value: val,
+          id: this.id,
+        });
+      },
+    },
+    data: () => ({
+      edited: false,
+    }),
     components: {
       PSButton,
     },
