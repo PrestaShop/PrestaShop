@@ -130,6 +130,9 @@ class ModuleTabRegister
         }, $tabs);
 
         foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerFileName) {
+            if (strpos($adminControllerFileName, 'Controller.php') === false) {
+                continue;
+            }
             $adminControllerName = str_replace('Controller.php', '', $adminControllerFileName);
             if (in_array($adminControllerName, $tabsNames)) {
                 continue;
