@@ -192,7 +192,7 @@ class ModuleTabRegister
         $moduleFolder = $this->finder->files()
                     ->in($modulePath)
                     ->depth('== 0')
-                    ->name('*.php')
+                    ->name('*Controller.php')
                     ->exclude(['index.php'])
                     ->contains('/Controller\s+extends\s+/i');
 
