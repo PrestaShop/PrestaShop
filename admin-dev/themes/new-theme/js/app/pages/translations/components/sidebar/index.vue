@@ -81,7 +81,9 @@
       },
     },
     mounted() {
-      this.$store.dispatch('getDomainsTree');
+      this.$store.dispatch('getDomainsTree', {
+        store: this.$store,
+      });
       EventBus.$on('lastTreeItemClick', (el) => {
         this.$store.dispatch('updateCurrentDomain', el.item);
         this.$store.dispatch('getCatalog', { url: el.item.dataValue });
