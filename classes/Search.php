@@ -489,7 +489,7 @@ class SearchCore
                             $sql .= ', p.reference';
                         break;
                         case 'supplier_reference':
-                            $sql .= ', p.supplier_reference';
+                            $sql .= ', ps_product_supplier';
                         break;
                         case 'ean13':
                             $sql .= ', p.ean13';
