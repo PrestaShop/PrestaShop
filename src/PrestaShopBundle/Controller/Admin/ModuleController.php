@@ -704,12 +704,21 @@ class ModuleController extends FrameworkBundleAdminController
 
         // toolbarButtons
         $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
-            'icon' => 'cloud_upload',
-            'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
-        );
+        
+        if (!in_array(
+            $this->authorizationLevel($this::controller_name),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+            )
+        )) {
+            $toolbarButtons['add_module'] = array(
+                'href' => '#',
+                'desc' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
+                'icon' => 'cloud_upload',
+                'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
+            );
+        }
 
         return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
     }
