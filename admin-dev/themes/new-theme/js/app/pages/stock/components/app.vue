@@ -65,7 +65,7 @@
         let sorting = desc;
         const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
         if (typeof desc !== 'string') {
-          sorting = this.$route.name === 'overview' ? ' desc' : '';
+          sorting = ' desc';
         }
         this.$store.dispatch('isLoading');
 
