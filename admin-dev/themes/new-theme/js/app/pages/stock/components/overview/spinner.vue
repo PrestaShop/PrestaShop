@@ -182,7 +182,7 @@
   .edit-qty {
     text-indent: 5px;
     height: 33px;
-    width: 70px;
+    width: 100px;
     border: 1px solid $gray-light;
     margin: 3px 0;
   }
