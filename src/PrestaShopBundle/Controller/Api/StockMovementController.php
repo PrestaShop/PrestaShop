@@ -78,7 +78,7 @@ class StockMovementController extends ApiController
      */
     public function listMovementsTypesAction(Request $request)
     {
-        $grouped = 'true' === $request->get('grouped');
+        $grouped = (bool)$request->get('grouped');
 
         return $this->jsonResponse($this->stockMovementRepository->getTypes($grouped), $request);
     }
