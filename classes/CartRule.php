@@ -479,11 +479,11 @@ class CartRuleCore extends ObjectModel
     /**
      * Check if the CartRule exists
      *
-     * @param string $code CartRule code
+     * @param string $name CartRule name
      *
      * @return bool Indicates whether the CartRule can be found
      */
-    public static function cartRuleExists($code)
+    public static function cartRuleExists($name)
     {
         if (!CartRule::isFeatureActive()) {
             return false;
@@ -492,7 +492,7 @@ class CartRuleCore extends ObjectModel
         return (bool) Db::getInstance()->getValue('
 		SELECT `id_cart_rule`
 		FROM `' . _DB_PREFIX_ . 'cart_rule`
-		WHERE `code` = \'' . pSQL($code) . '\'');
+		WHERE `code` = \'' . pSQL($name) . '\'');
     }
 
     /**
