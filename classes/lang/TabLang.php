@@ -130,7 +130,7 @@ class TabLangCore extends DataLangCore
                 md5('Stock Coverage') => $this->translator->trans('Stock Coverage', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Stock Management') => $this->translator->trans('Stock Management', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Stock Movement') => $this->translator->trans('Stock Movement', array(), 'Admin.Navigation.Menu', $this->locale),
-                md5('Stock') => $this->translator->trans('Stock', array(), 'Admin.Navigation.Menu', $this->locale),
+                md5('Stocks') => $this->translator->trans('Stocks', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Stores') => $this->translator->trans('Stores', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Suppliers') => $this->translator->trans('Suppliers', array(), 'Admin.Navigation.Menu', $this->locale),
                 md5('Supply orders') => $this->translator->trans('Supply orders', array(), 'Admin.Navigation.Menu', $this->locale),

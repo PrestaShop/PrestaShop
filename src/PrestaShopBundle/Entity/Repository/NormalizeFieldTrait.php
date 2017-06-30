@@ -40,9 +40,24 @@ trait NormalizeFieldTrait
             }
         };
 
-        array_walk($rows, function (&$rowColumns) use ($castIdentifiersToIntegers) {
-            array_walk($rowColumns, $castIdentifiersToIntegers);
-        });
+        array_walk_recursive($rows, $castIdentifiersToIntegers);
+
+        return $rows;
+    }
+
+    /**
+     * @param $rows
+     * @return mixed
+     */
+    protected function castIdsToArray($rows)
+    {
+        $castIdentifiersToArray = function (&$columnValue, $columnName) {
+            if ($this->shouldCastToInt($columnName)) {
+                $columnValue = array_map('intval', explode(',', $columnValue));
+            }
+        };
+
+        array_walk_recursive($rows, $castIdentifiersToArray);
 
         return $rows;
     }

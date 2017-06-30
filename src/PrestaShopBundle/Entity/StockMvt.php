@@ -112,9 +112,9 @@ class StockMvt
     private $dateAdd;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="sign", type="boolean", nullable=false, options={"default":1})
+     * @ORM\Column(name="sign", type="smallint", nullable=false, options={"default":1})
      */
     private $sign = '1';
 
@@ -382,7 +382,7 @@ class StockMvt
     /**
      * Set sign
      *
-     * @param boolean $sign
+     * @param integer $sign
      *
      * @return StockMvt
      */
@@ -396,7 +396,7 @@ class StockMvt
     /**
      * Get sign
      *
-     * @return boolean
+     * @return integer
      */
     public function getSign()
     {

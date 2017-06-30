@@ -1367,9 +1367,9 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:48</note>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:49</note>
       </trans-unit>
-      <trans-unit id="dc7f9d531239c6acc08b99236a4204cd">
-        <source>Stock management</source>
-        <target>Stock management</target>
+      <trans-unit id="d164dc7a9ce1ca081fcee017f54b21ec">
+        <source>Stocks management</source>
+        <target>Stocks management</target>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:54</note>
       </trans-unit>
@@ -1379,9 +1379,9 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:54</note>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:56</note>
       </trans-unit>
-      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
-        <source>Stock</source>
-        <target>Stock</target>
+      <trans-unit id="1dc2af14d15238ba67e03c99a6f415f6">
+        <source>Stocks</source>
+        <target>Stocks</target>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:55</note>
       </trans-unit>
