@@ -52,6 +52,7 @@ class PDFGeneratorCore extends TCPDF
         'pl' => 'dejavusans',
         'ar' => 'dejavusans',
         'fa' => 'dejavusans',
+        'fr' => 'dejavusans',
         'ur' => 'dejavusans',
         'az' => 'dejavusans',
         'ca' => 'dejavusans',
@@ -147,7 +148,7 @@ class PDFGeneratorCore extends TCPDF
         if (array_key_exists($iso_lang, $this->font_by_lang)) {
             $this->font = $this->font_by_lang[$iso_lang];
         }else {
-            $this->font = self::DEFAULT_FONT;
+            $this->font = 'dejavusans';
         }
 
         $this->setHeaderFont(array($this->font, '', PDF_FONT_SIZE_MAIN, '', false));
