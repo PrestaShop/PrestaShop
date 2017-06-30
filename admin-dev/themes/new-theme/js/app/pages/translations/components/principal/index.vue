@@ -113,7 +113,7 @@
         return this.$store.state.currentDomain;
       },
       currentDomainTotalTranslations() {
-        return (this.$store.state.currentDomainTotalTranslations <= 1) ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.totalTranslations)}` : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
+        return (this.$store.state.currentDomainTotalTranslations <= 1) ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}` : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
       },
       currentDomainTotalMissingTranslations() {
         return this.$store.state.currentDomainTotalMissingTranslations;

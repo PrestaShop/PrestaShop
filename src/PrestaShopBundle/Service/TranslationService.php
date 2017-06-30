@@ -249,7 +249,7 @@ class TranslationService {
         $entityManager = $doctrine->getManager();
         $logger = $this->container->get('logger');
 
-        if (empty($theme)) {
+        if (empty($theme) || 'Modules' === substr($domain, 0, 7)) {
             $theme = null;
         }
 

@@ -62,8 +62,8 @@ export const getDomainsTree = ({ commit }, payload) => {
   commit(types.SIDEBAR_LOADING, true);
   commit(types.PRINCIPAL_LOADING, true);
 
-  if (payload && payload.search) {
-    params.search = payload.search;
+  if (payload.store.getters.searchTags.length) {
+    params.search = payload.store.getters.searchTags;
   }
 
   Vue.http.get(url, {
@@ -84,7 +84,9 @@ export const saveTranslations = ({ commit }, payload) => {
   Vue.http.post(url, {
     translations,
   }).then(() => {
-    payload.store.dispatch('getDomainsTree');
+    payload.store.dispatch('getDomainsTree', {
+      store: payload.store,
+    });
     return showGrowl('notice', 'Translations successfully updated');
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
