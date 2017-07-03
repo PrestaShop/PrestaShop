@@ -424,7 +424,7 @@ class ProductController extends FrameworkBundleAdminController
         );
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
-        $form = $this->createFormBuilder($modelMapper->getFormData())
+        $form = $this->createFormBuilder($modelMapper->getFormData(), array('allow_extra_fields' => true))
             ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
             ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
             ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
