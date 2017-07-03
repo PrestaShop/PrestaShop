@@ -171,6 +171,19 @@ abstract class PaymentModuleCore extends Module
             $this->context = Context::getContext();
         }
         $this->context->cart = new Cart((int)$id_cart);
+        //Check that products have available quantity
+        $products = $this->context->cart->getProducts();
+        foreach ($products as $row) {
+            $quantityToSell = $row['cart_quantity'];
+            $quantityProduct = Product::getQuantity($row['id_product'], $row['id_product_attribute'], $row['id_shop']);
+            $product = new Product($row['id_product'], true, null, $row['id_shop']);
+            if (!Validate::isLoadedObject($product)) {
+                die($this->module->l('The Product object could not be loaded.'));
+            }
+            if (($quantityToSell > $quantityProduct) && (!$product->isAvailableWhenOutOfStock((int)$product->out_of_stock))) {
+                Tools::redirect('index.php?controller=order&step=1');
+            }
+        }
         $this->context->customer = new Customer((int)$this->context->cart->id_customer);
         // The tax cart is loaded before the customer so re-cache the tax calculation method
         $this->context->cart->setTaxCalculationMethod();
