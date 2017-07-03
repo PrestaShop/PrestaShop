@@ -154,6 +154,10 @@ class Module implements ModuleInterface
             $version = $this->attributes->get('version');
         }
 
+        if (!$this->attributes->has('version_available')) {
+            $this->attributes->set('version_available', $this->disk->get('version'));
+        }
+
         $img = $this->attributes->get('img');
         if (empty($img)) {
             $this->attributes->set('img', __PS_BASE_URI__.'img/questionmark.png');
@@ -332,10 +336,17 @@ class Module implements ModuleInterface
 
     public function canBeUpgraded()
     {
-        return
-            $this->database->get('installed') == 1
-            && $this->attributes->get('version_available')
-            !== 0 && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')
-        ;
+        if ($this->database->get('installed') == 0) {
+            return false;
+        }
+
+        // Potential update from API
+        if ($this->attributes->get('version_available') !== 0
+            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')) {
+            return true;
+        }
+
+        // Potential update from disk
+        return version_compare($this->database->get('version'), $this->disk->get('version'), '<');
     }
 }
