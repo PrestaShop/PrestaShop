@@ -36,7 +36,7 @@
   .dropdown-menu
     min-width: 210px
     list-style: none
-    padding-left: 0
+    @include padding-left(0)
     font-size: 13px
     li:first-child a
       color: #00aff0
@@ -60,17 +60,17 @@
         padding-bottom: .3125rem
     .group
       a
-        padding-left: 1.875rem
+        @include padding-left(1.875rem)
     .shop
       display: flex
       a
-        padding-left: 3.75rem
+        @include padding-left(3.75rem)
       a.link-shop
         text-decoration: none
-        float: right
-        margin-left: auto
-        padding-left: inherit
-        padding-right: 10px
+        @include float(right)
+        @include margin-left(auto)
+        @include padding-left(inherit)
+        @include padding-right(10px)
         padding-top: 3px
         i.material-icons
           cursor: pointer
@@ -82,7 +82,7 @@
     color: #00aff0
     cursor: pointer
 
-@media screen and (-webkit-min-device-pixel-ratio:0)
+@media screen and (-webkit-min-device-pixel-ratio: 0)
   .custom-select select
     @include padding-right(30px)
 

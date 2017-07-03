@@ -10,7 +10,7 @@
 	@include padding(0, 0, 0, 20px)
 	input
 		vertical-align: baseline
-		margin-right: 4px
+		@include margin-right(4px)
 		line-height: normal
 	i
 		font-size: $icon-size-base
@@ -56,7 +56,7 @@
 		position: relative
 		top: 1px
 	.tt-hint
-		left: 4px !important
+		@include left(4px !important)
 		color: #ccc
 
 .tree-panel-label-title

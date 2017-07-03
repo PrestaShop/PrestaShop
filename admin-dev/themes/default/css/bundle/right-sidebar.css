@@ -4,7 +4,7 @@
   position: fixed;
   display: block;
   top: 136px;
-  bottom: 0px;
+  bottom: 0;
   z-index: 399;
   overflow: auto;
   right: -3em;

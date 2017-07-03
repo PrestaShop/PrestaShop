@@ -90,7 +90,7 @@
 	td.actions
 		@include text-align(right)
 		@include padding-right(5px)
-	th.actions .btn,
+	th.actions .btn
 		margin-bottom: 4px !important
 
 	tr.myDragClass
@@ -156,7 +156,7 @@ tr.highlighted td
 			display: block
 		thead tr
 			display: block
-			float: left
+			@include float(left)
 			width: 70%
 			&:first-child
 				width: 30%
@@ -168,7 +168,7 @@ tr.highlighted td
 			height: 48px
 			text-align: center
 		th .fixed-width-md
-			float: left
+			@include float(left)
 		th .fixed-width-sm
 			width: 100% !important
 		tr
@@ -182,7 +182,7 @@ tr.highlighted td
 			position: relative
 			padding-left: 35% !important
 			width: 100% !important
-			text-align: left !important
+			@include text-align(left !important)
 			line-height: 2em !important
 			font-size: 1.15em !important
 			white-space: nowrap
@@ -197,7 +197,7 @@ tr.highlighted td
 					position: relative
 					padding: 0
 					margin: 0
-					float: right
+					@include float(right)
 					display: inline-block
 					background: transparent
 					border: none
@@ -207,11 +207,11 @@ tr.highlighted td
 				background-color: white
 				border: none
 				padding: 12px 10px !important
-				margin-right: 5px
+				@include margin-right(5px)
 				display: inline-block
 				margin: 0 !important
-				float: right
-				border-left: 1px solid #EAEDEF
+				@include float(right)
+				@include border-left(1px solid #EAEDEF)
 				z-index: 13
 				color: $brand-primary
 				font-weight: bold
@@ -231,17 +231,17 @@ tr.highlighted td
 		td:before
 			position: absolute
 			top: 4px
-			left: 12px
+			@include left(12px)
 			width: 30%
-			border-right: 1px solid #EAEDEF
-			padding-right: 10px
+			@include border-right(1px solid #EAEDEF)
+			@include padding-right(10px)
 			white-space: nowrap
 			color: #aaa
-			text-align: right
+			@include text-align(right)
 			font-size: 0.9em
 			font-style: italic
 		td:last-child
-			text-align: right !important
+			@include text-align(right !important)
 			padding: 0 !important
 			&:before
 				content: none !important

@@ -8,7 +8,7 @@
   display: inline-block;
   width: 0;
   height: 0;
-  margin-left: 2px;
+  @include margin-left(2px);
   vertical-align: middle;
   border-top:   $caret-width-base solid;
   border-right: $caret-width-base solid transparent;
@@ -29,16 +29,16 @@
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  @include left(0);
   z-index: $zindex-dropdown;
   display: none; // none by default, but block on "open" of the menu
-  float: left;
+  @include float(left);
   min-width: 160px;
   padding: 5px 0;
   margin: 2px 0 0; // override default ul
   list-style: none;
   font-size: $font-size-base;
-  text-align: left; // Ensures proper alignment if parent has it changed (e.g., modal footer)
+  @include text-align(left); // Ensures proper alignment if parent has it changed (e.g., modal footer)
   background-color: $dropdown-bg;
   border: 1px solid $dropdown-fallback-border; // IE8 fallback
   border: 1px solid $dropdown-border;
@@ -134,8 +134,8 @@
 // Add extra class to `.dropdown-menu` to flip the alignment of the dropdown
 // menu with the parent.
 .dropdown-menu-right {
-  left: auto; // Reset the default from `.dropdown-menu`
-  right: 0;
+  @include left(auto); // Reset the default from `.dropdown-menu`
+  @include right(0);
 }
 // With v3, we enabled auto-flipping if you have a dropdown within a right
 // aligned nav component. To enable the undoing of that, we provide an override
@@ -144,8 +144,8 @@
 // This is only for left-aligning a dropdown menu within a `.navbar-right` or
 // `.pull-right` nav component.
 .dropdown-menu-left {
-  left: 0;
-  right: auto;
+  @include left(0);
+  @include right(auto);
 }
 
 // Dropdown section headers
@@ -169,8 +169,8 @@
 
 // Right aligned dropdowns
 .pull-right > .dropdown-menu {
-  right: 0;
-  left: auto;
+  @include right(0);
+  @include left(auto);
 }
 
 // Allow for dropdowns to go bottom up (aka, dropup-menu)
@@ -202,12 +202,14 @@
 @media (min-width: $grid-float-breakpoint) {
   .navbar-right {
     .dropdown-menu {
-      right: 0; left: auto;
+      @include right(0);
+      @include left(auto);
     }
     // Necessary for overrides of the default right aligned menu.
     // Will remove come v4 in all likelihood.
     .dropdown-menu-left {
-      left: 0; right: auto;
+      @include right(auto);
+      @include left(0);
     }
   }
 }

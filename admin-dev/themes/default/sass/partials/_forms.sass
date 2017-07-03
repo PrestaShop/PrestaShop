@@ -98,7 +98,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	.hide-file-upload
 		position: absolute
 		top: 0
-		left: 0
+		@include left(0)
 		width: 100%
 		height: 100%
 		@include opacity(0)
@@ -124,7 +124,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 //tag
 .tagify-container
 	background-color: white
-	padding: 0px 3px
+	padding: 0 3px
 	min-height: 30px
 	overflow: auto
 	border: solid 1px #ccc

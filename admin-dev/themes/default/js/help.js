@@ -313,7 +313,12 @@ $(function() {
 			arr_feedback.helpful = percentageMap[percentage];
 			$('#help-container .slider-cursor').removeClass('hide');
 			$('#help-container .helpful-labels li').removeClass('active');
-			$('#help-container .slider-cursor').css('left',percentage+'%');
+			var htmlDirection = window.getComputedStyle($('html')[0]).getPropertyValue('direction');
+			if (htmlDirection === "rtl") {
+				$('#help-container .slider-cursor').css('right',percentage+'%');
+			} else {
+				$('#help-container .slider-cursor').css('left',percentage+'%');
+			}
 			$('#help-container .helpful-labels li').addClass('disabled').off();
 			$(this).removeClass('disabled').addClass('active');
 			if (percentage <= 25) {

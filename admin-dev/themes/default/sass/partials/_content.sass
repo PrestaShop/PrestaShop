@@ -127,10 +127,7 @@ body
 		.panel-heading
 			font-size: 13px
 			margin: -8px -8px 10px
-			@include ltr
-				padding-left: 8px
-			@include rtl
-				padding-right: 8px
+			@include padding-left(8px)
 		.form-group
 			margin-bottom: 8px
 
@@ -162,7 +159,7 @@ body.display-modal
 				margin-top: 0
 	.modal-footer
 		.alert
-			text-align: left
+			@include text-align(left)
 
 //todo: remove temp fix for bootstrap RC1 -> final
 .bootstrap
@@ -197,7 +194,7 @@ body.display-modal
 	position: relative
 	margin: 0
 	padding: 0
-	float: right
+	@include float(right)
 	width: 30%
 	margin-top: 155px
 	margin-bottom: 50px
