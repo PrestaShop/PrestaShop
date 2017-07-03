@@ -35,10 +35,16 @@ export default {
     EventBus.$on('showModal', () => {
       this.showModal();
     });
+    EventBus.$on('hideModal', () => {
+      this.hideModal();
+    });
   },
   methods: {
     showModal() {
       $(this.$el).modal('show');
+    },
+    hideModal() {
+      $(this.$el).modal('hide');
     },
     onSave() {
       this.$emit('save');

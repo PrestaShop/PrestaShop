@@ -48,7 +48,12 @@
               @pageChanged="onPageChanged"
             />
           </div>
-          <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
+          <form class="col-xs-12"
+            method="post" 
+            :action="saveAction"
+            :isEdited="isEdited"
+            @submit.prevent="saveTranslations"
+          >
             <div class="row">
               <div class="col-xs-12 m-b-2">
                 <PSButton :primary="true" type="submit" class="pull-xs-right">
@@ -64,7 +69,7 @@
               :translated="translation"
               :label="translation.default"
               :extraInfo="getDomain(translation.tree_domain)"
-              @isEdited="edited"
+              @editedAction="isEdited"
               >
             </TranslationInput>
             <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
@@ -149,6 +154,13 @@
       },
     },
     methods: {
+      isEdited(input) {
+        if (this.editedInput.indexOf(input.id) === -1 && input.value) {
+          this.editedInput.push(input.id);
+        } else if (this.editedInput.indexOf(input.id) >= 0 && !input.value) {
+          this.editedInput.splice(this.editedInput.indexOf(input.id), 1);
+        }
+      },
       onPageChanged(pageIndex) {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch();
@@ -194,12 +206,15 @@
 
         return this.modifiedTranslations;
       },
+      edited() {
+        return this.editedInput.length > 0;
+      },
     },
     data: () => ({
       translations: [],
       originalTranslations: [],
       modifiedTranslations: [],
-      edited: false,
+      editedInput: [],
     }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {

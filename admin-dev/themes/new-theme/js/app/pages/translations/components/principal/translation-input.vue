@@ -35,7 +35,6 @@
 
 <script>
   import PSButton from 'app/widgets/ps-button';
-  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     name: 'TranslationInput',
@@ -65,7 +64,10 @@
           modifiedTranslated.database = modifiedValue;
           modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
-          this.edited = modifiedValue !== '';
+          this.$emit('editedAction', {
+            value: modifiedValue !== '',
+            id: this.id,
+          });
         },
       },
       isMissing() {
@@ -78,17 +80,6 @@
         EventBus.$emit('resetTranslation', this.translated);
       },
     },
-    watch: {
-      edited(val) {
-        EventBus.$emit('isEdited', {
-          value: val,
-          id: this.id,
-        });
-      },
-    },
-    data: () => ({
-      edited: false,
-    }),
     components: {
       PSButton,
     },

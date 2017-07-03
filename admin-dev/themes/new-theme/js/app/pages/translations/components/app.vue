@@ -82,15 +82,16 @@
           this.destHref = $(e.currentTarget).attr('href');
         }
       });
-      EventBus.$on('isEdited', (val) => {
-        console.log(val);
-      });
       window.onbeforeunload = () => {
-        if (!this.leave && this.edited) {
+        if (!this.destHref && this.isEdited() && !this.leave) {
+          return true;
+        }
+        if (!this.leave && this.isEdited()) {
           setTimeout(() => {
             window.stop();
           }, 500);
           EventBus.$emit('showModal');
+          return null;
         }
       };
     },
@@ -102,11 +103,15 @@
         this.$store.currentDomain = '';
       },
       onSave() {
-        
+        this.$refs.principal.saveTranslations();
+        EventBus.$emit('hideModal');
       },
       onLeave() {
         this.leave = true;
         window.location.href = this.destHref;
+      },
+      isEdited() {
+        return this.$refs.principal.edited();
       },
     },
     data: () => ({
