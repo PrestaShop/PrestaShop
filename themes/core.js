@@ -42,14 +42,14 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(1);
 
 
-/***/ }),
+/***/ },
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -95,9 +95,9 @@
 	  (0, _common.psShowHide)();
 	});
 
-/***/ }),
+/***/ },
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * jQuery JavaScript Library v2.2.4
@@ -1674,9 +1674,9 @@
 	// and CommonJS for browser emulators (#13566)
 	if(!noGlobal){window.jQuery = window.$ = jQuery;}return jQuery;}); // Otherwise append directly
 
-/***/ }),
+/***/ },
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1827,15 +1827,15 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 4 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = prestashop;
 
-/***/ }),
+/***/ },
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1922,9 +1922,9 @@
 	  }
 	});
 
-/***/ }),
+/***/ },
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1981,9 +1981,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2061,9 +2061,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2221,9 +2221,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2263,6 +2263,7 @@
 	    pendingQuery = false;
 	    prestashop.emit('updateProductList', data);
 	    window.history.pushState(data, undefined, data.current_url);
+	    window.scrollTo(0, 0);
 	}
 	
 	function handleError() {
@@ -2294,9 +2295,9 @@
 	    });
 	});
 
-/***/ }),
+/***/ },
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2343,9 +2344,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2495,9 +2496,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -2555,9 +2556,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 13 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -2827,9 +2828,9 @@
 	  return arg === void 0;
 	}
 
-/***/ }),
+/***/ },
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2873,6 +2874,6 @@
 	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
-/***/ })
+/***/ }
 /******/ ]);
 //# sourceMappingURL=core.js.map
