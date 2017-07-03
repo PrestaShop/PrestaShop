@@ -2,11 +2,11 @@
   position: fixed;
   background: $white;
   top: $size-header-height;
-  left: $size-navbar-width;
+  @include left($size-navbar-width);
   height: $size-header-toolbar-height;
-  right: 0;
+  @include right(0);
   z-index: 501;
-  padding-left: 0.625rem;
+  @include padding-left(0.625rem);
   border-bottom: 0.0625rem solid $color-separator;
 
   > .title {
@@ -24,7 +24,7 @@
 .toolbar-icons {
   position: absolute;
   top: 1.25rem;
-  right: 0.625rem;
+  @include right(0.625rem);
 }
 
 .page-head-tabs {
@@ -34,7 +34,7 @@
 
     > .tab {
         display: inline-block;
-        float: left;
+      @include float(left);
         height: 40px;
         line-height: 40px;
         padding: 0 10px;
@@ -60,6 +60,6 @@
 
 .page-sidebar-closed {
   .header-toolbar {
-    left: $size-navbar-width-mini;
+    @include left($size-navbar-width-mini);
   }
 }

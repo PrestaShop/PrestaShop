@@ -3,7 +3,7 @@
  */
 .module-modal-title {
   display: inline-block;
-  padding-left: 1em;
+  @include padding-left(1em);
   display: table-cell;
   vertical-align: top;
 }
@@ -56,7 +56,7 @@
   margin-top: 1em;
 }
 .module-modal-badges > img {
-  margin-right: 1em;
+  @include margin-right(1em);
 }
 .module-modal-dialog {
   height: 85%;
@@ -68,7 +68,7 @@
 }
 .module-modal-close {
   width: auto !important;
-  margin-right: 5px;
+  @include margin-right(5px);
 }
 .nav-tabs {
   border-bottom: 1px solid #bbcdd2;
@@ -200,7 +200,7 @@
 }
 
 .module-checkbox-bulk-list {
-  padding: 5px 0 0 5px;
+  @include padding(5px, 0, 0, 5px);
 }
 
 .module-search-bar {
@@ -221,16 +221,16 @@
   padding: 20px;
 }
 .module-menu-item > div {
-  padding-right: 20px;
+  @include padding-right(20px);
 }
 .module-sorting-menu {
   margin-bottom: 30px;
 }
 .module-sorting {
-  margin-left: 35px;
+  @include margin-left(35px);
 }
 .module-sorting i {
-  margin-left: 10px;
+  @include margin-left(10px);
   cursor: pointer;
   font-size: 26px;
 }
@@ -256,14 +256,16 @@
   height: 50px;
 }
 .module-tags-clear-btn {
-  margin-right: 10px;
+  @include margin-right(10px);
+  @include margin-left(0);
   margin-top: 10px;
   position: absolute;
   color: #2eacce;
   font-size: 20px;
   cursor: pointer;
   top: 0;
-  right: 0;
+  @include right(0);
+  @include left(auto);
 }
 .module-search-result-wording {
   color: #1E2024 !important;
@@ -296,7 +298,7 @@
   margin: auto;
 }
 .module-kpi {
-  margin-right: 15px;
+  @include margin-right(15px);
   display: initial;
 }
 .module-kpi i {
@@ -388,7 +390,7 @@
   font-size: small;
   overflow: auto;
   overflow-y: hidden;
-  margin: 35px 5px 20px 5px;
+  margin: 35px 5px 20px;
   text-align: justify;
   display: none;
 }
