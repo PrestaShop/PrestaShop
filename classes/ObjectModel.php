@@ -676,10 +676,8 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
                 // only if we are in a shop context (if we are in all context, we just want to update entries that alread exists)
                 $shop_exists = Db::getInstance()->getValue('SELECT '.$this->def['primary'].' FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE '.$where);
 
-                $display_multishop_checkboxes = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP;
-
                 if ($shop_exists) {
-                    if ($display_multishop_checkboxes) {
+                    if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
                         foreach ($fields as $key => $val) {
                             if (!array_key_exists($key, $this->update_fields)) {
                                 unset($fields[$key]);
