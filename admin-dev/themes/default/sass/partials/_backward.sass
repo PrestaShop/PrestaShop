@@ -12,7 +12,7 @@
 		margin: 0 0 10px 0
 		padding: 1em
 		img
-			padding: 0 4px 0 0
+			@include padding(0, 4px, 0, 0)
 			vertical-align: bottom
 	legend
 		background: #EBEDF4
@@ -20,23 +20,23 @@
 		font-weight: 700
 		margin: 0
 		padding: .2em .5em
-		text-align: left
+		@include text-align(left)
 		a
 			color: #585984
 			text-decoration: none
 	label
 		color: #585a69
 		text-shadow: 0 1px 0 #fff
-		float: left
+		@include float(left)
 		width: 250px
 		padding: .2em .5em 0 0
-		text-align: right
+		@include text-align(right)
 		font-weight: bold
 		&.t
 			float: none
 			clear: none
-			padding: 0 5px 0
-			margin: 0px
+			padding: 0 5px
+			margin: 0
 			font-weight: normal
 			font-size: 12px
 			text-shadow: none
@@ -48,7 +48,7 @@
 		clear: both
 
 	.margin-form
-		padding: 0 0 1em 260px
+		@include padding(0, 0, 1em, 260px)
 		color: #7F7F7F
 		font-size: .85em
 	.button
@@ -104,7 +104,7 @@
 				color: #333
 				font-size: 13px
 				padding: 4px 6px
-				text-align: left
+				@include text-align(left)
 				&.right
 					text-align: center
 			td
@@ -124,9 +124,9 @@
 				background: #FFF!important
 				border-bottom: none
 			td.first
-				border-left: 1px solid #DEDEDE
+				@include border-left(1px solid #DEDEDE)
 			td.last
-				border-right: 1px solid #DEDEDE
+				@include border-right(1px solid #DEDEDE)
 			&.small td
 				height: 15px
 			&.last td
@@ -139,21 +139,21 @@
 	.form-group
 		clear: both
 		margin-bottom: 1em
-		float: left
+		@include float(left)
 		width: 100%
 		> div
-			float: left
+			@include float(left)
 	.panel:not(.bootstrap)
 		background-color: #EBEDF4
 		border: 1px solid #CCCED7
 		color: #585A69
 		margin: 0 0 10px 0
 		padding: 1em
-		float: left
+		@include float(left)
 		width: 100%
 		box-sizing: border-box
 		img
-			padding: 0 4px 0 0
+			@include padding(0, 4px, 0, 0)
 			vertical-align: bottom
 		h3
 			position: relative
@@ -164,30 +164,30 @@
 			font-weight: 700
 			margin: 0
 			padding: .2em .5em
-			text-align: left
+			@include text-align(left)
 			a
 				color: #585984
 				text-decoration: none
 			i
 				font-family: 'FontAwesome'
 		.help-block
-			float: left
+			@include float(left)
 			clear: both
 		.switch
-			float: left
+			@include float(left)
 			clear: both
 			line-height: 1.3em
 			label
-				padding: 0 10px 0 5px
-				float: left
+				@include padding(0, 10px, 0, 5px)
+				@include float(left)
 				width: auto
 			input[type=checkbox], input[type=radio]
-				float: left
+				@include float(left)
 		.radio
 			label
 				clear: both
 				width: auto
-				margin-right: 4px
+				@include margin-right(4px)
 		button
 			cursor: pointer
 			background: -moz-linear-gradient(center top , #F9F9F9, #E3E3E3) repeat scroll 0 0 transparent
@@ -219,13 +219,13 @@
 			a
 				display: inline-block
 				padding: 0 8px
-				border-right: solid 1px #888
+				@include border-right(solid 1px #888)
 		.tree
-			padding: 0 0 0 20px
+			@include padding(0, 0, 0, 20px)
 			list-style: none
 			input
 				vertical-align: baseline
-				margin-right: 4px
+				@include margin-right(4px)
 				line-height: normal
 			i
 				font-size: $icon-size-base
@@ -260,6 +260,4 @@
 				color: #ccc
 				&:hover
 					color: #ccc
-					background-color: none
-
-
+					background-color: transparent

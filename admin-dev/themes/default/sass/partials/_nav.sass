@@ -38,7 +38,7 @@ $min-height: 950px
 			position: relative
 			ul.submenu
 				display: none
-				padding: 0px
+				padding: 0
 				background-color: #363A41
 				&.list-group
 					margin-bottom: 0
@@ -58,7 +58,7 @@ $min-height: 950px
 				text-overflow: ellipsis
 				overflow: hidden
 				span
-					padding-left: 15px
+					@include padding-left(15px)
 			> a.title
 				display: block
 				position: relative
@@ -99,7 +99,7 @@ $min-height: 950px
 						margin-top: 10px
 					position: absolute
 					z-index: 1
-					right: 0
+					@include right(0)
 			&.hover
 				ul.submenu
 					position: absolute
@@ -114,7 +114,7 @@ $min-height: 950px
 				a, li.active a
 					color: $sidebar-menu-active-color
 					&.title
-						border-right: 3px solid #fff
+						@include border-right(3px solid #fff)
 						background-color: $sidebar-menu-bg-hover-color
 					i
 						color: $sidebar-menu-active-color
@@ -126,7 +126,7 @@ $min-height: 950px
 							a
 								color: $sidebar-menu-color
 								padding: 5px 8px
-								padding-left: 38px
+								@include padding-left(38px)
 								&:hover
 									color: $sidebar-menu-hover-color
 									background-color: $sidebar-menu-bg-hover-color
@@ -229,10 +229,7 @@ $min-height: 950px
 				display: block!important
 				top: $menu-item-size!important
 				width: 200px!important
-				@include rtl
-					right: 50px
-				@include ltr
-					left: 50px
+				@include right(50px)
 	#content
 		@include margin-left(55px)
 		@media (max-width: $screen-phone)
@@ -336,7 +333,7 @@ $min-height: 950px
 			cursor: pointer
 		ul#ellipsis_submenu
 			@include right(0)
-			left: inherit
+			@include left(inherit)
 			a.title
 				padding: 0 8px
 				@include text-align(left)
@@ -351,7 +348,7 @@ $min-height: 950px
 	.notifications
 		background-color: white
 		height: 100%
-		margin-left: 40px
+		@include margin-left(40px)
 	.nav-link::before
 		font-family: 'Material Icons'
 		display: block
@@ -370,9 +367,8 @@ $min-height: 950px
 			line-height: .875rem
 			height: .875rem
 			vertical-align: middle
-			position: absolute
 			top: 20px
-			right: 40px
+			@include right(40px)
 			color: #fff
 			background: #fb0
 			font-size: .5625rem
@@ -412,28 +408,28 @@ $min-height: 950px
 				font-family: 'Material Icons'
 				content: "\E313"
 				font-size: 20px
-				margin-left: 10px
+				@include margin-left(10px)
 				vertical-align: bottom
 		#shop-list-collapse
 			background-color: white
 			list-style-type: none
-			text-align: left
-			padding-left: 0
+			@include text-align(left)
+			@include padding-left(0)
 			margin-top: 10px
 			li
 				border-bottom: #BBCDD2 1px solid
 				height: 30px
-				padding-left: 30px
+				@include padding-left(30px)
 				line-height: 50px
 				height: 50px
 				&.group
-					padding-left: 50px
+					@include padding-left(50px)
 					a
 						color: #363A41
 						font-weight: bold
 						text-transform: none
 				&.shop
-					padding-left: 70px
+					@include padding-left(70px)
 					text-transform: none
 					&.disabled a
 						color: #BBCDD2
@@ -441,7 +437,7 @@ $min-height: 950px
 						color: #363A41
 					.link-shop
 						position: absolute
-						right: 20px
+						@include right(20px)
 						.material-icons
 							color: #6C868E
 							font-size: 20px
@@ -505,7 +501,7 @@ $min-height: 950px
 			.submenu
 				a
 					background-color: #282b30
-					padding-left: 40px
+					@include padding-left(40px)
 				&.list-group
 					margin-bottom: 0
 			&#tab-SELL, &#tab-IMPROVE, &#tab-CONFIGURE
@@ -582,7 +578,7 @@ $min-height: 950px
 			@include left(10px!important)
 	.no-notification
 		top: 220px
-		left: 20px
+		@include left(20px)
 
 .page-topbar:not(.mobile-nav)
 	#main

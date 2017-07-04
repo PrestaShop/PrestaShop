@@ -120,12 +120,12 @@
 	@include alert-variant(white, $alert-addons-border, $alert-addons-text)
 	@include alert-panel(icon-rocket, white)
 	&:before
-		left: 25px
+		@include left(25px)
 		top: 40px
 		font-size: 98px
 	border: solid 2px $brand-info
 	box-shadow: inset 140px 0 0 $brand-info
-	padding: 20px 20px 20px 160px
+	@include padding(20px,20px, 20px, 160px)
 	.onboarding-step
 		width: 100%
 		height: 2em

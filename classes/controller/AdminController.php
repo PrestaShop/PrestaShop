@@ -2673,7 +2673,11 @@ class AdminControllerCore extends Controller
     public function setMedia($isNewTheme = false)
     {
         if ($isNewTheme) {
-            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
+            if ($this->context->language->is_rtl) {
+                $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme_rtl.css', 'all', 1);
+            } else {
+                $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/main.css', 'all', 1);
+            }
             $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/main.bundle.js');
             $this->addjQueryPlugin(array('chosen'));
         } else {

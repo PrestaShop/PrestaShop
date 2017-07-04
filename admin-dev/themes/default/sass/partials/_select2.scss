@@ -28,7 +28,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 .select2-container .select2-choice {
     display: block;
     height: 26px;
-    padding: 0 0 0 8px;
+    @include padding(0, 0, 0, 8px);
     overflow: hidden;
     position: relative;
 
@@ -59,11 +59,11 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 }
 
 .select2-container.select2-allowclear .select2-choice .select2-chosen {
-    margin-right: 42px;
+    @include margin-right(42px);
 }
 
 .select2-container .select2-choice > .select2-chosen {
-    margin-right: 26px;
+    @include margin-right(26px);
     display: block;
     overflow: hidden;
 
@@ -79,7 +79,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
     width: 12px;
     height: 12px;
     position: absolute;
-    right: 24px;
+    @include right(24px);
     top: 8px;
 
     font-size: 1px;
@@ -105,7 +105,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
     margin: 0;
     padding: 0;
     position: fixed;
-    left: 0;
+    @include left(0);
     top: 0;
     min-height: 100%;
     min-width: 100%;
@@ -170,9 +170,9 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
     width: 18px;
     height: 100%;
     position: absolute;
-    right: 0;
+    @include right(0);
     top: 0;
-    border-left: 1px solid #ccc;
+    @include border-left(1px solid #ccc);
     border-radius: 0 4px 4px 0;
     background-clip: padding-box;
     background-color: #EEEEEE;
@@ -202,7 +202,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
     width: 100%;
     height: auto !important;
     min-height: 26px;
-    padding: 4px 20px 4px 5px;
+    @include padding(4px, 20px, 4px, 5px);
     margin: 0;
 
     outline: 0;
@@ -255,7 +255,7 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 
 .select2-dropdown-open .select2-choice .select2-arrow {
     background: transparent;
-    border-left: none;
+    @include border-left(none);
     filter: none;
 }
 .select2-dropdown-open .select2-choice .select2-arrow b {
@@ -286,16 +286,30 @@ Version: 3.4.6 Timestamp: Sat Mar 22 22:30:15 EDT 2014
 
 .select2-results ul.select2-result-sub {
     margin: 0;
-    padding-left: 0;
+    @include padding-left(0);
 }
 
-.select2-results ul.select2-result-sub > li .select2-result-label { padding-left: 20px }
-.select2-results ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 40px }
-.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 60px }
-.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 80px }
-.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 100px }
-.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 110px }
-.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label { padding-left: 120px }
+.select2-results ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(20px);
+}
+.select2-results ul.select2-result-sub ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(40px);
+}
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(60px);
+}
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(80px);
+}
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(100px);
+}
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(110px);
+}
+.select2-results ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub ul.select2-result-sub > li .select2-result-label {
+    @include padding-left(120px);
+}
 
 .select2-results li {
     list-style: none;
@@ -389,7 +403,7 @@ disabled look for disabled choices in the results dropdown
 .select2-container.select2-container-disabled .select2-choice .select2-arrow {
     background-color: #f4f4f4;
     background-image: none;
-    border-left: 0;
+    @include border-left(0);
 }
 
 .select2-container.select2-container-disabled .select2-choice abbr {
@@ -414,7 +428,7 @@ disabled look for disabled choices in the results dropdown
 }
 
 .select2-locked {
-  padding: 3px 5px 3px 5px !important;
+  padding: 3px 5px !important;
 }
 
 .select2-container-multi .select2-choices {
@@ -428,12 +442,11 @@ disabled look for disabled choices in the results dropdown
             box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
 .select2-container-multi .select2-choices li {
-    float: left;
+    @include float(left);
     list-style: none;
 }
-html[dir="rtl"] .select2-container-multi .select2-choices li
-{
-    float: right;
+html[dir="rtl"] .select2-container-multi .select2-choices li {
+    @include float(right);
 }
 .select2-container-multi .select2-choices .select2-search-field {
     margin: 0;
@@ -464,8 +477,8 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
 }
 
 .select2-container-multi .select2-choices .select2-search-choice {
-    padding: 3px 5px 3px 18px;
-    margin: 3px 0 3px 5px;
+    @include padding(3px, 5px, 3px, 18px);
+    @include margin(3px, 0, 3px, 5px);
     position: relative;
 
     line-height: 13px;
@@ -490,10 +503,9 @@ html[dir="rtl"] .select2-container-multi .select2-choices li
     background-image: -moz-linear-gradient(top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
     background-image: linear-gradient(to top, #f4f4f4 20%, #f0f0f0 50%, #e8e8e8 52%, #eee 100%);
 }
-html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
-{
-    margin-left: 0;
-    margin-right: 5px;
+html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice {
+    @include margin-left(0);
+    @include margin-right(5px);
 }
 .select2-container-multi .select2-choices .select2-search-choice .select2-chosen {
     cursor: default;
@@ -507,7 +519,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
     width: 12px;
     height: 13px;
     position: absolute;
-    right: 3px;
+    @include right(3px);
     top: 4px;
 
     font-size: 1px;
@@ -515,12 +527,12 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
     background: url('../img/select2.png') right top no-repeat;
 }
 html[dir="rtl"] .select2-search-choice-close {
-    right: auto;
-    left: 3px;
+    @include right(auto);
+    @include left(3px);
 }
 
 .select2-container-multi .select2-search-choice-close {
-    left: 3px;
+    @include left(3px);
 }
 
 .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover {
@@ -539,7 +551,7 @@ html[dir="rtl"] .select2-search-choice-close {
 }
 
 .select2-container-multi.select2-container-disabled .select2-choices .select2-search-choice {
-    padding: 3px 5px 3px 5px;
+    padding: 3px 5px;
     border: 1px solid #ddd;
     background-image: none;
     background-color: #f4f4f4;
@@ -566,8 +578,8 @@ html[dir="rtl"] .select2-search-choice-close {
     overflow: hidden !important;
     position: absolute !important;
     outline: 0 !important;
-    left: 0px !important;
-    top: 0px !important;
+    @include left(0 !important);
+    top: 0 !important;
 }
 
 .select2-display-none {
@@ -577,7 +589,7 @@ html[dir="rtl"] .select2-search-choice-close {
 .select2-measure-scrollbar {
     position: absolute;
     top: -10000px;
-    left: -10000px;
+    @include left(-10000px);
     width: 100px;
     height: 100px;
     overflow: scroll;
@@ -640,7 +652,7 @@ html[dir="rtl"] .select2-search-choice-close {
 }
 
 .control-group.warning .select2-container .select2-choice div {
-    border-left: 1px solid #C09853 !important;
+    @include border-left(1px solid #C09853 !important);
     background: #FCF8E3 !important;
 }
 
@@ -655,7 +667,7 @@ html[dir="rtl"] .select2-search-choice-close {
 }
 
 .control-group.error .select2-container .select2-choice div {
-    border-left: 1px solid #B94A48 !important;
+    @include border-left(1px solid #B94A48 !important);
     background: #F2DEDE !important;
 }
 
@@ -670,7 +682,7 @@ html[dir="rtl"] .select2-search-choice-close {
 }
 
 .control-group.info .select2-container .select2-choice div {
-    border-left: 1px solid #3A87AD !important;
+    @include border-left(1px solid #3A87AD !important);
     background: #D9EDF7 !important;
 }
 
@@ -685,6 +697,6 @@ html[dir="rtl"] .select2-search-choice-close {
 }
 
 .control-group.success .select2-container .select2-choice div {
-    border-left: 1px solid #468847 !important;
+    @include border-left(1px solid #468847 !important);
     background: #DFF0D8 !important;
 }

@@ -34,7 +34,7 @@
 
     .nav {
       .nav-item {
-        margin-left: 0;
+        @include margin-left(0);
         width: 33%;
         text-align: center;
       }
@@ -42,7 +42,7 @@
       .nav-link {
         color: $font-color-secondary;
         font-weight: $font-weight-normal;
-        padding: 0.9375rem 0.9375rem 0.625rem 0.9375rem;
+        padding: 0.9375rem 0.9375rem 0.625rem;
 
         &.active {
           border-top: 0;

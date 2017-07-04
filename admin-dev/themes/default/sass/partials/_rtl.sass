@@ -80,42 +80,45 @@ html
 	.input-group input[type="text"]
 		float: right
 
-.kpi-container
-	padding-bottom: 10px !important
-	.kpi-refresh
-		position: absolute
-		z-index: 1
-		left: 20px
-
 #nav-sidebar
 	ul.menu
 		li.maintab
 			&.hover:not(.active)
 				&:before
-					content: ''
-					width: 0
-					height: 0
-					border-style: solid
 					border-width: 8px 0 8px 10px
 					border-color: transparent transparent transparent $main-color
-					background-color: transparent
-					margin-top: 6px
-					@media (min-height: $min-height)
-						margin-top: 10px
-					position: absolute
-					z-index: 1
-					left: 0
-					right: inherit
-			&.active
-				a, li.active a
-					&.title
-						border-left: 3px solid #fff
-						border-right: 0px
-						background-color: $sidebar-menu-bg-hover-color
-				@media (min-height: $min-height)
-					ul.submenu
-						body:not(.page-sidebar-closed) &
-							margin-right: 35px
-							margin-left: 0px
-							@include border-right(1px solid $sidebar-menu-bg-hover-color)
-							border-left: 0px
+
+
+//  HELP
+// -----------------
+#help-container
+	ul.childpages-macro,
+	.toc-macro li > ul
+		> li:before
+			margin-right: 0 !important
+			margin-left: 5px
+	.content
+		h2:before,
+		h3:before
+			margin: 0 0 0 8px !important
+	section.feedback .helpful-input-range ul.helpful-labels li
+		float: right !important
+	section.feedback .helpful-input-range .slider
+		background: -webkit-linear-gradient(right, #ff6843, #00aff0, #79b51c) !important
+		background: linear-gradient(right, #ff6843, #00aff0, #79b51c) !important
+		background: -moz-linear-gradient(right, #ff6843, #00aff0, #79b51c) !important
+		background: -o-linear-gradient(right, #ff6843, #00aff0, #79b51c) !important
+	section.feedback .feedback-reason button.close
+		right: auto !important
+		left: 0
+	.radio input[type="radio"],
+	.radio-inline input[type="radio"],
+	.checkbox input[type="checkbox"],
+	.checkbox-inline input[type="checkbox"]
+		float: right !important
+		margin-right: -20px
+		margin-left: 0 !important
+	.radio,
+	.checkbox
+		padding-left: 0 !important
+		padding-right: 20px

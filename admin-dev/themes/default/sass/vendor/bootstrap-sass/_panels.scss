@@ -153,11 +153,11 @@
       > tr {
         > th:first-child,
         > td:first-child {
-          border-left: 0;
+          @include border-left(0);
         }
         > th:last-child,
         > td:last-child {
-          border-right: 0;
+          @include border-right(0);
         }
       }
     }

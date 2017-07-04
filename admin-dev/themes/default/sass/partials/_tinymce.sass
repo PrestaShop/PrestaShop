@@ -20,6 +20,8 @@
 	box-sizing: content-box
 	@include text-align(left)
 	direction: ltr
+	@include rtl
+		direction: rtl
 	*
 		margin: 0
 		padding: 0
@@ -39,9 +41,11 @@
 		-webkit-tap-highlight-color: transparent
 		line-height: normal
 		font-weight: normal
-		text-align: left
+		@include text-align(left)
 		box-sizing: content-box
 		direction: ltr
+		@include rtl
+			direction: rtl
 
 .mce-widget
 	margin: 0
@@ -62,9 +66,11 @@
 	-webkit-tap-highlight-color: transparent
 	line-height: normal
 	font-weight: normal
-	text-align: left
+	@include text-align(left)
 	box-sizing: content-box
 	direction: ltr
+	@include rtl
+		direction: rtl
 	*
 		margin: 0
 		padding: 0
@@ -84,9 +90,11 @@
 		-webkit-tap-highlight-color: transparent
 		line-height: normal
 		font-weight: normal
-		text-align: left
+		@include text-align(left)
 		box-sizing: content-box
 		direction: ltr
+		@include rtl
+			direction: rtl
 	button
 		box-sizing: border-box
 
@@ -181,7 +189,7 @@ div.mce-edit-area
 			border-color: #a1a1a1
 
 .mce-grid-border
-	margin: 0 4px 0 4px
+	margin: 0 4px
 	a
 		border-color: #d6d6d6
 		width: 13px
@@ -467,22 +475,16 @@ body .mce-abs-layout-item
 	border-top-color: #000
 
 .mce-tooltip-arrow-e
-	@include rtl
-		border-left-color: #000
-	@include ltr
-		border-right-color: #000
+	@include border-right-color(#000)
 
 .mce-tooltip-arrow-w
-	@include rtl
-		border-right-color: #000
-	@include ltr
-		border-left-color: #000
+	@include border-left-color(#000)
 
 .mce-tooltip-nw, .mce-tooltip-sw
 	@include margin-left(-14px)
 
 .mce-tooltip-n .mce-tooltip-arrow
-	top: 0px
+	top: 0
 	border-bottom-style: solid
 	border-top: none
 	border-left-color: transparent
@@ -534,8 +536,8 @@ body .mce-abs-layout-item
 .mce-tooltip-e .mce-tooltip-arrow
 	top: 50%
 	margin-top: -5px
-	border-left-style: solid
-	border-right: none
+	@include border-left-style(solid)
+	@include border-right(none)
 	border-top-color: transparent
 	border-bottom-color: transparent
 	@include right(0)
@@ -864,7 +866,7 @@ i.mce-i-checkbox
 
 .mce-rtl
 	.mce-flow-layout
-		@include text-align(right)
+		@include text-align(left)
 		direction: rtl
 	.mce-flow-layout-item
 		@include margin(2px, 2px, 2px, 0)
@@ -890,7 +892,7 @@ i.mce-i-checkbox
 		white-space: pre-wrap
 
 .mce-rtl .mce-label
-	@include text-align(right)
+	text-align: left
 	direction: rtl
 
 .mce-menubar
@@ -980,7 +982,6 @@ i.mce-i-checkbox
 .mce-menu-shortcut
 	display: inline-block
 	color: #adadad
-	display: inline-block
 	*display: inline
 	*zoom: 1
 	padding: 0 15px 0 20px

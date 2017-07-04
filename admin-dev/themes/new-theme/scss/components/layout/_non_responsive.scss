@@ -6,7 +6,7 @@
   height: 100%;
   z-index: 501;
   top: 3.438rem;
-  left: 0.125rem;
+  @include left(0.125rem);
   color: $white;
   padding: 4.375rem 2.5rem 0 2.5rem;
   font-size: 1.063rem;

@@ -242,7 +242,7 @@
 
 				{* Notifications *}
         {if $show_new_orders || $show_new_customers || $show_new_messages}
-          <ul class="header-list navbar-right">
+          <ul class="header-list">
             <li id="notification" class="dropdown">
               <a href="javascript:void(0);" class="notification dropdown-toggle notifs">
                 <i class="material-icons">notifications_none</i>
@@ -316,7 +316,7 @@
 
 				{* Shop name *}
 				{if {$base_url}}
-					<ul id="header-list" class="header-list navbar-right">
+					<ul id="header-list" class="header-list">
 						<li class="shopname" data-mobile="true" data-from="header-list" data-target="menu">
               {if isset($debug_mode) && $debug_mode == true}
                 <span class="shop-state hidden-xs" id="debug-mode">

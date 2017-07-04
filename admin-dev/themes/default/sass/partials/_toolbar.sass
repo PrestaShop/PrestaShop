@@ -114,10 +114,10 @@
 		display:  inline-block
 		position: absolute
 		bottom:   0
-		left:     220px
+		@include left(220px)
 		a
 			display:        inline-block
-			float:          left
+			@include float(left)
 			height:         40px
 			line-height:    40px
 			padding:        0 10px
@@ -131,7 +131,7 @@
 .page-sidebar-closed
 	.page-head
 		.page-head-tabs
-			left: 60px
+			@include left(60px)
 
 .page-header-toolbar-back
 	border: none!important

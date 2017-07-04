@@ -107,43 +107,27 @@
 	content: ""
 .arrow-left:before
 	top: 6px
-	@include ltr
-		border-right-color: #d1d4d7
-		border-width: 7px 7px 7px 0
-	@include rtl
-		border-left-color: #d1d4d7
-		border-width: 7px 0 7px 7px
+	@include border-right-color(#d1d4d7)
+	@include border-width(7px,7px, 7px, 0)
 	@include margin-left(-7px)
 	@include left(0)
 .arrow-left:after
 	top: 7px
-	@include ltr
-		border-right-color: #fff
-		border-width: 6px 6px 6px 0
-	@include rtl
-		border-left-color: #fff
-		border-width: 6px 0 6px 6px
+	@include border-right-color(#fff)
+	@include border-width(6px, 6px, 6px, 0)
 	@include left(0)
 	@include margin-left(-6px)
 .arrow-right:before
 	top: 6px
-	@include ltr
-		border-left-color: #d1d4d7
-		border-width: 7px 0 7px 7px
-	@include rtl
-		border-right-color: #d1d4d7
-		border-width: 7px 7px 7px 0
-	@include right(0px)
+	@include border-left-color(#d1d4d7)
+	@include border-width(7px, 0, 7px, 7px)
+	@include right(0)
 	@include margin-right(-7px)
 .arrow-right:after
 	top: 7px
-	@include ltr
-		border-left-color: #fff
-		border-width: 6px 0 6px 6px
-	@include rtl
-		border-right-color: #fff
-		border-width: 6px 6px 6px 0
-	@include right(0px)
+	@include border-left-color(#fff)
+	@include border-width(6px, 0, 6px, 6px)
+	@include right(0)
 	@include margin-right(-6px)
 
 //Timeline

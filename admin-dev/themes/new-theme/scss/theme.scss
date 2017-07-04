@@ -2,6 +2,8 @@
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/PrestaKit/scss/custom/_variables.scss";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
+@import "../../default/sass/vendor/bi-app/variables-ltr";
+@import "../../default/sass/vendor/bi-app/mixins";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";

@@ -9307,7 +9307,8 @@ textarea:focus:focus, input[type="text"]:focus:focus, input[type="password"]:foc
   width: 13.13rem;
   padding-top: 50px;
   padding-top: 3.125rem;
-  height: 100%; }
+  height: 100%;
+  left: 0; }
   @media (max-width: 767px) {
     .nav-bar {
       visibility: hidden; } }
@@ -9632,7 +9633,9 @@ ul.category-tree {
       font-size: 1.25rem;
       color: #6C868E;
       top: -4px;
-      top: -0.25rem; }
+      top: -0.25rem;
+      -webkit-transform: rotate(180deg);
+              transform: rotate(180deg); }
   ul.category-tree .less::before {
     content: "\E313"; }
   ul.category-tree .more::before {
@@ -9742,8 +9745,8 @@ ul.category-tree {
   .notification-center .notifications .nav .nav-link {
     color: #6C868E;
     font-weight: 400;
-    padding: 15px 15px 10px 15px;
-    padding: 0.9375rem 0.9375rem 0.625rem 0.9375rem; }
+    padding: 15px 15px 10px;
+    padding: 0.9375rem 0.9375rem 0.625rem; }
     .notification-center .notifications .nav .nav-link.active {
       border-top: 0;
       border-bottom: 2px solid #25B9D7;
@@ -10588,7 +10591,7 @@ ul.category-tree {
       margin-top: 3.125rem; }
   .product-page .nav-tabs {
     height: 3.125rem;
-    width: 125rem;
+    width: auto;
     position: relative; }
     .product-page .nav-tabs .nav-link.active:not(.description-tab) {
       border-top: transparent;
@@ -11170,13 +11173,15 @@ ul.category-tree {
 
 .module-tags-clear-btn {
   margin-right: 10px;
+  margin-left: 0;
   margin-top: 10px;
   position: absolute;
   color: #2eacce;
   font-size: 20px;
   cursor: pointer;
   top: 0;
-  right: 0; }
+  right: 0;
+  left: auto; }
 
 .module-search-result-wording {
   color: #1E2024 !important;
@@ -11297,7 +11302,7 @@ ul.category-tree {
   font-size: small;
   overflow: auto;
   overflow-y: hidden;
-  margin: 35px 5px 20px 5px;
+  margin: 35px 5px 20px;
   text-align: justify;
   display: none; }
 
@@ -11351,8 +11356,7 @@ form#importDropzone {
   line-height: normal;
   font-weight: normal;
   box-sizing: content-box;
-  text-align: left;
-  direction: ltr; }
+  text-align: left; }
   .mce-container * {
     margin: 0;
     padding: 0;
@@ -11373,8 +11377,7 @@ form#importDropzone {
     line-height: normal;
     font-weight: normal;
     text-align: left;
-    box-sizing: content-box;
-    direction: ltr; }
+    box-sizing: content-box; }
 
 .mce-widget {
   margin: 0;
@@ -11396,8 +11399,7 @@ form#importDropzone {
   line-height: normal;
   font-weight: normal;
   text-align: left;
-  box-sizing: content-box;
-  direction: ltr; }
+  box-sizing: content-box; }
   .mce-widget * {
     margin: 0;
     padding: 0;
@@ -11418,8 +11420,7 @@ form#importDropzone {
     line-height: normal;
     font-weight: normal;
     text-align: left;
-    box-sizing: content-box;
-    direction: ltr; }
+    box-sizing: content-box; }
   .mce-widget button {
     box-sizing: border-box; }
 
@@ -11512,7 +11513,7 @@ div.mce-edit-area {
     border-color: #a1a1a1; }
 
 .mce-grid-border {
-  margin: 0 4px 0 4px; }
+  margin: 0 4px; }
   .mce-grid-border a {
     border-color: #d6d6d6;
     width: 13px;
@@ -11710,7 +11711,10 @@ div.mce-fullscreen {
   display: block;
   background-color: #fff;
   border-top: 1px solid #c5c5c5;
-  border-radius: 0 0 6px 6px; }
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px; }
 
 .mce-window-head .mce-dragh {
   position: absolute;
@@ -11769,7 +11773,7 @@ body .mce-abs-layout-item {
   text-align: center;
   white-space: normal;
   border-radius: 3px;
-  padding: 5px 8px 4px 8px; }
+  padding: 5px 8px 4px; }
 
 .mce-tooltip-arrow {
   position: absolute;
@@ -11847,7 +11851,7 @@ body .mce-abs-layout-item {
   top: 50%;
   margin-top: -5px;
   border-left-style: solid;
-  border-right: none;
+  border-right: 0;
   border-top-color: transparent;
   border-bottom-color: transparent;
   right: 0; }
@@ -11964,14 +11968,20 @@ body .mce-abs-layout-item {
 .mce-btn-group .mce-btn {
   border: solid 1px #ccc;
   border-radius: 0;
-  border-right: none; }
+  border-right: 0; }
 
 .mce-btn-group .mce-first {
-  border-radius: 3px 0 0 3px; }
+  border-top-left-radius: 3px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 3px; }
 
 .mce-btn-group .mce-last {
-  border-right: solid 1px #ccc;
-  border-radius: 0 3px 3px 0; }
+  border-right: 1px solid #ccc;
+  border-top-left-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 0; }
 
 .mce-btn-group .mce-first.mce-last {
   border-radius: 3px; }
@@ -12053,7 +12063,7 @@ i.mce-i-checkbox {
   border-right-color: #bdbdbd; }
 
 .mce-colorbutton.mce-btn-small .mce-open {
-  padding: 0 3px 0 3px; }
+  padding: 0 3px; }
 
 .mce-rtl .mce-colorbutton {
   direction: rtl; }
@@ -12085,10 +12095,16 @@ i.mce-i-checkbox {
   .mce-combobox.mce-disabled input {
     color: #adadad; }
   .mce-combobox.mce-has-open input {
-    border-radius: 4px 0 0 4px; }
+    border-top-left-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 4px; }
   .mce-combobox .mce-btn {
     border-left: 0;
-    border-radius: 0 4px 4px 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 0;
     background-color: #C5C5C5; }
   .mce-combobox button {
     height: 26px; }
@@ -12368,7 +12384,7 @@ div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
   left: 0;
   top: 0;
   z-index: 1000;
-  padding: 5px 0 5px 0;
+  padding: 5px 0;
   margin: 2px 0 0;
   min-width: 160px;
   background: #fff;
@@ -12429,7 +12445,7 @@ i.mce-i-resize {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, .15), 0 1px 2px rgba(0, 0, 0, .05); }
 
 .mce-splitbtn.mce-btn-small .mce-open {
-  padding: 0 3px 0 3px; }
+  padding: 0 3px; }
 
 .mce-rtl .mce-splitbtn {
   direction: rtl;
@@ -12480,7 +12496,7 @@ i.mce-i-resize {
   transition: border linear .2s, box-shadow linear .2s;
   height: 28px;
   resize: none;
-  padding: 0 4px 0 4px;
+  padding: 0 4px;
   white-space: pre-wrap;
   *white-space: pre;
   color: #333; }
