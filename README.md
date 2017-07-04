@@ -66,7 +66,9 @@ To run the software, use:
 >
     docker-compose up
 
-It will bind your ports 80 and 443 to the web server. If you want to use other ports, open and modify the file `docker-compose.yml`.
+Then reach your shop with the URL http://localhost:8001
+
+It will bind your ports 8001 to the web server. If you want to use other ports, open and modify the file `docker-compose.yml`.
 MySQL credentials can also be found and modified in this file if needed.
 
 User documentation
