@@ -17,9 +17,16 @@ services:
     apache:
         container_name: prestashop-git
         image: prestashop/prestashop-git:7
+        environment:
+            PS_INSTALL_AUTO: 1
+            DB_PASSWD: password
+            DB_NAME: prestashop
+            DB_SERVER: mysql
+            PS_DOMAIN: localhost:8001
+            PS_FOLDER_INSTALL: install-dev
+            PS_FOLDER_ADMIN: admin-dev
         ports:
-            - "80:80"
-            - "443:443"
+            - "8001:80"
         volumes:
             - ./:/var/www/html/
         restart: always
