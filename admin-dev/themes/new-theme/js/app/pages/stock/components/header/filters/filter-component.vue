@@ -33,16 +33,27 @@
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
-
-    <PSTree
-      v-if="hasChildren"
-      ref="tree"
-      :hasCheckbox="true"
-      :model="list"
-      @checked="onCheck"
-      :translations="PSTreeTranslations"
-    >
-    </PSTree>
+    <div v-if="hasChildren">
+        <PSTree
+          v-if="isOverview"
+          v-once
+          ref="tree"
+          :hasCheckbox="true"
+          :model="list"
+          @checked="onCheck"
+          :translations="PSTreeTranslations"
+        >
+        </PSTree>
+         <PSTree
+            v-else
+            ref="tree"
+            :hasCheckbox="true"
+            :model="list"
+            @checked="onCheck"
+            :translations="PSTreeTranslations"
+          >
+      </PSTree>
+    </div>
     <ul
       class="m-t-1"
       v-else
@@ -73,6 +84,9 @@
   export default {
     props: ['placeholder', 'itemID', 'label', 'list'],
     computed: {
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
       hasPlaceholder() {
         return !this.tags.length;
       },
