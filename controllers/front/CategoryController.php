@@ -76,12 +76,6 @@ class CategoryControllerCore extends FrontController
         if (Tools::getValue('live_edit')) {
             return;
         }
-
-        if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY')))) {
-            $this->redirect_after = '404';
-            $this->redirect();
-        }
-
         if (!Tools::getValue('noredirect') && Validate::isLoadedObject($this->category)) {
             parent::canonicalRedirection($this->context->link->getCategoryLink($this->category));
         }
@@ -107,11 +101,11 @@ class CategoryControllerCore extends FrontController
         parent::init();
 
         // Check if the category is active and return 404 error if is disable.
-        if (!$this->category->active) {
+        if (!$this->category->active || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY')))) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
-        }
-
+            $this->errors[] = Tools::displayError('Category not found');
+        } else 
         // Check if category can be accessible by current customer and return 403 if not
         if (!$this->category->checkAccess($this->context->customer->id)) {
             header('HTTP/1.1 403 Forbidden');
@@ -129,6 +123,10 @@ class CategoryControllerCore extends FrontController
         parent::initContent();
 
         $this->setTemplate(_PS_THEME_DIR_.'category.tpl');
+		
+        if ($this->errors) {
+            return;
+        }
 
         if (!$this->customer_access) {
             return;
