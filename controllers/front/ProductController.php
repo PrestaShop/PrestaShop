@@ -152,8 +152,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 header('Status: 403 Forbidden');
                 $this->errors[] = $this->trans('You do not have access to this product.', array(), 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
-
-                return;
             } else {
                 // Load category
                 $id_category = false;
