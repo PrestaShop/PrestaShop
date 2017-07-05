@@ -323,10 +323,9 @@ class ProductControllerCore extends FrontController
         $ecotax_rate = (float)Tax::getProductEcotaxRate($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         if (Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX')) {
             $ecotax_tax_amount = Tools::ps_round($this->product->ecotax * (1 + $ecotax_rate / 100), 2);
+        } else {
+            $ecotax_tax_amount = Tools::ps_round($this->product->ecotax, 2);
         }
-	else {
-	    $ecotax_tax_amount = Tools::ps_round($this->product->ecotax, 2);
-	}
 
         $id_currency = (int)$this->context->cookie->id_currency;
         $id_product = (int)$this->product->id;
@@ -334,16 +333,14 @@ class ProductControllerCore extends FrontController
 
         $quantity_discounts = SpecificPrice::getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, null, true, (int)$this->context->customer->id);
         foreach ($quantity_discounts as &$quantity_discount) {
-            if (!isset($quantity_discount['base_price'])) {
-                $quantity_discount['base_price'] = 0;
-            }
+            $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC ? true : false, null, 6, null, false, false, $quantity_discount['from_quantity']);
             if ($quantity_discount['id_product_attribute']) {
-                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, $quantity_discount['id_product_attribute']);
+                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC ? true : false, $quantity_discount['id_product_attribute'], 6, null, false, false, $quantity_discount['from_quantity']);
 
                 $combination = new Combination((int)$quantity_discount['id_product_attribute']);
                 $attributes = $combination->getAttributesName((int)$this->context->language->id);
                 foreach ($attributes as $attribute) {
-                    $quantity_discount['attributes'] = $attribute['name'].' - ';
+                    $quantity_discount['attributes'] = $attribute['name'] . ' - ';
                 }
                 $quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
             }
