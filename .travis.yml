@@ -29,7 +29,7 @@ env:
 matrix:
   include:
     - php: 7.1
-      env: EXTRA_TESTS=functionnal
+      env: EXTRA_TESTS=functional
 
 before_install:
   # Apache & php-fpm configuration
@@ -51,8 +51,8 @@ script:
   - composer phpunit-sf
   - composer phpunit-controllers
   - bash ./travis-scripts/run-selenium-tests
+  - bash ./travis-scripts/run-functional-tests # Must run before starter theme
   - bash ./travis-scripts/test-startertheme
-  - bash ./travis-scripts/run-functionnal-tests
 
 after_script:
   - sudo cat /var/log/apache2/error.log
