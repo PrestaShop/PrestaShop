@@ -4610,7 +4610,7 @@ class AdminImportControllerCore extends AdminController
         $this->modals[] = array(
              'modal_id' => 'importProgress',
              'modal_class' => 'modal-md',
-             'modal_title' => $this->trans('Importing...', array(), 'Admin.Advparameters.Notification'),
+             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
              'modal_content' => $modal_content
          );
     }
