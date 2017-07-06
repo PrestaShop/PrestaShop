@@ -148,6 +148,8 @@ class AdminCarriersControllerCore extends AdminController
 
         // Assign them in two steps! Because renderModulesList needs it before to be called.
         $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', array(), 'Admin.Shipping.Feature'));
+        $this->context->smarty->assign('panel_id', 'recommended-carriers-panel');
+
         $this->context->smarty->assign(array(
             'showHeaderAlert' => $showHeaderAlert,
             'modules_list' => $this->renderModulesList('back-office,AdminCarriers,new')
