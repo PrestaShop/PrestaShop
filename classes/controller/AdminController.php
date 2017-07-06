@@ -402,6 +402,9 @@ class AdminControllerCore extends Controller
 
     /** @var string */
     protected $tabSlug;
+	
+	/** @var bool  Assign admin errors & warning to template */
+	public $show_admin_errors = true;
 
     public function __construct($forceControllerName = '', $default_theme_name = 'default')
     {
@@ -1789,20 +1792,9 @@ class AdminControllerCore extends Controller
             $page = $this->content;
         }
 
-        if ($conf = Tools::getValue('conf')) {
-            $this->context->smarty->assign('conf', $this->json ? json_encode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
-        }
-
-        if ($error = Tools::getValue('error')) {
-            $this->context->smarty->assign('error', $this->json ? json_encode($this->_error[(int)$error]) : $this->_error[(int)$error]);
-        }
-
-        foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type) {
-            if (!is_array($this->$type)) {
-                $this->$type = (array)$this->$type;
-            }
-            $this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->$type)) : array_unique($this->$type));
-        }
+		if($this->show_admin_errors) {
+			$this->assignAdminErrors();
+		}
 
         if ($this->show_page_header_toolbar && !$this->lite_display) {
             $this->context->smarty->assign(
@@ -1824,6 +1816,27 @@ class AdminControllerCore extends Controller
 
         $this->smartyOutputContent($this->layout);
     }
+	
+	/**
+	 * Assign smarty variables for Errors & warnings in Back Office
+	 */
+	public function assignAdminErrors()
+	{
+		if ($conf = Tools::getValue('conf')) {
+			$this->context->smarty->assign('conf', $this->json ? json_encode($this->_conf[(int)$conf]) : $this->_conf[(int)$conf]);
+		}
+
+		if ($error = Tools::getValue('error')) {
+			$this->context->smarty->assign('error', $this->json ? json_encode($this->_error[(int)$error]) : $this->_error[(int)$error]);
+		}
+
+		foreach (array('errors', 'warnings', 'informations', 'confirmations') as $type) {
+			if (!is_array($this->$type)) {
+				$this->$type = (array)$this->$type;
+			}
+			$this->context->smarty->assign($type, $this->json ? json_encode(array_unique($this->$type)) : array_unique($this->$type));
+		}
+	}
 
     /**
      * Add a warning message to display at the top of the page
