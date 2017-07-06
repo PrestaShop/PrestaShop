@@ -259,7 +259,7 @@ class AdminEmployeesControllerCore extends AdminController
                     'type' => 'html',
                     'name' => 'employee_avatar',
                     'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
-					<div class="alert alert-info">'.sprintf($this->trans(
+					<div id="employee-avatar-thumbnail" class="alert alert-info">'.sprintf($this->trans(
                         'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.',
                         array(
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',

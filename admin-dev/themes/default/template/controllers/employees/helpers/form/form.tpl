@@ -26,7 +26,7 @@
 
 {block name="field"}
 	{if $input.type == 'prestashop_addons'}
-		<div id="addons-connexion-container" ="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
+		<div id="addons-connection-container" class="col-lg-{if isset($input.col)}{$input.col|intval}{else}9{/if} {if !isset($input.label)}col-lg-offset-3{/if}">
 			{if isset($logged_on_addons) && $logged_on_addons}
 				<p><i class="icon-user"></i>{l s='You are currently connected as %username%' sprintf=['%username%' => '$username_addons'] d='Admin.Advparameters.Feature'}</p>
 				<a class="btn btn-default" href="#" id="addons_logout_button">
