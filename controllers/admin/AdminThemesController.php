@@ -523,6 +523,7 @@ class AdminThemesControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
                 'buttons' => array(
                     'storeLink' => array(
+                        'id' => 'visit-theme-catalog-link',
                         'title' => $this->trans('Visit the theme catalog', array(), 'Admin.Design.Feature'),
                         'icon' => 'process-icon-themes',
                         'href' => Tools::getCurrentUrlProtocolPrefix().'addons.prestashop.com/en/3-templates-prestashop'
