@@ -854,7 +854,7 @@ class FrontControllerCore extends Controller
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme');
+                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme.Global');
                     if (isset($record->country->name) && $record->country->name) {
                         $countryName = $record->country->name;
                     }
@@ -1657,7 +1657,7 @@ class FrontControllerCore extends Controller
         $breadcrumb = array();
 
         $breadcrumb['links'][] = array(
-            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme'),
+            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('index', true),
         );
 

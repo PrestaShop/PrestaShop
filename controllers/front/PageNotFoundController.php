@@ -56,7 +56,7 @@ class PageNotFoundControllerCore extends FrontController
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
-        $page['title'] = $this->trans('The page you are looking for was not found.', array(), 'Shop.Theme');
+        $page['title'] = $this->trans('The page you are looking for was not found.', array(), 'Shop.Theme.Global');
 
         return $page;
     }

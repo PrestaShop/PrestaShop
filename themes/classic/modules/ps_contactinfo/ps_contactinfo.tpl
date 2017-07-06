@@ -25,7 +25,7 @@
 
 <div class="block-contact col-md-4 links wrapper">
   <div class="hidden-sm-down">
-    <h4 class="text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme'}</h4>
+    <h4 class="text-uppercase block-contact-title">{l s='Store information' d='Shop.Theme.Global'}</h4>
       {$contact_infos.address.formatted nofilter}
       {if $contact_infos.phone}
         <br>
@@ -36,7 +36,7 @@
           '[/1]' => '</span>',
           '%phone%' => $contact_infos.phone
           ]
-          d='Shop.Theme'
+          d='Shop.Theme.Global'
         }
       {/if}
       {if $contact_infos.fax}
@@ -49,7 +49,7 @@
             '[/1]' => '</span>',
             '%fax%' => $contact_infos.fax
           ]
-          d='Shop.Theme'
+          d='Shop.Theme.Global'
         }
       {/if}
       {if $contact_infos.email}
@@ -62,13 +62,13 @@
             '[/1]' => '</span>',
             '%email%' => $contact_infos.email
           ]
-          d='Shop.Theme'
+          d='Shop.Theme.Global'
         }
       {/if}
   </div>
   <div class="hidden-md-up">
     <div class="title">
-      <a class="h3" href="{$urls.pages.stores}">{l s='Store information' d='Shop.Theme'}</a>
+      <a class="h3" href="{$urls.pages.stores}">{l s='Store information' d='Shop.Theme.Global'}</a>
     </div>
   </div>
 </div>

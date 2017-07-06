@@ -69,7 +69,7 @@ class DiscountControllerCore extends FrontController
         foreach ($vouchers as $key => $voucher) {
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme');
+            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
             $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
             ;
 
@@ -101,9 +101,9 @@ class DiscountControllerCore extends FrontController
     protected function getCombinableVoucherTranslation($voucher)
     {
         if ($voucher['cart_rule_restriction']) {
-            $combinableVoucherTranslation = $this->trans('No', array(), 'Shop.Theme');
+            $combinableVoucherTranslation = $this->trans('No', array(), 'Shop.Theme.Global');
         } else {
-            $combinableVoucherTranslation = $this->trans('Yes', array(), 'Shop.Theme');
+            $combinableVoucherTranslation = $this->trans('Yes', array(), 'Shop.Theme.Global');
         }
 
         return $combinableVoucherTranslation;

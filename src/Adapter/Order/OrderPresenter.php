@@ -448,11 +448,11 @@ class OrderPresenter implements PresenterInterface
     {
         return array(
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
         );
     }
 }

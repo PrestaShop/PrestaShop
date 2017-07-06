@@ -124,11 +124,11 @@ class ProductPresenter
         // TODO: move it to a common parent, since it's copied in OrderPresenter and CartPresenter
         $presentedProduct['labels'] = array(
             'tax_short' => ($settings->include_taxes)
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
             'tax_long' => ($settings->include_taxes)
-                ? $this->translator->trans('Tax included', array(), 'Shop.Theme')
-                : $this->translator->trans('Tax excluded', array(), 'Shop.Theme'),
+                ? $this->translator->trans('Tax included', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('Tax excluded', array(), 'Shop.Theme.Global'),
         );
 
         return $presentedProduct;
