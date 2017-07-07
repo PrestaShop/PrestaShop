@@ -418,7 +418,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $params = array(
                         '{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
                         '{link}' => Tools::url(
-                            $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
+                            $this->context->link->getPageLink('contact', true, (int)$ct->id_lang, null, false, $ct->id_shop),
                             'id_customer_thread='.(int)$ct->id.'&token='.$ct->token
                         ),
                         '{firstname}' => $customer->firstname,
