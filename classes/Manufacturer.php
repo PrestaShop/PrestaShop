@@ -124,10 +124,14 @@ class ManufacturerCore extends ObjectModel
      */
     public function delete()
     {
-        $address = new Address($this->id_address);
-
-        if (Validate::isLoadedObject($address) && !$address->delete()) {
-            return false;
+        $addresses = $this->getAddresses();
+        if (is_array($addresses)) {
+            foreach ($addresses as $data) {
+                $address = new Address($data['id_address']);
+                if (Validate::isLoadedObject($address) && !$address->delete()) {
+                    return false;
+                }
+            }
         }
 
         if (parent::delete()) {
