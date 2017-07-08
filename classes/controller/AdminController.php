@@ -2673,8 +2673,20 @@ class AdminControllerCore extends Controller
     public function setMedia($isNewTheme = false)
     {
         if ($isNewTheme) {
-            $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/main.bundle.js');
+            $newThemePath = __PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/';
+            $this->addCSS($newThemePath.'public/theme.css', 'all', 1);
+
+            // RTL Support : Override Styles
+            if (Context::getContext()->language->is_rtl) {
+                $this->addCSS($newThemePath.'public/theme-rtl.css', 'all', 1);
+            }
+
+            // Localization Styles : import if existing StyleSheet by iso
+            if (($isoCode = Context::getContext()->language->iso_code)) {
+                $this->addCSS($newThemePath.'public/localization-assets/iso-'.$isoCode.'/css/'.$isoCode.'.css', 'all', 1);
+            }
+
+            $this->addJS($newThemePath.'public/bundle.js');
             $this->addjQueryPlugin(array('chosen'));
         } else {
 

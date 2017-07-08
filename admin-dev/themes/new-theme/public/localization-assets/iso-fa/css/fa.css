@@ -1,0 +1,31 @@
+/*
+ * A Persian (Farsi) Font http://rastikerdar.github.io/vazir-font/
+ * LICENSE: https://github.com/rastikerdar/vazir-font/blob/master/LICENSE
+ */
+@font-face {
+    font-family: Vazir;
+    src: url('../fonts/Vazir-font/Vazir.woff') format('woff');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: Vazir;
+    src: url('../fonts/Vazir-font/Vazir-Bold.woff') format('woff');
+    font-weight: bold;
+}
+
+body {
+    font-family: Vazir, sans-serif, tahoma, arial;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6,
+.pstaggerTag
+.tooltip,.popover,
+.pstaggerTagsWrapper,
+.module-modal-title>h4,
+.module-search-result-wording,
+.onboarding .panel .onboarding-intro h3,
+.select2-container--prestakit .select2-selection,
+.select2-container--prestakit .select2-search--dropdown .select2-search__field{
+    font-family: Vazir, sans-serif, tahoma, arial;
+}
