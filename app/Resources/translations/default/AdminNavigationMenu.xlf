@@ -684,8 +684,8 @@ File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:80</note>
   <file original="install-dev/upgrade/php/add_new_status_stock.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="1dc2af14d15238ba67e03c99a6f415f6">
-        <source>Stocks</source>
-        <target>Stocks</target>
+        <source>Stock</source>
+        <target>Stock</target>
         <note>Context:
 File: install-dev/upgrade/php/add_new_status_stock.php:68</note>
       </trans-unit>

@@ -1380,8 +1380,8 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:54</note>
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:56</note>
       </trans-unit>
       <trans-unit id="1dc2af14d15238ba67e03c99a6f415f6">
-        <source>Stocks</source>
-        <target>Stocks</target>
+        <source>Stock</source>
+        <target>Stock</target>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:55</note>
       </trans-unit>
