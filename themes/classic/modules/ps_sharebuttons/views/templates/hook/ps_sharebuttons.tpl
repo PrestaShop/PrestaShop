@@ -24,7 +24,7 @@
  *}
 
 {block name='social_sharing'}
-  {if $social_share_links}
+  {if isset($social_share_links) && $social_share_links|is_array}
     <div class="social-sharing">
       <span>{l s='Share' d='Shop.Theme.Actions'}</span>
       <ul>
