@@ -94,6 +94,7 @@ class DbPDOCore extends Db
      *
      * @see DbCore::connect()
      * @return PDO
+     * @throws PrestaShopException
      */
     public function connect()
     {
@@ -364,7 +365,7 @@ class DbPDOCore extends Db
 
         if (!$result) {
             $value = 'MyISAM';
-        }else {
+        } else {
             $row = $result->fetch();
             if (!$row || strtolower($row['Value']) != 'yes') {
                 $value = 'MyISAM';
