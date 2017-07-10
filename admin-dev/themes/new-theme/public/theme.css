@@ -10304,7 +10304,6 @@ ul.category-tree {
       font-size: 1.25rem; }
   .product-page .maxLength {
     float: right;
-    font-family: OpenSans;
     font-size: 12px;
     font-style: italic;
     color: #6C868E; }
@@ -10471,6 +10470,7 @@ ul.category-tree {
     overflow-x: hidden; }
     #attributes-list .attribute-group .attributes .two-columns {
       -webkit-columns: 2;
+         -moz-columns: 2;
               columns: 2; }
     #attributes-list .attribute-group .attributes .attribute .js-attribute-checkbox {
       display: none; }
@@ -12741,3 +12741,6 @@ body {
 #product_filter_column_active .select2 {
   min-width: 70px;
   min-width: 4.375rem; }
+
+span.twitter-typeahead {
+  display: block !important; }
