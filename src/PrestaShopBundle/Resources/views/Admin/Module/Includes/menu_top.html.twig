@@ -24,16 +24,7 @@
  *#}
 <div class="module-top-menu">
     <div class="row">
-        <div class="col-md-8 module-menu-item">
-            {% if topMenuData is defined %}
-                {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
-            {% endif %}
-            {% if requireFilterStatus is defined and requireFilterStatus == true %}
-                {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_status.html.twig' %}
-            {% endif %}
-        </div>
-
-        <div class="col-md-4">
+        <div class="col-md-8">
             <div class="input-group module-search-block">
                 <span class="input-group-addon module-search-icon">
                     <i class="material-icons">search</i>
@@ -42,6 +33,14 @@
             </div>
         </div>
 
+        <div class="col-md-4 module-menu-item">    
+            {% if topMenuData is defined %}
+                {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_categories.html.twig' with { 'topMenuData': topMenuData } %}
+            {% endif %}
+            {% if requireFilterStatus is defined and requireFilterStatus == true %}
+                {% include 'PrestaShopBundle:Admin/Module/Includes:dropdown_status.html.twig' %}
+            {% endif %}
+        </div>
     </div>
 </div>
 
