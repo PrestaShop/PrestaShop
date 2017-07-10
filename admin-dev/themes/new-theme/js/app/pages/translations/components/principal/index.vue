@@ -49,7 +49,7 @@
             />
           </div>
           <form class="col-xs-12"
-            method="post" 
+            method="post"
             :action="saveAction"
             :isEdited="isEdited"
             @submit.prevent="saveTranslations"
@@ -162,8 +162,11 @@
         }
       },
       onPageChanged(pageIndex) {
-        this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch();
+        if (!this.edited() || (this.edited() && confirm(this.trans('modal_content')))) {
+          this.$store.dispatch('updatePageIndex', pageIndex);
+          this.fetch();
+          this.editedInput = [];
+        }
       },
       fetch() {
         this.$store.dispatch('getCatalog', {
