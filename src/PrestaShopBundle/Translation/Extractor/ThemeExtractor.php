@@ -102,18 +102,22 @@ class ThemeExtractor
             ->getDefaultCatalogue()
         ;
 
-        $defaultCatalogue = current($defaultCatalogue);
+        if (!empty($defaultCatalogue)) {
+            $defaultCatalogue = current($defaultCatalogue);
 
-        $defaultDomainsCatalogue = $catalogue->getDomains();
+            if (!empty($defaultCatalogue)) {
+                $defaultDomainsCatalogue = $catalogue->getDomains();
 
-        foreach ($defaultCatalogue as $domain => $translation) {
-            $domain = str_replace('.' . $locale, '', $domain);
-            $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
+                foreach ($defaultCatalogue as $domain => $translation) {
+                    $domain = str_replace('.' . $locale, '', $domain);
+                    $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
 
-            if (in_array($domain, $defaultDomainsCatalogue)) {
-                foreach ($translation as $key => $trans) {
-                    if ($catalogue->has($key, $domain)) {
-                        $catalogue->set($key, $trans, $domain);
+                    if (in_array($domain, $defaultDomainsCatalogue)) {
+                        foreach ($translation as $key => $trans) {
+                            if ($catalogue->has($key, $domain)) {
+                                $catalogue->set($key, $trans, $domain);
+                            }
+                        }
                     }
                 }
             }
