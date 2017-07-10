@@ -39,6 +39,22 @@ class DbPDOCore extends Db
 
     /**
      * Returns a new PDO object (database link)
+     * @deprecated use getPDO
+     *
+     * @param string $host
+     * @param string $user
+     * @param string $password
+     * @param string $dbname
+     * @param int $timeout
+     * @return PDO
+     */
+    protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
+    {
+        return static::getPDO($host, $user, $host, $dbname, $timeout);
+    }
+
+    /**
+     * Returns a new PDO object (database link)
      *
      * @param string $host
      * @param string $user
