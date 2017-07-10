@@ -87,6 +87,7 @@ export const saveTranslations = ({ commit }, payload) => {
     payload.store.dispatch('getDomainsTree', {
       store: payload.store,
     });
+    payload.store.state.modifiedTranslations = [];
     return showGrowl('notice', 'Translations successfully updated');
   }, (error) => {
     showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);

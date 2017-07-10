@@ -155,17 +155,23 @@
     },
     methods: {
       isEdited(input) {
-        if (this.editedInput.indexOf(input.id) === -1 && input.value) {
-          this.editedInput.push(input.id);
-        } else if (this.editedInput.indexOf(input.id) >= 0 && !input.value) {
-          this.editedInput.splice(this.editedInput.indexOf(input.id), 1);
+        if (
+          this.$store.state.modifiedTranslations.indexOf(input.id) === -1 &&
+          input.translation.edited
+        ) {
+          this.$store.state.modifiedTranslations[input.id] = input.translation;
+        } else if (
+          this.$store.state.modifiedTranslations.indexOf(input.id) >= 0 &&
+          !input.translation.edited
+        ) {
+          this.$store.state.modifiedTranslations.splice(this.$store.state.modifiedTranslations.indexOf(input.id), 1);
         }
       },
       onPageChanged(pageIndex) {
         if (!this.edited() || (this.edited() && confirm(this.trans('modal_content')))) {
           this.$store.dispatch('updatePageIndex', pageIndex);
           this.fetch();
-          this.editedInput = [];
+          this.$store.state.modifiedTranslations = [];
         }
       },
       fetch() {
@@ -195,29 +201,26 @@
       },
       getModifiedTranslations() {
         this.modifiedTranslations = [];
-        this.translations.forEach((translation) => {
-          if (translation.edited) {
-            this.modifiedTranslations.push({
-              default: translation.default,
-              edited: translation.edited,
-              domain: translation.tree_domain.join(''),
-              locale: window.data.locale,
-              theme: window.data.selected,
-            });
-          }
+        this.$store.state.modifiedTranslations.forEach((translation) => {
+          this.modifiedTranslations.push({
+            default: translation.default,
+            edited: translation.edited,
+            domain: translation.tree_domain.join(''),
+            locale: window.data.locale,
+            theme: window.data.selected,
+          });
         });
 
         return this.modifiedTranslations;
       },
       edited() {
-        return this.editedInput.length > 0;
+        return this.$store.state.modifiedTranslations.length > 0;
       },
     },
     data: () => ({
       translations: [],
       originalTranslations: [],
       modifiedTranslations: [],
-      editedInput: [],
     }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {

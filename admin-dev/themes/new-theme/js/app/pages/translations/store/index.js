@@ -54,6 +54,7 @@ const state = {
   sidebarLoading: true,
   principalLoading: true,
   searchTags: [],
+  modifiedTranslations: [],
 };
 
 // getters are functions
