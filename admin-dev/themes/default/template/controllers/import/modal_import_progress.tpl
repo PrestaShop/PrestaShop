@@ -73,7 +73,7 @@
   </div>
 
   <div id="import_progress_div" style="display:none;">
-    <div class="pull-right" id="import_progression_details" default-value="{l s="Importing data..." d="Admin.Advparameters.Notification"}">
+    <div class="pull-right" id="import_progression_details" default-value="{l s="Importing your data..." d="Admin.Advparameters.Notification"}">
       &nbsp;
     </div>
     <div class="progress active progress-striped" style="display: block; width: 100%">
