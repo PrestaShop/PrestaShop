@@ -76,6 +76,8 @@ class ThemeExtractor
         );
         $this->smartyExtractor->extract($themeDirectory, $this->catalog, $options['root_dir']);
 
+        $this->overrideFromDefaultCatalog($locale, $this->catalog);
+
         if ($this->overrideFromDatabase) {
             $this->overrideFromDatabase($theme->getName(), $locale, $this->catalog);
         }
@@ -91,6 +93,31 @@ class ThemeExtractor
         }
 
         throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
+    }
+
+    private function overrideFromDefaultCatalog($locale, &$catalogue)
+    {
+        $defaultCatalogue = $this->themeProvider
+            ->setLocale($locale)
+            ->getDefaultCatalogue()
+        ;
+
+        $defaultCatalogue = current($defaultCatalogue);
+
+        $defaultDomainsCatalogue = $catalogue->getDomains();
+
+        foreach ($defaultCatalogue as $domain => $translation) {
+            $domain = str_replace('.' . $locale, '', $domain);
+            $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
+
+            if (in_array($domain, $defaultDomainsCatalogue)) {
+                foreach ($translation as $key => $trans) {
+                    if ($catalogue->has($key, $domain)) {
+                        $catalogue->set($key, $trans, $domain);
+                    }
+                }
+            }
+        }
     }
 
     private function overrideFromDatabase($themeName, $locale, &$catalogue)
