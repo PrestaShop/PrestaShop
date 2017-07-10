@@ -48,7 +48,12 @@
               @pageChanged="onPageChanged"
             />
           </div>
-          <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
+          <form class="col-xs-12"
+            method="post" 
+            :action="saveAction"
+            :isEdited="isEdited"
+            @submit.prevent="saveTranslations"
+          >
             <div class="row">
               <div class="col-xs-12 m-b-2">
                 <PSButton :primary="true" type="submit" class="pull-xs-right">
@@ -60,9 +65,12 @@
             <TranslationInput
               v-for="(translation, key) in translationsCatalog"
               :key="key"
+              :id="key"
               :translated="translation"
               :label="translation.default"
-              :extraInfo="getDomain(translation.tree_domain)">
+              :extraInfo="getDomain(translation.tree_domain)"
+              @editedAction="isEdited"
+              >
             </TranslationInput>
             <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
               {{ trans('button_save') }}
@@ -146,6 +154,13 @@
       },
     },
     methods: {
+      isEdited(input) {
+        if (this.editedInput.indexOf(input.id) === -1 && input.value) {
+          this.editedInput.push(input.id);
+        } else if (this.editedInput.indexOf(input.id) >= 0 && !input.value) {
+          this.editedInput.splice(this.editedInput.indexOf(input.id), 1);
+        }
+      },
       onPageChanged(pageIndex) {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch();
@@ -176,11 +191,10 @@
         }
       },
       getModifiedTranslations() {
-        const modifiedTranslations = [];
-
+        this.modifiedTranslations = [];
         this.translations.forEach((translation) => {
           if (translation.edited) {
-            modifiedTranslations.push({
+            this.modifiedTranslations.push({
               default: translation.default,
               edited: translation.edited,
               domain: translation.tree_domain.join(''),
@@ -190,15 +204,18 @@
           }
         });
 
-        return modifiedTranslations;
+        return this.modifiedTranslations;
+      },
+      edited() {
+        return this.editedInput.length > 0;
       },
     },
-    data() {
-      return {
-        translations: [],
-        originalTranslations: [],
-      };
-    },
+    data: () => ({
+      translations: [],
+      originalTranslations: [],
+      modifiedTranslations: [],
+      editedInput: [],
+    }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {
         const translations = [];

@@ -35,11 +35,13 @@
 
 <script>
   import PSButton from 'app/widgets/ps-button';
-  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     name: 'TranslationInput',
     props: {
+      id: {
+        type: Number,
+      },
       extraInfo: {
         type: String,
         required: false,
@@ -62,6 +64,10 @@
           modifiedTranslated.database = modifiedValue;
           modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
+          this.$emit('editedAction', {
+            value: modifiedValue !== '',
+            id: this.id,
+          });
         },
       },
       isMissing() {
