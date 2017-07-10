@@ -85,9 +85,12 @@
         store: this.$store,
       });
       EventBus.$on('lastTreeItemClick', (el) => {
-        this.$store.dispatch('updateCurrentDomain', el.item);
-        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
-        this.$store.dispatch('updatePageIndex', 1);
+        if (!this.edited() || (this.edited() && confirm(this.trans('modal_content')))) {
+          this.$store.dispatch('updateCurrentDomain', el.item);
+          this.$store.dispatch('getCatalog', { url: el.item.dataValue });
+          this.$store.dispatch('updatePageIndex', 1);
+          this.$store.state.modifiedTranslations = [];
+        }
       });
     },
     methods: {
@@ -107,6 +110,9 @@
         }
 
         return toDisplay;
+      },
+      edited: function edited() {
+        return this.$store.state.modifiedTranslations.length > 0;
       },
     },
     components: {
