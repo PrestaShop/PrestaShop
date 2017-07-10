@@ -262,7 +262,7 @@
 					{/if}
 				{else}
 				<p class="text-muted text-center">
-					{l s='%firstname% %lastname% has not placed any orders yet' sprintf=['%firstname' => '$customer->firstname', '%lastname%' => '$customer->lastname'] d='Admin.Orderscustomers.Feature'}
+					{l s='%firstname% %lastname% has not placed any orders yet' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname] d='Admin.Orderscustomers.Feature'}
 				</p>
 				{/if}
 			</div>
@@ -404,7 +404,7 @@
 					</table>
 				{else}
 				<p class="text-muted text-center">
-					{l s='%firstname% %lastname% has never contacted you' sprintf=['%firstname%' => '$customer->firstname', '%lastname%' => '$customer->lastname'] d='Admin.Orderscustomers.Feature'}
+					{l s='%firstname% %lastname% has never contacted you' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname] d='Admin.Orderscustomers.Feature'}
 				</p>
 				{/if}
 			</div>
@@ -452,7 +452,7 @@
 					</table>
 				{else}
 				<p class="text-muted text-center">
-					{l s='%firstname% %lastname% has no discount vouchers' sprintf=['%firstname%' => '$customer->firstname', '%lastname%' => '$customer->lastname'] d='Admin.Orderscustomers.Feature'}
+					{l s='%firstname% %lastname% has no discount vouchers' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname] d='Admin.Orderscustomers.Feature'}
 				</p>
 				{/if}
 			</div>
@@ -650,7 +650,7 @@
 					</table>
 				{else}
 					<p class="text-muted text-center">
-						{l s='%firstname% %lastname% has not registered any addresses yet' sprintf=['%firstname%' => '$customer->firstname', '%lastname%' => '$customer->lastname']}
+						{l s='%firstname% %lastname% has not registered any addresses yet' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname]}
 					</p>
 				{/if}
 			</div>
