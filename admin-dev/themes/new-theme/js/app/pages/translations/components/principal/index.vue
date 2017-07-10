@@ -155,15 +155,9 @@
     },
     methods: {
       isEdited(input) {
-        if (
-          this.$store.state.modifiedTranslations.indexOf(input.id) === -1 &&
-          input.translation.edited
-        ) {
+        if (input.translation.edited) {
           this.$store.state.modifiedTranslations[input.id] = input.translation;
-        } else if (
-          this.$store.state.modifiedTranslations.indexOf(input.id) >= 0 &&
-          !input.translation.edited
-        ) {
+        } else {
           this.$store.state.modifiedTranslations.splice(this.$store.state.modifiedTranslations.indexOf(input.id), 1);
         }
       },
