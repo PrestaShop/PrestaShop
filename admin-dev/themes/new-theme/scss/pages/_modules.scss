@@ -312,6 +312,12 @@
   min-height: 74px;
 }
 
+.toolbar-icons {
+  .btn-primary {
+    border-radius: 0;
+  }
+}
+
 /**
  * Module Categories Grid
  */
