@@ -33,10 +33,10 @@
           '[/1]' => '</span>',
           '%phone%' => $contact_infos.phone
         ]
-        d='Shop.Theme'
+        d='Shop.Theme.Global'
       }
     {else}
-      <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme'}</a>
+      <a href="{$urls.pages.contact}">{l s='Contact us' d='Shop.Theme.Global'}</a>
     {/if}
   </div>
 </div>

@@ -40,7 +40,7 @@
 
         <div class="form-group row">
           <div class="col-md-9 col-md-offset-3">
-            <h3>{l s='Contact us' d='Shop.Theme'}</h3>
+            <h3>{l s='Contact us' d='Shop.Theme.Global'}</h3>
           </div>
         </div>
 

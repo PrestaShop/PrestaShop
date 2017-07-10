@@ -129,7 +129,7 @@
                           {/if}
                         {/foreach}
                         {if !$active_found}
-                          {l s='(no filter)' d='Shop.Theme'}
+                          {l s='(no filter)' d='Shop.Theme.Global'}
                         {/if}
                       </span>
                       <i class="material-icons float-xs-right">&#xE5C5;</i>
