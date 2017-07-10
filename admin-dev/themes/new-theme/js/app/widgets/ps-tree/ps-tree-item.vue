@@ -181,7 +181,6 @@
     }
   }
   .disable {
-    color: $gray-light;
-    cursor: not-allowed;
+    display: none;
   }
 </style>
