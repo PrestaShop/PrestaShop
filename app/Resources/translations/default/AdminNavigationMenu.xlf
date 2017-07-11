@@ -683,7 +683,7 @@ File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:80</note>
   </file>
   <file original="install-dev/upgrade/php/add_new_status_stock.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="1dc2af14d15238ba67e03c99a6f415f6">
+      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
         <source>Stock</source>
         <target>Stock</target>
         <note>Context:

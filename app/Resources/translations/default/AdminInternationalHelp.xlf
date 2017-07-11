@@ -6,7 +6,7 @@
         <source>Search a word or expression, e.g.: "Order confirmation"</source>
         <target>Search a word or expression, e.g.: "Order confirmation"</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:56</note>
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:59</note>
       </trans-unit>
     </body>
   </file>

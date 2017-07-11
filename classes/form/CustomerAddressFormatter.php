@@ -199,17 +199,17 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
             case 'postcode':
                 return $this->translator->trans('Zip/Postal Code', [], 'Shop.Forms.Labels');
             case 'city':
-                return $this->translator->trans('City', [], 'Admin.Global');
+                return $this->translator->trans('City', [], 'Shop.Forms.Labels');
             case 'Country':
-                return $this->translator->trans('Country', [], 'Admin.Global');
+                return $this->translator->trans('Country', [], 'Shop.Forms.Labels');
             case 'State':
-                return $this->translator->trans('State', [], 'Admin.Global');
+                return $this->translator->trans('State', [], 'Shop.Forms.Labels');
             case 'phone':
                 return $this->translator->trans('Phone', [], 'Shop.Forms.Labels');
             case 'phone_mobile':
                 return $this->translator->trans('Mobile phone', [], 'Shop.Forms.Labels');
             case 'company':
-                return $this->translator->trans('Company', [], 'Admin.Global');
+                return $this->translator->trans('Company', [], 'Shop.Forms.Labels');
             case 'vat_number':
                 return $this->translator->trans('VAT number', [], 'Shop.Forms.Labels');
             case 'dni':

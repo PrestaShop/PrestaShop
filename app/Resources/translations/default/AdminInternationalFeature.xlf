@@ -46,20 +46,20 @@ File: src/PrestaShopBundle/Twig/TranslationsExtension.php:471</note>
         <source>1 missing</source>
         <target>1 missing</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:43</note>
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:46</note>
       </trans-unit>
       <trans-unit id="026966b734feffa2a2a7c807d268e495">
         <source>%nb_translation% expression</source>
         <target>%nb_translation% expression</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:46
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:49
  Comment: nb_translations can be 0 or 1</note>
       </trans-unit>
       <trans-unit id="e3ee9f9a340e253eb5196ce7d53ae2d8">
         <source>Search translations</source>
         <target>Search translations</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:55</note>
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:58</note>
       </trans-unit>
     </body>
   </file>
