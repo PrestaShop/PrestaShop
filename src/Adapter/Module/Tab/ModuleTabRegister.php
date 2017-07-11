@@ -62,11 +62,6 @@ class ModuleTabRegister
     private $translator;
 
     /**
-     * @var Finder
-     */
-    private $finder;
-
-    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -76,13 +71,12 @@ class ModuleTabRegister
      */
     private $languages;
 
-    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem, array $languages)
+    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
         $this->logger = $logger;
         $this->translator = $translator;
-        $this->finder = $finder;
         $this->filesystem = $filesystem;
         $this->languages = $languages;
     }
@@ -189,7 +183,7 @@ class ModuleTabRegister
             return array();
         }
 
-        $moduleFolder = $this->finder->files()
+        $moduleFolder = Finder::create()->files()
                     ->in($modulePath)
                     ->depth('== 0')
                     ->name('*Controller.php')

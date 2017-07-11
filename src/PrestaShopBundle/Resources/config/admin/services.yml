@@ -102,7 +102,6 @@ services:
             - "@prestashop.core.admin.lang.repository"
             - "@logger"
             - "@translator"
-            - "@finder"
             - "@filesystem"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 

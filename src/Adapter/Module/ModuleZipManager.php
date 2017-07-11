@@ -49,16 +49,12 @@ class ModuleZipManager
      * @var Symfony\Component\Filesystem\Filesystem
      */
     private $filesystem;
-    /**
-     * @var Symfony\Component\Finder\Finder
-     */
-    private $finder;
+
     private $translator;
     
-    public function __construct(Filesystem $filesystem, Finder $finder, TranslatorInterface $translator)
+    public function __construct(Filesystem $filesystem, TranslatorInterface $translator)
     {
         $this->filesystem = $filesystem;
-        $this->finder = $finder;
         $this->translator = $translator;
     }
 
@@ -97,7 +93,8 @@ class ModuleZipManager
         }
 
         // Check the structure and get the module name
-        $directories = $this->finder->directories()
+        $directories = Finder::create()
+            ->directories()
             ->in($sandboxPath)
             ->depth('== 0')
             ->exclude(['__MACOSX'])
@@ -110,7 +107,8 @@ class ModuleZipManager
             $moduleName = basename(current($directories)->getFileName());
 
             // Inside of this folder, we MUST have a file called <module name>.php
-            $moduleFolder = $this->finder->files()
+            $moduleFolder = Finder::create()
+                    ->files()
                     ->in($sandboxPath.$moduleName)
                     ->depth('== 0')
                     ->exclude(['__MACOSX'])

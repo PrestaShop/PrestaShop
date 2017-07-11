@@ -37,21 +37,18 @@ class ThemeExporter
 {
     protected $configuration;
     protected $fileSystem;
-    protected $finder;
     protected $langRepository;
     protected $translationsExporter;
 
     public function __construct(
         ConfigurationInterface $configuration,
         Filesystem $fileSystem,
-        Finder $finder,
         LangRepository $langRepository,
         TranslationsExporter $translationsExporter
     )
     {
         $this->configuration = $configuration;
         $this->fileSystem = $fileSystem;
-        $this->finder = $finder;
         $this->langRepository = $langRepository;
         $this->translationsExporter = $translationsExporter;
     }
@@ -74,9 +71,7 @@ class ThemeExporter
 
     private function copyTheme($themeDir, $cacheDir)
     {
-        $finderClassName = get_class($this->finder);
-        $this->finder = $finderClassName::create();
-        $fileList = $this->finder
+        $fileList = Finder::create()
             ->files()
             ->in($themeDir)
             ->exclude(['node_modules']);
@@ -133,9 +128,7 @@ class ThemeExporter
         $zip = new ZipArchive();
         $zip->open($destinationFileName, ZipArchive::CREATE);
 
-        $finderClassName = get_class($this->finder);
-        $this->finder = $finderClassName::create();
-        $files = $this->finder
+        $files = Finder::create()
             ->files()
             ->in($sourceDir)
             ->exclude(['node_modules']);
