@@ -1112,29 +1112,29 @@ class AdminImportControllerCore extends AdminController
         }
 
         $url = urldecode(trim($url));
-        $parced_url = parse_url($url);
+        $parsedUrl = parse_url($url);
 
-        if (isset($parced_url['path'])) {
-            $uri = ltrim($parced_url['path'], '/');
+        if (isset($parsedUrl['path'])) {
+            $uri = ltrim($parsedUrl['path'], '/');
             $parts = explode('/', $uri);
             foreach ($parts as &$part) {
                 $part = rawurlencode($part);
             }
             unset($part);
-            $parced_url['path'] = '/'.implode('/', $parts);
+            $parsedUrl['path'] = '/'.implode('/', $parts);
         }
 
-        if (isset($parced_url['query'])) {
+        if (isset($parsedUrl['query'])) {
             $query_parts = array();
-            parse_str($parced_url['query'], $query_parts);
-            $parced_url['query'] = http_build_query($query_parts);
+            parse_str($parsedUrl['query'], $query_parts);
+            $parsedUrl['query'] = http_build_query($query_parts);
         }
 
         if (!function_exists('http_build_url')) {
             require_once(_PS_TOOL_DIR_.'http_build_url/http_build_url.php');
         }
 
-        $url = http_build_url('', $parced_url);
+        $url = http_build_url('', $parsedUrl);
 
         $orig_tmpfile = $tmpfile;
 
@@ -3705,28 +3705,45 @@ class AdminImportControllerCore extends AdminController
         return $line_count;
     }
 
-    public function storeContactImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
+    /**
+     * Import a store.
+     * If passed data contains a known store id, this store will be updated.
+     * Can also be used for store data validation only.
+     *
+     * @param array $info         : Store data
+     * @param       $notUsed      : Not used anymore.
+     * @param bool  $regenerate   : If images should be regenerated
+     * @param bool  $forceIds     : If passed store id should be used for store creation
+     * @param bool  $validateOnly : If set to true, store will not be updated nor created with $info data
+     *
+     * @return void
+     */
+    public function storeContactImportOne($info, $notUsed, $regenerate, $forceIds, $validateOnly = false)
     {
         AdminImportController::setDefaultValues($info);
 
-        if ($force_ids && isset($info['id']) && (int)$info['id']) {
-            $store = new Store((int)$info['id']);
-        } else {
-            if (array_key_exists('id', $info) && (int)$info['id'] && Store::existsInDatabase((int)$info['id'], 'store')) {
-                $store = new Store((int)$info['id']);
-            } else {
-                $store = new Store();
-            }
-        }
+        $storeId = isset($info['id']) ? (int)$info['id'] : null;
+        $store   = new Store($storeId);
+
+        $store->force_id = (bool)$forceIds;
 
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $store);
 
-        if (isset($store->image) && !empty($store->image)) {
-            if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
-                $this->warnings[] = $store->image.' '.$this->trans('cannot be copied.', array(), 'Admin.Advparameters.Notification');
+        if (!empty($store->image)) {
+            $imgWasCopied = AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate);
+            if (!$imgWasCopied) {
+                $this->warnings[] = $store->image . ' '
+                    . $this->trans('cannot be copied.', [], 'Admin.Advparameters.Notification');
             }
         }
 
+        /*
+         * New structure for store hours :
+         * [
+         *   ['hour string'],
+         *   ['another hour string'],
+         * ]
+         */
         if (isset($store->hours) && is_array($store->hours)) {
             $newHours = array();
             foreach ($store->hours as $hour) {
@@ -3749,9 +3766,10 @@ class AdminImportControllerCore extends AdminController
                 $country->id_zone = 0; // Default zone for country to create
                 $country->iso_code = Tools::strtoupper(Tools::substr($store->country, 0, 2)); // Default iso for country to create
                 $country->contains_states = 0; // Default value for country to create
-                $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
-                if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                $country->need_identification_number = 0; // Default value for country to create
+                $langFieldsValidationResult = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
+                if (($fieldsValidationResult = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                    ($langFieldsValidationResult = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
                     !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
                     $country->add()) {
                     $store->id_country = (int)$country->id;
@@ -3766,8 +3784,8 @@ class AdminImportControllerCore extends AdminController
                             'Admin.Advparameters.Notification'
                         );
                     }
-                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
-                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                    if ($fieldsValidationResult !== true || isset($langFieldsValidationResult) && $langFieldsValidationResult !== true) {
+                        $this->errors[] = ($fieldsValidationResult !== true ? $fieldsValidationResult : '').(isset($langFieldsValidationResult) && $langFieldsValidationResult !== true ? $langFieldsValidationResult : '').
                             Db::getInstance()->getMsgError();
                     }
                 }
@@ -3789,8 +3807,8 @@ class AdminImportControllerCore extends AdminController
                 $state->id_zone = 0; // Default zone for state to create
                 $state->iso_code = Tools::strtoupper(Tools::substr($store->state, 0, 2)); // Default iso for state to create
                 $state->tax_behavior = 0;
-                if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+                if (($fieldsValidationResult = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
+                    ($langFieldsValidationResult = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
                     !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
                     $state->add()) {
                     $store->id_state = (int)$state->id;
@@ -3803,35 +3821,57 @@ class AdminImportControllerCore extends AdminController
                             'Admin.Advparameters.Notification'
                         );
                     }
-                    if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
-                        $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
+                    if ($fieldsValidationResult !== true || isset($langFieldsValidationResult) && $langFieldsValidationResult !== true) {
+                        $this->errors[] = ($fieldsValidationResult !== true ? $fieldsValidationResult : '').(isset($langFieldsValidationResult) && $langFieldsValidationResult !== true ? $langFieldsValidationResult : '').
                             Db::getInstance()->getMsgError();
                     }
                 }
             }
         }
 
-        $res = false;
-        if (($field_error = $store->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $store->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
-            if ($store->id && $store->storeExists($store->id)) {
-                $res = $validateOnly ? $validateOnly : $store->update();
-            }
-            $store->force_id = (bool)$force_ids;
-            if (!$res) {
-                $res = $validateOnly ? $validateOnly : $store->add();
-            }
+        $fieldsValidationResult     = $store->validateFields(UNFRIENDLY_ERROR, true);
+        $langFieldsValidationResult = $store->validateFieldsLang(UNFRIENDLY_ERROR, true);
 
-            if (!$res) {
-                $this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
+        // If errors, log them and stop execution
+        if (true !== $fieldsValidationResult || true !== $langFieldsValidationResult) {
+            $errorGenericMessage = $this->trans('Store is invalid', [], 'Admin.Advparameters.Notification');
+            $this->errors[]      = $errorGenericMessage . ' (' . $store->name . ')';
+
+            $errorDetails = '';
+            if ($fieldsValidationResult !== true) {
+                $errorDetails .= $fieldsValidationResult;
+            }
+            if ($langFieldsValidationResult !== true) {
+                $errorDetails .= $langFieldsValidationResult;
+            }
+            $this->errors[] = $errorDetails;
+
+            return;
+        }
+
+        if ($validateOnly) {
+            return;
+        }
+
+        $res = false;
+        if ($store->storeExists($store->id)) {
+            $res = $store->update();
+        }
+
+        // If store doesn't exist or update failed
+        if (!$res) {
+            $store->force_id = (bool)$forceIds;
+            $res = $store->add();
+        }
+
+        // If nothing worked, log an error
+        if (!$res) {
+            $this->errors[] = Db::getInstance()->getMsgError() . ' '
+                . sprintf(
                     $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
                     $info['name'],
-                    (isset($info['id']) ? $info['id'] : 'null')
+                    ($store->id ? $store->id : 'null')
                 );
-            }
-        } else {
-            $this->errors[] = $this->trans('Store is invalid', array(), 'Admin.Advparameters.Notification').' ('.$store->name.')';
-            $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '');
         }
     }
 
