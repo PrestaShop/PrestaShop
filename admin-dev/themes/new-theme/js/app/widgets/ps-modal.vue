@@ -12,7 +12,7 @@
               {{translations.modal_content}}
             </div>
             <div class="modal-footer">
-                <PSButton @click="onSave" class="btn-lg" primary>{{translations.button_save}}</PSButton>
+                <PSButton @click="onSave" class="btn-lg" primary data-dismiss="modal">{{translations.button_save}}</PSButton>
                 <PSButton @click="onLeave" class="btn-lg" ghost data-dismiss="modal">{{translations.button_leave}}</PSButton>
             </div>
           </div>
