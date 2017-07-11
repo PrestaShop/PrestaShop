@@ -77,6 +77,24 @@ export const getDomainsTree = ({ commit }, payload) => {
   });
 };
 
+export const refreshCounts = ({ commit }, payload) => {
+  const url = window.data.domainsTreeUrl;
+  const params = {};
+
+  if (payload.store.getters.searchTags.length) {
+    params.search = payload.store.getters.searchTags;
+  }
+
+  Vue.http.get(url, {
+    params,
+  }).then((response) => {
+    payload.store.state.currentDomainTotalMissingTranslations -= payload.successfullySaved;
+    commit(types.SET_DOMAINS_TREE, response.body);
+  }, (error) => {
+    showGrowl('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
+  });
+};
+
 export const saveTranslations = ({ commit }, payload) => {
   const url = payload.url;
   const translations = payload.translations;
@@ -84,7 +102,8 @@ export const saveTranslations = ({ commit }, payload) => {
   Vue.http.post(url, {
     translations,
   }).then(() => {
-    payload.store.dispatch('getDomainsTree', {
+    payload.store.dispatch('refreshCounts', {
+      successfullySaved: translations.length,
       store: payload.store,
     });
     payload.store.state.modifiedTranslations = [];
