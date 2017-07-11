@@ -741,5 +741,10 @@
       <title>Display new elements in back office product page, Combination tab</title>
       <description>This hook launches modules when the back office product page is displayed</description>
     </hook>
+    <hook id="displayFrontPageTop">
+      <name>displayFrontPageTop</name>
+      <title>Display data in every front controller page header bottom</title>
+      <description>This Display data in every front controller page header bottom</description>
+    </hook>
   </entities>
 </entity_hook>

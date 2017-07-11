@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/trackingfront/trackingfront.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="47be05698f8dd87bb445ceefce6abd0d">
+        <source>Password is required</source>
+        <target>Password is required</target>
+        <note>Context:
+File: modules/trackingfront/trackingfront.php:88</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

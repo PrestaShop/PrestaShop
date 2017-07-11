@@ -33,6 +33,7 @@
         <header class="page-header">
           <h1>{$smarty.block.child}</h1>
         </header>
+        {hook h='displayFrontPageTop'}
       {/block}
     {/block}
 
