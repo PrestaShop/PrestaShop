@@ -2299,9 +2299,8 @@ class CartCore extends ObjectModel
                 $warehouse_count_by_address[$product['id_address_delivery']][$warehouse['id_warehouse']]++;
             }
         }
+        arsort($warehouse_count_by_address[$product['id_address_delivery']]);
         unset($product);
-
-        arsort($warehouse_count_by_address);
 
         // Step 2 : Group product by warehouse
         $grouped_by_warehouse = array();
