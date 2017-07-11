@@ -148,7 +148,7 @@
                       <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
                            url-upload="{{ path('admin_product_image_upload', {'idProduct': id_product}) }}"
                            url-position="{{ path('admin_product_image_positions') }}"
-                           data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}"
+                           data-max-size="{{ 'PS_LIMIT_UPLOAD_IMAGE_VALUE'|configuration }}"
                       >
                         <div id="product-images-dropzone-error" class="text-danger"></div>
                         <div class="dz-default dz-message openfilemanager">
