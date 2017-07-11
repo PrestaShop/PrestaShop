@@ -172,6 +172,9 @@
     display: inline-block;
     margin: 2px;
     min-height: 25px;
+    .close {
+      padding-left: 3px;
+    }
   }
 
   // Combination generator
@@ -181,9 +184,7 @@
     input.token-input[type="text"] {
       display: inline-block;
       border: 0;
-      padding: 0;
       outline: none;
-      margin-bottom: 0;
       background-color: transparent;
       max-width: 100%;
     }
