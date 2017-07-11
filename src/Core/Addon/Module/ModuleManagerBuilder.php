@@ -180,9 +180,9 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir.'/doctrine');
 
-        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
-        self::$lecacyContext = new LegacyContext();
         self::$legacyLogger = new LegacyLogger();
+        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient, self::$legacyLogger);
+        self::$lecacyContext = new LegacyContext();
 
         if (is_null(self::$adminModuleDataProvider)) {
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
