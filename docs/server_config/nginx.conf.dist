@@ -141,6 +141,11 @@ server {
             deny all;
         }
     }
+    location /img {
+        location ~ \.php$ {
+            deny all;
+        }
+    }
 
     # PHP FPM part
     location ~ [^/]\.php(/|$) {
