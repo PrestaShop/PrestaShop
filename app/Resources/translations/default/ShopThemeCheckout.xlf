@@ -384,7 +384,7 @@ File: themes/StarterTheme/templates/customer/discount.tpl:43</note>
         <source>Use this address for invoice too</source>
         <target>Use this address for invoice too</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:20</note>
+File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:29</note>
       </trans-unit>
     </body>
   </file>

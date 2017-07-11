@@ -182,13 +182,13 @@ File: themes/StarterTheme/templates/_partials/pagination.tpl:45</note>
         <source>Cancel</source>
         <target>Cancel</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:31</note>
+File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:40</note>
       </trans-unit>
       <trans-unit id="56ed5ee3432287e536a4913eabb9227e">
         <source>Save Address</source>
         <target>Save Address</target>
         <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:28</note>
+File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:37</note>
       </trans-unit>
     </body>
   </file>
