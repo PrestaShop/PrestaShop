@@ -181,4 +181,8 @@ export default function() {
       }
     });
   };
+
+  $('#form_step3_attributes').closest('div').on('change', function() {
+    $('.tt-input').css('width', '');
+  });
 }
