@@ -9978,15 +9978,15 @@ ul.category-tree {
     display: inline-block;
     margin: 2px;
     min-height: 25px; }
+    .product-page .token .close {
+      padding-left: 3px; }
   .product-page .tokenfield {
     height: auto;
     padding-bottom: 0; }
     .product-page .tokenfield input.token-input[type="text"] {
       display: inline-block;
       border: 0;
-      padding: 0;
-      margin-top: -6px;
-      margin-bottom: 0;
+      outline: none;
       background-color: transparent;
       max-width: 100%; }
   .product-page #accordion_combinations td.img img {
@@ -10304,7 +10304,6 @@ ul.category-tree {
       font-size: 1.25rem; }
   .product-page .maxLength {
     float: right;
-    font-family: OpenSans;
     font-size: 12px;
     font-style: italic;
     color: #6C868E; }
@@ -12741,3 +12740,9 @@ body {
 #product_filter_column_active .select2 {
   min-width: 70px;
   min-width: 4.375rem; }
+
+span.twitter-typeahead {
+  display: block !important;
+  width: 100% !important; }
+  span.twitter-typeahead input.tt-input {
+    width: 100% !important; }
