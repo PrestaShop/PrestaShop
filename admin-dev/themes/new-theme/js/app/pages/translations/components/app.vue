@@ -39,7 +39,7 @@
         <Principal :modal="this.$refs.transModal" ref="principal" />
       </div>
     </div>
-    <PSModal @save="onSave" @leave="onLeave" :translations="translations"/>
+    <PSModal ref="transModal" :translations="translations"/>
   </div>
 </template>
 
@@ -50,7 +50,7 @@
   import Principal from './principal';
   import PSModal from 'app/widgets/ps-modal';
   import { EventBus } from 'app/utils/event-bus';
-  
+
 
   export default {
     name: 'app',
@@ -90,7 +90,14 @@
           setTimeout(() => {
             window.stop();
           }, 500);
-          EventBus.$emit('showModal');
+          this.$refs.transModal.showModal();
+          this.$refs.transModal.$once('save', () => {
+            this.$refs.principal.saveTranslations();
+            this.leavePage();
+          });
+          this.$refs.transModal.$once('leave', () => {
+            this.leavePage();
+          });
           return null;
         }
       };
@@ -102,11 +109,7 @@
         });
         this.$store.currentDomain = '';
       },
-      onSave() {
-        this.$refs.principal.saveTranslations();
-        EventBus.$emit('hideModal');
-      },
-      onLeave() {
+      leavePage() {
         this.leave = true;
         window.location.href = this.destHref;
       },
