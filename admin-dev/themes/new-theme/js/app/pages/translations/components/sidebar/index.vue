@@ -44,6 +44,10 @@
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
+    props: [
+      'modal',
+      'principal',
+    ],
     computed: {
       treeReady() {
         return !this.$store.state.sidebarLoading;
@@ -85,15 +89,27 @@
         store: this.$store,
       });
       EventBus.$on('lastTreeItemClick', (el) => {
-        if (!this.edited() || (this.edited() && confirm(this.trans('modal_content')))) {
-          this.$store.dispatch('updateCurrentDomain', el.item);
-          this.$store.dispatch('getCatalog', { url: el.item.dataValue });
-          this.$store.dispatch('updatePageIndex', 1);
-          this.$store.state.modifiedTranslations = [];
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.principal.saveTranslations();
+            this.itemClick(el);
+          });
+          this.modal.$once('leave', () => {
+            this.itemClick(el);
+          });
+        } else {
+          this.itemClick(el);
         }
       });
     },
     methods: {
+      itemClick: function itemClick(el) {
+        this.$store.dispatch('updateCurrentDomain', el.item);
+        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
+        this.$store.dispatch('updatePageIndex', 1);
+        this.$store.state.modifiedTranslations = [];
+      },
       getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
         const keys = Object.keys(tree);
         let toDisplay = '';

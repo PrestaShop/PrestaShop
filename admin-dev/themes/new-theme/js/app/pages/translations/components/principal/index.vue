@@ -97,6 +97,9 @@
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
+    props: [
+      'modal',
+    ],
     computed: {
       principalReady() {
         return !this.$store.state.principalLoading;
@@ -154,18 +157,33 @@
       },
     },
     methods: {
+      changePage: function changePage(pageIndex) {
+        this.$store.dispatch('updatePageIndex', pageIndex);
+        this.fetch();
+        this.$store.state.modifiedTranslations = [];
+      },
       isEdited(input) {
         if (input.translation.edited) {
           this.$store.state.modifiedTranslations[input.id] = input.translation;
         } else {
-          this.$store.state.modifiedTranslations.splice(this.$store.state.modifiedTranslations.indexOf(input.id), 1);
+          this.$store.state.modifiedTranslations.splice(
+            this.$store.state.modifiedTranslations.indexOf(input.id),
+            1
+          );
         }
       },
       onPageChanged(pageIndex) {
-        if (!this.edited() || (this.edited() && confirm(this.trans('modal_content')))) {
-          this.$store.dispatch('updatePageIndex', pageIndex);
-          this.fetch();
-          this.$store.state.modifiedTranslations = [];
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.saveTranslations();
+            this.changePage(pageIndex);
+          });
+          this.modal.$once('leave', () => {
+            this.changePage(pageIndex);
+          });
+        } else {
+          this.changePage(pageIndex);
         }
       },
       fetch() {

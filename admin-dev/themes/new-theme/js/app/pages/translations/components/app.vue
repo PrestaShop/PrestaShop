@@ -35,8 +35,8 @@
       </div>
 
       <div class="row">
-        <Sidebar />
-        <Principal ref="principal" />
+        <Sidebar :modal="this.$refs.transModal" :principal="this.$refs.principal"/>
+        <Principal :modal="this.$refs.transModal" ref="principal" />
       </div>
     </div>
     <PSModal @save="onSave" @leave="onLeave" :translations="translations"/>
