@@ -140,15 +140,22 @@ small.label, small.value {
   .form-control:focus {
     outline: none;
   }
-  .input-group-btn > .btn {
-    border: 0;
-    box-shadow: none;
-    color: #ffffff;
-    font-size: 0.6875rem;
-    font-weight: normal;
-    margin-left: 0;
-    padding: 0.625rem 1rem;
-    text-transform: uppercase;
+  .input-group-btn {
+    height: 100%;
+    > .btn {
+      border: 0;
+      box-shadow: none;
+      color: #ffffff;
+      font-size: 0.6875rem;
+      font-weight: normal;
+      margin-left: 0;
+      padding: 0.625rem 1rem;
+      text-transform: uppercase;
+      &[data-action="show-password"]{
+        background: $gray;
+        height: 100%;
+      }
+    }
   }
 }
 input, textarea {
