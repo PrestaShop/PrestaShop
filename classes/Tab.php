@@ -136,12 +136,6 @@ class TabCore extends ObjectModel
             return false;
         }
 
-        /* Profile selection */
-        $profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM `'._DB_PREFIX_.'profile` WHERE `id_profile` != 1');
-        if (!$profiles || empty($profiles)) {
-            return true;
-        }
-
         /* Right management */
         $slug = 'ROLE_MOD_TAB_'.strtoupper(self::getClassNameById($idTab));
 
