@@ -111,6 +111,6 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.'/default';
+        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
     }
 }

@@ -95,6 +95,12 @@ class ThemeExtractor
         throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
     }
 
+    /**
+     * Add default catalogue in this &$catalogue when the translation exists
+     *
+     * @param string $locale
+     * @param MessageCatalogue $catalogue
+     */
     private function overrideFromDefaultCatalog($locale, &$catalogue)
     {
         $defaultCatalogue = $this->themeProvider
@@ -102,28 +108,43 @@ class ThemeExtractor
             ->getDefaultCatalogue()
         ;
 
-        if (!empty($defaultCatalogue)) {
-            $defaultCatalogue = current($defaultCatalogue);
+        if (empty($defaultCatalogue)) {
+            return;
+        }
 
-            if (!empty($defaultCatalogue)) {
-                $defaultDomainsCatalogue = $catalogue->getDomains();
+        $defaultCatalogue = current($defaultCatalogue);
 
-                foreach ($defaultCatalogue as $domain => $translation) {
-                    $domain = str_replace('.' . $locale, '', $domain);
-                    $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
+        if (empty($defaultCatalogue)) {
+            return;
+        }
 
-                    if (in_array($domain, $defaultDomainsCatalogue)) {
-                        foreach ($translation as $key => $trans) {
-                            if ($catalogue->has($key, $domain)) {
-                                $catalogue->set($key, $trans, $domain);
-                            }
-                        }
+        $defaultDomainsCatalogue = $catalogue->getDomains();
+
+        foreach ($defaultCatalogue as $domain => $translation) {
+            // AdminCatalogFeature.fr-FR to AdminCatalogFeature
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            // AdminCatalogFeature to Admin.Catalog.Feature
+            $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
+
+            if (in_array($domain, $defaultDomainsCatalogue)) {
+                foreach ($translation as $key => $trans) {
+                    if ($catalogue->has($key, $domain)) {
+                        $catalogue->set($key, $trans, $domain);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Add database catalogue in this &$catalogue
+     *
+     * @param string $themeName
+     * @param string $locale
+     * @param MessageCatalogue $catalogue
+     * @throws \Exception
+     */
     private function overrideFromDatabase($themeName, $locale, &$catalogue)
     {
         if (is_null($this->themeProvider)) {
