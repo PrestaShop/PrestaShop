@@ -55,11 +55,11 @@
             <form class="row">
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_from')}}</label>
-                <PSDatePicker @dpChange="onDpChange"  @reset="onClear" data-type="sup"/>
+                <PSDatePicker :locale="locale" @dpChange="onDpChange"  @reset="onClear" data-type="sup"/>
               </div>
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_to')}}</label>
-                <PSDatePicker @dpChange="onDpChange" @reset="onClear" data-type="inf" />
+                <PSDatePicker :locale="locale" @dpChange="onDpChange" @reset="onClear" data-type="inf" />
               </div>
             </form>
           </div>
@@ -94,6 +94,9 @@
 
   export default {
     computed: {
+      locale() {
+        return window.data.locale;
+      },
       isOverview() {
         return this.$route.name === 'overview';
       },

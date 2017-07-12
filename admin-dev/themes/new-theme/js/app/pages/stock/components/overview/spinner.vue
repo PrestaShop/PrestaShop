@@ -192,4 +192,8 @@
     -moz-appearance: none;
     appearance: none;
 }
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
 </style>
