@@ -75,8 +75,10 @@ server {
 
     gzip_disable "MSIE [1-6]\.(?!.*SV1)";
 
-    # Static assets delivery optimisations
-    add_header Strict-Transport-Security max-age=31536000;
+    # HSTS (Force clients to interact with your website using HTTPS only)
+    # For enhanced security, register your site here: https://hstspreload.org/
+    # WARNING: Don't use this if your site is not fully on HTTPS!
+    # add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" preload; always;
 
     # Cloudflare / Max CDN fix
     location ~* \.(eot|otf|ttf|woff|woff2)$ {
