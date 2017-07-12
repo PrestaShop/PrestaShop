@@ -524,12 +524,6 @@ class AddressCore extends ObjectModel
      */
     public function getFieldsRequiredDB()
     {
-        $this->cacheFieldsRequiredDatabase(false);
-        $objectName = $this->getObjectName();
-        if (isset(self::$fieldsRequiredDatabase[$objectName])) {
-            return self::$fieldsRequiredDatabase[$objectName];
-        }
-
-        return array();
+        return parent::getCachedFieldsRequiredDatabase();
     }
 }

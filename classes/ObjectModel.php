@@ -1040,10 +1040,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
 
         // Check if field is required
-        $objectName = $this->getObjectName();
-        $required_fields = (isset(self::$fieldsRequiredDatabase[$objectName]))
-            ? self::$fieldsRequiredDatabase[$objectName]
-            : array();
+        $required_fields = $this->getCachedFieldsRequiredDatabase();
         if (!$id_lang || $id_lang == $ps_lang_default) {
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {
@@ -1170,10 +1167,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $this->cacheFieldsRequiredDatabase();
         $errors = array();
-        $objectName = $this->getObjectName();
-        $required_fields_database = (isset(self::$fieldsRequiredDatabase[$objectName]))
-            ? self::$fieldsRequiredDatabase[$objectName]
-            : array();
+        $required_fields_database = $this->getCachedFieldsRequiredDatabase();
         foreach ($this->def['fields'] as $field => $data) {
             $value = Tools::getValue($field, $this->{$field});
             // Check if field is required by user
@@ -1279,10 +1273,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         $resource_parameters = array_merge_recursive($default_resource_parameters, $this->{$ws_params_attribute_name});
 
-        $objectName = $this->getObjectName();
-        $required_fields = (isset(self::$fieldsRequiredDatabase[$objectName])
-            ? self::$fieldsRequiredDatabase[$objectName]
-            : array());
+        $required_fields = $this->getCachedFieldsRequiredDatabase();
         foreach ($this->def['fields'] as $field_name => $details) {
             if (!isset($resource_parameters['fields'][$field_name])) {
                 $resource_parameters['fields'][$field_name] = array();
@@ -1388,10 +1379,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $this->cacheFieldsRequiredDatabase();
         $errors = array();
-        $objectName = $this->getObjectName();
-        $required_fields = (isset(self::$fieldsRequiredDatabase[$objectName]))
-            ? self::$fieldsRequiredDatabase[$objectName]
-            : array();
+        $required_fields = $this->getCachedFieldsRequiredDatabase();
 
         foreach ($this->def['fields'] as $field => $data) {
             if (!in_array($field, $required_fields)) {
@@ -1466,6 +1454,20 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 self::$fieldsRequiredDatabase = array();
             }
         }
+    }
+
+    /**
+     * Get required fields list for this model or for all the models
+     *
+     * @param bool $all : whether it should return required fields for this model or all the models
+     *
+     * @return array
+     */
+    public function getCachedFieldsRequiredDatabase($all = false)
+    {
+        $this->cacheFieldsRequiredDatabase($all);
+
+        return $all ? self::$fieldsRequiredDatabase : self::$fieldsRequiredDatabase[$this->getObjectName()];
     }
 
     /**
