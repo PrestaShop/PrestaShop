@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6583719affb4a5febb33"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a5f165a0488899fe6351"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -33175,7 +33175,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 exports.i(__webpack_require__(327), "");
 
 // module
-exports.push([module.i, "\n/* not used */\n/* TODO change padding */\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 3.5px;\n    right: 0;\n    border: none;\n    height: 31px;\n    width: 40px;\n    background: #25B9D7;\n    z-index: 2;\n    border-left: 10px solid white;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n.edit-qty[data-v-599c0dc5] {\n  text-indent: 5px;\n  height: 33px;\n  width: 70px;\n  border: 1px solid #BBCDD2;\n  margin: 3px 0;\n}\ninput[type=number][data-v-599c0dc5]::-webkit-inner-spin-button,\ninput[type=number][data-v-599c0dc5]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n", ""]);
+exports.push([module.i, "\n/* not used */\n/* TODO change padding */\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 3.5px;\n    right: 0;\n    border: none;\n    height: 31px;\n    width: 40px;\n    background: #25B9D7;\n    z-index: 2;\n    border-left: 10px solid white;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n.edit-qty[data-v-599c0dc5] {\n  text-indent: 5px;\n  height: 33px;\n  width: 100px;\n  border: 1px solid #BBCDD2;\n  margin: 3px 0;\n}\ninput[type=number][data-v-599c0dc5]::-webkit-inner-spin-button,\ninput[type=number][data-v-599c0dc5]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n", ""]);
 
 // exports
 
@@ -35630,7 +35630,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
-  * vue-router v2.6.0
+  * vue-router v2.7.0
   * (c) 2017 Evan You
   * @license MIT
   */
@@ -35646,6 +35646,10 @@ function warn (condition, message) {
   if (process.env.NODE_ENV !== 'production' && !condition) {
     typeof console !== 'undefined' && console.warn(("[vue-router] " + message));
   }
+}
+
+function isError (err) {
+  return Object.prototype.toString.call(err).indexOf('Error') > -1
 }
 
 var View = {
@@ -36149,7 +36153,7 @@ function install (Vue) {
 
   var strats = Vue.config.optionMergeStrategies;
   // use the same hook merging strategy for route hooks
-  strats.beforeRouteEnter = strats.beforeRouteLeave = strats.created;
+  strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = strats.created;
 }
 
 /*  */
@@ -37289,6 +37293,107 @@ function runQueue (queue, fn, cb) {
 
 /*  */
 
+function resolveAsyncComponents (matched) {
+  return function (to, from, next) {
+    var hasAsync = false;
+    var pending = 0;
+    var error = null;
+
+    flatMapComponents(matched, function (def, _, match, key) {
+      // if it's a function and doesn't have cid attached,
+      // assume it's an async component resolve function.
+      // we are not using Vue's default async resolving mechanism because
+      // we want to halt the navigation until the incoming component has been
+      // resolved.
+      if (typeof def === 'function' && def.cid === undefined) {
+        hasAsync = true;
+        pending++;
+
+        var resolve = once(function (resolvedDef) {
+          if (resolvedDef.__esModule && resolvedDef.default) {
+            resolvedDef = resolvedDef.default;
+          }
+          // save resolved on async factory in case it's used elsewhere
+          def.resolved = typeof resolvedDef === 'function'
+            ? resolvedDef
+            : _Vue.extend(resolvedDef);
+          match.components[key] = resolvedDef;
+          pending--;
+          if (pending <= 0) {
+            next();
+          }
+        });
+
+        var reject = once(function (reason) {
+          var msg = "Failed to resolve async component " + key + ": " + reason;
+          process.env.NODE_ENV !== 'production' && warn(false, msg);
+          if (!error) {
+            error = isError(reason)
+              ? reason
+              : new Error(msg);
+            next(error);
+          }
+        });
+
+        var res;
+        try {
+          res = def(resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+        if (res) {
+          if (typeof res.then === 'function') {
+            res.then(resolve, reject);
+          } else {
+            // new syntax in Vue 2.3
+            var comp = res.component;
+            if (comp && typeof comp.then === 'function') {
+              comp.then(resolve, reject);
+            }
+          }
+        }
+      }
+    });
+
+    if (!hasAsync) { next(); }
+  }
+}
+
+function flatMapComponents (
+  matched,
+  fn
+) {
+  return flatten(matched.map(function (m) {
+    return Object.keys(m.components).map(function (key) { return fn(
+      m.components[key],
+      m.instances[key],
+      m, key
+    ); })
+  }))
+}
+
+function flatten (arr) {
+  return Array.prototype.concat.apply([], arr)
+}
+
+// in Webpack 2, require.ensure now also returns a Promise
+// so the resolve/reject functions may get called an extra time
+// if the user uses an arrow function shorthand that happens to
+// return that Promise.
+function once (fn) {
+  var called = false;
+  return function () {
+    var args = [], len = arguments.length;
+    while ( len-- ) args[ len ] = arguments[ len ];
+
+    if (called) { return }
+    called = true;
+    return fn.apply(this, args)
+  }
+}
+
+/*  */
+
 var History = function History (router, base) {
   this.router = router;
   this.base = normalizeBase(base);
@@ -37582,106 +37687,6 @@ function poll (
       poll(cb, instances, key, isValid);
     }, 16);
   }
-}
-
-function resolveAsyncComponents (matched) {
-  return function (to, from, next) {
-    var hasAsync = false;
-    var pending = 0;
-    var error = null;
-
-    flatMapComponents(matched, function (def, _, match, key) {
-      // if it's a function and doesn't have cid attached,
-      // assume it's an async component resolve function.
-      // we are not using Vue's default async resolving mechanism because
-      // we want to halt the navigation until the incoming component has been
-      // resolved.
-      if (typeof def === 'function' && def.cid === undefined) {
-        hasAsync = true;
-        pending++;
-
-        var resolve = once(function (resolvedDef) {
-          // save resolved on async factory in case it's used elsewhere
-          def.resolved = typeof resolvedDef === 'function'
-            ? resolvedDef
-            : _Vue.extend(resolvedDef);
-          match.components[key] = resolvedDef;
-          pending--;
-          if (pending <= 0) {
-            next();
-          }
-        });
-
-        var reject = once(function (reason) {
-          var msg = "Failed to resolve async component " + key + ": " + reason;
-          process.env.NODE_ENV !== 'production' && warn(false, msg);
-          if (!error) {
-            error = isError(reason)
-              ? reason
-              : new Error(msg);
-            next(error);
-          }
-        });
-
-        var res;
-        try {
-          res = def(resolve, reject);
-        } catch (e) {
-          reject(e);
-        }
-        if (res) {
-          if (typeof res.then === 'function') {
-            res.then(resolve, reject);
-          } else {
-            // new syntax in Vue 2.3
-            var comp = res.component;
-            if (comp && typeof comp.then === 'function') {
-              comp.then(resolve, reject);
-            }
-          }
-        }
-      }
-    });
-
-    if (!hasAsync) { next(); }
-  }
-}
-
-function flatMapComponents (
-  matched,
-  fn
-) {
-  return flatten(matched.map(function (m) {
-    return Object.keys(m.components).map(function (key) { return fn(
-      m.components[key],
-      m.instances[key],
-      m, key
-    ); })
-  }))
-}
-
-function flatten (arr) {
-  return Array.prototype.concat.apply([], arr)
-}
-
-// in Webpack 2, require.ensure now also returns a Promise
-// so the resolve/reject functions may get called an extra time
-// if the user uses an arrow function shorthand that happens to
-// return that Promise.
-function once (fn) {
-  var called = false;
-  return function () {
-    var args = [], len = arguments.length;
-    while ( len-- ) args[ len ] = arguments[ len ];
-
-    if (called) { return }
-    called = true;
-    return fn.apply(this, args)
-  }
-}
-
-function isError (err) {
-  return Object.prototype.toString.call(err).indexOf('Error') > -1
 }
 
 /*  */
@@ -38122,7 +38127,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '2.6.0';
+VueRouter.version = '2.7.0';
 
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter);
@@ -42095,7 +42100,7 @@ exports.default = {
       var sorting = desc;
       var action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
       if (typeof desc !== 'string') {
-        sorting = this.$route.name === 'overview' ? ' desc' : '';
+        sorting = ' desc';
       }
       this.$store.dispatch('isLoading');
 
@@ -42267,24 +42272,7 @@ exports.default = {
       return this.$store.state.employees;
     },
     movementsTypes: function movementsTypes() {
-      var displayName = void 0;
-      var movements = [];
-
-      return this.$store.state.movementsTypes.filter(function (movement) {
-        if (displayName !== movement.name) {
-          displayName = movement.name;
-          movements.push(movement);
-          return movements;
-        }
-        var item = _lodash2.default.find(movements, {
-          name: displayName
-        });
-        var clone = Object.assign(item, {
-          id_stock_mvt_reason: [item.id_stock_mvt_reason]
-        });
-
-        return clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
-      });
+      return this.$store.state.movementsTypes;
     },
     categoriesList: function categoriesList() {
       return this.$store.getters.categories;
@@ -42341,6 +42329,7 @@ exports.default = {
     PSDatePicker: _psDatepicker2.default
   },
   mounted: function mounted() {
+    this.date_add = {};
     this.$store.dispatch('getSuppliers');
     this.$store.dispatch('getCategories');
   },

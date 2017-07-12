@@ -878,13 +878,13 @@ File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:62</note>
         <source>Caption</source>
         <target>Caption</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:136</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:137</note>
       </trans-unit>
       <trans-unit id="84967207ddc311cfbe8ee66f677a1544">
         <source>Cover image</source>
         <target>Cover image</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:140</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductImageController.php:141</note>
       </trans-unit>
     </body>
   </file>
@@ -1367,7 +1367,7 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:48</note>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:49</note>
       </trans-unit>
-      <trans-unit id="dc7f9d531239c6acc08b99236a4204cd">
+      <trans-unit id="d164dc7a9ce1ca081fcee017f54b21ec">
         <source>Stock management</source>
         <target>Stock management</target>
         <note>Context:
@@ -1379,9 +1379,9 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:54</note>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:56</note>
       </trans-unit>
-      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
-        <source>Stock</source>
-        <target>Stock</target>
+      <trans-unit id="1dc2af14d15238ba67e03c99a6f415f6">
+        <source>Stocks</source>
+        <target>Stocks</target>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:55</note>
       </trans-unit>

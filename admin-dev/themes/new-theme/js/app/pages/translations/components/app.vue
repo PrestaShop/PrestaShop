@@ -67,7 +67,6 @@
     methods: {
       onSearch(keywords) {
         this.$store.dispatch('getDomainsTree', {
-          search: keywords,
           store: this.$store,
         });
         this.$store.currentDomain = '';

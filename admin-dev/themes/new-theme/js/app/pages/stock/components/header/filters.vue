@@ -101,24 +101,7 @@
         return this.$store.state.employees;
       },
       movementsTypes() {
-        let displayName;
-        const movements = [];
-
-        return this.$store.state.movementsTypes.filter((movement) => {
-          if (displayName !== movement.name) {
-            displayName = movement.name;
-            movements.push(movement);
-            return movements;
-          }
-          const item = _.find(movements, {
-            name: displayName,
-          });
-          const clone = Object.assign(item, {
-            id_stock_mvt_reason: [item.id_stock_mvt_reason],
-          });
-
-          return clone.id_stock_mvt_reason.push(movement.id_stock_mvt_reason);
-        });
+        return this.$store.state.movementsTypes;
       },
       categoriesList() {
         return this.$store.getters.categories;
@@ -175,6 +158,7 @@
       PSDatePicker,
     },
     mounted() {
+      this.date_add = {};
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },

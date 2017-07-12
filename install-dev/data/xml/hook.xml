@@ -743,8 +743,8 @@
     </hook>
     <hook id="displayFrontPageTop">
       <name>displayFrontPageTop</name>
-      <title>Display data in every front controller page header bottom</title>
-      <description>This Display data in every front controller page header bottom</description>
+      <title>Display data in every front controller page-header bottom</title>
+      <description>This Display data in every front controller page-header bottom</description>
     </hook>
   </entities>
 </entity_hook>

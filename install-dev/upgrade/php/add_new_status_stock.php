@@ -65,7 +65,7 @@ function add_new_status_stock()
     foreach ($languages as $lang) {
         Db::getInstance()->execute(
             'INSERT INTO `'._DB_PREFIX_.'tab_lang` (`id_tab`, `id_lang`, `name`)
-                VALUES ('.(int)$lastIdTab.', '.(int)$lang['id_lang'].', "'.pSQL($translator->trans('Stock', array(), 'Admin.Navigation.Menu', $lang['locale'])).'")');
+                VALUES ('.(int)$lastIdTab.', '.(int)$lang['id_lang'].', "'.pSQL($translator->trans('Stocks', array(), 'Admin.Navigation.Menu', $lang['locale'])).'")');
     }
 
     foreach ($data as $d) {

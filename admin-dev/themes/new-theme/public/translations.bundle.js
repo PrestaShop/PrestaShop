@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6583719affb4a5febb33"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a5f165a0488899fe6351"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -28160,8 +28160,8 @@ const getDomainsTree = ({ commit }, payload) => {
   commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["i" /* SIDEBAR_LOADING */], true);
   commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["j" /* PRINCIPAL_LOADING */], true);
 
-  if (payload && payload.search) {
-    params.search = payload.search;
+  if (payload.store.getters.searchTags.length) {
+    params.search = payload.store.getters.searchTags;
   }
 
   __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.get(url, {
@@ -28184,7 +28184,9 @@ const saveTranslations = ({ commit }, payload) => {
   __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post(url, {
     translations,
   }).then(() => {
-    payload.store.dispatch('getDomainsTree');
+    payload.store.dispatch('getDomainsTree', {
+      store: payload.store,
+    });
     return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('notice', 'Translations successfully updated');
   }, (error) => {
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('error', error.bodyText ? JSON.parse(error.bodyText).error : error.statusText);
@@ -28624,7 +28626,6 @@ exports.default = {
   methods: {
     onSearch: function onSearch(keywords) {
       this.$store.dispatch('getDomainsTree', {
-        search: keywords,
         store: this.$store
       });
       this.$store.currentDomain = '';
@@ -28887,7 +28888,7 @@ exports.default = {
       return this.$store.state.currentDomain;
     },
     currentDomainTotalTranslations: function currentDomainTotalTranslations() {
-      return this.$store.state.currentDomainTotalTranslations <= 1 ? '- ' + this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.totalTranslations) : '- ' + this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations);
+      return this.$store.state.currentDomainTotalTranslations <= 1 ? '- ' + this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations) : '- ' + this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations);
     },
     currentDomainTotalMissingTranslations: function currentDomainTotalMissingTranslations() {
       return this.$store.state.currentDomainTotalMissingTranslations;
@@ -29242,7 +29243,9 @@ exports.default = {
   mounted: function mounted() {
     var _this = this;
 
-    this.$store.dispatch('getDomainsTree');
+    this.$store.dispatch('getDomainsTree', {
+      store: this.$store
+    });
     _eventBus.EventBus.$on('lastTreeItemClick', function (el) {
       _this.$store.dispatch('updateCurrentDomain', el.item);
       _this.$store.dispatch('getCatalog', { url: el.item.dataValue });
@@ -35755,7 +35758,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {/**
-  * vue-router v2.6.0
+  * vue-router v2.7.0
   * (c) 2017 Evan You
   * @license MIT
   */
@@ -35771,6 +35774,10 @@ function warn (condition, message) {
   if (process.env.NODE_ENV !== 'production' && !condition) {
     typeof console !== 'undefined' && console.warn(("[vue-router] " + message));
   }
+}
+
+function isError (err) {
+  return Object.prototype.toString.call(err).indexOf('Error') > -1
 }
 
 var View = {
@@ -36274,7 +36281,7 @@ function install (Vue) {
 
   var strats = Vue.config.optionMergeStrategies;
   // use the same hook merging strategy for route hooks
-  strats.beforeRouteEnter = strats.beforeRouteLeave = strats.created;
+  strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = strats.created;
 }
 
 /*  */
@@ -37414,6 +37421,107 @@ function runQueue (queue, fn, cb) {
 
 /*  */
 
+function resolveAsyncComponents (matched) {
+  return function (to, from, next) {
+    var hasAsync = false;
+    var pending = 0;
+    var error = null;
+
+    flatMapComponents(matched, function (def, _, match, key) {
+      // if it's a function and doesn't have cid attached,
+      // assume it's an async component resolve function.
+      // we are not using Vue's default async resolving mechanism because
+      // we want to halt the navigation until the incoming component has been
+      // resolved.
+      if (typeof def === 'function' && def.cid === undefined) {
+        hasAsync = true;
+        pending++;
+
+        var resolve = once(function (resolvedDef) {
+          if (resolvedDef.__esModule && resolvedDef.default) {
+            resolvedDef = resolvedDef.default;
+          }
+          // save resolved on async factory in case it's used elsewhere
+          def.resolved = typeof resolvedDef === 'function'
+            ? resolvedDef
+            : _Vue.extend(resolvedDef);
+          match.components[key] = resolvedDef;
+          pending--;
+          if (pending <= 0) {
+            next();
+          }
+        });
+
+        var reject = once(function (reason) {
+          var msg = "Failed to resolve async component " + key + ": " + reason;
+          process.env.NODE_ENV !== 'production' && warn(false, msg);
+          if (!error) {
+            error = isError(reason)
+              ? reason
+              : new Error(msg);
+            next(error);
+          }
+        });
+
+        var res;
+        try {
+          res = def(resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+        if (res) {
+          if (typeof res.then === 'function') {
+            res.then(resolve, reject);
+          } else {
+            // new syntax in Vue 2.3
+            var comp = res.component;
+            if (comp && typeof comp.then === 'function') {
+              comp.then(resolve, reject);
+            }
+          }
+        }
+      }
+    });
+
+    if (!hasAsync) { next(); }
+  }
+}
+
+function flatMapComponents (
+  matched,
+  fn
+) {
+  return flatten(matched.map(function (m) {
+    return Object.keys(m.components).map(function (key) { return fn(
+      m.components[key],
+      m.instances[key],
+      m, key
+    ); })
+  }))
+}
+
+function flatten (arr) {
+  return Array.prototype.concat.apply([], arr)
+}
+
+// in Webpack 2, require.ensure now also returns a Promise
+// so the resolve/reject functions may get called an extra time
+// if the user uses an arrow function shorthand that happens to
+// return that Promise.
+function once (fn) {
+  var called = false;
+  return function () {
+    var args = [], len = arguments.length;
+    while ( len-- ) args[ len ] = arguments[ len ];
+
+    if (called) { return }
+    called = true;
+    return fn.apply(this, args)
+  }
+}
+
+/*  */
+
 var History = function History (router, base) {
   this.router = router;
   this.base = normalizeBase(base);
@@ -37707,106 +37815,6 @@ function poll (
       poll(cb, instances, key, isValid);
     }, 16);
   }
-}
-
-function resolveAsyncComponents (matched) {
-  return function (to, from, next) {
-    var hasAsync = false;
-    var pending = 0;
-    var error = null;
-
-    flatMapComponents(matched, function (def, _, match, key) {
-      // if it's a function and doesn't have cid attached,
-      // assume it's an async component resolve function.
-      // we are not using Vue's default async resolving mechanism because
-      // we want to halt the navigation until the incoming component has been
-      // resolved.
-      if (typeof def === 'function' && def.cid === undefined) {
-        hasAsync = true;
-        pending++;
-
-        var resolve = once(function (resolvedDef) {
-          // save resolved on async factory in case it's used elsewhere
-          def.resolved = typeof resolvedDef === 'function'
-            ? resolvedDef
-            : _Vue.extend(resolvedDef);
-          match.components[key] = resolvedDef;
-          pending--;
-          if (pending <= 0) {
-            next();
-          }
-        });
-
-        var reject = once(function (reason) {
-          var msg = "Failed to resolve async component " + key + ": " + reason;
-          process.env.NODE_ENV !== 'production' && warn(false, msg);
-          if (!error) {
-            error = isError(reason)
-              ? reason
-              : new Error(msg);
-            next(error);
-          }
-        });
-
-        var res;
-        try {
-          res = def(resolve, reject);
-        } catch (e) {
-          reject(e);
-        }
-        if (res) {
-          if (typeof res.then === 'function') {
-            res.then(resolve, reject);
-          } else {
-            // new syntax in Vue 2.3
-            var comp = res.component;
-            if (comp && typeof comp.then === 'function') {
-              comp.then(resolve, reject);
-            }
-          }
-        }
-      }
-    });
-
-    if (!hasAsync) { next(); }
-  }
-}
-
-function flatMapComponents (
-  matched,
-  fn
-) {
-  return flatten(matched.map(function (m) {
-    return Object.keys(m.components).map(function (key) { return fn(
-      m.components[key],
-      m.instances[key],
-      m, key
-    ); })
-  }))
-}
-
-function flatten (arr) {
-  return Array.prototype.concat.apply([], arr)
-}
-
-// in Webpack 2, require.ensure now also returns a Promise
-// so the resolve/reject functions may get called an extra time
-// if the user uses an arrow function shorthand that happens to
-// return that Promise.
-function once (fn) {
-  var called = false;
-  return function () {
-    var args = [], len = arguments.length;
-    while ( len-- ) args[ len ] = arguments[ len ];
-
-    if (called) { return }
-    called = true;
-    return fn.apply(this, args)
-  }
-}
-
-function isError (err) {
-  return Object.prototype.toString.call(err).indexOf('Error') > -1
 }
 
 /*  */
@@ -38247,7 +38255,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '2.6.0';
+VueRouter.version = '2.7.0';
 
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter);
