@@ -6,10 +6,6 @@ parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
 
 services:
-    finder:
-        class: Symfony\Component\Finder\Finder
-        shared: false
-
     doctrine.cache.provider:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
@@ -283,7 +279,6 @@ services:
         arguments:
           - "@prestashop.adapter.legacy.configuration"
           - "@filesystem"
-          - "@finder"
           - "@prestashop.core.admin.lang.repository"
           - "@prestashop.translation.theme.exporter"
 
@@ -475,7 +470,6 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
         arguments:
             - "@filesystem"
-            - "@finder"
             - "@translator"
 
     prestashop.twig.extension.hook:
