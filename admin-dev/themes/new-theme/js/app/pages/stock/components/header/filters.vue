@@ -165,6 +165,11 @@
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
+    watch: {
+      $route() {
+
+      },
+    },
     data: () => ({
       disabled: true,
       suppliers: [],
