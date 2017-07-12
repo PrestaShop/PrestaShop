@@ -1170,7 +1170,8 @@ class CartCore extends ObjectModel
         $operator = 'up',
         $id_address_delivery = 0,
         Shop $shop = null,
-        $auto_add_cart_rule = true
+        $auto_add_cart_rule = true,
+        $skipAvailabilityCheckOutOfStock = false
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1258,7 +1259,7 @@ class CartCore extends ObjectModel
                     $new_qty = (int)$result['quantity'] + (int)$quantity;
                     $qty = '+ '.(int)$quantity;
 
-                    if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
+                    if (!$skipAvailabilityCheckOutOfStock && !Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                         if ($new_qty > $product_qty) {
                             return false;
                         }
