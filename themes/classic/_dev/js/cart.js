@@ -5,7 +5,10 @@ prestashop.cart = prestashop.cart || {};
 
 prestashop.cart.active_inputs = null;
 
-var spinnerSelector = 'input[name="product-quantity-spin"]';
+let spinnerSelector = 'input[name="product-quantity-spin"]';
+let hasError = false;
+let updateOpertation = '';
+let errorMsg = '';
 
 /**
  * Attach Bootstrap TouchSpin event handlers
@@ -23,6 +26,8 @@ function createSpin()
       max: 1000000
     });
   });
+  
+  CheckUpdateQuantityOperations.switchErrorStat();
 }
 
 
@@ -146,6 +151,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation(cartAction.type, resp);
       var $quantityInput = getTouchSpinInput($target);
       $quantityInput.val(resp.quantity);
 
@@ -183,6 +189,7 @@ $(document).ready(() => {
         promises.push(jqXHR);
       }
     }).then(function (resp) {
+      CheckUpdateQuantityOperations.checkUpdateOpertation('updateProductQuantityInCart', resp);
       $target.val(resp.quantity);
 
       var dataset;
@@ -274,4 +281,49 @@ $(document).ready(() => {
   )
 });
 
+const CheckUpdateQuantityOperations = {
+  'switchErrorStat': () => {
+    let $checkoutBtn = $('.checkout a');
+    let isValidOperation = ($.inArray(updateOpertation, ['updateProductQuantityInCart', 'decreaseProductQuantity']) !== -1);
+
+    if ($("#notifications article.alert-danger").length
+        || (hasError && isValidOperation)) {
+      $checkoutBtn.addClass('disabled');
+    }
+
+    if (hasError && '' !== errorMsg) {
+      let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
+      $checkoutBtn.addClass('disabled');
+      $('#notifications .container').html(strError);
+      errorMsg = '';
+    } else if (!hasError 
+              && (isValidOperation || 'increaseProductQuantity' === updateOpertation)) {
+      hasError = false;
+      $('#notifications .container').html('');
+      $checkoutBtn.removeClass('disabled');
+    }
+  },
+  'checkUpdateOpertation': (type, resp) => {
+    updateOpertation = type;
+    hasError = resp.hasOwnProperty('hasError');
+    let isValidOperation = ('increaseProductQuantity' !== updateOpertation);
+
+    switch (hasError) {
+      case true :
+        errorMsg = (!isValidOperation && $("#notifications article.alert-danger").length === 0) ? resp.errors : '';
+        break;
+      case false :
+        if (isValidOperation) {
+          resp.cart.products.forEach(function (value) {
+            if (parseInt(value.id_product) === resp.id_product) {
+              hasError = (parseInt(value.active)
+              && parseInt(value.quantity_available) < resp.quantity);
+              errorMsg = hasError ? resp.errors : '';
+            }
+          });
+        }
+        break;
+    }
+  }
+};
 
