@@ -172,8 +172,11 @@
     display: inline-block;
     margin: 2px;
     min-height: 25px;
+    .close {
+      padding-left: 3px;
+    }
   }
-  
+
   // Combination generator
   .tokenfield {
     height: auto;
@@ -181,9 +184,7 @@
     input.token-input[type="text"] {
       display: inline-block;
       border: 0;
-      padding: 0;
-      margin-top: -6px;
-      margin-bottom: 0;
+      outline: none;
       background-color: transparent;
       max-width: 100%;
     }
@@ -592,7 +593,6 @@
 
   .maxLength {
     float: right;
-    font-family: OpenSans;
     font-size: 12px;
     font-style: italic;
     color: $gray-medium;
