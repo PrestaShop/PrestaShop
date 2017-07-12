@@ -960,17 +960,8 @@ class LanguageCore extends ObjectModel
                 $files_list = $other_files;
             }
 
-            // don't know why, but it's needed & doesn't work otherwise
-            $translations_extract = array(
-                'translations/'.(string)$iso.'/admin.php',
-                'translations/'.(string)$iso.'/errors.php',
-                'translations/'.(string)$iso.'/fields.php',
-                'translations/'.(string)$iso.'/pdf.php',
-                'translations/'.(string)$iso.'/tabs.php',
-            );
-
-            if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../') ||
-                !$gz->extractList($translations_extract, _PS_TRANSLATIONS_DIR_.'../')) {
+            // Extract all the content of the archive in the directory
+            if (!$gz->extractModify(_PS_TRANSLATIONS_DIR_.'../')) {
                 $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
             }
 
@@ -1015,7 +1006,7 @@ class LanguageCore extends ObjectModel
         return Cache::retrieve($key);
     }
 
-    public static function updateModulesTranslations(Array $modules_list)
+    public static function updateModulesTranslations(array $modules_list)
     {
         require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 
