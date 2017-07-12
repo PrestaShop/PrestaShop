@@ -72,6 +72,16 @@ File: admin-dev/themes/default/template/search_form.tpl:79</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4eac69549b8424b6cf5852421f327838">
+        <source>Confirm this action</source>
+        <target>Confirm this action</target>
+        <note>Context:
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8098b34f582537833b36b58273c3545b">
@@ -603,16 +613,6 @@ File: modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl:33</note>
         <target>Choose a file</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:52</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dc30bc0c7914db5918da4263fce93ad2">
-        <source>Clear</source>
-        <target>Clear</target>
-        <note>Context:
-File: modules/ps_linklist/views/templates/admin/linkwidget/helpers/form/form.tpl:237</note>
       </trans-unit>
     </body>
   </file>

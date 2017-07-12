@@ -85,8 +85,8 @@
       <table class="table table-striped table-bordered table-labeled hidden-xs-down">
         <thead class="thead-default">
           <tr>
-            <th>{l s='Date' d='Shop.Theme'}</th>
-            <th>{l s='Status' d='Shop.Theme'}</th>
+            <th>{l s='Date' d='Shop.Theme.Global'}</th>
+            <th>{l s='Status' d='Shop.Theme.Global'}</th>
           </tr>
         </thead>
         <tbody>
@@ -161,7 +161,7 @@
         <table class="table table-striped table-bordered hidden-sm-down">
           <thead class="thead-default">
             <tr>
-              <th>{l s='Date' d='Shop.Theme'}</th>
+              <th>{l s='Date' d='Shop.Theme.Global'}</th>
               <th>{l s='Carrier' d='Shop.Theme.Checkout'}</th>
               <th>{l s='Weight' d='Shop.Theme.Checkout'}</th>
               <th>{l s='Shipping cost' d='Shop.Theme.Checkout'}</th>
@@ -185,7 +185,7 @@
             <div class="shipping-line">
               <ul>
                 <li>
-                  <strong>{l s='Date' d='Shop.Theme'}</strong> {$line.shipping_date}
+                  <strong>{l s='Date' d='Shop.Theme.Global'}</strong> {$line.shipping_date}
                 </li>
                 <li>
                   <strong>{l s='Carrier' d='Shop.Theme.Checkout'}</strong> {$line.carrier_name}

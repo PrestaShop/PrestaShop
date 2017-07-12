@@ -1367,7 +1367,7 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:48</note>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:49</note>
       </trans-unit>
-      <trans-unit id="d164dc7a9ce1ca081fcee017f54b21ec">
+      <trans-unit id="dc7f9d531239c6acc08b99236a4204cd">
         <source>Stock management</source>
         <target>Stock management</target>
         <note>Context:
@@ -1379,9 +1379,9 @@ File: src/PrestaShopBundle/Translation/Api/StockApi.php:54</note>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:56</note>
       </trans-unit>
-      <trans-unit id="1dc2af14d15238ba67e03c99a6f415f6">
-        <source>Stocks</source>
-        <target>Stocks</target>
+      <trans-unit id="27ce7f8b5623b2e2df568d64cf051607">
+        <source>Stock</source>
+        <target>Stock</target>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:55</note>
       </trans-unit>
@@ -2353,9 +2353,9 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_seo.html.t
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_max_length.html.twig:29</note>
       </trans-unit>
-      <trans-unit id="99afc28a59b876c8968a455e292701aa">
-        <source>[1][/1] of [2][/2] characters used max</source>
-        <target>[1][/1] of [2][/2] characters used max</target>
+      <trans-unit id="db65e64331ad696848ba5bfa44a757b5">
+        <source>[1][/1] of [2][/2] characters allowed</source>
+        <target>[1][/1] of [2][/2] characters allowed</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_max_length.html.twig:36</note>
       </trans-unit>

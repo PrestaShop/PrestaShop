@@ -576,12 +576,6 @@ File: install-dev/classes/controllerHttp.php:118</note>
         <note>Context:
 File: install-dev/classes/controllerHttp.php:123</note>
       </trans-unit>
-      <trans-unit id="d1f932af763aee7890dc506a9b7a5283">
-        <source>XXXXXXXXXXXXXX</source>
-        <target>XXXXXXXXXXXXXX</target>
-        <note>Context:
-File: install-dev/classes/controllerHttp.php:348</note>
-      </trans-unit>
       <trans-unit id="9fca14e649c0c0615185b971b85b4348">
         <source>http://doc.prestashop.com/display/PS17/Installing+PrestaShop</source>
         <target>http://doc.prestashop.com/display/PS17/Installing+PrestaShop</target>

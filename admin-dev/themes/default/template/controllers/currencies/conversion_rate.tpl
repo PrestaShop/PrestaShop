@@ -47,7 +47,7 @@
 					<div class="pull-right checkbox titatoggle unchecked-red checkbox-slider--b-flat"></div>
 					<div class="clearfix"></div>
 				</div>
-				<span class="status disabled">{l s='Please install %module_name% before using this feature' sprintf=['%module_name%' => 'cronjobs'] d='Admin.International.Notification'}</span>
+				<span class="status disabled">{l s='Please install the %module_name% module before using this feature.' sprintf=['%module_name%' => 'cronjobs'] d='Admin.International.Notification'}</span>
 			</div>
 		{/if}
 		<div class="panel">

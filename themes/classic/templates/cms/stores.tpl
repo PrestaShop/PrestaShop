@@ -25,7 +25,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  {l s='Our stores' d='Shop.Theme'}
+  {l s='Our stores' d='Shop.Theme.Global'}
 {/block}
 
 {block name='page_content_container'}
@@ -41,7 +41,7 @@
             <h3 class="h3 card-title">{$store.name}</h3>
             <address>{$store.address.formatted nofilter}</address>
             {if $store.note || $store.phone || $store.fax || $store.email}
-              <a data-toggle="collapse" href="#about-{$store.id}" aria-expanded="false" aria-controls="about-{$store.id}"><strong>{l s='About and Contact' d='Shop.Theme'}</strong><i class="material-icons">&#xE409;</i></a>
+              <a data-toggle="collapse" href="#about-{$store.id}" aria-expanded="false" aria-controls="about-{$store.id}"><strong>{l s='About and Contact' d='Shop.Theme.Global'}</strong><i class="material-icons">&#xE409;</i></a>
             {/if}
           </div>
           <div class="col-md-4 col-sm-5 col-xs-12 divide-left">

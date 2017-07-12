@@ -132,15 +132,6 @@ class TabCore extends ObjectModel
         if (!$context) {
             $context = Context::getContext();
         }
-        if (!$context->employee || !$context->employee->id_profile) {
-            return false;
-        }
-
-        /* Profile selection */
-        $profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM `'._DB_PREFIX_.'profile` WHERE `id_profile` != 1');
-        if (!$profiles || empty($profiles)) {
-            return true;
-        }
 
         /* Right management */
         $slug = 'ROLE_MOD_TAB_'.strtoupper(self::getClassNameById($idTab));
@@ -153,7 +144,10 @@ class TabCore extends ObjectModel
 
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             $access->updateLgcAccess('1', $idTab, $action, true);
-            $access->updateLgcAccess($context->employee->id_profile, $idTab, $action, true);
+
+            if ($context->employee && $context->employee->id_profile) {
+                $access->updateLgcAccess($context->employee->id_profile, $idTab, $action, true);
+            }
         }
 
         return true;

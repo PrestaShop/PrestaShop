@@ -48,7 +48,7 @@
     {# Actual Page Content #}
     <div class="row">
         <div class="col-lg-10 col-lg-offset-1">
-            <div class="module-short-list">
+            <div id="module-short-list-configure" class="module-short-list">
                 <span class="module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
                       data-title="{{ "Modules to configure"|trans({}, 'Admin.Modules.Feature') }}"
@@ -58,7 +58,7 @@
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_configure.html.twig' with { 'modules': modules.to_configure, 'display_type': 'list', id: 'notification'  } %}
 
             <hr class="top-menu-separator">
-            <div class="module-short-list">
+            <div id="module-short-list-update" class="module-short-list">
                 <span class="module-search-result-wording">{{ '%nbModules% modules to update'|trans({'%nbModules%' : modules.to_update|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
                       data-title="{{ "Modules to update"|trans({}, 'Admin.Modules.Feature') }}"

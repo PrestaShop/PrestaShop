@@ -202,25 +202,25 @@ class StoresControllerCore extends FrontController
             unset($store['hours']);
             $store['business_hours'] = [
                 [
-                    'day' => $this->trans('Monday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Monday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[0],
                 ],[
-                    'day' => $this->trans('Tuesday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Tuesday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[1],
                 ],[
-                    'day' => $this->trans('Wednesday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Wednesday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[2],
                 ],[
-                    'day' => $this->trans('Thursday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Thursday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[3],
                 ],[
-                    'day' => $this->trans('Friday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Friday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[4],
                 ],[
-                    'day' => $this->trans('Saturday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Saturday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[5],
                 ],[
-                    'day' => $this->trans('Sunday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Sunday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[6],
                 ],
             ];

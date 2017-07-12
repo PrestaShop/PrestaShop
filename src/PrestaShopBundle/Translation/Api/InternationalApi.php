@@ -36,7 +36,10 @@ class InternationalApi extends AbstractApi
         return array(
             'button_reset' => $this->translator->trans('Reset', array(), 'Admin.Actions'),
             'button_save' => $this->translator->trans('Save', array(), 'Admin.Global'),
+            'button_leave' => $this->translator->trans('Leave anyway', array(), 'Admin.Notifications.Warning'),
             'button_search' => $this->translator->trans('Search', array(), 'Admin.Actions'),
+            'modal_title' => $this->translator->trans('Confirm this action', array(), 'Admin.Actions'),
+            'modal_content' => $this->translator->trans('Your modifications are not saved yet. Do you wish to save it before leaving?', array(), 'Admin.Notifications.Warning'),
             'head_title' => $this->translator->trans('Translations', array(), 'Admin.Navigation.Menu'),
             /* Missing is plural, always > 1 */
             'label_missing' => $this->translator->trans('%d missing', array(), 'Admin.International.Feature'),

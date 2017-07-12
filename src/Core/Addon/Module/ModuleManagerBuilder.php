@@ -40,7 +40,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
@@ -170,7 +169,7 @@ class ModuleManagerBuilder
             }
         }
         
-        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator);
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = dirname(__FILE__) . '/../../../../app';

@@ -59,7 +59,7 @@
     </div>
     <div class="progress active progress-striped" style="display: block; width: 100%">
       <div class="progress-bar progress-bar-info" role="progressbar" style="width: 0%" id="validate_progressbar_done">
-        <span>{l s="[1]%percentage%[/1]% Validated" sprintf=[
+        <span>{l s="[1]%percentage%[/1]% validated" sprintf=[
                   '[1]' => '<span id="validate_progression_done">',
                   '%percentage%' => '0',
                   '[/1]' => '</span>'
@@ -73,7 +73,7 @@
   </div>
 
   <div id="import_progress_div" style="display:none;">
-    <div class="pull-right" id="import_progression_details" default-value="{l s="Importing data..." d="Admin.Advparameters.Notification"}">
+    <div class="pull-right" id="import_progression_details" default-value="{l s="Importing your data..." d="Admin.Advparameters.Notification"}">
       &nbsp;
     </div>
     <div class="progress active progress-striped" style="display: block; width: 100%">
@@ -81,7 +81,7 @@
         <span>{l s="Linking accessories..." d="Admin.Advparameters.Notification"}</span>
       </div>
       <div class="progress-bar progress-bar-success" role="progressbar" style="width: 0%" id="import_progressbar_done">
-        <span>{l s="[1]%size%[/1]% Imported" sprintf=[
+        <span>{l s="[1]%size%[/1]% imported" sprintf=[
           '[1]' => '<span id="import_progression_done">',
           '%size%' => '0',
           '[/1]' => '</span>'

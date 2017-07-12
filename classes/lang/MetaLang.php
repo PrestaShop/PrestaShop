@@ -76,7 +76,7 @@ class MetaLangCore extends DataLangCore
                     => $this->translator->trans('Shop powered by PrestaShop', array(), 'Shop.Navigation', $this->locale),
 
                 md5('Manufacturers list')
-                    => $this->translator->trans('Brands list', array(), 'Shop.Navigation', $this->locale),
+                    => $this->translator->trans('Brand list', array(), 'Shop.Navigation', $this->locale),
 
                 md5('Our new products')
                     => $this->translator->trans('Our new products', array(), 'Shop.Navigation', $this->locale),

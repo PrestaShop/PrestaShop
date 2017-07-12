@@ -36,9 +36,10 @@
 
       <div class="row">
         <Sidebar />
-        <Principal />
+        <Principal ref="principal" />
       </div>
     </div>
+    <PSModal @save="onSave" @leave="onLeave" :translations="translations"/>
   </div>
 </template>
 
@@ -47,6 +48,9 @@
   import Search from './header/search';
   import Sidebar from './sidebar';
   import Principal from './principal';
+  import PSModal from 'app/widgets/ps-modal';
+  import { EventBus } from 'app/utils/event-bus';
+  
 
   export default {
     name: 'app',
@@ -63,6 +67,33 @@
       totalMissingTranslationsString() {
         return this.totalMissingTranslations === 1 ? this.trans('label_missing_singular') : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
       },
+      translations() {
+        return {
+          button_save: this.trans('button_save'),
+          button_leave: this.trans('button_leave'),
+          modal_content: this.trans('modal_content'),
+          modal_title: this.trans('modal_title'),
+        };
+      },
+    },
+    mounted() {
+      $('a').on('click', (e) => {
+        if ($(e.currentTarget).attr('href')) {
+          this.destHref = $(e.currentTarget).attr('href');
+        }
+      });
+      window.onbeforeunload = () => {
+        if (!this.destHref && this.isEdited() && !this.leave) {
+          return true;
+        }
+        if (!this.leave && this.isEdited()) {
+          setTimeout(() => {
+            window.stop();
+          }, 500);
+          EventBus.$emit('showModal');
+          return null;
+        }
+      };
     },
     methods: {
       onSearch(keywords) {
@@ -71,12 +102,28 @@
         });
         this.$store.currentDomain = '';
       },
+      onSave() {
+        this.$refs.principal.saveTranslations();
+        EventBus.$emit('hideModal');
+      },
+      onLeave() {
+        this.leave = true;
+        window.location.href = this.destHref;
+      },
+      isEdited() {
+        return this.$refs.principal.edited();
+      },
     },
+    data: () => ({
+      destHref: null,
+      leave: false,
+    }),
     components: {
       TranslationsHeader,
       Search,
       Sidebar,
       Principal,
+      PSModal,
     },
   };
 </script>

@@ -25,7 +25,7 @@
 {extends file='page.tpl'}
 
 {block name='page_title'}
-  <span class="sitemap-title">{l s='Sitemap' d='Shop.Theme'}</span>
+  <span class="sitemap-title">{l s='Sitemap' d='Shop.Theme.Global'}</span>
 {/block}
 
 {block name='page_content_container'}

@@ -114,9 +114,9 @@ File: modules/welcome/OnBoarding/Configuration.php:147</note>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:148</note>
       </trans-unit>
-      <trans-unit id="21df1a10cfd7a0f51ee662b67b583226">
-        <source>The payments methods are already available to your customers.</source>
-        <target>The payments methods are already available to your customers.</target>
+      <trans-unit id="af7c66bbf83c48324a2787cc5f5b90cc">
+        <source>These payment methods are already available to your customers.</source>
+        <target>These payment methods are already available to your customers.</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:153</note>
       </trans-unit>
@@ -168,9 +168,9 @@ File: modules/welcome/OnBoarding/Configuration.php:197</note>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:199</note>
       </trans-unit>
-      <trans-unit id="2aa32dc808cd1aaef06cf3023af12d3b">
-        <source>A module can be already installed for you, free to install or paying - browse our selection to see what's available!</source>
-        <target>A module can be already installed for you, free to install or paying - browse our selection to see what's available!</target>
+      <trans-unit id="8f2dd8cbf2ed7e2edf0a56c63fe7f8c9">
+        <source>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</source>
+        <target>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:200</note>
       </trans-unit>

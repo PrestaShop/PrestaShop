@@ -1118,11 +1118,99 @@ File: controllers/admin/AdminImportController.php:4471</note>
         <note>Context:
 File: controllers/admin/AdminImportController.php:4599</note>
       </trans-unit>
-      <trans-unit id="fa072aec56f675fa4e267c90bac014a6">
-        <source>Importing...</source>
-        <target>Importing...</target>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d85366190ecd2aebf8363980ad9d6740">
+        <source>Importing your data...</source>
+        <target>Importing your data...</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4613</note>
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="8a1d14318cfc965da76c0b9d0a53bb93">
+        <source>Aborting, please wait...</source>
+        <target>Aborting, please wait...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="e130ff31fe5f7a054a2db876a7acc94d">
+        <source>Data imported!</source>
+        <target>Data imported!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="118f9dbc8442c6be19dfc0b70d965929">
+        <source>Look at your listings to make sure it's all there as you wished.</source>
+        <target>Look at your listings to make sure it's all there as you wished.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="4959a069997257077022c1b96b3b8001">
+        <source>Errors occurred:</source>
+        <target>Errors occurred:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="0ccb924c3db6a900cff26de895f756b8">
+        <source>Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP "post_max_size" setting to [1]%size%[/1]MB at least, and try again.</source>
+        <target>Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP "post_max_size" setting to [1]%size%[/1]MB at least, and try again.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="841e4579e55a01ab8f0c565995ba7cfc">
+        <source>Some errors were detected. Please check the details:</source>
+        <target>Some errors were detected. Please check the details:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="3df311b82f78fa4059e9a78a26e77b06">
+        <source>We made the following adjustments:</source>
+        <target>We made the following adjustments:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="6e17621d481059924339f91ed431a116">
+        <source>Validating data...</source>
+        <target>Validating data...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="95fdb0ead4798ff27cce78fac3fd3c11">
+        <source>[1]%percentage%[/1]% validated</source>
+        <target>[1]%percentage%[/1]% validated</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="fd2f43e6f9f4de5be1b08cdac13d7749">
+        <source>Processing next page...</source>
+        <target>Processing next page...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:92</note>
+      </trans-unit>
+      <trans-unit id="f438c83e3ff4dd40a3fc1bf4bb3e79f5">
+        <source>Linking accessories...</source>
+        <target>Linking accessories...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:81</note>
+      </trans-unit>
+      <trans-unit id="2a44b5ac9f88c57f584bf083730a93f7">
+        <source>[1]%size%[/1]% imported</source>
+        <target>[1]%size%[/1]% imported</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:84</note>
+      </trans-unit>
+      <trans-unit id="650e0b1fd707ad8ad3a94e2eb494de3d">
+        <source>Ignore warnings and continue?</source>
+        <target>Ignore warnings and continue?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:100</note>
+      </trans-unit>
+      <trans-unit id="b8388ec68dcac2402d944fbb3382b0f1">
+        <source>Abort import</source>
+        <target>Abort import</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:104</note>
       </trans-unit>
     </body>
   </file>
@@ -1373,106 +1461,6 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
         <target>You do not have permission to delete this. When the MultiStore mode is enabled, only a SuperAdmin can delete all items before an import.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:497</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8a1d14318cfc965da76c0b9d0a53bb93">
-        <source>Aborting, please wait...</source>
-        <target>Aborting, please wait...</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:27</note>
-      </trans-unit>
-      <trans-unit id="d85366190ecd2aebf8363980ad9d6740">
-        <source>Importing your data...</source>
-        <target>Importing your data...</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="e130ff31fe5f7a054a2db876a7acc94d">
-        <source>Data imported!</source>
-        <target>Data imported!</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:33</note>
-      </trans-unit>
-      <trans-unit id="118f9dbc8442c6be19dfc0b70d965929">
-        <source>Look at your listings to make sure it's all there as you wished.</source>
-        <target>Look at your listings to make sure it's all there as you wished.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="4959a069997257077022c1b96b3b8001">
-        <source>Errors occurred:</source>
-        <target>Errors occurred:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="0ccb924c3db6a900cff26de895f756b8">
-        <source>Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP "post_max_size" setting to [1]%size%[/1]MB at least, and try again.</source>
-        <target>Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP "post_max_size" setting to [1]%size%[/1]MB at least, and try again.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="841e4579e55a01ab8f0c565995ba7cfc">
-        <source>Some errors were detected. Please check the details:</source>
-        <target>Some errors were detected. Please check the details:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:49</note>
-      </trans-unit>
-      <trans-unit id="3df311b82f78fa4059e9a78a26e77b06">
-        <source>We made the following adjustments:</source>
-        <target>We made the following adjustments:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:52</note>
-      </trans-unit>
-      <trans-unit id="6e17621d481059924339f91ed431a116">
-        <source>Validating data...</source>
-        <target>Validating data...</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:57</note>
-      </trans-unit>
-      <trans-unit id="1e495a6131b55873654b8811c08bb52a">
-        <source>[1]%percentage%[/1]% Validated</source>
-        <target>[1]%percentage%[/1]% Validated</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:62</note>
-      </trans-unit>
-      <trans-unit id="fd2f43e6f9f4de5be1b08cdac13d7749">
-        <source>Processing next page...</source>
-        <target>Processing next page...</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:92</note>
-      </trans-unit>
-      <trans-unit id="fa442f7735a17f9b84431fc4694c2e54">
-        <source>Importing data...</source>
-        <target>Importing data...</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:76</note>
-      </trans-unit>
-      <trans-unit id="f438c83e3ff4dd40a3fc1bf4bb3e79f5">
-        <source>Linking accessories...</source>
-        <target>Linking accessories...</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:81</note>
-      </trans-unit>
-      <trans-unit id="1b2988a288ba5e2a73a4e2cf1b4311c1">
-        <source>[1]%size%[/1]% Imported</source>
-        <target>[1]%size%[/1]% Imported</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:84</note>
-      </trans-unit>
-      <trans-unit id="650e0b1fd707ad8ad3a94e2eb494de3d">
-        <source>Ignore warnings and continue?</source>
-        <target>Ignore warnings and continue?</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:100</note>
-      </trans-unit>
-      <trans-unit id="b8388ec68dcac2402d944fbb3382b0f1">
-        <source>Abort import</source>
-        <target>Abort import</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:104</note>
       </trans-unit>
     </body>
   </file>
