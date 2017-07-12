@@ -157,6 +157,11 @@
       },
     },
     methods: {
+      /**
+       * Dispatch the event to change the page index,
+       * get the translations and reset the modified translations into the state
+       * @param {Integer} pageIndex
+       */
       changePage: function changePage(pageIndex) {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch();

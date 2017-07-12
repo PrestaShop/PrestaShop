@@ -104,6 +104,11 @@
       });
     },
     methods: {
+      /**
+       * Update the domain, retrieve the translations catalog, set the page to 1
+       * and reset the modified translations
+       * @param {object} el - Domain to set
+       */
       itemClick: function itemClick(el) {
         this.$store.dispatch('updateCurrentDomain', el.item);
         this.$store.dispatch('getCatalog', { url: el.item.dataValue });
@@ -127,6 +132,10 @@
 
         return toDisplay;
       },
+      /**
+       * Check if some translations have been edited
+       * @returns {boolean}
+       */
       edited: function edited() {
         return this.$store.state.modifiedTranslations.length > 0;
       },

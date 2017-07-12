@@ -109,6 +109,9 @@
         });
         this.$store.currentDomain = '';
       },
+      /**
+       * Set leave to true and redirect the user to the new location
+       */
       leavePage() {
         this.leave = true;
         window.location.href = this.destHref;
