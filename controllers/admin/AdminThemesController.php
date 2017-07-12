@@ -80,10 +80,7 @@ class AdminThemesControllerCore extends AdminController
     {
         if (
             !$this->logged_on_addons
-            || !in_array(
-                    $this->authorizationLevel(),
-                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE)
-                )
+            || !$this->isEditGranted()
             || _PS_MODE_DEMO_
         ) {
             return false;
@@ -142,13 +139,7 @@ class AdminThemesControllerCore extends AdminController
         parent::initPageHeaderToolbar();
 
         if (empty($this->display)) {
-            if (!in_array(
-                $this->authorizationLevel(),
-                array(
-                    AdminController::LEVEL_VIEW,
-                    AdminController::LEVEL_EDIT,
-                )
-            )) {
+            if ($this->isEditGranted()) {
                 $this->page_header_toolbar_btn['import_theme'] = array(
                     'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
                     'desc' => $this->trans('Add new theme', array(), 'Admin.Design.Feature'),
@@ -251,13 +242,7 @@ class AdminThemesControllerCore extends AdminController
         }
 
         if ('exporttheme' === Tools::getValue('action')) {
-            if (!in_array(
-                $this->authorizationLevel(),
-                array(
-                    AdminController::LEVEL_ADD,
-                    AdminController::LEVEL_DELETE,
-                )
-            )) {
+            if (!$this->isEditGranted()) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 return false;
             }
@@ -271,9 +256,7 @@ class AdminThemesControllerCore extends AdminController
         } elseif (Tools::isSubmit('submitAddconfiguration')) {
             try {
                 if (
-                    !in_array(
-                        $this->authorizationLevel(),
-                        array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
+                    !$this->isEditGranted()
                     || _PS_MODE_DEMO_
                 ) {
                     Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
@@ -402,9 +385,7 @@ class AdminThemesControllerCore extends AdminController
     public function processUploadFile($dest)
     {
         if (
-            !in_array(
-                $this->authorizationLevel(),
-                array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
+            !$this->isEditGranted()
             || _PS_MODE_DEMO_
         ) {
             $this->errors[] = $this->trans('You do not have permission to upload this.', array(), 'Admin.Notifications.Error');
@@ -594,13 +575,7 @@ class AdminThemesControllerCore extends AdminController
 
     public function renderImportTheme()
     {
-        if (!in_array(
-            $this->authorizationLevel(),
-            array(
-                AdminController::LEVEL_ADD,
-                AdminController::LEVEL_DELETE,
-            )
-        )) {
+        if (!$this->isEditGranted()) {
             $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             return false;
         }
@@ -788,5 +763,19 @@ class AdminThemesControllerCore extends AdminController
             $this->theme_manager->saveTheme($this->context->shop->theme);
             Tools::clearCache();
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEditGranted()
+    {
+        return in_array(
+            $this->authorizationLevel(),
+            array(
+                AdminController::LEVEL_ADD,
+                AdminController::LEVEL_DELETE,
+            )
+        );
     }
 }
