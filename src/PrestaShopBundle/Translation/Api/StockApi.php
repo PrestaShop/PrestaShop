@@ -56,7 +56,7 @@ class StockApi extends AbstractApi
             'menu_movements' => $this->translator->trans('Movements', array(), 'Admin.Catalog.Feature'),
             'no_product' => $this->translator->trans('No product matches your search. Try changing search terms.', array(), 'Admin.Catalog.Notification'),
             'none' => $this->translator->trans('None', array(), 'Admin.Catalog.Feature'),
-            'notification_stock_updated' => $this->translator->trans('Stocks successfully updated', array(), 'Admin.Catalog.Notification'),
+            'notification_stock_updated' => $this->translator->trans('Stock successfully updated', array(), 'Admin.Catalog.Notification'),
             'product_search' => $this->translator->trans('Search products (search by name, reference, supplier)', array(), 'Admin.Catalog.Feature'),
             'title_available'  => $this->translator->trans('Available', array(), 'Admin.Global'),
             'title_date' => $this->translator->trans('Date & Time', array(), 'Admin.Catalog.Feature'),
