@@ -97,7 +97,7 @@ class AdminAccessControllerCore extends AdminController
             'id_perms' => array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4),
             'modules' => $modules,
             'link' => $this->context->link,
-            'employee_profile' => (int) $this->context->employee->id_profile,
+            'employee_profile_id' => (int) $this->context->employee->id_profile,
         );
 
         return parent::renderForm();

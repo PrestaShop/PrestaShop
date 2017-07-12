@@ -292,7 +292,7 @@
                         {assign var=has_all_rights value=true}
                         {foreach $perms as $perm}
                           {assign var=id_perm value=$id_perms[$perm]}
-                          {if $access_edit == 1 && $accesses[$employee_profile][$tab.id_tab][$perm]}
+                          {if $access_edit == 1 && $accesses[$employee_profile_id][$tab.id_tab][$perm]}
                             <td>
                               <input type="checkbox" data-id="{$id_perm}" data-parent="0" data-type="{$perm}"
                                      data-rel="{$access[$tab.id_tab]['id_tab']}||{$profile.id_profile}||{$perm}||{$tabsize}||{count($tabs)}"
@@ -324,7 +324,7 @@
                                 {assign var=has_all_rights value=true}
                                 {foreach $perms as $perm}
                                   {assign var=id_perm value=$id_perms[$perm]}
-                                  {if $access_edit == 1 && $accesses[$employee_profile][$child.id_tab][$perm]}
+                                  {if $access_edit == 1 && $accesses[$employee_profile_id][$child.id_tab][$perm]}
                                     <td>
                                       <input type="checkbox" data-id="{$id_perm}" data-parent="{$child.id_parent}"
                                              data-type="{$perm}"
@@ -358,7 +358,7 @@
                                     {assign var=has_all_rights value=true}
                                     {foreach $perms as $perm}
                                       {assign var=id_perm value=$id_perms[$perm]}
-                                      {if $access_edit == 1 && $accesses[$employee_profile][$subChild.id_tab][$perm]}
+                                      {if $access_edit == 1 && $accesses[$employee_profile_id][$subChild.id_tab][$perm]}
                                         <td>
                                           <input type="checkbox" data-id="{$id_perm}"
                                                  data-parent="{$subChild.id_parent}" data-type="{$perm}"
@@ -390,7 +390,7 @@
                                           {assign var=has_all_rights value=true}
                                           {foreach $perms as $perm}
                                             {assign var=id_perm value=$id_perms[$perm]}
-                                            {if $access_edit == 1  && $accesses[$employee_profile][$subsubChild.id_tab][$perm]}
+                                            {if $access_edit == 1  && $accesses[$employee_profile_id][$subsubChild.id_tab][$perm]}
                                               <td>
                                                 <input type="checkbox" data-id="{$id_perm}"
                                                        data-parent="{$subsubChild.id_parent}" data-type="{$perm}"
@@ -475,15 +475,15 @@
                         <td>&raquo; {$module.name}</td>
                         <td>
                           <input type="checkbox"
-                                 value="1"{if $module.view == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile][$k].view} class="ajax-ma-view changeModuleAccess" data-rel="{$module.id_module}||view||{$profile.id_profile}"{else}{assign var=enable_bulk_view value=false} class="ajax-ma-view" disabled="disabled"{/if}/>
+                                 value="1"{if $module.view == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].view} class="ajax-ma-view changeModuleAccess" data-rel="{$module.id_module}||view||{$profile.id_profile}"{else}{assign var=enable_bulk_view value=false} class="ajax-ma-view" disabled="disabled"{/if}/>
                         </td>
                         <td>
                           <input type="checkbox"
-                                 value="1"{if $module.configure == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile][$k].configure} class="ajax-ma-configure changeModuleAccess" data-rel="{$module.id_module}||configure||{$profile.id_profile}"{else}{assign var=enable_bulk_configure value=false} class="ajax-ma-configure" disabled="disabled"{/if}/>
+                                 value="1"{if $module.configure == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].configure} class="ajax-ma-configure changeModuleAccess" data-rel="{$module.id_module}||configure||{$profile.id_profile}"{else}{assign var=enable_bulk_configure value=false} class="ajax-ma-configure" disabled="disabled"{/if}/>
                         </td>
                         <td>
                           <input type="checkbox"
-                                 value="1"{if $module.uninstall == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile][$k].uninstall} class="ajax-ma-uninstall changeModuleAccess" data-rel="{$module.id_module}||uninstall||{$profile.id_profile}"{else}{assign var=enable_bulk_uninstall value=false} class="ajax-ma-uninstall" disabled="disabled"{/if}/>
+                                 value="1"{if $module.uninstall == true} checked="checked"{/if}{if $access_edit == 1 && $modules[$employee_profile_id][$k].uninstall} class="ajax-ma-uninstall changeModuleAccess" data-rel="{$module.id_module}||uninstall||{$profile.id_profile}"{else}{assign var=enable_bulk_uninstall value=false} class="ajax-ma-uninstall" disabled="disabled"{/if}/>
                         </td>
                       </tr>
                     {/foreach}
