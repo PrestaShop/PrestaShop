@@ -31,7 +31,9 @@
 		</button>
 		<ul class="dropdown-menu">
 			{foreach from=$module_languages item=language}
-			<li><a href="{$trad_link|escape:'html':'UTF-8'}{$language['iso_code']|escape:'html':'UTF-8'}#{$module_name|escape:'html':'UTF-8'}">{$language.name|escape:'html':'UTF-8'}</a></li>
+				<li>
+					<a href="{$translateLinks[$language.iso_code]|escape:'html':'UTF-8'}">{$language.name|escape:'html':'UTF-8'}</a>
+				</li>
 			{/foreach}
 		</ul>
 	</div>
