@@ -2910,8 +2910,8 @@ class ProductCore extends ObjectModel
         }
 
         if ($usetax != false
-            && !empty($address_infos['vat_number'])
-            && $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
+            && !empty($address->vat_number)
+            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY')
             && Configuration::get('VATNUMBER_MANAGEMENT')) {
             $usetax = false;
         }
