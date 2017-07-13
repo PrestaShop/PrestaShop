@@ -88,6 +88,6 @@ class BackOfficeProvider extends AbstractProvider implements UseDefaultCatalogue
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.'/default';
+        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
     }
 }
