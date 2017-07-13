@@ -49,7 +49,7 @@
             />
           </div>
           <form class="col-xs-12"
-            method="post" 
+            method="post"
             :action="saveAction"
             :isEdited="isEdited"
             @submit.prevent="saveTranslations"
@@ -97,6 +97,9 @@
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
+    props: [
+      'modal',
+    ],
     computed: {
       principalReady() {
         return !this.$store.state.principalLoading;
@@ -154,16 +157,39 @@
       },
     },
     methods: {
+      /**
+       * Dispatch the event to change the page index,
+       * get the translations and reset the modified translations into the state
+       * @param {Integer} pageIndex
+       */
+      changePage: function changePage(pageIndex) {
+        this.$store.dispatch('updatePageIndex', pageIndex);
+        this.fetch();
+        this.$store.state.modifiedTranslations = [];
+      },
       isEdited(input) {
-        if (this.editedInput.indexOf(input.id) === -1 && input.value) {
-          this.editedInput.push(input.id);
-        } else if (this.editedInput.indexOf(input.id) >= 0 && !input.value) {
-          this.editedInput.splice(this.editedInput.indexOf(input.id), 1);
+        if (input.translation.edited) {
+          this.$store.state.modifiedTranslations[input.id] = input.translation;
+        } else {
+          this.$store.state.modifiedTranslations.splice(
+            this.$store.state.modifiedTranslations.indexOf(input.id),
+            1
+          );
         }
       },
       onPageChanged(pageIndex) {
-        this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch();
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.saveTranslations();
+            this.changePage(pageIndex);
+          });
+          this.modal.$once('leave', () => {
+            this.changePage(pageIndex);
+          });
+        } else {
+          this.changePage(pageIndex);
+        }
       },
       fetch() {
         this.$store.dispatch('getCatalog', {
@@ -192,29 +218,26 @@
       },
       getModifiedTranslations() {
         this.modifiedTranslations = [];
-        this.translations.forEach((translation) => {
-          if (translation.edited) {
-            this.modifiedTranslations.push({
-              default: translation.default,
-              edited: translation.edited,
-              domain: translation.tree_domain.join(''),
-              locale: window.data.locale,
-              theme: window.data.selected,
-            });
-          }
+        this.$store.state.modifiedTranslations.forEach((translation) => {
+          this.modifiedTranslations.push({
+            default: translation.default,
+            edited: translation.edited,
+            domain: translation.tree_domain.join(''),
+            locale: window.data.locale,
+            theme: window.data.selected,
+          });
         });
 
         return this.modifiedTranslations;
       },
       edited() {
-        return this.editedInput.length > 0;
+        return this.$store.state.modifiedTranslations.length > 0;
       },
     },
     data: () => ({
       translations: [],
       originalTranslations: [],
       modifiedTranslations: [],
-      editedInput: [],
     }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {
