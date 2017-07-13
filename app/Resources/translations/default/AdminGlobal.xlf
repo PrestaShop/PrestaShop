@@ -1206,7 +1206,7 @@ File: controllers/admin/AdminImportController.php:391</note>
         <source>Customers</source>
         <target>Customers</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4394</note>
+File: controllers/admin/AdminImportController.php:4396</note>
       </trans-unit>
       <trans-unit id="c6e2a9b2d1979c244d18c7e9fbf9a86f">
         <source>Zip/postal code</source>
@@ -1470,7 +1470,7 @@ File: controllers/admin/AdminTaxRulesGroupController.php:126</note>
         <source>No Tax</source>
         <target>No Tax</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:274</note>
+File: controllers/admin/AdminCarriersController.php:276</note>
       </trans-unit>
     </body>
   </file>

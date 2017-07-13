@@ -40,61 +40,61 @@ File: controllers/admin/AdminCarriersController.php:128</note>
         <source>Apply shipping cost</source>
         <target>Apply shipping cost</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:247</note>
+File: controllers/admin/AdminCarriersController.php:249</note>
       </trans-unit>
       <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
         <source>Shipping and handling</source>
         <target>Shipping and handling</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:281</note>
+File: controllers/admin/AdminCarriersController.php:283</note>
       </trans-unit>
       <trans-unit id="590f6d9a5885f042982c9a911f76abda">
         <source>Default behavior</source>
         <target>Default behavior</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:311</note>
+File: controllers/admin/AdminCarriersController.php:313</note>
       </trans-unit>
       <trans-unit id="e3d29a6f3d7588301aa04429e686b260">
         <source>According to total price</source>
         <target>According to total price</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:316</note>
+File: controllers/admin/AdminCarriersController.php:318</note>
       </trans-unit>
       <trans-unit id="49fec5c86a3b43821fdf0d9aa7bbd935">
         <source>According to total weight</source>
         <target>According to total weight</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:321</note>
+File: controllers/admin/AdminCarriersController.php:323</note>
       </trans-unit>
       <trans-unit id="324029d06c6bfe85489099f6e69b7637">
         <source>Maximum package height</source>
         <target>Maximum package height</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:347</note>
+File: controllers/admin/AdminCarriersController.php:349</note>
       </trans-unit>
       <trans-unit id="3e86ececa46af50900510892f94c4ed6">
         <source>Maximum package width</source>
         <target>Maximum package width</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:354</note>
+File: controllers/admin/AdminCarriersController.php:356</note>
       </trans-unit>
       <trans-unit id="1935671a637346f67b485596b9fcba2c">
         <source>Maximum package depth</source>
         <target>Maximum package depth</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:361</note>
+File: controllers/admin/AdminCarriersController.php:363</note>
       </trans-unit>
       <trans-unit id="0cce6348a3d85f52a44d053f542afcbc">
         <source>Maximum package weight</source>
         <target>Maximum package weight</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:368</note>
+File: controllers/admin/AdminCarriersController.php:370</note>
       </trans-unit>
       <trans-unit id="4e140ba723a03baa6948340bf90e2ef6">
         <source>Name:</source>
         <target>Name:</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:728</note>
+File: controllers/admin/AdminCarriersController.php:730</note>
       </trans-unit>
     </body>
   </file>

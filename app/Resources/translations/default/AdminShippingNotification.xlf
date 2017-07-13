@@ -6,7 +6,7 @@
         <source>An error occurred while updating carrier information.</source>
         <target>An error occurred while updating carrier information.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:547</note>
+File: controllers/admin/AdminCarriersController.php:549</note>
       </trans-unit>
     </body>
   </file>

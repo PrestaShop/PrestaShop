@@ -65,7 +65,7 @@
           modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
           this.$emit('editedAction', {
-            value: modifiedValue !== '',
+            translation: modifiedTranslated,
             id: this.id,
           });
         },

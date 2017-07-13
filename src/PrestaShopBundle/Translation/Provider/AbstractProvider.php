@@ -169,7 +169,7 @@ abstract class AbstractProvider implements ProviderInterface
      */
     public function getResourceDirectory()
     {
-        return $this->resourceDirectory.'/'.$this->locale;
+        return $this->resourceDirectory.DIRECTORY_SEPARATOR.$this->locale;
     }
 
     /**

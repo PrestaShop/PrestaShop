@@ -52,7 +52,7 @@ File: src/PrestaShopBundle/Controller/Admin/AddonsController.php:81</note>
         <source>This functionality has been disabled.</source>
         <target>This functionality has been disabled.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4313</note>
+File: controllers/admin/AdminImportController.php:4315</note>
       </trans-unit>
       <trans-unit id="e96814b3d9ff9ae65c8f2be2ee3e0555">
         <source>Invalid tag(s) (%s)</source>
@@ -1070,13 +1070,13 @@ File: controllers/admin/AdminShopUrlController.php:458</note>
         <source>Unknown error.</source>
         <target>Unknown error.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:404</note>
+File: controllers/admin/AdminThemesController.php:403</note>
       </trans-unit>
       <trans-unit id="9f4c1b4b9bcf088c9d32e74b7f542a77">
         <source>You do not have permission to upload this.</source>
         <target>You do not have permission to upload this.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:392</note>
+File: controllers/admin/AdminThemesController.php:391</note>
       </trans-unit>
     </body>
   </file>

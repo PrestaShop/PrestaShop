@@ -738,7 +738,7 @@ File: controllers/admin/AdminImportController.php:718</note>
         <source>To proceed, please upload a file first.</source>
         <target>To proceed, please upload a file first.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4478</note>
+File: controllers/admin/AdminImportController.php:4480</note>
       </trans-unit>
       <trans-unit id="a080a85258618039d010a2136f85e69f">
         <source>There is an empty row in the file that won't be imported.</source>
@@ -768,7 +768,7 @@ File: controllers/admin/AdminImportController.php:1309</note>
         <source>%1$s (ID: %2$s) cannot be saved</source>
         <target>%1$s (ID: %2$s) cannot be saved</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3795</note>
+File: controllers/admin/AdminImportController.php:3797</note>
       </trans-unit>
       <trans-unit id="86b00089e0a8e76925f3d4b28ef43317">
         <source>URL rewriting failed to auto-generate a friendly URL for: %s</source>
@@ -798,7 +798,7 @@ File: controllers/admin/AdminImportController.php:1414</note>
         <source>cannot be copied.</source>
         <target>cannot be copied.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3705</note>
+File: controllers/admin/AdminImportController.php:3707</note>
       </trans-unit>
       <trans-unit id="87098ca5171ae766269f50b24ef3189d">
         <source>%1$s (ID: %2$s) cannot be %3$s</source>
@@ -816,7 +816,7 @@ File: controllers/admin/AdminImportController.php:1669</note>
         <source>%s cannot be saved</source>
         <target>%s cannot be saved</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3772</note>
+File: controllers/admin/AdminImportController.php:3774</note>
       </trans-unit>
       <trans-unit id="32fa1d06b5d0a192c9991c4bf038b30c">
         <source>Shop is not valid</source>
@@ -978,145 +978,145 @@ File: controllers/admin/AdminImportController.php:3646</note>
         <source>Store is invalid</source>
         <target>Store is invalid</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3801</note>
+File: controllers/admin/AdminImportController.php:3803</note>
       </trans-unit>
       <trans-unit id="6d5030fd40c1e08767b4b70d3786b0fb">
         <source>Supplier ID (%d) is not valid (at line %d).</source>
         <target>Supplier ID (%d) is not valid (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3871</note>
+File: controllers/admin/AdminImportController.php:3873</note>
       </trans-unit>
       <trans-unit id="0c8476c5f5cdedcf296f6b3c22e0dffb">
         <source>Lang ID (%d) is not valid (at line %d).</source>
         <target>Lang ID (%d) is not valid (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3874</note>
+File: controllers/admin/AdminImportController.php:3876</note>
       </trans-unit>
       <trans-unit id="95a6134288586bc854f6793506d00efd">
         <source>Warehouse ID (%d) is not valid (at line %d).</source>
         <target>Warehouse ID (%d) is not valid (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3877</note>
+File: controllers/admin/AdminImportController.php:3879</note>
       </trans-unit>
       <trans-unit id="8fb2f7240d1cbeb86010e76827af5751">
         <source>Currency ID (%d) is not valid (at line %d).</source>
         <target>Currency ID (%d) is not valid (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3880</note>
+File: controllers/admin/AdminImportController.php:3882</note>
       </trans-unit>
       <trans-unit id="2eca847eb03cb63596621d5480ca7c24">
         <source>Reference (%s) already exists (at line %d).</source>
         <target>Reference (%s) already exists (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3886</note>
+File: controllers/admin/AdminImportController.php:3888</note>
       </trans-unit>
       <trans-unit id="f49f836c284f6cc5cc41737dfab70cc2">
         <source>Date format (%s) is not valid (at line %d). It should be: %s.</source>
         <target>Date format (%s) is not valid (at line %d). It should be: %s.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3889</note>
+File: controllers/admin/AdminImportController.php:3891</note>
       </trans-unit>
       <trans-unit id="70e7a6fcceb39a1e3ea3925182b85d18">
         <source>YYYY-MM-DD</source>
         <target>YYYY-MM-DD</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3891</note>
+File: controllers/admin/AdminImportController.php:3893</note>
       </trans-unit>
       <trans-unit id="c8d9173d79c5d4c90be6f9daaec5f617">
         <source>Date (%s) cannot be in the past (at line %d). Format: %s.</source>
         <target>Date (%s) cannot be in the past (at line %d). Format: %s.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3891</note>
+File: controllers/admin/AdminImportController.php:3893</note>
       </trans-unit>
       <trans-unit id="8f7627c77b01dc968a9665c0156da405">
         <source>Discount rate (%d) is not valid (at line %d). %s.</source>
         <target>Discount rate (%d) is not valid (at line %d). %s.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4038</note>
+File: controllers/admin/AdminImportController.php:4040</note>
       </trans-unit>
       <trans-unit id="ef1a78ea7433cfc92f358d6dbf4fcd48">
         <source>Format: Between 0 and 100</source>
         <target>Format: Between 0 and 100</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4049</note>
+File: controllers/admin/AdminImportController.php:4051</note>
       </trans-unit>
       <trans-unit id="8985093401a36bb0b31a127caccfaf0d">
         <source>Supply Order (%d) is not editable (at line %d).</source>
         <target>Supply Order (%d) is not editable (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3897</note>
+File: controllers/admin/AdminImportController.php:3899</note>
       </trans-unit>
       <trans-unit id="6afcfa28445fa35c1f6618a471891ed8">
         <source>Supply Order could not be saved (at line %d).</source>
         <target>Supply Order could not be saved (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3928</note>
+File: controllers/admin/AdminImportController.php:3930</note>
       </trans-unit>
       <trans-unit id="bb19d4490bdc48656603c0a7ef30db73">
         <source>Supply Order (%s) could not be loaded (at line %d).</source>
         <target>Supply Order (%s) could not be loaded (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:3994</note>
+File: controllers/admin/AdminImportController.php:3996</note>
       </trans-unit>
       <trans-unit id="5e063c49ce8203f2ca7a496da24b819e">
         <source>Product/Attribute (%d/%d) cannot be added twice (at line %d).</source>
         <target>Product/Attribute (%d/%d) cannot be added twice (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4012</note>
+File: controllers/admin/AdminImportController.php:4014</note>
       </trans-unit>
       <trans-unit id="0a657a7416c29bdc5b134b61b863e7ee">
         <source>Product (%d/%d) is not available for this order (at line %d).</source>
         <target>Product (%d/%d) is not available for this order (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4024</note>
+File: controllers/admin/AdminImportController.php:4026</note>
       </trans-unit>
       <trans-unit id="ca676c9ec4e1ae9fe9df3ac28910e6ef">
         <source>Unit Price (tax excl.) (%d) is not valid (at line %d).</source>
         <target>Unit Price (tax excl.) (%d) is not valid (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4031</note>
+File: controllers/admin/AdminImportController.php:4033</note>
       </trans-unit>
       <trans-unit id="406eba9770c82a84cae2d6ee3e846a56">
         <source>Quantity Expected (%d) is not valid (at line %d).</source>
         <target>Quantity Expected (%d) is not valid (at line %d).</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4046</note>
+File: controllers/admin/AdminImportController.php:4048</note>
       </trans-unit>
       <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
         <source>Cannot read the .CSV file</source>
         <target>Cannot read the .CSV file</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4135</note>
+File: controllers/admin/AdminImportController.php:4137</note>
       </trans-unit>
       <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
         <source>Linking Accessories...</source>
         <target>Linking Accessories...</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4390</note>
+File: controllers/admin/AdminImportController.php:4392</note>
       </trans-unit>
       <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
         <source>%s import</source>
         <target>%s import</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4466</note>
+File: controllers/admin/AdminImportController.php:4468</note>
       </trans-unit>
       <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
         <source>(from %s to %s)</source>
         <target>(from %s to %s)</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4468</note>
+File: controllers/admin/AdminImportController.php:4470</note>
       </trans-unit>
       <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
         <source>with truncate</source>
         <target>with truncate</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4471</note>
+File: controllers/admin/AdminImportController.php:4473</note>
       </trans-unit>
       <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
         <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
         <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4599</note>
+File: controllers/admin/AdminImportController.php:4601</note>
       </trans-unit>
     </body>
   </file>
@@ -1264,7 +1264,7 @@ File: admin-dev/backup.php:105</note>
         <source>Administrator permissions cannot be modified.</source>
         <target>Administrator permissions cannot be modified.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:460</note>
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:515</note>
       </trans-unit>
     </body>
   </file>

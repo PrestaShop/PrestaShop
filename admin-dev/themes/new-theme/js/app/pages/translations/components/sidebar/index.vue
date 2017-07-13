@@ -44,6 +44,10 @@
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
+    props: [
+      'modal',
+      'principal',
+    ],
     computed: {
       treeReady() {
         return !this.$store.state.sidebarLoading;
@@ -85,12 +89,32 @@
         store: this.$store,
       });
       EventBus.$on('lastTreeItemClick', (el) => {
-        this.$store.dispatch('updateCurrentDomain', el.item);
-        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
-        this.$store.dispatch('updatePageIndex', 1);
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.principal.saveTranslations();
+            this.itemClick(el);
+          });
+          this.modal.$once('leave', () => {
+            this.itemClick(el);
+          });
+        } else {
+          this.itemClick(el);
+        }
       });
     },
     methods: {
+      /**
+       * Update the domain, retrieve the translations catalog, set the page to 1
+       * and reset the modified translations
+       * @param {object} el - Domain to set
+       */
+      itemClick: function itemClick(el) {
+        this.$store.dispatch('updateCurrentDomain', el.item);
+        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
+        this.$store.dispatch('updatePageIndex', 1);
+        this.$store.state.modifiedTranslations = [];
+      },
       getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
         const keys = Object.keys(tree);
         let toDisplay = '';
@@ -107,6 +131,13 @@
         }
 
         return toDisplay;
+      },
+      /**
+       * Check if some translations have been edited
+       * @returns {boolean}
+       */
+      edited: function edited() {
+        return this.$store.state.modifiedTranslations.length > 0;
       },
     },
     components: {

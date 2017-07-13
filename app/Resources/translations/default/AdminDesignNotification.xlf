@@ -178,31 +178,31 @@ File: controllers/admin/AdminImagesController.php:737</note>
         <source>The uploaded file is too large.</source>
         <target>The uploaded file is too large.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:401</note>
+File: controllers/admin/AdminThemesController.php:400</note>
       </trans-unit>
       <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
         <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:339</note>
+File: controllers/admin/AdminThemesController.php:340</note>
       </trans-unit>
       <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
         <source>Invalid file format.</source>
         <target>Invalid file format.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:436</note>
+File: controllers/admin/AdminThemesController.php:435</note>
       </trans-unit>
       <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
         <source>Failed to move uploaded file.</source>
         <target>Failed to move uploaded file.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:449</note>
+File: controllers/admin/AdminThemesController.php:448</note>
       </trans-unit>
       <trans-unit id="3cb5c48f468125102a98fe83a277029d">
         <source>Warning: if no email logo is available, the main logo will be used instead.</source>
         <target>Warning: if no email logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:495</note>
+File: controllers/admin/AdminThemesController.php:494</note>
       </trans-unit>
     </body>
   </file>

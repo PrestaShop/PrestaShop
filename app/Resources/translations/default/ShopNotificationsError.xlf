@@ -406,7 +406,7 @@ File: controllers/front/OrderDetailController.php:185</note>
         <source>Invalid message</source>
         <target>Invalid message</target>
         <note>Context:
-File: controllers/front/ProductController.php:809</note>
+File: controllers/front/ProductController.php:810</note>
       </trans-unit>
       <trans-unit id="91e6cde963af2000218553722fc7a093">
         <source>This product is no longer available.</source>
@@ -424,13 +424,13 @@ File: controllers/front/ProductController.php:153</note>
         <source>An error occurred while deleting the selected picture.</source>
         <target>An error occurred while deleting the selected picture.</target>
         <note>Context:
-File: controllers/front/ProductController.php:225</note>
+File: controllers/front/ProductController.php:226</note>
       </trans-unit>
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
         <note>Context:
-File: controllers/front/ProductController.php:781</note>
+File: controllers/front/ProductController.php:782</note>
       </trans-unit>
     </body>
   </file>

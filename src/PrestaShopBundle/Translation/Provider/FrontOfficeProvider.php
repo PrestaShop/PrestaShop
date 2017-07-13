@@ -102,6 +102,6 @@ class FrontOfficeProvider extends AbstractProvider implements UseDefaultCatalogu
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.'/default';
+        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
     }
 }

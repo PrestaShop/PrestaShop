@@ -86,6 +86,6 @@ class ModulesProvider extends AbstractProvider implements UseDefaultCatalogueInt
      */
     public function getDefaultResourceDirectory()
     {
-        return $this->resourceDirectory.'/default';
+        return $this->resourceDirectory.DIRECTORY_SEPARATOR.'default';
     }
 }

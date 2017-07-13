@@ -27,7 +27,7 @@
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
     <div class="card p-a-2">
-      <router-view class="view" @fetch="fetch"></router-view>
+      <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
     </div>
     <PSPagination
       :currentIndex="currentPagination"
@@ -83,6 +83,9 @@
       applyFilter(filters) {
         this.filters = filters;
         this.fetch();
+      },
+      resetFilters() {
+        this.filters = {};
       },
     },
     components: {

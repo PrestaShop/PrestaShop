@@ -6,7 +6,7 @@
         <source>Failed to install admin tab "%name%".</source>
         <target>Failed to install admin tab "%name%".</target>
         <note>Context:
-File: src/Adapter/Module/Tab/ModuleTabRegister.php:271</note>
+File: src/Adapter/Module/Tab/ModuleTabRegister.php:265</note>
       </trans-unit>
     </body>
   </file>
@@ -42,19 +42,19 @@ File: src/Adapter/Module/ModuleDataProvider.php:212</note>
         <source>Unable to find uploaded module at the following path: %file%</source>
         <target>Unable to find uploaded module at the following path: %file%</target>
         <note>Context:
-File: src/Adapter/Module/ModuleZipManager.php:82</note>
+File: src/Adapter/Module/ModuleZipManager.php:78</note>
       </trans-unit>
       <trans-unit id="848578a1a363f2c2443b3989154bf646">
         <source>Cannot extract module in %path% to get its name. %error%</source>
         <target>Cannot extract module in %path% to get its name. %error%</target>
         <note>Context:
-File: src/Adapter/Module/ModuleZipManager.php:92</note>
+File: src/Adapter/Module/ModuleZipManager.php:88</note>
       </trans-unit>
       <trans-unit id="a85499f3d020141df9b6203b7585a9bf">
         <source>This file does not seem to be a valid module zip</source>
         <target>This file does not seem to be a valid module zip</target>
         <note>Context:
-File: src/Adapter/Module/ModuleZipManager.php:129</note>
+File: src/Adapter/Module/ModuleZipManager.php:127</note>
       </trans-unit>
     </body>
   </file>
@@ -128,7 +128,7 @@ File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:626</note>
         <source>Synchronized with Addons marketplace!</source>
         <target>Synchronized with Addons marketplace!</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:753</note>
+File: src/PrestaShopBundle/Controller/Admin/ModuleController.php:762</note>
       </trans-unit>
     </body>
   </file>
