@@ -582,7 +582,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_co
         <source>Uninstall</source>
         <target>Uninstall</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:428</note>
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:505</note>
       </trans-unit>
     </body>
   </file>

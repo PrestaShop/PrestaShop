@@ -176,7 +176,7 @@ File: controllers/admin/AdminStatusesController.php:686</note>
         <source>Your theme has been correctly exported: %path%</source>
         <target>Your theme has been correctly exported: %path%</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:249</note>
+File: controllers/admin/AdminThemesController.php:252</note>
       </trans-unit>
     </body>
   </file>

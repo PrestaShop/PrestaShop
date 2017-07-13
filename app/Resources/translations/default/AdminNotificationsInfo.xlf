@@ -6,7 +6,7 @@
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:724</note>
+File: controllers/admin/AdminCarriersController.php:726</note>
       </trans-unit>
     </body>
   </file>
