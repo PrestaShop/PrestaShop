@@ -22,15 +22,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="ps-dropdown dropdown btn-group">
+<div class="ps-dropdown dropdown btn-group bordered">
     {% for menu in topMenuData %}
         {% set refMenu = menu.refMenu %}
-        <span type="button"  id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div type="button"  id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="js-selected-item selected-item module-category-selector-label">
                 {{menu.name}}
             </span>
-            <i class="material-icons arrow-down">keyboard_arrow_down</i>
-        </span>
+            <i class="material-icons arrow-down pull-right">keyboard_arrow_down</i>
+        </div>
         <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
             <ul class="items-list js-items-list">
                 <li class="module-category-reset">
