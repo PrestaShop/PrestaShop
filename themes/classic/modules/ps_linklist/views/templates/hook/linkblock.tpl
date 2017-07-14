@@ -44,7 +44,9 @@
                 id="{$link.id}-{$linkBlock.id}"
                 class="{$link.class}"
                 href="{$link.url}"
-                title="{$link.description}">
+                title="{$link.description}"
+                {if isset($link.target) && $link.target} target="_blank" {/if}
+            >
               {$link.title}
             </a>
           </li>
