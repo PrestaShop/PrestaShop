@@ -497,7 +497,7 @@ $(document).ready(function() {
 		});
 	}
 	
-	displayProductAttributes();
+    displayProductAttributes();
 });
 
 
