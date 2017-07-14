@@ -44,7 +44,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Employee;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use Db;
 use InstallSession;
 use Language as LanguageLegacy;
 use PrestashopInstallerException;
@@ -292,16 +292,22 @@ class Install extends AbstractInstall
     public function clearDatabase($truncate = false)
     {
         $instance = Db::getInstance();
-        $instance->execute('SET FOREIGN_KEY_CHECKS=0');
-        $sqlRequest = (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
-        foreach ($instance->executeS('SHOW TABLES') as $row) {
+        $tables = $instance->executeS('SHOW TABLES');
+        if (!count($tables)) {
+            return;
+        }
+        
+        $instance->query('SET FOREIGN_KEY_CHECKS=0');
+        $sqlRequest = '';
+        foreach ($tables as $row) {
+            $sqlRequest .= (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
             $table = current($row);
             if (!_DB_PREFIX_ || preg_match('#^'._DB_PREFIX_.'#i', $table)) {
-                $sqlRequest .= ' `'.$table.'`,';
+                $sqlRequest .= ' `'.$table.'`;';
             }
         }
-        $instance->execute(rtrim($sqlRequest, ','));
-        $instance->execute('SET FOREIGN_KEY_CHECKS=1');
+        $instance->query($sqlRequest);
+        $instance->query('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**

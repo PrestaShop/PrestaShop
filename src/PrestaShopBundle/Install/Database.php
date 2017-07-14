@@ -27,8 +27,8 @@
 
 namespace PrestaShopBundle\Install;
 
+use Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
 
 class Database extends AbstractInstall
 {
@@ -70,10 +70,6 @@ class Database extends AbstractInstall
             // Try to connect to database
             switch (Db::checkConnection($server, $login, $password, $database, true)) {
                 case 0:
-                    if (!Db::checkEncoding($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install').$dbtype;
-                    }
-
                     // Check if a table with same prefix already exists
                     if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix)) {
                         $errors[] = $this->translator->trans('At least one table with same prefix was already found, please change your prefix or drop your database', array(), 'Install');

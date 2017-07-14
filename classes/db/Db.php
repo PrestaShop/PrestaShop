@@ -165,17 +165,6 @@ class DbCore
     }
 
     /**
-     * Execute a query and get result resource
-     *
-     * @param string $sql
-     * @return PDOStatement|mysqli_result|resource|bool
-     */
-     protected function _query($sql)
-     {
-         return $this->link->executeQuery($sql);
-     }
-
-    /**
      * Get number of rows in a result
      *
      * @param \Doctrine\DBAL\Driver\Statement $result
@@ -265,7 +254,8 @@ class DbCore
     {
         $search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
         $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
-        return str_replace($search, $replace, $str);    }
+        return str_replace($search, $replace, $str);
+    }
 
     /**
      * Returns the text of the error message from previous database operation
@@ -294,13 +284,12 @@ class DbCore
      * Sets the current active database on the server that's associated with the specified link identifier.
      * Do not remove, useful for some modules.
      *
-     * @param string $db_name
+     * @param string $dbName
      * @return bool|int
      */
-    public function set_db($db_name)
+    public function set_db($dbName)
     {
-        // ToDo: To be checked
-        throw new Symfony\Component\Serializer\Exception\UnsupportedException();
+        $this->query('use '.$dbName);
     }
 
     /**
@@ -436,11 +425,11 @@ class DbCore
             $sql = $sql->build();
         }
 
-        $this->result = $this->_query($sql);
+        $this->result = $this->link->executeQuery($sql);
 
         if (!$this->result && $this->getNumberError() == 2006) {
             if ($this->connect()) {
-                $this->result = $this->_query($sql);
+                $this->result = $this->link->executeQuery($sql);
             }
         }
 
@@ -534,7 +523,7 @@ class DbCore
             $sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
         }
 
-        return (bool)$this->q($sql, $use_cache);
+        return (bool)$this->query($sql, $use_cache);
     }
 
     /**
@@ -579,7 +568,7 @@ class DbCore
             $sql .= ' LIMIT '.(int)$limit;
         }
 
-        return (bool)$this->q($sql, $use_cache);
+        return (bool)$this->query($sql, $use_cache);
     }
 
     /**
@@ -607,17 +596,13 @@ class DbCore
 
     /**
      * Executes a query
-     *
+     * @deprecated use query() instead
      * @param string|DbQuery $sql
      * @param bool $use_cache
      * @return bool
      */
     public function execute($sql, $use_cache = true)
     {
-        if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
-        }
-
         return (bool) $this->query($sql);
     }
 
@@ -644,7 +629,7 @@ class DbCore
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
             }
-            return $this->execute($sql, $use_cache);
+            return $this->query($sql);
         }
 
         $this->result = $this->query($sql);
@@ -721,30 +706,6 @@ class DbCore
         if ($this->result) {
             return $this->_numRows($this->result);
         }
-    }
-
-    /**
-     * Executes a query
-     *
-     * @param string|DbQuery $sql
-     * @param bool $use_cache
-     * @return bool|mysqli_result|PDOStatement|resource
-     * @throws PrestaShopDatabaseException
-     */
-    protected function q($sql, $use_cache = true)
-    {
-        if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
-        }
-
-        $this->result = false;
-        $result = $this->query($sql);
-
-        if (_PS_DEBUG_SQL_) {
-            $this->displayError($sql);
-        }
-
-        return $result;
     }
 
     /**
@@ -876,7 +837,7 @@ class DbCore
         try {
             $link = new self($server, $user, $pwd, $db, true);
         } catch (DBALException $e) {
-            return ($e->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getCode() == 42000)) ? 2 : 1;
+            return ($e->getPrevious()->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getPrevious()->getCode() == 42000)) ? 2 : 1;
         }
         unset($link);
         return 0;
@@ -912,26 +873,7 @@ class DbCore
         }
         return $value;
     }
-    /**
-     * Try a connection to the database and set names to UTF-8
-     *
-     * @see Db::checkEncoding()
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @return bool
-     */
-    public static function tryUTF8($server, $user, $pwd)
-    {
-        try {
-            $link = new self($server, $user, $pwd, null, true);
-        } catch (DBALException $e) {
-            return false;
-        }
-        $result = $link->exec('SET NAMES \'utf8\'');
-        unset($link);
-        return ($result === false) ? false : true;
-    }
+
     /**
      * Checks if auto increment value and offset is 1
      *
@@ -966,12 +908,12 @@ class DbCore
     public static function createDatabase($server, $user, $pwd, $dbname, $dropit = false)
     {
         try {
-            $link = new self($server, $user, $pwd, $dbname, true);
+            $link = new self($server, $user, $pwd, null, true);
         } catch (DBALException $e) {
             return false;
         }
-        $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
-        if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
+        $success = $link->link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+        if ($dropit && ($link->link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
             return true;
         }
         return $success;
