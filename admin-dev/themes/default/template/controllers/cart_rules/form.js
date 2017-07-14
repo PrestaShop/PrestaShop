@@ -496,6 +496,8 @@ $(document).ready(function() {
 			callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
 		});
 	}
+	
+	displayProductAttributes();
 });
 
 
