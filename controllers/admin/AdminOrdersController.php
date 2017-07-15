@@ -935,7 +935,10 @@ class AdminOrdersControllerCore extends AdminController
                                 if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($order_detail->product_id)) {
                                     StockAvailable::synchronize($order_detail->product_id);
                                 }
-                                Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
+                                Hook::exec('actionProductCancel', array(
+				    'order' => $order,
+				    'id_order_detail' => (int)$id_order_detail,
+				    'product_quantity' => $qty_cancel_product), null, false, true, false, $order->id_shop);
                             }
                         }
                         if (!count($this->errors) && $customizationList) {
