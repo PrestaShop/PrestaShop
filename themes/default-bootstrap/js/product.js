@@ -940,10 +940,15 @@ function updateDiscountTable()
 			var discountedPrice = basePrice - discount;
 			var discountUpTo = discount * quantity;
 		}
-
-		if (displayDiscountPrice != 0)
-			$(this).children('td').eq(1).text(formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
-		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
+		if (discount > 0) {
+			if (displayDiscountPrice != 0)
+				$(this).children('td').eq(1).text(formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
+			$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
+		}
+		else {
+			$(this).children('td').eq(1).text("-");
+			$(this).children('td').eq(2).text("-");
+		}
 
 		$(this).attr("data-real-discount-value", formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
 		$(this).attr("data-base-price", formatCurrency(basePrice * currencyRate, currencyFormat, currencySign, currencyBlank));
@@ -1219,19 +1224,21 @@ function updateDiscountPrice(type, discount, price) {
 	$('#reduction_amount').hide();
 	$('#old_price, #old_price_display').hide();
 
-	if (type == 'amount') {
-		$('#reduction_amount').show();
-		$('#reduction_amount_display').text(discount);
+    if (parseFloat(discount) != 0) {
+		if (type == 'amount') {
+			$('#reduction_amount').show();
+			$('#reduction_amount_display').text(discount);
 
+		}
+		else {
+			$('#reduction_percent').show();
+			$('#reduction_percent_display').text(discount);
+		}
+
+		$('#old_price, #old_price_display').removeClass('hidden').show();
+		$('#old_price_display .price').text(price);
 	}
-	else {
-		$('#reduction_percent').show();
-		$('#reduction_percent_display').text(discount);
-	}
-
-	$('#old_price, #old_price_display').removeClass('hidden').show();
-	$('#old_price_display .price').text(price);
-
 }
+
 
 

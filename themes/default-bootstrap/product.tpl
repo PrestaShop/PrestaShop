@@ -410,6 +410,7 @@
 						<th>{l s='Quantity'}</th>
 						<th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
 						<th>{l s='You Save'}</th>
+						<th>{l s='Price'} {hook h="displayProductPriceBlock" product=$product type="price"}</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -439,36 +440,45 @@
 								{$quantity_discount.quantity|intval}
 							</td>
 							<td>
-								{if $display_discount_price}
-									{if $quantity_discount.reduction_type == 'amount'}
-										{convertPrice price = $quantity_discount.base_price|floatval - $quantity_discount.real_value|floatval}
+								{if $quantity_discount.real_value > 0}
+									{if $display_discount_price}
+										{if $quantity_discount.reduction_type == 'amount'}
+											{convertPrice price = $quantity_discount.base_price|floatval - $quantity_discount.real_value|floatval}
+										{else}
+											{convertPrice price=($quantity_discount.base_price* (1 - $quantity_discount.reduction)|floatval)}
+
+										{/if}
 									{else}
-										{convertPrice price=($quantity_discount.base_price* (1 - $quantity_discount.reduction)|floatval)}
+										{if $quantity_discount.reduction_type == 'amount'}
+
+											{convertPrice price = $quantity_discount.real_value}
+										{else}
+
+											{$quantity_discount.real_value|floatval}%
+										{/if}
+
 
 									{/if}
 								{else}
-									{if $quantity_discount.reduction_type == 'amount'}
-
-										{convertPrice price = $quantity_discount.real_value}
-									{else}
-
-										{$quantity_discount.real_value|floatval}%
-									{/if}
-
-
+									<span> - </span>
 								{/if}
 
 							</td>
 							<td>
-								<span>{l s='Up to'}</span>
-								{if  $quantity_discount.reduction_type == 'amount'}
+								{if $quantity_discount.real_value > 0}
+									<span>{l s='Up to'}</span>
+									{if  $quantity_discount.reduction_type == 'amount'}
 
-									{convertPrice price= ($quantity_discount.real_value*$quantity_discount.quantity)|floatval}
+										{convertPrice price= ($quantity_discount.real_value*$quantity_discount.quantity)|floatval}
+									{else}
+
+										{convertPrice price=($quantity_discount.base_price* $quantity_discount.reduction *$quantity_discount.quantity)|floatval}
+									{/if}
 								{else}
-
-									{convertPrice price=($quantity_discount.base_price* $quantity_discount.reduction *$quantity_discount.quantity)|floatval}
+									<span> - </span>
 								{/if}
 							</td>
+							<td>{convertPrice price= $quantity_discount.base_price} </td>
 						</tr>
 					{/foreach}
 					</tbody>

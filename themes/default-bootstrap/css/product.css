@@ -673,7 +673,7 @@ table.table-product-discounts {
   table.table-product-discounts tr td,
   table.table-product-discounts tr th {
     border-left: 1px solid #d6d4d4;
-    width: 33%;
+    width: 25%;
     padding: 10px 20px 11px;
     border-top: 1px solid #d6d4d4;
     border-right: none;
