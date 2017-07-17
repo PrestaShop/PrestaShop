@@ -1002,7 +1002,7 @@ class AdminImportControllerCore extends AdminController
     {
         $filename_prefix = date('YmdHis').'-';
 
-        if (isset($_FILES['file']) && !empty($_FILES['file']['error'])) {
+        if (!empty($_FILES['file']['error'])) {
             switch ($_FILES['file']['error']) {
                 case UPLOAD_ERR_INI_SIZE:
                     $_FILES['file']['error'] = $this->trans(
@@ -1347,7 +1347,7 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     $html = '';
                 }
-                $fields[] = '<div>'.$field['label'].$html.'</div>';
+                $fields[] = '<div>' . $field['label'] . $html . '</div>';
             }
             ++$i;
         }
@@ -1594,13 +1594,38 @@ class AdminImportControllerCore extends AdminController
         return true;
     }
 
+    /**
+     * @deprecated Please use AdminImportControllerCore::getBestPath() instead
+     *
+     * @param $tgt_width
+     * @param $tgt_height
+     * @param $path_infos
+     *
+     * @return string
+     */
     protected static function get_best_path($tgt_width, $tgt_height, $path_infos)
     {
-        $path_infos = array_reverse($path_infos);
-        $path = '';
-        foreach ($path_infos as $path_info) {
-            list($width, $height, $path) = $path_info;
-            if ($width >= $tgt_width && $height >= $tgt_height) {
+        return self::getBestPath($tgt_width, $tgt_height, $path_infos);
+    }
+
+    /**
+     * Get the best image path
+     *
+     * TODO : better description
+     *
+     * @param $tgtWidth
+     * @param $tgtHeight
+     * @param $pathInfos
+     *
+     * @return string
+     */
+    protected static function getBestPath($tgtWidth, $tgtHeight, $pathInfos)
+    {
+        $pathInfos = array_reverse($pathInfos);
+        $path      = '';
+        foreach ($pathInfos as $pathInfo) {
+            list($width, $height, $path) = $pathInfo;
+            if ($width >= $tgtWidth && $height >= $tgtHeight) {
                 return $path;
             }
         }
@@ -2935,7 +2960,9 @@ class AdminImportControllerCore extends AdminController
         $shop_is_feature_active = Shop::isFeatureActive();
 
         $lineCount = 0;
-        while ((!$limit || $lineCount < $limit) && $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)) {
+        while ((!$limit || $lineCount < $limit)
+            && $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator)
+        ) {
             $lineCount++;
 
             if ($this->convert) {
@@ -3099,15 +3126,14 @@ class AdminImportControllerCore extends AdminController
                         }
                     }
                     if (empty($id_image)) {
-                        $this->warnings[] =
-                            $this->trans(
-                                'No image was found for combination with id_product = %s and image position = %s.',
-                                array(
-                                    $product->id,
-                                    (int)$position,
-                                ),
-                                'Admin.Advparameters.Notification'
-                            );
+                        $this->warnings[] = $this->trans(
+                            'No image was found for combination with id_product = %s and image position = %s.',
+                            array(
+                                $product->id,
+                                (int)$position,
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -4714,7 +4740,6 @@ class AdminImportControllerCore extends AdminController
 
         // If store doesn't exist or update failed
         if (!$res) {
-            $store->force_id = (bool)$forceIds;
             $res = $store->add();
         }
 
@@ -4758,7 +4783,7 @@ class AdminImportControllerCore extends AdminController
             $this->supplyOrdersImportOne(
                 $info,
                 $force_ids,
-                $current_line,
+                $lineCount - 1,
                 $validateOnly
             );
         }
