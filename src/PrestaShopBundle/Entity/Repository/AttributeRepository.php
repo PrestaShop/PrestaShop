@@ -42,7 +42,8 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('a')
             ->addSelect('ag.id AS attributeGroupId')
             ->addSelect('ag.position AS attributeGroupPosition')
-            ->addSelect('agl.publicName AS attributeGroupName')
+            ->addSelect('agl.name AS attributeGroupName')
+            ->addSelect('agl.publicName AS attributeGroupPublicName')
             ->addSelect('a.id')
             ->addSelect('a.color')
             ->addSelect('a.position as attributePosition')
@@ -71,6 +72,7 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
                 $attributeGroups[$attribute['attributeGroupPosition']] = array(
                     'id' => $attribute['attributeGroupId'],
                     'name' => $attribute['attributeGroupName'],
+                    'publicName' => $attribute['attributeGroupPublicName'],
                     'position' => $attribute['attributeGroupPosition'],
                     'attributes' => array(
                         $attribute['attributePosition'] => $this->getAttributeRow($attribute),
