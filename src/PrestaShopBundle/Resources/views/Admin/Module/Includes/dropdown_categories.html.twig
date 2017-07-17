@@ -25,7 +25,7 @@
 <div class="ps-dropdown dropdown btn-group bordered">
     {% for menu in topMenuData %}
         {% set refMenu = menu.refMenu %}
-        <div type="button"  id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div id="{{refMenu}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="js-selected-item selected-item module-category-selector-label">
                 {{menu.name}}
             </span>

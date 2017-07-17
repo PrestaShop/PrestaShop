@@ -225,6 +225,23 @@
 }
 .module-sorting {
   margin-left: 35px;
+  .select2-selection {
+    border-radius: 0;
+    min-width: 175px;
+    .select2-selection__arrow {
+      b {
+        display: none;
+      }
+      &:before {
+        content: "\E313";
+        font-family: 'Material Icons';
+        font-size: 1.5rem;
+        position: relative;
+        color: $gray-medium;
+        right: 20px;
+      }
+    }
+  }
 }
 .module-sorting i {
   margin-left: 10px;
@@ -241,7 +258,7 @@
   border-radius: 0;
   height: auto;
   span {
-    font-size: .9rem;
+    font-size: .8rem;
     font-weight: lighter;
     letter-spacing: 1px;
   }
