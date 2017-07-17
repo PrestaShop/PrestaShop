@@ -52,6 +52,9 @@ class ProductCore extends ObjectModel
     /** @var int default Category id */
     public $id_category_default;
 
+    /** @var array */
+    public $id_category;
+
     /** @var int default Shop id */
     public $id_shop_default;
 
