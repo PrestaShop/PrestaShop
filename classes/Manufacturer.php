@@ -64,6 +64,8 @@ class ManufacturerCore extends ObjectModel
     /** @var bool active */
     public $active;
 
+    public $shop;
+
     /**
      * @see ObjectModel::$definition
      */

@@ -61,6 +61,8 @@ class SupplierCore extends ObjectModel
     /** @var bool active */
     public $active;
 
+    public $shop;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -446,7 +448,7 @@ class SupplierCore extends ObjectModel
     /**
      * Tells if a supplier exists
      *
-     * @param $idSupplier Supplier id
+     * @param $idSupplier int Supplier id
      *
      * @return bool
      */

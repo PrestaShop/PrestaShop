@@ -862,7 +862,7 @@ class AdminImportControllerCore extends AdminController
         $this->multiple_value_separator = $separator ? $separator :  ',';
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         $bo_theme = ((Validate::isLoadedObject($this->context->employee)
             && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
@@ -873,7 +873,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         // We need to set parent media first, so that jQuery is loaded before the dependant plugins
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
         $this->addJs(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
@@ -930,10 +930,9 @@ class AdminImportControllerCore extends AdminController
         }
 
         $csv_selected = '';
-        if (isset($this->context->cookie->csv_selected) &&
-            @filemtime(AdminImportController::getPath(
-                urldecode($this->context->cookie->csv_selected)
-            ))) {
+        if (isset($this->context->cookie->csv_selected)
+            && @filemtime(AdminImportController::getPath(urldecode($this->context->cookie->csv_selected)))
+        ) {
             $csv_selected = urldecode($this->context->cookie->csv_selected);
         } else {
             $this->context->cookie->csv_selected = $csv_selected;
@@ -1162,12 +1161,12 @@ class AdminImportControllerCore extends AdminController
         for ($i = 0; $i < $nb_column; $i++) {
             if (MAX_COLUMNS * (int)$current_table <= $i && (int)$i < MAX_COLUMNS * ((int)$current_table + 1)) {
                 $html .= '<th>
-							<select id="type_value['.$i.']"
-								name="type_value['.$i.']"
-								class="type_value">
-								'.$this->getTypeValuesOptions($i).'
-							</select>
-						</th>';
+                            <select id="type_value['.$i.']"
+                                name="type_value['.$i.']"
+                                class="type_value">
+                                '.$this->getTypeValuesOptions($i).'
+                            </select>
+                        </th>';
             }
         }
         $html .= '</tr></thead><tbody>';
@@ -1233,6 +1232,8 @@ class AdminImportControllerCore extends AdminController
         if (($bom = fread($handle, 3)) != "\xEF\xBB\xBF") {
             rewind($handle);
         }
+
+        return true;
     }
 
     protected static function getBoolean($field)
@@ -1258,7 +1259,6 @@ class AdminImportControllerCore extends AdminController
             $separator = ',';
         }
 
-        $tab = '';
         $uniqid_path = false;
 
         // try data:// protocole. If failed, old school file on filesystem.
@@ -1632,8 +1632,15 @@ class AdminImportControllerCore extends AdminController
         return $path;
     }
 
-    public function categoryImport($offset = false, $limit = false, &$crossStepsVars = false, $validateOnly = false)
-    {
+    public function categoryImport(
+        $offset = false,
+        $limit = false,
+        &$crossStepsVariables = false,
+        $validateOnly = false
+    ) {
+        if (!is_array($crossStepsVariables)) {
+            $crossStepsVariables = array();
+        }
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) {
@@ -1653,8 +1660,8 @@ class AdminImportControllerCore extends AdminController
 
 
         $cat_moved = array();
-        if ($crossStepsVars !== false && array_key_exists('cat_moved', $crossStepsVars)) {
-            $cat_moved = $crossStepsVars['cat_moved'];
+        if (array_key_exists('cat_moved', $crossStepsVariables)) {
+            $cat_moved = $crossStepsVariables['cat_moved'];
         }
 
         $lineCount = 0;
@@ -1695,9 +1702,7 @@ class AdminImportControllerCore extends AdminController
         }
         $this->closeCsvFile($handle);
 
-        if ($crossStepsVars !== false) {
-            $crossStepsVars['cat_moved'] = $cat_moved;
-        }
+        $crossStepsVariables['cat_moved'] = $cat_moved;
 
         return $lineCount;
     }
@@ -1923,9 +1928,10 @@ class AdminImportControllerCore extends AdminController
         } else {
             // Associate category to shop
             if ($shopIsFeatureActive) {
-                Db::getInstance()->execute('
-					DELETE FROM '._DB_PREFIX_.'category_shop
-					WHERE id_category = '.(int)$category->id);
+                Db::getInstance()->execute(
+                    'DELETE FROM '._DB_PREFIX_.'category_shop '
+                    . 'WHERE id_category = '.(int)$category->id
+                );
 
                 if (!$shopIsFeatureActive) {
                     $info['shop'] = 1;
@@ -1954,9 +1960,14 @@ class AdminImportControllerCore extends AdminController
         $validateOnly = false,
         $moreStep = 0
     ) {
+        if (!is_array($crossStepsVariables)) {
+            $crossStepsVariables = array();
+        }
+
         if ($moreStep == 1) {
             return $this->productImportAccessories($offset, $limit, $crossStepsVariables);
         }
+
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
         if (!$handle) {
@@ -1980,7 +1991,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         $accessories = array();
-        if ($crossStepsVariables !== false && array_key_exists('accessories', $crossStepsVariables)) {
+        if (array_key_exists('accessories', $crossStepsVariables)) {
             $accessories = $crossStepsVariables['accessories'];
         }
 
@@ -2024,16 +2035,18 @@ class AdminImportControllerCore extends AdminController
             Tag::updateTagCount();
         }
 
-        if ($crossStepsVariables !== false) {
-            $crossStepsVariables['accessories'] = $accessories;
-        }
+        $crossStepsVariables['accessories'] = $accessories;
 
         return $lineCount;
     }
 
-    protected function productImportAccessories($offset, $limit, &$crossStepsVariables)
+    protected function productImportAccessories($offset, $limit, &$crossStepsVariables = array())
     {
-        if ($crossStepsVariables === false || !array_key_exists('accessories', $crossStepsVariables)) {
+        if (!is_array($crossStepsVariables)) {
+            $crossStepsVariables = array();
+        }
+
+        if (!array_key_exists('accessories', $crossStepsVariables)) {
             return 0;
         }
 
@@ -2099,12 +2112,12 @@ class AdminImportControllerCore extends AdminController
         if ($forceIds && $productId) {
             $product = new Product($productId);
         } elseif ($matchRef && array_key_exists('reference', $info)) {
-            $datas = Db::getInstance()->getRow('
-					SELECT p.`id_product`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`reference` = "'.pSQL($info['reference']).'"
-				', false);
+            $datas = Db::getInstance()->getRow(
+                'SELECT p.`id_product` '
+                . 'FROM `'._DB_PREFIX_.'product` p ' . Shop::addSqlAssociation('product', 'p')
+                . ' WHERE p.`reference` = "'.pSQL($info['reference']).'"',
+                false
+            );
             if (isset($datas['id_product']) && $datas['id_product']) {
                 $product = new Product((int)$datas['id_product']);
             } else {
@@ -2227,10 +2240,11 @@ class AdminImportControllerCore extends AdminController
                 $supplier->active = true;
 
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly &&  // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $supplier->add()) {
+                if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly  // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $supplier->add()
+                ) {
                     $product->id_supplier = (int)$supplier->id;
                     $supplier->associateTo($product->id_shop_list);
                 } else {
@@ -2284,7 +2298,10 @@ class AdminImportControllerCore extends AdminController
                         // FIXME needing such a comment about "&& !$validateOnly" position is a code smell.
                         // Refacto needed.
                         if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true
-                            && ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                            && ($lang_field_error = $category_to_create->validateFieldsLang(
+                                UNFRIENDLY_ERROR,
+                                true
+                            )) === true
                             && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
                             && $category_to_create->add()
                         ) {
@@ -2412,22 +2429,23 @@ class AdminImportControllerCore extends AdminController
 
             // If match ref is specified && ref product && ref product already in base, trying to update
             if ($matchRef && $product->reference && $product->existsRefInDatabase($product->reference)) {
-                $datas = Db::getInstance()->getRow('
-					SELECT product_shop.`date_add`, p.`id_product`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`reference` = "'.pSQL($product->reference).'"
-				', false);
+                $datas = Db::getInstance()->getRow(
+                    'SELECT product_shop.`date_add`, p.`id_product` '
+                    . 'FROM `' . _DB_PREFIX_ . 'product` p ' . Shop::addSqlAssociation('product', 'p')
+                    . ' WHERE p.`reference` = "' . pSQL($product->reference) . '"',
+                    false
+                );
                 $product->id = (int)$datas['id_product'];
                 $product->date_add = pSQL($datas['date_add']);
                 $res = ($validateOnly || $product->update());
             } // Else If id product && id product already in base, trying to update
             elseif ($productExistsInDatabase) {
-                $datas = Db::getInstance()->getRow('
-					SELECT product_shop.`date_add`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`id_product` = '.(int)$product->id, false);
+                $datas = Db::getInstance()->getRow(
+                    'SELECT product_shop.`date_add` '
+                    . 'FROM `' . _DB_PREFIX_ . 'product` p ' . Shop::addSqlAssociation('product', 'p')
+                    . ' WHERE p.`id_product` = ' . (int)$product->id,
+                    false
+                );
                 $product->date_add = pSQL($datas['date_add']);
                 $res = ($validateOnly || $product->update());
             }
@@ -2930,10 +2948,14 @@ class AdminImportControllerCore extends AdminController
         &$crossStepsVariables = false,
         $validateOnly = false
     ) {
+        if (!is_array($crossStepsVariables)) {
+            $crossStepsVariables = array();
+        }
+
         $default_language = Configuration::get('PS_LANG_DEFAULT');
 
         $groups = array();
-        if ($crossStepsVariables !== false && array_key_exists('groups', $crossStepsVariables)) {
+        if (array_key_exists('groups', $crossStepsVariables)) {
             $groups = $crossStepsVariables['groups'];
         }
         foreach (AttributeGroup::getAttributesGroups($default_language) as $group) {
@@ -2941,7 +2963,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         $attributes = array();
-        if ($crossStepsVariables !== false && array_key_exists('attributes', $crossStepsVariables)) {
+        if (array_key_exists('attributes', $crossStepsVariables)) {
             $attributes = $crossStepsVariables['attributes'];
         }
         foreach (Attribute::getAttributes($default_language) as $attribute) {
@@ -2994,10 +3016,9 @@ class AdminImportControllerCore extends AdminController
         }
         $this->closeCsvFile($handle);
 
-        if ($crossStepsVariables !== false) {
-            $crossStepsVariables['groups'] = $groups;
-            $crossStepsVariables['attributes'] = $attributes;
-        }
+        $crossStepsVariables['groups'] = $groups;
+        $crossStepsVariables['attributes'] = $attributes;
+
         return $lineCount;
     }
 
@@ -3035,12 +3056,12 @@ class AdminImportControllerCore extends AdminController
         if (isset($info['id_product']) && $info['id_product']) {
             $product = new Product((int)$info['id_product'], false, $default_language);
         } elseif (Tools::getValue('match_ref') && isset($info['product_reference']) && $info['product_reference']) {
-            $datas = Db::getInstance()->getRow('
-				SELECT p.`id_product`
-				FROM `'._DB_PREFIX_.'product` p
-				'.Shop::addSqlAssociation('product', 'p').'
-				WHERE p.`reference` = "'.pSQL($info['product_reference']).'"
-			', false);
+            $datas = Db::getInstance()->getRow(
+                'SELECT p.`id_product` '
+                . 'FROM `' . _DB_PREFIX_ . 'product` p ' . Shop::addSqlAssociation('product', 'p')
+                . ' WHERE p.`reference` = "' . pSQL($info['product_reference']) . '"',
+                false
+            );
             if (isset($datas['id_product']) && $datas['id_product']) {
                 $product = new Product((int)$datas['id_product'], false, $default_language);
             } else {
@@ -3076,10 +3097,11 @@ class AdminImportControllerCore extends AdminController
                     $field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
                     $lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);
 
-                    if ($field_error === true &&
-                        $lang_field_error === true &&
-                        !$validateOnly &&
-                        $image->add()) {
+                    if ($field_error === true
+                        && $lang_field_error === true
+                        && !$validateOnly
+                        && $image->add()
+                    ) {
                         $image->associateTo($id_shop_list);
                         // FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
@@ -3173,8 +3195,9 @@ class AdminImportControllerCore extends AdminController
                     $obj->public_name[$default_language] = $group;
                     $obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
 
-                    if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                        ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+                    if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true
+                        && ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    ) {
                         // here, cannot avoid attributeGroup insertion to avoid an error during validation step.
                         //if (!$validateOnly) {
                             $obj->add();
@@ -3230,8 +3253,9 @@ class AdminImportControllerCore extends AdminController
                             ? Attribute::getHigherPosition($groups[$group]) + 1
                             : $position;
 
-                        if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                            ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+                        if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true
+                            && ($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                        ) {
                             if (!$validateOnly) {
                                 $obj->add();
                                 $obj->associateTo($id_shop_list);
@@ -3367,16 +3391,17 @@ class AdminImportControllerCore extends AdminController
             if (!$validateOnly) {
                 // now adds the attributes in the attribute_combination table
                 if ($id_product_attribute_update) {
-                    Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'product_attribute_combination
-						WHERE id_product_attribute = '.(int)$id_product_attribute);
+                    Db::getInstance()->execute(
+                        'DELETE FROM ' . _DB_PREFIX_ . 'product_attribute_combination '
+                        . 'WHERE id_product_attribute = ' . (int)$id_product_attribute
+                    );
                 }
 
                 foreach ($attributes_to_add as $attribute_to_add) {
                     Db::getInstance()->execute(
                         'INSERT IGNORE INTO ' . _DB_PREFIX_.'product_attribute_combination '
-                        . '(id_attribute, id_product_attribute)
-						VALUES (' . (int)$attribute_to_add . ',' . (int)$id_product_attribute . ')',
+                        . '(id_attribute, id_product_attribute) '
+                        . 'VALUES (' . (int)$attribute_to_add . ',' . (int)$id_product_attribute . ')',
                         false
                     );
                 }
@@ -3612,7 +3637,10 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        $customer_exist = false;
+        $customer_exists = false;
+        $current_id_customer = null;
+        $current_id_shop = null;
+        $current_id_shop_group = null;
         $autodate = true;
 
         if (array_key_exists('id', $info)
@@ -3623,7 +3651,7 @@ class AdminImportControllerCore extends AdminController
             $current_id_customer = (int)$customer->id;
             $current_id_shop = (int)$customer->id_shop;
             $current_id_shop_group = (int)$customer->id_shop_group;
-            $customer_exist = true;
+            $customer_exists = true;
             $customer_groups = $customer->getGroups();
             $addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
         }
@@ -3730,8 +3758,9 @@ class AdminImportControllerCore extends AdminController
         }
 
         $res = false;
-        if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+        if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true
+            && ($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+        ) {
             $res = true;
             foreach ($customers_shop as $id_shop => $id_group) {
                 $customer->force_id = (bool)$force_ids;
@@ -3739,7 +3768,7 @@ class AdminImportControllerCore extends AdminController
                     foreach ($id_group as $key => $id) {
                         $customer->id_shop = (int)$key;
                         $customer->id_shop_group = (int)$id;
-                        if ($customer_exist
+                        if ($customer_exists
                             && ((int)$current_id_shop_group == (int)$id
                                 || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))
                             )
@@ -3768,7 +3797,7 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     $customer->id_shop = $id_shop;
                     $customer->id_shop_group = $id_group;
-                    if ($customer_exist && (int)$id_shop == (int)$current_id_shop) {
+                    if ($customer_exists && (int)$id_shop == (int)$current_id_shop) {
                         $customer->id = (int)$current_id_customer;
                         $res &= ($validateOnly || $customer->update());
                     } else {
@@ -3830,7 +3859,6 @@ class AdminImportControllerCore extends AdminController
     public function addressImport($offset = false, $limit = false, $validateOnly = false)
     {
         $this->receiveTab();
-        $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
         $handle = $this->openCsvFile($offset);
         if (!$handle) {
             return false;
@@ -3887,6 +3915,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $address);
 
+        $country = null;
         if (isset($address->country) && is_numeric($address->country)) {
             if (Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), (int)$address->country)) {
                 $address->id_country = (int)$address->country;
@@ -3905,10 +3934,11 @@ class AdminImportControllerCore extends AdminController
                 $country->contains_states = 0; // Default value for country to create
                 $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $country->add()) {
+                if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $country->add()
+                ) {
                     $address->id_country = (int)$country->id;
                 } else {
                     if (!$validateOnly) {
@@ -3945,10 +3975,11 @@ class AdminImportControllerCore extends AdminController
                 $state->iso_code = Tools::strtoupper(Tools::substr($address->state, 0, 2));
                 $state->tax_behavior = 0;
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $state->add()) {
+                if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $state->add()
+                ) {
                     $address->id_state = (int)$state->id;
                 } else {
                     if (!$validateOnly) {
@@ -4069,10 +4100,11 @@ class AdminImportControllerCore extends AdminController
                 $manufacturer = new Manufacturer();
                 $manufacturer->name = $address->manufacturer;
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $manufacturer->add()) {
+                if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $manufacturer->add()
+                ) {
                     $address->id_manufacturer = (int)$manufacturer->id;
                 } else {
                     if (!$validateOnly) {
@@ -4103,10 +4135,11 @@ class AdminImportControllerCore extends AdminController
                 $supplier = new Supplier();
                 $supplier->name = $address->supplier;
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $supplier->add()) {
+                if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $supplier->add()
+                ) {
                     $address->id_supplier = (int)$supplier->id;
                 } else {
                     if (!$validateOnly) {
@@ -4126,8 +4159,9 @@ class AdminImportControllerCore extends AdminController
         }
 
         $res = false;
-        if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+        if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true
+            && ($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+        ) {
             $address->force_id = (bool)$force_ids;
 
             if (isset($customer_list) && count($customer_list) > 0) {
@@ -4236,8 +4270,9 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $manufacturer);
 
         $res = false;
-        if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+        if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true
+            && ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+        ) {
             if ($manufacturer->id && $manufacturer->manufacturerExists($manufacturer->id)) {
                 $res = ($validateOnly || $manufacturer->update());
             }
@@ -4267,9 +4302,10 @@ class AdminImportControllerCore extends AdminController
             if (!$validateOnly && $res) {
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $manufacturer->shop) {
-                    Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'manufacturer_shop
-						WHERE id_manufacturer = '.(int)$manufacturer->id);
+                    Db::getInstance()->execute(
+                        'DELETE FROM ' . _DB_PREFIX_ . 'manufacturer_shop '
+                        . 'WHERE id_manufacturer = ' . (int)$manufacturer->id
+                    );
                     $manufacturer->shop = explode($this->multiple_value_separator, $manufacturer->shop);
                     $shops = array();
                     foreach ($manufacturer->shop as $shop) {
@@ -4373,8 +4409,9 @@ class AdminImportControllerCore extends AdminController
         }
 
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
-        if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+        if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true
+            && ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+        ) {
             $res = false;
             if ($supplier->id && $supplier->supplierExists($supplier->id)) {
                 $res = ($validateOnly || $supplier->update());
@@ -4404,9 +4441,10 @@ class AdminImportControllerCore extends AdminController
             } elseif (!$validateOnly) {
                 // Associate supplier to group shop
                 if ($shop_is_feature_active && $supplier->shop) {
-                    Db::getInstance()->execute('
-						DELETE FROM '._DB_PREFIX_.'supplier_shop
-						WHERE id_supplier = '.(int)$supplier->id);
+                    Db::getInstance()->execute(
+                        'DELETE FROM '._DB_PREFIX_.'supplier_shop '
+                        . 'WHERE id_supplier = '.(int)$supplier->id
+                    );
                     $supplier->shop = explode($this->multiple_value_separator, $supplier->shop);
                     $shops = array();
                     foreach ($supplier->shop as $shop) {
@@ -4497,8 +4535,9 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $alias);
 
         $res = false;
-        if (($field_error = $alias->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-            ($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
+        if (($field_error = $alias->validateFields(UNFRIENDLY_ERROR, true)) === true
+            && ($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+        ) {
             if ($alias->id && $alias->aliasExists($alias->id)) {
                 $res = ($validateOnly || $alias->update());
             }
@@ -4637,10 +4676,11 @@ class AdminImportControllerCore extends AdminController
                 $country->need_identification_number = 0; // Default value for country to create
                 $langFieldsValidationResult = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($fieldsValidationResult = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($langFieldsValidationResult = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $country->add()) {
+                if (($fieldsValidationResult = $country->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($langFieldsValidationResult = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $country->add()
+                ) {
                     $store->id_country = (int)$country->id;
                 } else {
                     if (!$validateOnly) {
@@ -4682,10 +4722,11 @@ class AdminImportControllerCore extends AdminController
                 $state->iso_code = Tools::strtoupper(Tools::substr($store->state, 0, 2));
                 $state->tax_behavior = 0;
                 // FIXME needing such a comment about "&& !$validateOnly" position is a code smell. Refacto needed.
-                if (($fieldsValidationResult = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-                    ($langFieldsValidationResult = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
-                    !$validateOnly && // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
-                    $state->add()) {
+                if (($fieldsValidationResult = $state->validateFields(UNFRIENDLY_ERROR, true)) === true
+                    && ($langFieldsValidationResult = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true
+                    && !$validateOnly // Do not move this condition: previous tests should be played always, but next ->add() test should not be played in validateOnly mode
+                    && $state->add()
+                ) {
                     $store->id_state = (int)$state->id;
                 } else {
                     if (!$validateOnly) {
@@ -4818,7 +4859,6 @@ class AdminImportControllerCore extends AdminController
         $reference = pSQL($info['reference']);
         $date_delivery_expected = pSQL($info['date_delivery_expected']);
         $discount_rate = (float)$info['discount_rate'];
-        $is_template = (bool)$info['is_template'];
 
         $error = '';
         // checks parameters
@@ -4903,10 +4943,6 @@ class AdminImportControllerCore extends AdminController
             // sets parameters
             AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supply_order);
 
-            // updatesd($supply_order);
-
-            $res = false;
-
             if ((int)$supply_order->id
                 && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference))
             ) {
@@ -4935,6 +4971,10 @@ class AdminImportControllerCore extends AdminController
         &$crossStepsVariables = false,
         $validateOnly = false
     ) {
+        if (!is_array($crossStepsVariables)) {
+            $crossStepsVariables = array();
+        }
+
         // opens CSV & sets locale
         $this->receiveTab();
         $handle = $this->openCsvFile($offset);
@@ -5347,7 +5387,8 @@ class AdminImportControllerCore extends AdminController
                 array(),
                 'Admin.Notifications.Error'
             );
-            return;
+
+            return false;
         }
 
         if (Tools::isSubmit('import')) {
@@ -5390,6 +5431,7 @@ class AdminImportControllerCore extends AdminController
             }
         }
         Db::getInstance()->enableCache();
+
         return parent::postProcess();
     }
 
