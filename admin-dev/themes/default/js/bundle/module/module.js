@@ -635,8 +635,12 @@ var AdminModuleController = function() {
     if (currentDisplaySwitch.length) {
       this.currentDisplay = currentDisplaySwitch.attr('data-switch');
     } else {
-      this.currentDisplay = 'list';
+      this.currentDisplay = 'grid';
     }
+    $('.sort-component').select2({
+      minimumResultsForSearch: Infinity,
+      placeholder: false
+    });
   }
 
   this.initSortingDropdown = function () {
