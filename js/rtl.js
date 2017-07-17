@@ -14,13 +14,15 @@ $(document).ready(function () {
         var s = '';
         var i = '';
         var v = '';
-        for (var x = 0, l = styles_old.length; x < l; x++) {
-            s = styles_old[x].split(':');
-            i = $.trim(s[0]);
-            styles[makeGeneralRTL(i)] = makeValueRTL(i, $.trim(s[1]));
+        if(styles_old.indexOf('background-image') !== -1) {
+            for (var x = 0, l = styles_old.length; x < l; x++) {
+                s = styles_old[x].split(':');
+                i = $.trim(s[0]);
+                styles[makeGeneralRTL(i)] = makeValueRTL(i, $.trim(s[1]));
+            }
+            $(this).removeAttr("style");
+            $(this).css(styles);
         }
-        $(this).removeAttr("style");
-        $(this).css(styles);
     });
 });
 
