@@ -477,9 +477,53 @@ class FrontControllerCore extends Controller
             $this->displayRestrictedCountryPage();
         }
 
+        if (Tools::isSubmit('live_edit') && !$this->checkLiveEditAccess()) {
+            Tools::redirect('index.php?controller=404');
+        }
+
         $this->iso = $iso;
         $this->context->cart = $cart;
         $this->context->currency = $currency;
+    }
+
+    /**
+     * Checks if the user can use Live Edit feature
+     *
+     * @return bool
+     */
+    public function checkLiveEditAccess()
+    {
+        if (!Tools::isSubmit('live_edit') || !Tools::getValue('ad') || !Tools::getValue('liveToken')) {
+            return false;
+        }
+
+        if (Tools::getValue('liveToken') != Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
+            return false;
+        }
+
+        return is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
+    }
+
+    /**
+     * Renders Live Edit widget
+     *
+     * @return string HTML
+     */
+    public function getLiveEditFooter()
+    {
+        if ($this->checkLiveEditAccess()) {
+            $data = $this->context->smarty->createData();
+
+            $data->assign(array(
+                'ad'        => Tools::getValue('ad'),
+                'live_edit' => true,
+                'hook_list' => Hook::$executed_hooks,
+                'id_shop'   => $this->context->shop->id
+            ));
+            return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();
+        } else {
+            return '';
+        }
     }
 
     /**
@@ -656,6 +700,8 @@ class FrontControllerCore extends Controller
             }
         } else {
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+            $live_edit_content = $this->getLiveEditFooter();
+            $html .= $live_edit_content;
         }
 
         Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
@@ -754,7 +800,7 @@ class FrontControllerCore extends Controller
      */
     protected function canonicalRedirection($canonical_url = '')
     {
-        if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET') {
+        if (!$canonical_url || !Configuration::get('PS_CANONICAL_REDIRECT') || strtoupper($_SERVER['REQUEST_METHOD']) != 'GET' || Tools::getValue('live_edit')) {
             return;
         }
 
@@ -894,6 +940,13 @@ class FrontControllerCore extends Controller
             foreach ($assets['js'] as $js) {
                 $this->registerJavascript($js['id'], $js['path'], $js);
             }
+        }
+
+        if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
+
+            $this->addJqueryUi('ui.sortable');
+            $this->addJqueryPlugin('fancybox');
+            $this->registerJavascript('hookLiveEdit', '/js/hookLiveEdit.js', ['position' => 'bottom', 'priority' => 0]);
         }
 
         // Execute Hook FrontController SetMedia
