@@ -308,10 +308,10 @@ function paginationButton(nbProductsIn, nbProductOut)
 			var nbPage = parseInt($('div.pagination li.current').children().children().html());
 			var nb_products = nbProductsIn;
 
-			if ($('#nb_item option:selected').length == 0)
+			if ($('#nb_page_items option:selected').length == 0)
 				var nbPerPage = nb_products;
 			else
-				var nbPerPage = parseInt($('#nb_item option:selected').val());
+				var nbPerPage = parseInt($('#nb_page_items option:selected').val());
 
 			isNaN(nbPage) ? nbPage = 1 : nbPage = nbPage;
 			nbPerPage*nbPage < nb_products ? productShowing = nbPerPage*nbPage :productShowing = (nbPerPage*nbPage-nb_products-nbPerPage*nbPage)*-1;
