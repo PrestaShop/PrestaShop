@@ -28,7 +28,7 @@ $(document).ready(function() {
 		var search = this.search;
 		var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop') + '&id_employee=' + get('id_employee');
 
-		if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir)
+		if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir && !$(this).hasClass('settingModule'))
 		{
 			if (search.length == 0)
 				this.search = hrefAdd;
@@ -41,24 +41,47 @@ $(document).ready(function() {
 		hooks_list.push($(this).attr('id'));
 	});
 
-	$('.dndModule').each(function () {
+	$('.dndModule').each(function (index) {
 
-		var ids = $(this).attr('id').split('_');
+        var moduleBlock = $(this);
+
+        moduleBlock.attr('data-order', index);
+
+		var ids = moduleBlock.attr('id').split('_');
 
 		var name_module = ids['5'];
 
 		name_module = name_module.replace("-", "_");
 
 		modules_list.push(name_module);
-	});
 
+		var toolbar = $(this).find('.toolbar').html();
+
+        moduleBlock.find('.toolbar').remove();
+
+        moduleBlock.find(' > *').prepend('<div class="toolbar">' + toolbar + '</div>');
+
+        var ClassFirstElement = moduleBlock.find(' > *').attr('class');
+
+        if(ClassFirstElement !== undefined) {
+            var ClassArray = ClassFirstElement.split(" ");
+            $.each( ClassArray, function( key, value ) {
+                var col = value.indexOf("col-");
+                if( col != -1) {
+                    moduleBlock.addClass(value);
+                    moduleBlock.find(' > *').removeClass(value);
+                }
+            });
+        }
+
+	});
 
 	getHookableList();
 
 	$('.unregisterHook').unbind('click').click(function()
 	{
 		ids = $(this).attr('id').split('_');
-		$(this).parent().parent().parent().fadeOut('slow', function() {
+        $(this).closest( ".toolbar" ).parent().parent().fadeOut('slow', function() {
 			$(this).parent().data('id', + ids[0]);
 			$(this).hide();
 		});
@@ -68,7 +91,6 @@ $(document).ready(function() {
 	$('#resetLiveEdit').unbind('click').click(function()
 	{
 		$('.dndModule').fadeIn('slow', function() {
-			// $(this).parent().data('id', + ids[0]);
 			$(this).show();
 		});
 		return false;
@@ -79,11 +101,13 @@ $(document).ready(function() {
 		$('#' + cancelMove + '').sortable('cancel');
 		return false;
 	});
+
 	$('#saveLiveEdit').unbind('click').click(function()
 	{
 		saveModulePosition();
 		return false;
 	});
+
 	$('#closeLiveEdit').unbind('click').click(function() 
 	{
 		if (!has_been_moved)
@@ -96,6 +120,7 @@ $(document).ready(function() {
 		}
 		return false;
 	});
+
 	$('.add_module_live_edit').unbind('click').click(function()
 	{
 		$("#live_edit_feedback_str").html('<div style="text-align:center; padding: 30px;"><img src="' + baseDir + 'img/loadingAnimation.gif"></div>');
@@ -105,11 +130,13 @@ $(document).ready(function() {
 		getHookableModuleList(id.substr(4, id.length));
 		return false;
 	});
+
 	$('.dndHook').each(function() {
 		var id_hook = $(this).attr('id');
 		var new_target_id = '';
 		var old_target = '';
 		var cancel = false;
+
 		$('#' + id_hook + '').sortable({
 			opacity: 0.5,
 			cursor: 'move',
@@ -150,7 +177,8 @@ $(document).ready(function() {
 					ui.placeholder.css({
 						visibility: 'visible',
 						border: '1px solid #72CB67',
-						background: '#DFFAD3'
+						background: '#DFFAD3',
+                        'min-height': '100px'
 					});
 				}
 				else
@@ -164,6 +192,7 @@ $(document).ready(function() {
 				}
 			}
 		});
+
 		$('#' + id_hook + '').disableSelection();
 	});
 });
@@ -295,7 +324,7 @@ function hideFeedback()
 		$.fancybox.close();
 		$('#live_edit_feedback_str').html('');
 	});
-};
+}
 
 function get(name)
 {

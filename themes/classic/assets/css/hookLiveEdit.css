@@ -1,0 +1,74 @@
+.dndModule {
+    border: 1px dotted red;
+    position: relative;
+}
+
+.dndModule .toolbar {
+    font-family: Georgia;
+    font-size: 13px;
+    font-style: italic;
+    height: 35px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    min-width: 200px;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    background: #ddd;
+    z-index: 2;
+}
+
+.dndModule .toolbar .toolbar-content {
+    float: left;
+}
+
+.dndModule .toolbar .toolbar-btn {
+    float: right;
+    position: relative;
+    z-index: 9;
+}
+
+.dndModule .toolbar img {
+    padding-right: 5px;
+    width: 40px;
+    float: left;
+}
+
+.dndModule .toolbar .toolbar-btn a {
+    color: #2fb5d2 !important;
+    padding-top: 5px;
+    display: inline-block;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+}
+
+.dndModule .toolbar .toolbar-btn a:hover {
+    color: #232323 !important;
+}
+
+#header .header-nav .dndModule {
+    display: inline-block;
+}
+
+#header .header-nav {
+    max-height: inherit;
+}
+
+.dndModule > * {
+    padding-top: 35px;
+    width: 100%;
+}
+
+.toolbar-title {
+    text-overflow: ellipsis;
+    display: inline-block;
+    overflow: hidden;
+    max-width: 100px;
+    white-space: nowrap;
+    line-height: 35px;
+}
+
+.dndModule:hover .toolbar {
+    z-index: 5;
+}

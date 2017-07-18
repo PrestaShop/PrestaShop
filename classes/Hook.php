@@ -965,20 +965,33 @@ class HookCore extends ObjectModel
         $is_configurable = method_exists($moduleInstance, 'getContent') ? 1 : 0;
 
         $live_content = '<div rel="'.Tools::safeOutput($moduleInstance->name).'" id="hook_'.(int)$id_hook.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
+<<<<<<< HEAD
 				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
 					<span class="toolbar" style="font-family: Georgia;font-size:13px;font-style:italic;">
 						<img style="padding-right:5px;width: 40px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.png">'
             .Tools::safeOutput($moduleInstance->displayName).'<span style="float:right;position: relative;z-index: 9;">
 				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule" style="color: #2fb5d2;">
+=======
+				class="dndModule">
+					<div class="toolbar">
+					    <div class="toolbar-content">
+						<img src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.png">
+                        <div class="toolbar-title">' . Tools::safeOutput($moduleInstance->displayName) . '</div></div><div class="toolbar-btn">
+				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
+>>>>>>> FO: Fix position + add button
 					<i class="material-icons md-icon">zoom_out_map</i></a>
-				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook" style="color: #2fb5d2;">
+				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
 					<i class="material-icons md-icon">delete_forever</i></a> ';
         if(1 === $is_configurable) {
-            $live_content .= '<a target="_blank" href="'.$link_module.'" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="settingModule" style="color: #2fb5d2;">
+            $live_content .= '<a target="_blank" href="'.$link_module.'" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="settingModule">
 					<i class="material-icons md-icon">settings</i></a>';
         }
 
+<<<<<<< HEAD
         $live_content .= '</span></span>'.$display.'</div>';
+=======
+        $live_content .= '</div></div>'.$display.'</div>';
+>>>>>>> FO: Fix position + add button
 
         return $live_content;
     }
