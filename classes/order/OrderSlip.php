@@ -293,10 +293,14 @@ class OrderSlipCore extends ObjectModel
             $tax_calculator = $carrier->getTaxCalculator($address);
             $order_slip->{'total_shipping_tax_'.$inc_or_ex_1} = ($shipping_cost === null ? $order->{'total_shipping_tax_'.$inc_or_ex_1} : (float)$shipping_cost);
 
-            if ($tax_calculator instanceof TaxCalculator) {
-                $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($order_slip->{'total_shipping_tax_'.$inc_or_ex_1}), _PS_PRICE_COMPUTE_PRECISION_);
+            if ($shipping_cost === null) {
+                $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = $order->{'total_shipping_tax_'.$inc_or_ex_2};
             } else {
-                $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
+                if ($tax_calculator instanceof TaxCalculator) {
+                    $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($order_slip->{'total_shipping_tax_'.$inc_or_ex_1}), _PS_PRICE_COMPUTE_PRECISION_);
+                } else {
+                    $order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
+                }
             }
         } else {
             $order_slip->shipping_cost = false;
@@ -380,8 +384,8 @@ class OrderSlipCore extends ObjectModel
         }
 
         $order_slip->{'total_products_tax_'.$inc_or_ex_2} -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
-        $order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->{'total_products_tax_'.$inc_or_ex_1};
-        $order_slip->shipping_cost_amount = $order_slip->total_shipping_tax_incl;
+        $order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->{'total_products_tax_'.$inc_or_ex_2};
+        $order_slip->shipping_cost_amount = $order_slip->{'total_shipping_tax_'.$inc_or_ex_2};
 
         if ((float)$amount && !$amount_choosen) {
             $order_slip->order_slip_type = 1;
