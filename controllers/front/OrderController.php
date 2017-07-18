@@ -124,6 +124,16 @@ class OrderControllerCore extends ParentOrderController
     {
         parent::initContent();
 
+        /* id_carrier is not defined in database before choosing a carrier, set it to a default one to match a potential cart _rule */
+        if (empty($this->context->cart->id_carrier)) {
+            $checked = $this->context->cart->simulateCarrierSelectedOutput();
+            $checked = ((int)Cart::desintifier($checked));
+            $this->context->cart->id_carrier = $checked;
+            $this->context->cart->update();
+            CartRule::autoRemoveFromCart($this->context);
+            CartRule::autoAddToCart($this->context);
+        }
+
         if (Tools::isSubmit('ajax') && Tools::getValue('method') == 'updateExtraCarrier') {
             // Change virtualy the currents delivery options
             $delivery_option = $this->context->cart->getDeliveryOption();
