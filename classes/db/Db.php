@@ -99,6 +99,13 @@ class DbCore
     protected $last_cached;
 
     /**
+     * Contains details about the connection to instanciate
+     * 
+     * @var array
+     */
+    protected $options;
+
+    /**
      * Instantiates a database connection
      *
      * @param string $server Server address
@@ -107,7 +114,7 @@ class DbCore
      * @param string $database Database name
      * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
      */
-    public function __construct($server, $user, $password, $database, $connect = true)
+    public function __construct($server, $user, $password, $database, $connect = true, array $options = array())
     {
         $this->server = $server;
         $this->user = $user;
@@ -121,6 +128,13 @@ class DbCore
 
         if ($connect) {
             $this->connect();
+        }
+
+        global $kernel;
+        if (!empty($options['dbal_connection'])) {
+            dump('doge');
+            // ToDo: Hardcoded value to be replaced
+            $this->link = $kernel->get('doctrine.dbal.default_connection');
         }
     }
 
@@ -162,17 +176,6 @@ class DbCore
     public function disconnect()
     {
         $this->link->close();
-    }
-
-    /**
-     * Get number of rows in a result
-     *
-     * @param \Doctrine\DBAL\Driver\Statement $result
-     * @return int
-     */
-    protected function _numRows($result)
-    {
-        return $result->rowCount();
     }
 
     /**
@@ -305,7 +308,7 @@ class DbCore
         // This MUST not be declared with the class members because some defines (like _DB_SERVER_) may not exist yet (the constructor can be called directly with params)
         if (!self::$_servers) {
             self::$_servers = array(
-                array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
+                array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_, 'name' => 'default'), /* MySQL Master server */
             );
         }
 
@@ -322,12 +325,23 @@ class DbCore
         }
 
         if (!isset(self::$instance[$id_server])) {
+            $options = array();
+            global $kernel;
+            // To be checked, it seems it is not instanciated yet
+            $sfFound = ($kernel instanceof \Symfony\Component\HttpKernel\KernelInterface);
+
+            if ($sfFound && !empty(self::$_servers[$id_server]['name'])) {
+                $options['dbal_connection'] = self::$_servers[$id_server]['name'];
+            }
+
             $class = Db::getClass();
             self::$instance[$id_server] = new $class(
                 self::$_servers[$id_server]['server'],
                 self::$_servers[$id_server]['user'],
                 self::$_servers[$id_server]['password'],
-                self::$_servers[$id_server]['database']
+                self::$_servers[$id_server]['database'],
+                !$sfFound, // Do not connect if container service exists
+                $options
             );
         }
 
@@ -704,7 +718,7 @@ class DbCore
     public function numRows()
     {
         if ($this->result) {
-            return $this->_numRows($this->result);
+            return $this->result->rowCount();
         }
     }
 
@@ -762,7 +776,7 @@ class DbCore
     /**
      * Get used link instance
      *
-     * @return PDO|mysqli|resource Resource
+     * @return \Doctrine\DBAL\Connection
      */
     public function getLink()
     {
