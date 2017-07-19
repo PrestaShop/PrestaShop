@@ -58,7 +58,7 @@ class SupplierControllerCore extends FrontController
         if ($id_supplier = (int)Tools::getValue('id_supplier')) {
             $this->supplier = new Supplier($id_supplier, $this->context->language->id);
 
-            if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active) {
+            if (!Validate::isLoadedObject($this->supplier) || !$this->supplier->active || !$this->supplier->isAssociatedToShop()) {
                 header('HTTP/1.1 404 Not Found');
                 header('Status: 404 Not Found');
                 $this->errors[] = Tools::displayError('The chosen supplier does not exist.');
