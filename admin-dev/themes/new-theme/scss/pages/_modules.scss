@@ -137,12 +137,15 @@
         }
 
         .module-quick-action-list {
-
             > [class^="module-star-ranking-"] {
                 display:none;
             }
         }
     }
+}
+
+.module-item-wrapper-grid .btn-group {
+  width: 100%;
 }
 
 /**
