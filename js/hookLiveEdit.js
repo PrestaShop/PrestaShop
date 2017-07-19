@@ -87,9 +87,15 @@ $(document).ready(function () {
     });
 
     $('#resetLiveEdit').unbind('click').click(function () {
+        $('.dndHook').each(function () {
+            var id_hook = $(this).attr('id');
+            $('#' + id_hook + '').sortable( "cancel" );
+        });
+
         $('.dndModule').fadeIn('slow', function () {
             $(this).show();
         });
+
         return false;
     });
 
