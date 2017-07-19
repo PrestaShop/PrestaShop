@@ -76,7 +76,7 @@ class CmsControllerCore extends FrontController
             } else {
                 $this->assignCase = 1;
             }
-        } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active) {
+        } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active && $this->cms_category->isAssociatedToShop()) {
             $this->assignCase = 2;
         } else {
             header('HTTP/1.1 404 Not Found');
