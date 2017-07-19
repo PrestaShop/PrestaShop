@@ -23,10 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use Doctrine\DBAL\Configuration as DBALConfiguration;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\DriverManager;
+
 /**
  * Class DbCore
  */
-abstract class DbCore
+class DbCore
 {
     /** @var int Constant used by insert() method */
     const INSERT = 1;
@@ -55,7 +60,7 @@ abstract class DbCore
     /** @var bool */
     protected $is_cache_enabled;
 
-    /** @var PDO|mysqli|resource Resource link */
+    /** @var \Doctrine\DBAL\Connection */
     protected $link;
 
     /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
@@ -94,46 +99,101 @@ abstract class DbCore
     protected $last_cached;
 
     /**
+     * Instantiates a database connection
+     *
+     * @param string $server Server address
+     * @param string $user User login
+     * @param string $password User password
+     * @param string $database Database name
+     * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
+     */
+    public function __construct($server, $user, $password, $database, $connect = true)
+    {
+        $this->server = $server;
+        $this->user = $user;
+        $this->password = $password;
+        $this->database = $database;
+        $this->is_cache_enabled = (defined('_PS_CACHE_ENABLED_')) ? _PS_CACHE_ENABLED_ : false;
+
+        if (!defined('_PS_DEBUG_SQL_')) {
+            define('_PS_DEBUG_SQL_', false);
+        }
+
+        if ($connect) {
+            $this->connect();
+        }
+    }
+
+    /**
      * Opens a database connection
      *
-     * @return PDO|mysqli|resource
+     * @return \Doctrine\DBAL\Connection
      */
-    abstract public function connect();
+    public function connect()
+    {
+        $this->connectionParams = array(
+            'host' => $this->server,
+            'user' => $this->user,
+            'password' => $this->password,
+            'driver' => 'pdo_mysql',
+            'charset' => 'utf8',
+            'server_version' => '5.5',
+        );
+
+        if (strpos($this->server, ':')) {
+            list($this->connectionParams['host'], $this->connectionParams['port']) = explode(':', $this->server);
+        }
+
+        if ($this->database) {
+            $this->connectionParams['dbname'] = $this->database;
+        }
+
+        $config = new DBALConfiguration();
+        $this->link = DriverManager::getConnection($this->connectionParams, $config);
+
+        $this->link->exec('SET SESSION sql_mode = \'\'');
+
+        return $this->link;
+    }
 
     /**
      * Closes database connection
      */
-    abstract public function disconnect();
-
-    /**
-     * Execute a query and get result resource
-     *
-     * @param string $sql
-     * @return PDOStatement|mysqli_result|resource|bool
-     */
-    abstract protected function _query($sql);
+    public function disconnect()
+    {
+        $this->link->close();
+    }
 
     /**
      * Get number of rows in a result
      *
-     * @param mixed $result
+     * @param \Doctrine\DBAL\Driver\Statement $result
      * @return int
      */
-    abstract protected function _numRows($result);
+    protected function _numRows($result)
+    {
+        return $result->rowCount();
+    }
 
     /**
      * Get the ID generated from the previous INSERT operation
      *
      * @return int|string
      */
-    abstract public function Insert_ID();
+    public function Insert_ID()
+    {
+        return $this->link->lastInsertId();
+    }
 
     /**
      * Get number of affected rows in previous database operation
      *
      * @return int
      */
-    abstract public function Affected_Rows();
+    public function Affected_Rows()
+    {
+        return $this->result->rowCount();
+    }
 
     /**
      * Get next row for a query which does not return an array
@@ -141,7 +201,18 @@ abstract class DbCore
      * @param PDOStatement|mysqli_result|resource|bool $result
      * @return array|object|false|null
      */
-    abstract public function nextRow($result = false);
+    public function nextRow($result = false)
+    {
+        if (!$result) {
+            $result = $this->result;
+        }
+
+        if (!is_object($result)) {
+            return false;
+        }
+
+        return $result->fetch();
+    }
 
     /**
      * Get all rows for a query which return an array
@@ -149,14 +220,29 @@ abstract class DbCore
      * @param PDOStatement|mysqli_result|resource|bool|null $result
      * @return array
      */
-    abstract protected function getAll($result = false);
+    protected function getAll($result = false)
+    {
+        if (!$result) {
+            $result = $this->result;
+        }
+
+        if (!is_object($result)) {
+            return false;
+        }
+
+        return $result->fetchAll();
+    }
 
     /**
      * Get database version
      *
      * @return string
      */
-    abstract public function getVersion();
+    public function getVersion()
+    {
+        // ToDo: Check if best answer
+        return $this->getValue('SELECT VERSION()');
+    }
 
     /**
      * Protect string against SQL injections
@@ -164,37 +250,47 @@ abstract class DbCore
      * @param string $str
      * @return string
      */
-    abstract public function _escape($str);
+    public function _escape($str)
+    {
+        $search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"');
+        $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"');
+        return str_replace($search, $replace, $str);
+    }
 
     /**
      * Returns the text of the error message from previous database operation
      *
      * @return string
      */
-    abstract public function getMsgError();
+    public function getMsgError()
+    {
+        $error = $this->link->errorInfo();
+        return ($error[0] == '00000') ? '' : $error[2];
+    }
 
     /**
      * Returns the number of the error from previous database operation
      *
      * @return int
      */
-    abstract public function getNumberError();
+    public function getNumberError()
+    {
+        // ToDo: check function called, errorCode() should exists
+        $error = $this->link->errorInfo();
+        return isset($error[1]) ? $error[1] : 0;
+    }
 
     /**
      * Sets the current active database on the server that's associated with the specified link identifier.
      * Do not remove, useful for some modules.
      *
-     * @param string $db_name
+     * @param string $dbName
      * @return bool|int
      */
-    abstract public function set_db($db_name);
-
-    /**
-     * Selects best table engine.
-     *
-     * @return string
-     */
-    abstract public function getBestEngine();
+    public function set_db($dbName)
+    {
+        $this->query('use '.$dbName);
+    }
 
     /**
      * Returns database object instance.
@@ -284,44 +380,8 @@ abstract class DbCore
      */
     public static function getClass()
     {
-        $class = '';
-        if (PHP_VERSION_ID >= 50200 && extension_loaded('pdo_mysql')) {
-            $class = 'DbPDO';
-        } elseif (extension_loaded('mysqli')) {
-            $class = 'DbMySQLi';
-        }
-
-        if (empty($class)) {
-            throw new PrestaShopException('Cannot select any valid SQL engine.');
-        }
-
-        return $class;
-    }
-
-    /**
-     * Instantiates a database connection
-     *
-     * @param string $server Server address
-     * @param string $user User login
-     * @param string $password User password
-     * @param string $database Database name
-     * @param bool $connect If false, don't connect in constructor (since 1.5.0.1)
-     */
-    public function __construct($server, $user, $password, $database, $connect = true)
-    {
-        $this->server = $server;
-        $this->user = $user;
-        $this->password = $password;
-        $this->database = $database;
-        $this->is_cache_enabled = (defined('_PS_CACHE_ENABLED_')) ? _PS_CACHE_ENABLED_ : false;
-
-        if (!defined('_PS_DEBUG_SQL_')) {
-            define('_PS_DEBUG_SQL_', false);
-        }
-
-        if ($connect) {
-            $this->connect();
-        }
+        // Removed all classes extendint DbCore  so ...
+        return str_replace('Core', '', __CLASS__);
     }
 
     /**
@@ -340,7 +400,6 @@ abstract class DbCore
     public function enableCache()
     {
         $this->is_cache_enabled = true;
-        Cache::getInstance()->flush();
     }
 
     /**
@@ -366,11 +425,11 @@ abstract class DbCore
             $sql = $sql->build();
         }
 
-        $this->result = $this->_query($sql);
+        $this->result = $this->link->executeQuery($sql);
 
         if (!$this->result && $this->getNumberError() == 2006) {
             if ($this->connect()) {
-                $this->result = $this->_query($sql);
+                $this->result = $this->link->executeQuery($sql);
             }
         }
 
@@ -464,7 +523,7 @@ abstract class DbCore
             $sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
         }
 
-        return (bool)$this->q($sql, $use_cache);
+        return (bool)$this->query($sql, $use_cache);
     }
 
     /**
@@ -509,7 +568,7 @@ abstract class DbCore
             $sql .= ' LIMIT '.(int)$limit;
         }
 
-        return (bool)$this->q($sql, $use_cache);
+        return (bool)$this->query($sql, $use_cache);
     }
 
     /**
@@ -531,32 +590,20 @@ abstract class DbCore
         $this->result = false;
         $sql = 'DELETE FROM `'.bqSQL($table).'`'.($where ? ' WHERE '.$where : '').($limit ? ' LIMIT '.(int)$limit : '');
         $res = $this->query($sql);
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
-        }
 
         return (bool)$res;
     }
 
     /**
      * Executes a query
-     *
+     * @deprecated use query() instead
      * @param string|DbQuery $sql
      * @param bool $use_cache
      * @return bool
      */
     public function execute($sql, $use_cache = true)
     {
-        if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
-        }
-
-        $this->result = $this->query($sql);
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
-        }
-
-        return (bool)$this->result;
+        return (bool) $this->query($sql);
     }
 
     /**
@@ -577,20 +624,12 @@ abstract class DbCore
         $this->result = false;
         $this->last_query = $sql;
 
-        if ($use_cache && $this->is_cache_enabled && $array) {
-            $this->last_query_hash = Tools::hashIV($sql);
-            if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
-                $this->last_cached = true;
-                return $result;
-            }
-        }
-
         // This method must be used only with queries which display results
         if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql)) {
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
             }
-            return $this->execute($sql, $use_cache);
+            return $this->query($sql);
         }
 
         $this->result = $this->query($sql);
@@ -604,11 +643,6 @@ abstract class DbCore
             } else {
                 $result = $this->getAll($this->result);
             }
-        }
-
-        $this->last_cached = false;
-        if ($use_cache && $this->is_cache_enabled && $array) {
-            Cache::getInstance()->setQuery($sql, $result);
         }
 
         return $result;
@@ -632,14 +666,6 @@ abstract class DbCore
         $this->result = false;
         $this->last_query = $sql;
 
-        if ($use_cache && $this->is_cache_enabled) {
-            $this->last_query_hash = Tools::hashIV($sql);
-            if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
-                $this->last_cached = true;
-                return $result;
-            }
-        }
-
         $this->result = $this->query($sql);
         if (!$this->result) {
             $result = false;
@@ -647,17 +673,7 @@ abstract class DbCore
             $result = $this->nextRow($this->result);
         }
 
-        $this->last_cached = false;
-
-        if (is_null($result)) {
-            $result = false;
-        }
-
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->setQuery($sql, $result);
-        }
-
-        return $result;
+        return ($result ? $result : false);
     }
 
     /**
@@ -687,42 +703,9 @@ abstract class DbCore
      */
     public function numRows()
     {
-        if (!$this->last_cached && $this->result) {
-            $nrows = $this->_numRows($this->result);
-            if ($this->is_cache_enabled) {
-                Cache::getInstance()->set($this->last_query_hash.'_nrows', $nrows);
-            }
-            return $nrows;
-        } elseif ($this->is_cache_enabled && $this->last_cached) {
-            return Cache::getInstance()->get($this->last_query_hash.'_nrows');
+        if ($this->result) {
+            return $this->_numRows($this->result);
         }
-    }
-
-    /**
-     * Executes a query
-     *
-     * @param string|DbQuery $sql
-     * @param bool $use_cache
-     * @return bool|mysqli_result|PDOStatement|resource
-     * @throws PrestaShopDatabaseException
-     */
-    protected function q($sql, $use_cache = true)
-    {
-        if ($sql instanceof DbQuery) {
-            $sql = $sql->build();
-        }
-
-        $this->result = false;
-        $result = $this->query($sql);
-        if ($use_cache && $this->is_cache_enabled) {
-            Cache::getInstance()->deleteQuery($sql);
-        }
-
-        if (_PS_DEBUG_SQL_) {
-            $this->displayError($sql);
-        }
-
-        return $result;
     }
 
     /**
@@ -777,48 +760,13 @@ abstract class DbCore
     }
 
     /**
-     * Try a connection to the database
+     * Get used link instance
      *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param bool $new_db_link
-     * @param string|bool $engine
-     * @param int $timeout
-     * @return int Error code or 0 if connection was successful
+     * @return PDO|mysqli|resource Resource
      */
-    public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
+    public function getLink()
     {
-        return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine, $timeout));
-    }
-
-    /**
-     * Try a connection to the database and set names to UTF-8
-     *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @return bool
-     */
-    public static function checkEncoding($server, $user, $pwd)
-    {
-        return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
-    }
-
-    /**
-     * Try a connection to the database and check if at least one table with same prefix exists
-     *
-     * @param string $server Server address
-     * @param string $user Login for database connection
-     * @param string $pwd Password for database connection
-     * @param string $db Database name
-     * @param string $prefix Tables prefix
-     * @return bool
-     */
-    public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
-    {
-        return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+        return $this->link;
     }
 
     /**
@@ -834,7 +782,96 @@ abstract class DbCore
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
+        try {
+            $link = new self($server, $user, $pwd, $db, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        if ($engine === null) {
+            $engine = 'MyISAM';
+        }
+        $result = $link->query('
+		CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+		) ENGINE='.$engine);
+        if (!$result) {
+            $error = $link->errorInfo();
+            return $error[2];
+        }
+        $link->query('DROP TABLE `'.$prefix.'test`');
+        return true;
+    }
+    
+    /**
+     * Try a connection to the database
+     *
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
+     * @param bool $new_db_link
+     * @param string|bool $engine
+     * @param int $timeout
+     * @return int Error code or 0 if connection was successful
+     */
+    public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
+    {
+        return self::tryToConnect($server, $user, $pwd, $db);
+    }
+
+    /**
+     * Try a connection to the database
+     *
+     * @see Db::checkConnection()
+     * @param string $server Server address
+     * @param string $user Login for database connection
+     * @param string $pwd Password for database connection
+     * @param string $db Database name
+     * @param bool $newDbLink
+     * @param string|bool $engine
+     * @param int $timeout
+     * @return int Error code or 0 if connection was successful
+     */
+    public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
+    {
+        try {
+            $link = new self($server, $user, $pwd, $db, true);
+        } catch (DBALException $e) {
+            return ($e->getPrevious()->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getPrevious()->getCode() == 42000)) ? 2 : 1;
+        }
+        unset($link);
+        return 0;
+    }
+    /**
+     * Selects best table engine.
+     *
+     * @return string
+     */
+    public function getBestEngine()
+    {
+        $value = 'InnoDB';
+        $sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
+        $result = $this->link->query($sql);
+        if (!$result) {
+            $value = 'MyISAM';
+        }else {
+            $row = $result->fetch();
+            if (!$row || strtolower($row['Value']) != 'yes') {
+                $value = 'MyISAM';
+            }
+        }
+        /* MySQL >= 5.6 */
+        $sql = 'SHOW ENGINES';
+        $result = $this->link->query($sql);
+        while ($row = $result->fetch()) {
+            if ($row['Engine'] == 'InnoDB') {
+                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                    $value = 'InnoDB';
+                }
+                break;
+            }
+        }
+        return $value;
     }
 
     /**
@@ -847,16 +884,38 @@ abstract class DbCore
      */
     public static function checkAutoIncrement($server, $user, $pwd)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
+        try {
+            $link = new self($server, $user, $pwd, null, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        $ret = (bool)(($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
+        $ret &= (bool)(($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
+        unset($link);
+        return $ret;
     }
 
     /**
-     * Get used link instance
+     * Tries to connect and create a new database
      *
-     * @return PDO|mysqli|resource Resource
+     * @param string $host
+     * @param string $user
+     * @param string $password
+     * @param string $dbname
+     * @param bool $dropit If true, drops the created database.
+     * @return bool|int
      */
-    public function getLink()
+    public static function createDatabase($server, $user, $pwd, $dbname, $dropit = false)
     {
-        return $this->link;
+        try {
+            $link = new self($server, $user, $pwd, null, true);
+        } catch (DBALException $e) {
+            return false;
+        }
+        $success = $link->link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
+        if ($dropit && ($link->link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
+            return true;
+        }
+        return $success;
     }
 }

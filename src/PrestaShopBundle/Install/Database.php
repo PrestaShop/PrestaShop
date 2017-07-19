@@ -27,8 +27,8 @@
 
 namespace PrestaShopBundle\Install;
 
+use Db;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
-use PrestaShop\PrestaShop\Adapter\Entity\Db;
 
 class Database extends AbstractInstall
 {
@@ -70,10 +70,6 @@ class Database extends AbstractInstall
             // Try to connect to database
             switch (Db::checkConnection($server, $login, $password, $database, true)) {
                 case 0:
-                    if (!Db::checkEncoding($server, $login, $password)) {
-                        $errors[] = $this->translator->trans('Cannot convert database data to utf-8', array(), 'Install').$dbtype;
-                    }
-
                     // Check if a table with same prefix already exists
                     if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix)) {
                         $errors[] = $this->translator->trans('At least one table with same prefix was already found, please change your prefix or drop your database', array(), 'Install');
@@ -109,14 +105,12 @@ class Database extends AbstractInstall
 
     public function createDatabase($server, $database, $login, $password, $dropit = false)
     {
-        $class = '\\'.Db::getClass();
-        return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
+        return Db::createDatabase($server, $login, $password, $database, $dropit);
     }
 
     public function getBestEngine($server, $database, $login, $password)
     {
-        $class = '\\'.Db::getClass();
-        $instance = new $class($server, $login, $password, $database, true);
+        $instance = new Db($server, $login, $password, $database, true);
         $engine = $instance->getBestEngine();
         unset($instance);
         return $engine;
