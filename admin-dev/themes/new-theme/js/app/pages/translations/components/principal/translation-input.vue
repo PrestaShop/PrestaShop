@@ -35,6 +35,7 @@
 
 <script>
   import PSButton from 'app/widgets/ps-button';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     name: 'TranslationInput',
