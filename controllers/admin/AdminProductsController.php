@@ -444,7 +444,7 @@ class AdminProductsControllerCore extends AdminController
     {
         $result = parent::loadObject($opt);
         if ($result && Validate::isLoadedObject($this->object)) {
-            if (Shop::getContext() == Shop::CONTEXT_SHOP && Shop::isFeatureActive() && !$this->object->isAssociatedToShop()) {
+            if (Shop::isFeatureActive() && !$this->object->isAssociatedToShop()) {
                 $default_product = new Product((int)$this->object->id, false, null, (int)$this->object->id_shop_default);
                 $def = ObjectModel::getDefinition($this->object);
                 foreach ($def['fields'] as $field_name => $row) {
