@@ -141,11 +141,19 @@
                 display:none;
             }
         }
+          .module-stars {
+            bottom: 20%;
+          }
     }
 }
 
-.module-item-wrapper-grid .btn-group {
-  width: 100%;
+.module-item-wrapper-grid {
+  .btn-group {
+    width: 92%;
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+  }
 }
 
 /**
