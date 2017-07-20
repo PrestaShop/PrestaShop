@@ -24,16 +24,19 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
-#   v1.7.2.0-RC1 - (2017-07-04)
+#   v1.7.2.0 - (2017-07-20)
 ####################################
 - Back Office:
   - New feature:
+    - #8080: Translations confirmation modal
     - #7808: Add tooltips on product's combination image
     - #8031: Placeholder width in declination page
     - #8027: Currencies live exchanges rates upload
     - #7910: Can translate submenu tab!
     - #7865: Fix redirect payment module retrieving good category
   - Improvement:
+    - #8096: Add ids to recommended-payment & carriers & others
+    - #8098: Wording update for 1.7.2 catalog
     - #8004: Fix displayed combination creation field
     - #8008: Clean AdminProductsController
     - #7911: Fix style of selected customer in product page
@@ -56,6 +59,26 @@ Release Notes for PrestaShop 1.7
     - #7715: Change text tooltip in SEO
     - #7618: Update addons authentication form
   - Bug fix:
+    - #8161: Fix reset translation button
+    - #8074: Fix authorization panel
+    - #8129: Fix translations behavior
+    - #8135: Last wording update for 1.7.2.x
+    - #8093: Fix stock management filters
+    - #8094: Fix stock datepicker
+    - #8119: Fix the display of placeholder in combinations tab
+    - #8076: Fix upgrade button with update from disk
+    - #8107: Fix module enabling when ~ in theme.yml
+    - #8085: Fix JS event thrown on module uninstall
+    - #8106: Fix the upload quota for the product image
+    - #8120: Update catalog
+    - #8109: Fix the weird syntax in customer information page
+    - #8095: Feedback on translation page
+    - #8077: Revert Stock to singular
+    - #8068: Stock Management fixes
+    - #8065: Feedback on translation page
+    - #8054: Fix api category tree
+    - #8059: Fix missing use in ModuleDataUpdater
+    - #8052: Fix strings for specific price rules
     - #7939: Fix the categories tree
     - #8003: Fixed import store in backoffice
     - #8044: Fix the conversion_rate in the order_payment table
@@ -89,25 +112,12 @@ Release Notes for PrestaShop 1.7
     - #7898: Merge PRs from 1.7.1.x
     - #7861: Bug with override AdminProductsController
     - #7864: Fix recommended modules popup on legacy BO
-    - #7891: Set value for Short Desc
     - #7875: Fix datepicker design
     - #7817: Introduce tinymce constraint & fixed short_description length
     - #7809: No order notification message was wrong
-    - #7860: Deny legacy module page view
-    - #7789: Message Customer on order details page
-    - #7801: Choose Theme on Mail Translation
-    - #7790: Add a scrollbar for TinyMCE
-    - #7783: Versions completions for the max value
-    - #7807: Partial revert of 0c42257 to fix profiling mode in BO
     - #7792: Remove all bourbon deprecations
     - #7777: Make module actions translatable
-    - #7769: Fix the datepicker to use locale instead of iso code
     - #7763: Updated path in maintenance message
-    - #7738: Fix access to domainized modules translations
-    - #7723: Fix catalog ASC sorting
-    - #7724: Fix translations theme export on Windows
-    - #7690: Incorrect translation on Symfony page (problems with TinyMCE)
-    - #7730: Alphabetically sort features on product page
     - #7623: Avoid silencious fail of simple category creation from product form
     - #7680: Fixed javascript bug on form submission
     - #7662: Fix show currency name in tab "Catalog Price Rules" for option "All currencies"
@@ -131,8 +141,12 @@ Release Notes for PrestaShop 1.7
     - #7813: Close thumbs modal when area under thumbs is clicked
     - #7020: Improve front-end accessibility
     - #7681: Improve readability on Classic theme
-    - #7750: Some refacto for address controller
   - Bug fix:
+    - #8142: Fix the price update on quantity change on cart
+    - #8121: Limit the description's image by the size of description's frame
+    - #8132: Fix the height of the "Show password" button
+    - #8088: Auto width for the selector on product page
+    - #8012: Show the forbiden message on product page
     - #8040: Wrong close of 'product_tabs' {block} in product.tpl
     - #7959: Empty customization ID after adding to cart
     - #8009: Remove contact form after submit
@@ -148,29 +162,12 @@ Release Notes for PrestaShop 1.7
     - #7926: Fix mobile style toggling
     - #7909: Wording checkout delivery
     - #7907: Edit address for a Guest
-    - #7795: Fix allow order value
     - #7866: Fixed full size order-item table
-    - #7773: Fix for CMS tree on sitemap
-    - #7785: Fix slide down of carrier extra content in order funnel
-    - #7797: Translate file upload button label
-    - #7805: Fix word break classic
-    - #7762: Allow image for categories when no description
-    - #7761: Refresh product line on quantity change in cart & Show discount to cart summary
-    - #7747: Fix the except_pages in theme.yml
-    - #7745: Fix radio buttons on faceted search
-    - #7759: Convert voucher value
     - #7796: Fix address form Ajax refresh
-    - #7710: Fix country change in checkout form
-    - #7742: Fix for image change in zoom modal window
-    - #7734: Catch the exception when a template is missing in prod mode
-    - #7720: Display product reference when product has no combination
-    - #7689: Save zero to id_state if country has no states
-    - #7729: Fixed display amount with good taxes
-    - #7726: Fixed Terms and conditions popup on mobile not possible to close
-    - #7693: Password controller must be in SSL when available
     - #7602: Let translate the edit label on order checkout
 - Core:
   - New feature:
+    - #8053: Add theme configurator translation & update catalog
     - #7760: Allow free order
     - #7889: Introduce module self configurator feature
     - #7825: Handle multishop in console commands
@@ -191,6 +188,14 @@ Release Notes for PrestaShop 1.7
     - #7666: Use HTTPS where available in README.md
     - #7606: Updates README.md file.
   - Bug fix:
+    - #8118: Extract theme with default translation in any language
+    - #8101: Fix the tab permissions when only one profile
+    - #8103: Fix get attributes in order presenter
+    - #8124: Remove Finder from depency injection
+    - #8108: Fix update prefix sql
+    - #8070: Module tab registration must check filenames
+    - #8056: Fix type of errors variable in module configuration feature
+    - #8058: Fix missing @Template annotation created by refactoring
     - #8047: License, composer, catalog, assets
     - #8028: Update regex for tab registration
     - #7996: Fix product with combinations auto-indexation
@@ -205,22 +210,10 @@ Release Notes for PrestaShop 1.7
     - #7915: Rethrow an exception instead of calling die when there is an erro…
     - #7914: Changed SearchController extend to allow override
     - #7904: Initialize getSynopsisDetails() output as an array instead of ''
-    - #7901: Use composer cacert file by default
     - #7811: Display the login form after an failed authentication
     - #7838: Return empty array instead of false.
     - #7872: Display translated strings properly in SF debugger!
     - #7852: Improve upgrade command
-    - #7826: Allowed redirect protocol with Tools::file_get_content (curl)
-    - #7800: Fix assets path when theme has the same name than PS
-    - #7770: Return array when it's wanted if the hook doesn't exist
-    - #7766: Fix displayError when string is using sprintf
-    - #7740: Fix missing {url entity=product id=X}
-    - #7752: Upgrade theme modules & disabling them in the same time that the theme
-    - #7776: Fix cache on install
-    - #7753: Added nullable for Tab entity
-    - #7746: Doctrine without foreign for autoupgrade backup
-    - #7714: Module code cleanup and fix module action in details modal
-    - #7739: Allow modules compliancy on 3 digits
     - #7611: Removed setSortOption in ProductSearchQuery
     - #7609: Removed return duplication from search provider
 - Installer:
@@ -228,20 +221,20 @@ Release Notes for PrestaShop 1.7
     - #7744: Adding 5 languages to the installer (SK, UK, ET, EL, FI)
   - Improvement:
     - #7977: Drop unused fields from ps_product_lang
-    - #7743: Allow 255 char to company field in Adress
   - Bug fix:
+    - #8087: Translate fixtures with CLI install
+    - #8049: Reflect new Finnish tax rate in tax rule group names
+    - #8055: Fix update sql for upgrade
     - #7981: Fix upgrade from very old versions
     - #8018: URL update for installer
     - #7993: Avoid INSTALL_PATH re-define error
     - #7879: Set allow_url_fopen mandatory
-    - #7846: Fix install/upgrade/upgrade.php for php-5.4 syntax
     - #7832: Fix install/upgrade/upgrade.php for php-5.4 syntax
     - #7601: Use new module name for OrderState creation
 - Web Services:
   - Bug fix:
     - #7664: Retrieve text only from selected customization
     - #5352: Fix webservice unit_price_ratio set to 0
-    - #7732: Change variable from string to array for php 7
 - Localization:
   - New feature:
     - #7828: New localization packs - DZ, KR, MA, ZA
