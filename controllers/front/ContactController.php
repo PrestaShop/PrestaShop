@@ -36,9 +36,11 @@ class ContactControllerCore extends FrontController
     public function postProcess()
     {
         if (Tools::isSubmit('submitMessage')) {
+            $saveContactKey = $this->context->cookie->contactFormKey;
             $extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
             $file_attachment = Tools::fileAttachment('fileUpload');
             $message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
+            $url = Tools::getValue('url');
             if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from)) {
                 $this->errors[] = Tools::displayError('Invalid email address.');
             } elseif (!$message) {
@@ -51,6 +53,8 @@ class ContactControllerCore extends FrontController
                 $this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
             } elseif (!empty($file_attachment['name']) && !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)) {
                 $this->errors[] = Tools::displayError('Bad file extension');
+            } elseif ($url === false || !empty($url) || $saveContactKey != (Tools::getValue('contactKey'))) {
+                $this->errors[] = Tools::displayError('An error occurred while sending the message.');
             } else {
                 $customer = $this->context->customer;
                 if (!$customer->id) {
@@ -247,9 +251,13 @@ class ContactControllerCore extends FrontController
             $this->context->smarty->assign('customerThread', $customer_thread);
         }
 
+        $contactKey = md5(uniqid(microtime(), true));
+        $this->context->cookie->__set('contactFormKey', $contactKey);
+
         $this->context->smarty->assign(array(
             'contacts' => Contact::getContacts($this->context->language->id),
-            'message' => html_entity_decode(Tools::getValue('message'))
+            'message' => html_entity_decode(Tools::getValue('message')),
+            'contactKey' => $contactKey,
         ));
 
         $this->setTemplate(_PS_THEME_DIR_.'contact-form.tpl');
