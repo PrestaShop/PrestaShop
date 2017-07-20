@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "351bf9b02371fcd3cf6c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "caf21073d1097ec3ef3b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -33233,7 +33233,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "/* not used */\n/* TODO change padding */\n#search .search-input {\n  box-shadow: none;\n  border: #BBCDD2 1px solid;\n  background-color: white;\n  min-height: 35px;\n  outline: none;\n  border-radius: 0;\n}\n.search-form {\n  width: calc(100% - 130px);\n}\n.search-form .search-button {\n    float: right;\n    position: absolute;\n    right: 14px;\n    top: 1px;\n    margin-top: 28px;\n}\n", ""]);
+exports.push([module.i, "/* not used */\n/* TODO change padding */\n#search .search-input {\n  box-shadow: none;\n  border: #BBCDD2 1px solid;\n  background-color: white;\n  min-height: 35px;\n  outline: none;\n  border-radius: 0;\n}\n.search-form {\n  width: calc(100% - 130px);\n}\n.search-form .search-button {\n    float: right;\n    position: absolute;\n    right: 14px;\n    top: 1px;\n    margin-top: 28px;\n    height: 35px;\n}\n", ""]);
 
 // exports
 
