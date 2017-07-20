@@ -71,7 +71,7 @@
         this.$emit('tagChange', tagName);
       },
       remove() {
-        if (this.tags.length) {
+        if (this.tags.length && !this.tag.length) {
           const tagName = this.tags[this.tags.length - 1];
           this.tags.pop();
           this.$emit('tagChange', tagName);
