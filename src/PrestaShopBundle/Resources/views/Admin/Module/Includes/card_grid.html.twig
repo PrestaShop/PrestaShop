@@ -85,11 +85,6 @@
     </div>
 
     <div class="module-container module-quick-action-grid clearfix">
-      {% if module.attributes.nbRates > 0 %}
-        <div class="module-star-ranking-grid-{{ module.attributes.starsRate}} small">
-          ({{ module.attributes.nbRates }})
-        </div>
-      {% endif %}
       {% set badges = module.attributes.badges %}
       {% if badges %}
         <div>
@@ -98,6 +93,17 @@
             {{badge.label}}
           {% endfor %}
         </div>
+      {% endif %}
+      <hr />
+      {% if module.attributes.nbRates > 0 %}
+        <div class="module-stars module-star-ranking-grid-{{ module.attributes.starsRate}} small">
+          ({{ module.attributes.nbRates }})
+        </div>
+      {% endif %}
+      {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
+        {{ module.attributes.price.displayPrice }}
+      {% elseif module.attributes.url_active != 'buy' %}
+        {{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
       {% endif %}
       {% if requireBulkActions is defined and requireBulkActions == true %}
         <div class="pull-right module-checkbox-bulk-grid">
