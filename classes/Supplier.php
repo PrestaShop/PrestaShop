@@ -448,7 +448,7 @@ class SupplierCore extends ObjectModel
     /**
      * Tells if a supplier exists
      *
-     * @param $idSupplier int Supplier id
+     * @param int $idSupplier Supplier id
      *
      * @return bool
      */
