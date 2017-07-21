@@ -41,7 +41,7 @@
 	</div>
 {elseif isset($cms_category)}
 	<div class="block-cms">
-		<h1><a href="{if $cms_category->id eq 1}{$base_dir}{else}{$link->getCMSCategoryLink($cms_category->id, $cms_category->link_rewrite)}{/if}">{$cms_category->name|escape:'html':'UTF-8'}</a></h1>
+		<h1><a href="{if $cms_category->id eq 1}{if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}{else}{$link->getCMSCategoryLink($cms_category->id, $cms_category->link_rewrite)}{/if}">{$cms_category->name|escape:'html':'UTF-8'}</a></h1>
 		{if $cms_category->description}
 			<p>{$cms_category->description|escape:'html':'UTF-8'}</p>
 		{/if}
