@@ -4,6 +4,7 @@ GitHub contributors:
 - 0kph
 - 123monsite-regis
 - 1RV34
+- Abdelaziz JRIBI
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
@@ -49,6 +50,7 @@ GitHub contributors:
 - Axome
 - Aylab
 - Balestrino
+- Bastien Bieri
 - bbsimon
 - bellini13
 - Benjamin PONGY
@@ -116,7 +118,6 @@ GitHub contributors:
 - Debusschere Alexandre
 - Denis Yurevich
 - Denver Prophit Jr
-- Denver Prophit Jr.
 - Desbouche Christophe
 - DevNet
 - Dh42
@@ -180,7 +181,7 @@ GitHub contributors:
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- François Gaillard
+- FranÃ§ois Gaillard
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -308,6 +309,7 @@ GitHub contributors:
 - Mainmich
 - makk1ntosh
 - makoso
+- Manfredi Petruso
 - manuelbcd
 - marcinsz101
 - Marco Cervellin
