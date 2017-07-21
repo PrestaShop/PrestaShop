@@ -49,7 +49,7 @@
           <tr>
             <th scope="row">{$order.details.reference}</th>
             <td>{$order.details.order_date}</td>
-            <td class="text-xsright">{$order.totals.total.value}</td>
+            <td class="text-xs-right">{$order.totals.total.value}</td>
             <td class="hidden-md-down">{$order.details.payment}</td>
             <td>
               <span
@@ -96,7 +96,7 @@
                 </span>
               </div>
             </div>
-            <div class="col-xs-2 text-xsright">
+            <div class="col-xs-2 text-xs-right">
                 <div>
                   <a href="{$order.details.details_url}" data-link-action="view-order-details" title="{l s='Details' d='Shop.Theme.Customeraccount'}">
                     <i class="material-icons">&#xE8B6;</i>

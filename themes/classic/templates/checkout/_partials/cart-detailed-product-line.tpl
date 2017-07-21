@@ -146,7 +146,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-2 col-xs-2 text-xsright">
+      <div class="col-md-2 col-xs-2 text-xs-right">
         <div class="cart-line-product-actions">
           <a
               class                       = "remove-from-cart"
