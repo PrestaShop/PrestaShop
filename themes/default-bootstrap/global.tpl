@@ -27,7 +27,7 @@
 {addJsDef baseDir=$content_dir}
 {addJsDef baseUri=$base_uri}
 {addJsDef static_token=$static_token}
-{addJsDef token=$token}
+{addJsDef token=$token|htmlentities:$smarty.const.ENT_QUOTES}
 {addJsDef priceDisplayPrecision=$priceDisplayPrecision*$currency->decimals}
 {addJsDef priceDisplayMethod=$priceDisplay}
 {addJsDef roundMode=$roundMode}
