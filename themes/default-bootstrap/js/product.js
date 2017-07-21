@@ -683,13 +683,7 @@ function updatePrice()
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
 	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
-
-	// If a specific price redefine the combination base price
-	if (combination.specific_price && combination.specific_price.price > 0)
-	{
-		basePriceWithoutTax = +combination.specific_price.price;
-		basePriceWithTax = +combination.specific_price.price * (taxRate/100 + 1);
-	}
+	
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
 	var priceWithDiscountsWithTax = basePriceWithTax;
