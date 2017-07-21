@@ -59,7 +59,7 @@
       },
       add(tag) {
         if (tag) {
-          this.tags.push(tag);
+          this.tags.push(tag.trim());
           this.tag = '';
           this.focus();
           this.$emit('tagChange', this.tag);
