@@ -318,6 +318,10 @@ function updatePaymentMethods(json)
 	$('#opc_payment_methods-content #HOOK_PAYMENT').html(json.HOOK_PAYMENT);
 }
 
+function updateDisplayPrice(json) {
+	$('#HOOK_DISPLAY_PRODUCT_PRICE_BLOCK').html(json.HOOK_DISPLAY_PRODUCT_PRICE_BLOCK);
+}
+
 function updatePaymentMethodsDisplay()
 {
 	var checked = '';
@@ -448,6 +452,7 @@ function updateAddressSelection(is_adv_api)
 				}
 				updateCarrierList(jsonData.carrier_data);
 				updatePaymentMethods(jsonData);
+				updateDisplayPrice(jsonData);
 				updateCartSummary(jsonData.summary);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);

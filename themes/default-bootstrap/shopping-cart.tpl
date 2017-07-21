@@ -169,7 +169,10 @@
 									{/if}
 								{/if}
 							</td>
-							<td colspan="{$col_span_subtotal}" class="text-right">{if $display_tax_label}{l s='Total products (tax incl.)'}{else}{l s='Total products'}{/if}</td>
+							<td colspan="{$col_span_subtotal}" class="text-right">
+								{l s='Total products'}
+								(<span class="hookDisplayProductPriceBlock-price" id="HOOK_DISPLAY_PRODUCT_PRICE_BLOCK">{hook h="displayCartTotalPriceLabel"}</span>)
+							</td>
 							<td colspan="2" class="price" id="total_product">{displayPrice price=$total_products_wt}</td>
 						</tr>
 					{/if}
@@ -282,17 +285,23 @@
 				<tr class="cart_total_price">
 					<td colspan="{$col_span_subtotal}" class="total_price_container text-right">
 						<span>{l s='Total'}</span>
-                        <div class="hookDisplayProductPriceBlock-price">
+                        <div class="hookDisplayProductPriceBlock-price" id="HOOK_DISPLAY_PRODUCT_PRICE_BLOCK">
                             {hook h="displayCartTotalPriceLabel"}
                         </div>
 					</td>
 					{if $use_taxes}
-						<td colspan="2" class="price" id="total_price_container">
-							<span id="total_price">{displayPrice price=$total_price}</span>
-						</td>
+						{if $priceDisplay}
+							<td colspan="2" class="price" id="total_price_container">
+								<span id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</span>
+							</td>
+						{else}
+							<td colspan="2" class="price" id="total_price_container">
+								<span id="total_price">{displayPrice price=$total_price}</span>
+							</td>
+						{/if}
 					{else}
 						<td colspan="2" class="price" id="total_price_container">
-							<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
+							<span id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</span>
 						</td>
 					{/if}
 				</tr>
