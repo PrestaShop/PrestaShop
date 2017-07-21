@@ -863,7 +863,7 @@ function updatePrice()
 	// It doesn't modify the price, it's only for display
 	if (productUnitPriceRatio > 0)
 	{
-		$('#unit_price_display').text(formatCurrency(unit_price * currencyRate, currencyFormat, currencySign, currencyBlank));
+		$('#unit_price_display').text(formatCurrency(unit_price, currencyFormat, currencySign, currencyBlank));
 		$('.unit-price').show();
 	}
 
