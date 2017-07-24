@@ -26,6 +26,9 @@
 
 /**
  * Class ManufacturerAddressCore
+ *
+ * Holds address info of a Manufacturer.
+ * This class extends AddressCore to be differentiated from other AddressCore objects in DB.
  */
 class ManufacturerAddressCore extends AddressCore
 {
