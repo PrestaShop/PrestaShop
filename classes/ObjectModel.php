@@ -1467,7 +1467,13 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $this->cacheFieldsRequiredDatabase($all);
 
-        return $all ? self::$fieldsRequiredDatabase : self::$fieldsRequiredDatabase[$this->getObjectName()];
+        if ((bool)$all) {
+            return self::$fieldsRequiredDatabase;
+        }
+
+        return !empty(self::$fieldsRequiredDatabase[$this->getObjectName()])
+            ? self::$fieldsRequiredDatabase[$this->getObjectName()]
+            : array();
     }
 
     /**
