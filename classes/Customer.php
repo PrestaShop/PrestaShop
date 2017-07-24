@@ -197,7 +197,11 @@ class CustomerCore extends ObjectModel
 
     public function __construct($id = null)
     {
-        $this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+        if ($id) {
+            $this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+        } else {
+            $this->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+        }
         parent::__construct($id);
     }
 
@@ -338,6 +342,7 @@ class CustomerCore extends ObjectModel
                 $this->{$key} = $value;
             }
         }
+        $this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
         return $this;
     }
 
