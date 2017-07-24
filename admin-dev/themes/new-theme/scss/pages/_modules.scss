@@ -141,12 +141,23 @@
                 display:none;
             }
         }
-          .module-stars {
-            bottom: 20%;
-          }
     }
 }
 
+.badges-container {
+  min-height: 30px;
+  font-size: .9rem;
+}
+
+.module-price {
+  position: absolute;
+  right: 10px;
+  bottom: 50px;
+}
+
+.module-quick-description-grid {
+  min-height: 80px;
+}
 .module-item-wrapper-grid {
   .btn-group {
     width: 92%;

@@ -25,7 +25,7 @@
 {% set isModuleActive = module.database.active|default('0') %}
 
 <div
-  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-4 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
+  class="module-item module-item-grid col-md-12 col-lg-4 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
   data-id="{{ module.attributes.id }}"
   data-name="{{ module.attributes.displayName }}"
   data-scoring="{{ module.attributes.avgRate }}"
@@ -85,9 +85,9 @@
     </div>
 
     <div class="module-container module-quick-action-grid clearfix">
-      {% set badges = module.attributes.badges %}
-      {% if badges %}
-        <div>
+        <div class="badges-container">
+        {% set badges = module.attributes.badges %}
+          {% if badges %}
           {% for badge in badges %}
             <img src="{{badge.img}}" alt="{{badge.label}}"/>
             {{badge.label}}
@@ -100,11 +100,13 @@
           ({{ module.attributes.nbRates }})
         </div>
       {% endif %}
+      <div class="pull-right module-price">
       {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
         {{ module.attributes.price.displayPrice }}
       {% elseif module.attributes.url_active != 'buy' %}
         {{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
       {% endif %}
+      </div>
       {% if requireBulkActions is defined and requireBulkActions == true %}
         <div class="pull-right module-checkbox-bulk-grid">
           <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
