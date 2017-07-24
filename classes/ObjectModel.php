@@ -1486,7 +1486,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         $objectName = $this->getObjectName();
         if (!Db::getInstance()->execute(
-            'DELETE FROM ' . _DB_PREFIX_ . "required_field WHERE object_name = '$objectName'")
+            'DELETE FROM ' . _DB_PREFIX_ . 'required_field'
+            . "WHERE object_name = '" . Db::getInstance()->escape($objectName) . "'")
         ) {
             return false;
         }

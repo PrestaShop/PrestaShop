@@ -26,6 +26,9 @@
 
 /**
  * Class WarehouseAddressCore
+ *
+ * Holds address info of a Warehouse.
+ * This class extends AddressCore to be differentiated from other AddressCore objects in DB.
  */
 class WarehouseAddressCore extends AddressCore
 {

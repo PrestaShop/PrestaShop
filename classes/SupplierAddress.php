@@ -26,6 +26,9 @@
 
 /**
  * Class SupplierAddressCore
+ *
+ * Holds address info of a Supplier.
+ * This class extends AddressCore to be differentiated from other AddressCore objects in DB.
  */
 class SupplierAddressCore extends AddressCore
 {
