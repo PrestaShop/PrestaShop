@@ -3504,7 +3504,18 @@ class CartCore extends ObjectModel
         return $shipping_cost;
     }
 
-    protected function getPackageShippingCostFromModule($carrier, $shipping_cost, $products)
+    /**
+     * Ask the module the package shipping cost.
+     *
+     * If a carrier has been linked to a carrier module, we call it order to review the shipping costs.
+     *
+     * @param Carrier $carrier The concerned carrier (Your module may have several carriers)
+     * @param float $shipping_cost The calculated shipping cost from the core, regarding package dimension and cart total
+     * @param array $products The list of products
+     * 
+     * @return boolean|float The package price for the module (0 if free, false is disabled)
+     */
+    protected function getPackageShippingCostFromModule(Carrier $carrier, $shipping_cost, $products)
     {
         if (!$carrier->shipping_external) {
             return $shipping_cost;
@@ -3520,14 +3531,15 @@ class CartCore extends ObjectModel
         if (property_exists($module, 'id_carrier')) {
             $module->id_carrier = $carrier->id;
         }
-        if ($carrier->need_range) {
-            if (method_exists($module, 'getPackageShippingCost')) {
-                $shipping_cost = $module->getPackageShippingCost($this, $shipping_cost, $products);
-            } else {
-                $shipping_cost = $module->getOrderShippingCost($this, $shipping_cost);
-            }
+
+        if (!$carrier->need_range) {
+            return $module->getOrderShippingCostExternal($this);
+        }
+
+        if (method_exists($module, 'getPackageShippingCost')) {
+            $shipping_cost = $module->getPackageShippingCost($this, $shipping_cost, $products);
         } else {
-            $shipping_cost = $module->getOrderShippingCostExternal($this);
+            $shipping_cost = $module->getOrderShippingCost($this, $shipping_cost);
         }
 
         return $shipping_cost;
