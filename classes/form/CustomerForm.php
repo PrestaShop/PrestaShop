@@ -229,7 +229,7 @@ class CustomerFormCore extends AbstractForm
     {
         $formFieldsAssociated = array();
         // Group FormField instances by module name
-        foreach($this->formFields as $formField) {
+        foreach ($this->formFields as $formField) {
             if (!empty($formField->moduleName)) {
                 $formFieldsAssociated[$formField->moduleName][] = $formField;
             }

@@ -57,7 +57,7 @@ class StylesheetManagerCore extends AbstractAssetManager
     ) {
         if ('remote' === $server) {
             $this->add($id, $relativePath, $media, $priority, $inline, $server);
-        } else if ($fullPath = $this->getFullPath($relativePath)) {
+        } elseif ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }

@@ -259,9 +259,10 @@ class AdminThemesControllerCore extends AdminController
                     !$this->isEditGranted()
                     || _PS_MODE_DEMO_
                 ) {
-                    Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
-                }
-                else {
+                    throw new Exception (
+                        $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error')
+                    );
+                } else {
                     if ($filename = Tools::getValue('theme_archive_server')) {
                         $path = _PS_ALL_THEMES_DIR_.$filename;
                         $this->theme_manager->install($path);
@@ -758,8 +759,7 @@ class AdminThemesControllerCore extends AdminController
             || _PS_MODE_DEMO_
         ) {
             Tools::clearCache();
-        }
-        else {
+        } else {
             $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
             $this->theme_manager->saveTheme($this->context->shop->theme);
             Tools::clearCache();

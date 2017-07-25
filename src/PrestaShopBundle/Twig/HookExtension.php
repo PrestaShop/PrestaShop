@@ -57,9 +57,9 @@ class HookExtension extends \Twig_Extension
      * @param ModuleDataProvider $moduleDataProvider
      */
     public function __construct(
-      HookDispatcher $hookDispatcher,
-      ModuleDataProvider $moduleDataProvider,
-      ModuleRepository $moduleRepository = null
+        HookDispatcher $hookDispatcher,
+        ModuleDataProvider $moduleDataProvider,
+        ModuleRepository $moduleRepository = null
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->moduleDataProvider = $moduleDataProvider;

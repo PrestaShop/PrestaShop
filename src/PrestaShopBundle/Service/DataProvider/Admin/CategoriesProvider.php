@@ -37,8 +37,8 @@ class CategoriesProvider
     private $apiClient;
     private $logger;
 
-    static $categories;
-    static $categoriesFromApi;
+    public static $categories;
+    public static $categoriesFromApi;
 
     public function __construct(ApiClient $apiClient, LoggerInterface $logger)
     {

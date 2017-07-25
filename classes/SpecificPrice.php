@@ -96,7 +96,8 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Flush local cache
      */
-    protected function flushCache() {
+    protected function flushCache()
+    {
         SpecificPrice::$_specificPriceCache = array();
         SpecificPrice::$_filterOutCache = array();
         SpecificPrice::$_cache_priorities = array();

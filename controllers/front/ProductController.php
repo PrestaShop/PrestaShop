@@ -144,7 +144,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
                             $this->setTemplate('errors/404');
-                        break;
+                            break;
                     }
                 }
             } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {

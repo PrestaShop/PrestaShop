@@ -865,7 +865,7 @@ class AdminCartsControllerCore extends AdminController
         return ($echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo);
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         // don't display ordered carts
         foreach ($this->_list as $row) {

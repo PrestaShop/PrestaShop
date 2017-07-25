@@ -169,9 +169,17 @@ class SearchCore
         return $string;
     }
 
-    public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
-        $order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
-    {
+    public static function find(
+        $id_lang,
+        $expr,
+        $page_number = 1,
+        $page_size = 1,
+        $order_by = 'position',
+        $order_way = 'desc',
+        $ajax = false,
+        $use_cookie = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -438,16 +446,16 @@ class SearchCore
                     switch ($key) {
                         case 'pa_reference':
                             $sql .= ', pa.reference AS pa_reference';
-                        break;
+                            break;
                         case 'pa_supplier_reference':
                             $sql .= ', pa.supplier_reference AS pa_supplier_reference';
-                        break;
+                            break;
                         case 'pa_ean13':
                             $sql .= ', pa.ean13 AS pa_ean13';
-                        break;
+                            break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
-                        break;
+                            break;
                     }
                 }
             }
@@ -484,31 +492,31 @@ class SearchCore
                     switch ($key) {
                         case 'pname':
                             $sql .= ', pl.name pname';
-                        break;
+                            break;
                         case 'reference':
                             $sql .= ', p.reference';
-                        break;
+                            break;
                         case 'supplier_reference':
                             $sql .= ', p.supplier_reference';
-                        break;
+                            break;
                         case 'ean13':
                             $sql .= ', p.ean13';
-                        break;
+                            break;
                         case 'upc':
                             $sql .= ', p.upc';
-                        break;
+                            break;
                         case 'description_short':
                             $sql .= ', pl.description_short';
-                        break;
+                            break;
                         case 'description':
                             $sql .= ', pl.description';
-                        break;
+                            break;
                         case 'cname':
                             $sql .= ', cl.name cname';
-                        break;
+                            break;
                         case 'mname':
                             $sql .= ', m.name mname';
-                        break;
+                            break;
                     }
                 }
             }
@@ -765,9 +773,17 @@ class SearchCore
         $queryArray3 = array();
     }
 
-    public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false,
-            $useCookie = true, Context $context = null)
-    {
+    public static function searchTag(
+        $id_lang,
+        $tag,
+        $count = false,
+        $pageNumber = 0,
+        $pageSize = 10,
+        $orderBy = false,
+        $orderWay = false,
+        $useCookie = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }

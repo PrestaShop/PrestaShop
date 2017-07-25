@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Service\Hook;
 
-interface HookContentClassInterface {
+interface HookContentClassInterface
+{
     public function toArray();
 }

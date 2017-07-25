@@ -204,7 +204,7 @@ abstract class CacheCore
 
     /**
      * Delete one or several data from cache (* joker can be used)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return array List of deleted keys

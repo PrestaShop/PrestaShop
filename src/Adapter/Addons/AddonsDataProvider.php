@@ -138,6 +138,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             case 'service':
                 try {
                     return $this->marketplaceClient->getServices();
@@ -145,6 +146,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             case 'native_all':
                 try {
                     return $this->marketplaceClient->setIsoCode('all')
@@ -153,6 +155,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             case 'must-have':
                 try {
                     return $this->marketplaceClient->getMustHaveModules();
@@ -160,6 +163,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             case 'must-have-themes':
                 $protocols[] = 'http';
                 $post_data .= '&method=listing&action=must-have-themes';
@@ -171,6 +175,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             case 'customer_themes':
                 $post_data .= '&method=listing&action=customer-themes&username='.urlencode($params['username_addons'])
                     .'&password='.urlencode($params['password_addons']);
@@ -196,6 +201,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             case 'hosted_module':
                 $post_data .= '&method=module&id_module='.urlencode((int) $params['id_module']).'&username='.urlencode($params['hosted_email'])
                     .'&password='.urlencode($params['password_addons'])
@@ -217,6 +223,7 @@ class AddonsDataProvider implements AddonsInterface
                     self::$is_addons_up = false;
                     throw $e;
                 }
+                break;
             default:
                 return false;
         }

@@ -168,7 +168,6 @@ abstract class AbstractAdminQueryBuilder
 
         // ORDER
         if (count($order) > 0) {
-
             $goodOrder = array();
             foreach ($order as $k => $o) {
                 $value = explode(' ', $o);

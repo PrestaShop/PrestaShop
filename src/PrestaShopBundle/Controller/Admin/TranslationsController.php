@@ -38,12 +38,17 @@ class TranslationsController extends FrameworkBundleAdminController
 {
     protected $layoutTitle = 'Translations';
 
-    const controller_name = 'ADMINTRANSLATIONS';
+    const CONTROLLER_NAME = 'ADMINTRANSLATIONS';
+
+    /**
+     * @deprecated
+     */
+    const controller_name = self::CONTROLLER_NAME;
 
     // overview method on FrameworkBundleAdminController for all vue-js app
     // redirect to the new translation application
     // before, clean request params
-     private function redirectToTranslationApp(Request $request)
+    private function redirectToTranslationApp(Request $request)
     {
         $params = array();
         foreach ($request->request->all() as $k => $p) {
@@ -75,7 +80,7 @@ class TranslationsController extends FrameworkBundleAdminController
 
         if (
             !in_array(
-                $this->authorizationLevel($this::controller_name),
+                $this->authorizationLevel($this::CONTROLLER_NAME),
                 array(
                     PageVoter::LEVEL_READ,
                     PageVoter::LEVEL_UPDATE,
