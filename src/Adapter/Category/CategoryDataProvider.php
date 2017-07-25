@@ -152,18 +152,20 @@ class CategoryDataProvider
      */
     public function getCategoriesWithBreadCrumb()
     {
-        $allCategories = $this->getAllCategoriesName();
-
-        $results = [];
-        foreach ($allCategories as $category) {
-            $results[] = [
-                'id' => $category['id_category'],
-                'name' => $category['name'],
-                'breadcrumb' => $this->getBreadCrumb($category['id_category'])
-            ];
-        }
-
-        return $results;
+        $context = \ContextCore::getContext();
+        $db = \DbCore::getInstance();
+        
+        return $db->executeS('SELECT cl.`id_category` as "id", cl.`name`, (SELECT GROUP_CONCAT(cl.name SEPARATOR "'.$delimiter.'")
+                                FROM `'._DB_PREFIX_.'category` c
+                                INNER JOIN `'._DB_PREFIX_.'category_shop` category_shop ON (category_shop.id_category = c.id_category AND category_shop.id_shop = '.$context->shop->id.')
+                                INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.id_shop = ' . $context->shop->id . ' AND cl.id_lang = ' . $context->language->id . ')
+                                RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON  c.`nleft` <= c2.`nleft` AND c.`nright` >= c2.`nright`
+                                WHERE 1 AND c.id_category IS NOT NULL AND c.`level_depth` > 0 AND c2.`id_category` = X.`id_category`) AS "breadcrumb"
+                                FROM `'._DB_PREFIX_.'category` X
+                                INNER JOIN `'._DB_PREFIX_.'category_shop` XS ON (XS.`id_category` = X.`id_category` AND XS.id_shop = '.$context->shop->id.')
+                                INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (cl.`id_category` = X.`id_category` AND cl.id_shop = ' . $context->shop->id . ' AND cl.id_lang = ' . $context->language->id . ')
+                                GROUP BY X.`id_category`
+                                ORDER BY X.`nleft` ');
     }
 
     /**
