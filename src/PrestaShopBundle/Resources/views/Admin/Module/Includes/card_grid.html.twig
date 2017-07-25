@@ -25,7 +25,7 @@
 {% set isModuleActive = module.database.active|default('0') %}
 
 <div
-  class="module-item module-item-grid col-md-12 col-lg-4 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
+  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
   data-id="{{ module.attributes.id }}"
   data-name="{{ module.attributes.displayName }}"
   data-scoring="{{ module.attributes.avgRate }}"
@@ -86,14 +86,13 @@
 
     <div class="module-container module-quick-action-grid clearfix">
         <div class="badges-container">
-        {% set badges = module.attributes.badges %}
+          {% set badges = module.attributes.badges %}
           {% if badges %}
-          {% for badge in badges %}
+            {% set badge = badges|first %}
             <img src="{{badge.img}}" alt="{{badge.label}}"/>
             {{badge.label}}
-          {% endfor %}
+          {% endif %}
         </div>
-      {% endif %}
       <hr />
       {% if module.attributes.nbRates > 0 %}
         <div class="module-stars module-star-ranking-grid-{{ module.attributes.starsRate}} small">
