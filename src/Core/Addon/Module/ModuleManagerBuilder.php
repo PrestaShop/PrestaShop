@@ -40,7 +40,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
@@ -70,7 +69,8 @@ class ModuleManagerBuilder
     /**
      * @return null|ModuleManagerBuilder
      */
-    static public function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance == null) {
             self::$instance = new self();
         }
@@ -169,8 +169,8 @@ class ModuleManagerBuilder
                 $marketPlaceClient->setSslVerification($parameters['parameters']['addons.api_client.verify_ssl']);
             }
         }
-        
-        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), new Finder(), self::$translator);
+
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator);
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = dirname(__FILE__) . '/../../../../app';
@@ -181,9 +181,9 @@ class ModuleManagerBuilder
 
         self::$cacheProvider = new FilesystemCache(self::$addonsDataProvider->cacheDir.'/doctrine');
 
-        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient);
-        self::$lecacyContext = new LegacyContext();
         self::$legacyLogger = new LegacyLogger();
+        self::$categoriesProvider = new CategoriesProvider($marketPlaceClient, self::$legacyLogger);
+        self::$lecacyContext = new LegacyContext();
 
         if (is_null(self::$adminModuleDataProvider)) {
             self::$adminModuleDataProvider = new AdminModuleDataProvider(

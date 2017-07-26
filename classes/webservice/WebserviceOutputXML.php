@@ -105,9 +105,8 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
                 }
                 $node_content .= '</language>';
             }
-        }
-        // display not i18n fields value
-        else {
+        } else {
+            // display not i18n fields value
             if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank') {
                 if (!is_array($field['xlink_resource'])) {
                     $ret .= ' xlink:href="'.$this->getWsUrl().$field['xlink_resource'].'/'.$field['value'].'"';

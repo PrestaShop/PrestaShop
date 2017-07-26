@@ -103,5 +103,4 @@ class ModuleTabUnregister
                     'Admin.Modules.Notification'));
         }
     }
-
 }

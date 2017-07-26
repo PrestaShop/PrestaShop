@@ -890,9 +890,9 @@ File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.
   </file>
   <file original="admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0296eae61110f312702845281b4371d0">
-        <source>Please install %module_name% before using this feature</source>
-        <target>Please install %module_name% before using this feature</target>
+      <trans-unit id="0f4a4ca4bdfda88bb59a4ba4814a5f78">
+        <source>Please install the %module_name% module before using this feature.</source>
+        <target>Please install the %module_name% module before using this feature.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/currencies/conversion_rate.tpl:50</note>
       </trans-unit>

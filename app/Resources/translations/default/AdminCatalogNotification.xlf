@@ -388,9 +388,9 @@ File: src/PrestaShopBundle/Form/Validator/Constraints/TinyMceMaxLengthValidator.
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:57</note>
       </trans-unit>
-      <trans-unit id="ecb3f28e84b1a6d149efe6b4be0edf98">
-        <source>Stocks successfully updated</source>
-        <target>Stocks successfully updated</target>
+      <trans-unit id="96d17a8fdea016168a9d506b0da23c07">
+        <source>Stock successfully updated</source>
+        <target>Stock successfully updated</target>
         <note>Context:
 File: src/PrestaShopBundle/Translation/Api/StockApi.php:59</note>
       </trans-unit>

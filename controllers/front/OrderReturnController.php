@@ -171,7 +171,7 @@ class OrderReturnControllerCore extends FrontController
 
         if (($id_order_return = (int) Tools::getValue('id_order_return')) && Validate::isUnsignedId($id_order_return)) {
             $breadcrumb['links'][] = array(
-                'title' => $this->trans('Merchandise returns', array(), 'Shop.Theme'),
+                'title' => $this->trans('Merchandise returns', array(), 'Shop.Theme.Global'),
                 'url' => $this->context->link->getPageLink('order-follow'),
             );
         }

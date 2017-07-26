@@ -131,6 +131,7 @@ class AdminPaymentControllerCore extends AdminController
 
             $this->context->smarty->assign(array(
                 'panel_title' => $this->trans('Recommended payment gateways', array(), 'Admin.Payment.Feature'),
+                'panel_id' => 'recommended-payment-gateways-panel',
                 'view_all' => true
             ));
             $fetch .= $helper->renderModulesList($unactive_list);

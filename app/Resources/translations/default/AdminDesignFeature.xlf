@@ -2,27 +2,27 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="classes/lang/ThemeLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b2e65dd885f23af9aa18dc3485fe847b">
-        <source>Full Width</source>
-        <target>Full Width</target>
+      <trans-unit id="24e61dc70866cb84d375a6270035c7cf">
+        <source>Full width</source>
+        <target>Full width</target>
         <note>Context:
 File: classes/lang/ThemeLang.php:40</note>
       </trans-unit>
-      <trans-unit id="96e47382a440cf09589d723985bc0799">
-        <source>Three Columns</source>
-        <target>Three Columns</target>
+      <trans-unit id="63bd7d20cb7d515fe705bcda029ea776">
+        <source>Three columns</source>
+        <target>Three columns</target>
         <note>Context:
 File: classes/lang/ThemeLang.php:41</note>
       </trans-unit>
-      <trans-unit id="31731125ea40ba9484b478dbc11a75e8">
-        <source>Two Columns, small left column</source>
-        <target>Two Columns, small left column</target>
+      <trans-unit id="710c71f05157207e5c47015fc032564d">
+        <source>Two columns, small left column</source>
+        <target>Two columns, small left column</target>
         <note>Context:
 File: classes/lang/ThemeLang.php:42</note>
       </trans-unit>
-      <trans-unit id="5dd505ab4211d7fd56bf7d04cfda181c">
-        <source>Two Columns, small right column</source>
-        <target>Two Columns, small right column</target>
+      <trans-unit id="4c318832b92e5f7b818aba037e1ed5ac">
+        <source>Two columns, small right column</source>
+        <target>Two columns, small right column</target>
         <note>Context:
 File: classes/lang/ThemeLang.php:43</note>
       </trans-unit>
@@ -38,15 +38,15 @@ File: classes/lang/ThemeLang.php:47</note>
         <note>Context:
 File: classes/lang/ThemeLang.php:49</note>
       </trans-unit>
-      <trans-unit id="33bebecc4ab04bb671826d3f2ea23ee3">
-        <source>Two columns with a small left column</source>
-        <target>Two columns with a small left column</target>
+      <trans-unit id="74266ad9cb6f32c9da66592ca748ef8d">
+        <source>Two columns with a small left column.</source>
+        <target>Two columns with a small left column.</target>
         <note>Context:
 File: classes/lang/ThemeLang.php:51</note>
       </trans-unit>
-      <trans-unit id="4f01cd55ec25135ea6210a1f2082f7f3">
-        <source>Two columns with a small right column</source>
-        <target>Two columns with a small right column</target>
+      <trans-unit id="fefe6a1aca554473c855e076d0376b52">
+        <source>Two columns with a small right column.</source>
+        <target>Two columns with a small right column.</target>
         <note>Context:
 File: classes/lang/ThemeLang.php:53</note>
       </trans-unit>
@@ -276,61 +276,61 @@ File: controllers/admin/AdminImagesController.php:697</note>
         <source>Add new theme</source>
         <target>Add new theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:147</note>
+File: controllers/admin/AdminThemesController.php:145</note>
       </trans-unit>
       <trans-unit id="3ff63fb80ae3bd04b6550282d39f674f">
         <source>Export current theme</source>
         <target>Export current theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:152</note>
+File: controllers/admin/AdminThemesController.php:150</note>
       </trans-unit>
       <trans-unit id="b5c941eace89787ab475237451189eac">
         <source>Import theme</source>
         <target>Import theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:162</note>
+File: controllers/admin/AdminThemesController.php:161</note>
       </trans-unit>
       <trans-unit id="f5ad3d3e217e4b7ea1729eb997dfbe1e">
         <source>Your current theme</source>
         <target>Your current theme</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:472</note>
+File: controllers/admin/AdminThemesController.php:471</note>
       </trans-unit>
       <trans-unit id="410901e83305e49595778896745950a9">
         <source><![CDATA[Invoice & Email Logos]]></source>
         <target><![CDATA[Invoice & Email Logos]]></target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:476</note>
+File: controllers/admin/AdminThemesController.php:475</note>
       </trans-unit>
       <trans-unit id="90dafb1cce6579655041476ab07fab90">
         <source>Favicons</source>
         <target>Favicons</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:477</note>
+File: controllers/admin/AdminThemesController.php:476</note>
       </trans-unit>
       <trans-unit id="49824ed511fd64f33f2f8a1818ee8fe1">
         <source>Header logo</source>
         <target>Header logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:481</note>
+File: controllers/admin/AdminThemesController.php:480</note>
       </trans-unit>
       <trans-unit id="358b0205fd07c94c16a82d8278bc5b76">
         <source>Mail logo</source>
         <target>Mail logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:494</note>
+File: controllers/admin/AdminThemesController.php:493</note>
       </trans-unit>
       <trans-unit id="d84613cd39906ab9161e1ad513f8947b">
         <source>Invoice logo</source>
         <target>Invoice logo</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:503</note>
+File: controllers/admin/AdminThemesController.php:502</note>
       </trans-unit>
       <trans-unit id="49e95301d8fcdbc23f623e0f2d1ed1e6">
         <source>Favicon</source>
         <target>Favicon</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:512</note>
+File: controllers/admin/AdminThemesController.php:511</note>
       </trans-unit>
       <trans-unit id="859a82ffb385f9227c656960996025eb">
         <source>Visit the theme catalog</source>
@@ -354,37 +354,37 @@ File: controllers/admin/AdminThemesController.php:562</note>
         <source>Import from your computer</source>
         <target>Import from your computer</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:591</note>
+File: controllers/admin/AdminThemesController.php:596</note>
       </trans-unit>
       <trans-unit id="6966bbbcdeb44c019201ede70e7b74b8">
         <source>Zip file</source>
         <target>Zip file</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:597</note>
+File: controllers/admin/AdminThemesController.php:602</note>
       </trans-unit>
       <trans-unit id="dec0faa6eb19bd9120d12c5a876bd1cf">
         <source>Import from the web</source>
         <target>Import from the web</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:613</note>
+File: controllers/admin/AdminThemesController.php:618</note>
       </trans-unit>
       <trans-unit id="a33388a338ee2b199d66112369279558">
         <source>Archive URL</source>
         <target>Archive URL</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:619</note>
+File: controllers/admin/AdminThemesController.php:624</note>
       </trans-unit>
       <trans-unit id="cd8d9cc19984ccf9d314eee5eebfc2cc">
         <source>Import from FTP</source>
         <target>Import from FTP</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:647</note>
+File: controllers/admin/AdminThemesController.php:652</note>
       </trans-unit>
       <trans-unit id="a5a23094873852f0c0a9e55be4f1cf1d">
         <source>Select the archive</source>
         <target>Select the archive</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:653</note>
+File: controllers/admin/AdminThemesController.php:658</note>
       </trans-unit>
     </body>
   </file>

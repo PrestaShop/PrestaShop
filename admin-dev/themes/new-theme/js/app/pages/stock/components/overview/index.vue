@@ -51,6 +51,7 @@
       this.$store.dispatch('updateKeywords', []);
       this.$store.dispatch('updateOrder', 'product');
       this.$store.dispatch('isLoading');
+      this.$emit('resetFilters');
       this.$emit('fetch', DEFAULT_SORT);
     },
     components: {

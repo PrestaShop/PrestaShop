@@ -19,6 +19,10 @@
   .manufacturer-logo {
     height: 35px;
   }
+
+  .product-description img {
+    max-width: 100%;
+  }
 }
 .input-color {
   position: absolute;
@@ -455,7 +459,8 @@
     margin: $medium-space 0;
     select {
       background-color: white;
-      width: 3.75rem;
+      width: auto;
+      padding-right: 1.875rem;
       @include box-shadow-light;
     }
     ul li {

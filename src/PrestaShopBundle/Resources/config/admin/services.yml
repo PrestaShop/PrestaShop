@@ -86,7 +86,7 @@ services:
 
     prestashop.adapter.admin.controller.attribute_generator:
         class: PrestaShop\PrestaShop\Adapter\Attribute\AdminAttributeGeneratorControllerWrapper
-        
+
     prestashop.adapter.module.self_configurator:
         class: PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator
         arguments:
@@ -102,7 +102,6 @@ services:
             - "@prestashop.core.admin.lang.repository"
             - "@logger"
             - "@translator"
-            - "@finder"
             - "@filesystem"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
@@ -207,6 +206,7 @@ services:
             filesystem:               "@filesystem"
             themeRepository:          "@prestashop.core.addon.theme.repository"
             themeExtractor:           "@prestashop.translation.theme_extractor"
+            defaultTranslationDir:    "%translations_dir%"
 
     prestashop.translation.modules_provider:
         class: PrestaShopBundle\Translation\Provider\ModulesProvider

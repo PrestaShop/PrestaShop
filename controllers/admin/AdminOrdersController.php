@@ -24,17 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class BoOrder extends PaymentModule
-{
-    public $active = 1;
-    public $name = 'bo_order';
-
-    public function __construct()
-    {
-        $this->displayName = $this->trans('Back office order', array(), 'Admin.Orderscustomers.Feature');
-    }
-}
-
 use PrestaShop\PrestaShop\Adapter\StockManager;
 
 /**
@@ -502,8 +491,7 @@ class AdminOrdersControllerCore extends AdminController
                     if ($order_carrier->update()) {
                         //send mail only if tracking number is different AND not empty
                         if (!empty($tracking_number) && $old_tracking_number != $tracking_number) {
-                            if ($order_carrier->sendInTransitEmail($order))
-                            {
+                            if ($order_carrier->sendInTransitEmail($order)) {
                                 $customer = new Customer((int)$order->id_customer);
                                 $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
 
@@ -573,10 +561,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        /* Add a new message for the current order and send an e-mail to the customer if needed */
-        elseif (Tools::isSubmit('submitMessage') && isset($order)) {
+        } elseif (Tools::isSubmit('submitMessage') && isset($order)) {
+            // Add a new message for the current order and send an e-mail to the customer if needed
             if ($this->access('edit')) {
                 $customer = new Customer(Tools::getValue('id_customer'));
                 if (!Validate::isLoadedObject($customer)) {
@@ -685,10 +671,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        /* Partial refund from order */
-        elseif (Tools::isSubmit('partialRefund') && isset($order)) {
+        } elseif (Tools::isSubmit('partialRefund') && isset($order)) {
+            // Partial refund from order
             if ($this->access('edit')) {
                 if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds)) {
                     $amount = 0;
@@ -892,10 +876,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        /* Cancel product from order */
-        elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
+        } elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
+            // Cancel product from order
             if ($this->access('delete')) {
                 if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization')) {
                     $this->errors[] = $this->trans('You must select a product.', array(), 'Admin.Orderscustomers.Notification');
@@ -2087,9 +2069,9 @@ class AdminOrdersControllerCore extends AdminController
             $combination = new Combination($product_informations['product_attribute_id']);
             if (!Validate::isLoadedObject($combination)) {
                 die(json_encode(array(
-                'result' => false,
-                'error' => $this->trans('The combination object cannot be loaded.', array(), 'Admin.Orderscustomers.Notification')
-            )));
+                    'result' => false,
+                    'error' => $this->trans('The combination object cannot be loaded.', array(), 'Admin.Orderscustomers.Notification')
+                )));
             }
         }
 
@@ -2233,9 +2215,8 @@ class AdminOrdersControllerCore extends AdminController
                 $order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->add();
-            }
-            // Update current invoice
-            else {
+            } else {
+                // Update current invoice
                 $order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
                 $order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
                 $order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -2869,23 +2850,23 @@ class AdminOrdersControllerCore extends AdminController
                 $left_to_reinject -= $quantity_to_reinject;
                 if (Pack::isPack((int)$product->id)) {
                     // Gets items
-                        if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
-                            $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
-                            // Foreach item
-                            foreach ($products_pack as $product_pack) {
-                                if ($product_pack->advanced_stock_management == 1) {
-                                    $manager->addProduct(
-                                        $product_pack->id,
-                                        $product_pack->id_pack_product_attribute,
-                                        new Warehouse($movement['id_warehouse']),
-                                        $product_pack->pack_quantity * $quantity_to_reinject,
-                                        null,
-                                        $movement['price_te'],
-                                        true
-                                    );
-                                }
+                    if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                        $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
+                        // Foreach item
+                        foreach ($products_pack as $product_pack) {
+                            if ($product_pack->advanced_stock_management == 1) {
+                                $manager->addProduct(
+                                    $product_pack->id,
+                                    $product_pack->id_pack_product_attribute,
+                                    new Warehouse($movement['id_warehouse']),
+                                    $product_pack->pack_quantity * $quantity_to_reinject,
+                                    null,
+                                    $movement['price_te'],
+                                    true
+                                );
                             }
                         }
+                    }
                     if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
                             ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
                         $manager->addProduct(

@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div class="panel">
+<div class="panel" {if isset($panel_id)}id="{$panel_id}"{/if}>
 	<h3>
 		<i class="icon-list-ul"></i>
 		{if isset($panel_title)}{$panel_title|escape:'html':'UTF-8'}{else}{l s='Modules list'}{/if}

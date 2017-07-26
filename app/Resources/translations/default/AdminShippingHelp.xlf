@@ -6,97 +6,97 @@
         <source>Allowed characters: letters, spaces and %s</source>
         <target>Allowed characters: letters, spaces and %s</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:173</note>
+File: controllers/admin/AdminCarriersController.php:175</note>
       </trans-unit>
       <trans-unit id="3194ebe40c7a8c29c78ea79066b6e05c">
         <source>Carrier name displayed during checkout</source>
         <target>Carrier name displayed during checkout</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:174</note>
+File: controllers/admin/AdminCarriersController.php:176</note>
       </trans-unit>
       <trans-unit id="9e93aab109e30d26aa231a49385c99db">
         <source>Upload a logo from your computer.</source>
         <target>Upload a logo from your computer.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:182</note>
+File: controllers/admin/AdminCarriersController.php:184</note>
       </trans-unit>
       <trans-unit id="e81c4e4f2b7b93b481e13a8553c2ae1b">
         <source>or</source>
         <target>or</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:182</note>
+File: controllers/admin/AdminCarriersController.php:184</note>
       </trans-unit>
       <trans-unit id="cdaa245d6e50b5647bfd9fcb77ac9a21">
         <source>Estimated delivery time will be displayed during checkout.</source>
         <target>Estimated delivery time will be displayed during checkout.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:191</note>
+File: controllers/admin/AdminCarriersController.php:193</note>
       </trans-unit>
       <trans-unit id="7a753d72397847025d0a91c564fa0fdc">
         <source>Delivery tracking URL: Type '@' where the tracking number should appear. It will then be automatically replaced by the tracking number.</source>
         <target>Delivery tracking URL: Type '@' where the tracking number should appear. It will then be automatically replaced by the tracking number.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:204</note>
+File: controllers/admin/AdminCarriersController.php:206</note>
       </trans-unit>
       <trans-unit id="f8af50e8f2eb39dc8581b4943d6ec59f">
         <source>The zones in which this carrier will be used.</source>
         <target>The zones in which this carrier will be used.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:215</note>
+File: controllers/admin/AdminCarriersController.php:217</note>
       </trans-unit>
       <trans-unit id="920bd1fb6d54c93fca528ce941464225">
         <source>Group access</source>
         <target>Group access</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:219</note>
+File: controllers/admin/AdminCarriersController.php:221</note>
       </trans-unit>
       <trans-unit id="8a52ca34a90eb8486886815e62958ac1">
         <source>Apply both regular shipping cost and product-specific shipping costs.</source>
         <target>Apply both regular shipping cost and product-specific shipping costs.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:263</note>
+File: controllers/admin/AdminCarriersController.php:265</note>
       </trans-unit>
       <trans-unit id="91aa2e3b1cd071ba7031bf4263e11821">
         <source>Include the shipping and handling costs in the carrier price.</source>
         <target>Include the shipping and handling costs in the carrier price.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:298</note>
+File: controllers/admin/AdminCarriersController.php:300</note>
       </trans-unit>
       <trans-unit id="482836cce404046ca7dc34fb0a6fc526">
         <source>Apply the cost of the highest defined range</source>
         <target>Apply the cost of the highest defined range</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:333</note>
+File: controllers/admin/AdminCarriersController.php:335</note>
       </trans-unit>
       <trans-unit id="b73438685f91ee3e3afbb725fb8f948a">
         <source>Out-of-range behavior occurs when none is defined (e.g. when a customer's cart weight is greater than the highest range limit).</source>
         <target>Out-of-range behavior occurs when none is defined (e.g. when a customer's cart weight is greater than the highest range limit).</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:343</note>
+File: controllers/admin/AdminCarriersController.php:345</note>
       </trans-unit>
       <trans-unit id="0687bb4ca6cc1c51d79684159f91ff11">
         <source>Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
         <target>Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:350</note>
+File: controllers/admin/AdminCarriersController.php:352</note>
       </trans-unit>
       <trans-unit id="ff5e2cfc010955358f7ff264d9e58398">
         <source>Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
         <target>Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:357</note>
+File: controllers/admin/AdminCarriersController.php:359</note>
       </trans-unit>
       <trans-unit id="049de64decc4aa8fa5aa89cf8b17470c">
         <source>Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
         <target>Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:364</note>
+File: controllers/admin/AdminCarriersController.php:366</note>
       </trans-unit>
       <trans-unit id="a414ac63c6b29218661d1fa2c6e21b5b">
         <source>Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.</source>
         <target>Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:371</note>
+File: controllers/admin/AdminCarriersController.php:373</note>
       </trans-unit>
     </body>
   </file>

@@ -137,7 +137,6 @@ class ModuleTabRegisterTest extends UnitTestCase
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.lang.repository'),
                 $this->sfKernel->getContainer()->get('logger'),
                 $this->sfKernel->getContainer()->get('translator'),
-                $this->sfKernel->getContainer()->get('finder'),
                 $this->sfKernel->getContainer()->get('filesystem'),
                 $this->languages,
             )

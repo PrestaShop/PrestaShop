@@ -81,7 +81,7 @@ class Theme implements AddonInterface
         foreach ($modulesToHook as $hookName => $modules) {
             if (is_array($modules)) {
                 foreach (array_values($modules) as $module) {
-                    if (!in_array($module, $modulesToEnable)) {
+                    if (null !== $module && !in_array($module, $modulesToEnable)) {
                         $modulesToEnable[] = $module;
                     }
                 }

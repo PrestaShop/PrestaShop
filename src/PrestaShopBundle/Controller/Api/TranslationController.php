@@ -317,7 +317,7 @@ class TranslationController extends ApiController
         $treeBuilder = new TreeBuilder($this->translationService->langToLocale($lang), $selected);
         $catalogue = $treeBuilder->makeTranslationArray($moduleProvider, $search);
 
-        return $this->getCleanTree($treeBuilder, $catalogue, $type, $selected, $search);
+        return $this->getCleanTree($treeBuilder, $catalogue, $type, null, $search);
     }
 
     /**
@@ -333,10 +333,10 @@ class TranslationController extends ApiController
      */
     private function getCleanTree(TreeBuilder $treeBuilder, $catalogue, $type, $selected, $search = null)
     {
-        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
+        $selected = ('mails' === $type && 'subject' === $selected ? false : $selected);
 
-        $theme = ('themes' === $type && 'classic' !== $selected ? $selected : false);
-        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $theme, $search);
+        $translationsTree = $treeBuilder->makeTranslationsTree($catalogue);
+        $translationsTree = $treeBuilder->cleanTreeToApi($translationsTree, $this->container->get('router'), $selected, $search);
 
         return $translationsTree;
     }

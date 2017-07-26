@@ -397,11 +397,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Formats a value
      *
-     * @param mixed	$value
-     * @param int	$type
-     * @param bool	$with_quotes
-     * @param bool	$purify
-     * @param bool	$allow_null
+     * @param mixed $value
+     * @param int $type
+     * @param bool $with_quotes
+     * @param bool $purify
+     * @param bool $allow_null
      * @return mixed
      */
     public static function formatValue($value, $type, $with_quotes = false, $purify = true, $allow_null = false)
@@ -449,7 +449,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return $value;
 
             case self::TYPE_STRING:
-            default :
+            default:
                 if ($with_quotes) {
                     return '\''.pSQL($value).'\'';
                 }
@@ -743,9 +743,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                                 $result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
                             }
                         }
-                    }
-                    // If this table is not linked to multishop system ...
-                    else {
+                    } else {
+                        // If this table is not linked to multishop system ...
                         $where = pSQL($this->def['primary']).' = '.(int)$this->id
                                     .' AND id_lang = '.(int)$field['id_lang'];
                         if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where)) {

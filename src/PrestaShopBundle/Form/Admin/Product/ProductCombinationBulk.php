@@ -54,7 +54,7 @@ class ProductCombinationBulk extends CommonAbstractType
         $this->isoCode = $options['iso_code'];
         $this->priceDisplayPrecision = $options['price_display_precision'];
 
-        if($is_stock_management){
+        if ($is_stock_management) {
             $builder->add('quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => true,
                 'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
@@ -95,8 +95,6 @@ class ProductCombinationBulk extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
             ));
-
-
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -112,5 +110,4 @@ class ProductCombinationBulk extends CommonAbstractType
     {
         return 'product_combination_bulk';
     }
-
 }

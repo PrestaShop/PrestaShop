@@ -154,7 +154,7 @@ File: admin-dev/themes/default/template/controllers/search/helpers/view/view.tpl
         <source>%d result matches your query "%s".</source>
         <target>%d result matches your query "%s".</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:54
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:57
  Comment: %d can be 0 or 1</note>
       </trans-unit>
     </body>

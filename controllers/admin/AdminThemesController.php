@@ -80,10 +80,7 @@ class AdminThemesControllerCore extends AdminController
     {
         if (
             !$this->logged_on_addons
-            || !in_array(
-                    $this->authorizationLevel(),
-                    array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE)
-                )
+            || !$this->isEditGranted()
             || _PS_MODE_DEMO_
         ) {
             return false;
@@ -142,16 +139,18 @@ class AdminThemesControllerCore extends AdminController
         parent::initPageHeaderToolbar();
 
         if (empty($this->display)) {
-            $this->page_header_toolbar_btn['import_theme'] = array(
-                'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
-                'desc' => $this->trans('Add new theme', array(), 'Admin.Design.Feature'),
-                'icon' => 'process-icon-new'
-            );
-            $this->page_header_toolbar_btn['export_theme'] = array(
-                'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
-                'desc' => $this->trans('Export current theme', array(), 'Admin.Design.Feature'),
-                'icon' => 'process-icon-export'
-            );
+            if ($this->isEditGranted()) {
+                $this->page_header_toolbar_btn['import_theme'] = array(
+                    'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
+                    'desc' => $this->trans('Add new theme', array(), 'Admin.Design.Feature'),
+                    'icon' => 'process-icon-new'
+                );
+                $this->page_header_toolbar_btn['export_theme'] = array(
+                    'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
+                    'desc' => $this->trans('Export current theme', array(), 'Admin.Design.Feature'),
+                    'icon' => 'process-icon-export'
+                );
+            }
 
             if ($this->context->mode) {
                 unset($this->toolbar_btn['new']);
@@ -243,6 +242,10 @@ class AdminThemesControllerCore extends AdminController
         }
 
         if ('exporttheme' === Tools::getValue('action')) {
+            if (!$this->isEditGranted()) {
+                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                return false;
+            }
             $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
             $this->confirmations[] = $this->trans(
@@ -253,14 +256,13 @@ class AdminThemesControllerCore extends AdminController
         } elseif (Tools::isSubmit('submitAddconfiguration')) {
             try {
                 if (
-                    !in_array(
-                        $this->authorizationLevel(),
-                        array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
+                    !$this->isEditGranted()
                     || _PS_MODE_DEMO_
                 ) {
-                    Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
-                }
-                else {
+                    throw new Exception (
+                        $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error')
+                    );
+                } else {
                     if ($filename = Tools::getValue('theme_archive_server')) {
                         $path = _PS_ALL_THEMES_DIR_.$filename;
                         $this->theme_manager->install($path);
@@ -384,9 +386,7 @@ class AdminThemesControllerCore extends AdminController
     public function processUploadFile($dest)
     {
         if (
-            !in_array(
-                $this->authorizationLevel(),
-                array(AdminController::LEVEL_ADD, AdminController::LEVEL_DELETE))
+            !$this->isEditGranted()
             || _PS_MODE_DEMO_
         ) {
             $this->errors[] = $this->trans('You do not have permission to upload this.', array(), 'Admin.Notifications.Error');
@@ -523,6 +523,7 @@ class AdminThemesControllerCore extends AdminController
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
                 'buttons' => array(
                     'storeLink' => array(
+                        'id' => 'visit-theme-catalog-link',
                         'title' => $this->trans('Visit the theme catalog', array(), 'Admin.Design.Feature'),
                         'icon' => 'process-icon-themes',
                         'href' => Tools::getCurrentUrlProtocolPrefix().'addons.prestashop.com/en/3-templates-prestashop'
@@ -576,6 +577,11 @@ class AdminThemesControllerCore extends AdminController
 
     public function renderImportTheme()
     {
+        if (!$this->isEditGranted()) {
+            $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
+            return false;
+        }
+
         $fields_form = array();
 
         $toolbar_btn['save'] = array(
@@ -753,11 +759,24 @@ class AdminThemesControllerCore extends AdminController
             || _PS_MODE_DEMO_
         ) {
             Tools::clearCache();
-        }
-        else {
+        } else {
             $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
             $this->theme_manager->saveTheme($this->context->shop->theme);
             Tools::clearCache();
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isEditGranted()
+    {
+        return in_array(
+            $this->authorizationLevel(),
+            array(
+                AdminController::LEVEL_ADD,
+                AdminController::LEVEL_DELETE,
+            )
+        );
     }
 }

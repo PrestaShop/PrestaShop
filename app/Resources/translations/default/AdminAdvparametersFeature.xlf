@@ -46,19 +46,19 @@ File: controllers/admin/AdminImportController.php:524</note>
         <source>Store contacts</source>
         <target>Store contacts</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4415</note>
+File: controllers/admin/AdminImportController.php:4417</note>
       </trans-unit>
       <trans-unit id="0440efe0a9a9bc643eaec7dbdade39df">
         <source>Supply Orders</source>
         <target>Supply Orders</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4424</note>
+File: controllers/admin/AdminImportController.php:4426</note>
       </trans-unit>
       <trans-unit id="9f954c5e16659673382f03fa027772ea">
         <source>Supply Order Details</source>
         <target>Supply Order Details</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:4429</note>
+File: controllers/admin/AdminImportController.php:4431</note>
       </trans-unit>
       <trans-unit id="b8495b50f5c172ebad1cc5c615548afa">
         <source>Ignore this column</source>
@@ -1706,13 +1706,13 @@ File: admin-dev/themes/default/template/controllers/shop/helpers/form/form.tpl:7
         <source>Menu</source>
         <target>Menu</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:269</note>
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:274</note>
       </trans-unit>
       <trans-unit id="1587f391edb6fe6f3b919aaa27e25cfb">
         <source>No menu</source>
         <target>No menu</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:299</note>
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:284</note>
       </trans-unit>
     </body>
   </file>

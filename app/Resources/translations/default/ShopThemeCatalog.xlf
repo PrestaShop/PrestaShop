@@ -174,13 +174,13 @@ File: classes/controller/FrontController.php:1510</note>
         <source>Items</source>
         <target>Items</target>
         <note>Context:
-File: controllers/front/ProductController.php:946</note>
+File: controllers/front/ProductController.php:947</note>
       </trans-unit>
       <trans-unit id="7d74f3b92b19da5e606d737d339a9679">
         <source>Item</source>
         <target>Item</target>
         <note>Context:
-File: controllers/front/ProductController.php:946</note>
+File: controllers/front/ProductController.php:947</note>
       </trans-unit>
     </body>
   </file>

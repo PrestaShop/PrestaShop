@@ -332,9 +332,8 @@ class AdminCartRulesControllerCore extends AdminController
 			INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
 				SELECT id_cart_rule, '.(int)$currentObject->id.' FROM `'._DB_PREFIX_.'cart_rule` WHERE cart_rule_restriction = 1
 			)');
-        }
-        // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
-        else {
+        } else {
+            // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
             $ruleCombinations = Db::getInstance()->executeS('
 			SELECT cr.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule cr
@@ -509,7 +508,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
                 Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
                 break;
-            default :
+            default:
                 Context::getContext()->smarty->assign('product_rule_itemlist', array('selected' => array(), 'unselected' => array()));
                 Context::getContext()->smarty->assign('product_rule_choose_content', '');
         }

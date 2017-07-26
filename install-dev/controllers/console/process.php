@@ -157,6 +157,11 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
+        // Update fixtures lang
+        foreach (Language::getLanguages() as $lang) {
+            Language::updateMultilangTable($lang['iso_code']);
+        }
+
         if ($this->datas->newsletter) {
             $params = http_build_query(array(
                     'email' => $this->datas->admin_email,

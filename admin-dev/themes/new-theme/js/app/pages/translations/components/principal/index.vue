@@ -48,7 +48,12 @@
               @pageChanged="onPageChanged"
             />
           </div>
-          <form class="col-xs-12" :action="saveAction" method="post" @submit.prevent="saveTranslations">
+          <form class="col-xs-12"
+            method="post"
+            :action="saveAction"
+            :isEdited="isEdited"
+            @submit.prevent="saveTranslations"
+          >
             <div class="row">
               <div class="col-xs-12 m-b-2">
                 <PSButton :primary="true" type="submit" class="pull-xs-right">
@@ -60,9 +65,12 @@
             <TranslationInput
               v-for="(translation, key) in translationsCatalog"
               :key="key"
+              :id="key"
               :translated="translation"
               :label="translation.default"
-              :extraInfo="getDomain(translation.tree_domain)">
+              :extraInfo="getDomain(translation.tree_domain)"
+              @editedAction="isEdited"
+              >
             </TranslationInput>
             <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
               {{ trans('button_save') }}
@@ -89,6 +97,9 @@
   import { EventBus } from 'app/utils/event-bus';
 
   export default {
+    props: [
+      'modal',
+    ],
     computed: {
       principalReady() {
         return !this.$store.state.principalLoading;
@@ -146,9 +157,39 @@
       },
     },
     methods: {
-      onPageChanged(pageIndex) {
+      /**
+       * Dispatch the event to change the page index,
+       * get the translations and reset the modified translations into the state
+       * @param {Integer} pageIndex
+       */
+      changePage: function changePage(pageIndex) {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch();
+        this.$store.state.modifiedTranslations = [];
+      },
+      isEdited(input) {
+        if (input.translation.edited) {
+          this.$store.state.modifiedTranslations[input.id] = input.translation;
+        } else {
+          this.$store.state.modifiedTranslations.splice(
+            this.$store.state.modifiedTranslations.indexOf(input.id),
+            1
+          );
+        }
+      },
+      onPageChanged(pageIndex) {
+        if (this.edited()) {
+          this.modal.showModal();
+          this.modal.$once('save', () => {
+            this.saveTranslations();
+            this.changePage(pageIndex);
+          });
+          this.modal.$once('leave', () => {
+            this.changePage(pageIndex);
+          });
+        } else {
+          this.changePage(pageIndex);
+        }
       },
       fetch() {
         this.$store.dispatch('getCatalog', {
@@ -176,29 +217,28 @@
         }
       },
       getModifiedTranslations() {
-        const modifiedTranslations = [];
-
-        this.translations.forEach((translation) => {
-          if (translation.edited) {
-            modifiedTranslations.push({
-              default: translation.default,
-              edited: translation.edited,
-              domain: translation.tree_domain.join(''),
-              locale: window.data.locale,
-              theme: window.data.selected,
-            });
-          }
+        this.modifiedTranslations = [];
+        this.$store.state.modifiedTranslations.forEach((translation) => {
+          this.modifiedTranslations.push({
+            default: translation.default,
+            edited: translation.edited,
+            domain: translation.tree_domain.join(''),
+            locale: window.data.locale,
+            theme: window.data.selected,
+          });
         });
 
-        return modifiedTranslations;
+        return this.modifiedTranslations;
+      },
+      edited() {
+        return this.$store.state.modifiedTranslations.length > 0;
       },
     },
-    data() {
-      return {
-        translations: [],
-        originalTranslations: [],
-      };
-    },
+    data: () => ({
+      translations: [],
+      originalTranslations: [],
+      modifiedTranslations: [],
+    }),
     mounted() {
       EventBus.$on('resetTranslation', (el) => {
         const translations = [];

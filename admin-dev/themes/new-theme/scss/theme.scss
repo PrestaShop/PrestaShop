@@ -90,3 +90,11 @@ $color-icons: #6c868e;
 #product_filter_column_active .select2 {
   min-width: 4.375rem;
 }
+// Needed to override the default inline style of typeahead and take all the width
+span.twitter-typeahead {
+  display: block !important;
+  width: 100% !important;
+  input.tt-input {
+    width: 100% !important;
+  }
+}

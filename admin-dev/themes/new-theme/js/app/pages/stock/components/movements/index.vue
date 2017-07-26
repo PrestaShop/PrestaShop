@@ -109,6 +109,7 @@
       this.$store.dispatch('getEmployees');
       this.$store.dispatch('getMovementsTypes');
       this.$store.dispatch('updateOrder', 'date_add');
+      this.$emit('resetFilters');
       this.$emit('fetch', DEFAULT_SORT);
     },
     components: {

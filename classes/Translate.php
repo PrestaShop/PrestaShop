@@ -131,7 +131,7 @@ class TranslateCore
      *
      * @return string translation
      */
-    public static function getGenericAdminTranslation($string, $key = null, &$langArray)
+    public static function getGenericAdminTranslation($string, $key, &$langArray)
     {
         $string = preg_replace("/\\\*'/", "\'", $string);
         if (is_null($key)) {

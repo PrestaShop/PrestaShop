@@ -62,11 +62,6 @@ class ModuleTabRegister
     private $translator;
 
     /**
-     * @var Finder
-     */
-    private $finder;
-
-    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -76,13 +71,12 @@ class ModuleTabRegister
      */
     private $languages;
 
-    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem, array $languages)
+    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
         $this->logger = $logger;
         $this->translator = $translator;
-        $this->finder = $finder;
         $this->filesystem = $filesystem;
         $this->languages = $languages;
     }
@@ -109,7 +103,6 @@ class ModuleTabRegister
                 $this->logger->error($e->getMessage());
             }
         }
-
     }
 
     /**
@@ -123,7 +116,7 @@ class ModuleTabRegister
     protected function addUndeclaredTabs($moduleName, array $tabs)
     {
         // Function to get only class name from tabs already declared
-        $tabsNames = array_map(function($tab) {
+        $tabsNames = array_map(function ($tab) {
             if (array_key_exists('class_name', $tab)) {
                 return $tab['class_name'];
             }
@@ -189,7 +182,7 @@ class ModuleTabRegister
             return array();
         }
 
-        $moduleFolder = $this->finder->files()
+        $moduleFolder = Finder::create()->files()
                     ->in($modulePath)
                     ->depth('== 0')
                     ->name('*Controller.php')
@@ -207,7 +200,7 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllersFilename($moduleName)
     {
-        return array_map(function(SplFileInfo $file) {
+        return array_map(function (SplFileInfo $file) {
             return $file->getFilename();
         }, $this->getModuleAdminControllers($moduleName));
     }
@@ -216,7 +209,7 @@ class ModuleTabRegister
     {
         $translatedNames = array();
 
-        foreach($this->languages as $lang) {
+        foreach ($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
             if (!is_array($names)) {
                 $translatedNames[$lang['id_lang']] = $names;

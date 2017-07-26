@@ -251,7 +251,7 @@ class AdminFeaturesControllerCore extends AdminController
                     'href' => $back,
                     'desc' => $this->trans('Back to the list', array(), 'Admin.Catalog.Help')
                 );
-            break;
+                break;
             case 'view':
                 $this->toolbar_btn['newAttributes'] = array(
                     'href' => self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token,

@@ -31,7 +31,7 @@
 <script>
  export default {
    props: {
-     primary: { type: Boolean, required: true },
+     primary: { type: Boolean },
      ghost: { type: Boolean },
    },
    computed: {
@@ -55,7 +55,7 @@
   @import "~PrestaKit/scss/custom/_variables.scss";
   .btn {
     border-radius:0;
-    height: 34px;
+    min-height: 34px;
   }
   .btn-secondary {
     background-color: $gray-medium;

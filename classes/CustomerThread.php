@@ -230,8 +230,7 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getCustomerMessagesOrder($id_customer, $id_order)
     {
-        $sql = 
-            'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
+        $sql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
                 e.`firstname` AS efirstname, e.`lastname` AS elastname
 			FROM '._DB_PREFIX_.'customer_thread ct
 			LEFT JOIN '._DB_PREFIX_.'customer_message cm
@@ -245,7 +244,7 @@ class CustomerThreadCore extends ObjectModel
             GROUP BY cm.id_customer_message
 		 	ORDER BY cm.date_add DESC
             LIMIT 2';
-         
+
         return Db::getInstance()->executeS($sql);
     }
 }

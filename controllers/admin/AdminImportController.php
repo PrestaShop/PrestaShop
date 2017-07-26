@@ -3682,6 +3682,8 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
+
+        return $line_count;
     }
 
     public function storeContactImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
@@ -4610,7 +4612,7 @@ class AdminImportControllerCore extends AdminController
         $this->modals[] = array(
              'modal_id' => 'importProgress',
              'modal_class' => 'modal-md',
-             'modal_title' => $this->trans('Importing...', array(), 'Admin.Advparameters.Notification'),
+             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
              'modal_content' => $modal_content
          );
     }

@@ -40,6 +40,9 @@
   export default {
     name: 'TranslationInput',
     props: {
+      id: {
+        type: Number,
+      },
       extraInfo: {
         type: String,
         required: false,
@@ -62,6 +65,10 @@
           modifiedTranslated.database = modifiedValue;
           modifiedTranslated.edited = modifiedValue;
           this.$emit('input', modifiedTranslated);
+          this.$emit('editedAction', {
+            translation: modifiedTranslated,
+            id: this.id,
+          });
         },
       },
       isMissing() {
