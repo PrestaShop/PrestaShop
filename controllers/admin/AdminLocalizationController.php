@@ -239,7 +239,7 @@ class AdminLocalizationControllerCore extends AdminController
 
         $i = 0;
         if ($xml_localization) {
-            foreach ($xml_localization->pack as $key => $pack) {
+            foreach ($xml_localization->pack as $pack) {
                 $remote_isos[(string)$pack->iso] = true;
                 $localizations_pack[$i]['iso_localization_pack'] = (string)$pack->iso;
                 $localizations_pack[$i]['name'] = (string)$pack->name;

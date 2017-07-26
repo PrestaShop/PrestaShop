@@ -76,7 +76,7 @@ class HelperShopCore extends Helper
         } elseif ($shop_context == Shop::CONTEXT_GROUP) {
             $current_shop_name = sprintf(Translate::getAdminTranslation('%s group'), $tree[Shop::getContextShopGroupID()]['name']);
         } else {
-            foreach ($tree as $group_id => $group_data) {
+            foreach ($tree as $group_data) {
                 foreach ($group_data['shops'] as $shop_id => $shop_data) {
                     if ($shop_id == Shop::getContextShopID()) {
                         $current_shop_name = $shop_data['name'];

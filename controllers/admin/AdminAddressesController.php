@@ -444,12 +444,6 @@ class AdminAddressesControllerCore extends AdminController
 
         $selected_country = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT');
 
-        $inv_adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
-        $dlv_adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
-
-        $inv_all_fields = array();
-        $dlv_all_fields = array();
-
         $out = array();
 
         foreach (array('inv', 'dlv') as $adr_type) {

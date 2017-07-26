@@ -242,7 +242,7 @@ class AdminCartsControllerCore extends AdminController
             $total_price = $summary['total_price'];
             $total_shipping = $summary['total_shipping'];
         }
-        foreach ($products as $k => &$product) {
+        foreach ($products as &$product) {
             if ($tax_calculation_method == PS_TAX_EXC) {
                 $product['product_price'] = $product['price'];
                 $product['product_total'] = $product['total'];

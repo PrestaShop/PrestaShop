@@ -77,12 +77,12 @@ class ObjectPresenter implements PresenterInterface
                     'htmlFields' => $htmlFields,
                     'object' => $presentedObject,
                 ),
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
 
             if (!empty($filteredHtml['object'])) {

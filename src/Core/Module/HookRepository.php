@@ -121,8 +121,6 @@ class HookRepository
      */
     public function persistHooksConfiguration(array $hooks)
     {
-        $hook_module = [];
-
         foreach ($hooks as $hook_name => $module_names) {
             $id_hook = $this->getIdByName($hook_name);
             if (!$id_hook) {
