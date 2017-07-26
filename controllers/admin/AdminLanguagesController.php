@@ -407,6 +407,8 @@ class AdminLanguagesControllerCore extends AdminController
             $this->errors[] = $this->trans('Flag and "No picture" image fields are required.', array(), 'Admin.International.Notification');
         }
 
+        $this->addLocaleToPost($_POST['iso_code']);
+
         return parent::processAdd();
     }
 
@@ -434,8 +436,23 @@ class AdminLanguagesControllerCore extends AdminController
             }
         }
 
+        $this->addLocaleToPost($_POST['iso_code']);
+
         $this->checkEmployeeIdLang($object->id);
         return parent::processUpdate();
+    }
+
+    /**
+     * Fill $_POST with iso_code
+     * if locale doesn't exists, put en-US
+     *
+     * @param $iso_code
+     */
+    private function addLocaleToPost($iso_code)
+    {
+        $locale = Language::getLocaleByIso($iso_code);
+
+        $_POST['locale'] = $locale ? $locale : 'en-US';
     }
 
     /**
