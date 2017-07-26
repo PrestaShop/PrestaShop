@@ -27,9 +27,6 @@
 class TreeToolbarLinkCore extends TreeToolbarButtonCore implements
     ITreeToolbarButtonCore
 {
-    private $_action;
-    private $_icon_class;
-    private $_link;
     protected $_template = 'tree_toolbar_link.tpl';
 
     public function __construct($label, $link, $action = null, $iconClass = null)
