@@ -11120,11 +11120,15 @@ ul.category-tree {
 
 .module-price {
   position: absolute;
-  right: 10px;
+  right: 15px;
   bottom: 50px; }
 
 .module-quick-description-grid {
   min-height: 80px; }
+
+@media (min-width: 1300px) and (max-width: 1550px) {
+  .module-item-grid {
+    width: 33.333333%; } }
 
 /**
 * Addons Module Cast (List view)
