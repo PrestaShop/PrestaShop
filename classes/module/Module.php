@@ -758,7 +758,7 @@ abstract class ModuleCore
             }
         }
 
-        if ($this->getOverrides() != null) {
+        if ($force_all && $this->getOverrides() != null) {
             // Install overrides
             try {
                 $this->installOverrides();
@@ -863,7 +863,7 @@ abstract class ModuleCore
     public function disable($force_all = false)
     {
         $result = true;
-        if ($this->getOverrides() != null) {
+        if ($force_all &&$this->getOverrides() != null) {
             $result &= $this->uninstallOverrides();
         }
 
