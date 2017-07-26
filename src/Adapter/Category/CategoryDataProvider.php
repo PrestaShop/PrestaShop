@@ -30,6 +30,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Category;
 use Context;
+use Shop;
 
 /**
  * This class will provide data from DB / ORM about Category
@@ -208,13 +209,13 @@ class CategoryDataProvider
         }
 
         $searchCategories = Category::getAllCategoriesName(
-            $root_category = null,
-            $id_lang = Context::getContext()->language->id,
-            $active = true,
-            $groups = null,
-            $use_shop_restriction = true,
-            $sql_filter = $query,
-            $sql_sort = '',
+            null,
+            Context::getContext()->language->id,
+            true,
+            null,
+            true,
+            $query,
+            '',
             $limit
         );
 

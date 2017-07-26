@@ -42,7 +42,7 @@ class PasswordControllerCore extends FrontController
 
         if (Tools::isSubmit('email')) {
             $this->sendRenewPasswordLink();
-        } elseif (($token = Tools::getValue('token')) && ($id_customer = (int)Tools::getValue('id_customer'))) {
+        } elseif (Tools::getValue('token') && ($id_customer = (int)Tools::getValue('id_customer'))) {
             $this->changePassword();
         } elseif (Tools::getValue('token') || Tools::getValue('id_customer')) {
             $this->errors[] = $this->trans('We cannot regenerate your password with the data you\'ve submitted', array(), 'Shop.Notifications.Error');

@@ -111,7 +111,7 @@ class HookConfigurator
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];
-        foreach ($hooks as $hookName => $modules) {
+        foreach ($hooks as $modules) {
             $list = array_merge($list, $modules);
         }
 
