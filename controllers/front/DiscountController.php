@@ -62,8 +62,8 @@ class DiscountControllerCore extends FrontController
         $vouchers = CartRule::getCustomerCartRules(
             $this->context->language->id,
             $this->context->customer->id,
-            $active = true,
-            $includeGeneric = false
+            true,
+            false
         );
 
         foreach ($vouchers as $key => $voucher) {

@@ -492,7 +492,7 @@ class AdminLanguagesControllerCore extends AdminController
         $images_types = ImageType::getImagesTypes('products');
         $dirs = array(_PS_PROD_IMG_DIR_, _PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_SUPP_IMG_DIR_, _PS_MANU_IMG_DIR_);
         foreach ($dirs as $dir) {
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 if (file_exists($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg')) {
                     if (!unlink($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg')) {
                         $this->errors[] = $this->trans('An error occurred during image deletion process.', array(), 'Admin.International.Notification');

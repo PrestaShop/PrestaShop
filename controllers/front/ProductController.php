@@ -316,12 +316,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $filteredProduct = Hook::exec(
                 'filterProductContent',
                 array('object' => $product_for_template),
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
             if (!empty($filteredProduct['object'])) {
                 $product_for_template = $filteredProduct['object'];

@@ -125,7 +125,7 @@ class StockRepository extends StockManagementRepository
                     $productIdentity->getCombinationId(),
                     $delta,
                     $this->contextAdapter->getContext()->shop->id,
-                    $add_movement = true,
+                    true,
                     array(
                         'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
                     )
