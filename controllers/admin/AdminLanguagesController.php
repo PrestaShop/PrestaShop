@@ -308,7 +308,6 @@ class AdminLanguagesControllerCore extends AdminController
 
     protected function processBulkDelete()
     {
-        $can_bulk = true;
         if (is_array($this->boxes) && !empty($this->boxes)) {
             foreach ($this->boxes as $id_lang) {
                 $object = new Language((int)$id_lang);
@@ -464,7 +463,7 @@ class AdminLanguagesControllerCore extends AdminController
                     $this->errors[] = $this->trans('An error occurred while copying "No picture" image to your brand folder.', array(), 'Admin.International.Notification');
                 } else {
                     $images_types = ImageType::getImagesTypes('products');
-                    foreach ($images_types as $k => $image_type) {
+                    foreach ($images_types as $image_type) {
                         if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'])) {
                             $this->errors[] = $this->trans('An error occurred while resizing "No picture" image to your product directory.', array(), 'Admin.International.Notification');
                         }
