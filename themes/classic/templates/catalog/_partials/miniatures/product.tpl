@@ -34,31 +34,32 @@
           >
         </a>
       {/block}
+    </div>
 
-      <div class="product-description">
-        {block name='product_name'}
-          <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h1>
-        {/block}
+    <div class="product-description">
+      {block name='product_name'}
+        <h1 class="h3 product-title" itemprop="name"><a href="{$product.url}">{$product.name|truncate:30:'...'}</a></h1>
+      {/block}
 
-        {block name='product_price_and_shipping'}
-          {if $product.show_price}
-            <div class="product-price-and-shipping">
-              {if $product.has_discount}
-                {hook h='displayProductPriceBlock' product=$product type="old_price"}
+      {block name='product_price_and_shipping'}
+        {if $product.show_price}
+          <div class="product-price-and-shipping">
+            {if $product.has_discount}
+              {hook h='displayProductPriceBlock' product=$product type="old_price"}
 
-                <span class="sr-only">{l s='Regular price' d='Shop.Theme.Catalog'}</span>
-                <span class="regular-price">{$product.regular_price}</span>
-                {if $product.discount_type === 'percentage'}
-                  <span class="discount-percentage">{$product.discount_percentage}</span>
-                {/if}
+              <span class="sr-only">{l s='Regular price' d='Shop.Theme.Catalog'}</span>
+              <span class="regular-price">{$product.regular_price}</span>
+              {if $product.discount_type === 'percentage'}
+                <span class="discount-percentage">{$product.discount_percentage}</span>
               {/if}
+            {/if}
 
-              {hook h='displayProductPriceBlock' product=$product type="before_price"}
+            {hook h='displayProductPriceBlock' product=$product type="before_price"}
 
-              <span class="sr-only">{l s='Price' d='Shop.Theme.Catalog'}</span>
-              <span itemprop="price" class="price">{$product.price}</span>
+            <span class="sr-only">{l s='Price' d='Shop.Theme.Catalog'}</span>
+            <span itemprop="price" class="price">{$product.price}</span>
 
-              {hook h='displayProductPriceBlock' product=$product type='unit_price'}
+            {hook h='displayProductPriceBlock' product=$product type='unit_price'}
 
             {hook h='displayProductPriceBlock' product=$product type='weight'}
           </div>
