@@ -68,7 +68,7 @@
                     <span>
                     {$level2Name}
                     {if $level2.sub_tabs|@count}
-                      <i class="material-icons pull-right hidden-md-up">keyboard_arrow_down</i>
+                      <i class="material-icons float-right hidden-md-up">keyboard_arrow_down</i>
                     {/if}
                     </span>
 

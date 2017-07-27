@@ -1,7 +1,7 @@
 {* Quick access *}
 <div class="ps-dropdown dropdown">
-  <span type="button" id="quick-access" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <span class="selected-item">{l s='Quick Access'}</span> 
+  <span id="quick-access" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class="selected-item">{l s='Quick Access'}</span>
     <i class="material-icons arrow-down pull-right">keyboard_arrow_down</i>
   </span>
   <div class="ps-dropdown-menu dropdown-menu" aria-labelledby="quick-access">
