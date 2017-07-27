@@ -11126,6 +11126,9 @@ ul.category-tree {
 .module-quick-description-grid {
   min-height: 80px; }
 
+.module-item-wrapper-grid .module-quick-action-grid .form-action-button {
+  bottom: 0; }
+
 @media (min-width: 1300px) and (max-width: 1550px) {
   .module-item-grid {
     width: 33.333333%; } }
