@@ -44,7 +44,7 @@
             <PSPagination
               :currentIndex="currentPagination"
               :pagesCount="pagesCount"
-              class="pull-xs-right"
+              class="float-xs-right"
               @pageChanged="onPageChanged"
             />
           </div>
@@ -56,7 +56,7 @@
           >
             <div class="row">
               <div class="col-xs-12 m-b-2">
-                <PSButton :primary="true" type="submit" class="pull-xs-right">
+                <PSButton :primary="true" type="submit" class="float-xs-right">
                   {{ trans('button_save') }}
                 </PSButton>
               </div>
@@ -72,7 +72,7 @@
               @editedAction="isEdited"
               >
             </TranslationInput>
-            <PSButton :primary="true" type="submit" class="pull-xs-right m-t-3">
+            <PSButton :primary="true" type="submit" class="float-xs-right m-t-3">
               {{ trans('button_save') }}
             </PSButton>
           </form>

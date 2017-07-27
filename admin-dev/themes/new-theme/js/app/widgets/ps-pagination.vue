@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav class="pull-xs-right m-t-1" v-if="displayPagination">
+  <nav class="float-xs-right m-t-1" v-if="displayPagination">
     <ul class="pagination" :class="{'multi':isMultiPagination}">
       <li v-if="isMultiPagination" class="page-item">
-        <button v-show="activeLeftArrow" class="pull-left page-link" @click="prev($event)">
+        <button v-show="activeLeftArrow" class="float-left page-link" @click="prev($event)">
           <i class="material-icons">keyboard_arrow_left</i>
           <span class="sr-only">Previous</span>
         </button>
@@ -48,7 +48,7 @@
         </button>
       </li>
       <li v-if="isMultiPagination" class="page-item">
-        <button v-show="activeRightArrow" class="pull-left page-link" @click="next($event)">
+        <button v-show="activeRightArrow" class="float-left page-link" @click="next($event)">
           <i class="material-icons">keyboard_arrow_right</i>
           <span class="sr-only">Next</span>
         </button>

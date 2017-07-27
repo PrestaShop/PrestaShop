@@ -29,7 +29,7 @@
         <i class="material-icons">keyboard_arrow_down</i>
         <strong v-if="translations">{{translations.expand}}</strong>
       </span>
-      <span class="pull-right text-uppercase pointer" @click="reduce">
+      <span class="float-right text-uppercase pointer" @click="reduce">
         <i class="material-icons">keyboard_arrow_up</i>
         <strong v-if="translations">{{translations.reduce}}</strong>
       </span>

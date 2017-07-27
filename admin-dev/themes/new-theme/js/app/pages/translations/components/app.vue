@@ -27,7 +27,7 @@
     <TranslationsHeader />
     <div class="container-fluid">
       <div class="row">
-        <div class="translations-summary pull-xs-right">
+        <div class="translations-summary float-xs-right">
           <span>{{ totalTranslations }}</span>
           <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
         </div>

@@ -67,7 +67,7 @@
       </span>
     </td>
     <td class="qty-spinner">
-      <Spinner :product="product" class="pull-xs-right" />
+      <Spinner :product="product" class="float-xs-right" />
     </td>
   </tr>
 </template>

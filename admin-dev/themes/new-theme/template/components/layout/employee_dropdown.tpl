@@ -24,13 +24,13 @@
  *}
 <div class="employee-dropdown dropdown">
   {if isset($employee)}
-    <div class="img-circle person" data-toggle="dropdown">
+    <div class="rounded-circle person" data-toggle="dropdown">
       <i class="material-icons">person</i>
     </div>
   {/if}
   <div class="dropdown-menu dropdown-menu-right p-a-1 m-r-2">
     <div class="text-xs-center employee_avatar">
-      <img class="avatar img-circle" src="{$employee->getImage()}" /><br>
+      <img class="avatar rounded-circle" src="{$employee->getImage()}" /><br>
       <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
     <hr>

@@ -26,7 +26,7 @@
   <div>
     <button class="search-input collapse-button" type="button" data-toggle="collapse" data-target="#filters">
       <i class="material-icons m-r-1">filter_list</i>
-      <i class="material-icons pull-right ">keyboard_arrow_down</i>
+      <i class="material-icons float-right ">keyboard_arrow_down</i>
       {{trans('button_advanced_filter')}}
     </button>
     <div class="collapse" id="filters">
@@ -102,7 +102,7 @@
             />
           </div>
         </div>
-        <!-- <PSButton type="button" class="pull-right m-y-2 m-x-2" :primary="true" :disabled="disabled" @click="onClick">
+        <!-- <PSButton type="button" class="float-right m-y-2 m-x-2" :primary="true" :disabled="disabled" @click="onClick">
           <i class="material-icons m-r-1">filter_list</i>
           {{trans('button_apply_advanced_filter')}}
         </PSButton> -->
