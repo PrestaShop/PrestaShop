@@ -758,7 +758,7 @@ abstract class ModuleCore
             }
         }
 
-        if(count($items) == Shop::getTotalShops()){
+        if (count($items) == Shop::getTotalShops()) {
             $force_all = true;
         }
 
@@ -868,7 +868,7 @@ abstract class ModuleCore
     {
         $result = true;
 
-        if(count(Shop::getContextListShopID()) == Shop::getTotalShops()){
+        if (count(Shop::getContextListShopID()) == Shop::getTotalShops()) {
             $force_all = true;
         }
 
