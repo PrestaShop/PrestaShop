@@ -681,11 +681,16 @@ function updatePrice()
 
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - groupReduction);
 
+    // If a specific price redefine the combination base price
+	if (combination.specific_price && combination.specific_price.price > 0) {
+		basePriceWithoutTax = +combination.specific_price.price;
+		basePriceWithTax = +combination.specific_price.price * (taxRate / 100 + 1);
+	}
+
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
-	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
-	
+	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate / 100 + 1);
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
 	var priceWithDiscountsWithTax = basePriceWithTax;
@@ -698,7 +703,7 @@ function updatePrice()
 			if (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === "0") {
 				var reduction = combination.specific_price.reduction;
 				if (combination.specific_price.id_currency == 0)
-					reduction = reduction * currencyRate * (1 - groupReduction);
+					reduction = reduction * currencyRate;// * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
 				priceWithDiscountsWithTax -= reduction * (taxRate / 100 + 1);
 			}
@@ -724,8 +729,8 @@ function updatePrice()
 				else if (!specific_currency)
 					reduction = reduction * currencyRate;
 
-				if (typeof groupReduction !== 'undefined' && groupReduction > 0)
-					reduction *= 1 - parseFloat(groupReduction);
+				//if (typeof groupReduction !== 'undefined' && groupReduction > 0)
+				//	reduction *= 1 - parseFloat(groupReduction);
 
 
 				priceWithDiscountsWithTax -= reduction;
@@ -735,10 +740,7 @@ function updatePrice()
 		}
 	}
 	// Update the Discount Table after use it
-	if (noTaxForThisProduct || customerGroupWithoutTax)
-		updateDiscountTable(basePriceWithoutTax);
-	else
-		updateDiscountTable(basePriceWithTax);
+	updateDiscountTable(combination);
 
 	if (default_eco_tax) {
 		// combination.ecotax doesn't modify the price but only the display
@@ -776,7 +778,7 @@ function updatePrice()
 			unit_price = baseUnitPrice + unit_impact;
 
 			if (!noTaxForThisProduct || !customerGroupWithoutTax)
-				unit_price = unit_price * (taxRate/100 + 1);
+				unit_price = unit_price * (taxRate / 100 + 1);
 		}
 		else
 			unit_price = priceWithDiscountsDisplay / productUnitPriceRatio;
@@ -825,7 +827,7 @@ function updatePrice()
 			ecotax = +combination.ecotax;
 
 		if (!noTaxForThisProduct)
-			ecotax = ecotax * (1 + ecotaxTax_rate/100)
+			ecotax = ecotax * (1 + ecotaxTax_rate / 100)
 
 		$('#ecotax_price_display').text(formatCurrency(ecotax * currencyRate, currencyFormat, currencySign, currencyBlank));
 		$('.price-ecotax').show();
@@ -849,13 +851,7 @@ function updatePrice()
 	else {
 		$('#our_price_display').text(formatCurrency(0, currencyFormat, currencySign, currencyBlank)).trigger('change');
 	}
-
-
-	/*if (noTaxForThisProduct || customerGroupWithoutTax)
-	 updateDiscountTable(priceWithDiscountsWithoutTax);
-	 else
-	 updateDiscountTable(priceWithDiscountsWithTax);
-	 */
+	
 }
 
 //update display of the large image
@@ -914,7 +910,7 @@ function displayDiscounts(combination)
 	}
 }
 
-function updateDiscountTable() 
+function updateDiscountTable(combination) 
 {
 	var index = 0;
 	$('#quantityDiscount tbody tr').each(function () {
@@ -930,7 +926,36 @@ function updateDiscountTable()
 				ecotax = default_eco_tax * (1 + ecotaxTax_rate / 100);
 			}
 		}
-		var basePrice = quantityDiscounts[index].base_price;
+		if (noTaxForThisProduct || customerGroupWithoutTax) {
+			var basePrice = quantityDiscounts[index].product_price_HT;
+		}
+		else {
+			var basePrice = quantityDiscounts[index].product_price_HT * (taxRate / 100 + 1);
+		}
+
+		if (typeof groupReduction !== 'undefined' && groupReduction > 0) {
+			basePrice = basePrice * (1 - groupReduction);
+		}
+
+		if (quantityDiscounts[index].price > 0 && (quantityDiscounts[index].id_product_attribute == 0 || quantityDiscounts[index].id_product_attribute == $('#idCombination').val())) {
+			if (noTaxForThisProduct || customerGroupWithoutTax) {
+				basePrice = quantityDiscounts[index].price;
+			}
+			else {
+				basePrice = quantityDiscounts[index].price * (taxRate / 100 + 1);
+			}
+		}
+
+		if (combination.price > 0) {
+			if (noTaxForThisProduct || customerGroupWithoutTax) {
+				basePrice = basePrice + +combination.price;
+			}
+			else {
+				basePrice = basePrice + +combination.price * (taxRate / 100 + 1);
+			}
+		}
+		basePrice = basePrice + ecotax;
+
 		var basePriceWithoutEcotax = basePrice - ecotax;
 		if (type == 'percentage') {
 			var discountedPrice = (basePriceWithoutEcotax * (1 - discount / 100)) + ecotax;
@@ -942,12 +967,14 @@ function updateDiscountTable()
 		}
 		if (discount > 0) {
 			if (displayDiscountPrice != 0)
-				$(this).children('td').eq(1).text(formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
-			$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
+				$(this).children('td').eq(2).text(formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));
+			$(this).children('td').eq(1).text(formatCurrency(basePrice * currencyRate, currencyFormat, currencySign, currencyBlank));
+			$(this).children('td').eq(3).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
 		}
 		else {
-			$(this).children('td').eq(1).text("-");
+			$(this).children('td').eq(1).text(formatCurrency(basePrice * currencyRate, currencyFormat, currencySign, currencyBlank));
 			$(this).children('td').eq(2).text("-");
+			$(this).children('td').eq(3).text("-");
 		}
 
 		$(this).attr("data-real-discount-value", formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank));

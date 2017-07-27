@@ -408,9 +408,10 @@
 					<thead>
 					<tr>
 						<th>{l s='Quantity'}</th>
+						<th>{l s='Base price' pdf='true'} {hook h="displayProductPriceBlock" product=$product type="price"}</th>
 						<th>{if $display_discount_price}{l s='Price'}{else}{l s='Discount'}{/if}</th>
 						<th>{l s='You Save'}</th>
-						<th>{l s='Price'} {hook h="displayProductPriceBlock" product=$product type="price"}</th>
+
 					</tr>
 					</thead>
 					<tbody>
@@ -439,6 +440,7 @@
 							<td>
 								{$quantity_discount.quantity|intval}
 							</td>
+							<td>{convertPrice price= $quantity_discount.base_price} </td>
 							<td>
 								{if $quantity_discount.real_value > 0}
 									{if $display_discount_price}
@@ -478,7 +480,6 @@
 									<span> - </span>
 								{/if}
 							</td>
-							<td>{convertPrice price= $quantity_discount.base_price} </td>
 						</tr>
 					{/foreach}
 					</tbody>
