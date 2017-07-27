@@ -758,6 +758,10 @@ abstract class ModuleCore
             }
         }
 
+        if(count($items) == Shop::getTotalShops()){
+            $force_all = true;
+        }
+
         if ($force_all && $this->getOverrides() != null) {
             // Install overrides
             try {
@@ -863,6 +867,11 @@ abstract class ModuleCore
     public function disable($force_all = false)
     {
         $result = true;
+
+        if(count(Shop::getContextListShopID()) == Shop::getTotalShops()){
+            $force_all = true;
+        }
+
         if ($force_all && $this->getOverrides() != null) {
             $result &= $this->uninstallOverrides();
         }
