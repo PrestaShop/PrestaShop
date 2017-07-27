@@ -286,7 +286,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $installed = $uninstalled = array();
-        foreach ($tab_modules_list as $key => $value) {
+        foreach ($tab_modules_list as $value) {
             $continue = 0;
             foreach ($modules_list_unsort['installed'] as $mod_in) {
                 if ($mod_in->name == $value) {
@@ -760,7 +760,7 @@ class AdminModulesControllerCore extends AdminController
                 }
 
                 $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
-                $upgradeAvailable = 0;
+
                 $modules = array();
 
                 foreach ($allModules as $km => $moduleToUpdate) {
