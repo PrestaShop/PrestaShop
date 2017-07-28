@@ -32,21 +32,21 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class PageVoter extends Voter
 {
-    const CREATE = 'create';
+    const READ   = 'read';
 
     const UPDATE = 'update';
 
+    const CREATE = 'create';
+
     const DELETE = 'delete';
 
-    const READ   = 'read';
-
-    const LEVEL_DELETE   = 4;
+    const LEVEL_READ   = 1;
 
     const LEVEL_UPDATE   = 2;
 
     const LEVEL_CREATE   = 3;
 
-    const LEVEL_READ   = 1;
+    const LEVEL_DELETE   = 4;
 
     /**
      * @param string $attribute
