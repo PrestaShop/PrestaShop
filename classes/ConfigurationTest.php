@@ -66,6 +66,7 @@ class ConfigurationTestCore
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
+            'translations_sf2' => 'app/Resources/translations',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -420,5 +421,10 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+
+    public static function test_translations_sf2($dir)
+    {
+        return ConfigurationTest::test_dir($dir);
     }
 }
