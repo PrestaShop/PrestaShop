@@ -32,7 +32,7 @@ if (Tools::getValue('bo')) {
     define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
     $directory = _PS_ADMIN_DIR_.'themes/default/';
 } else {
-    $directory = _PS_THEME_DIR_;
+    $directory = _PS_THEME_DIR_.'templates/';
 }
 
 require_once(_PS_ROOT_DIR_.'/config/smarty.config.inc.php');
