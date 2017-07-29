@@ -25,7 +25,7 @@
  */
 
 
-namespace PrestaShop\PrestaShop\tests\TestCase;
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 use Psr\Log\LoggerInterface;
 

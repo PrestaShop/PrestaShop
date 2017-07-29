@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration;
+namespace PrestaShop\PrestaShop\Tests\Integration;
 
 
 use Module;
