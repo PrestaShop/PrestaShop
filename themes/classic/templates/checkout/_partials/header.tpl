@@ -32,7 +32,7 @@
               <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo' d='Shop.Theme.Global'}">
             </a>
           </div>
-          <div class="col-md-6 text-xsright hidden-sm-down">
+          <div class="col-md-6 text-xs-right hidden-sm-down">
             {hook h='displayNav1'}
           </div>
           <div class="hidden-md-up text-sm-center mobile">
