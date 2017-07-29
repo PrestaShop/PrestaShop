@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\FileSystem;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;

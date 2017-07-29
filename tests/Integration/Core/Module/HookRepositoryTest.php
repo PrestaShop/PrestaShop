@@ -25,7 +25,7 @@
  */
 
 
-namespace PrestaShop\PrestaShop\tests\Integration\Core\Module;
+namespace PrestaShop\PrestaShop\Tests\Integration\Core\Module;
 
 use Context;
 use Db;

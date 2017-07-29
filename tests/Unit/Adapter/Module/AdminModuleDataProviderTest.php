@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
+namespace PrestaShop\PrestaShop\Tests\Unit\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;

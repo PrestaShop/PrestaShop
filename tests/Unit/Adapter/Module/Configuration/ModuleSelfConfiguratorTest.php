@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module\Configuration;
+namespace PrestaShop\PrestaShop\Tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
@@ -43,7 +43,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     private $moduleRepository;
 
     public $defaultDir;
-    
+
     public function setup()
     {
         $this->configuration = new ConfigurationMock();
@@ -261,7 +261,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 class ConfigurationMock extends Configuration
 {
     private $configurationData = array();
-    
+
     public function set($key, $value)
     {
         $this->configurationData[$key] = $value;
@@ -284,7 +284,7 @@ class ConnectionMock extends Connection
 {
     public $sql = array();
     public $executedSql = array();
-    
+
     public function connect()
     {
         return true;
