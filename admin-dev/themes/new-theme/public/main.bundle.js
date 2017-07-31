@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4171b75f826c4fbc2df0"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d5ced403aacbd16aeb7c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -43556,9 +43556,14 @@ let setNotificationsNumber = function (id, number) {
       $imagesElem.html('');
 
       __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.each(combinationsImages[value], function(key, image) {
+        let legend = '';
+        __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.each(image.legend, function(k, value) {
+          legend = legend + ' data-legend' + k + '="' + value.replace('"', '') + '"';
+        });
+
         $imagesElem.append(`<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
-          <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
+          <img src="${image.base_image_url}-small_default.${image.format}" alt="" ${legend}>
         </div>`);
       });
 
