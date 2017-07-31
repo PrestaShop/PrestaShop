@@ -511,7 +511,7 @@ li.product-flag {
       left:0;
       top:0;
     }
-    &:not(.discount)~li.product-flag {
+    &:not(.discount):not(.on-sale)~li.product-flag {
         margin-top: 3.75rem;
     }
 }
