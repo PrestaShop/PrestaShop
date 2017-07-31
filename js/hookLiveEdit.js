@@ -113,7 +113,7 @@ $(document).ready(function () {
         if (!has_been_moved)
             closeLiveEdit();
         else {
-            $("#live_edit_feedback_str").html('<div style="padding:10px;margin-top:10px;"><div class="alert alert-info"><p>' + confirmClose + '</p></div><p style="height:1.6em;display:block"><a style="margin:auto;float:left" class="btn btn-primary" href="#" onclick="closeLiveEdit();">' + confirm + '</a><a style="margin:auto;float:right;" class="btn btn-primary" href="#" onclick="closeFancybox();">' + cancel + '</a></p></div>');
+            $("#live_edit_feedback_str").html('<div style="padding:10px;margin-top:10px;"><div class="alert alert-info"><p>' + confirmClose + '</p></div><p style="height:1.6em;display:block"><a style="margin:auto;float:left" class="btn-live-edit" href="#" onclick="closeLiveEdit();">' + confirm + '</a><a style="margin:auto;float:right;" class="btn-live-edit" href="#" onclick="closeFancybox();">' + cancel + '</a></p></div>');
             $("#fancy").attr('href', '#live_edit_feedback');
             $("#fancy").trigger("click");
         }
@@ -226,7 +226,7 @@ function getHookableList() {
                 hookable_list = jsonData;// create and fill input array
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding: 10px;"><div class="alert alert-danger"><h3>TECHNICAL ERROR:</h3></div>' + loadFail + '<br><br><a style="margin:auto" class="btn btn-primary" href="#" onclick="closeFancybox();">' + close + '</a></div>');
+            $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding: 10px;"><div class="alert alert-danger"><h3>TECHNICAL ERROR:</h3></div>' + loadFail + '<br><br><a style="margin:auto" class="btn-live-edit" href="#" onclick="closeFancybox();">' + close + '</a></div>');
             $("#fancy").attr('href', '#live_edit_feedback');
             $("#fancy").trigger("click");
         }
@@ -252,7 +252,7 @@ function getHookableModuleList(hook) {
                 select += '<option value="' + jsonData[i].id + '">' + jsonData[i].name + '</option>';
             }
             select += '</select>';
-            $("#live_edit_feedback_str").html('<div style="padding:10px">' + select + '<br><br><a style="margin:auto" class="button" href="#" >' + add + '</a><br><br><a style="margin:auto" class="btn btn-primary" href="#" onclick="closeFancybox();">' + cancel + '</a>');
+            $("#live_edit_feedback_str").html('<div style="padding:10px">' + select + '<br><br><a style="margin:auto" class="button" href="#" >' + add + '</a><br><br><a style="margin:auto" class="btn-live-edit" href="#" onclick="closeFancybox();">' + cancel + '</a>');
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("TECHNICAL ERROR: unable to unregister hook \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
@@ -290,12 +290,12 @@ function saveModulePosition() {
             dataType: 'json',
             data: datas,
             success: function (jsonData) {
-                $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ok" style="text-align:center; padding-top: 33px;margin-top:10px;"><div class="alert alert-success"><h3>' + saveOK + '</h3></div><a class="exclusive btn btn-primary" href="#" onclick="closeFancybox();">' + close + '</a></div>');
+                $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ok" style="text-align:center; padding-top: 33px;margin-top:10px;"><div class="alert alert-success"><h3>' + saveOK + '</h3></div><a class="exclusive btn-live-edit" href="#" onclick="closeFancybox();">' + close + '</a></div>');
                 // timer = setTimeout("hideFeedback()", 3000);
                 has_been_moved = false;
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding-top: 33px;"><img src="' + baseDir + 'img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + unableToSaveModulePosition + '<br><br><a style="margin:auto" class="btn btn-primary" href="#" onclick="closeFancybox();">' + close + '</a></div>');
+                $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding-top: 33px;"><img src="' + baseDir + 'img/admin/error.png"><h3>TECHNICAL ERROR:</h3>' + unableToSaveModulePosition + '<br><br><a style="margin:auto" class="btn-live-edit" href="#" onclick="closeFancybox();">' + close + '</a></div>');
             }
         }
     )

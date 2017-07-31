@@ -36,7 +36,7 @@
 	var loadFail = '{l s='Failed to load module list' js=1}';
 </script>
 
-<div style=" background-color:000; background-color: rgba(0,0,0, 0.7); border-bottom: 1px solid #000; width:100%;height:45px; padding:5px 10px; position:fixed;top:0;left:0;z-index:9999;">
+<div id="liveEditTopBar">
 <form id="liveEdit-action-form" action="./{$ad}/index.php" method="post">
 	<input type="hidden" name="ajax" value="1" />
 	<input type="hidden" name="id_shop" value="{$id_shop}" />
@@ -49,9 +49,9 @@
 			value="{$hook_name}" />
 	{/foreach}
 <div >
-	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="exclusive btn btn-primary" style="color:#fff;float:right; text-shadow: 0 -1px 0 #157402; margin-right:20px;">
-	<input type="submit" value="{l s='Close Live edit'}" id="closeLiveEdit" class="button btn btn-primary" style="background: #333 none; color:#fff; border:1px solid #000; float:right; margin-right:10px;">
-	<input type="submit" value="{l s='Reset Live edit'}" id="resetLiveEdit" class="button btn btn-primary" style="background: #e6e6e6;color: #292b2c;border: 1px solid #adadad;float: right;margin-right: 10px;">
+	<input type="submit" value="{l s='Save'}" name="saveHook" id="saveLiveEdit" class="live-edit-btn-save btn-live-edit">
+	<input type="submit" value="{l s='Close Live edit'}" id="closeLiveEdit" class="live-edit-btn-close btn-live-edit">
+	<input type="submit" value="{l s='Reset Live edit'}" id="resetLiveEdit" class="live-edit-btn-reset btn-live-edit">
 </div>
 </form>
 	<div style="float:right;margin-right:20px;" id="live_edit_feed_back"></div>

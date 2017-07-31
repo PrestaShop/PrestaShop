@@ -33,7 +33,7 @@
     padding-right: 5px;
     width: 40px;
     float: left;
-    margin:0;
+    margin: 0;
 }
 
 .dndModule .toolbar .toolbar-btn a {
@@ -41,6 +41,7 @@
     padding-top: 5px;
     display: inline-block;
     cursor: pointer;
+    font-size: 24px;
     transition: all .2s ease-in-out;
 }
 
@@ -71,4 +72,71 @@
 
 .dndModule:hover .toolbar {
     z-index: 5;
+}
+
+#liveEditTopBar {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-bottom: 1px solid #000;
+    width: 100%;
+    height: 45px;
+    padding: 5px 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
+.btn-live-edit {
+    color: #fff;
+    background-color: #2fb5d2;
+    box-shadow: 2px 2px 4px 0 rgba(0, 0, 0, .2);
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: .5rem 1.25rem;
+    display: inline-block;
+    line-height: 1.25;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    border-radius: 0;
+    transition: all .2s ease-in-out;
+}
+
+.btn-live-edit:hover {
+    color: #fff;
+    background-color: #2592a9;
+    border-color: transparent;
+}
+
+.live-edit-btn-save {
+    color: #fff;
+    float: right;
+    text-shadow: 0 -1px 0 #22bad3;
+    margin: 0 20px 0 0;
+    height: auto !important;
+}
+
+.live-edit-btn-close {
+    background: #333 none;
+    color: #fff;
+    border: 1px solid #000;
+    float: right;
+    margin: 0 10px 0 0;
+    height: auto !important;
+}
+
+.live-edit-btn-reset {
+    background: #e6e6e6;
+    color: #292b2c;
+    border: 1px solid #adadad;
+    float: right;
+    margin: 0 10px 0 0;
+    height: auto !important;
 }
