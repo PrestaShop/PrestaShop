@@ -159,8 +159,27 @@
   min-height: 80px;
 }
 
-.module-item-wrapper-grid .module-quick-action-grid .form-action-button {
-  bottom: 0;
+.module-item-wrapper-grid .module-quick-action-grid .form-action-button-container {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
+  .form-action-button {
+    width: 100%;
+    margin: 0 auto;
+    + .dropdown-toggle {
+      left: -12px;
+    }
+  }
+}
+
+.spinner {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin-left: -20px;
 }
 
 @media (min-width: 1300px) and (max-width: 1550px) {
