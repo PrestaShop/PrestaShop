@@ -961,7 +961,7 @@ class LanguageCore extends ObjectModel
             }
 
             // Extract all the content of the archive in the directory
-            if (!$gz->extractModify(_PS_TRANSLATIONS_DIR_.'../')) {
+            if (!$gz->extractModify(_PS_TRANSLATIONS_DIR_.'../', '')) {
                 $errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
             }
 
