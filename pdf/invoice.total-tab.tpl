@@ -25,10 +25,10 @@
 <table id="total-tab" width="100%">
 
 	<tr>
-		<td class="grey" width="70%">
+		<td class="grey" width="50%">
 			{l s='Total Products' d='Shop.Pdf' pdf='true'}
 		</td>
-		<td class="white" width="30%">
+		<td class="white" width="50%">
 			{displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
 		</td>
 	</tr>
@@ -36,10 +36,10 @@
 	{if $footer.product_discounts_tax_excl > 0}
 
 		<tr>
-			<td class="grey" width="70%">
+			<td class="grey" width="50%">
 				{l s='Total Discounts' d='Shop.Pdf' pdf='true'}
 			</td>
-			<td class="white" width="30%">
+			<td class="white" width="50%">
 				- {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
 			</td>
 		</tr>
@@ -47,10 +47,10 @@
 	{/if}
 	{if !$order->isVirtual()}
 	<tr>
-		<td class="grey" width="70%">
+		<td class="grey" width="50%">
 			{l s='Shipping Costs' d='Shop.Pdf' pdf='true'}
 		</td>
-		<td class="white" width="30%">
+		<td class="white" width="50%">
 			{if $footer.shipping_tax_excl > 0}
 				{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
 			{else}
