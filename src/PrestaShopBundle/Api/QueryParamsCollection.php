@@ -315,6 +315,10 @@ abstract class QueryParamsCollection
             return $this->appendSqlDateAddFilter($filters, $value);
         }
 
+        if ($column === 'active') {
+            return $this->appendSqlActiveFilter($filters, $value);
+        }
+
         if (!is_array($value)) {
             $filters[] = sprintf('AND {%s} = :%s', $column, $column);
 
@@ -404,6 +408,10 @@ abstract class QueryParamsCollection
             return $this->appendSqlDateAddFilterParam($value, $sqlParams);
         }
 
+        if ($column === 'active') {
+            return $this->appendSqlActiveFilterParam($value, $sqlParams);
+        }
+
         if (!is_array($value)) {
             $sqlParams[$column] = (int)$value;
 
@@ -485,6 +493,34 @@ abstract class QueryParamsCollection
         }
         if (array_key_exists('inf', $value)) {
             $sqlParams[':date_add_inf'] = $value['inf'];
+        }
+
+        return $sqlParams;
+    }
+
+    /**
+     * @param array $filters
+     * @param active
+     * @return array
+     */
+    protected function appendSqlActiveFilter(array $filters, $active)
+    {
+        if (in_array($active, array('0', '1'))) {
+            $filters[] = sprintf('AND %s = %s', '{active}', ':active');
+        }
+
+        return $filters;
+    }
+
+    /**
+     * @param $value
+     * @param $sqlParams
+     * @return mixed
+     */
+    protected function appendSqlActiveFilterParam($value, $sqlParams)
+    {
+        if (in_array($value, array('0', '1'))) {
+            $sqlParams[':active'] = $value;
         }
 
         return $sqlParams;
