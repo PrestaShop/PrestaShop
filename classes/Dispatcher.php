@@ -449,6 +449,10 @@ class DispatcherCore
     {
         $context = Context::getContext();
 
+        if (isset($context->shop) && $id_shop === null) {
+            $id_shop = (int)$context->shop->id;
+        }
+
         // Load custom routes from modules
         $modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
         if (is_array($modules_routes) && count($modules_routes)) {
@@ -478,17 +482,16 @@ class DispatcherCore
         }
 
         // Set default routes
-        foreach ($language_ids as $id_lang) {
-            foreach ($this->default_routes as $id => $route) {
-                $this->addRoute(
-                    $id,
-                    $route['rule'],
-                    $route['controller'],
-                    $id_lang,
-                    $route['keywords'],
-                    isset($route['params']) ? $route['params'] : array(),
-                    $id_shop
-                );
+        foreach ($this->default_routes as $id => $route) {
+            $route = $this->computeRoute(
+                $route['rule'],
+                $route['controller'],
+                $route['keywords'],
+                isset($route['params']) ? $route['params'] : array()
+            );
+            foreach ($language_ids as $id_lang) {
+                // the default routes are the same, whatever the language
+                $this->routes[$id_shop][$id_lang][$id] = $route;
             }
         }
 
@@ -502,7 +505,15 @@ class DispatcherCore
             if ($results = Db::getInstance()->executeS($sql)) {
                 foreach ($results as $row) {
                     if ($row['url_rewrite']) {
-                        $this->addRoute($row['page'], $row['url_rewrite'], $row['page'], $row['id_lang'], array(), array(), $id_shop);
+                        $this->addRoute(
+                            $row['page'],
+                            $row['url_rewrite'],
+                            $row['page'],
+                            $row['id_lang'],
+                            array(),
+                            array(),
+                            $id_shop
+                        );
                     }
                 }
             }
@@ -523,20 +534,72 @@ class DispatcherCore
                         $language_ids[] = (int)$context->language->id;
                     }
 
+                    $route = $this->computeRoute(
+                        $custom_route,
+                        $route_data['controller'],
+                        $route_data['keywords'],
+                        isset($route_data['params']) ? $route_data['params'] : array()
+                    );
                     foreach ($language_ids as $id_lang) {
-                        $this->addRoute(
-                            $route_id,
-                            $custom_route,
-                            $route_data['controller'],
-                            $id_lang,
-                            $route_data['keywords'],
-                            isset($route_data['params']) ? $route_data['params'] : array(),
-                            $id_shop
-                        );
+                        // those routes are the same, whatever the language
+                        $this->routes[$id_shop][$id_lang][$route_id] = $route;
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @param string $rule Url rule
+     * @param string $controller Controller to call if request uri match the rule
+     *
+     * @return array
+     */
+    public function computeRoute($rule, $controller, array $keywords = array(), array $params = array())
+    {
+        $regexp = preg_quote($rule, '#');
+        if ($keywords) {
+            $transform_keywords = array();
+            preg_match_all('#\\\{(([^{}]*)\\\:)?(' .
+                implode('|', array_keys($keywords)) . ')(\\\:([^{}]*))?\\\}#', $regexp, $m);
+            for ($i = 0, $total = count($m[0]); $i < $total; $i++) {
+                $prepend = $m[2][$i];
+                $keyword = $m[3][$i];
+                $append = $m[5][$i];
+                $transform_keywords[$keyword] = array(
+                    'required' => isset($keywords[$keyword]['param']),
+                    'prepend' => stripslashes($prepend),
+                    'append' => stripslashes($append),
+                );
+
+                $prepend_regexp = $append_regexp = '';
+                if ($prepend || $append) {
+                    $prepend_regexp = '(' . $prepend;
+                    $append_regexp = $append . ')?';
+                }
+
+                if (isset($keywords[$keyword]['param'])) {
+                    $regexp = str_replace($m[0][$i], $prepend_regexp .
+                        '(?P<' . $keywords[$keyword]['param'] . '>' . $keywords[$keyword]['regexp'] . ')' .
+                        $append_regexp, $regexp);
+                } else {
+                    $regexp = str_replace($m[0][$i], $prepend_regexp .
+                        '(' . $keywords[$keyword]['regexp'] . ')' .
+                        $append_regexp, $regexp);
+                }
+            }
+            $keywords = $transform_keywords;
+        }
+
+        $regexp = '#^/' . $regexp . '$#u';
+
+        return array(
+            'rule' => $rule,
+            'regexp' => $regexp,
+            'controller' => $controller,
+            'keywords' => $keywords,
+            'params' => $params,
+        );
     }
 
     /**
@@ -545,48 +608,25 @@ class DispatcherCore
      * @param string $rule Url rule
      * @param string $controller Controller to call if request uri match the rule
      * @param int $id_lang
+     * @param array $keywords
+     * @param array $params
      * @param int $id_shop
      */
-    public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array(), $id_shop = null)
+    public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(),
+                             array $params = array(), $id_shop = null)
     {
-        if (isset(Context::getContext()->language) && $id_lang === null) {
-            $id_lang = (int)Context::getContext()->language->id;
+        $context = Context::getContext();
+
+        if (isset($context->language) && $id_lang === null) {
+            $id_lang = (int)$context->language->id;
         }
 
-        if (isset(Context::getContext()->shop) && $id_shop === null) {
-            $id_shop = (int)Context::getContext()->shop->id;
+        if (isset($context->shop) && $id_shop === null) {
+            $id_shop = (int)$context->shop->id;
         }
 
-        $regexp = preg_quote($rule, '#');
-        if ($keywords) {
-            $transform_keywords = array();
-            preg_match_all('#\\\{(([^{}]*)\\\:)?('.implode('|', array_keys($keywords)).')(\\\:([^{}]*))?\\\}#', $regexp, $m);
-            for ($i = 0, $total = count($m[0]); $i < $total; $i++) {
-                $prepend = $m[2][$i];
-                $keyword = $m[3][$i];
-                $append = $m[5][$i];
-                $transform_keywords[$keyword] = array(
-                    'required' =>    isset($keywords[$keyword]['param']),
-                    'prepend' =>    stripslashes($prepend),
-                    'append' =>        stripslashes($append),
-                );
+        $route = $this->computeRoute($rule, $controller, $keywords, $params);
 
-                $prepend_regexp = $append_regexp = '';
-                if ($prepend || $append) {
-                    $prepend_regexp = '('.$prepend;
-                    $append_regexp = $append.')?';
-                }
-
-                if (isset($keywords[$keyword]['param'])) {
-                    $regexp = str_replace($m[0][$i], $prepend_regexp.'(?P<'.$keywords[$keyword]['param'].'>'.$keywords[$keyword]['regexp'].')'.$append_regexp, $regexp);
-                } else {
-                    $regexp = str_replace($m[0][$i], $prepend_regexp.'('.$keywords[$keyword]['regexp'].')'.$append_regexp, $regexp);
-                }
-            }
-            $keywords = $transform_keywords;
-        }
-
-        $regexp = '#^/'.$regexp.'$#u';
         if (!isset($this->routes[$id_shop])) {
             $this->routes[$id_shop] = array();
         }
@@ -594,13 +634,7 @@ class DispatcherCore
             $this->routes[$id_shop][$id_lang] = array();
         }
 
-        $this->routes[$id_shop][$id_lang][$route_id] = array(
-            'rule' =>        $rule,
-            'regexp' =>        $regexp,
-            'controller' =>    $controller,
-            'keywords' =>    $keywords,
-            'params' =>        $params,
-        );
+        $this->routes[$id_shop][$id_lang][$route_id] = $route;
     }
 
     /**
@@ -620,7 +654,8 @@ class DispatcherCore
             $id_shop = (int)Context::getContext()->shop->id;
         }
 
-        return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang]) && isset($this->routes[$id_shop][$id_lang][$route_id]);
+        return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang])
+            && isset($this->routes[$id_shop][$id_lang][$route_id]);
     }
 
     /**
@@ -642,11 +677,13 @@ class DispatcherCore
             $this->loadRoutes($id_shop);
         }
 
-        if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang]) || !isset($this->routes[$id_shop][$id_lang][$route_id])) {
+        if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang])
+            || !isset($this->routes[$id_shop][$id_lang][$route_id])) {
             return false;
         }
 
-        return preg_match('#\{([^{}]*:)?'.preg_quote($keyword, '#').'(:[^{}]*)?\}#', $this->routes[$id_shop][$id_lang][$route_id]['rule']);
+        return preg_match('#\{([^{}]*:)?'.preg_quote($keyword, '#').
+            '(:[^{}]*)?\}#', $this->routes[$id_shop][$id_lang][$route_id]['rule']);
     }
 
     /**
@@ -681,7 +718,8 @@ class DispatcherCore
      * @param bool $use_routes If false, don't use to create this url
      * @param string $anchor Optional anchor to add at the end of this url
      */
-    public function createUrl($route_id, $id_lang = null, array $params = array(), $force_routes = false, $anchor = '', $id_shop = null)
+    public function createUrl($route_id, $id_lang = null, array $params = array(), $force_routes = false, $anchor = '',
+                              $id_shop = null)
     {
         if ($id_lang === null) {
             $id_lang = (int)Context::getContext()->language->id;
@@ -697,7 +735,8 @@ class DispatcherCore
         if (!isset($this->routes[$id_shop][$id_lang][$route_id])) {
             $query = http_build_query($params, '', '&');
             $index_link = $this->use_routes ? '' : 'index.php';
-            return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : ((trim($route_id) == '') ? '' : 'index.php?controller='.$route_id).(($query) ? '&'.$query : '').$anchor;
+            return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') :
+                ((trim($route_id) == '') ? '' : 'index.php?controller='.$route_id).(($query) ? '&'.$query : '').$anchor;
         }
         $route = $this->routes[$id_shop][$id_lang][$route_id];
         // Check required fields
@@ -708,7 +747,8 @@ class DispatcherCore
             }
 
             if (!array_key_exists($key, $params)) {
-                throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
+                throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "'.
+                    $key.'" for route "'.$route_id.'"');
             }
             if (isset($this->default_routes[$route_id])) {
                 $query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
@@ -806,7 +846,15 @@ class DispatcherCore
             if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($test_request_uri, PHP_URL_PATH))) {
                 // Add empty route as last route to prevent this greedy regexp to match request uri before right time
                 if ($this->empty_route) {
-                    $this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller'], Context::getContext()->language->id, array(), array(), $id_shop);
+                    $this->addRoute(
+                        $this->empty_route['routeID'],
+                        $this->empty_route['rule'],
+                        $this->empty_route['controller'],
+                        Context::getContext()->language->id,
+                        array(),
+                        array(),
+                        $id_shop
+                    );
                 }
 
                 list($uri) = explode('?', $this->request_uri);
