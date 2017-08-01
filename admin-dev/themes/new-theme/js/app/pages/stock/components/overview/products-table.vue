@@ -39,6 +39,9 @@
           <PSSort order="supplier" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">
+           {{trans('title_status')}}
+        </th>
+        <th class="text-xs-center">
            {{trans('title_physical')}}
           <PSSort order="physical_quantity" @sort="toggleSort" />
         </th>
