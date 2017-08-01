@@ -127,6 +127,7 @@ GitHub contributors:
 - emilien-puget
 - emily-d
 - Emmanuel Marichal
+- enrique
 - Eolia
 - Eric Le Lay
 - Eric Rouvier
@@ -142,6 +143,7 @@ GitHub contributors:
 - firstred
 - flashmaestro
 - Florian Kwakkenbos
+- Florian Lemaitre
 - Flowster
 - fram
 - Francois Gaillard
@@ -152,8 +154,10 @@ GitHub contributors:
 - Gaelle ITZKOVITZ
 - Gamesh
 - Geoffray
+- gfilippakis
 - ggedamed
 - Giant Leap Lab
+- Giovanni
 - Gordon Coubrough
 - gr4devel
 - Granger Kevin
@@ -162,6 +166,7 @@ GitHub contributors:
 - Gregoire Belorgey
 - gskema
 - Guillaume DELOINCE
+- Guillaume Germain
 - Guillaume Lafarge
 - Guillaume Leseur
 - Gytis
@@ -254,6 +259,7 @@ GitHub contributors:
 - matiasiglesias
 - Mats Rynge
 - Matteo
+- Matthias RAIGNE
 - MatthieuB
 - matthieume
 - MaX3315
@@ -280,6 +286,7 @@ GitHub contributors:
 - misthero
 - moncef102
 - montes
+- mounir.boukhris
 - mplh
 - MustangZhong
 - natrim
@@ -299,6 +306,7 @@ GitHub contributors:
 - oleacorner
 - Olivier Monaco
 - Otto Nascarella
+- Pablo Borowicz
 - Pan P
 - Pan P.
 - Pan Ploenes
@@ -399,6 +407,7 @@ GitHub contributors:
 - Sebastien Monterisi
 - Tanguy JACQUET
 - tchauviere
+- TechhDan
 - thecb1
 - therampagerado
 - Thibaud Chauviere

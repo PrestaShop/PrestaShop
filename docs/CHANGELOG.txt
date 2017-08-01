@@ -24,6 +24,35 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.16 - (2017-08-01)
+####################################
+
+	Fixed bugs:
+    BO: Fix bulk delete for CMS Category
+    BO: Remove download limit (SQL manager CSV export)
+    BO: Fix the export link of ASM movements
+    BO: Fixed bug about the language link in the reply_msg mail
+    BO: Add unicode prime symbol in PDF
+    BO: Add correctly the free_shipping cart_rule to an order from BO
+    BO: Update only checked fields when multishop option activated
+
+    FO: Fix multistore search indexation
+    FO: Fix the pagination of the list of products
+    FO: Fixed opc_id_address_invoice in OPC
+    FO: Add impact on price to the product price
+    FO: CategoryController - Show page 404 with an error instead of redirecting to the 404
+    FO: Use $base_dir_ssl if SSL is enabled on CMS categories pages
+    FO: Fix tax problems in shopping cart
+    FO: Fix unit price of the product with combinations
+    FO: Fix the translation when installing Prestashop
+
+    CO: Use MySQL index in cart delete method
+    CO: Undefined index base_price
+    CO: Subrequest error in SQL Manager
+    CO: Fix import theme while module use non registered hook in DB
+
+
+####################################
 #   v1.6.1.15 - (2017-06-28)
 ####################################
 
