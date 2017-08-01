@@ -598,6 +598,10 @@ class AdminCustomersControllerCore extends AdminController
                 Tools::getValue('groupBox_'.$group['id_group'], in_array($group['id_group'], $customer_groups_ids));
         }
 
+        $this->tpl_form_vars = array(
+            'back_url' => urldecode(Tools::getValue('back')),
+        );
+
         return parent::renderForm();
     }
 
