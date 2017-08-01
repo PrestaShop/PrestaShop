@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
 
       {if $breadcrumbs2.container.name != ''}
-        <li>
+        <li class="breadcrumb-item">
           {if $breadcrumbs2.container.href != ''}
             <a href="{$breadcrumbs2.container.href|escape}">{$breadcrumbs2.container.name|escape}</a>
           {/if}
@@ -14,7 +14,7 @@
       {/if}
 
       {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
-        <li>
+        <li class="breadcrumb-item">
           {if $breadcrumbs2.tab.href != ''}
             <a href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
           {/if}
