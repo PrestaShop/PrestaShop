@@ -344,7 +344,7 @@ class OrderPresenter implements PresenterInterface
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
                     if ($shipping['url'] && $shipping['tracking_number']) {
-                        $tracking_line = '<a href="'.str_replace('@', $shipping['tracking_number'], $shipping['url']).'">'.$shipping['tracking_number'].'</a>';
+                        $tracking_line = '<a href="'.str_replace('@', $shipping['tracking_number'], $shipping['url']).'" target="_blank">'.$shipping['tracking_number'].'</a>';
                     } else {
                         $tracking_line = $shipping['tracking_number'];
                     }
