@@ -43,7 +43,8 @@
 	{/if}
 	{if in_array($input.name, ['image', 'thumb'])}
 		<div class="col-lg-6">
-			<div class="help-block">{l s='Recommended dimensions (for the default theme): %1spx x %2spx' sprintf=[$input.format.width, $input.format.height]}
+			<div class="help-block">{l s='Recommended dimensions (for the default theme): %1spx x %2spx' sprintf=[$input.format.width, $input.format.height]},
+				{if ($input.name == 'thumb')}{$labelTypeImageMiniature}{/if}
 			</div>
 		</div>
 	{/if}
