@@ -103,6 +103,9 @@ class HookFinder
         $presentedContents = array();
 
         foreach ($hookContent as $moduleName => $moduleContents) {
+            if (!is_array($moduleContents)) {
+                continue;
+            }
             foreach ($moduleContents as $content) {
                 if (!$content instanceof HookContentClassInterface) {
                     throw new \Exception('The class returned must implement HookContentClassInterface to be presented');
