@@ -221,7 +221,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
         $customer = new Customer();
 
         /* Change the default group */
-        if (Group::isFeatureActive()) {
+        if (Group::isFeatureActive() || $customer->id == null) {
             $customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
         }
     }
