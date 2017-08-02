@@ -391,11 +391,12 @@ class ThemeManager implements AddonManagerInterface
     {
         global $kernel; // sf kernel
 
-        if (!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\HttpKernelInterface) {
-            $translationService = $kernel->getContainer()->get('prestashop.service.translation');
-        } else {
+        if (!(!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\HttpKernelInterface)) {
             return;
         }
+
+        $translationService = $kernel->getContainer()->get('prestashop.service.translation');
+        $themeProvider = $kernel->getContainer()->get('prestashop.translation.theme_provider');
 
         $themeName = $theme->getName();
         $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$themeName;
@@ -421,8 +422,14 @@ class ThemeManager implements AddonManagerInterface
             // construct a new catalog for this lang and import in database if key and message are different
             $messageCatalog = $this->getCatalogueFromPaths($translationFolder . $locale, $locale);
 
+            $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+
             foreach ($messageCatalog->all() as $domain => $messages) {
                 $domain = str_replace('.'.$locale, '', $domain);
+
+                if (in_array($domain, $allDomains)) {
+                    continue;
+                }
 
                 foreach ($messages as $key => $message) {
                     if ($key !== $message) {
@@ -431,5 +438,41 @@ class ThemeManager implements AddonManagerInterface
                 }
             }
         }
+    }
+
+    /**
+     * Get all default domain from catalog
+     *
+     * @param $locale
+     * @param $themeProvider
+     * @return array
+     */
+    private function getDefaultDomains($locale, $themeProvider)
+    {
+        $allDomains = array();
+
+        $defaultCatalogue = $themeProvider
+            ->setLocale($locale)
+            ->getDefaultCatalogue()
+        ;
+
+        if (empty($defaultCatalogue)) {
+            return $allDomains;
+        }
+
+        $defaultCatalogue = $defaultCatalogue->all();
+
+        if (empty($defaultCatalogue)) {
+            return $allDomains;
+        }
+
+        foreach ($defaultCatalogue as $domain => $translation) {
+            // AdminCatalogFeature.fr-FR to AdminCatalogFeature
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            $allDomains[] = $domain;
+        }
+
+        return $allDomains;
     }
 }
