@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -40,9 +41,13 @@ use Shop;
 use Employee;
 use Exception;
 use PrestaShopException;
+use PrestaShopLogger;
+use Language;
 
 class ThemeManager implements AddonManagerInterface
 {
+    use TranslationFinderTrait;
+
     private $hookConfigurator;
     private $shop;
     private $employee;
@@ -348,8 +353,12 @@ class ThemeManager implements AddonManagerInterface
                 )
             );
         }
+
         $this->filesystem->mkdir($themePath);
         $this->filesystem->mirror($sandboxPath, $themePath);
+
+        $this->importTranslationToDatabase($theme);
+
         $this->filesystem->remove($sandboxPath);
     }
 
@@ -371,5 +380,56 @@ class ThemeManager implements AddonManagerInterface
         }
 
         file_put_contents($jsonConfigFolder.'/shop'.$this->shop->id.'.json', json_encode($theme->get(null)));
+    }
+
+    /**
+     * Import translation from Theme to Database
+     *
+     * @param $theme
+     */
+    private function importTranslationToDatabase($theme)
+    {
+        global $kernel; // sf kernel
+
+        if (!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\HttpKernelInterface) {
+            $translationService = $kernel->getContainer()->get('prestashop.service.translation');
+        } else {
+            return;
+        }
+
+        $themeName = $theme->getName();
+        $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$themeName;
+        $translationFolder = $themePath.DIRECTORY_SEPARATOR.'translations'.DIRECTORY_SEPARATOR;
+
+        $languages = Language::getLanguages();
+        foreach ($languages as $language) {
+            $locale = $language['locale'];
+
+            // retrieve Lang doctrine entity
+            try {
+                $lang = $translationService->findLanguageByLocale($locale);
+            } catch (Exception $exception) {
+                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+                continue;
+            }
+
+            // check if translation dir for this lang exists
+            if (!is_dir($translationFolder . $locale)) {
+                continue;
+            }
+
+            // construct a new catalog for this lang and import in database if key and message are different
+            $messageCatalog = $this->getCatalogueFromPaths($translationFolder . $locale, $locale);
+
+            foreach ($messageCatalog->all() as $domain => $messages) {
+                $domain = str_replace('.'.$locale, '', $domain);
+
+                foreach ($messages as $key => $message) {
+                    if ($key !== $message) {
+                        $translationService->saveTranslationMessage($lang, $domain, $key, $message, $themeName);
+                    }
+                }
+            }
+        }
     }
 }
