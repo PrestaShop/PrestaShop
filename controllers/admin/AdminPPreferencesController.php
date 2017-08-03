@@ -218,6 +218,35 @@ class AdminPPreferencesControllerCore extends AdminController
                             'off' => 'onchange="stockManagementActivationAuthorization()"'
                         )
                     ),
+                    'PS_LABEL_IN_STOCK_PRODUCTS' => array(
+                        'title' => $this->trans('Label of in-stock products', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isString',
+                        'type' => 'textLang',
+                    ),
+                    'PS_LABEL_OOS_PRODUCTS_BOA' => array(
+                        'title' => $this->trans('Label of out-of-stock products with allowed backorders', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isString',
+                        'type' => 'textLang',
+                    ),
+                    'PS_LABEL_OOS_PRODUCTS_BOD' => array(
+                        'title' => $this->trans('Label of out-of-stock products with denied backorders', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isString',
+                        'type' => 'textLang',
+                    ),
+                    'PS_LABEL_DELIVERY_TIME_AVAILABLE' => array(
+                        'title' => $this->trans('Delivery time of in-stock products', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isString',
+                        'type' => 'textLang',
+                        'desc' => $this->trans('Leave empty to disable', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)', array(), 'Admin.Shopparameters.Help'),
+                    ),
+                    'PS_LABEL_DELIVERY_TIME_OOSBOA' => array(
+                        'title' => $this->trans('Delivery time of out-of-stock products with allowed backorders', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isString',
+                        'type' => 'textLang',
+                        'desc' => $this->trans('Leave empty to disable', array(), 'Admin.Shopparameters.Feature'),
+                        'hint' => $this->trans('Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)', array(), 'Admin.Shopparameters.Help'),
+                    ),
                     'PS_PACK_STOCK_TYPE' => array(
                         'title' =>  $this->trans('Default pack stock management', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('When selling packs of products, how do you want your stock to be calculated?', array(), 'Admin.Shopparameters.Help'),
