@@ -72,12 +72,11 @@ class AdminProductsControllerCore extends AdminController
 
     public function init()
     {
-        global $kernel;
-
         if (Tools::getIsset('id_product')) {
             if (Tools::getIsset('addproduct') || Tools::getIsset('updateproduct')) {
-                if ($kernel instanceof HttpKernelInterface) {
-                    $sfRouter = $kernel->getContainer()->get('router');
+                $sfContainer = SymfonyContainer::getSfContainer();
+                if ($sfContainer) {
+                    $sfRouter = $sfContainer->get('router');
                     Tools::redirectAdmin($sfRouter->generate(
                         'admin_product_form',
                         array('id' => Tools::getValue('id_product'))
