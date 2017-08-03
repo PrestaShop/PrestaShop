@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-    <div class="media">
+    <div>
       <div class="media-left">
         <img v-if="displayThumb" :src="thumbnail" class="thumbnail media-object"  />
         <div v-else class="no-img"></div>

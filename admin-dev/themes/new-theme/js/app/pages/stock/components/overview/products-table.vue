@@ -26,7 +26,7 @@
   <PSTable class="mt-1">
     <thead>
       <tr>
-        <th width="40%" class="thead-title">
+        <th width="30%" class="thead-title">
           {{trans('title_product')}}
           <PSSort order="product" @sort="toggleSort" />
         </th>

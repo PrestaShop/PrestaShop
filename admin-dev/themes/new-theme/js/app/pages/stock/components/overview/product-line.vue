@@ -24,7 +24,11 @@
  *-->
 <template>
   <tr>
-    <td class="flex pr-1">
+    <td class="flex p-r-1">
+      <PSCheckbox
+        id=""
+        model=""
+      />
       <PSMedia
         class="ml-1"
         :thumbnail="thumbnail"
