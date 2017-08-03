@@ -137,6 +137,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'customizable_products_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/upload/'), 'Install'),
                         'virtual_products_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/download/'), 'Install'),
                         'config_sf2_dir' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/config/'), 'Install'),
+                        'translations_sf2' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/Resources/translations/'), 'Install'),
                     )
                 ),
             ),
