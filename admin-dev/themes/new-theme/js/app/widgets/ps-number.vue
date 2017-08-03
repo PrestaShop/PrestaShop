@@ -1,8 +1,5 @@
-<!--**
- * 2007-2017 PrestaShop
- *
- * NOTICE OF LICENSE
- *
+<!--
+*
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
@@ -22,47 +19,60 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
-<template>
-  <div class="row product-actions">
-    <div
-      class="col-md-8 qty"
-      :class="classObject"
-    >
-      <PSNumber
-        @focus="focusIn"
-        @blur="focusOut"
-      />
-    </div>
-    <MovementType />
-  </div>
+
+ <template>
+    <input
+      type="number"
+      class="ps-number"
+      :value="value"
+      @keyup="onKeyup($event)"
+      @focus="focusIn"
+      @blur="focusOut($event)"
+    />
 </template>
 
 <script>
-  import MovementType from './movement-type';
-  import PSNumber from 'app/widgets/ps-number';
-
   export default {
-    computed: {
-      classObject() {
-        return {
-          active: this.isActive,
-        };
+    props: {
+      value: {
+        type: Number,
       },
     },
     methods: {
-      focusIn() {
-        this.isActive = true;
+      onKeyup($event) {
+        this.$emit('keyup', $event);
       },
-      focusOut() {
-        this.isActive = false;
+      focusIn() {
+        this.$emit('focus');
+      },
+      focusOut($event) {
+        this.$emit('blur', $event);
       },
     },
-    data: () => ({
-      isActive: false,
-    }),
-    components: {
-      MovementType,
-      PSNumber,
+    mounted() {
+      const self = this;
+      $(this.$el).spinner({
+        spin(event, ui) {
+          self.$emit('change', ui.value);
+        },
+      });
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+  .ps-number {
+    text-indent: 5px;
+    height: 33px;
+    width: 100px;
+    border: 1px solid $gray-light;
+    margin: 3px 0;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+</style>

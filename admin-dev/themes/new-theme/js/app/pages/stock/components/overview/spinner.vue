@@ -30,19 +30,18 @@
     @mouseleave="focusOut($event)"
     @submit.prevent="sendQty"
   >
-    <input
+    <PSNumber
       name="qty"
       class="edit-qty"
-      type="number"
       placeholder="0"
       pattern="\d*"
       step="1"
-      :id="id"
-      v-model="qty"
+      :value="qty"
+      @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
-    >
+    />
     <transition name="fade">
       <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
     </transition>
@@ -50,17 +49,9 @@
 </template>
 
 <script>
+  import PSNumber from 'app/widgets/ps-number';
   export default {
     props: ['product'],
-    mounted() {
-      const self = this;
-      $(`#${this.id}`).spinner({
-        spin(event, ui) {
-          self.value = ui.value;
-          self.isEnabled = !!self.value;
-        },
-      });
-    },
     computed: {
       qty() {
         if (parseInt(this.product.qty, 10) === 0) {
@@ -79,6 +70,10 @@
       },
     },
     methods: {
+      onChange(val) {
+        this.value = val;
+        this.isEnabled = !!val;
+      },
       deActivate() {
         this.isActive = false;
         this.isEnabled = false;
@@ -123,6 +118,9 @@
           delta: val,
         });
       },
+    },
+    components: {
+      PSNumber,
     },
     data: () => ({
       value: null,
@@ -179,21 +177,5 @@
   .fade-enter, .fade-leave-to {
     opacity: 0
   }
-  .edit-qty {
-    text-indent: 5px;
-    height: 33px;
-    width: 100px;
-    border: 1px solid $gray-light;
-    margin: 3px 0;
-  }
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-input[type='number'] {
-    -moz-appearance:textfield;
-}
 
 </style>
