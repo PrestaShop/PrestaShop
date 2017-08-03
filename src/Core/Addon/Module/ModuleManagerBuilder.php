@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
+use SymfonyContainer;
 use Doctrine\Common\Cache\FilesystemCache;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
@@ -87,9 +88,10 @@ class ModuleManagerBuilder
      */
     public function build()
     {
-        global $kernel;
-        if (!is_null($kernel)) {
-            return $kernel->getContainer()->get('prestashop.module.manager');
+        $sfContainer = SymfonyContainer::getSfContainer();
+
+        if ($sfContainer) {
+            return $sfContainer->get('prestashop.module.manager');
         } else {
             return new ModuleManager(
                 self::$adminModuleDataProvider,
@@ -114,9 +116,9 @@ class ModuleManagerBuilder
     public function buildRepository()
     {
         if (is_null(self::$modulesRepository)) {
-            global $kernel;
-            if (!is_null($kernel)) {
-                self::$modulesRepository = $kernel->getContainer()->get('prestashop.core.admin.module.repository');
+            $sfContainer = SymfonyContainer::getSfContainer();
+            if ($sfContainer) {
+                self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
                 self::$modulesRepository = new ModuleRepository(
                     self::$adminModuleDataProvider,
