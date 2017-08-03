@@ -218,35 +218,6 @@ class AdminPPreferencesControllerCore extends AdminController
                             'off' => 'onchange="stockManagementActivationAuthorization()"'
                         )
                     ),
-                    /*'PS_ADVANCED_STOCK_MANAGEMENT' => array(
-                        'title' => $this->trans('Enable advanced stock management'),
-                        'hint' => $this->trans('Allows you to manage physical stock, warehouses and supply orders in a new Stock menu.'),
-                        'validation' => 'isBool',
-                        'cast' => 'intval',
-                        'required' => false,
-                        'type' => 'bool',
-                        'visibility' => Shop::CONTEXT_ALL,
-                        'js' => array(
-                            'on' => 'onchange="advancedStockManagementActivationAuthorization()"',
-                            'off' => 'onchange="advancedStockManagementActivationAuthorization()"'
-                        )
-                    ),
-                    'PS_FORCE_ASM_NEW_PRODUCT' => array(
-                        'title' => $this->trans('New products use advanced stock management'),
-                        'hint' => $this->trans('New products will automatically use advanced stock management and depends on stock, but no warehouse will be selected'),
-                        'validation' => 'isBool',
-                        'cast' => 'intval',
-                        'required' => false,
-                        'type' => 'bool',
-                        'visibility' => Shop::CONTEXT_ALL,
-                    ),
-                    'PS_DEFAULT_WAREHOUSE_NEW_PRODUCT' => array(
-                        'title' => $this->trans('Default warehouse on new products'),
-                        'hint' => $this->trans('Automatically set a default warehouse when new product is created'),
-                        'type' => 'select',
-                        'list' => $warehouse_list,
-                        'identifier' => 'id_warehouse'
-                    ),*/
                     'PS_PACK_STOCK_TYPE' => array(
                         'title' =>  $this->trans('Default pack stock management', array(), 'Admin.Shopparameters.Feature'),
                         'hint' => $this->trans('When selling packs of products, how do you want your stock to be calculated?', array(), 'Admin.Shopparameters.Help'),
@@ -268,7 +239,7 @@ class AdminPPreferencesControllerCore extends AdminController
                         'identifier' => 'pack_stock',
                     ),
                 ),
-                'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization();</script>',
+                'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();</script>',
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
         );
