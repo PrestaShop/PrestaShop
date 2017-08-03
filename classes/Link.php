@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
@@ -686,15 +687,15 @@ class LinkCore
 
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
-        $sfContainer = SymfonyContainer::getSfContainer();
-        if ($sfContainer) {
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer)) {
             $sfRouter = $sfContainer->get('router');
         }
 
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = $sfContainer->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = $sfContainer->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
@@ -1306,8 +1307,9 @@ class LinkCore
                 if (!array_key_exists('route', $params)) {
                     throw new \InvalidArgumentException('You need to setup a `route` attribute.');
                 }
-                $sfContainer = SymfonyContainer::getSfContainer();
-                if ($sfContainer) {
+
+                $sfContainer = SymfonyContainer::getInstance();
+                if (!is_null($sfContainer)) {
                     $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {
