@@ -230,8 +230,6 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        global $kernel;
-
         if (isset($_GET['error'])) {
             $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
         }
@@ -246,7 +244,8 @@ class AdminThemesControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 return false;
             }
-            $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
+            $sfContainer = SymfonyContainer::getSfContainer();
+            $exporter = $sfContainer->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
             $this->confirmations[] = $this->trans(
                 'Your theme has been correctly exported: %path%',
