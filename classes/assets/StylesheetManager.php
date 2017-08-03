@@ -112,7 +112,7 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function sortList()
     {
-        foreach ($this->list as $type => &$items) {
+        foreach ($this->list as &$items) {
             Tools::uasort(
                 $items,
                 function ($a, $b) {

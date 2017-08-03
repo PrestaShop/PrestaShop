@@ -400,7 +400,7 @@ class AdminCartRulesControllerCore extends AdminController
             foreach ($cart_rule->getProductRuleGroups() as $productRuleGroup) {
                 $j = 1;
                 $productRulesDisplay = array();
-                foreach ($productRuleGroup['product_rules'] as $id_product_rule => $productRule) {
+                foreach ($productRuleGroup['product_rules'] as $productRule) {
                     $productRulesDisplay[] = $this->getProductRuleDisplay($i, $j++, $productRule['type'], $productRule['values']);
                 }
                 $productRuleGroupsArray[] = $this->getProductRuleGroupDisplay($i++, $productRuleGroup['quantity'], $productRulesDisplay);

@@ -705,7 +705,7 @@ class AdminManufacturersControllerCore extends AdminController
             $products[$i]->loadStockData();
             /* Build attributes combinations */
             $combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
-            foreach ($combinations as $k => $combination) {
+            foreach ($combinations as $combination) {
                 $comb_array[$combination['id_product_attribute']]['reference'] = $combination['reference'];
                 $comb_array[$combination['id_product_attribute']]['ean13'] = $combination['ean13'];
                 $comb_array[$combination['id_product_attribute']]['upc'] = $combination['upc'];
@@ -810,7 +810,7 @@ class AdminManufacturersControllerCore extends AdminController
             count($_FILES) &&
             file_exists(_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg')) {
             $images_types = ImageType::getImagesTypes('manufacturers');
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 $res &= ImageManager::resize(
                     _PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
                     _PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'.jpg',
