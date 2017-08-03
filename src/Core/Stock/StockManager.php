@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Stock;
 
 use DateTime;
-use SymfonyContainer;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
@@ -192,8 +192,8 @@ class StockManager
             $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
 
             if ($stockMvt) {
-                $sfContainer = SymfonyContainer::getSfContainer();
-                if ($sfContainer) {
+                $sfContainer = SymfonyContainer::getInstance();
+                if (!is_null($sfContainer)) {
                     $stockMvtRepository = $sfContainer->get('prestashop.core.api.stockMovement.repository');
 
                     return $stockMvtRepository->saveStockMvt($stockMvt);

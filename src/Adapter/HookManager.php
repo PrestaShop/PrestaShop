@@ -26,8 +26,6 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Hook;
-use SymfonyContainer;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class HookManager
 {
@@ -55,12 +53,13 @@ class HookManager
         $use_push = false,
         $id_shop = null
     ) {
-        $sfContainer = SymfonyContainer::getSfContainer();
-        if ($sfContainer) {
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
             $hook_args = array_merge(array('request' => $sfContainer->get('request')), $hook_args);
 
             // If the Symfony kernel is instanciated, we use it for the event fonctionnality
             $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
+
             return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
         } else {
             try {

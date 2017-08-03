@@ -26,7 +26,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
-use SymfonyContainer;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Doctrine\Common\Cache\FilesystemCache;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
@@ -82,15 +82,12 @@ class ModuleManagerBuilder
     /**
      * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager.
      *
-     * @global type $kernel
-     *
      * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
      */
     public function build()
     {
-        $sfContainer = SymfonyContainer::getSfContainer();
-
-        if ($sfContainer) {
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer)) {
             return $sfContainer->get('prestashop.module.manager');
         } else {
             return new ModuleManager(
@@ -109,15 +106,13 @@ class ModuleManagerBuilder
     /**
      * Returns an instance of \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository.
      *
-     * @global type $kernel
-     *
      * @return \PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
      */
     public function buildRepository()
     {
         if (is_null(self::$modulesRepository)) {
-            $sfContainer = SymfonyContainer::getSfContainer();
-            if ($sfContainer) {
+            $sfContainer = SymfonyContainer::getInstance();
+            if (!is_null($sfContainer)) {
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
                 self::$modulesRepository = new ModuleRepository(

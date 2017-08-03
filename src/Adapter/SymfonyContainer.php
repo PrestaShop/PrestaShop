@@ -24,29 +24,32 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Adapter;
 
+use Symfony\Component\HttpKernel\KernelInterface;
+
+/**
+ * Class SymfonyContainer
+ *
+ * This is a TEMPORARY class for quick access to the Symfony Container
+ */
 final class SymfonyContainer
 {
-    /* @var SymfonyContainer */
-    protected static $instance;
-
-    private function __construct(){ }
+    /** @var self */
+    private static $instance = null;
 
     /**
      * Get a singleton instance of SymfonyContainer
      *
-     * @return Context
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface;
      */
-    public static function getSfContainer()
+    public static function getInstance()
     {
         if (!isset(self::$instance)) {
 
             global $kernel;
 
-            if (!is_null($kernel) &&
-                !is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest()) &&
-                $kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface
-            ) {
+            if (!is_null($kernel) && $kernel instanceof KernelInterface) {
                 self::$instance = $kernel->getContainer();
             }
         }
