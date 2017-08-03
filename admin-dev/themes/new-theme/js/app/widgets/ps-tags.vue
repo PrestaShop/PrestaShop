@@ -98,7 +98,7 @@
       min-height: 25px;
       .material-icons {
         vertical-align: middle;
-        color: $gray;
+        color: $gray-dark;
         margin: 0 2px 0 5px;
         cursor: pointer;
       }

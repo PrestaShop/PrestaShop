@@ -1,7 +1,7 @@
 .main-header {
   position: fixed;
   z-index: 503;
-  background: $white;
+  background: #ffffff;
   height: $size-header-height;
   width: 100%;
   @include media-breakpoint-down(sm) {

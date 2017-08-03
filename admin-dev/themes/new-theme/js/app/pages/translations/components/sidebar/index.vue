@@ -181,7 +181,7 @@
     }
     .tree-extra-label-mini {
       background-color: $danger;
-      color: $white;
+      color: #ffffff;
       padding: 0 0.5rem;
       border-radius: 0.75rem;
       display: inline-block;

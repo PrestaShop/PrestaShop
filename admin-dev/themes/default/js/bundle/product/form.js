@@ -1072,7 +1072,7 @@ var form = (function() {
       });
 
       /** show rendered form after page load */
-      $(window).load(function() {
+      $(window).on('load', function() {
         $('#form-loading').fadeIn(function() {
           /** Create Bloodhound engine */
           var engine = new Bloodhound({

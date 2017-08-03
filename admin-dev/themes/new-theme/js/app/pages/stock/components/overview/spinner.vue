@@ -133,7 +133,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~jquery-ui/themes/base/minified/jquery.ui.spinner.min.css";
+  @import "~jquery-ui-dist/jquery-ui.css";
   @import "~PrestaKit/scss/custom/_variables.scss";
   *{
     outline: none;

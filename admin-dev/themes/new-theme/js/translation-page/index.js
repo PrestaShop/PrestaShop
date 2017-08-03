@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery';
 import initMessagesVisibilityToggling from './messages-visibility'
 import initMessagesEdition from './messages-edition'
 import initMessagesPagination from './messages-pagination'

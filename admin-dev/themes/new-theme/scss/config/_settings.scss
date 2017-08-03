@@ -5,7 +5,7 @@ $gray-dark-text: #bebebe;
 $gray-dark-title: #bbcdd1;
 $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
-$gray-dark-text-hover: $white;
+$gray-dark-text-hover: #ffffff;
 $color-separator: #dfdfdf;
 
 // Sizes
@@ -19,3 +19,7 @@ $size-header-toolbar-height: 6.25rem;
 // Imported from bootstrap
 
 $grid-gutter-width: 1.875rem !default;
+
+$border-radius: .25rem !default;
+
+$font-size-base: $font-size-n;

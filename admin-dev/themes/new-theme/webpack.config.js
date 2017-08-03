@@ -29,19 +29,18 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 let config = {
   entry: {
     main: [
-      'tether/dist/js/tether.js',
-      'jquery/dist/jquery.js',
-      'jquery-ui/jquery-ui.js',
-      'bootstrap/dist/js/npm.js',
+      'prestakit/dist/js/prestashop-ui-kit.js',
+      'jquery-ui-dist/jquery-ui.js',
+      // 'bootstrap/dist/js/npm.js',
+      'moment/moment.js',
       'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
       'jwerty/jwerty.js',
       'magnific-popup/dist/jquery.magnific-popup.js',
       'dropzone/dist/dropzone.js',
-      'typeahead.js/dist/typeahead.jquery.min.js',
+      'typeahead.js/dist/typeahead.jquery.js',
       'typeahead.js/dist/bloodhound.min.js',
-      'prestakit/dist/js/prestashop-ui-kit.js',
-      'bootstrap-slider/dist/bootstrap-slider.js',
+      // 'bootstrap-slider/dist/bootstrap-slider.js',
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
     ],
@@ -71,27 +70,11 @@ let config = {
   module: {
     rules: [
       {
-        test: /jquery\/dist\/jquery\.js/,
-        use: [
-          {
-            loader: 'expose-loader',
-            query: 'jQuery',
-          }, {
-            loader: 'expose-loader',
-            query: 'jquery',
-          }, {
-            loader: 'expose-loader',
-            query: '$',
-          }
-        ]
+        test: /jquery-ui\.js/,
+        use: "imports-loader?define=>false&this=>window"
       }, {
-        test: require.resolve('tether'),
-        use: [
-          {
-            loader: 'expose-loader',
-            query: 'Tether'
-          }
-        ]
+        test: /jquery\.magnific-popup\.js/,
+        use: "imports-loader?define=>false&exports=>false&this=>window"
       }, {
         test: /bloodhound\.min\.js/,
         use: [
@@ -101,19 +84,24 @@ let config = {
           }
         ]
       }, {
+        test: /dropzone\/dist\/dropzone\.js/,
+        loader: 'imports-loader?this=>window&module=>null'
+      }, {
+        test: /moment.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
+        test: /typeahead\.jquery\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
+        test: /bootstrap-tokenfield\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
+        test: /bootstrap-datetimepicker\.js/,
+        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+      }, {
         test: /jwerty\/jwerty\.js/,
         loader: 'imports-loader?this=>window&module=>false'
       }, {
-        test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports-loader=>false&this=>window'
-      }, {
-        test: /bloodhound\.js/,
-        loader: 'exports-loader?Bloodhound!imports-loader?define=>false&exports-loader=>false&this=>window'
-      }, {
-        test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null'
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
@@ -122,22 +110,19 @@ let config = {
             css: 'postcss-loader'
           },
         }
-      },
-      {
+      }, {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader']
         })
-      },
-      {
+      }, {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader', 'postcss-loader', 'sass-loader']
         })
-      },
-      {
+      }, {
         test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
         use: 'file-loader?name=[hash].[ext]'
       }
@@ -145,30 +130,30 @@ let config = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextPlugin('theme.css')
+    new ExtractTextPlugin('theme.css'),
   ]
 };
 
-if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: false
-      }
-    })
-  );
-} else {
+// if (process.env.NODE_ENV === 'production') {
+//   config.plugins.push(
+//     new webpack.optimize.UglifyJsPlugin({
+//       sourceMap: false,
+//       compress: {
+//         sequences: true,
+//         conditionals: true,
+//         booleans: true,
+//         if_return: true,
+//         join_vars: true,
+//         drop_console: true
+//       },
+//       output: {
+//         comments: false
+//       }
+//     })
+//   );
+// } else {
   config.entry.stock.push('webpack/hot/only-dev-server');
   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
-}
+// }
 
 module.exports = config;

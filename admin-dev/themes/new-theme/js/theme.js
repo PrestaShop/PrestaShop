@@ -36,6 +36,8 @@ import '../scss/theme.scss';
 
 // Theme Javascript
 
+Dropzone.autoDiscover = false;
+
 import NavBar from './nav_bar.js';
 
 import './product-page/index';

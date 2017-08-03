@@ -29,8 +29,8 @@
 <style lang="sass" scoped>
   @import "~PrestaKit/scss/custom/_variables.scss";
   .ps-spinner {
-    color: $white;
-    background-color: $white;
+    color: #ffffff;
+    background-color: #ffffff;
     width: 40px;
     height: 40px;
     border-radius: 40px;
