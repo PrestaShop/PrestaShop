@@ -25,21 +25,77 @@
 
 <template>
   <div class="radio">
-    <label>
-      <input type="radio" name="optradio" :checked="checked" @change="onChange">{{label}}
-    </label>
+    <input type="radio" :id="id" name="radio-group" :checked="checked" @change="onChange">
+    <label :for="id">{{label}}</label>
   </div>
 </template>
 
 <script>
   export default{
     props: {
+      id: { type: String, required: true },
       label: { type: String, required: false },
       checked: { type: Boolean, required: false },
       value: { type: String, required: false },
     },
     methods: {
-      onChange() { this.$emit('change', this.value); },
+      onChange() {
+        this.$emit('change', this.value);
+      },
     },
-  }
+  };
 </script>
+
+<style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+  [type="radio"]:checked,
+  [type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+  }
+  [type="radio"]:checked + label,
+  [type="radio"]:not(:checked) + label
+  {
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: $gray-dark;
+  }
+  [type="radio"]:checked + label:before,
+  [type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid $gray-medium;
+    border-radius: 100%;
+    background: $white;
+  }
+  [type="radio"]:checked + label:before {
+    border: 2px solid $primary;
+  }
+  [type="radio"]:checked + label:after,
+  [type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: $primary;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    transition: all 0.2s ease;
+  }
+  [type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    transform: scale(0);
+  }
+  [type="radio"]:checked + label:after {
+    opacity: 1;
+    transform: scale(1);
+  }
+</style>
