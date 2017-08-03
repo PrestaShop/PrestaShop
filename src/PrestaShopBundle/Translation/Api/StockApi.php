@@ -47,7 +47,8 @@ class StockApi extends AbstractApi
             'filter_search_category' => $this->translator->trans('Search a category', array(), 'Admin.Catalog.Feature'),
             'filter_search_suppliers' => $this->translator->trans('Search a supplier', array(), 'Admin.Catalog.Feature'),
             'filter_status' => $this->translator->trans('Filter by status', array(), 'Admin.Catalog.Feature'),
-            'filter_status_all' => $this->translator->trans('All', array(), 'Admin.Global'),
+            // 'All' refers to statuses as if "All statuses". Please adapt as necessary in your language
+            'filter_status_all' => $this->translator->trans('All', array(), 'Admin.Catalog.Feature'),
             'filter_status_disable' => $this->translator->trans('Disabled', array(), 'Admin.Global'),
             'filter_status_enable' => $this->translator->trans('Enabled', array(), 'Admin.Global'),
             'filter_suppliers' => $this->translator->trans('Filter by supplier', array(), 'Admin.Catalog.Feature'),
