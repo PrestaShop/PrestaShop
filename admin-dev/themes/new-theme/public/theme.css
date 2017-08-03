@@ -11145,7 +11145,8 @@ ul.category-tree {
     width: 100%;
     margin: 0 auto; }
     .module-item-wrapper-grid .module-quick-action-grid .form-action-button-container .form-action-button + .dropdown-toggle {
-      left: -12px; }
+      left: -12px;
+      height: 32px; }
 
 @media (min-width: 1300px) and (max-width: 1550px) {
   .module-item-grid {
