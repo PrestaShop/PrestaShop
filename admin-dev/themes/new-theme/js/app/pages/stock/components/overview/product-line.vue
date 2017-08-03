@@ -26,8 +26,8 @@
   <tr>
     <td class="flex p-r-1">
       <PSCheckbox
-        id=""
-        model=""
+        :id="product.combination_id"
+        :model="product"
       />
       <PSMedia
         class="ml-1"
