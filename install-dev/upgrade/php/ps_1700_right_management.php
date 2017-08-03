@@ -31,12 +31,12 @@ function ps_1700_right_management()
     /**
      * Add roles
      */
-    foreach (array('TAB', 'MODULE') as $element) {
+    foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
         foreach ($actions as $action) {
             Db::getInstance()->execute('
                 INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role`
                 (`slug`)
-                SELECT CONCAT("ROLE_MOD_'.$element.'_", UCASE(`class_name`), "_'.$action.'")
+                SELECT CONCAT("ROLE_MOD_'.$element.'_", UCASE(`'.$nameColumn.'`), "_'.$action.'")
                 FROM `'._DB_PREFIX_.strtolower($element).'`
             ');
         }
