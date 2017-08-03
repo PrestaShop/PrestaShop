@@ -35,14 +35,14 @@
           <PSSort order="reference" @sort="toggleSort" />
         </th>
         <th>
-           {{trans('title_supplier')}}
+          {{trans('title_supplier')}}
           <PSSort order="supplier" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">
-           {{trans('title_status')}}
+          {{trans('title_status')}}
         </th>
         <th class="text-xs-center">
-           {{trans('title_physical')}}
+          {{trans('title_physical')}}
           <PSSort order="physical_quantity" @sort="toggleSort" />
         </th>
         <th class="text-xs-center">

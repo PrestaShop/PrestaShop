@@ -295,27 +295,27 @@ abstract class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
-        if ($column === 'attributes') {
+        if ('attributes' === $column) {
             return $this->appendSqlAttributesFilter($filters, $value);
         }
 
-        if ($column === 'features') {
+        if ('features' === $column) {
             return $this->appendSqlFeaturesFilter($filters, $value);
         }
 
-        if ($column === 'keywords') {
+        if ('keywords' === $column) {
             return $filters;
         }
 
-        if ($column === 'category_id') {
+        if ('category_id' === $column) {
             return $this->appendSqlCategoryFilter($filters);
         }
 
-        if ($column === 'date_add') {
+        if ('date_add' === $column) {
             return $this->appendSqlDateAddFilter($filters, $value);
         }
 
-        if ($column === 'active') {
+        if ('active' === $column) {
             return $this->appendSqlActiveFilter($filters, $value);
         }
 
@@ -388,27 +388,27 @@ abstract class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
-        if ($column === 'attributes') {
+        if ('attributes' === $column) {
             return $this->appendSqlAttributesFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'features') {
+        if ('features' === $column) {
             return $this->appendSqlFeaturesFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'keywords') {
+        if ('keywords' === $column) {
             return $this->appendSqlSearchFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'category_id') {
+        if ('category_id' === $column) {
             return $this->appendSqlCategoryFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'date_add') {
+        if ('date_add' === $column) {
             return $this->appendSqlDateAddFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'active') {
+        if ('active' === $column) {
             return $this->appendSqlActiveFilterParam($value, $sqlParams);
         }
 

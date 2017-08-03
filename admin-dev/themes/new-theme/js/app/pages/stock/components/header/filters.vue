@@ -80,22 +80,22 @@
           <div class="p-y-2 p-x-2">
             <h2>{{trans('filter_status')}}</h2>
             <PSRadio
-                :label="trans('filter_status_enable')"
-                :checked="false"
-                value="1"
-                @change="onRadioChange"
+              :label="trans('filter_status_enable')"
+              :checked="false"
+              value="1"
+              @change="onRadioChange"
             />
             <PSRadio
-                :label="trans('filter_status_disable')"
-                :checked="false"
-                value="0"
-                @change="onRadioChange"
+              :label="trans('filter_status_disable')"
+              :checked="false"
+              value="0"
+              @change="onRadioChange"
             />
             <PSRadio
-                :label="trans('filter_status_all')"
-                :checked="true"
-                value="null"
-                @change="onRadioChange"
+              :label="trans('filter_status_all')"
+              :checked="true"
+              value="null"
+              @change="onRadioChange"
             />
           </div>
         </div>
