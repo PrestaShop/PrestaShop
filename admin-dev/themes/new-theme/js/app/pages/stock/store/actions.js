@@ -40,6 +40,7 @@ export const getStock = ({ commit }, payload) => {
       keywords: payload.keywords ? payload.keywords : [],
       supplier_id: payload.suppliers ? payload.suppliers : [],
       category_id: payload.categories ? payload.categories : [],
+      active: payload.active !== "null" ? payload.active: [],
     },
   }).then((response) => {
     commit(types.LOADING_STATE, false);

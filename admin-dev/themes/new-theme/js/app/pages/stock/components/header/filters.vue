@@ -82,14 +82,20 @@
             <PSRadio
                 :label="trans('filter_status_enable')"
                 :checked="false"
+                value="1"
+                @change="onRadioChange"
             />
             <PSRadio
                 :label="trans('filter_status_disable')"
                 :checked="false"
+                value="0"
+                @change="onRadioChange"
             />
             <PSRadio
                 :label="trans('filter_status_all')"
                 :checked="true"
+                value="null"
+                @change="onRadioChange"
             />
           </div>
         </div>
@@ -154,6 +160,7 @@
           id_stock_mvt_reason: this.id_stock_mvt_reason,
           id_employee: this.id_employee,
           date_add: this.date_add,
+          active: this.active,
         });
       },
       onChange(item) {
@@ -170,6 +177,10 @@
         if (event.oldDate) {
           this.applyFilter();
         }
+      },
+      onRadioChange(value) {
+        this.active = value;
+        this.applyFilter();
       },
     },
     components: {
@@ -196,6 +207,7 @@
       id_stock_mvt_reason: [],
       id_employee: [],
       date_add: {},
+      active: null,
     }),
   };
 </script>

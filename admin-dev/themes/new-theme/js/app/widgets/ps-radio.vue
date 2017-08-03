@@ -25,7 +25,7 @@
 
 <template>
     <div class="radio">
-      <label><input type="radio" name="optradio" :checked="checked">{{label}}</label>
+      <label><input type="radio" name="optradio" :checked="checked" @change="onChange">{{label}}</label>
     </div>
 </template>
 
@@ -34,8 +34,11 @@ export default{
     props: {
         label: { type: String, required: false },
         checked: { type: Boolean, required: false },
+        value: { type: String, required: false },
     },
-
+    methods: {
+        onChange() { this.$emit('change', this.value); },
+    },
 }
 </script>
 
