@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\Adapter;
+namespace PrestaShop\PrestaShop\Tests\Integration\Adapter;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Database;
