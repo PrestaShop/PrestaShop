@@ -5,6 +5,7 @@
   width: $size-navbar-width;
   padding-top: 0.625rem + $size-header-height;
   height: 100%;
+  overflow: auto;
   @include media-breakpoint-down(sm) {
     visibility: hidden;
   }

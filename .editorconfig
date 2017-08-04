@@ -12,6 +12,10 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
+[*.sass]
+indent_style = tab
+indent_size = 1
+
 [*.php]
 indent_size = 4
 
