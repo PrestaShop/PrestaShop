@@ -25,7 +25,7 @@
 {% set isModuleActive = module.database.active|default('0') %}
 
 <div
-  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-4 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
+  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
   data-id="{{ module.attributes.id }}"
   data-name="{{ module.attributes.displayName }}"
   data-scoring="{{ module.attributes.avgRate }}"
@@ -51,6 +51,7 @@
         data-placement="top"
         title="{{ module.attributes.displayName|raw }}"
       >
+      {% set ats = module.attributes %}
         {% if module.attributes.displayName %}
           {{ module.attributes.displayName|raw }}
         {% else %}
@@ -67,7 +68,7 @@
         {% endblock %}
       </div>
     </div>
-    <div class="module-quick-description-grid small no-padding">
+    <div class="module-quick-description-grid small no-padding m-b-0">
       {% block addon_description %}
         <div class="module-quick-description-text">
           {{ module.attributes.description|raw }}
@@ -84,11 +85,27 @@
     </div>
 
     <div class="module-container module-quick-action-grid clearfix">
+        <div class="badges-container">
+          {% set badges = module.attributes.badges %}
+          {% if badges %}
+            {% set badge = badges|first %}
+            <img src="{{badge.img}}" alt="{{badge.label}}"/>
+            {{badge.label}}
+          {% endif %}
+        </div>
+      <hr />
       {% if module.attributes.nbRates > 0 %}
-        <div class="module-star-ranking-grid-{{ module.attributes.starsRate}} small">
+        <div class="module-stars module-star-ranking-grid-{{ module.attributes.starsRate}} small">
           ({{ module.attributes.nbRates }})
         </div>
       {% endif %}
+      <div class="pull-right module-price">
+      {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
+        {{ module.attributes.price.displayPrice }}
+      {% elseif module.attributes.url_active != 'buy' %}
+        {{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
+      {% endif %}
+      </div>
       {% if requireBulkActions is defined and requireBulkActions == true %}
         <div class="pull-right module-checkbox-bulk-grid">
           <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
