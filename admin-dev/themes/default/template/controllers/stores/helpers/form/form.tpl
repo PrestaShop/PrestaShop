@@ -74,7 +74,7 @@
           <div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
             <div class="col-lg-7">
               <input type="text" size="25"
-                     name="hours_{$k}_{$language.id_lang}"
+                     name="hours[{$k}][{$language.id_lang}]"
                      value="{if isset($fields_value.hours[$language.id_lang][$k-1])}{$fields_value.hours[$language.id_lang][$k-1]|escape:'html':'UTF-8'}{/if}"/>
             </div>
             <div class="col-lg-2">
@@ -92,7 +92,7 @@
           </div>
         {/foreach}
       {else}
-        <div class="col-lg-9"><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'html':'UTF-8'}{/if}"/>
+        <div class="col-lg-9"><input type="text" size="25" name="hours[{$k}]" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'html':'UTF-8'}{/if}"/>
         </div>
       {/if}
     </div>
