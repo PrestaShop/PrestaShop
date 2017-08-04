@@ -92,6 +92,7 @@
       right: 14px;
       top: 1px;
       margin-top: 28px;
+      height: 35px;
     }
   }
 </style>
