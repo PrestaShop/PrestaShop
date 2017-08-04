@@ -45,7 +45,7 @@
                 class="{$link.class}"
                 href="{$link.url}"
                 title="{$link.description}"
-                {if isset($link.target) && $link.target} target="_blank" {/if}
+                {if !empty($link.target)} target="{$link.target}" {/if}
             >
               {$link.title}
             </a>
