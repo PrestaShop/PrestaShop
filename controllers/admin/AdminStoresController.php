@@ -302,15 +302,17 @@ class AdminStoresControllerCore extends AdminController
 
         $hours_temp = ($this->getFieldValue($obj, 'hours'));
         if (is_array($hours_temp) && !empty($hours_temp)) {
+            $numberOfLang = count(Language::getLanguages());
             foreach ($hours_temp as $key => $hour) {
                 $hour_tmp = json_decode($hour);
-                if (!empty($hour_tmp)) {
-                    foreach ($hour_tmp as $h) {
-                        if (1 < count(Language::getLanguages())) {
-                            $hours[$key][] = implode(' | ', $h);
-                        } else {
-                            $hours[] = implode(' | ', $h);
-                        }
+                if (empty($hour_tmp)) {
+                    continue;
+                }
+                foreach ($hour_tmp as $h) {
+                    if (1 < $numberOfLang) {
+                        $hours[$key][] = implode(' | ', $h);
+                    } else {
+                        $hours[] = implode(' | ', $h);
                     }
                 }
             }
@@ -332,8 +334,13 @@ class AdminStoresControllerCore extends AdminController
             $langs = Language::getLanguages();
             /* Cleaning fields */
             foreach ($_POST as $kp => $vp) {
-                if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store'))) {
+                if (!in_array($kp, array('checkBoxShopGroupAsso_store', 'checkBoxShopAsso_store', 'hours'))) {
                     $_POST[$kp] = trim($vp);
+                }
+                if ('hours' === $kp) {
+                    foreach ($vp as $day => $value) {
+                        $_POST['hours'][$day] = is_array($value) ? array_map('trim', $_POST['hours'][$day]) : trim($value);
+                    }
                 }
             }
 
@@ -372,21 +379,20 @@ class AdminStoresControllerCore extends AdminController
                 $this->errors[] = $this->trans('The Zip/postal code is invalid.', array(), 'Admin.Notifications.Error');
             }
             /* Store hours */
-            $_POST['hours'] = array();
             foreach ($langs as $lang) {
-                $hours = [];
-                $idLang = '';
-                if (1 < count($langs)) {
-                    $_POST['hours_' . $lang['id_lang']] = array();
-                    $idLang = "_" . $lang['id_lang'];
-                }
-
+                $hours = array();
                 for ($i = 1; $i < 8; $i++) {
-                    $hours[] = explode(' | ', Tools::getValue('hours_' . (int)$i . $idLang));
-                    unset($_POST['hours_' . (int)$i . $idLang]);
+                    if (1 < count($langs)) {
+                        $hours[] = explode(' | ', $_POST['hours'][(int)$i][$lang['id_lang']]);
+                        unset($_POST['hours'][(int)$i][$lang['id_lang']]);
+                    } else {
+                        $hours[] = explode(' | ', $_POST['hours'][(int)$i]);
+                        unset($_POST['hours'][(int)$i]);
+                    }
                 }
-                $_POST['hours_' . $lang['id_lang']] = json_encode($hours);
+                $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
+            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
         }
 
         if (!count($this->errors)) {
