@@ -411,10 +411,19 @@ class ProductPresenter
 
         return $presentedProduct;
     }
+
+    /**
+     * @param array $presentedProduct
+     * @param ProductPresentationSettings $settings
+     * @param array $product
+     * @param Language $language
+     * @return array
+     */
     public function addQuantityInformation(
         array $presentedProduct,
         ProductPresentationSettings $settings,
-        array $product
+        array $product,
+        Language $language
     ) {
         $show_price = $this->shouldShowPrice($settings, $product);
 
@@ -440,21 +449,14 @@ class ProductPresenter
                         );
                         $presentedProduct['availability'] = 'unavailable';
                     } else {
-                        $presentedProduct['availability_message'] = $product['available_now'];
+                        $presentedProduct['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
                         $presentedProduct['availability'] = 'available';
                     }
                 }
             } elseif ($product['allow_oosp']) {
-                if ($product['available_later']) {
-                    $presentedProduct['availability_message'] = $product['available_later'];
-                    $presentedProduct['availability_date'] = $product['available_date'];
-                    $presentedProduct['availability'] = 'available';
-                } else {
-                    // no default message when allow_oosp (out of stock) is enabled & available_later is empty
-                    $presentedProduct['availability_message'] = null;
-                    $presentedProduct['availability_date'] = $product['available_date'];
-                    $presentedProduct['availability'] = 'unavailable';
-                }
+                $presentedProduct['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
+                $presentedProduct['availability_date'] = $product['available_date'];
+                $presentedProduct['availability'] = 'available';
             } elseif ($product['quantity_all_versions']) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
@@ -464,11 +466,7 @@ class ProductPresenter
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             } else {
-                $presentedProduct['availability_message'] = $this->translator->trans(
-                    'Out of stock',
-                    array(),
-                    'Shop.Theme.Catalog'
-                );
+                $presentedProduct['availability_message'] = Configuration::get('PS_LABEL_OOS_PRODUCTS_BOD', $language->id);
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'unavailable';
             }
@@ -637,7 +635,8 @@ class ProductPresenter
         $presentedProduct = $this->addQuantityInformation(
             $presentedProduct,
             $settings,
-            $product
+            $product,
+            $language
         );
 
         $presentedProduct = $this->addDeliveryInformation(
