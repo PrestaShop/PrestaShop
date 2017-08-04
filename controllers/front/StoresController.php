@@ -225,7 +225,7 @@ class StoresControllerCore extends FrontController
                 ],
             ];
             $store['image'] = $imageRetriever->getImage(new Store($store['id_store']), $store['id_store']);
-            if (is_array($store['image']['legend'])) {
+            if (is_array($store['image'])) {
                 $store['image']['legend'] = $store['image']['legend'][$this->context->language->id];
             }
         }

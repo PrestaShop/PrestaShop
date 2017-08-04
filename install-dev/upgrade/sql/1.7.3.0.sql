@@ -23,9 +23,9 @@ ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_alert` TINYINT(1) NOT
 CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   `id_store` int(11) unsigned NOT NULL,
   `id_lang` int(11) unsigned NOT NULL,
-  `name` varchar(128) NOT NULL,
-  `address1` varchar(128) NOT NULL,
-  `address2` varchar(128) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `address1` varchar(255) NOT NULL,
+  `address2` varchar(255) DEFAULT NULL,
   `hours` text,
   `note` text,
   PRIMARY KEY (`id_store`, `id_lang`)
