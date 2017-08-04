@@ -25,13 +25,20 @@
 <template>
   <div class="row product-actions">
     <div
-      class="col-md-8 qty"
+      class="col-md-8 qty flex"
       :class="classObject"
     >
-      <PSNumber
-        @focus="focusIn"
-        @blur="focusOut"
-      />
+      <PSCheckbox id="bulk-action" class="m-t-1" />
+      <div>
+        <div class="m-l-1">
+          <small>{{trans('title_bulk')}}</small>
+        </div>
+        <PSNumber
+          class="m-l-1"
+          @focus="focusIn"
+          @blur="focusOut"
+        />
+      </div>
     </div>
     <MovementType />
   </div>
@@ -40,6 +47,7 @@
 <script>
   import MovementType from './movement-type';
   import PSNumber from 'app/widgets/ps-number';
+  import PSCheckbox from 'app/widgets/ps-checkbox';
 
   export default {
     computed: {
@@ -63,6 +71,7 @@
     components: {
       MovementType,
       PSNumber,
+      PSCheckbox,
     },
   };
 </script>

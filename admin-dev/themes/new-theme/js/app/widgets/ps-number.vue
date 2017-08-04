@@ -21,14 +21,14 @@
  *-->
 
  <template>
-    <input
-      type="number"
-      class="ps-number"
-      :value="value"
-      @keyup="onKeyup($event)"
-      @focus="focusIn"
-      @blur="focusOut($event)"
-    />
+  <input
+    type="number"
+    class="ps-number"
+    :value="value"
+    @keyup="onKeyup($event)"
+    @focus="focusIn"
+    @blur="focusOut($event)"
+  />
 </template>
 
 <script>

@@ -64,6 +64,7 @@ class StockApi extends AbstractApi
             'notification_stock_updated' => $this->translator->trans('Stock successfully updated', array(), 'Admin.Catalog.Notification'),
             'product_search' => $this->translator->trans('Search products (search by name, reference, supplier)', array(), 'Admin.Catalog.Feature'),
             'title_available'  => $this->translator->trans('Available', array(), 'Admin.Global'),
+            'title_bulk'  => $this->translator->trans('Bulk edit quantity', array(), 'Admin.Catalog.Feature'),
             'title_date' => $this->translator->trans('Date & Time', array(), 'Admin.Catalog.Feature'),
             'title_edit_quantity'  => $this->translator->trans('Edit quantity', array(), 'Admin.Catalog.Feature'),
             'title_employee' => $this->translator->trans('Employee', array(), 'Admin.Global'),
