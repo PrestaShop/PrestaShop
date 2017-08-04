@@ -30,9 +30,11 @@ Finally, the ZIP file contains resources for developers and designers that are n
 Server configuration
 --------
 
-To install PrestaShop 1.7, you need a web server running PHP 5.4+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).  
+To install PrestaShop 1.7, you need a web server running PHP 5.4+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).
+
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
-We recommend the Apache or Nginx web servers.  
+We recommend the Apache or Nginx web servers (check out our [example Nginx configuration file][23]).
+
 You can find more information on the [System Administrator Guide][19].
 
 If your host does not offer PHP 5 by default, you will find a few explanations about PHP 5 or the `.htaccess` file in [our documentation][3], with details for certain hosting services.
@@ -146,3 +148,4 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [20]: https://addons.prestashop.com/
 [21]: CONTRIBUTORS.md
 [22]: https://getcomposer.org
+[23]: docs/server_config/nginx.conf.dist
