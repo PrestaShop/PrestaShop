@@ -27,6 +27,7 @@
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 
@@ -345,6 +346,12 @@ class ContextCore
     {
         if (null !== $this->translator) {
             return $this->translator;
+        }
+
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer)) {
+            $sfTranslator = $sfContainer->get('translator');
+            $sfTranslator->setLocale($this->language->locale);
         }
 
         $cacheDir = _PS_CACHE_DIR_.'translations';
