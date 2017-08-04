@@ -95,6 +95,9 @@
       {/if}
       {hook h='displayProductPriceBlock' product=$product type="price"}
       {hook h='displayProductPriceBlock' product=$product type="after_price"}
+      {if $product.delivery_information}
+        <span class="delivery-information">{$product.delivery_information}</span>
+      {/if}
     </div>
   </div>
 {/if}

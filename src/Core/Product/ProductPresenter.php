@@ -390,6 +390,27 @@ class ProductPresenter
         return $presentedProduct;
     }
 
+    /**
+     * @param array $presentedProduct
+     * @param array $product
+     * @param Language $language
+     * @return array
+     */
+    private function addDeliveryInformation(
+        array $presentedProduct,
+        array $product,
+        Language $language
+    ) {
+        $presentedProduct['delivery_information'] = null;
+
+        if ($product['quantity'] > 0) {
+            $presentedProduct['delivery_information'] = Configuration::get('PS_LABEL_DELIVERY_TIME_AVAILABLE', $language->id);
+        } elseif ($product['allow_oosp']) {
+            $presentedProduct['delivery_information'] = Configuration::get('PS_LABEL_DELIVERY_TIME_OOSBOA', $language->id);
+        }
+
+        return $presentedProduct;
+    }
     public function addQuantityInformation(
         array $presentedProduct,
         ProductPresentationSettings $settings,
@@ -617,6 +638,12 @@ class ProductPresenter
             $presentedProduct,
             $settings,
             $product
+        );
+
+        $presentedProduct = $this->addDeliveryInformation(
+            $presentedProduct,
+            $product,
+            $language
         );
 
         if (isset($product['ecotax'])) {
