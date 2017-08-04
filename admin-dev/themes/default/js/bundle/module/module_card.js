@@ -118,7 +118,7 @@ var AdminModuleCard = function () {
         var _this = this;
         var jqElementObj = element.closest("div.btn-group");
         var form = element.closest("form");
-        var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind pull-right\"></button>");
+        var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
         var url = "//" + window.location.host + form.attr("action");
 
         if (forceDeletion === "true" || forceDeletion === true) {
