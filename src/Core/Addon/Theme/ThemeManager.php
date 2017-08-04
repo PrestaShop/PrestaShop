@@ -31,6 +31,9 @@ use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 use PrestaShop\PrestaShop\Core\Image\ImageTypeRepository;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShopBundle\Service\TranslationService;
+use PrestaShopBundle\Translation\Provider\TranslationFinderTrait;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -40,9 +43,13 @@ use Shop;
 use Employee;
 use Exception;
 use PrestaShopException;
+use PrestaShopLogger;
+use Language;
 
 class ThemeManager implements AddonManagerInterface
 {
+    use TranslationFinderTrait;
+
     private $hookConfigurator;
     private $shop;
     private $employee;
@@ -348,8 +355,12 @@ class ThemeManager implements AddonManagerInterface
                 )
             );
         }
+
         $this->filesystem->mkdir($themePath);
         $this->filesystem->mirror($sandboxPath, $themePath);
+
+        $this->importTranslationToDatabase($theme);
+
         $this->filesystem->remove($sandboxPath);
     }
 
@@ -371,5 +382,115 @@ class ThemeManager implements AddonManagerInterface
         }
 
         file_put_contents($jsonConfigFolder.'/shop'.$this->shop->id.'.json', json_encode($theme->get(null)));
+    }
+
+    /**
+     * Import translation from Theme to Database
+     *
+     * @param Theme $theme
+     */
+    private function importTranslationToDatabase(Theme $theme)
+    {
+        global $kernel; // sf kernel
+
+        if (!(!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\KernelInterface)) {
+            return;
+        }
+
+        $translationService = $kernel->getContainer()->get('prestashop.service.translation');
+        $themeProvider = $kernel->getContainer()->get('prestashop.translation.theme_provider');
+
+        $themeName = $theme->getName();
+        $themePath = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_').$themeName;
+        $translationFolder = $themePath.DIRECTORY_SEPARATOR.'translations'.DIRECTORY_SEPARATOR;
+
+        $languages = Language::getLanguages();
+        foreach ($languages as $language) {
+            $locale = $language['locale'];
+
+            // retrieve Lang doctrine entity
+            try {
+                $lang = $translationService->findLanguageByLocale($locale);
+            } catch (Exception $exception) {
+                PrestaShopLogger::addLog('ThemeManager->importTranslationToDatabase() - Locale ' . $locale . ' does not exists');
+                continue;
+            }
+
+            // check if translation dir for this lang exists
+            if (!is_dir($translationFolder . $locale)) {
+                continue;
+            }
+
+            // construct a new catalog for this lang and import in database if key and message are different
+            $messageCatalog = $this->getCatalogueFromPaths($translationFolder . $locale, $locale);
+
+            // get all default domain from catalog
+            $allDomains = $this->getDefaultDomains($locale, $themeProvider);
+
+            // do the import
+            $this->handleImport($translationService, $messageCatalog, $allDomains, $lang, $locale, $themeName);
+        }
+    }
+
+    /**
+     * Get all default domain from catalog
+     *
+     * @param string $locale
+     * @param \PrestaShopBundle\Translation\Provider\ThemeProvider $themeProvider
+     *
+     * @return array
+     */
+    private function getDefaultDomains($locale, $themeProvider)
+    {
+        $allDomains = array();
+
+        $defaultCatalogue = $themeProvider
+            ->setLocale($locale)
+            ->getDefaultCatalogue()
+        ;
+
+        if (empty($defaultCatalogue)) {
+            return $allDomains;
+        }
+
+        $defaultCatalogue = $defaultCatalogue->all();
+
+        if (empty($defaultCatalogue)) {
+            return $allDomains;
+        }
+
+        foreach (array_keys($defaultCatalogue) as $domain) {
+            // AdminCatalogFeature.fr-FR to AdminCatalogFeature
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            $allDomains[] = $domain;
+        }
+
+        return $allDomains;
+    }
+
+    /**
+     * @param TranslationService $translationService
+     * @param MessageCatalogue $messageCatalog
+     * @param array $allDomains
+     * @param \PrestaShopBundle\Entity\Lang $lang
+     * @param string $locale
+     * @param string $themeName
+     */
+    private function handleImport(TranslationService $translationService, MessageCatalogue $messageCatalog, $allDomains, $lang, $locale, $themeName)
+    {
+        foreach ($messageCatalog->all() as $domain => $messages) {
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            if (in_array($domain, $allDomains)) {
+                continue;
+            }
+
+            foreach ($messages as $key => $message) {
+                if ($key !== $message) {
+                    $translationService->saveTranslationMessage($lang, $domain, $key, $message, $themeName);
+                }
+            }
+        }
     }
 }
