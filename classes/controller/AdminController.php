@@ -452,9 +452,9 @@ class AdminControllerCore extends Controller
 
         $this->_conf = array(
             1 => $this->trans('Successful deletion.', array(), 'Admin.Notifications.Success'),
-            2 => $this->trans('The selection has been successfully deleted.',  array(), 'Admin.Notifications.Success'),
-            3 => $this->trans('Successful creation.',  array(), 'Admin.Notifications.Success'),
-            4 => $this->trans('Successful update.',  array(), 'Admin.Notifications.Success'),
+            2 => $this->trans('The selection has been successfully deleted.', array(), 'Admin.Notifications.Success'),
+            3 => $this->trans('Successful creation.', array(), 'Admin.Notifications.Success'),
+            4 => $this->trans('Successful update.', array(), 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', array(), 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', array(), 'Admin.Notifications.Success'),
             7 => $this->trans('The image was successfully deleted.', array(), 'Admin.Notifications.Success'),
@@ -2861,7 +2861,7 @@ class AdminControllerCore extends Controller
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
             'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
         );
-        
+
         $this->context->smarty->assign($notificationsSettings);
 
         Media::addJsDef($notificationsSettings);
@@ -3159,8 +3159,9 @@ class AdminControllerCore extends Controller
         if ((int)Tools::getValue('submitFilter'.$this->list_id)) {
             $start = ((int)Tools::getValue('submitFilter'.$this->list_id) - 1) * $limit;
         } elseif (
-            empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) &&
-            Tools::isSubmit('export'.$this->table)
+            empty($start)
+            && isset($this->context->cookie->{$this->list_id.'_start'})
+            && Tools::isSubmit('export'.$this->table)
         ) {
             $start = $this->context->cookie->{$this->list_id.'_start'};
         }
@@ -4692,28 +4693,28 @@ class AdminControllerCore extends Controller
      */
     public function authorizationLevel()
     {
-        if(
+        if (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
-        } elseif(
+        } elseif (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
-        } elseif(
+        } elseif (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
-        } elseif(
+        } elseif (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ',
                 $this->context->employee->id_profile

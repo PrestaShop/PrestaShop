@@ -380,7 +380,11 @@ abstract class ControllerCore
                 }
             }
 
-            if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path))) {
+            if (
+                $css_path
+                && isset($this->css_files[key($css_path)])
+                && ($this->css_files[key($css_path)] == reset($css_path))
+            ) {
                 unset($this->css_files[key($css_path)]);
             }
         }
@@ -502,7 +506,6 @@ abstract class ControllerCore
                 $this->addCSS(key($plugin_path['css']), 'all', null, false);
             }
         }
-
     }
 
     /**
@@ -513,7 +516,10 @@ abstract class ControllerCore
      */
     public function isXmlHttpRequest()
     {
-        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+        return (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+        );
     }
 
     public function getLayout()
@@ -645,7 +651,9 @@ abstract class ControllerCore
     /**
      * Construct the container of dependencies
      */
-    protected function buildContainer(){}
+    protected function buildContainer()
+    {
+    }
 
     public function get($serviceId)
     {

@@ -72,10 +72,23 @@ class SqlLoader
     /**
      * Parse a SQL file and execute queries
      *
+     * @deprecated use parseFile()
+     *
      * @param string $filename
      * @param bool $stop_when_fail
      */
     public function parse_file($filename, $stop_when_fail = true)
+    {
+        return $this->parseFile($filename, $stop_when_fail);
+    }
+
+    /**
+     * Parse a SQL file and execute queries
+     *
+     * @param string $filename
+     * @param bool $stop_when_fail
+     */
+    public function parseFile($filename, $stop_when_fail = true)
     {
         if (!file_exists($filename)) {
             throw new PrestashopInstallerException("File $filename not found");

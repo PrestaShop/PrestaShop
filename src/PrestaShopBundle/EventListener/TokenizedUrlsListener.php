@@ -52,8 +52,7 @@ class TokenizedUrlsListener
         RouterInterface $router,
         $username,
         LegacyContext $legacyContext
-    )
-    {
+    ) {
         $this->tokenManager = $tokenManager;
         $this->router = $router;
         $this->username = $username;

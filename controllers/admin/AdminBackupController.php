@@ -189,9 +189,14 @@ class AdminBackupControllerCore extends AdminController
         parent::postProcess();
     }
 
-    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null,
-        $id_lang_shop = null)
-    {
+    public function getList(
+        $id_lang,
+        $order_by = null,
+        $order_way = null,
+        $start = 0,
+        $limit = null,
+        $id_lang_shop = null
+    ) {
         if (!Validate::isTableOrIdentifier($this->table)) {
             die('filter is corrupted');
         }

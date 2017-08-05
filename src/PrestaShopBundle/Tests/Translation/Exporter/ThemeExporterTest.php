@@ -124,7 +124,7 @@ class ThemeExporterTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('Delete Product', $messages[$domain]);
 
         $this->assertArrayHasKey('Override Me', $messages[$domain]);
-        $this->assertSame('Overridden' , $messages[$domain]['Override Me']);
+        $this->assertSame('Overridden', $messages[$domain]['Override Me']);
 
         $this->assertArrayHasKey('Override Me Twice', $messages[$domain]);
         $this->assertSame('Overridden Twice', $messages[$domain]['Override Me Twice']);

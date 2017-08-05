@@ -286,7 +286,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $installed = $uninstalled = array();
-        foreach ($tab_modules_list as $key => $value) {
+        foreach ($tab_modules_list as $value) {
             $continue = 0;
             foreach ($modules_list_unsort['installed'] as $mod_in) {
                 if ($mod_in->name == $value) {
@@ -585,16 +585,16 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     default:
                         $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
-                    break;
+                        break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
                 $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
@@ -760,7 +760,7 @@ class AdminModulesControllerCore extends AdminController
                 }
 
                 $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
-                $upgradeAvailable = 0;
+
                 $modules = array();
 
                 foreach ($allModules as $km => $moduleToUpdate) {

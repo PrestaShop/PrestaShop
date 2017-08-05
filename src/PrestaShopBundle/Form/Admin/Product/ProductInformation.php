@@ -232,7 +232,7 @@ class ProductInformation extends CommonAbstractType
             'mapped' => false,
             'currency' => $this->currency->iso_code,
         ));
-        if ($is_stock_management){
+        if ($is_stock_management) {
             $builder->add('qty_0_shortcut', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
                 'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),

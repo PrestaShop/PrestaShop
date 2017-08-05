@@ -891,7 +891,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         $positions = Tools::getValue('attribute_group');
 
         $new_positions = array();
-        foreach ($positions as $k => $v) {
+        foreach ($positions as $v) {
             if (count(explode('_', $v)) == 4) {
                 $new_positions[] = $v;
             }

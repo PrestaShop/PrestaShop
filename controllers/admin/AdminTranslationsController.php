@@ -346,9 +346,6 @@ class AdminTranslationsControllerCore extends AdminController
             // Get value of button save and stay
             $save_and_stay = Tools::isSubmit('submitTranslations'.$type.'AndStay');
 
-            // Get language
-            $lang = strtolower(Tools::getValue('lang'));
-
             // Unset all POST which are not translations
             unset(
                 $_POST['submitTranslations'.$type],
@@ -453,7 +450,7 @@ class AdminTranslationsControllerCore extends AdminController
         $arr_replace = array();
         $bool_flag = true;
         if (preg_match_all('#\$_MODULE\[\'([^\']+)\'\]#Ui', $content, $matches)) {
-            foreach ($matches[1] as $key => $value) {
+            foreach ($matches[1] as $value) {
                 $arr_replace[$value] = str_replace($theme_from, $theme_to, $value);
             }
             $content = str_replace(array_keys($arr_replace), array_values($arr_replace), $content);
@@ -908,7 +905,7 @@ class AdminTranslationsControllerCore extends AdminController
         $isoCode = $languageDetails['iso_code'];
 
         if (Validate::isLangIsoCode($isoCode)) {
-            if ($success = Language::downloadAndInstallLanguagePack($isoCode, $version = _PS_VERSION_, $params = null, $install = true)) {
+            if ($success = Language::downloadAndInstallLanguagePack($isoCode, _PS_VERSION_, null, true)) {
                 Language::loadLanguages();
                 Tools::clearAllCache();
 
@@ -1211,7 +1208,6 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_.'classes/', array(), 'php'));
                 $directories['php'] = array_merge($directories['php'], $this->getModulesHasMails());
                 break;
-
         }
 
         return $directories;
@@ -2564,7 +2560,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockTxt($content = false, $lang, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailBlockTxt($content, $lang, $mail_name, $group_name, $name_for_module = false)
     {
         if (!empty($content)) {
             $text_content = Tools::htmlentitiesUTF8(stripslashes(strip_tags($content[$lang])));
@@ -2592,7 +2588,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return string
      */
-    protected function displayMailBlockHtml($content = false, $lang, $url, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailBlockHtml($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
     {
         $title = array();
 
@@ -2609,7 +2605,7 @@ class AdminTranslationsControllerCore extends AdminController
                 </div>';
     }
 
-    protected function displayMailEditor($content = false, $lang, $mail_name, $group_name, $name_for_module = false)
+    protected function displayMailEditor($content, $lang, $mail_name, $group_name, $name_for_module = false)
     {
         $title = array();
 
@@ -2896,9 +2892,8 @@ class AdminTranslationsControllerCore extends AdminController
                     }
                 }
             }
-        }
-        // Or if is folder, we scan folder for check if found in folder and subfolder
-        elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
+        } elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file)) {
+            // Or if is folder, we scan folder for check if found in folder and subfolder
             foreach (scandir($dir.'/'.$file) as $temp) {
                 if ($temp[0] != '.') {
                     $subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
@@ -2984,7 +2979,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @return array
      */
-    protected function getAllModuleFiles($modules, $root_dir = null, $lang, $is_default = false)
+    protected function getAllModuleFiles($modules, $root_dir, $lang, $is_default = false)
     {
         $array_files = array();
         $initial_root_dir = $root_dir;

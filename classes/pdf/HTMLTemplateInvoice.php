@@ -169,10 +169,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 $order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
             } elseif ($order_detail['reduction_percent'] > 0) {
                 $has_discount = true;
-                if ($order_detail['reduction_percent'] == 100)
+                if ($order_detail['reduction_percent'] == 100) {
                     $order_detail['unit_price_tax_excl_before_specific_price'] = 0;
-                else
+                } else {
                     $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - $order_detail['reduction_percent']);
+                }
             }
 
             // Set tax_code
@@ -351,7 +352,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'product_tab' => $this->smarty->fetch($this->getTemplate('invoice.product-tab')),
             'tax_tab' => $this->getTaxTabContent(),
             'payment_tab' => $this->smarty->fetch($this->getTemplate('invoice.payment-tab')),
-			'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
+            'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
             'shipping_tab' => $this->smarty->fetch($this->getTemplate('invoice.shipping-tab')),
         );

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\TestCase;
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 use Cache;
 use Configuration;

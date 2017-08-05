@@ -88,9 +88,8 @@ class AdminGeolocationControllerCore extends AdminController
     {
         if ($this->isGeoLiteCityAvailable()) {
             Configuration::updateValue('PS_GEOLOCATION_ENABLED', (int)Tools::getValue('PS_GEOLOCATION_ENABLED'));
-        }
-        // stop processing if geolocation is set to yes but geolite pack is not available
-        elseif (Tools::getValue('PS_GEOLOCATION_ENABLED')) {
+        } elseif (Tools::getValue('PS_GEOLOCATION_ENABLED')) {
+            // stop processing if geolocation is set to yes but geolite pack is not available
             $this->errors[] = $this->trans('The geolocation database is unavailable.', array(), 'Admin.International.Notification');
         }
 

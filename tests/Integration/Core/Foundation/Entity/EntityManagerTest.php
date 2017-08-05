@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\Core\Foundation\Entity;
+namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;

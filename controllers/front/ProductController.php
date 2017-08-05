@@ -144,7 +144,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
                             $this->setTemplate('errors/404');
-                        break;
+                            break;
                     }
                 }
             } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {
@@ -316,12 +316,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $filteredProduct = Hook::exec(
                 'filterProductContent',
                 array('object' => $product_for_template),
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
             if (!empty($filteredProduct['object'])) {
                 $product_for_template = $filteredProduct['object'];

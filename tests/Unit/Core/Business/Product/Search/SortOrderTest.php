@@ -25,7 +25,7 @@
  */
 
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Product\Search;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product\Search;
 
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;

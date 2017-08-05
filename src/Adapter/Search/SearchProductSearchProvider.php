@@ -40,7 +40,6 @@ use Tools;
 class SearchProductSearchProvider implements ProductSearchProviderInterface
 {
     private $translator;
-    private $category;
     private $sortOrderFactory;
 
     public function __construct(

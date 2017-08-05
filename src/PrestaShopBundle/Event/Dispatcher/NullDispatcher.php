@@ -58,5 +58,4 @@ class NullDispatcher implements EventDispatcherInterface
     public function removeSubscriber(EventSubscriberInterface $subscriber)
     {
     }
-
 }

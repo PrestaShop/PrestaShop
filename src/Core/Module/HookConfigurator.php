@@ -44,17 +44,17 @@ class HookConfigurator
      * as found in theme.yml,
      * it has a format like:
      * [
-     * 		"someHookName" => [
-     * 			null,
-     * 			"blockstuff",
-     * 			"othermodule"
-     * 		],
-     * 		"someOtherHookName" => [
-     * 			null,
-     * 			"blockmenu" => [
-     * 				"except_pages" => ["category", "product"]
-     * 			]
-     * 		]
+     *     "someHookName" => [
+     *        null,
+     *        "blockstuff",
+     *        "othermodule"
+     *     ],
+     *     "someOtherHookName" => [
+     *         null,
+     *         "blockmenu" => [
+     *             "except_pages" => ["category", "product"]
+     *         ]
+     *     ]
      * ]
      */
     public function getThemeHooksConfiguration(array $hooks)
@@ -111,7 +111,7 @@ class HookConfigurator
     private function getUniqueModuleToHookList(array $hooks)
     {
         $list = [];
-        foreach ($hooks as $hookName => $modules) {
+        foreach ($hooks as $modules) {
             $list = array_merge($list, $modules);
         }
 

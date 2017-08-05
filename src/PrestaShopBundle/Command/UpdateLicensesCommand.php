@@ -128,8 +128,7 @@ class UpdateLicensesCommand extends Command
         $progress->start();
         $progress->setRedrawFrequency(20);
 
-        foreach ($finder as $file)
-        {
+        foreach ($finder as $file) {
             $this->license = $this->text;
             $this->makeGoodLicense($file);
 
@@ -259,7 +258,7 @@ class UpdateLicensesCommand extends Command
             $pos = strpos($haystack, $needle);
             // Important, if the <?php is in the middle of the file, continue
             if ($pos === 0) {
-                $newstring = substr_replace($haystack,$replace,$pos,strlen($needle));
+                $newstring = substr_replace($haystack, $replace, $pos, strlen($needle));
                 file_put_contents($file->getRelativePathname(), $newstring);
             }
 

@@ -734,8 +734,8 @@ class CartCore extends ObjectModel
                     }
 
                     if (
-                        $row['id_product'] == $gift['gift_product'] &&
-                        $row['id_product_attribute'] == $gift['gift_product_attribute']
+                        $row['id_product'] == $gift['gift_product']
+                        && $row['id_product_attribute'] == $gift['gift_product_attribute']
                     ) {
                         $row['is_gift'] = true;
                         $result[$rowIndex] = $row;
@@ -1534,24 +1534,6 @@ class CartCore extends ObjectModel
         }
 
         if ((int)$id_customization) {
-            $product_total_quantity = (int)Db::getInstance()->getValue(
-                'SELECT `quantity`
-                FROM `'._DB_PREFIX_.'cart_product`
-                WHERE `id_product` = '.(int)$id_product.'
-                AND `id_customization` = '.(int)$id_customization.'
-                AND `id_cart` = '.(int)$this->id.'
-                AND `id_product_attribute` = '.(int)$id_product_attribute
-            );
-
-            $customization_quantity = (int)Db::getInstance()->getValue('
-            SELECT `quantity`
-            FROM `'._DB_PREFIX_.'customization`
-            WHERE `id_cart` = '.(int)$this->id.'
-            AND `id_product` = '.(int)$id_product.'
-            AND `id_customization` = '.(int)$id_customization.'
-            AND `id_product_attribute` = '.(int)$id_product_attribute.'
-            '.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
-
             if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery)) {
                 return false;
             }
@@ -1632,8 +1614,8 @@ class CartCore extends ObjectModel
 
         foreach ($gifts as $gift) {
             if (
-                (int) $gift['id_product_attribute'] === $id_product_attribute &&
-                (int) $gift['id_product'] === $id_product
+                (int) $gift['id_product_attribute'] === $id_product_attribute
+                && (int) $gift['id_product'] === $id_product
             ) {
                 $preservedGifts[$id_product.'-'.$id_product_attribute]++;
             }

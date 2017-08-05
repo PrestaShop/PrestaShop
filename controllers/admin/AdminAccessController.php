@@ -143,7 +143,6 @@ class AdminAccessControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
-            $res = array();
             $access = new Access;
             $perm = Tools::getValue('perm');
             if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {

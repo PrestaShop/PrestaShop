@@ -57,7 +57,7 @@ class StockManagerCore implements StockManagerInterface
      */
     public function addProduct(
         $id_product,
-        $id_product_attribute = 0,
+        $id_product_attribute,
         Warehouse $warehouse,
         $quantity,
         $id_stock_mvt_reason,
@@ -101,7 +101,6 @@ class StockManagerCore implements StockManagerInterface
         switch ($warehouse->management_type) {
             // case CUMP mode
             case 'WA':
-
                 $stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id);
 
                 // if this product is already in stock
@@ -136,12 +135,11 @@ class StockManagerCore implements StockManagerInterface
                     $mvt_params['last_wa'] = 0;
                     $mvt_params['current_wa'] = $price_te;
                 }
-            break;
+                break;
 
             // case FIFO / LIFO mode
             case 'FIFO':
             case 'LIFO':
-
                 $stock_collection = $this->getStockCollection($id_product, $id_product_attribute, $warehouse->id, $price_te);
 
                 // if this product is already in stock
@@ -165,11 +163,11 @@ class StockManagerCore implements StockManagerInterface
                     $mvt_params['id_stock'] = $stock->id;
                 }
 
-            break;
+                break;
 
             default:
                 return false;
-            break;
+                break;
         }
 
         if (!$stock_exists) {
@@ -214,16 +212,17 @@ class StockManagerCore implements StockManagerInterface
      * @return array
      * @throws PrestaShopException
      */
-    public function removeProduct($id_product,
-        $id_product_attribute = null,
+    public function removeProduct(
+        $id_product,
+        $id_product_attribute,
         Warehouse $warehouse,
         $quantity,
         $id_stock_mvt_reason,
         $is_usable = true,
         $id_order = null,
         $ignore_pack = 0,
-        $employee = null)
-    {
+        $employee = null
+    ) {
         $return = array();
 
         if (!Validate::isLoadedObject($warehouse) || !$quantity || !$id_product) {
@@ -337,11 +336,10 @@ class StockManagerCore implements StockManagerInterface
                     $return[$stock->id]['quantity'] = $quantity;
                     $return[$stock->id]['price_te'] = $stock->price_te;
 
-                break;
+                    break;
 
                 case 'LIFO':
                 case 'FIFO':
-
                     // for each stock, parse its mvts history to calculate the quantities left for each positive mvt,
                     // according to the instant available quantities for this stock
                     foreach ($stock_collection as $stock) {
@@ -452,7 +450,7 @@ class StockManagerCore implements StockManagerInterface
                             $stock->update();
                         }
                     }
-                break;
+                    break;
             }
 
             if (Pack::isPacked($id_product, $id_product_attribute)) {
@@ -653,14 +651,15 @@ class StockManagerCore implements StockManagerInterface
     /**
      * @see StockManagerInterface::transferBetweenWarehouses()
      */
-    public function transferBetweenWarehouses($id_product,
-                                              $id_product_attribute,
-                                              $quantity,
-                                              $id_warehouse_from,
-                                              $id_warehouse_to,
-                                              $usable_from = true,
-                                              $usable_to = true)
-    {
+    public function transferBetweenWarehouses(
+        $id_product,
+        $id_product_attribute,
+        $quantity,
+        $id_warehouse_from,
+        $id_warehouse_to,
+        $usable_from = true,
+        $usable_to = true
+    ) {
         // Checks if this transfer is possible
         if ($this->getProductPhysicalQuantities($id_product, $id_product_attribute, array($id_warehouse_from), $usable_from) < $quantity) {
             return false;

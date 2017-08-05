@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter;
+namespace PrestaShop\PrestaShop\Tests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;

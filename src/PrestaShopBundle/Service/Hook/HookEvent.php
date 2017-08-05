@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Service\Hook;
 
 use Symfony\Component\EventDispatcher\Event;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * HookEvent is used in HookDispatcher.
@@ -59,12 +60,11 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        global $kernel;
-
         $globalParameters = array('_ps_version' => _PS_VERSION_);
 
-        if (!is_null($kernel) && !is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest())) {
-            $globalParameters['request'] = $kernel->getContainer()->get('request');
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
+            $globalParameters['request'] = $sfContainer->get('request');
         }
 
         return array_merge($globalParameters, $this->hookParameters);

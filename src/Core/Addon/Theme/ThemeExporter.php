@@ -45,8 +45,7 @@ class ThemeExporter
         Filesystem $fileSystem,
         LangRepository $langRepository,
         TranslationsExporter $translationsExporter
-    )
-    {
+    ) {
         $this->configuration = $configuration;
         $this->fileSystem = $fileSystem;
         $this->langRepository = $langRepository;

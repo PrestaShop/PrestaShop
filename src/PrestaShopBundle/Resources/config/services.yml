@@ -199,7 +199,7 @@ services:
 
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
-        arguments: ['@prestashop.addons.client_api']
+        arguments: ['@prestashop.addons.client_api', '@logger']
 
     # Presenters
     prestashop.adapter.presenter.module:

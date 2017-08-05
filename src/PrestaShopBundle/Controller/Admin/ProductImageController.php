@@ -76,7 +76,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 ));
             } else {
                 $error_msg = array();
-                foreach ($form->getErrors() as $key => $error) {
+                foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
                 $return_data = array('message' => implode(" ", $error_msg));
@@ -152,7 +152,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 $jsonResponse->setData($adminProductWrapper->ajaxProcessUpdateImage($idImage, $form->getData()));
             } else {
                 $error_msg = array();
-                foreach ($form->getErrors() as $key => $error) {
+                foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
 
