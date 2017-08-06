@@ -37,6 +37,10 @@
 
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
+{#
+	iPresta
+	@TODO : All loaded CSS by "link" elements must be removed from PrestaShop to support RTL. The right method, is to use Controller->addCss or StylesheetManager.
+#}
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/right-sidebar.css') }}" />

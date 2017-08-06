@@ -53,11 +53,16 @@ class StylesheetManagerCore extends AbstractAssetManager
         $media = self::DEFAULT_MEDIA,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $server = 'local'
+        $server = 'local', 
+        $needRtl = true
     ) {
         if ('remote' === $server) {
             $this->add($id, $relativePath, $media, $priority, $inline, $server);
-        } elseif ($fullPath = $this->getFullPath($relativePath)) {
+        }
+        //RTL : search and use rtl css file if it's not originally rtl
+        else if ($needRtl && Context::getContext()->language->is_rtl && $fullPath = $this->getFullPath(preg_replace('/(^[^.].*)(\.css)$/', '$1_rtl.css', $relativePath))) {
+                $this->add($id, $fullPath, $media, $priority, $inline, $server);
+        }else if ($fullPath = $this->getFullPath($relativePath)) {
             $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }

@@ -883,6 +883,8 @@ class FrontControllerCore extends Controller
         if ($this->context->language->is_rtl) {
             $this->registerStylesheet('theme-rtl', '/assets/css/rtl.css', ['media' => 'all', 'priority' => 900]);
         }
+        // iPresta: Font compatibility based on language @TODO
+        $this->registerStylesheet('theme-iso', '/assets/css/'.$this->context->language->iso_code.'.css', ['media' => 'all', 'priority' => 999]);
 
         $this->registerJavascript('corejs', '/themes/core.js', ['position' => 'bottom', 'priority' => 0]);
         $this->registerJavascript('theme-main', '/assets/js/theme.js', ['position' => 'bottom', 'priority' => 50]);
@@ -1031,11 +1033,12 @@ class FrontControllerCore extends Controller
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'server' => 'local',
+            'need_rtl' => true
         ];
 
         $params = array_merge($default_params, $params);
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], $params['need_rtl']);
     }
 
     public function unregisterStylesheet($id)

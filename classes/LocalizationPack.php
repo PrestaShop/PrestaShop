@@ -516,4 +516,32 @@ class LocalizationPackCore
     {
         return $this->_errors;
     }
+    /**
+     * LocalizationPack::installRtlStylesheets()
+     * 
+     * @param integer $bo_theme bool
+     * @param integer $fo_theme bool
+     * @param $theme_name : theme name
+     * @param $iso : Language iso code (optional)
+	 * @param $install : PrestaShop installation process (bool)
+     * @param $path : Custom directory (optional)
+     * @return void
+     */
+    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false , $theme_name = null, $iso = null, $install = false, $path = null)
+    {
+        $admin_dir = ($install) ? _PS_ROOT_DIR_.'/admin/' : _PS_ADMIN_DIR_;
+        $front_dir = _PS_ROOT_DIR_.'/themes/';
+        
+        if ($iso){
+            $lang_pack = Language::getLangDetails($iso);
+            if (!$lang_pack['is_rtl'])
+                return;
+        }
+        if ($bo_theme)
+            \RTLGenerator::generate($admin_dir.'themes');
+        if ($fo_theme)
+            \RTLGenerator::generate($front_dir.($theme_name?$theme_name:'classic'));
+        if ($path && is_dir($path))
+            \RTLGenerator::generate($path);
+    }
 }
