@@ -129,7 +129,7 @@ class CustomerAddressFormCore extends AbstractForm
             $is_valid &= (bool) $hookReturn;
         }
 
-        $is_valid = parent::validate();
+        $is_valid &= (bool) parent::validate();
 
 
         return $is_valid;
