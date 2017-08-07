@@ -137,6 +137,10 @@ class GroupCore extends ObjectModel
 
     public static function getPriceDisplayMethod($id_group)
     {
+        // if the feature "Customer Groups" is disabled so we need to change the id_group to PS_CUSTOMER_GROUP **default behavior**
+        if (!Group::isFeatureActive()) {
+            $id_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+        }
         if (!isset(Group::$group_price_display_method[$id_group])) {
             self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `price_display_method`
