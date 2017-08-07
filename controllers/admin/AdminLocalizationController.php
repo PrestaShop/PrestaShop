@@ -24,6 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 class AdminLocalizationControllerCore extends AdminController
 {
     public function __construct()
@@ -208,6 +209,19 @@ class AdminLocalizationControllerCore extends AdminController
                 }
             }
         }
+		
+        // iPresta
+        if (Tools::isSubmit('submitLocalizationRTL')) {
+            $backOffice = Tools::getValue('generate_bo');
+            $front = Tools::getValue('generate_fo');
+            if (!$front && !$backOffice)
+                $this->errors[] = $this->trans('Please select at least one item to make RTL stylesheets', array(), 'Admin.International.Notification');
+            else{
+                LocalizationPack::installRtlStylesheets($backOffice, $front, $theme = Tools::getValue('front_theme'));
+                Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);// TODO : Modify related message
+            }
+        }
+        // \iPresta
 
         // Remove the module list cache if the default country changed
         if (Tools::isSubmit('submitOptionsconfiguration') && file_exists(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
@@ -307,7 +321,9 @@ class AdminLocalizationControllerCore extends AdminController
             )
         );
 
-        $this->fields_form = array(
+        // ipresta
+        $this->multiple_fieldsets = true;
+        $this->fields_form[0]['form'] = array(
             'tinymce' => true,
             'legend' => array(
                 'title' => $this->trans('Import a localization pack', array(), 'Admin.International.Feature'),
@@ -362,6 +378,81 @@ class AdminLocalizationControllerCore extends AdminController
                 'name' => 'submitLocalizationPack'
             ),
         );
+        $all_themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
+                            ->buildRepository()
+                            ->getList();
+        foreach ($all_themes as $key => $theme){
+            $themes[] = array(
+                'id' => $key,
+                'name' => $theme->getName()
+            );
+        }
+        
+        $this->fields_form[1]['form'] = array(
+            'legend' => array(
+                'title' => $this->trans('Generate RTL stylesheets', array(), 'Admin.International.Feature'),
+                'icon' => 'icon-globe'
+            ),
+            'input' => array(
+                array(
+                    'type' => 'select',
+                    'class' => 'chosen',
+                    'label' => $this->trans('Theme name you want to RTL', array(), 'Admin.International.Feature'),
+                    'name' => 'front_theme',
+                    'options' => array(
+                        'query' => $themes,
+                        'id' => 'id',
+                        'name' => 'name'
+                    )
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->trans('Generate front RTL stylesheets', array(), 'Admin.International.Feature'),
+                    'name' => 'generate_fo',
+                    'required' => false,
+                    'class' => 't',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'active_on',
+                            'value' => 1,
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                        ),
+                        array(
+                            'id' => 'active_off',
+                            'value' => 0,
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
+                        )
+                    )
+                ),
+                array(
+                    'type' => 'switch',
+                    'label' => $this->trans('Generate back office RTL stylesheets', array(), 'Admin.International.Feature'),
+                    'name' => 'generate_bo',
+                    'required' => false,
+                    'class' => 't',
+                    'is_bool' => true,
+                    'values' => array(
+                        array(
+                            'id' => 'active_on',
+                            'value' => 1,
+                            'label' => $this->trans('Enabled', array(), 'Admin.Global')
+                        ),
+                        array(
+                            'id' => 'active_off',
+                            'value' => 0,
+                            'label' => $this->trans('Disabled', array(), 'Admin.Global')
+                        )
+                    )
+                ),
+            ),
+            'submit' => array(
+                'title' => $this->trans('Generate', array(), 'Admin.Actions'),
+                'icon' => 'process-icon-kalak icon-align-right',
+                'name' => 'submitLocalizationRTL'
+            ),
+        );
+        //\ ipresta
 
         $this->fields_value = array(
             'selection[]_states' => true,
