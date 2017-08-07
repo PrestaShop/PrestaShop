@@ -125,9 +125,14 @@ class CustomerAddressFormCore extends AbstractForm
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) != '') {
-            $is_valid &= (bool) $hookReturn;
-        }
+        // All modules hooked on actionValidateCustomerAddressForm must
+        // return true in order to validate the form
+        $is_valid &= array_reduce(
+            Hook::exec('actionValidateCustomerAddressForm', array('form' => $this), null, true),
+            function ($carry, $item) {
+                return $carry && (bool)$item;
+            },
+            true);
 
         return $is_valid;
     }
