@@ -516,6 +516,7 @@ class LocalizationPackCore
     {
         return $this->_errors;
     }
+    
     /**
      * LocalizationPack::installRtlStylesheets()
      * 
