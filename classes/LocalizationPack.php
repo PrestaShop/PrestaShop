@@ -528,12 +528,12 @@ class LocalizationPackCore
      * @param $path : Custom directory (optional)
      * @return void
      */
-    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false , $theme_name = null, $iso = null, $install = false, $path = null)
+    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false, $theme_name = null, $iso = null, $install = false, $path = null)
     {
         $admin_dir = ($install) ? _PS_ROOT_DIR_.'/admin/' : _PS_ADMIN_DIR_;
         $front_dir = _PS_ROOT_DIR_.'/themes/';
         
-        if ($iso){
+        if ($iso) {
             $lang_pack = Language::getLangDetails($iso);
             if (!$lang_pack['is_rtl'])
                 return;
