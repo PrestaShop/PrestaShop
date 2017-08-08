@@ -538,6 +538,7 @@ class AdminCartRulesControllerCore extends AdminController
 				OR `firstname` LIKE "%'.pSQL($search_query).'%"
 				OR `lastname` LIKE "%'.pSQL($search_query).'%"
 			)
+			'.Shop::addSqlRestriction(true).'
 			ORDER BY `firstname`, `lastname` ASC
 			LIMIT 50');
             die(json_encode($customers));
