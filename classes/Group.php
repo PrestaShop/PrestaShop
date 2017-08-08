@@ -135,7 +135,7 @@ class GroupCore extends ObjectModel
         return self::$cache_reduction['group'][$id_group];
     }
 
-    public static function getPriceDisplayMethod($id_group)
+    public static function getPriceDisplayMethodByGroup($id_group)
     {
         if (!isset(Group::$group_price_display_method[$id_group])) {
             self::$group_price_display_method[$id_group] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -148,7 +148,15 @@ class GroupCore extends ObjectModel
 
     public static function getDefaultPriceDisplayMethod()
     {
-        return Group::getPriceDisplayMethod((int)Configuration::get('PS_CUSTOMER_GROUP'));
+        return Group::getPriceDisplayMethodByGroup((int)Configuration::get('PS_CUSTOMER_GROUP'));
+    }
+
+    public static function getPriceDisplayMethod($id_group)
+    {
+        if (Group::isFeatureActive()) {
+            return Group::getPriceDisplayMethodByGroup($id_group);
+        }
+        return Group::getDefaultPriceDisplayMethod();
     }
 
     public function add($autodate = true, $null_values = false)
