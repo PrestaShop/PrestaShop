@@ -1188,7 +1188,7 @@ class LinkCore
 
         $patterns = array(
             '#'.Context::getContext()->link->getBaseLink().'#',
-            '#'.basename(_PS_ADMIN_DIR_).'#',
+            '#'.basename(_PS_ADMIN_DIR_).'/#',
             '/index.php/',
             '/_?token=[a-zA-Z0-9\_]+/'
         );
