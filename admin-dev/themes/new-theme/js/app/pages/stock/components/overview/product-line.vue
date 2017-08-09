@@ -43,6 +43,12 @@
     <td>
       {{ product.supplier_name }}
     </td>
+    <td v-if="product.active" class="text-xs-center">
+      <i class="material-icons enable">check</i>
+    </td>
+    <td v-else class="text-xs-center">
+      <i class="material-icons disable">close</i>
+    </td>
     <td class="text-xs-center">
       {{ physical }}
       <span class="qty-update" v-if="updatedQty">
@@ -115,5 +121,11 @@
   }
   .checkbox {
     width: 5%;
+  }
+  .enable {
+    color: $success;
+  }
+  .disable {
+    color: $danger;
   }
 </style>

@@ -40,6 +40,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'keywords',
             'attributes',
             'features',
+            'active',
         );
     }
 
@@ -54,6 +55,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'supplier',
             'available_quantity',
             'physical_quantity',
+            'active',
         );
     }
 
