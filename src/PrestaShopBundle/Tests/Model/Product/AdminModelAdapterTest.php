@@ -75,7 +75,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 "specificPricePriority_0" => '',
                 "specificPricePriority_1" => '',
                 "specificPricePriority_2" => '',
-                "specificPricePriority_3" => ''
+                "specificPricePriority_3" => '',
+                "specificPricePriority_4" => ''
             ],
             "step3" => [
                 "advanced_stock_management" => '',

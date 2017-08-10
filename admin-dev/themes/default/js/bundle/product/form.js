@@ -608,6 +608,7 @@ var specificPrices = (function() {
             '<td>' + specific_price.attributes_name + '</td>' +
             '<td>' + specific_price.currency + '</td>' +
             '<td>' + specific_price.country + '</td>' +
+            '<td>' + specific_price.zone + '</td>' +
             '<td>' + specific_price.group + '</td>' +
             '<td>' + specific_price.customer + '</td>' +
             '<td>' + specific_price.fixed_price + '</td>' +

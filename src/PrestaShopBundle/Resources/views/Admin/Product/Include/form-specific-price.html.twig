@@ -58,6 +58,13 @@
     <div class="col-md-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
+        {{ form_errors(form.sp_id_zone) }}
+        {{ form_widget(form.sp_id_zone) }}
+      </fieldset>
+    </div>
+    <div class="col-md-3">
+      <fieldset class="form-group">
+        <label>&nbsp;</label>
         {{ form_errors(form.sp_id_group) }}
         {{ form_widget(form.sp_id_group) }}
       </fieldset>

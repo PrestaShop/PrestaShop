@@ -3123,7 +3123,9 @@ class ProductCore extends ObjectModel
             $id_product_attribute = Product::getDefaultAttribute($id_product);
         }
 
-        $cache_id = (int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.$id_state.'-'.$zipcode.'-'.(int)$id_group.
+        $id_zone = Country::getIdZone($id_country);
+
+        $cache_id = (int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_zone.'-'.(int)$id_country.'-'.$id_state.'-'.$zipcode.'-'.(int)$id_group.
             '-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_customization.
             '-'.(int)$with_ecotax.'-'.(int)$id_customer.'-'.(int)$use_group_reduction.'-'.(int)$id_cart.'-'.(int)$real_quantity.
             '-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.($use_tax?'1':'0').'-'.(int)$decimals;
@@ -3139,7 +3141,8 @@ class ProductCore extends ObjectModel
             $id_product_attribute,
             $id_customer,
             $id_cart,
-            $real_quantity
+            $real_quantity,
+            $id_zone
         );
 
         if (isset(self::$_prices[$cache_id])) {
@@ -3336,7 +3339,8 @@ class ProductCore extends ObjectModel
         $id_currency = (int)$context->currency->id;
         $ids = Address::getCountryAndState((int)$context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $id_country = $ids['id_country'] ? (int)$ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
-        return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity);
+        $id_zone = Country::getIdZone($id_country);
+        return (bool)SpecificPrice::getSpecificPrice((int)$id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity, $id_zone);
     }
 
     /**

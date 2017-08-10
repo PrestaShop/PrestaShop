@@ -150,6 +150,9 @@ services:
     prestashop.adapter.data_provider.country:
         class: PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider
 
+    prestashop.adapter.data_provider.zone:
+        class: PrestaShop\PrestaShop\Adapter\Zone\ZoneDataProvider
+
     prestashop.adapter.data_provider.currency:
         class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
 

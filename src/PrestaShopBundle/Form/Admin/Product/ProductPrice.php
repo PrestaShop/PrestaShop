@@ -54,8 +54,9 @@ class ProductPrice extends CommonAbstractType
      * @param object $groupDataprovider
      * @param object $legacyContext
      * @param object $customerDataprovider
+     * @param object $zoneDataprovider
      */
-    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider)
+    public function __construct($translator, $taxDataProvider, $router, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider, $zoneDataprovider)
     {
         $this->translator = $translator;
         $this->router = $router;
@@ -65,6 +66,7 @@ class ProductPrice extends CommonAbstractType
         $this->currencyDataprovider = $currencyDataprovider;
         $this->groupDataprovider = $groupDataprovider;
         $this->customerDataprovider = $customerDataprovider;
+        $this->zoneDataprovider = $zoneDataprovider;
         $this->legacyContext = $legacyContext;
         $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
         $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();
@@ -154,6 +156,7 @@ class ProductPrice extends CommonAbstractType
         $specificPricePriorityChoices = [
              $this->translator->trans('Shop', [], 'Admin.Global') => 'id_shop',
              $this->translator->trans('Currency', [], 'Admin.Global') => 'id_currency',
+             $this->translator->trans('Zone', [], 'Admin.Global') => 'id_zone',
              $this->translator->trans('Country', [], 'Admin.Global') => 'id_country',
              $this->translator->trans('Group', [], 'Admin.Global') => 'id_group',
         ];

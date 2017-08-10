@@ -34,6 +34,7 @@ class SpecificPriceCore extends ObjectModel
     public $id_shop_group;
     public $id_currency;
     public $id_country;
+    public $id_zone;
     public $id_group;
     public $id_customer;
     public $price;
@@ -59,6 +60,7 @@ class SpecificPriceCore extends ObjectModel
             'id_currency' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_specific_price_rule' =>    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'id_country' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_zone' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_group' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_customer' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'price' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
@@ -82,6 +84,7 @@ class SpecificPriceCore extends ObjectModel
             'id_product_attribute' =>        array('xlink_resource' => 'product_attributes'),
             'id_currency' =>            array('xlink_resource' => 'currencies', 'required' => true),
             'id_country' =>            array('xlink_resource' => 'countries', 'required' => true),
+            'id_zone' =>            array('xlink_resource' => 'zones', 'required' => true),
             'id_group' =>                array('xlink_resource' => 'groups', 'required' => true),
             'id_customer' =>            array('xlink_resource' => 'customers', 'required' => true),
             ),
@@ -170,7 +173,7 @@ class SpecificPriceCore extends ObjectModel
     /**
      * score generation for quantity discount
      */
-    protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer)
+    protected static function _getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $id_zone)
     {
         $select = '(';
 
@@ -338,7 +341,7 @@ class SpecificPriceCore extends ObjectModel
         }
     }
 
-    public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0, $real_quantity = 0)
+    public static function getSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_cart = 0, $real_quantity = 0, $id_zone)
     {
         if (!SpecificPrice::isFeatureActive()) {
             return array();
@@ -353,15 +356,16 @@ class SpecificPriceCore extends ObjectModel
             $psQtyDiscountOnCombination = Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION');
         }
 
-        $key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
+        $key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_zone.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
         if (!array_key_exists($key, SpecificPrice::$_specificPriceCache)) {
             $query_extra = self::computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart);
             $query = '
-			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $id_zone).'
 				FROM `'._DB_PREFIX_.'specific_price`
 				WHERE
                 `id_shop` '.self::formatIntInQuery(0, $id_shop).' AND
                 `id_currency` '.self::formatIntInQuery(0, $id_currency).' AND
+                `id_zone` '.self::formatIntInQuery(0, $id_zone).' AND
                 `id_country` '.self::formatIntInQuery(0, $id_country).' AND
                 `id_group` '.self::formatIntInQuery(0, $id_group).' '.$query_extra.'
 				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
@@ -409,7 +413,7 @@ class SpecificPriceCore extends ObjectModel
 		');
     }
 
-    public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false, $id_customer = 0)
+    public static function getQuantityDiscounts($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_product_attribute = null, $all_combinations = false, $id_customer = 0, $id_zone)
     {
         if (!SpecificPrice::isFeatureActive()) {
             return array();
@@ -418,11 +422,12 @@ class SpecificPriceCore extends ObjectModel
         $query_extra = self::computeExtraConditions($id_product, ((!$all_combinations)?$id_product_attribute:null), $id_customer, null);
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *,
-					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $id_zone).'
 				FROM `'._DB_PREFIX_.'specific_price`
 				WHERE
 					`id_shop` '.self::formatIntInQuery(0, $id_shop).' AND
 					`id_currency` '.self::formatIntInQuery(0, $id_currency).' AND
+					`id_zone` '.self::formatIntInQuery(0, $id_zone).' AND
 					`id_country` '.self::formatIntInQuery(0, $id_country).' AND
 					`id_group` '.self::formatIntInQuery(0, $id_group).' '.$query_extra.'
 					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC
@@ -447,7 +452,7 @@ class SpecificPriceCore extends ObjectModel
         return $targeted_prices;
     }
 
-    public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0)
+    public static function getQuantityDiscount($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity, $id_product_attribute = null, $id_customer = 0, $id_zone)
     {
         if (!SpecificPrice::isFeatureActive()) {
             return array();
@@ -458,11 +463,12 @@ class SpecificPriceCore extends ObjectModel
         $query_extra = self::computeExtraConditions($id_product, $id_product_attribute, $id_customer, null);
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *,
-					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $id_zone).'
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE
 					`id_shop` '.self::formatIntInQuery(0, $id_shop).' AND
 					`id_currency` '.self::formatIntInQuery(0, $id_currency).' AND
+					`id_zone` '.self::formatIntInQuery(0, $id_zone).' AND
 					`id_country` '.self::formatIntInQuery(0, $id_country).' AND
 					`id_group` '.self::formatIntInQuery(0, $id_group).' AND
 					`from_quantity` >= '.(int)$quantity.' '.$query_extra.'
@@ -533,7 +539,7 @@ class SpecificPriceCore extends ObjectModel
         return $feature_active;
     }
 
-    public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
+    public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false, $id_zone)
     {
         $rule = ' AND `id_specific_price_rule`'.(!$rule ? '=0' : '!=0');
         return (int)Db::getInstance()->getValue('SELECT `id_specific_price`
@@ -543,6 +549,7 @@ class SpecificPriceCore extends ObjectModel
 													`id_shop`='.(int)$id_shop.' AND
 													`id_group`='.(int)$id_group.' AND
 													`id_country`='.(int)$id_country.' AND
+													`id_zone`='.(int)$id_zone.' AND
 													`id_currency`='.(int)$id_currency.' AND
 													`id_customer`='.(int)$id_customer.' AND
 													`from_quantity`='.(int)$from_quantity.' AND
