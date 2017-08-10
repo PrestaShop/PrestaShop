@@ -94,8 +94,8 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
-        $finalPrice = (new Number($product->price))
-            ->plus(new Number($combination['price']))
+        $finalPrice = (new Number((string) $product->price))
+            ->plus(new Number((string) $combination['price']))
             ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
 
         return array(
