@@ -34,7 +34,7 @@
 {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_READ') %}
   {% if url_active == 'buy' %}
   <div class="form-action-button-container">
-    <a class="btn btn-primary btn-primary-reverse btn-block btn-lg btn-primary-outline light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+    <a class="btn btn-primary btn-primary-reverse btn-block btn-primary-outline light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
       {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
     </a>
   </div>
