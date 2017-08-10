@@ -219,7 +219,7 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 
         $url_rewrite = \Db::getInstance()->getValue('SELECT url_rewrite FROM ' .
             _DB_PREFIX_ . 'meta_lang WHERE id_meta=' . $idMeta);
-        \Db::getInstance()->update('meta_lang', array('url_rewrite' => ''),'id_meta=' . $idMeta);
+        \Db::getInstance()->update('meta_lang', array('url_rewrite' => ''), 'id_meta=' . $idMeta);
 
         $robots = Tools::getRobotsContent();
         $fileSection = $robots['Files'];
