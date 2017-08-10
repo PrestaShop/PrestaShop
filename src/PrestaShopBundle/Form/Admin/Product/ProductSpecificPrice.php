@@ -68,7 +68,7 @@ class ProductSpecificPrice extends CommonAbstractType
         $this->groups = $this->formatDataChoicesList($groupDataprovider->getGroups($this->locales[0]['id_lang']), 'id_group');
         $this->currency = $legacyContext->getContext()->currency;
         $this->customerDataprovider = $customerDataprovider;
-        $this->zones = $this->formatDataChoicesList($zoneDataprovider->getZones(), 'id_zone');;
+        $this->zones = $this->formatDataChoicesList($zoneDataprovider->getZones(), 'id_zone');
     }
 
     /**
