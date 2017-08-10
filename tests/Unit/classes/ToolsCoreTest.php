@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use PHPUnit_Framework_TestCase;
+use Configuration;
 use Tools;
 
 class ToolsCoreTest extends PHPUnit_Framework_TestCase
@@ -201,5 +202,30 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
     {
         Tools::spreadAmount($amount, $precision, $rows, $column);
         $this->assertEquals(array_values($expectedRows), array_values($rows));
+    }
+
+    public function testRobotsContent()
+    {
+        $oldValue = Configuration::get('PS_REWRITING_SETTINGS');
+        Configuration::set('PS_REWRITING_SETTINGS', 1);
+        $idMeta = \Db::getInstance()->getValue('SELECT id_meta FROM '._DB_PREFIX_.'meta WHERE page=\'address\'');
+        $robots = Tools::getRobotsContent();
+        $fileSection = $robots['Files'];
+        $firstLang = current($fileSection);
+        $count = count($firstLang);
+
+        $this->assertNotContains('', $firstLang);
+
+        $url_rewrite = \Db::getInstance()->getValue('SELECT url_rewrite FROM '._DB_PREFIX_.'meta_lang WHERE id_meta='.$idMeta);
+        \Db::getInstance()->update('meta_lang', array('url_rewrite' => ''),  'id_meta='.$idMeta);
+
+        $robots = Tools::getRobotsContent();
+        $fileSection = $robots['Files'];
+        $firstLang = current($fileSection);
+
+        \Db::getInstance()->update('meta_lang', array('url_rewrite' => $url_rewrite),  'id_meta='.$idMeta);
+        $this->assertNotContains('', $firstLang);
+        $this->assertEquals(($count - 1), count($firstLang));
+        Configuration::set('PS_REWRITING_SETTINGS', $oldValue);
     }
 }

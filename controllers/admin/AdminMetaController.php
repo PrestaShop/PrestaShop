@@ -46,7 +46,7 @@ class AdminMetaControllerCore extends AdminController
         $this->identifier_name = 'page';
         $this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
         $this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-        $this->rb_data = $this->getRobotsContent();
+        $this->rb_data = Tools::getRobotsContent();
 
         $this->explicitSelect = true;
         $this->addRowAction('edit');
@@ -764,46 +764,6 @@ class AdminMetaControllerCore extends AdminController
 
     public function getRobotsContent()
     {
-        $tab = array();
-
-        // Special allow directives
-        $tab['Allow'] = array('*/modules/*.css', '*/modules/*.js');
-
-        // Directories
-        $tab['Directories'] = array('classes/', 'config/', 'download/', 'mails/', 'modules/', 'translations/', 'tools/');
-
-        // Files
-        $disallow_controllers = array(
-            'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
-            'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order', 'order-opc',
-            'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
-            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics','attachment', 'guest-tracking'
-        );
-
-        // Rewrite files
-        $tab['Files'] = array();
-        if (Configuration::get('PS_REWRITING_SETTINGS')) {
-            $sql = 'SELECT ml.url_rewrite, l.iso_code
-					FROM '._DB_PREFIX_.'meta m
-					INNER JOIN '._DB_PREFIX_.'meta_lang ml ON ml.id_meta = m.id_meta
-					INNER JOIN '._DB_PREFIX_.'lang l ON l.id_lang = ml.id_lang
-					WHERE l.active = 1 AND m.page IN (\''.implode('\', \'', $disallow_controllers).'\')';
-            if ($results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
-                foreach ($results as $row) {
-                    $tab['Files'][$row['iso_code']][] = $row['url_rewrite'];
-                }
-            }
-        }
-
-        $tab['GB'] = array(
-            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
-            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
-        );
-
-        foreach ($disallow_controllers as $controller) {
-            $tab['GB'][] = 'controller='.$controller;
-        }
-
-        return $tab;
+        return Tools::getRobotsContent();
     }
 }
