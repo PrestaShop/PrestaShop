@@ -550,22 +550,43 @@ class CustomerCore extends ObjectModel
      */
     public function getStats()
     {
-        $result = Db::getInstance()->getRow('
-		SELECT COUNT(`id_order`) AS nb_orders, SUM(`total_paid` / o.`conversion_rate`) AS total_orders
-		FROM `'._DB_PREFIX_.'orders` o
-		WHERE o.`id_customer` = '.(int)$this->id.'
-		AND o.valid = 1');
+        $result = array('nb_orders' => 0, 'total_orders' => 0);
+        $resultOrders = Db::getInstance()->executeS('
+        SELECT o.id_order,  MAX(o.total_paid) AS total_paid, SUM(coalesce(s.total_products_tax_incl,0)) AS total_product_tax_incl ,SUM(coalesce(s.total_shipping_tax_incl,0)) AS total_shipping_tax_incl , MAX(o.`conversion_rate`) AS conversion_rate
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        LEFT JOIN `' . _DB_PREFIX_ . 'order_slip` s ON o.id_order = s.id_order
+        WHERE o.`id_customer` = ' . (int)$this->id . '
+        AND o.valid = 1
+        GROUP BY o.id_order
+          ');
+        $resultOrderSlip = Db::getInstance()->executeS('
+        SELECT o.`id_order`, MAX(o.total_paid) AS total_paid, SUM(s.total_products_tax_incl) AS total_product_tax_incl ,SUM(s.total_shipping_tax_incl) AS total_shipping_tax_incl , MAX(o.`conversion_rate`) AS conversion_rate
+        FROM `' . _DB_PREFIX_ . 'orders` o
+        INNER JOIN `' . _DB_PREFIX_ . 'order_slip` s ON o.id_order = s.id_order
+        WHERE o.`id_customer` = ' . (int)$this->id . '
+        AND o.valid = 0
+          GROUP BY o.id_order
+        ');
 
         $result2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT MAX(c.`date_add`) AS last_visit
-		FROM `'._DB_PREFIX_.'guest` g
-		LEFT JOIN `'._DB_PREFIX_.'connections` c ON c.id_guest = g.id_guest
-		WHERE g.`id_customer` = '.(int)$this->id);
+		FROM `' . _DB_PREFIX_ . 'guest` g
+		LEFT JOIN `' . _DB_PREFIX_ . 'connections` c ON c.id_guest = g.id_guest
+		WHERE g.`id_customer` = ' . (int)$this->id);
 
         $result3 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT (YEAR(CURRENT_DATE)-YEAR(c.`birthday`)) - (RIGHT(CURRENT_DATE, 5)<RIGHT(c.`birthday`, 5)) AS age
-		FROM `'._DB_PREFIX_.'customer` c
-		WHERE c.`id_customer` = '.(int)$this->id);
+		FROM `' . _DB_PREFIX_ . 'customer` c
+		WHERE c.`id_customer` = ' . (int)$this->id);
+
+        foreach ($resultOrders as $row) {
+            $result['total_orders'] += ($row['total_paid'] - $row['total_product_tax_incl'] - $row['total_shipping_tax_incl']) / $row['conversion_rate'];
+            $result['nb_orders'] ++;
+        }
+        foreach ($resultOrderSlip as $row) {
+            $result['total_orders'] += ($row['total_paid'] - $row['total_product_tax_incl'] - $row['total_shipping_tax_incl']) / $row['conversion_rate'];
+            $result['nb_orders'] ++;
+        }
 
         $result['last_visit'] = $result2['last_visit'];
         $result['age'] = ($result3['age'] != date('Y') ? $result3['age'] : '--');
