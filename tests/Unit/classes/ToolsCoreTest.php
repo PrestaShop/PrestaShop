@@ -208,7 +208,8 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
     {
         $oldValue = Configuration::get('PS_REWRITING_SETTINGS');
         Configuration::set('PS_REWRITING_SETTINGS', 1);
-        $idMeta = \Db::getInstance()->getValue('SELECT id_meta FROM '._DB_PREFIX_.'meta WHERE page=\'address\'');
+        $idMeta = \Db::getInstance()->getValue('SELECT id_meta FROM ' .
+            _DB_PREFIX_ . 'meta WHERE page=\'address\'');
         $robots = Tools::getRobotsContent();
         $fileSection = $robots['Files'];
         $firstLang = current($fileSection);
@@ -216,14 +217,16 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 
         $this->assertNotContains('', $firstLang);
 
-        $url_rewrite = \Db::getInstance()->getValue('SELECT url_rewrite FROM '._DB_PREFIX_.'meta_lang WHERE id_meta='.$idMeta);
-        \Db::getInstance()->update('meta_lang', array('url_rewrite' => ''),  'id_meta='.$idMeta);
+        $url_rewrite = \Db::getInstance()->getValue('SELECT url_rewrite FROM ' .
+            _DB_PREFIX_ . 'meta_lang WHERE id_meta=' . $idMeta);
+        \Db::getInstance()->update('meta_lang', array('url_rewrite' => ''),'id_meta=' . $idMeta);
 
         $robots = Tools::getRobotsContent();
         $fileSection = $robots['Files'];
         $firstLang = current($fileSection);
 
-        \Db::getInstance()->update('meta_lang', array('url_rewrite' => $url_rewrite),  'id_meta='.$idMeta);
+        \Db::getInstance()->update('meta_lang', array('url_rewrite' => $url_rewrite),
+            'id_meta=' . $idMeta);
         $this->assertNotContains('', $firstLang);
         $this->assertEquals(($count - 1), count($firstLang));
         Configuration::set('PS_REWRITING_SETTINGS', $oldValue);
