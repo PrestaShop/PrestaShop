@@ -150,33 +150,24 @@ class StockManager implements StockInterface
             WHERE sa.id_shop = :shop_id
         ';
 
-        $arrayFrom = array(
-            '{table_prefix}',
-            ':shop_id',
-            ':error_state',
-            ':cancellation_state',
-        );
-
-        $arrayTo = array(
-            _DB_PREFIX_,
-            (int)$shopId,
-            (int)$errorState,
-            (int)$cancellationState,
+        $strParams = array(
+            '{table_prefix}' => _DB_PREFIX_,
+            ':shop_id' => (int)$shopId,
+            ':error_state' => (int)$errorState,
+            ':cancellation_state' => (int)$cancellationState,
         );
 
         if ($idProduct) {
             $updateReservedQuantityQuery .= ' AND sa.id_product = :product_id';
-            $arrayFrom[] = ':product_id';
-            $arrayTo[] = (int)$idProduct;
+            $strParams[':product_id'] = (int)$idProduct;
         }
 
         if ($idOrder) {
             $updateReservedQuantityQuery .= ' AND sa.id_product IN (SELECT product_id FROM {table_prefix}order_detail WHERE id_order = :order_id)';
-            $arrayFrom[] = ':order_id';
-            $arrayTo[] = (int)$idOrder;
+            $strParams[':order_id'] = (int)$idOrder;
         }
 
-        $updateReservedQuantityQuery = str_replace($arrayFrom, $arrayTo, $updateReservedQuantityQuery);
+        $updateReservedQuantityQuery = strtr($updateReservedQuantityQuery, $strParams);
 
         return Db::getInstance()->execute($updateReservedQuantityQuery);
     }
