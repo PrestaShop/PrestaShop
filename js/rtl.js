@@ -9,7 +9,7 @@
 $(document).ready(function () {
     $('[style]').each(function (index) {
         var styles_old = $(this).attr('style');
-        styles_old = styles_old.split(';');
+        styles_old = styles_old.split(';').filter(item => item);
         var styles = {};
         var s = '';
         var i = '';
