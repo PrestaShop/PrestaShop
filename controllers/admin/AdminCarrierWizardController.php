@@ -56,9 +56,9 @@ class AdminCarrierWizardControllerCore extends AdminController
         $this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminCarriers'));
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('smartWizard');
         $this->addJqueryPlugin('typewatch');
         $this->addJs(_PS_JS_DIR_.'admin/carrier_wizard.js');

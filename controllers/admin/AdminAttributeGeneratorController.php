@@ -46,9 +46,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJS(_PS_JS_DIR_.'admin/attributes.js');
     }
 
