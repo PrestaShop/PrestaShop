@@ -52,12 +52,12 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->php_self = $controllerName;
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         parent::setMedia(true);
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
