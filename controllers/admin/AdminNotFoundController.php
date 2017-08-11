@@ -37,7 +37,7 @@ class AdminNotFoundControllerCore extends AdminController
         return true;
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
