@@ -202,9 +202,9 @@ class AdminCategoriesControllerCore extends AdminController
         parent::initContent();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryUi('ui.widget');
         $this->addJqueryPlugin('tagify');
     }

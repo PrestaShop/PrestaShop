@@ -130,12 +130,12 @@ class AdminCountriesControllerCore extends AdminController
     }
 
     /**
-     * AdminController::setMedia() override
-     * @see AdminController::setMedia()
+     * AdminController::setMedia($isNewTheme = false) override
+     * @see AdminController::setMedia($isNewTheme = false)
      */
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJqueryPlugin('fieldselection');
     }
