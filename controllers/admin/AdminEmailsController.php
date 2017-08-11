@@ -226,9 +226,9 @@ class AdminEmailsControllerCore extends AdminController
         ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
 
         $this->addJs(_PS_JS_DIR_.'/admin/email.js');
 

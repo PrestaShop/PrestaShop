@@ -44,7 +44,7 @@ class AdminLoginControllerCore extends AdminController
         }
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
         $this->addJquery();
         $this->addjqueryPlugin('validate');
@@ -142,7 +142,7 @@ class AdminLoginControllerCore extends AdminController
             }
         }
 
-        $this->setMedia();
+        $this->setMedia($isNewTheme = false);
         $this->initHeader();
         parent::initContent();
         $this->initFooter();
@@ -161,7 +161,7 @@ class AdminLoginControllerCore extends AdminController
      *
      * @return bool
      */
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }

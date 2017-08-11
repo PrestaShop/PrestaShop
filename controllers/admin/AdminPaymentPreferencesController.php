@@ -211,9 +211,9 @@ class AdminPaymentPreferencesControllerCore extends AdminController
         return parent::initContent();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin('fancybox');
     }
 

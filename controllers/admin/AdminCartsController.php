@@ -428,7 +428,7 @@ class AdminCartsControllerCore extends AdminController
                     }
                 }
             }
-            $this->setMedia();
+            $this->setMedia($isNewTheme = false);
             $this->initFooter();
             $this->context->smarty->assign(array('customization_errors' => implode('<br />', $errors),
                                                             'css_files' => $this->css_files));

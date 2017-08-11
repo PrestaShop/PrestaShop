@@ -122,9 +122,9 @@ class AdminCartRulesControllerCore extends AdminController
         echo json_encode(array('html' => $html, 'next_link' => $next_link));
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin(array('typewatch', 'fancybox', 'autocomplete'));
     }
 
