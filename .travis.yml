@@ -20,6 +20,7 @@ dist: trusty
 php:
   - 5.6
   - 7.0
+  - 7.2
 
 env:
     global:
@@ -30,6 +31,8 @@ matrix:
     - php: 7.1
       # temporarily disabled
       # env: EXTRA_TESTS=functional
+  allow_failures:
+    - php: 7.2
 
 before_install:
   # Apache & php-fpm configuration
