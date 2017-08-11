@@ -563,19 +563,14 @@ class AdminControllerCore extends Controller
      * Set breadcrumbs array for the controller page
      *
      * @param int|null $tab_id
-     * @param array|null $tabs
      */
-    public function initBreadcrumbs($tab_id = null, $tabs = null)
+    public function initBreadcrumbs($tab_id = null)
     {
-        if (is_array($tabs) || count($tabs)) {
-            $tabs = array();
-        }
-
         if (is_null($tab_id)) {
             $tab_id = $this->id;
         }
 
-        $tabs = Tab::recursiveTab($tab_id, $tabs);
+        $tabs = Tab::recursiveTab($tab_id, array());
 
         $dummy = array('name' => '', 'href' => '', 'icon' => '');
         $breadcrumbs2 = array(
@@ -3515,7 +3510,7 @@ class AdminControllerCore extends Controller
      */
     public function getModulesList($filter_modules_list, $tracking_source = false)
     {
-        if (!is_array($filter_modules_list) && !is_null($filter_modules_list)) {
+        if (!is_array($filter_modules_list)) {
             $filter_modules_list = array($filter_modules_list);
         }
 
