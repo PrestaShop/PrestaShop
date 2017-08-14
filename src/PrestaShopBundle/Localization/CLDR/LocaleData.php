@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization;
+namespace PrestaShopBundle\Localization\CLDR;
 
-class CLDRLocaleData
+class LocaleData
 {
     /**
      * The locale code for this data (either language code or EITF tag)
@@ -88,11 +88,11 @@ class CLDRLocaleData
     /**
      * Override properties with data from another CLDRLocaleData object
      *
-     * @param CLDRLocaleData $newData
+     * @param LocaleData $newData
      *
      * @return $this
      */
-    public function merge(CLDRLocaleData $newData)
+    public function merge(LocaleData $newData)
     {
         $simpleProps         = array(
             'localeCode',

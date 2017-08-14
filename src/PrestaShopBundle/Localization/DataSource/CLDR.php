@@ -28,8 +28,8 @@ namespace PrestaShopBundle\Localization\DataSource;
 
 use Exception;
 use InvalidArgumentException;
-use PrestaShopBundle\Localization\CLDRDataReader;
-use PrestaShopBundle\Localization\CLDRDataReaderInterface;
+use PrestaShopBundle\Localization\CLDR\DataReader;
+use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 
 class CLDR implements DataSourceInterface
 {
@@ -46,16 +46,16 @@ class CLDR implements DataSourceInterface
     /**
      * The CLDR data reader (reads the CLDR data xml files)
      *
-     * @var CLDRDataReaderInterface
+     * @var DataReaderInterface
      */
     protected $reader;
 
     /**
      * CLDR constructor.
      *
-     * @param CLDRDataReader $reader
+     * @param DataReader $reader
      */
-    public function __construct(CLDRDataReader $reader)
+    public function __construct(DataReader $reader)
     {
         $this->setReader($reader);
     }
@@ -87,7 +87,7 @@ class CLDR implements DataSourceInterface
     /**
      * Get the data reader
      *
-     * @return CLDRDataReaderInterface
+     * @return DataReaderInterface
      * @throws Exception
      */
     public function getReader()
@@ -102,11 +102,11 @@ class CLDR implements DataSourceInterface
     /**
      * Set the data reader
      *
-     * @param CLDRDataReaderInterface $reader
+     * @param DataReaderInterface $reader
      *
      * @return $this
      */
-    public function setReader(CLDRDataReaderInterface $reader)
+    public function setReader(DataReaderInterface $reader)
     {
         $this->reader = $reader;
 
