@@ -92,7 +92,7 @@ function add_new_status_stock()
     $shops = Shop::getShops();
     foreach ($shops as $shop) {
         (new \PrestaShop\PrestaShop\Adapter\StockManager())->updatePhysicalProductQuantity(
-            $shop['id_shop'],
+            (int)$shop['id_shop'],
             (int)Configuration::get('PS_OS_ERROR'),
             (int)Configuration::get('PS_OS_CANCELED')
         );
