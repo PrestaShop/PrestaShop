@@ -316,6 +316,16 @@ class AdminModulesPositionsControllerCore extends AdminController
             'id_shop' => (int)$this->context->shop->id
         );
 
+        $url_live_edit = $this->getLiveEditUrl($live_edit_params);
+
+        if ($id_hook = Hook::getIdByName('liveEditLink')) {
+            $urls = Hook::exec('liveEditLink', array(), null, true);
+            $links = reset($urls);
+            if (!empty($links)) {
+                $url_live_edit = end($links);
+            }
+        }
+
         $this->context->smarty->assign(array(
             'show_toolbar' => true,
             'toolbar_btn' => $this->toolbar_btn,
@@ -324,7 +334,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'token' => $this->token,
             'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
             'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-            'url_live_edit' => $this->getLiveEditUrl($live_edit_params),
+            'url_live_edit' => $url_live_edit,
             'modules' => $module_instances,
             'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
             'display_key' => $this->display_key,
