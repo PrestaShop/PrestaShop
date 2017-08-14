@@ -191,6 +191,18 @@ $(document).ready(function () {
         });
 
         $('#' + id_hook + '').disableSelection();
+
+
+        //patch for displayed "flexbox" boxes
+        var $dndhook = $(this);
+        var $dndmodules = $(this).find(".dndModule");
+        var $parent = $dndhook.parent();
+
+        if ($dndmodules.length > 1 && $parent.css("display") === "flex") {
+            $dndhook.addClass($parent.attr('class'));
+            $parent.attr('class', '');
+        }
+
     });
 });
 // init hookable_list 

@@ -1,6 +1,15 @@
 .dndModule {
     border: 1px dotted red;
     position: relative;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.dndModule > * {
+    padding: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    max-width: inherit;
 }
 
 .dndModule .toolbar {
@@ -57,15 +66,11 @@
     max-height: inherit;
 }
 
-.dndModule > * {
-    width: 100%;
-}
-
 .toolbar-title {
     text-overflow: ellipsis;
     display: inline-block;
     overflow: hidden;
-    max-width: 100px;
+    /*max-width: 100px;*/
     white-space: nowrap;
     line-height: 35px;
 }

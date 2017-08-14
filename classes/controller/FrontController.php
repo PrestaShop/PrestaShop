@@ -947,7 +947,7 @@ class FrontControllerCore extends Controller
             $this->addJqueryUi('ui.sortable');
             $this->addJqueryPlugin('fancybox');
             $this->registerJavascript('hookLiveEdit', '/js/hookLiveEdit.js', ['position' => 'bottom', 'priority' => 0]);
-            $this->registerStylesheet('theme-rtl', '/assets/css/hookLiveEdit.css', ['media' => 'all', 'priority' => 1100]);
+            $this->registerStylesheet('theme-rtl', '/themes/hookLiveEdit.css', ['media' => 'all', 'priority' => 1100]);
         }
 
         // Execute Hook FrontController SetMedia
