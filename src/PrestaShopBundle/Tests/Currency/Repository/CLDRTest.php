@@ -28,7 +28,8 @@ namespace PrestaShopBundle\Tests\Currency\Repository;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Currency\Repository\CLDR as CLDRCurrencyRepository;
+use PrestaShopBundle\Currency\DataSource\CLDR as CLDRCurrencyRepository;
+use PrestaShopBundle\Localization\CLDRDataReader;
 
 class CLDRTest extends TestCase
 {
@@ -41,12 +42,12 @@ class CLDRTest extends TestCase
 
     public function setUp()
     {
-        $this->repo = new CLDRCurrencyRepository('fr-FR');
+        $this->repo = new CLDRCurrencyRepository('fr-FR', new CLDRDataReader());
     }
 
     public function testGetById()
     {
-        $this->assertNull($this->repo->getById(1));
+        $this->assertNull($this->repo->getCurrencyById(1));
     }
 
     /**
@@ -54,7 +55,7 @@ class CLDRTest extends TestCase
      */
     public function testGetByIdWithWrongParameter()
     {
-        $this->repo->getById('foobar');
+        $this->repo->getCurrencyById('foobar');
     }
 
     /**
@@ -66,9 +67,11 @@ class CLDRTest extends TestCase
     public function testGetByIsoCode($localeCode, $currencyCode, $expectedData)
     {
         $this->repo->setLocaleCode($localeCode);
-        $currencyData = $this->repo->getByIsoCode($currencyCode);
+        $currencyData = $this->repo->getCurrencyByIsoCode($currencyCode);
 
         foreach ($expectedData as $property => $value) {
+            // TODO : should be Currency instances, not plain array data
+            // TODO object comparison
             $this->assertSame($value, $currencyData[$property]);
         }
     }

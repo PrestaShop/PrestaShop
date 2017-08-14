@@ -24,32 +24,25 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Currency\Repository;
+namespace PrestaShopBundle\Localization\DataSource;
 
 interface DataSourceInterface
 {
     /**
-     * DataSourceInterface constructor.
-     *
-     * @param string $localeCode Language of retrieved data
-     */
-    public function __construct($localeCode);
-
-    /**
-     * Get currency data by ISO 4217 code
-     *
-     * @param string $isoCode
-     *
-     * @return array The currency data
-     */
-    public function getByIsoCode($isoCode);
-
-    /**
-     * Get currency data by internal database identifier
+     * Get locale data by internal database identifier
      *
      * @param int $id
      *
-     * @return array The currency data
+     * @return array The locale data
      */
-    public function getById($id);
+    public function getLocaleById($id);
+
+    /**
+     * Get locale data by code (either language code or IETF locale tag)
+     *
+     * @param string $code
+     *
+     * @return array The locale data
+     */
+    public function getLocaleByCode($code);
 }
