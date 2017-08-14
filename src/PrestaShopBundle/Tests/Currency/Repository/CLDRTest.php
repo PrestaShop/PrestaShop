@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Tests\Currency\Repository;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Currency\DataSource\CLDR as CLDRCurrencyRepository;
-use PrestaShopBundle\Localization\CLDRDataReader;
+use PrestaShopBundle\Localization\CLDR\DataReader;
 
 class CLDRTest extends TestCase
 {
@@ -42,7 +42,7 @@ class CLDRTest extends TestCase
 
     public function setUp()
     {
-        $this->repo = new CLDRCurrencyRepository('fr-FR', new CLDRDataReader());
+        $this->repo = new CLDRCurrencyRepository('fr-FR', new DataReader());
     }
 
     public function testGetById()

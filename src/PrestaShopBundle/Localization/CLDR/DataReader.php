@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization;
+namespace PrestaShopBundle\Localization\CLDR;
 
 use InvalidArgumentException;
 use SimplexmlElement;
 
-class CLDRDataReader implements CLDRDataReaderInterface
+class DataReader implements DataReaderInterface
 {
     const CLDR_ROOT = 'localization/CLDR/';
     const CLDR_MAIN = 'localization/CLDR/core/common/main/';
@@ -39,7 +39,7 @@ class CLDRDataReader implements CLDRDataReaderInterface
      *
      * @param string $localeCode The wanted locale code
      *
-     * @return CLDRLocaleData The locale data object
+     * @return LocaleData The locale data object
      */
     public function getLocaleByCode($localeCode)
     {
@@ -172,7 +172,7 @@ class CLDRDataReader implements CLDRDataReaderInterface
      *
      * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an EITF tag (e.g.: en-US)
      *
-     * @return CLDRLocaleData
+     * @return LocaleData
      */
     protected function readLocaleData($localeTag)
     {
@@ -186,7 +186,7 @@ class CLDRDataReader implements CLDRDataReaderInterface
      *
      * @param SimplexmlElement $xmlLocaleData XML locale data
      *
-     * @return CLDRLocaleData The mapped data
+     * @return LocaleData The mapped data
      */
     protected function mapLocaleData(SimplexmlElement $xmlLocaleData)
     {
@@ -194,7 +194,7 @@ class CLDRDataReader implements CLDRDataReaderInterface
             'numbers' => array(),
             'dates'   => array(), // Soon
         );
-        $localeData  = new CLDRLocaleData();
+        $localeData  = new LocaleData();
 
         if (isset($xmlLocaleData->identity->language)) {
             $localeData->localeCode = (string)$xmlLocaleData->identity->language['type'];
@@ -233,7 +233,7 @@ class CLDRDataReader implements CLDRDataReaderInterface
         // Symbols (by numbering system)
         if (isset($numbersData->symbols)) {
             foreach ($numbersData->symbols as $symbol) {
-                $symbolsList = new CLDRNumberSymbolList();
+                $symbolsList = new NumberSymbolList();
                 if (isset($symbol->decimal)) {
                     $symbolsList->decimal = (string)$symbol->decimal;
                 }
