@@ -24,17 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Currency\Repository;
+namespace PrestaShopBundle\Currency\DataSource;
 
-use InvalidArgumentException;
-
-class Database implements DataSourceInterface
+interface DataSourceInterface
 {
-    protected $stubData = array(
-        'EUR' => 978,
-        'USD' => 840,
-        'GBP' => 826,
-    );
+    /**
+     * Get currency data by ISO 4217 code
+     *
+     * @param string $isoCode
+     *
+     * @return array The currency data
+     */
+    public function getCurrencyByIsoCode($isoCode);
 
     /**
      * Get currency data by internal database identifier
@@ -43,40 +44,5 @@ class Database implements DataSourceInterface
      *
      * @return array The currency data
      */
-    public function getById($id)
-    {
-        if (!is_int($id)) {
-            throw new InvalidArgumentException('$id must be an integer');
-        }
-
-        $id = (int)$id;
-
-        if (empty($this->stubData[$id])) {
-            return [];
-        }
-
-        return [
-            'id'             => $id,
-            'numericIsoCode' => $this->stubData[$id],
-        ];
-    }
-
-    /**
-     * Get currency data by ISO 4217 code
-     *
-     * @param string $isoCode
-     *
-     * @return array The currency data
-     */
-    public function getByIsoCode($isoCode)
-    {
-        if (empty($this->stubData[$isoCode])) {
-            return [];
-        }
-
-        return [
-            'isoCode'        => $isoCode,
-            'numericIsoCode' => $this->stubData[$isoCode],
-        ];
-    }
+    public function getCurrencyById($id);
 }

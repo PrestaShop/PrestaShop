@@ -26,9 +26,10 @@
 
 namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Currency\Repository\Cache;
-use PrestaShopBundle\Currency\Repository\CLDR;
-use PrestaShopBundle\Currency\Repository\Database;
+use PrestaShopBundle\Currency\DataSource\Cache;
+use PrestaShopBundle\Currency\DataSource\CLDR;
+use PrestaShopBundle\Currency\DataSource\Database;
+use PrestaShopBundle\Localization\CLDRDataReader;
 
 class ManagerFactory
 {
@@ -44,9 +45,9 @@ class ManagerFactory
      */
     public function build($localeCode)
     {
-        $cache    = new Cache($localeCode);
-        $database = new Database($localeCode);
-        $cldr     = new CLDR($localeCode);
+        $cache    = new Cache($localeCode, new CLDRDataReader());
+        $database = new Database($localeCode, new CLDRDataReader());
+        $cldr     = new CLDR($localeCode, new CLDRDataReader());
 
         $installedCurrencyRepository = new Repository([$cache, $database]);
         $referenceRepository         = new Repository([$cldr]);
