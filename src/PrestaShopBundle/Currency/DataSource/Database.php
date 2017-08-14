@@ -26,9 +26,7 @@
 
 namespace PrestaShopBundle\Currency\DataSource;
 
-use Exception;
 use InvalidArgumentException;
-use PrestaShopBundle\Localization\CLDRDataReaderInterface;
 
 class Database implements DataSourceInterface
 {
@@ -46,38 +44,13 @@ class Database implements DataSourceInterface
     protected $localeCode;
 
     /**
-     * The CLDR data reader (reads the CLDR data xml files)
-     *
-     * @var CLDRDataReaderInterface
-     */
-    protected $reader;
-
-    /**
      * Database constructor.
      *
-     * @param                         $localeCode
-     * @param CLDRDataReaderInterface $reader
+     * @param $localeCode
      */
-    public function __construct($localeCode, CLDRDataReaderInterface $reader)
+    public function __construct($localeCode)
     {
         $this->localeCode = (string)$localeCode;
-        $this->setReader($reader);
-    }
-
-    public function getReader()
-    {
-        if (!isset($this->reader)) {
-            throw new Exception("Data reader has not been set");
-        }
-
-        return $this->reader;
-    }
-
-    public function setReader($reader)
-    {
-        $this->reader = $reader;
-
-        return $this;
     }
 
     public function getLocaleCode()

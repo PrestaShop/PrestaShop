@@ -30,6 +30,14 @@ use PrestaShopBundle\Currency\Manager as CurrencyManager;
 
 class Manager
 {
+    /**
+     * The currency manager is useful to build complete prices strings (locale object gives number + currency pattern,
+     * and currency object gives localized symbol)
+     *
+     * @var CurrencyManager
+     */
+    protected $currencyManager;
+
     public function __construct(CurrencyManager $currencyManager)
     {
         $this->currencyManager = $currencyManager;
@@ -46,5 +54,19 @@ class Manager
     public function getCurrency($id)
     {
         return $this->getCurrencyManager()->getCurrency((int)$id);
+    }
+
+    /**
+     * Get a locale instance
+     *
+     * @param string $localeCode
+     *
+     * @return Locale
+     */
+    public function getLocale($localeCode)
+    {
+        // TODO return locale instance
+
+        return new Locale($localeCode);
     }
 }

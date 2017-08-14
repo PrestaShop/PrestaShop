@@ -27,19 +27,30 @@
 namespace PrestaShopBundle\Tests\Localization;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\Locale;
-use PrestaShopBundle\Localization\LocaleFactory;
+use PrestaShopBundle\Currency\DataSource\Cache as CurrencyCacheDataSource;
+use PrestaShopBundle\Currency\DataSource\CLDR as CurrencyCLDRDataSource;
+use PrestaShopBundle\Currency\Manager as CurrencyManager;
+use PrestaShopBundle\Currency\Repository as CurrencyRepository;
+use PrestaShopBundle\Localization\CLDR\DataReader;
+use PrestaShopBundle\Localization\Manager as LocaleManager;
 
 class LocaleTest extends TestCase
 {
     /**
-     * @var LocaleFactory
+     * @var LocaleManager
      */
-    protected $factory;
+    protected $localeManager;
 
     public function setUp()
     {
-        $this->factory = new LocaleFactory();
+        $currencyCacheData = new CurrencyCacheDataSource('fr-FR');
+        $currencyCache = new CurrencyRepository([$currencyCacheData]);
+
+        $currencyCLDRData = new CurrencyCLDRDataSource('fr-FR', new DataReader());
+        $currencyCLDR = new CurrencyRepository([$currencyCLDRData]);
+
+        $currencyManager = new CurrencyManager($currencyCache, $currencyCLDR);
+        $this->localeManager = new LocaleManager($currencyManager);
     }
 
     /**
@@ -54,7 +65,7 @@ class LocaleTest extends TestCase
 
         foreach ($expectedFormats as $localeCode => $format) {
             if (!isset($cachedLocales[$localeCode])) {
-                $cachedLocales[$localeCode] = $this->factory->getInstance($localeCode);
+                $cachedLocales[$localeCode] = $this->localeManager->getLocale($localeCode);
             }
             $locale = $cachedLocales[$localeCode];
             $this->assertSame($format, $locale->formatNumber($floatNumber));

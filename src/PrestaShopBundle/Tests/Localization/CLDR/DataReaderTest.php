@@ -27,18 +27,18 @@
 namespace PrestaShopBundle\Tests\Localization;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\CLDRDataReader;
+use PrestaShopBundle\Localization\CLDR\DataReader;
 
-class CLDRDataReaderTest extends TestCase
+class DataReaderTest extends TestCase
 {
     /**
-     * @var CLDRDataReader
+     * @var DataReader
      */
     protected $reader;
 
     public function setUp()
     {
-        $this->reader = new CLDRDataReader();
+        $this->reader = new DataReader();
     }
 
     /**
@@ -57,7 +57,7 @@ class CLDRDataReaderTest extends TestCase
 
         foreach ($expectedData as $property => $value) {
             if ($property === 'numberSymbols') {
-                // Assertions on number symbols lists (array of CLDRNumberSymbolList objects)
+                // Assertions on number symbols lists (array of NumberSymbolList objects)
                 $expectedSymbolsSets = $value;
                 foreach ($expectedSymbolsSets as $expectedNumberingSystem => $expectedSymbolsSet) {
                     foreach ($expectedSymbolsSet as $symbolName => $symbolValue) {

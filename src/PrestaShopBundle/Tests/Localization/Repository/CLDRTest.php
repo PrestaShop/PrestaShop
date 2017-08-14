@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Tests\Localization\Repository;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\CLDRDataReader;
+use PrestaShopBundle\Localization\CLDR\DataReader;
 use PrestaShopBundle\Localization\DataSource\CLDR as CLDRLocaleRepository;
 
 class CLDRTest extends TestCase
@@ -42,7 +42,7 @@ class CLDRTest extends TestCase
 
     public function setUp()
     {
-        $this->repo = new CLDRLocaleRepository(new CLDRDataReader());
+        $this->repo = new CLDRLocaleRepository(new DataReader());
     }
 
     public function testGetById()

@@ -24,37 +24,26 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Tests\Localization;
+namespace PrestaShopBundle\Localization\CLDR;
 
-use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\LocaleFactory;
-
-class LocaleFactoryTest extends TestCase
+interface DataReaderInterface
 {
     /**
-     * Locale factory
+     * Get locale data by code (either language code or EITF locale tag)
      *
-     * @var LocaleFactory
+     * @param string $localeCode The wanted locale code
+     *
+     * @return array The locale data
      */
-    protected $factory;
-
-    public function setUp()
-    {
-        $this->factory = new LocaleFactory();
-    }
-
-    public function testGetInstance()
-    {
-        $instance = $this->factory->getInstance('en_US');
-        $this->assertInstanceOf('PrestaShopBundle\Localization\Locale', $instance);
-    }
+    public function getLocaleByCode($localeCode);
 
     /**
-     * @expectedException InvalidArgumentException
+     * Get currency data by ISO 4217 code
+     *
+     * @param string $isoCode    The currency code
+     * @param string $localeCode The output locale code (in which language do you want the currency data ?)
+     *
+     * @return array The currency data
      */
-    public function testGetInstanceWithWrongLocaleCode()
-    {
-        $this->factory->getInstance('foobar');
-    }
+    public function getCurrencyByIsoCode($isoCode, $localeCode);
 }

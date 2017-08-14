@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization;
+namespace PrestaShopBundle\Localization\CLDR;
 
-class CLDRNumberSymbolList
+class NumberSymbolList
 {
     /**
      * Decimal separator character
@@ -155,7 +155,7 @@ class CLDRNumberSymbolList
      */
     public $timeSeparator;
 
-    public function merge(CLDRNumberSymbolList $newList)
+    public function merge(NumberSymbolList $newList)
     {
         if (isset($newList->decimal)) {
             $this->decimal = $newList->decimal;
