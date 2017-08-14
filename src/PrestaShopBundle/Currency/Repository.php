@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Currency;
 
 use Exception;
 use InvalidArgumentException;
-use PrestaShopBundle\Currency\Repository\DataSourceInterface;
+use PrestaShopBundle\Currency\DataSource\DataSourceInterface;
 
 class Repository
 {
@@ -94,7 +94,7 @@ class Repository
 
         foreach ($this->getDataSources() as $index => $dataSource) {
             /** @var DataSourceInterface $dataSource */
-            $currencyData = $dataSource->getById((int)$id);
+            $currencyData = $dataSource->getCurrencyById((int)$id);
 
             if (!empty($currencyData)) {
                 $builder  = new Builder();
@@ -122,7 +122,7 @@ class Repository
 
         foreach ($this->getDataSources() as $index => $dataSource) {
             /** @var DataSourceInterface $dataSource */
-            $currencyData = $dataSource->getByIsoCode($currencyCode);
+            $currencyData = $dataSource->getCurrencyByIsoCode($currencyCode);
 
             if (!empty($currencyData)) {
                 $builder  = new Builder();

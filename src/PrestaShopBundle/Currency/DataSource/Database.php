@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Currency\Repository;
+namespace PrestaShopBundle\Currency\DataSource;
 
+use Exception;
 use InvalidArgumentException;
+use PrestaShopBundle\Localization\CLDRDataReaderInterface;
 
-class Cache implements DataSourceInterface
+class Database implements DataSourceInterface
 {
     protected $stubData = array(
         'EUR' => 978,
@@ -37,13 +39,67 @@ class Cache implements DataSourceInterface
     );
 
     /**
+     * The contextual locale code.. Data will be returned in this language.
+     *
+     * @var string
+     */
+    protected $localeCode;
+
+    /**
+     * The CLDR data reader (reads the CLDR data xml files)
+     *
+     * @var CLDRDataReaderInterface
+     */
+    protected $reader;
+
+    /**
+     * Database constructor.
+     *
+     * @param                         $localeCode
+     * @param CLDRDataReaderInterface $reader
+     */
+    public function __construct($localeCode, CLDRDataReaderInterface $reader)
+    {
+        $this->localeCode = (string)$localeCode;
+        $this->setReader($reader);
+    }
+
+    public function getReader()
+    {
+        if (!isset($this->reader)) {
+            throw new Exception("Data reader has not been set");
+        }
+
+        return $this->reader;
+    }
+
+    public function setReader($reader)
+    {
+        $this->reader = $reader;
+
+        return $this;
+    }
+
+    public function getLocaleCode()
+    {
+        return $this->localeCode;
+    }
+
+    public function setLocaleCode($localeCode)
+    {
+        $this->localeCode = (string)$localeCode;
+
+        return $this;
+    }
+
+    /**
      * Get currency data by internal database identifier
      *
      * @param int $id
      *
      * @return array The currency data
      */
-    public function getById($id)
+    public function getCurrencyById($id)
     {
         if (!is_int($id)) {
             throw new InvalidArgumentException('$id must be an integer');
@@ -68,7 +124,7 @@ class Cache implements DataSourceInterface
      *
      * @return array The currency data
      */
-    public function getByIsoCode($isoCode)
+    public function getCurrencyByIsoCode($isoCode)
     {
         if (empty($this->stubData[$isoCode])) {
             return [];
