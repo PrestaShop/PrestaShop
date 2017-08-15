@@ -678,9 +678,11 @@ abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterfa
 
                 if ($shop_exists) {
                     if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-                        foreach ($fields as $key => $val) {
-                            if (!array_key_exists($key, $this->update_fields)) {
-                                unset($fields[$key]);
+                        if (is_array($this->update_fields)) {
+                            foreach ($fields as $key => $val) {
+                                if (!array_key_exists($key, $this->update_fields)) {
+                                    unset($fields[$key]);
+                                }
                             }
                         }
                     }
