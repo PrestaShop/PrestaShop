@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Localization;
 
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
+use PrestaShopBundle\Localization\Formatter\NumberFactory;
 
 class Manager
 {
@@ -65,8 +66,6 @@ class Manager
      */
     public function getLocale($localeCode)
     {
-        // TODO return locale instance
-
-        return new Locale($localeCode);
+        return new Locale($localeCode, new NumberFactory(), $this);
     }
 }
