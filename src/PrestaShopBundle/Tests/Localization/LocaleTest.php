@@ -32,6 +32,7 @@ use PrestaShopBundle\Currency\DataSource\CLDR as CurrencyCLDRDataSource;
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
 use PrestaShopBundle\Currency\Repository as CurrencyRepository;
 use PrestaShopBundle\Localization\CLDR\DataReader;
+use PrestaShopBundle\Localization\Locale;
 use PrestaShopBundle\Localization\Manager as LocaleManager;
 
 class LocaleTest extends TestCase
@@ -67,6 +68,7 @@ class LocaleTest extends TestCase
             if (!isset($cachedLocales[$localeCode])) {
                 $cachedLocales[$localeCode] = $this->localeManager->getLocale($localeCode);
             }
+            /** @var Locale $locale */
             $locale = $cachedLocales[$localeCode];
             $this->assertSame($format, $locale->formatNumber($floatNumber));
         }

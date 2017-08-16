@@ -28,26 +28,22 @@ namespace PrestaShopBundle\Localization;
 
 use InvalidArgumentException;
 use PrestaShopBundle\Localization\Manager as LocaleManager;
-use PrestaShopBundle\Localization\Formatter\Currency as CurrencyFormatter;
-use PrestaShopBundle\Localization\Formatter\CurrencyFactory as CurrencyFormatterFactory;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 
 class Locale
 {
-    protected $currencyFormatterFactory;
     protected $localeCode;
     protected $manager;
+    protected $numberFormatter;
     protected $numberFormatterFactory;
 
     public function __construct(
         $localeCode,
-        CurrencyFormatterFactory $currencyFormatterFactory,
         NumberFormatterFactory $numberFormatterFactory,
         LocaleManager $manager
     ) {
         $this->localeCode               = $this->convertLocaleAsIETF($localeCode);
-        $this->currencyFormatterFactory = $currencyFormatterFactory;
         $this->numberFormatterFactory   = $numberFormatterFactory;
         $this->manager                  = $manager;
     }
@@ -90,30 +86,24 @@ class Locale
         return $this->getNumberFormatter()->format($number);
     }
 
-    /**
-     * @return NumberFormatter
-     */
-    public function getNumberFormatter()
-    {
-        return $this->numberFormatterFactory->build($this);
-    }
-
     public function formatCurrency($number, $currencyId)
     {
         $number = (string)$number;
+        $currency = $this->getManager()->getCurrency($currencyId);
 
-        return $this->getCurrencyFormatter($currencyId)->format($number);
+        return $this->getNumberFormatter()->formatCurrency($number, $currency);
     }
 
     /**
-     * @return CurrencyFormatter
+     * @return NumberFormatter
      */
-    public function getCurrencyFormatter($currencyId)
+    protected function getNumberFormatter()
     {
-        return $this->currencyFormatterFactory->build(
-            $this,
-            $this->getManager()->getCurrency($currencyId)
-        );
+        if (!isset($this->numberFormatter)) {
+            $this->numberFormatter = $this->numberFormatterFactory->build($this);
+        }
+
+        return $this->numberFormatter;
     }
 
     /**
@@ -122,5 +112,10 @@ class Locale
     public function getManager()
     {
         return $this->manager;
+    }
+
+    public function getDecimalPattern()
+    {
+
     }
 }

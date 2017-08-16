@@ -46,7 +46,7 @@ class DataReader implements DataReaderInterface
         $parts      = $this->getLocaleParts($localeCode);
         $commonData = $this->readLocaleData($parts['language']);
 
-        if ($localeCode === $parts['language']) {
+        if (empty($parts['region'])) {
             return $commonData;
         }
 
@@ -163,12 +163,7 @@ class DataReader implements DataReaderInterface
 
     /**
      * Extracts locale data from CLDR xml data.
-     * XML data will be mapped to a multidimensional array
-     *
-     * Example output :
-     * [
-     *     TODO
-     * ]
+     * XML data will be mapped in a LocaleData object
      *
      * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an EITF tag (e.g.: en-US)
      *
@@ -190,11 +185,7 @@ class DataReader implements DataReaderInterface
      */
     protected function mapLocaleData(SimplexmlElement $xmlLocaleData)
     {
-        $localeArray = array(
-            'numbers' => array(),
-            'dates'   => array(), // Soon
-        );
-        $localeData  = new LocaleData();
+        $localeData = new LocaleData();
 
         if (isset($xmlLocaleData->identity->language)) {
             $localeData->localeCode = (string)$xmlLocaleData->identity->language['type'];
@@ -207,16 +198,14 @@ class DataReader implements DataReaderInterface
 
         // Default numbering system.
         if (isset($numbersData->defaultNumberingSystem)) {
-            $localeArray['numbers']['numberingSystems']['default'] = (string)$numbersData->defaultNumberingSystem;
-            $localeData->numberingSystems['default']               = (string)$numbersData->defaultNumberingSystem;
+            $localeData->numberingSystems['default'] = (string)$numbersData->defaultNumberingSystem;
         }
 
         // Minimum grouping digits value defines when we should start grouping digits.
         // 1 => we start grouping at 4 figures numbers (1,000+) (most frequent)
         // 2 => we start grouping at 5 figures numbers (10,000+)
         if (isset($numbersData->minimumGroupingDigits)) {
-            $localeArray['numbers']['minimumGroupingDigits'] = (int)$numbersData->minimumGroupingDigits;
-            $localeData->minimumGroupingDigits               = (int)$numbersData->minimumGroupingDigits;
+            $localeData->minimumGroupingDigits = (int)$numbersData->minimumGroupingDigits;
         }
 
         // Complete numbering systems list with the "others" available for this locale.
@@ -225,8 +214,7 @@ class DataReader implements DataReaderInterface
         if (isset($numbersData->otherNumberingSystems)) {
             foreach ($numbersData->otherNumberingSystems->children() as $system) {
                 /** @var $system SimplexmlElement */
-                $localeArray['numbers']['numberingSystems'][$system->getName()] = (string)$system;
-                $localeData->numberingSystems[$system->getName()]               = (string)$system;
+                $localeData->numberingSystems[$system->getName()] = (string)$system;
             }
         }
 
@@ -277,8 +265,7 @@ class DataReader implements DataReaderInterface
                     $symbolsList->currencyGroup = (string)$symbol->currencyGroup;
                 }
 
-                $localeArray['numbers']['symbols'][(string)$symbol['numberSystem']] = $symbolsList;
-                $localeData->numberSymbols[(string)$symbol['numberSystem']]         = $symbolsList;
+                $localeData->numberSymbols[(string)$symbol['numberSystem']] = $symbolsList;
             }
         }
 
@@ -289,8 +276,7 @@ class DataReader implements DataReaderInterface
                 $numberSystem  = (string)$format['numberSystem'];
                 $patternResult = $format->xpath('decimalFormatLength[not(@type)]/decimalFormat/pattern');
 
-                $localeArray['numbers']['decimalPatterns'][$numberSystem] = (string)$patternResult[0];
-                $localeData->decimalPatterns[$numberSystem]               = (string)$patternResult[0];
+                $localeData->decimalPatterns[$numberSystem] = (string)$patternResult[0];
             }
         }
 
@@ -300,8 +286,7 @@ class DataReader implements DataReaderInterface
                 $numberSystem = (string)$format['numberSystem'];
                 $pattern      = $format->percentFormatLength->percentFormat->pattern;
 
-                $localeArray['numbers']['percentPatterns'][$numberSystem] = (string)$pattern;
-                $localeData->percentPatterns[$numberSystem]               = (string)$pattern;
+                $localeData->percentPatterns[$numberSystem] = (string)$pattern;
             }
         }
 
@@ -312,8 +297,7 @@ class DataReader implements DataReaderInterface
                 $numberSystem  = (string)$format['numberSystem'];
                 $patternResult = $format->xpath('currencyFormatLength/currencyFormat[@type="standard"]/pattern');
 
-                $localeArray['numbers']['currencyPatterns'][$numberSystem] = (string)$patternResult[0];
-                $localeData->currencyPatterns[$numberSystem]               = (string)$patternResult[0];
+                $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
             }
         }
 
