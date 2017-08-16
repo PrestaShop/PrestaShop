@@ -717,6 +717,26 @@ class LanguageCore extends ObjectModel
         }
     }
 
+    /**
+     * @param string $locale
+     *
+     * @return string|false|null
+     *
+     * @throws Exception
+     */
+    public static function getIsoByLocale($locale)
+    {
+        if (!Validate::isLanguageCode($locale)) {
+            throw new Exception(sprintf('The locale %s is invalid', $locale));
+        }
+
+        if ($details = self::getJsonLanguageDetails($locale)) {
+            return $details['iso_code'];
+        } else {
+            return false;
+        }
+    }
+
     public static function getLanguageCodeByIso($iso_code)
     {
         if (!Validate::isLanguageIsoCode($iso_code)) {
