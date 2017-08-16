@@ -26,6 +26,37 @@
 .module-modal-header > div {
   display: table-row;
 }
+.module-modal-header {
+  .read-more-stars {
+    bottom: 66px;
+    left: 105px;
+
+    &:before, &:after {
+      left: -80px;
+    }
+  }
+}
+.module-modal-footer {
+  .module-stars-price, .module-badges-action {
+    overflow: hidden;
+  }
+
+  .module-badges-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .module-price {
+    position: relative;
+    right: auto;
+    bottom: auto;
+  }
+
+  .module-stars-price {
+    padding: 0 0 10px 0;
+  }
+}
 .module-big-cover {
   height: 240px;
   overflow: hidden;

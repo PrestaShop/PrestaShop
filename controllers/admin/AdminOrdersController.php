@@ -2912,9 +2912,11 @@ class AdminOrdersControllerCore extends AdminController
 
             // sync all stock
             (new StockManager())->updatePhysicalProductQuantity(
-                $order_detail->id_shop,
+                (int)$order_detail->id_shop,
                 (int)Configuration::get('PS_OS_ERROR'),
-                (int)Configuration::get('PS_OS_CANCELED')
+                (int)Configuration::get('PS_OS_CANCELED'),
+                null,
+                (int)$order_detail->id_order
             );
 
             if ($delete) {

@@ -96,10 +96,8 @@ class StockRepository extends StockManagementRepository
     public function bulkUpdateStock(MovementsCollection $movements)
     {
         $products = $movements->map(function (Movement $movement) {
-            return $this->updateStock($movement, true);
+            return $this->updateStock($movement);
         });
-
-        $this->syncAllStock();
 
         return $products;
     }
@@ -133,7 +131,7 @@ class StockRepository extends StockManagementRepository
             }
 
             if (true === $syncStock) {
-                $this->syncAllStock();
+                $this->syncAllStock($productIdentity->getProductId());
             }
         }
 
@@ -143,12 +141,13 @@ class StockRepository extends StockManagementRepository
     /**
      * Sync all stock with Manager
      */
-    private function syncAllStock()
+    private function syncAllStock($idProduct)
     {
         (new StockManager())->updatePhysicalProductQuantity(
             $this->contextAdapter->getContext()->shop->id,
             $this->orderStates['error'],
-            $this->orderStates['cancellation']
+            $this->orderStates['cancellation'],
+            (int)$idProduct
         );
     }
 
