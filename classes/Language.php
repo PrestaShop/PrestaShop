@@ -707,7 +707,7 @@ class LanguageCore extends ObjectModel
     public static function getLocaleByIso($isoCode)
     {
         if (!Validate::isLanguageIsoCode($isoCode)) {
-            throw new Exception(sprintf('The ISO code %s is invalid'));
+            throw new Exception(sprintf('The ISO code %s is invalid', $isoCode));
         }
 
         if ($details = self::getLangDetails($isoCode)) {
