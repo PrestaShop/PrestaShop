@@ -181,7 +181,7 @@ class TranslateCore
             $iso = Context::getContext()->language->iso_code;
         }
 
-        if (!isset($translationsMerged[$name][$iso]) && isset(Context::getContext()->language)) {
+        if (!isset($translationsMerged[$name][$iso])) {
             $filesByPriority = array(
                 // Translations in theme
                 _PS_THEME_DIR_.'modules/'.$name.'/translations/'.$iso.'.php',
