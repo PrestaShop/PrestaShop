@@ -56,6 +56,6 @@ class Manager
     public function getCurrency($id)
     {
         return $this->getInstalledCurrencyRepository()
-            ->getCurrency();
+            ->getCurrency($id);
     }
 }

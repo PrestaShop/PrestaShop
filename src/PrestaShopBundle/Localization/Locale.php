@@ -27,25 +27,30 @@
 namespace PrestaShopBundle\Localization;
 
 use InvalidArgumentException;
-use PrestaShopBundle\Localization\Manager as LocaleManager;
+use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
+use PrestaShopBundle\Localization\Repository as LocaleRepository;
 
 class Locale
 {
     protected $localeCode;
-    protected $manager;
+    protected $repository;
     protected $numberFormatter;
     protected $numberFormatterFactory;
+    protected $specification;
+    protected $id;
 
     public function __construct(
         $localeCode,
         NumberFormatterFactory $numberFormatterFactory,
-        LocaleManager $manager
+        LocaleData $specification,
+        LocaleRepository $repository
     ) {
-        $this->localeCode               = $this->convertLocaleAsIETF($localeCode);
-        $this->numberFormatterFactory   = $numberFormatterFactory;
-        $this->manager                  = $manager;
+        $this->localeCode             = $this->convertLocaleAsIETF($localeCode);
+        $this->numberFormatterFactory = $numberFormatterFactory;
+        $this->specification          = $specification;
+        $this->repository             = $repository;
     }
 
     /**
@@ -71,6 +76,11 @@ class Locale
         throw new InvalidArgumentException('Unrecognized locale code (' . $localeCode . ')');
     }
 
+    public function getId()
+    {
+        return $this->id;
+    }
+
     /**
      * @return string
      */
@@ -88,8 +98,8 @@ class Locale
 
     public function formatCurrency($number, $currencyId)
     {
-        $number = (string)$number;
-        $currency = $this->getManager()->getCurrency($currencyId);
+        $number   = (string)$number;
+        $currency = $this->getRepository()->getCurrencyCollection()->getCurrency($currencyId);
 
         return $this->getNumberFormatter()->formatCurrency($number, $currency);
     }
@@ -107,15 +117,17 @@ class Locale
     }
 
     /**
-     * @return LocaleManager
+     * @return LocaleRepository
      */
-    public function getManager()
+    public function getRepository()
     {
-        return $this->manager;
+        return $this->repository;
     }
 
     public function getDecimalPattern()
     {
+        $spec = $this->getSpecification();
 
+        return $spec->decimalPatterns[$spec->defaultNumberingSystem];
     }
 }

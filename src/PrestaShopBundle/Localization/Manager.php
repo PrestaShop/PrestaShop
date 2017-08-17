@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Localization;
 
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
-use PrestaShopBundle\Localization\Formatter\NumberFactory;
 
 class Manager
 {
@@ -38,10 +37,17 @@ class Manager
      * @var CurrencyManager
      */
     protected $currencyManager;
+    protected $installedLocaleRepository;
+    protected $referenceLocaleRepository;
 
-    public function __construct(CurrencyManager $currencyManager)
-    {
-        $this->currencyManager = $currencyManager;
+    public function __construct(
+        Repository $installedLocaleRepository,
+        Repository $referenceLocaleRepository,
+        CurrencyManager $currencyManager
+    ) {
+        $this->installedLocaleRepository = $installedLocaleRepository;
+        $this->referenceLocaleRepository = $referenceLocaleRepository;
+        $this->currencyManager           = $currencyManager;
     }
 
     /**
@@ -66,6 +72,46 @@ class Manager
      */
     public function getLocale($localeCode)
     {
-        return new Locale($localeCode, new NumberFactory(), $this);
+        return $this->getReferenceLocaleRepository()->getLocaleByCode($localeCode);
+    }
+
+    /**
+     * @return Repository
+     */
+    public function getInstalledLocaleRepository()
+    {
+        return $this->installedLocaleRepository;
+    }
+
+    /**
+     * @param $installedLocaleRepository
+     *
+     * @return $this
+     */
+    public function setInstalledLocaleRepository($installedLocaleRepository)
+    {
+        $this->installedLocaleRepository = $installedLocaleRepository;
+
+        return $this;
+    }
+
+    /**
+     * @return Repository
+     */
+    public function getReferenceLocaleRepository()
+    {
+        return $this->referenceLocaleRepository;
+    }
+
+    /**
+     * @param $referenceLocaleRepository
+     *
+     * @return $this
+     */
+    public function setReferenceLocaleRepository($referenceLocaleRepository)
+    {
+        $this->referenceLocaleRepository = $referenceLocaleRepository;
+
+        return $this;
     }
 }

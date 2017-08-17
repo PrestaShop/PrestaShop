@@ -27,13 +27,18 @@
 namespace PrestaShopBundle\Tests\Localization;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Currency\CurrencyCollection;
 use PrestaShopBundle\Currency\DataSource\Cache as CurrencyCacheDataSource;
 use PrestaShopBundle\Currency\DataSource\CLDR as CurrencyCLDRDataSource;
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
 use PrestaShopBundle\Currency\Repository as CurrencyRepository;
 use PrestaShopBundle\Localization\CLDR\DataReader;
+use PrestaShopBundle\Localization\DataSource\Cache as LocaleCacheDataSource;
+use PrestaShopBundle\Localization\DataSource\CLDR as LocaleCLDRDataSource;
+use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 use PrestaShopBundle\Localization\Locale;
 use PrestaShopBundle\Localization\Manager as LocaleManager;
+use PrestaShopBundle\Localization\Repository as LocaleRepository;
 
 class LocaleTest extends TestCase
 {
@@ -44,6 +49,13 @@ class LocaleTest extends TestCase
 
     public function setUp()
     {
+        $localeCacheData = new LocaleCacheDataSource();
+        $numberFormatterFactory = new NumberFormatterFactory();
+        $localeCache = new LocaleRepository([$localeCacheData], $numberFormatterFactory, new CurrencyCollection());
+
+        $localeCLDRData = new LocaleCLDRDataSource(new DataReader());
+        $localeCLDR = new LocaleRepository([$localeCLDRData], $numberFormatterFactory, new CurrencyCollection());
+
         $currencyCacheData = new CurrencyCacheDataSource('fr-FR');
         $currencyCache = new CurrencyRepository([$currencyCacheData]);
 
@@ -51,7 +63,8 @@ class LocaleTest extends TestCase
         $currencyCLDR = new CurrencyRepository([$currencyCLDRData]);
 
         $currencyManager = new CurrencyManager($currencyCache, $currencyCLDR);
-        $this->localeManager = new LocaleManager($currencyManager);
+
+        $this->localeManager = new LocaleManager($localeCache, $localeCLDR, $currencyManager);
     }
 
     /**
