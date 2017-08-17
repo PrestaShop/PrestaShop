@@ -24,27 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\DataSource;
+namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Localization\CLDR\LocaleData;
-
-interface DataSourceInterface
+class CurrencyCollection
 {
-    /**
-     * Get locale data by internal database identifier
-     *
-     * @param int $id
-     *
-     * @return LocaleData The locale data
-     */
-    public function getLocaleById($id);
 
-    /**
-     * Get locale data by code (either language code or IETF locale tag)
-     *
-     * @param string $code
-     *
-     * @return LocaleData The locale data
-     */
-    public function getLocaleByCode($code);
 }

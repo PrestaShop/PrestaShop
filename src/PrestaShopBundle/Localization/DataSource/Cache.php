@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Localization\DataSource;
 
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 
-interface DataSourceInterface
+class Cache implements DataSourceInterface
 {
+
     /**
      * Get locale data by internal database identifier
      *
@@ -37,7 +38,10 @@ interface DataSourceInterface
      *
      * @return LocaleData The locale data
      */
-    public function getLocaleById($id);
+    public function getLocaleById($id)
+    {
+        // TODO: Implement getLocaleById() method.
+    }
 
     /**
      * Get locale data by code (either language code or IETF locale tag)
@@ -46,5 +50,8 @@ interface DataSourceInterface
      *
      * @return LocaleData The locale data
      */
-    public function getLocaleByCode($code);
+    public function getLocaleByCode($code)
+    {
+        // TODO: Implement getLocaleByCode() method.
+    }
 }
