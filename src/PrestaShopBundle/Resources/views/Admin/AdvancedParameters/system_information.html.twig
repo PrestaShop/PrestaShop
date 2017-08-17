@@ -1,0 +1,280 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+
+{% block content %}
+{% if notHostMode %}
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $.ajax({
+                type: 'POST',
+                url: '{{ path("admin_system_information_check_files") }}',
+                data: {},
+                dataType: 'json',
+                success: function(json)
+                {
+                    var tab = {
+                        'missing': '{{ "Missing files"|trans({}, "Admin.Advparameters.Notification") }}',
+                        'updated': '{{ "Updated files"|trans({}, "Admin.Advparameters.Notification") }}'
+                    };
+
+                    if (json.missing.length || json.updated.length)
+                        $('#changedFiles').html('<div class="alert alert-warning">{{ "Changed/missing files have been detected."|trans({}, "Admin.Advparameters.Notification") }}</div>');
+                    else
+                        $('#changedFiles').html('<div class="alert alert-success">{{ "No change has been detected in your files."|trans({}, "Admin.Advparameters.Notification") }}</div>');
+
+                        $.each(tab, function(key, lang)
+                        {
+                            if (json[key].length)
+                            {
+                                var html = $('<ul>').attr('id', key+'_files');
+                                $(json[key]).each(function(key, file)
+                                {
+                                    html.append($('<li>').html(file))
+                                });
+                                $('#changedFiles')
+                                    .append($('<h4>').html(lang+' ('+json[key].length+')'))
+                                    .append(html);
+                            }
+                        });
+                    }
+            });
+        });
+    </script>
+{% endif %}
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Configuration information'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    <p>{{ 'This information must be provided when you report an issue on our bug tracker or forum.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+                </div>
+            </div>
+        </div>
+        {% if notHostMode %}
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Server information'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    {% if uname is defined %}
+                        <p>
+                            <strong>{{ 'Server information'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ uname }}
+                        </p>
+                    {% endif %}
+                    <p>
+                        <strong>{{ 'Server software version:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ server.version }}
+                    </p>
+                    <p>
+                        <strong>{{ 'PHP version:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ server.php.version }}
+                    </p>
+                    <p>
+                        <strong>{{ 'Memory limit:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ server.php.memoryLimit }}
+                    </p>
+                    <p>
+                        <strong>{{ 'Max execution time:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ server.php.maxExecutionTime }}
+                    </p>
+                    <p>
+                        <strong>{{ 'Upload Max File size:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ server.php.maxFileSizeUpload }}
+                    </p>
+                    {% if instaWebInstalled %}
+                        <p>{{ 'PageSpeed module for Apache installed (mod_instaweb)'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    <p>
+                        <strong>{{ 'MySQL version:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.version }}
+                    </p>
+                    <p>
+                        <strong>{{ 'MySQL server:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.server }}
+                    </p>
+                    <p>
+                        <strong>{{ 'MySQL name:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.name }}
+                    </p>
+                    <p>
+                        <strong>{{ 'MySQL user:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.user }}
+                    </p>
+                    <p>
+                        <strong>{{ 'Tables prefix:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.prefix }}
+                    </p>
+                    <p>
+                        <strong>{{ 'MySQL engine:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.engine }}
+                    </p>
+                    <p>
+                        <strong>{{ 'MySQL driver:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ database.driver }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Store information'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    <p>
+                        <strong>{{ 'PrestaShop version:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ shop.version }}
+                    </p>
+                    <p>
+                        <strong>{{ 'Shop URL:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ shop.url }}
+                    </p>
+                    <p>
+                        <strong>{{ 'Current theme in use:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ shop.theme }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Mail configuration'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    <p>
+                        <strong>{{ 'Mail method:'|trans({}, 'Admin.Advparameters.Feature') }}</strong>
+
+                        {% if isNativePHPmail is defined %}
+                        {{ 'You are using the PHP mail() function.'|trans({}, 'Admin.Advparameters.Feature') }}
+                        {% else %}
+                        {{ 'You are using your own SMTP parameters.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+                    <p>
+                        <strong>{{ 'SMTP server:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ smtp.server }}
+                    </p>
+                    <p>
+                        <strong>{{ 'SMTP username:'|trans({}, 'Admin.Advparameters.Feature') }}</strong>
+                        {% if smtp.user is not empty %}
+                            {{ 'Defined'|trans({}, 'Admin.Advparameters.Feature') }}
+                        {% else %}
+                            <span style="color:red;">{{ 'Not defined'|trans({}, 'Admin.Advparameters.Feature') }}</span>
+                        {% endif %}
+                    </p>
+                    <p>
+                        <strong>{{ 'SMTP password:'|trans({}, 'Admin.Advparameters.Feature') }}</strong>
+                        {% if smtp.password is not empty %}
+                            {{ 'Defined'|trans({}, 'Admin.Advparameters.Feature') }}
+                        {% else %}
+                            <span style="color:red;">{{ 'Not defined'|trans({}, 'Admin.Advparameters.Feature') }}</span>
+                        {% endif %}
+                    </p>
+                    <p>
+                        <strong>{{ 'Encryption:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ smtp.encryption }}
+                    </p>
+                    <p>
+                        <strong>{{ 'SMTP port:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ smtp.port }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Your information'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    <p>
+                        <strong>{{ 'Your web browser:'|trans({}, 'Admin.Advparameters.Feature') }}</strong> {{ userAgent }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" id="checkConfiguration">
+            <div class="card-block">
+                <h3 class="card-heading">
+                    <i class="material-icons">info_outline</i> {{ 'Check your configuration'|trans({}, 'Admin.Advparameters.Feature') }}
+                </h3>
+                <div class="card-text">
+                    <p>
+                        <strong><i class="icon-info"></i>
+                            {{ 'Required parameters:'|trans({}, 'Admin.Advparameters.Feature') }}</strong>
+                        {% if failRequired == false %}
+                        <span class="text-success">{{ 'Ok'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+                    </p>
+                    {% else %}
+                        <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+                        </p>
+                        <ul>
+                            {% for key, value in testsRequired %}
+                                {% if 'fail' == value and testsErrors[key] is defined %}
+                                    <li>{{ testsErrors[key] }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {% if failOptional == false %}
+                        <p>
+                        <strong>{{ 'Optional parameters:'|trans({}, 'Admin.Advparameters.Feature') }}</strong>
+                        {% if failOptional is defined %}
+                            <span class="text-success">{{ 'Ok'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+                            </p>
+                        {% else %}
+                            <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+                            </p>
+                            <ul>
+                                {% for key, value in testsOptional %}
+                                    {% if 'fail' == value and testsErrors[key] is defined %}
+                                        <li>{{ testsErrors[key] }}</li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if notHostMode %}
+    <div class="card">
+        <div class="card-block">
+            <h3 class="card-heading">
+                <i class="material-icons">info_outline</i> {{ 'List of changed files'|trans({}, 'Admin.Advparameters.Feature') }}
+            </h3>
+            <div class="card-text" id="changedFiles">
+                <i class="material-icons">loop</i> {{ 'Checking files...'|trans({}, 'Admin.Advparameters.Notification') }}
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

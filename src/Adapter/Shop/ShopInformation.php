@@ -24,12 +24,40 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Adapter\Shop;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 
-header('Location: ../../../../../../../');
-exit;
+
+/**
+ * Retrieve common information from a the actual Shop
+ *
+ * Depends on Context, avoid re-use of this class
+ */
+class ShopInformation
+{
+    /**
+     * @var \Context
+     */
+    private $context;
+
+    /**
+     * @param LegacyContext $legacyContext
+     */
+    public function __construct(LegacyContext $legacyContext)
+    {
+        $this->context = $legacyContext->getContext();
+    }
+
+    /**
+     * @return array
+     */
+    public function getShopInformation()
+    {
+        return array(
+            'version' => _PS_VERSION_,
+            'url' => $this->context->shop->getBaseURL(),
+            'theme' => $this->context->shop->theme->getName(),
+        );
+    }
+}

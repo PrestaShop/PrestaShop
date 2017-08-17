@@ -24,12 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Adapter\Mail;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use Configuration;
 
-header('Location: ../../../../../../../../');
-exit;
+/**
+ * Retrieve mailing information
+ *
+ */
+class MailingInformation
+{
+    /**
+     * @return bool
+     */
+    public function isNativeMailUsed()
+    {
+        return Configuration::get('PS_MAIL_METHOD') == 1;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSmtpInformation()
+    {
+        return array(
+            'server' => Configuration::get('PS_MAIL_SERVER'),
+            'user' => Configuration::get('PS_MAIL_USER'),
+            'password' => Configuration::get('PS_MAIL_PASSWD'),
+            'encryption' => Configuration::get('PS_MAIL_SMTP_ENCRYPTION'),
+            'port' => Configuration::get('PS_MAIL_SMTP_PORT'),
+        );
+    }
+}
