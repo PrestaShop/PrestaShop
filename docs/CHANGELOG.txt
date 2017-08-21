@@ -24,6 +24,50 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.2.1 - (2017-08-16)
+####################################
+- Back Office:
+  - Improvement:
+    - #8140: Update modules page design
+  - Bug fix:
+    - #8236: Fix module modal layout
+    - #8046: Fix legacy submenu laptop
+    - #8141: Fix the module "translate" button with the new link of translation page
+    - #8173: Fix the search error with white spaces in stock page
+    - #8160: Fix the style of product reference in the stock management page
+    - #8166: Fix the misalignment of the search button in the stock page
+    - #8167: Fix the search tags in the stock management
+
+- Front Office:
+  - Improvement:
+    - #8205: Fix custom content link opening in the same page
+    - #8145: Fix custom content link opening in the same page
+    - #7855: Add link to products for Pack
+  - Bug fix:
+    - #8206: Fix flags on products front-office
+    - #8152: Make the slider appears on Mobile view
+    - #8191: Fix flags on products front-office
+    - #8155: Fix the style of forgotten password page
+    - #8169: Fix typo in bootstrap class
+    - #7716: Fix displaying product thumbnails
+    - #8111: Fix unclosed tag
+    - #8170: Limit the description's image by the size of description's frame
+
+- Core:
+  - Improvement:
+    - #8201: Speed up search queries (17)
+  - Bug fix:
+    - #8228: Optimise synchronization stock sql
+    - #8215: Add translations in database when importing theme
+    - #8165: Use MessageCatalog function to get all message
+    - #8186: Improve stock sql performance
+
+- Installer:
+  - Bug fix:
+    - #8021: Use correct module name column for authorization role
+
+
+####################################
 #   v1.7.2.0 - (2017-07-20)
 ####################################
 - Back Office:
