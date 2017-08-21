@@ -87,24 +87,62 @@ class SpecificPriceCore extends ObjectModel
             ),
     );
 
-
+    /**
+     * Local cache for getSpecificPrice function results
+     *
+     * @var array
+     */
     protected static $_specificPriceCache = array();
+
+    /**
+     * Local cache which stores if a product could have an associated specific price
+     *
+     * @var array
+     */
     protected static $_couldHaveSpecificPriceCache = array();
+
+    /**
+     * Store if the specific_price table contains any global rules in the productId columns
+     * i.e. if there is a product_id == 0 somewhere in the specific_price table
+     *
+     * @var boolean
+     */
     protected static $_hasGlobalProductRules = null;
+
+    /**
+     * Local cache for the filterOutField function. It stores the different existing values in the specific_price table
+     * for a given column name
+     *
+     * @var array
+     */
     protected static $_filterOutCache = array();
+
+    /**
+     * Local cache for getPriority function
+     *
+     * @var array
+     */
     protected static $_cache_priorities = array();
+
+    /**
+     * Local cache which stores if a given column name could have a value != 0 in the specific_price table
+     * i.e. if columnName != 0 somewhere in the specific_price table
+     *
+     * @var array
+     */
     protected static $_no_specific_values = array();
 
     /**
      * Flush local cache
      */
-    protected function flushCache() {
-        SpecificPrice::$_specificPriceCache = array();
-        SpecificPrice::$_couldHaveSpecificPriceCache = array();
-        SpecificPrice::$_hasGlobalProductRules = null;
-        SpecificPrice::$_filterOutCache = array();
-        SpecificPrice::$_cache_priorities = array();
-        SpecificPrice::$_no_specific_values = array();
+    protected function flushCache()
+    {
+        static::$_specificPriceCache = array();
+        static::$_couldHaveSpecificPriceCache = array();
+        static::$_hasGlobalProductRules = null;
+        static::$_filterOutCache = array();
+        static::$_cache_priorities = array();
+        static::$_no_specific_values = array();
         Product::flushPriceCache();
     }
 
@@ -352,7 +390,7 @@ class SpecificPriceCore extends ObjectModel
      *
      * @return bool
      */
-    public static function couldHaveSpecificPrice($idProduct)
+    protected static function couldHaveSpecificPrice($idProduct)
     {
         if (SpecificPrice::$_hasGlobalProductRules === null) {
             $queryHasGlobalRule = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = 0';
@@ -388,7 +426,7 @@ class SpecificPriceCore extends ObjectModel
      *
      * @return string
      */
-    public static function computeKey(
+    protected static function computeKey(
         $id_product,
         $id_shop,
         $id_currency,
@@ -402,7 +440,12 @@ class SpecificPriceCore extends ObjectModel
     )
     {
         if (self::$_no_specific_values !== null) {
-            foreach (self::$_no_specific_values as $variableName => $value) {
+            // $_no_specific_values contains the fieldName from the DB which doesn't have values != 0
+            // So it's ok the set the value to 0 for those fields to improve the cache efficiency
+            // Note that the variableName from the DB needs to match the function args name
+            // I.e. if the computeKey args are converted at some point in camelCase, we will need to introduce a
+            // snakeCase to camelCase conversion of $variableName
+            foreach (array_keys(self::$_no_specific_values) as $variableName) {
                 ${$variableName} = 0;
             }
         }
@@ -412,6 +455,8 @@ class SpecificPriceCore extends ObjectModel
     }
 
     /**
+     * Returns the specificPrice information related to a given productId and context
+     *
      * @param int  $id_product
      * @param int  $id_shop
      * @param int  $id_currency
@@ -433,8 +478,9 @@ class SpecificPriceCore extends ObjectModel
             return array();
         }
         /*
-        ** The date is not taken into account for the cache, but this is for the better because it keeps the consistency for the whole script.
-        ** The price must not change between the top and the bottom of the page
+         * The date is not taken into account for the cache, but this is for the better because it keeps the consistency
+         * for the whole script.
+         * The price must not change between the top and the bottom of the page
         */
 
         if (!self::couldHaveSpecificPrice($id_product)) {
@@ -448,18 +494,36 @@ class SpecificPriceCore extends ObjectModel
             // been computed yet
             $key = null;
         } else {
-            $key = self::computeKey($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity,
-                $id_product_attribute, $id_customer, $id_cart,
-                $real_quantity);
+            $key = self::computeKey(
+                $id_product,
+                $id_shop,
+                $id_currency,
+                $id_country,
+                $id_group,
+                $quantity,
+                $id_product_attribute,
+                $id_customer,
+                $id_cart,
+                $real_quantity
+            );
         }
 
         if (!array_key_exists($key, SpecificPrice::$_specificPriceCache)) {
             $query_extra = self::computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart);
             if ($key === null) {
-                // compute the key after calling computeExtraConditions as it initializes some usefull cache
-                $key = self::computeKey($id_product, $id_shop, $id_currency, $id_country, $id_group, $quantity,
-                    $id_product_attribute, $id_customer, $id_cart,
-                    $real_quantity);
+                // compute the key after calling computeExtraConditions as it initializes some useful cache
+                $key = self::computeKey(
+                    $id_product,
+                    $id_shop,
+                    $id_currency,
+                    $id_country,
+                    $id_group,
+                    $quantity,
+                    $id_product_attribute,
+                    $id_customer,
+                    $id_cart,
+                    $real_quantity
+                );
             }
             $query = '
 			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
@@ -475,6 +539,7 @@ class SpecificPriceCore extends ObjectModel
             $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
             SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         }
+
         return SpecificPrice::$_specificPriceCache[$key];
     }
 
