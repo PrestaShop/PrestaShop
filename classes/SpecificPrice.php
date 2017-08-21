@@ -440,7 +440,7 @@ class SpecificPriceCore extends ObjectModel
     )
     {
         if (self::$_no_specific_values !== null) {
-            // $_no_specific_values contains the fieldName from the DB which doesn't have values != 0
+            // $_no_specific_values contains the fieldName from the DB which don't have values != 0
             // So it's ok the set the value to 0 for those fields to improve the cache efficiency
             // Note that the variableName from the DB needs to match the function args name
             // I.e. if the computeKey args are converted at some point in camelCase, we will need to introduce a
