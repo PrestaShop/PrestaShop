@@ -47,8 +47,8 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 1) {
                 /* Handle product ID */
                 if ($searchType == 1 && (int)$this->query && Validate::isUnsignedInt((int)$this->query)) {
-                    if (($product = new Product($this->query)) && Validate::isLoadedObject($product)) {
-                        Tools::redirectAdmin('index.php?tab=AdminProducts&id_product='.(int)($product->id).'&token='.Tools::getAdminTokenLite('AdminProducts'));
+                    if ($id_product = Product::searchById((int)$this->query)) {
+                        Tools::redirectAdmin('index.php?tab=AdminProducts&id_product='.(int)($id_product).'&token='.Tools::getAdminTokenLite('AdminProducts'));
                     }
                 }
 
@@ -61,11 +61,12 @@ class AdminSearchControllerCore extends AdminController
                 if (!$searchType || $searchType == 2) {
                     /* Handle customer ID */
                     if ($searchType && (int)$this->query && Validate::isUnsignedInt((int)$this->query)) {
-                        if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
-                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer='.(int)$customer->id.'&viewcustomer'.'&token='.Tools::getAdminToken('AdminCustomers'.(int)Tab::getIdFromClassName('AdminCustomers').(int)$this->context->employee->id));
+                        $customers = Search::searchByShops('Customer', 'id_customer', (int)$this->query);
+                        $customer = $customers->getFirst();
+                        if (Validate::isLoadedObject($customer)) {
+                            Tools::redirectAdmin('index.php?tab=AdminCustomers&id_customer=' . (int)$customer->id . '&viewcustomer' . '&token=' . Tools::getAdminToken('AdminCustomers' . (int)Tab::getIdFromClassName('AdminCustomers') . (int)$this->context->employee->id));
                         }
                     }
-
                     /* Normal customer search */
                     $this->searchCustomer();
                 }
@@ -77,23 +78,27 @@ class AdminSearchControllerCore extends AdminController
 
             /* Order */
             if (!$searchType || $searchType == 3) {
-                if (Validate::isUnsignedInt(trim($this->query)) && (int)$this->query && ($order = new Order((int)$this->query)) && Validate::isLoadedObject($order)) {
-                    if ($searchType == 3) {
-                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)$order->id.'&vieworder'.'&token='.Tools::getAdminTokenLite('AdminOrders'));
-                    } else {
-                        $row = get_object_vars($order);
-                        $row['id_order'] = $row['id'];
-                        $customer = $order->getCustomer();
-                        $row['customer'] = $customer->firstname.' '.$customer->lastname;
-                        $order_state = $order->getCurrentOrderState();
-                        $row['osname'] = $order_state->name[$this->context->language->id];
-                        $this->_list['orders'] = array($row);
+                if (Validate::isUnsignedInt(trim($this->query)) && (int)$this->query) {
+                    $orders = Search::searchByShops('Order', 'id_order', (int)$this->query);
+                    $order = $orders->getFirst();
+                    if (Validate::isLoadedObject($order)) {
+                        if ($searchType == 3) {
+                            Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int)$order->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
+                        } else {
+                            $row = get_object_vars($order);
+                            $row['id_order'] = $row['id'];
+                            $customer = $order->getCustomer();
+                            $row['customer'] = $customer->firstname . ' ' . $customer->lastname;
+                            $order_state = $order->getCurrentOrderState();
+                            $row['osname'] = $order_state->name[$this->context->language->id];
+                            $this->_list['orders'] = array($row);
+                        }
                     }
                 } else {
-                    $orders = Order::getByReference($this->query);
-                    $nb_orders = count($orders);
+                    $orders = Search::searchByShops('Order', 'reference', $this->query);
+                    $nb_orders = $orders->count();
                     if ($nb_orders == 1 && $searchType == 3) {
-                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order='.(int)$orders[0]->id.'&vieworder'.'&token='.Tools::getAdminTokenLite('AdminOrders'));
+                        Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int)$orders[0]->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
                     } elseif ($nb_orders) {
                         $this->_list['orders'] = array();
                         foreach ($orders as $order) {
@@ -101,13 +106,13 @@ class AdminSearchControllerCore extends AdminController
                             $row = get_object_vars($order);
                             $row['id_order'] = $row['id'];
                             $customer = $order->getCustomer();
-                            $row['customer'] = $customer->firstname.' '.$customer->lastname;
+                            $row['customer'] = $customer->firstname . ' ' . $customer->lastname;
                             $order_state = $order->getCurrentOrderState();
                             $row['osname'] = $order_state->name[$this->context->language->id];
                             $this->_list['orders'][] = $row;
                         }
                     } elseif ($searchType == 3) {
-                        $this->errors[] = Tools::displayError('No order was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+                        $this->errors[] = Tools::displayError('No order was found with this ID:') . ' ' . Tools::htmlentitiesUTF8($this->query);
                     }
                 }
             }
@@ -115,17 +120,21 @@ class AdminSearchControllerCore extends AdminController
             /* Invoices */
             if ($searchType == 4) {
                 if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query))) {
-                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf').'&submitAction=generateInvoicePDF&id_order='.(int)($invoice->id_order));
+                    Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateInvoicePDF&id_order=' . (int)($invoice->id_order));
                 }
-                $this->errors[] = Tools::displayError('No invoice was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = Tools::displayError('No invoice was found with this ID:') . ' ' . Tools::htmlentitiesUTF8($this->query);
             }
 
             /* Cart */
             if ($searchType == 5) {
-                if ((int)$this->query && Validate::isUnsignedInt((int)$this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
-                    Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart='.(int)($cart->id).'&viewcart'.'&token='.Tools::getAdminToken('AdminCarts'.(int)(Tab::getIdFromClassName('AdminCarts')).(int)$this->context->employee->id));
+                if ((int)$this->query && Validate::isUnsignedInt((int)$this->query)) {
+                    $carts = Search::searchByShops('Cart', 'id_cart', (int)$this->query);
+                    $cart = $carts->getFirst();
+                    if (Validate::isLoadedObject($cart)) {
+                        Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int)($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int)(Tab::getIdFromClassName('AdminCarts')) . (int)$this->context->employee->id));
+                    }
                 }
-                $this->errors[] = Tools::displayError('No cart was found with this ID:').' '.Tools::htmlentitiesUTF8($this->query);
+                $this->errors[] = Tools::displayError('No cart was found with this ID:') . ' ' . Tools::htmlentitiesUTF8($this->query);
             }
             /* IP */
             // 6 - but it is included in the customer block

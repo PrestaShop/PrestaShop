@@ -860,4 +860,12 @@ class SearchCore
 
         return Product::getProductsProperties((int)$id_lang, $result);
     }
+
+    public static function searchByShops($table, $field, $valueField)
+    {
+        $results = new PrestaShopCollection($table);
+        $results->where($field, '=', $valueField);
+        $results->where('id_shop', 'IN', Shop::getContextListShopID(false));
+        return $results;
+    }
 }

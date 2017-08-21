@@ -3806,6 +3806,26 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Admin panel product search
+     * @param int $id_product Id
+     * @return array Matching products
+     */
+    public static function searchById($id_product)
+    {
+        $query = new DbQuery();
+        $query->select('DISTINCT(p.`id_product`)');
+        $query->from('product', 'p');
+        $query->join('INNER JOIN `' . _DB_PREFIX_ . 'product_shop` ps ON ps.`id_product` = p.`id_product`');
+        $query->where('p.id_product = ' . $id_product . Shop::addSqlRestriction(false, 'ps'));
+        $products = Db::getInstance()->executeS($query);
+        if (!$products) {
+            return false;
+        }
+        return $products[0]['id_product'];
+    }
+
+
+    /**
     * Duplicate attributes when duplicating a product
     *
     * @param int $id_product_old Old product id
