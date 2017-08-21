@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+
 /**
  * @since 1.5.0
  */
@@ -483,8 +485,7 @@ class HelperListCore extends Helper
             case 'index.php?controller=AdminProducts':
             case 'index.php?tab=AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                global $kernel; // sf kernel
-                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'updateproduct' => 1]);
@@ -531,8 +532,7 @@ class HelperListCore extends Helper
             case 'index.php?controller=AdminProducts':
             case 'index.php?tab=AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                global $kernel; // sf kernel
-                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = SymfonyContainer::getInstance()->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy && $this->identifier == 'id_product') {
                     $href = Context::getContext()->link->getAdminLink('AdminProducts', true, ['id_product' => $id, 'deleteproduct' => 1]);

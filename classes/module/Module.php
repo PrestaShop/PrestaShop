@@ -3144,6 +3144,25 @@ abstract class ModuleCore
         $parameters['legacy'] = 'htmlspecialchars';
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
     }
+
+    /**
+     * Check if the module uses the new translation system
+     * @return bool
+     */
+    public function isUsingNewTranslationSystem()
+    {
+        $moduleName = $this->name;
+        $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
+        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+
+        foreach ($domains as $domain) {
+            if (false !== stripos($domain, $moduleName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
 
 function ps_module_version_sort($a, $b)

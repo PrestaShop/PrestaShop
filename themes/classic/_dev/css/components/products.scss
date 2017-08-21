@@ -22,6 +22,7 @@
 
   .product-description img {
     max-width: 100%;
+    height: auto;
   }
 }
 .input-color {
@@ -486,7 +487,6 @@ li.product-flag {
     text-transform: uppercase;
     color: white;
     margin-top: $small-space;
-    margin-left: -0.3125rem;
     z-index: 2;
     @include box-shadow-light;
     &.online-only{
@@ -510,6 +510,9 @@ li.product-flag {
       margin: 0;
       left:0;
       top:0;
+    }
+    &:not(.discount):not(.on-sale)~li.product-flag {
+        margin-top: 3.75rem;
     }
 }
 

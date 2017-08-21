@@ -2,6 +2,7 @@ About PrestaShop
 --------
 
 [![Build Status](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=develop)](https://travis-ci.org/PrestaShop/PrestaShop)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a798dc20a1254776aa7a8a0d8bd8d331)](https://www.codacy.com/app/PrestaShop/PrestaShop?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=PrestaShop/PrestaShop&amp;utm_campaign=Badge_Grade)
 
 PrestaShop is a free and Open Source e-commerce web application, committed to providing the best shopping cart experience for both merchants and customers. It is written in PHP, is highly customizable, supports all the major payment services, is translated in many languages and localized for many countries, has a fully responsive design (both front and back office), etc. [See all the available features][1].
 
@@ -30,9 +31,11 @@ Finally, the ZIP file contains resources for developers and designers that are n
 Server configuration
 --------
 
-To install PrestaShop 1.7, you need a web server running PHP 5.4+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).  
+To install PrestaShop 1.7, you need a web server running PHP 5.4+ and any flavor of MySQL 5.0+ (MySQL, MariaDB, Percona Server, etc.).
+
 You will also need a database administration tool, such as phpMyAdmin, in order to create a database for PrestaShop.
-We recommend the Apache or Nginx web servers.  
+We recommend the Apache or Nginx web servers (check out our [example Nginx configuration file][23]).
+
 You can find more information on the [System Administrator Guide][19].
 
 If your host does not offer PHP 5 by default, you will find a few explanations about PHP 5 or the `.htaccess` file in [our documentation][3], with details for certain hosting services.
@@ -146,3 +149,4 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [20]: https://addons.prestashop.com/
 [21]: CONTRIBUTORS.md
 [22]: https://getcomposer.org
+[23]: docs/server_config/nginx.conf.dist

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\IoC;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
 
 use Exception;
 use PHPUnit_Framework_TestCase;

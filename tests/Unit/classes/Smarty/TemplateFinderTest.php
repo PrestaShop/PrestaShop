@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\classes\Smarty;
+namespace PrestaShop\PrestaShop\Tests\Unit\classes\Smarty;
 
 use TemplateFinder;
 

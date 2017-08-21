@@ -109,11 +109,13 @@
     padding-top: 3em;
   }
   .table tr td {
-    padding: 5px 0;
+    padding: 5px 5px 5px;
     vertical-align: top;
     &:not(.qty-spinner) {
       padding-top:14px;
     }
+    word-wrap: break-word;
+    white-space: normal;
   }
   .ui-spinner {
     .ui-spinner-button {

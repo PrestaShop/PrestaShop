@@ -25,7 +25,7 @@
  */
 
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Module;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Module;
 
 use Phake;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;

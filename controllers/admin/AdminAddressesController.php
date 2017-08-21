@@ -443,18 +443,20 @@ class AdminAddressesControllerCore extends AdminController
         $tmp_addr = new Address((int)Tools::getValue('id_address'));
 
         $selected_country = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT');
+        $adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
 
+        $all_fields = array();
         $out = array();
 
-        foreach (array('inv', 'dlv') as $adr_type) {
-            foreach (${$adr_type.'_adr_fields'} as $fields_line) {
-                foreach (explode(' ', $fields_line) as $field_item) {
-                    ${$adr_type.'_all_fields'}[] = trim($field_item);
-                }
+        foreach ($adr_fields as $fields_line) {
+            foreach (explode(' ', $fields_line) as $field_item) {
+                $all_fields[] = trim($field_item);
             }
+        }
 
-            $out[$adr_type.'_adr_fields'] = ${$adr_type.'_adr_fields'};
-            $out[$adr_type.'_all_fields'] = ${$adr_type.'_all_fields'};
+        foreach (array('inv', 'dlv') as $adr_type) {
+            $out[$adr_type.'_adr_fields'] = $adr_fields;
+            $out[$adr_type.'_all_fields'] = $all_fields;
         }
 
         return $out;

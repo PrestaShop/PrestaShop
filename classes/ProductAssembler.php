@@ -90,7 +90,7 @@ class ProductAssemblerCore
 
         $rows = Db::getInstance()->executeS($sql);
 
-        return array_merge($rawProduct, $rows[0]);
+        return array_merge($rows[0], $rawProduct);
     }
 
     /**

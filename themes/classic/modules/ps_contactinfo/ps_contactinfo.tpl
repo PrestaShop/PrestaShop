@@ -58,8 +58,8 @@
         {l
           s='Email us: [1]%email%[/1]'
           sprintf=[
-            '[1]' => '<span>',
-            '[/1]' => '</span>',
+            '[1]' => '<a href="mailto:'|cat:$contact_infos.email|cat:'" class="dropdown">',
+            '[/1]' => '</a>',
             '%email%' => $contact_infos.email
           ]
           d='Shop.Theme.Global'

@@ -286,7 +286,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $installed = $uninstalled = array();
-        foreach ($tab_modules_list as $key => $value) {
+        foreach ($tab_modules_list as $value) {
             $continue = 0;
             foreach ($modules_list_unsort['installed'] as $mod_in) {
                 if ($mod_in->name == $value) {
@@ -760,7 +760,7 @@ class AdminModulesControllerCore extends AdminController
                 }
 
                 $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
-                $upgradeAvailable = 0;
+
                 $modules = array();
 
                 foreach ($allModules as $km => $moduleToUpdate) {
@@ -1395,10 +1395,33 @@ class AdminModulesControllerCore extends AdminController
     {
         parent::initModal();
 
+        $module = Module::getInstanceByName(Tools::getValue('configure'));
+        $languages = Language::getLanguages(false);
+        $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
+        $link = Context::getContext()->link;
+        $translateLinks = array();
+        foreach ($languages as $lang) {
+            if ($isNewTranslateSystem) {
+                $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslationSf', true, array(
+                    'lang' => $lang['iso_code'],
+                    'type' => 'modules',
+                    'selected' => $module->name,
+                    'locale' => $lang['locale'],
+                ));
+            } else {
+                $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslations', true, array(), array(
+                    'type' => 'modules',
+                    'module' => $module->name,
+                    'lang' => $lang['iso_code'],
+                ));
+            }
+        }
+
         $this->context->smarty->assign(array(
             'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&module='.Tools::getValue('configure').'&lang=',
-            'module_languages' => Language::getLanguages(false),
-            'module_name' => Tools::getValue('module_name'),
+            'module_languages' => $languages,
+            'module_name' => $module->name,
+            'translateLinks' => $translateLinks,
         ));
 
         $modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');

@@ -743,7 +743,6 @@ class AdminCartsControllerCore extends AdminController
         $id_customer = (int)Tools::getValue('id_customer');
         $carts = Cart::getCustomerCarts((int)$id_customer);
         $orders = Order::getCustomerOrders((int)$id_customer);
-        $customer = new Customer((int)$id_customer);
 
         if (count($carts)) {
             foreach ($carts as $key => &$cart) {
@@ -762,9 +761,12 @@ class AdminCartsControllerCore extends AdminController
         }
         if ($orders || $carts) {
             $to_return = array_merge($this->ajaxReturnVars(),
-                                            array('carts' => $carts,
-                                                     'orders' => $orders,
-                                                     'found' => true));
+                array(
+                    'carts' => $carts,
+                    'orders' => $orders,
+                    'found' => true
+                )
+            );
         } else {
             $to_return = array_merge($this->ajaxReturnVars(), array('found' => false));
         }

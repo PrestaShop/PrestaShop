@@ -631,12 +631,15 @@ var AdminModuleController = function() {
   };
 
   this.initCurrentDisplay = function() {
-    var currentDisplaySwitch = $('.module-sort-active');
-    if (currentDisplaySwitch.length) {
-      this.currentDisplay = currentDisplaySwitch.attr('data-switch');
-    } else {
+    if (this.currentDisplay === '') {
       this.currentDisplay = 'list';
+    } else {
+      this.currentDisplay = 'grid';
     }
+    $('.sort-component').select2({
+      minimumResultsForSearch: Infinity,
+      placeholder: false
+    });
   }
 
   this.initSortingDropdown = function () {

@@ -34,12 +34,8 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <div class="module-sorting module-sorting-display pull-right">
-                <i id="module-sort-grid" data-switch="grid" class="material-icons module-sort-switch module-sort-active">view_module</i>
-                <i id="module-sort-list" data-switch="list" class="material-icons module-sort-switch">view_list</i>
-            </div>
             <div class="module-sorting module-sorting-author pull-right">
-                <select class="c-select c-select-sm">
+                <select data-toggle="select2" class="sort-component">
                   <option value="" disabled selected>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
                   <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
                   <option value="price">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>

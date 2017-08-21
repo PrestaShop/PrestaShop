@@ -1534,24 +1534,6 @@ class CartCore extends ObjectModel
         }
 
         if ((int)$id_customization) {
-            $product_total_quantity = (int)Db::getInstance()->getValue(
-                'SELECT `quantity`
-                FROM `'._DB_PREFIX_.'cart_product`
-                WHERE `id_product` = '.(int)$id_product.'
-                AND `id_customization` = '.(int)$id_customization.'
-                AND `id_cart` = '.(int)$this->id.'
-                AND `id_product_attribute` = '.(int)$id_product_attribute
-            );
-
-            $customization_quantity = (int)Db::getInstance()->getValue('
-            SELECT `quantity`
-            FROM `'._DB_PREFIX_.'customization`
-            WHERE `id_cart` = '.(int)$this->id.'
-            AND `id_product` = '.(int)$id_product.'
-            AND `id_customization` = '.(int)$id_customization.'
-            AND `id_product_attribute` = '.(int)$id_product_attribute.'
-            '.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
-
             if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery)) {
                 return false;
             }

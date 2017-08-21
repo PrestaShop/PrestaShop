@@ -31,7 +31,7 @@
     </button>
     <div class="collapse" id="filters">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div v-if="isOverview" class="p-y-2 p-x-2">
             <h2>{{trans('filter_suppliers')}}</h2>
             <FilterComponent
@@ -64,7 +64,7 @@
             </form>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <div class="p-y-2 p-x-2">
             <h2>{{trans('filter_categories')}}</h2>
             <FilterComponent
@@ -73,6 +73,32 @@
               itemID="id_category"
               label="name"
               @active="onFilterActive"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="p-y-2 p-x-2">
+            <h2>{{trans('filter_status')}}</h2>
+            <PSRadio
+              id="enable"
+              :label="trans('filter_status_enable')"
+              :checked="false"
+              value="1"
+              @change="onRadioChange"
+            />
+            <PSRadio
+              id="disable"
+              :label="trans('filter_status_disable')"
+              :checked="false"
+              value="0"
+              @change="onRadioChange"
+            />
+            <PSRadio
+              id="all"
+              :label="trans('filter_status_all')"
+              :checked="true"
+              value="null"
+              @change="onRadioChange"
             />
           </div>
         </div>
@@ -90,6 +116,7 @@
   import PSSelect from 'app/widgets/ps-select';
   import PSButton from 'app/widgets/ps-button';
   import PSDatePicker from 'app/widgets/ps-datepicker';
+  import PSRadio from 'app/widgets/ps-radio';
   import _ from 'lodash';
 
   export default {
@@ -136,6 +163,7 @@
           id_stock_mvt_reason: this.id_stock_mvt_reason,
           id_employee: this.id_employee,
           date_add: this.date_add,
+          active: this.active,
         });
       },
       onChange(item) {
@@ -153,12 +181,17 @@
           this.applyFilter();
         }
       },
+      onRadioChange(value) {
+        this.active = value;
+        this.applyFilter();
+      },
     },
     components: {
       FilterComponent,
       PSSelect,
       PSButton,
       PSDatePicker,
+      PSRadio,
     },
     mounted() {
       this.date_add = {};
@@ -177,6 +210,7 @@
       id_stock_mvt_reason: [],
       id_employee: [],
       date_add: {},
+      active: null,
     }),
   };
 </script>
@@ -188,6 +222,7 @@
     border-radius: 2px;
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
     border: solid 1px #b9cdd2;
+    width: 150%;
   }
   .collapse-button {
     width: 100%;

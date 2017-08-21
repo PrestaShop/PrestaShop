@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Product $object
@@ -72,12 +71,11 @@ class AdminProductsControllerCore extends AdminController
 
     public function init()
     {
-        global $kernel;
-
         if (Tools::getIsset('id_product')) {
             if (Tools::getIsset('addproduct') || Tools::getIsset('updateproduct')) {
-                if ($kernel instanceof HttpKernelInterface) {
-                    $sfRouter = $kernel->getContainer()->get('router');
+                $sfContainer = SymfonyContainer::getInstance();
+                if (!is_null($sfContainer)) {
+                    $sfRouter = $sfContainer->get('router');
                     Tools::redirectAdmin($sfRouter->generate(
                         'admin_product_form',
                         array('id' => Tools::getValue('id_product'))
