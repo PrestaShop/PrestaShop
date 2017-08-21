@@ -24,12 +24,6 @@
  *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
