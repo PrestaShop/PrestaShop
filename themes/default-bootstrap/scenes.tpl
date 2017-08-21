@@ -26,7 +26,7 @@
 <div id="scenes">
 	<div>
 		{foreach $scenes as $scene_key=>$scene}
-		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({$base_dir}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px;{if !$scene@first} display:none;{/if}">
+		<div class="screen_scene" id="screen_scene_{$scene->id}" style="background:transparent url({if isset($force_ssl) && $force_ssl}{$base_dir_ssl}{else}{$base_dir}{/if}img/scenes/{$scene->id}-scene_default.jpg); height:{$largeSceneImageType.height}px; width:{$largeSceneImageType.width}px;{if !$scene@first} display:none;{/if}">
 			{foreach $scene->products as $product_key=>$product}
 			{if isset($product.id_image)}
 				{assign var=imageIds value="`$product.id_product`-`$product.id_image`"}
