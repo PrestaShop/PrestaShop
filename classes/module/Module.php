@@ -1887,11 +1887,7 @@ abstract class ModuleCore implements ModuleInterface
             return $string;
         }
 
-        if (($translation = Context::getContext()->getTranslator()->trans($string, array(), null, $locale)) !== $string) {
-            return $translation;
-        }
-
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, false, $locale);
+        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
     }
 
     /*
