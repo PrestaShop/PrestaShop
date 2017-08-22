@@ -73,7 +73,7 @@
 </script>
 
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   #search {
     .search-input {
       box-shadow: none;

@@ -135,7 +135,7 @@
 </script>
 
 <style lang="sass?outputStyle=expanded">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
     z-index: 0;
     height: 128px;

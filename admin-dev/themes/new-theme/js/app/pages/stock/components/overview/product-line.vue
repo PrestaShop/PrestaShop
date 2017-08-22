@@ -112,7 +112,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   .qty-update {
     color: $brand-primary;
     .material-icons {

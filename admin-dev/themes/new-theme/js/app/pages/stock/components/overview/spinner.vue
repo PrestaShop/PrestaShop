@@ -134,7 +134,7 @@
 
 <style lang="sass" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   *{
     outline: none;
   }

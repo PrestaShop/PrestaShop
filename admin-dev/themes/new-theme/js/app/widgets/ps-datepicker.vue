@@ -56,7 +56,7 @@
 </script>
 
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
 
   .date {
     a[data-action='clear']::before {
@@ -74,5 +74,5 @@
       background-color: white;
     }
   }
-  
+
 </style>

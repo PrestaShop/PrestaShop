@@ -45,7 +45,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   .product-title {
     .has-combination & {
       font-weight: 600;

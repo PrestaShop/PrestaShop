@@ -148,7 +148,7 @@
 </script>
 
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   .tree-header {
     .pointer {
       font-size: .65rem;

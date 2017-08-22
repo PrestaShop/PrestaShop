@@ -85,7 +85,7 @@
   };
 </script>
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   .tags-input {
     .tag {
       background: $brand-primary;
