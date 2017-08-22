@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Localization\Formatter;
 
 use InvalidArgumentException;
+use PrestaShop\Decimal\Number as DecimalNumber;
 use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Localization\Locale;
 
@@ -48,6 +49,8 @@ class Number
     protected $secondaryGroupSize;
     protected $positiveNumberPattern;
     protected $negativeNumberPattern;
+    protected $minimumFractionDigits;
+    protected $maximumFractionDigits;
     protected $currencyDisplay;
 
     /**
@@ -58,20 +61,87 @@ class Number
     public function __construct(Locale $locale)
     {
         $this->setLocale($locale);
-        $this->setCurrencyDisplay(self::CURRENCY_DISPLAY_SYMBOL);
+        $this->setMinimumFractionDigits(0)
+            ->setMaximumFractionDigits(3)
+            ->setCurrencyDisplay(self::CURRENCY_DISPLAY_SYMBOL);
     }
 
     public function format($number, $style = self::DECIMAL)
     {
-        $availablePatterns = $this->getAvailablePatterns();
-        if (!array_key_exists($style, $availablePatterns)) {
-            throw new InvalidArgumentException('Unknown format style provided.');
+        if (!is_numeric($number)) {
+            $message = sprintf('The provided value "%s" must be a valid number or numeric string.', $number);
+            throw new InvalidArgumentException($message);
         }
 
-        $number = (string)$number;
+        $availablePatterns = $this->getAvailablePatterns();
+        if (!array_key_exists($style, $availablePatterns)) {
+            $message = sprintf('The provided format style "%s" is invalid.', $style);
+            throw new InvalidArgumentException($message);
+        }
+
+        // Ensure that the value is positive and has the right number of digits.
+        $decNumber = new DecimalNumber($number);
+        $negative = $decNumber->isNegative();
+        $signMultiplier = $negative ? new DecimalNumber('-1') : new DecimalNumber('1');
+        $number = $decNumber->dividedBy($signMultiplier, 12);
+        // Split the number into major and minor digits.
+        $numberParts = explode('.', $number);
+        $majorDigits = $numberParts[0];
+        // Account for maximumFractionDigits = 0, where the number won't
+        // have a decimal point, and $numberParts[1] won't be set.
+        $minorDigits = isset($numberParts[1]) ? $numberParts[1] : '';
+
+        if ($this->groupingUsed()) {
+            // Reverse the major digits, since they are grouped from the right.
+            $majorDigits = array_reverse(str_split($majorDigits));
+            // Group the major digits.
+            $groups = [];
+            $groups[] = array_splice($majorDigits, 0, $this->getPrimaryGroupSize());
+            while (!empty($majorDigits)) {
+                $groups[] = array_splice($majorDigits, 0, $this->getSecondaryGroupSize());
+            }
+            // Reverse the groups and the digits inside of them.
+            $groups = array_reverse($groups);
+            foreach ($groups as &$group) {
+                $group = implode(array_reverse($group));
+            }
+            // Reconstruct the major digits.
+            $majorDigits = implode(',', $groups);
+        }
+
+        if ($this->getMinimumFractionDigits() < $this->getMaximumFractionDigits()) {
+            // Strip any trailing zeroes.
+            $minorDigits = rtrim($minorDigits, '0');
+            // Re-add needed zeroes
+            $minorDigits = str_pad($minorDigits, $this->getMinimumFractionDigits(), '0');
+        }
+
+        // Assemble the final number and insert it into the pattern.
+        $number = $majorDigits;
+        if ($minorDigits) {
+            $number .= '.' . $minorDigits;
+        }
+        $pattern = $negative ? $this->getNegativeNumberPattern() : $this->getPositiveNumberPattern();
+        $number = preg_replace('/#(?:[\.,]#+)*0(?:[,\.][0#]+)*/', $number, $pattern);
+        // Localize the number.
+        $number = $this->replaceDigits($number);
+        $number = $this->replaceSymbols($number);
 
 
-        return 'TODO';
+        return $number;
+    }
+
+    protected function replaceDigits($number)
+    {
+        // TODO use digits set for the locale (cf. /localization/CLDR/core/common/supplemental/numberingSystems.xml)
+        return $number;
+    }
+
+    protected function replaceSymbols($number)
+    {
+        $replacements = $this->getNumberSymbols();
+
+        return strtr($number, $replacements);
     }
 
     public function formatCurrency($number, Currency $currency)
@@ -94,6 +164,11 @@ class Number
     protected function getDecimalPattern()
     {
         return $this->getLocale()->getDecimalPattern();
+    }
+
+    protected function getNumberSymbols()
+    {
+        return $this->getLocale()->getNumberSymbols();
     }
 
     /**
@@ -206,6 +281,46 @@ class Number
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMinimumFractionDigits()
+    {
+        return $this->minimumFractionDigits;
+    }
+
+    /**
+     * @param $minimumFractionDigits
+     *
+     * @return $this
+     */
+    public function setMinimumFractionDigits($minimumFractionDigits)
+    {
+        $this->minimumFractionDigits = $minimumFractionDigits;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMaximumFractionDigits()
+    {
+        return $this->maximumFractionDigits;
+    }
+
+    /**
+     * @param $maximumFractionDigits
+     *
+     * @return $this
+     */
+    public function setMaximumFractionDigits($maximumFractionDigits)
+    {
+        $this->maximumFractionDigits = $maximumFractionDigits;
 
         return $this;
     }

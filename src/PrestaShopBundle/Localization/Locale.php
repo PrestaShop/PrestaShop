@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Localization;
 
 use InvalidArgumentException;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
+use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 use PrestaShopBundle\Localization\Repository as LocaleRepository;
@@ -129,5 +130,51 @@ class Locale
         $spec = $this->getSpecification();
 
         return $spec->decimalPatterns[$spec->defaultNumberingSystem];
+    }
+
+    public function getPercentPattern()
+    {
+        $spec = $this->getSpecification();
+
+        return $spec->percentPatterns[$spec->defaultNumberingSystem];
+    }
+
+    public function getCurrencyPattern()
+    {
+        $spec = $this->getSpecification();
+
+        return $spec->currencyPatterns[$spec->defaultNumberingSystem];
+    }
+
+    /**
+     * @return LocaleData
+     */
+    protected function getSpecification()
+    {
+        return $this->specification;
+    }
+
+    public function getNumberSymbols()
+    {
+        $spec = $this->getSpecification();
+        /** @var NumberSymbolList $specSymbols */
+        $specSymbols = $spec->numberSymbols[$spec->defaultNumberingSystem];
+
+        return array(
+            '.' => $specSymbols->decimal,
+            ',' => $specSymbols->group,
+            '+' => $specSymbols->plusSign,
+            '-' => $specSymbols->minusSign,
+            '%' => $specSymbols->percentSign,
+        );
+    }
+
+    protected function getDefaultNumberingSystem()
+    {
+        if (!isset($this->getSpecification()->defaultNumberingSystem)) {
+            return $this->getSpecification()->numberingSystems[0];
+        }
+
+        return $this->getSpecification()->defaultNumberingSystem;
     }
 }
