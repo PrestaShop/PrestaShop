@@ -180,38 +180,32 @@ class OrderHistoryCore extends ObjectModel
                     $employee = null;
                 }
             }
-            
 
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
                 if (Validate::isLoadedObject($old_os)) {
-                    // if becoming logable => adds sale
-                    if ($new_os->logable && !$old_os->logable) {
-                        ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
-                        // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop)) {
-                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
-                        }
-                    }
-                    // if becoming unlogable => removes sale
-                    elseif (!$new_os->logable && $old_os->logable) {
-                        ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
+                    $dependsOnStock = StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop);
+                    $quantityAvailableProduct = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $order->id_shop);
+                    $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'], $order->id_shop));
+                    $productQuantityIsAvailabel = $quantityAvailableProduct <= 0 && !$isAvailableWhenOutOfStock;
+                    $isCanceledOrder = (!in_array($new_os->id, $error_or_canceled_statuses) && in_array($old_os->id, $error_or_canceled_statuses));
 
-                        // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
-                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
-                        }
-                    }
-                    // if waiting for payment => payment error/canceled
-                    elseif (!$new_os->logable && !$old_os->logable &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
-                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+                    $this->updateOrderProductQuantity(
+                        $new_os,
+                        $old_os,
+                        $product,
+                        $productQuantityIsAvailabel,
+                        $dependsOnStock,
+                        $error_or_canceled_statuses,
+                        $isCanceledOrder,
+                        $order->id_shop
+                    );
+
+                    if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                        && $dependsOnStock
+                        && $isCanceledOrder
+                        && $productQuantityIsAvailabel) {
+                        Tools::redirect($_SERVER['HTTP_REFERER']);
                     }
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
@@ -528,5 +522,98 @@ class OrderHistoryCore extends ObjectModel
         } else {
             return $this->add();
         }
+    }
+
+    /**
+     * Upadate the quantity of stock available
+     *
+     * @param bool $productQuantityIsAvailabel
+     * @param Product $product
+     * @param int $shopId
+     */
+    private function updateStockAvailableQuantity($productQuantityIsAvailabel, $product, $shopId)
+    {
+        if ($productQuantityIsAvailabel) {
+            Tools::redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $shopId);
+        }
+    }
+
+    /**
+     * Update the ordered product quantity
+     *
+     * @param OrderState $newOrderState
+     * @param OrderState $oldOrderState
+     * @param Product $product
+     * @param bool $productQuantityIsAvailabel
+     * @param bool $dependsOnStock
+     * @param array $errorOrCanceledStatuses
+     * @param bool $isCanceledOrder
+     * @param int $shopId
+     */
+    private function updateOrderProductQuantity($newOrderState, $oldOrderState, $product, $productQuantityIsAvailabel, $dependsOnStock, $errorOrCanceledStatuses, $isCanceledOrder, $shopId)
+    {
+        $isAvailableProduct = (!Pack::isPack($product['product_id']) && !$dependsOnStock);
+        $isUpdatedSale = $this->updateSale(
+            $newOrderState,
+            $oldOrderState,
+            $isAvailableProduct,
+            $errorOrCanceledStatuses,
+            $productQuantityIsAvailabel,
+            $product,
+            $shopId
+        );
+
+        if (!$isUpdatedSale && !$newOrderState->logable && !$oldOrderState->logable && !$dependsOnStock) {
+            $isWaitingForPaymentOrder = (in_array($newOrderState->id, $errorOrCanceledStatuses) && !in_array($oldOrderState->id, $errorOrCanceledStatuses));
+
+            if ($isWaitingForPaymentOrder) { //if waiting for payment => payment error/canceled
+                StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $shopId);
+            } elseif ($isCanceledOrder) { // if payment error/canceled => waiting for payment
+                $this->updateStockAvailableQuantity($productQuantityIsAvailabel, $product, $shopId);
+            }
+        }
+    }
+
+    /**
+     * Add/remove the sale product
+     *
+     * @param OrderState $newOrderState
+     * @param OrderState $oldOrderState
+     * @param bool $isAvailableProduct
+     * @param array $errorOrCanceledStatuses
+     * @param bool $productQuantityIsAvailabel
+     * @param Product $product
+     * @param int $shopId
+     * @return bool
+     */
+    private function updateSale($newOrderState, $oldOrderState, $isAvailableProduct, $errorOrCanceledStatuses, $productQuantityIsAvailabel, $product, $shopId)
+    {
+        $logableOrder = $newOrderState->logable && !$oldOrderState->logable;
+        $unlogableOrder = !$newOrderState->logable && $oldOrderState->logable;
+
+        if (!$logableOrder && !$unlogableOrder) {
+            return false;
+        }
+
+        // if becoming logable => adds sale
+        if ($logableOrder) {
+            ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
+
+            // @since 1.5.0 - Stock Management
+            if ($isAvailableProduct && in_array($oldOrderState->id, $errorOrCanceledStatuses)) {
+                $this->updateStockAvailableQuantity($productQuantityIsAvailabel, $product, $shopId);
+            }
+        } elseif ($unlogableOrder) { // if becoming unlogable => removes sale
+            ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
+
+            // @since 1.5.0 - Stock Management
+            if ($isAvailableProduct && in_array($newOrderState->id, $errorOrCanceledStatuses)) {
+                StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $shopId);
+            }
+        }
+
+        return true;
     }
 }
