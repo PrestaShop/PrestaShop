@@ -185,34 +185,66 @@ class OrderHistoryCore extends ObjectModel
             // foreach products of the order
             foreach ($order->getProductsDetail() as $product) {
                 if (Validate::isLoadedObject($old_os)) {
+                    $dependsOnStock = StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop);
+                    $quantityAvailableProduct = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $order->id_shop);
+                    $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'], $order->id_shop));
                     // if becoming logable => adds sale
                     if ($new_os->logable && !$old_os->logable) {
                         ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop)) {
-                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($old_os->id, $error_or_canceled_statuses)
+                            && !$dependsOnStock
+                        ) {
+                            if ($quantityAvailableProduct <= 0 && !$isAvailableWhenOutOfStock) {
+                                Tools::redirect($_SERVER['HTTP_REFERER']);
+                            } else {
+                                StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
+                            }
+
                         }
-                    }
-                    // if becoming unlogable => removes sale
+                    } // if becoming unlogable => removes sale
                     elseif (!$new_os->logable && $old_os->logable) {
                         ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
 
                         // @since 1.5.0 - Stock Management
-                        if (!Pack::isPack($product['product_id']) &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
+                        if (!Pack::isPack($product['product_id'])
+                            && in_array($new_os->id, $error_or_canceled_statuses)
+                            && !$dependsOnStock
+                        ) {
                             StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
                         }
+                    } elseif (!$new_os->logable && !$old_os->logable && !$dependsOnStock) {
+
+                        //if waiting for payment => payment error/canceled
+                        if (in_array($new_os->id, $error_or_canceled_statuses)
+                            && !in_array($old_os->id, $error_or_canceled_statuses)
+                        ) {
+                            StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+                        } // if payment error/canceled => waiting for payment
+                        elseif (!in_array($new_os->id, $error_or_canceled_statuses)
+                            && in_array($old_os->id, $error_or_canceled_statuses)
+                        ) {
+                            if ($quantityAvailableProduct <= 0 && !$isAvailableWhenOutOfStock) {
+                                Tools::redirect($_SERVER['HTTP_REFERER']);
+                            } else {
+                                StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
+                            }
+
+                        }
                     }
-                    // if waiting for payment => payment error/canceled
-                    elseif (!$new_os->logable && !$old_os->logable &&
-                            in_array($new_os->id, $error_or_canceled_statuses) &&
-                            !in_array($old_os->id, $error_or_canceled_statuses) &&
-                            !StockAvailable::dependsOnStock($product['id_product'])) {
-                        StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+
+                    if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                        if ($dependsOnStock) {
+                            if (!in_array($new_os->id, $error_or_canceled_statuses)
+                                && in_array($old_os->id, $error_or_canceled_statuses)
+                                && ($quantityAvailableProduct <= 0 && !$isAvailableWhenOutOfStock)
+                            ) {
+                                Tools::redirect($_SERVER['HTTP_REFERER']);
+                            }
+                        }
                     }
+
                 }
                 // From here, there is 2 cases : $old_os exists, and we can test shipped state evolution,
                 // Or old_os does not exists, and we should consider that initial shipped state is 0 (to allow decrease of stocks)
