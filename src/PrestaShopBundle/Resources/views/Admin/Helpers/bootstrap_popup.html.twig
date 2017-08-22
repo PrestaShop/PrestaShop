@@ -39,7 +39,7 @@
 
             {% if progressbar is defined %}
                 <div class="modal-body" id="{{ progressbar.id }}">
-                    <div class="pull-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}">
+                    <div class="float-right progress-details-text" default-value="{{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}">
                         {{ progressbar.label|default('Processing...'|trans({}, 'Admin.Global')) }}
                     </div>
                     <div class="progress active progress-striped" style="display: block; width: 100%">

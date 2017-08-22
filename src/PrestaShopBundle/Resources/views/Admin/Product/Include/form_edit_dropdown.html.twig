@@ -31,7 +31,7 @@
     <a
       href="{{ default_item.href|default("#") }}"
       title="{{ default_item.title|default(default_item.label|default("")) }}"
-      class="pull-left product-edit m-r-2"
+      class="float-left product-edit m-r-2"
       {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %}
     >
       {% if default_item.icon %}

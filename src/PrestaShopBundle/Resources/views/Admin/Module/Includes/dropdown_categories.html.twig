@@ -29,7 +29,7 @@
             <span class="js-selected-item selected-item module-category-selector-label">
                 {{menu.name}}
             </span>
-            <i class="material-icons arrow-down pull-right">keyboard_arrow_down</i>
+            <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
         </div>
         <div class="ps-dropdown-menu dropdown-menu module-category-selector" aria-labelledby="{{refMenu}}">
             <ul class="items-list js-items-list">
@@ -45,7 +45,7 @@
                         data-category-display-name="{{subMenu.name}}"
                     >
                         <a  class="dropdown-item" href="#">
-                            {{subMenu.name}}<span class="pull-right">{{subMenu.modules|length }}</span>
+                            {{subMenu.name}}<span class="float-right">{{subMenu.modules|length }}</span>
                         </a>
                     </li>
                 {% endfor %}
