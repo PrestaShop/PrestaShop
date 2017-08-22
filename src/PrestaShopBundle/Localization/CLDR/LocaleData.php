@@ -44,6 +44,13 @@ class LocaleData
     public $numberingSystems;
 
     /**
+     * Default numbering system
+     *
+     * @var string
+     */
+    public $defaultNumberingSystem;
+
+    /**
      * Used to suppress groupings below a certain value
      *
      * 1 -> grouping starts at 4 figures integers (1,000 and more)
