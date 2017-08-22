@@ -137,12 +137,12 @@ class SpecificPriceCore extends ObjectModel
      */
     protected function flushCache()
     {
-        static::$_specificPriceCache = array();
-        static::$_couldHaveSpecificPriceCache = array();
-        static::$_hasGlobalProductRules = null;
-        static::$_filterOutCache = array();
-        static::$_cache_priorities = array();
-        static::$_no_specific_values = array();
+        self::$_specificPriceCache = array();
+        self::$_couldHaveSpecificPriceCache = array();
+        self::$_hasGlobalProductRules = null;
+        self::$_filterOutCache = array();
+        self::$_cache_priorities = array();
+        self::$_no_specific_values = array();
         Product::flushPriceCache();
     }
 
@@ -231,8 +231,8 @@ class SpecificPriceCore extends ObjectModel
             return explode(';', Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES'));
         }
 
-        if (!isset(SpecificPrice::$_cache_priorities[(int)$id_product])) {
-            SpecificPrice::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        if (!isset(self::$_cache_priorities[(int)$id_product])) {
+            self::$_cache_priorities[(int)$id_product] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT `priority`, `id_specific_price_priority`
 				FROM `'._DB_PREFIX_.'specific_price_priority`
 				WHERE `id_product` = '.(int)$id_product.'
@@ -240,7 +240,7 @@ class SpecificPriceCore extends ObjectModel
 			');
         }
 
-        $priority = SpecificPrice::$_cache_priorities[(int)$id_product];
+        $priority = self::$_cache_priorities[(int)$id_product];
 
         if (!$priority) {
             $priority = Configuration::get('PS_SPECIFIC_PRICE_PRIORITIES');
@@ -268,7 +268,7 @@ class SpecificPriceCore extends ObjectModel
         }
         $key_cache     = __FUNCTION__.'-'.$field_name.'-'.$threshold;
         $specific_list = array();
-        if (!array_key_exists($key_cache, SpecificPrice::$_filterOutCache)) {
+        if (!array_key_exists($key_cache, self::$_filterOutCache)) {
             $query_count    = 'SELECT COUNT(DISTINCT `'.$name.'`) FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$name.'` != 0';
             $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
             if ($specific_count == 0) {
@@ -283,14 +283,14 @@ class SpecificPriceCore extends ObjectModel
                     $specific_list[] = $value[$field_name];
                 }
             }
-            SpecificPrice::$_filterOutCache[$key_cache] = $specific_list;
+            self::$_filterOutCache[$key_cache] = $specific_list;
         } else {
-            $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
+            $specific_list = self::$_filterOutCache[$key_cache];
         }
 
         // $specific_list is empty if the threshold is reached
         if (empty($specific_list) || in_array($field_value, $specific_list)) {
-            if ($name == 'id_product' && !SpecificPrice::$_hasGlobalProductRules) {
+            if ($name == 'id_product' && !self::$_hasGlobalProductRules) {
                 $query_extra = 'AND `' . $name . '` = ' . (int)$field_value . ' ';
             } else {
                 $query_extra = 'AND `' . $name . '` ' . self::formatIntInQuery(0, $field_value) . ' ';
@@ -343,16 +343,16 @@ class SpecificPriceCore extends ObjectModel
 
         if ($ending == $now && $beginning == $now) {
             $key = __FUNCTION__.'-'.$first_date.'-'.$last_date;
-            if (!array_key_exists($key, SpecificPrice::$_filterOutCache)) {
+            if (!array_key_exists($key, self::$_filterOutCache)) {
                 $query_from_count    = 'SELECT 1 FROM `'._DB_PREFIX_.'specific_price` WHERE `from` BETWEEN \''.$first_date.'\' AND \''.$last_date.'\'';
                 $from_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_from_count);
 
                 $query_to_count                       = 'SELECT 1 FROM `'._DB_PREFIX_.'specific_price` WHERE `to` BETWEEN \''.$first_date.'\' AND \''.$last_date.'\'';
 
                 $to_specific_count                    = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_to_count);
-                SpecificPrice::$_filterOutCache[$key] = array($from_specific_count, $to_specific_count);
+                self::$_filterOutCache[$key] = array($from_specific_count, $to_specific_count);
             } else {
-                list($from_specific_count, $to_specific_count) = SpecificPrice::$_filterOutCache[$key];
+                list($from_specific_count, $to_specific_count) = self::$_filterOutCache[$key];
             }
         } else {
             $from_specific_count = $to_specific_count = 1;
@@ -392,22 +392,22 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static function couldHaveSpecificPrice($idProduct)
     {
-        if (SpecificPrice::$_hasGlobalProductRules === null) {
+        if (self::$_hasGlobalProductRules === null) {
             $queryHasGlobalRule = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = 0';
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($queryHasGlobalRule);
-            SpecificPrice::$_hasGlobalProductRules = !empty($row);
+            self::$_hasGlobalProductRules = !empty($row);
         }
-        if (SpecificPrice::$_hasGlobalProductRules) {
+        if (self::$_hasGlobalProductRules) {
             return true;
         }
 
-        if (!array_key_exists($idProduct, SpecificPrice::$_couldHaveSpecificPriceCache)) {
+        if (!array_key_exists($idProduct, self::$_couldHaveSpecificPriceCache)) {
             $query = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = ' . (int)$idProduct;
             $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
-            SpecificPrice::$_couldHaveSpecificPriceCache[$idProduct] = !empty($row);
+            self::$_couldHaveSpecificPriceCache[$idProduct] = !empty($row);
         }
 
-        return SpecificPrice::$_couldHaveSpecificPriceCache[$idProduct];
+        return self::$_couldHaveSpecificPriceCache[$idProduct];
     }
 
     /**
@@ -508,7 +508,7 @@ class SpecificPriceCore extends ObjectModel
             );
         }
 
-        if (!array_key_exists($key, SpecificPrice::$_specificPriceCache)) {
+        if (!array_key_exists($key, self::$_specificPriceCache)) {
             $query_extra = self::computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart);
             if ($key === null) {
                 // compute the key after calling computeExtraConditions as it initializes some useful cache
@@ -537,10 +537,10 @@ class SpecificPriceCore extends ObjectModel
 
             $query .= ($psQtyDiscountOnCombination || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
             $query .= ' ORDER BY `id_product_attribute` DESC, `id_cart` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
-            SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+            self::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
         }
 
-        return SpecificPrice::$_specificPriceCache[$key];
+        return self::$_specificPriceCache[$key];
     }
 
     public static function setPriorities($priorities)
