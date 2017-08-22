@@ -780,7 +780,7 @@ function updatePrice()
 		{
 			baseUnitPrice = productBasePriceTaxExcl / productUnitPriceRatio;
 			unit_price = baseUnitPrice + unit_impact;
-			unit_price = unit_price*(1 - discountPercentage);
+			unit_price = unit_price*(1 - discountPercentage/100);
 
 			if (!noTaxForThisProduct && !customerGroupWithoutTax)
 				unit_price = unit_price * (taxRate/100 + 1);
