@@ -611,14 +611,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $count++;
                 if ($count > 1) {
                     //find attributes of current group, having a possible combination with current selected
-                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2 
+                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2
                         WHERE `id_product_attribute` IN (
-                            SELECT pac.`id_product_attribute`
-                                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-                                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                                WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
-                                GROUP BY id_product_attribute
-                                HAVING COUNT(id_product) = '.count($current_selected_attributes).'
+                            SELECT * from (
+                                SELECT pac.`id_product_attribute`
+                                    FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                                    INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                                    WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
+                                    GROUP BY id_product_attribute
+                                    HAVING COUNT(id_product) = '.count($current_selected_attributes).'
+                            ) as sub_pac_query
                         ) AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
                     foreach ($id_attributes as $k => $row) {
                         $id_attributes[$k] = (int)$row['id_attribute'];
