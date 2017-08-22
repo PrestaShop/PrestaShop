@@ -390,7 +390,7 @@ class SpecificPriceCore extends ObjectModel
      *
      * @return bool
      */
-    protected static function couldHaveSpecificPrice($idProduct)
+    final protected static function couldHaveSpecificPrice($idProduct)
     {
         if (self::$_hasGlobalProductRules === null) {
             $queryHasGlobalRule = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE id_product = 0';
@@ -426,7 +426,7 @@ class SpecificPriceCore extends ObjectModel
      *
      * @return string
      */
-    protected static function computeKey(
+    final protected static function computeKey(
         $id_product,
         $id_shop,
         $id_currency,
