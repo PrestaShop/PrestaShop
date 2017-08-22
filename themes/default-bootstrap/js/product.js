@@ -765,10 +765,12 @@ function updatePrice()
 
 	// Compute discount value and percentage
 	// Done just before display update so we have final prices
+	var discountValue = 0;
+	var discountPercentage = 0;
 	if (basePriceDisplay != priceWithDiscountsDisplay)
 	{
-		var discountValue = basePriceDisplay - priceWithDiscountsDisplay;
-		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
+		discountValue = basePriceDisplay - priceWithDiscountsDisplay;
+		discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
 
 	var unit_impact = +combination.unit_impact;
@@ -778,8 +780,9 @@ function updatePrice()
 		{
 			baseUnitPrice = productBasePriceTaxExcl / productUnitPriceRatio;
 			unit_price = baseUnitPrice + unit_impact;
+			unit_price = unit_price*(1 - discountPercentage);
 
-			if (!noTaxForThisProduct || !customerGroupWithoutTax)
+			if (!noTaxForThisProduct && !customerGroupWithoutTax)
 				unit_price = unit_price * (taxRate/100 + 1);
 		}
 		else
