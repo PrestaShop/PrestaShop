@@ -840,7 +840,7 @@
           display: none;
           +.attribute-label {
             display: inline-block;
-            font-size: $font-size-n;
+            font-size: $font-size-base;
             color: $gray-light;
             margin: 0;
             .pretty-checkbox {
