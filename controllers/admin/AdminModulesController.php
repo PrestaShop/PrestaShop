@@ -1395,32 +1395,35 @@ class AdminModulesControllerCore extends AdminController
     {
         parent::initModal();
 
-        $module = Module::getInstanceByName(Tools::getValue('configure'));
         $languages = Language::getLanguages(false);
-        $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
-        $link = Context::getContext()->link;
         $translateLinks = array();
-        foreach ($languages as $lang) {
-            if ($isNewTranslateSystem) {
-                $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslationSf', true, array(
-                    'lang' => $lang['iso_code'],
-                    'type' => 'modules',
-                    'selected' => $module->name,
-                    'locale' => $lang['locale'],
-                ));
-            } else {
-                $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslations', true, array(), array(
-                    'type' => 'modules',
-                    'module' => $module->name,
-                    'lang' => $lang['iso_code'],
-                ));
+        
+        if (Tools::getIsset('configure')) {
+            $module = Module::getInstanceByName(Tools::getValue('configure'));
+            $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
+            $link = Context::getContext()->link;
+            foreach ($languages as $lang) {
+                if ($isNewTranslateSystem) {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslationSf', true, array(
+                        'lang' => $lang['iso_code'],
+                        'type' => 'modules',
+                        'selected' => $module->name,
+                        'locale' => $lang['locale'],
+                    ));
+                } else {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslations', true, array(), array(
+                        'type' => 'modules',
+                        'module' => $module->name,
+                        'lang' => $lang['iso_code'],
+                    ));
+                }
             }
         }
 
         $this->context->smarty->assign(array(
             'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&module='.Tools::getValue('configure').'&lang=',
             'module_languages' => $languages,
-            'module_name' => $module->name,
+            'module_name' => Tools::getValue('configure'),
             'translateLinks' => $translateLinks,
         ));
 
