@@ -56,7 +56,7 @@ class Tools
     /**
      * Polyfill for bcadd if BC Math extension is not installed.
      *
-     * @deprecated Use PrestaShop\Decimal\Number instead
+     * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
