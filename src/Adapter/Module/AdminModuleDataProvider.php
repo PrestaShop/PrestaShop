@@ -158,7 +158,7 @@ class AdminModuleDataProvider implements ModuleInterface
             return true;
         }
 
-        if ('install' === $action) {
+        if (in_array($action, array('install', 'upgrade'))) {
             return $this->employee->can('add', 'AdminModulessf');
         }
 
