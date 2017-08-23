@@ -463,12 +463,17 @@ class AuthControllerCore extends FrontController
                         }
 
                         $this->updateContext($customer);
+                        $this->context->cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)$customer->id);
+                        $this->context->cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$customer->id);
 
-                        $this->context->cart->update();
                         Hook::exec('actionCustomerAccountAdd', array(
                                 '_POST' => $_POST,
                                 'newCustomer' => $customer
                             ));
+                        $id_guest = Guest::getFromCustomer($customer->id);
+                        $this->context->cookie->id_guest = $id_guest;
+                        $this->context->cart->id_guest = $id_guest;
+                        $this->context->cart->update();
                         if ($this->ajax) {
                             $return = array(
                                 'hasError' => !empty($this->errors),
