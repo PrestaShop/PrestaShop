@@ -188,6 +188,7 @@ class ModuleManagerBuilder
                 self::$legacyLogger,
                 self::$addonsDataProvider,
                 self::$categoriesProvider,
+                self::$moduleDataProvider,
                 self::$cacheProvider
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());

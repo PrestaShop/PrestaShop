@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -35,6 +36,8 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\TranslatorInterface;
 use Module as LegacyModule;
 use Context;
+use Employee;
+use Tools;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -48,12 +51,16 @@ class AdminModuleDataProvider implements ModuleInterface
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
+    protected $module_actions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
+
     private $languageISO;
     private $logger;
     private $router = null;
     private $addonsDataProvider;
     private $categoriesProvider;
+    private $moduleProvider;
     private $cacheProvider;
+    private $employee;
 
     protected $catalog_modules = array();
     protected $catalog_modules_names;
@@ -64,14 +71,18 @@ class AdminModuleDataProvider implements ModuleInterface
         LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
-        CacheProvider $cacheProvider = null
+        ModuleDataProvider $modulesProvider,
+        CacheProvider $cacheProvider = null,
+        Employee $employee = null
     ) {
         list($this->languageISO) = explode('-', $translator->getLocale());
 
         $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
+        $this->moduleProvider = $modulesProvider;
         $this->cacheProvider = $cacheProvider;
+        $this->employee = $employee;
     }
 
     public function setRouter(Router $router)
@@ -87,6 +98,10 @@ class AdminModuleDataProvider implements ModuleInterface
         $this->catalog_modules = array();
     }
 
+    /**
+     * @deprecated since version 1.7.3.0
+     * @return array
+     */
     public function getAllModules()
     {
         return LegacyModule::getModulesOnDisk(true,
@@ -111,11 +126,59 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a module
+     *
+     * @param string $name The module nale
+     * @return array of allowed actions
+     */
+    public function getAllowedActions($name = '')
+    {
+        $allowedActions = array();
+        foreach ($this->module_actions as $action) {
+            if ($this->allowedAccess($action, $name)) {
+                $allowedActions[] = $action;
+            }
+        }
+        return $allowedActions;
+    }
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a specified action
+     *
+     * @param string $action The action called in the module
+     * @param string $name (Optionnal for 'install') The module name to check
+     * @return boolean
+     */
+    public function allowedAccess($action, $name = '')
+    {
+        if (Tools::isPHPCLI()) {
+            return true;
+        }
+
+        if (!in_array($action, $this->module_actions)) {
+            return false;
+        }
+
+        if ('install' === $action) {
+            return $this->employee->can('add', 'AdminModulessf');
+    }
+
+        if ('uninstall' === $action) {
+            return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
+}
+
+        if (in_array($action, array('upgrade', 'disable', 'enable', 'disable_mobile', 'enable_mobile'))) {
+            return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
+        }
+    }
+
     public function generateAddonsUrls(array $addons, $specific_action = null)
     {
         foreach ($addons as &$addon) {
             $urls = array();
-            foreach (array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade') as $action) {
+            foreach ($this->getAllowedActions($addon->attributes->get('name')) as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),

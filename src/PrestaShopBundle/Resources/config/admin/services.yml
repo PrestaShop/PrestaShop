@@ -78,7 +78,9 @@ services:
              - "@logger"
              - "@prestashop.core.admin.data_provider.addons_interface"
              - "@prestashop.categories_provider"
+             - "@prestashop.adapter.data_provider.module"
              - "@doctrine.cache.provider"
+             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
         calls:
             - [ setRouter, ['@router']]
         decorates: prestashop.core.admin.data_provider.module_interface
