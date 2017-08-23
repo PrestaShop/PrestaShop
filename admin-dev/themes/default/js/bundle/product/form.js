@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-var inputsTimeout=false;
 
 $(document).ready(function() {
   form.init();
@@ -980,16 +979,6 @@ var form = (function() {
       });
   }
 
-  function checkDOMChange() {
-    if($('.attribute_wholesale_price').length > 0 && $('.attribute_priceTE').length > 0) {
-      inputsTimeout = null;
-      $('.attribute_wholesale_price, .attribute_priceTE').each(function(){
-        $(this).val(priceCalculation.normalizePrice($(this).val()));
-      })
-    }else
-      inputsTimeout = setTimeout( checkDOMChange, 100 );
-  }
-
   return {
     'init': function() {
       /** prevent form submit on ENTER keypress */
@@ -1147,8 +1136,17 @@ var form = (function() {
           });
         });
         imagesProduct.initExpander();
+
+        /** On event "DOMSubtreeModified" : force normalizePrice on attribute_wholesale_price and attribute_priceTE */
+        $('#accordion_combinations').on('DOMSubtreeModified', function() {
+          $('.attribute_wholesale_price, .attribute_priceTE').each(function(){
+            $(this).val(priceCalculation.normalizePrice($(this).val()));
+          })
+        });
+
       });
-      checkDOMChange();
+
+
     },
     'send': function() {
       send();
