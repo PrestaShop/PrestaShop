@@ -210,7 +210,7 @@ class SpecificPriceCore extends ObjectModel
 
     /**
      * Remove or add a field value to a query if values are present in the database (cache friendly)
-     *
+     * 
      * @param string $field_name
      * @param int $field_value
      * @param int $threshold
