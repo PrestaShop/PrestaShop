@@ -2785,16 +2785,16 @@
         },
         {
             "name": "prestashop/decimal",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/decimal.git",
-                "reference": "b39e1c3f4c9016ee505409e8718cb54798a0840e"
+                "reference": "42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/b39e1c3f4c9016ee505409e8718cb54798a0840e",
-                "reference": "b39e1c3f4c9016ee505409e8718cb54798a0840e",
+                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f",
+                "reference": "42e9bc8c2ec533dc2a247f9321b8f3ed55c5341f",
                 "shasum": ""
             },
             "require": {
@@ -2829,7 +2829,7 @@
                 "precision",
                 "prestashop"
             ],
-            "time": "2017-08-10T14:02:38+00:00"
+            "time": "2017-08-22T14:23:19+00:00"
         },
         {
             "name": "prestashop/graphnvd3",
