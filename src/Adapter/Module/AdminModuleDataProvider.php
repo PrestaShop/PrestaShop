@@ -130,15 +130,16 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * Check the permissions of the current context (CLI or employee) for a module
      *
+     * @param array $actions Actions to check
      * @param string $name The module nale
      * @return array of allowed actions
      */
-    public function getAllowedActions($name = '')
+    protected function filterAllowedActions(array $actions, $name = '')
     {
         $allowedActions = array();
-        foreach ($this->module_actions as $action) {
-            if ($this->allowedAccess($action, $name)) {
-                $allowedActions[] = $action;
+        foreach (array_keys($actions) as $action_name) {
+            if ($this->allowedAccess($action_name, $name)) {
+                $allowedActions[$action_name] = $actions[$action_name];
             }
         }
         return $allowedActions;
@@ -157,28 +158,22 @@ class AdminModuleDataProvider implements ModuleInterface
             return true;
         }
 
-        if (!in_array($action, $this->module_actions)) {
-            return false;
-        }
-
         if ('install' === $action) {
             return $this->employee->can('add', 'AdminModulessf');
-    }
+        }
 
         if ('uninstall' === $action) {
             return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
-}
-
-        if (in_array($action, array('upgrade', 'disable', 'enable', 'disable_mobile', 'enable_mobile'))) {
-            return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
         }
+
+        return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
     }
 
     public function generateAddonsUrls(array $addons, $specific_action = null)
     {
         foreach ($addons as &$addon) {
             $urls = array();
-            foreach ($this->getAllowedActions($addon->attributes->get('name')) as $action) {
+            foreach ($this->module_actions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -250,13 +245,15 @@ class AdminModuleDataProvider implements ModuleInterface
             } else {
                 $url_active = 'buy';
             }
-            if (count($urls)) {
-                $addon->attributes->set('urls', $urls);
-            }
+
+            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
+            $addon->attributes->set('urls', $urls);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
-            } else {
+            } elseif (array_key_exists($url_active, $urls)) {
                 $addon->attributes->set('url_active', $url_active);
+            } else {
+                $addon->attributes->set('url_active', key($urls));
             }
 
             $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));

@@ -183,6 +183,7 @@ class ModuleManagerBuilder
         self::$lecacyContext = new LegacyContext();
 
         if (is_null(self::$adminModuleDataProvider)) {
+            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$translator,
                 self::$legacyLogger,
@@ -201,7 +202,6 @@ class ModuleManagerBuilder
                 self::$lecacyContext,
                 self::$legacyLogger,
                 self::$translator);
-            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
         }
     }
 
