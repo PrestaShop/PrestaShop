@@ -247,10 +247,12 @@ var combinations = (function() {
 
           /** Add title on product's combination image */
           $(function() {
-              $('#combination_form_' + contentElem.attr('data')).find("img").each(function() {
-                  title = $(this).attr('src').split('/').pop();
-                  $(this).attr('title',title);
-              });
+            let idLang = parseInt($('#form_switch_language option:selected').data('idlang'));
+            $('#combination_form_' + contentElem.attr('data')).find('img').each(function() {
+              let legend = $(this).data('legend' + idLang);
+              $(this).attr('alt', legend);
+              $(this).attr('title', legend);
+            });
           });
 
           $('#form-nav, #form_content').hide();

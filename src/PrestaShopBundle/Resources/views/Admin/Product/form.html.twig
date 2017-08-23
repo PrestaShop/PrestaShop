@@ -53,7 +53,7 @@
             <div class="{{ languages|length == 1 ? 'hide' : '' }}">
               <select id="form_switch_language" class="form-control" data-toggle="select2">
                 {% for language in languages %}
-                  <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
+                  <option data-idlang={{ language.id_lang }}" value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
                 {% endfor %}
               </select>
             </div>

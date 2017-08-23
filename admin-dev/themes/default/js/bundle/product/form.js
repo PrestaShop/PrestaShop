@@ -961,6 +961,8 @@ var form = (function() {
   }
 
   function switchLanguage(iso_code) {
+    $('#form_switch_language option[value!="' + iso_code + '"]').attr('selected', false);
+    $('#form_switch_language option[value="' + iso_code + '"]').attr('selected', true);
     $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-' + iso_code + ')').removeClass('active');
     $('div.translations.tabbable > div > div.tab-pane.translation-label-' + iso_code).addClass('active');
   }

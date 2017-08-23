@@ -102,9 +102,14 @@ export default function() {
       $imagesElem.html('');
 
       $.each(combinationsImages[value], function(key, image) {
+        let legend = '';
+        $.each(image.legend, function(k, value) {
+          legend = legend + ' data-legend' + k + '="' + value.replace('"', '') + '"';
+        });
+
         $imagesElem.append(`<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
-          <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
+          <img src="${image.base_image_url}-small_default.${image.format}" alt="" ${legend}>
         </div>`);
       });
 
