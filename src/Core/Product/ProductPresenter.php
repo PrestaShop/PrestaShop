@@ -834,8 +834,8 @@ class ProductPresenter
 
     /**
      * Assemble the same features in one array
-     * @param $presentedProduct
-     * @return mixed
+     * @param  array $presentedProduct
+     * @return array
      */
     public function addFeaturesToDisplay($presentedProduct)
     {
@@ -850,7 +850,7 @@ class ProductPresenter
             }
         }
 
-        $presentedProduct['feature_to_display'] = $features;
+        $presentedProduct['grouped_features'] = $features;
 
         return $presentedProduct;
     }
