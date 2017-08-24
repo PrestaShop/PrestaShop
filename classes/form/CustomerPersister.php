@@ -53,18 +53,18 @@ class CustomerPersisterCore
         return $this->errors;
     }
 
-    public function save(Customer $customer, $clearTextPassword, $newPassword = '')
+    public function save(Customer $customer, $clearTextPassword, $newPassword = '', $password_required = true)
     {
         if ($customer->id) {
-            return $this->update($customer, $clearTextPassword, $newPassword);
+            return $this->update($customer, $clearTextPassword, $newPassword, $password_required);
         } else {
             return $this->create($customer, $clearTextPassword);
         }
     }
 
-    private function update(Customer $customer, $clearTextPassword, $newPassword)
+    private function update(Customer $customer, $clearTextPassword, $newPassword, $password_required = true)
     {
-        if (!$customer->is_guest && !$this->crypto->checkHash(
+        if (!$customer->is_guest && $password_required && !$this->crypto->checkHash(
             $clearTextPassword,
             $customer->passwd,
             _COOKIE_KEY_
@@ -86,7 +86,7 @@ class CustomerPersisterCore
             );
         }
 
-        if ($customer->is_guest) {
+        if ($customer->is_guest || !$password_required) {
             // TODO SECURITY: Audit requested
             if ($customer->id != $this->context->customer->id) {
 

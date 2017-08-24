@@ -31,6 +31,8 @@ class IdentityControllerCore extends FrontController
     public $authRedirection = 'identity';
     public $ssl = true;
 
+    public $password_required = true;
+
     /**
      * Assign template vars related to page content
      * @see FrontController::initContent()
@@ -39,12 +41,13 @@ class IdentityControllerCore extends FrontController
     {
         $should_redirect = false;
 
-        $customer_form = $this->makeCustomerForm();
+        $customer_form = $this->makeCustomerForm()->setPasswordRequired($this->password_required);
         $customer = new Customer();
 
         $customer_form->getFormatter()
             ->setAskForNewPassword(true)
-            ->setPasswordRequired(true)
+            ->setAskForPassword($this->password_required)
+            ->setPasswordRequired($this->password_required)
             ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
         ;
 
