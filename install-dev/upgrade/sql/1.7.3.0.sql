@@ -34,3 +34,5 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
 /* PHP:ps_1730_migrate_data_from_store_to_store_lang_and_clean_store(); */;
 
 ALTER TABLE `PREFIX_store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`;
+
+ALTER TABLE `PREFIX_feature_product` DROP PRIMARY KEY ,ADD PRIMARY KEY (`id_feature`, `id_product`, `id_feature_value`);
