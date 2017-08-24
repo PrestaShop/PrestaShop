@@ -329,23 +329,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['inputAccessories'] = $inputAccessories;
         }
 
-        //map features
-        if (!empty($form_data['features'])) {
-            foreach ($form_data['features'] as $dataFeature) {
-                $idFeature = $dataFeature['feature'];
-
-                //custom value is defined
-                if ($dataFeature['custom_value'][$this->defaultLocale]) {
-                    foreach ($this->locales as $locale) {
-                        $form_data['feature_'.$idFeature.'_value'] = null;
-                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
-                    }
-                } elseif ($dataFeature['value']) {
-                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
-                }
-            }
-        }
-
         //map warehouseProductLocations
         $form_data['warehouse_loaded'] = 1;
         $warehouses = $this->warehouseAdapter->getWarehouses();
