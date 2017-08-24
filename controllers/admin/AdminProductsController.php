@@ -870,22 +870,24 @@ class AdminProductsControllerCore extends AdminController
             $languages = Language::getLanguages(false);
             if ($form = Tools::getValue('form', false)) {
                 $features = isset($form['step1']['features']) ? $form['step1']['features'] : array();
-                foreach ($features as $feature) {
-                    if (empty($feature['value'])) {
-                        if ($defaultValue = $this->checkFeatures($languages, $feature)) {
-                            $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
-                            foreach ($languages as $language) {
-                                if (isset($feature['custom_value'][$language['id_lang']])
-                                    && $custom = $feature['custom_value'][$language['id_lang']]
-                                ) {
-                                    $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $custom);
-                                } else {
-                                    $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $defaultValue);
+                if (is_array($features)) {
+                    foreach ($features as $feature) {
+                        if (empty($feature['value'])) {
+                            if ($defaultValue = $this->checkFeatures($languages, $feature)) {
+                                $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
+                                foreach ($languages as $language) {
+                                    if (isset($feature['custom_value'][$language['id_lang']])
+                                        && $custom = $feature['custom_value'][$language['id_lang']]
+                                    ) {
+                                        $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $custom);
+                                    } else {
+                                        $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $defaultValue);
+                                    }
                                 }
                             }
+                        } else {
+                            $product->addFeaturesToDB($feature['feature'], $feature['value']);
                         }
-                    } else {
-                        $product->addFeaturesToDB($feature['feature'], $feature['value']);
                     }
                 }
             }
@@ -1571,9 +1573,9 @@ class AdminProductsControllerCore extends AdminController
 
     /**
      * Checking customs feature
-     * @param $languages
-     * @param $featureInfo
-     * @return int|mixed
+     * @param array $languages
+     * @param array $featureInfo
+     * @return int|string
      */
     protected function checkFeatures($languages, $featureInfo)
     {
@@ -1581,9 +1583,8 @@ class AdminProductsControllerCore extends AdminController
         $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $featureInfo['feature']);
 
         foreach ($languages as $language) {
-            if (isset($featureInfo['custom_value'][$language['id_lang']])
-                && $val = $featureInfo['custom_value'][$language['id_lang']]
-            ) {
+            if (isset($featureInfo['custom_value'][$language['id_lang']])) {
+                $val = $featureInfo['custom_value'][$language['id_lang']];
                 $current_language = new Language($language['id_lang']);
                 if (Tools::strlen($val) > $rules['sizeLang']['value']) {
                     $this->errors[] = $this->trans(

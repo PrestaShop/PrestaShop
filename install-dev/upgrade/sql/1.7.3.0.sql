@@ -35,4 +35,4 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
 
 ALTER TABLE `PREFIX_store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`;
 
-ALTER TABLE `PREFIX_feature_product` DROP PRIMARY KEY ,ADD PRIMARY KEY (`id_feature`, `id_product`, `id_feature_value`);
+ALTER TABLE `PREFIX_feature_product` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_feature`, `id_product`, `id_feature_value`);
