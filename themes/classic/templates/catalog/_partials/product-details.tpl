@@ -51,13 +51,13 @@
   {/block}
 
   {block name='product_features'}
-    {if $product.features}
+    {if $product.feature_to_display}
       <section class="product-features">
         <h3 class="h6">{l s='Data sheet' d='Shop.Theme.Catalog'}</h3>
         <dl class="data-sheet">
-          {foreach from=$product.features item=feature}
+          {foreach from=$product.feature_to_display item=feature}
             <dt class="name">{$feature.name}</dt>
-            <dd class="value">{$feature.value}</dd>
+            <dd class="value">{$feature.value|nl2br nofilter}</dd>
           {/foreach}
         </dl>
       </section>

@@ -674,6 +674,11 @@ class ProductPresenter
 
         $presentedProduct['embedded_attributes'] = $this->getProductEmbeddedAttributes($product);
 
+        // if product has features
+        if (isset($presentedProduct['features'])) {
+            $presentedProduct = $this->addFeaturesToDisplay($presentedProduct);
+        }
+
         return $presentedProduct;
     }
 
@@ -826,5 +831,28 @@ class ProductPresenter
         }
 
         return $embeddedProductAttributes;
+    }
+
+    /**
+     * Assemble the same features in one array
+     * @param $presentedProduct
+     * @return mixed
+     */
+    public function addFeaturesToDisplay($presentedProduct)
+    {
+        $features = array();
+        foreach ($presentedProduct['features'] as $feature) {
+            if (isset($feature['name'])) {
+                if (array_key_exists($feature['name'], $features)) {
+                    $features[$feature['name']]['value'] .= "\n" . $feature['value'];
+                } else {
+                    $features[$feature['name']] = $feature;
+                }
+            }
+        }
+
+        $presentedProduct['feature_to_display'] = $features;
+
+        return $presentedProduct;
     }
 }
