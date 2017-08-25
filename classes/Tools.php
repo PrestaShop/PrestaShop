@@ -3841,7 +3841,7 @@ exit;
             return;
         }
 
-        $sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
+        $sort_function = function($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
 
         uasort($rows, $sort_function);
 
