@@ -1334,6 +1334,8 @@ class AdminOrdersControllerCore extends AdminController
             if ($this->tabAccess['edit'] === '1') {
                 if (!Tools::getValue('discount_name')) {
                     $this->errors[] = Tools::displayError('You must specify a name in order to create a new discount.');
+                } elseif ((float)Tools::getValue('discount_value') <= 0) {
+                    $this->errors[] = Tools::displayError('The discount value is invalid.');
                 } else {
                     if ($order->hasInvoice()) {
                         // If the discount is for only one invoice
