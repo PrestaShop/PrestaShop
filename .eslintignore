@@ -1,0 +1,8 @@
+**/public/
+**/vendor/
+modules/
+admin-dev/filemanager/
+themes/classic/assets/js/
+**/*jquery/*.js
+**/jquery*.js
+themes/core.js
