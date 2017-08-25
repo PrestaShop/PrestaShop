@@ -2057,7 +2057,7 @@ class ToolsCore
 
     private static function toCamelCaseCallback(array $matches)
     {
-      return strtoupper($matches[1]);
+        return strtoupper($matches[1]);
     }
 
     /**
@@ -3772,7 +3772,7 @@ exit;
             return;
         }
 
-        $sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
+        $sort_function = function($a, $b) use ($column) { return $b[$column] > $a[$column] ? 1 : -1; };
 
         uasort($rows, $sort_function);
 
