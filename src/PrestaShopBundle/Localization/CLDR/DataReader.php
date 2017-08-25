@@ -192,8 +192,6 @@ class DataReader implements DataReaderInterface
         }
         if (isset($xmlLocaleData->identity->territory)) {
             $localeData->localeCode .= '-' . $xmlLocaleData->identity->territory['type'];
-        } elseif (isset($xmlLocaleData->numbers->symbols)) {
-            $localeData->defaultNumberingSystem = (string)$xmlLocaleData->numbers->symbols[0]['numberSystem'];
         }
 
         $numbersData = $xmlLocaleData->numbers;
@@ -201,6 +199,8 @@ class DataReader implements DataReaderInterface
         // Default numbering system.
         if (isset($numbersData->defaultNumberingSystem)) {
             $localeData->defaultNumberingSystem = (string)$numbersData->defaultNumberingSystem;
+        } elseif (isset($xmlLocaleData->numbers->symbols)) {
+            $localeData->defaultNumberingSystem = (string)$xmlLocaleData->numbers->symbols[0]['numberSystem'];
         }
 
         // Minimum grouping digits value defines when we should start grouping digits.
