@@ -678,6 +678,10 @@ abstract class QueryParamsCollection
             return $filters;
         }
 
+        if (!is_array($this->queryParams['filter']['keywords'])) {
+            $this->queryParams['filter']['keywords'] = (array)$this->queryParams['filter']['keywords'];
+        }
+
         $parts = array_map(function ($index) {
             return sprintf(
                 'AND (' .
