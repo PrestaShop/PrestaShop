@@ -63,7 +63,6 @@ class LocaleTest extends TestCase
         $currencyCLDR = new CurrencyRepository([$currencyCLDRData]);
 
         $currencyManager = new CurrencyManager($currencyCache, $currencyCLDR);
-
         $this->localeManager = new LocaleManager($localeCache, $localeCLDR, $currencyManager);
     }
 
@@ -71,7 +70,7 @@ class LocaleTest extends TestCase
      * @param $floatNumber
      * @param $expectedFormats
      *
-     * @dataProvider provideValidNumberFormatsFromFloat
+     * @dataProvider provideValidNumberFormats
      */
     public function testFormatNumberWithFloat($floatNumber, $expectedFormats)
     {
@@ -87,29 +86,36 @@ class LocaleTest extends TestCase
         }
     }
 
-    public function provideValidNumberFormatsFromFloat()
+    public function provideValidNumberFormats()
     {
         return [
             [
-                'number'  => 1234560.789898989898,
+                'number'  => 1234560.123,
                 'formats' => [
-                    'en-GB' => '1,234,560.789899',
-                    'en-US' => '1,234,560.789899',
-                    'fr-FR' => '1 234 560,789899',
-                    'ar-IL' => '1٬234٬560٫789899',
+                    'en-GB' => '1,234,560.123',
+                    'en-US' => '1,234,560.123',
+                    'fr-FR' => '1 234 560,123',
+                    'ar-IL' => '1,234,560.123', // Needs to be changed when numbering system is configurable
+                ],
+            ],
+            [
+                'number'  => 1234560.789,
+                'formats' => [
+                    'en-GB' => '1,234,560.789',
+                    'en-US' => '1,234,560.789',
+                    'fr-FR' => '1 234 560,789',
+                    'ar-IL' => '1,234,560.789', // Needs to be changed when numbering system is configurable
+                ],
+            ],
+            [
+                'number'  => '1234560.789898989898123',
+                'formats' => [
+                    'en-GB' => '1,234,560.789898989898123',
+                    'en-US' => '1,234,560.789898989898123',
+                    'fr-FR' => '1 234 560,789898989898123',
+                    'ar-IL' => '1,234,560.789898989898123', // Needs to be changed when numbering system is configurable
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param $floatNumber
-     * @param $expectedFormats
-     *
-     * @dataProvider provideValidNumberFormatsFromString
-     */
-    public function testFormatNumberWithString($floatNumber, $expectedFormats)
-    {
-        // TODO
     }
 }

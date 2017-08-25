@@ -129,21 +129,21 @@ class Locale
     {
         $spec = $this->getSpecification();
 
-        return $spec->decimalPatterns[$spec->defaultNumberingSystem];
+        return $spec->decimalPatterns[$this->getUsedNumberingSystem()];
     }
 
     public function getPercentPattern()
     {
         $spec = $this->getSpecification();
 
-        return $spec->percentPatterns[$spec->defaultNumberingSystem];
+        return $spec->percentPatterns[$this->getUsedNumberingSystem()];
     }
 
     public function getCurrencyPattern()
     {
         $spec = $this->getSpecification();
 
-        return $spec->currencyPatterns[$spec->defaultNumberingSystem];
+        return $spec->currencyPatterns[$this->getUsedNumberingSystem()];
     }
 
     /**
@@ -158,7 +158,12 @@ class Locale
     {
         $spec = $this->getSpecification();
         /** @var NumberSymbolList $specSymbols */
-        $specSymbols = $spec->numberSymbols[$spec->defaultNumberingSystem];
+        if (isset($spec->numberSymbols['latn'])) {
+            // TODO : get rid of this case when numbering system choice is implemented.
+            $specSymbols = $spec->numberSymbols['latn'];
+        } else {
+            $specSymbols = $spec->numberSymbols[$this->getUsedNumberingSystem()];
+        }
 
         return array(
             '.' => $specSymbols->decimal,
@@ -169,12 +174,51 @@ class Locale
         );
     }
 
-    protected function getDefaultNumberingSystem()
+    /**
+     * Get the numbering system to use.
+     *
+     * It should be the default numbering system declared by CLDR. But for now, and in order to delay the work on
+     * different available numbering systems (and specifically on non-latin number digits) for a given locale, we will
+     * stick to latn whenever possible, and use the default as a fallback.
+     *
+     * TODO : with "numbering system choice" feature => should return default numbering system as a fallback only.
+     *
+     * @return string The numbering system to use
+     */
+    public function getUsedNumberingSystem()
     {
-        if (!isset($this->getSpecification()->defaultNumberingSystem)) {
-            return $this->getSpecification()->numberingSystems[0];
+        $availableNumberingSystems = $this->getSpecification()->numberingSystems;
+
+        if (!$availableNumberingSystems) {
+            return $this->getDefaultNumberingSystem();
         }
 
-        return $this->getSpecification()->defaultNumberingSystem;
+        // TODO : get rid of this case when numbering system choice is implemented.
+        if (in_array('latn', $availableNumberingSystems)) {
+            return 'latn';
+        }
+
+        foreach (array('traditional', 'native', 'finance') as $system) {
+            if (isset($availableNumberingSystems[$system])) {
+                return $availableNumberingSystems[$system];
+            }
+        }
+
+        return $this->getDefaultNumberingSystem();
+    }
+
+    /**
+     * Get the numbering system defined as default for this locale
+     *
+     * @return string The default numbering system
+     */
+    protected function getDefaultNumberingSystem()
+    {
+        $spec = $this->getSpecification();
+        if (isset($spec->defaultNumberingSystem)) {
+            return $spec->defaultNumberingSystem;
+        }
+
+        return $spec->numberingSystems[0];
     }
 }

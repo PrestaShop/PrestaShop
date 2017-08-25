@@ -66,6 +66,14 @@ class Number
             ->setCurrencyDisplay(self::CURRENCY_DISPLAY_SYMBOL);
     }
 
+    /**
+     * Format a number according to locale rules
+     *
+     * @param float|string $number The number to format
+     * @param string $style The format style (decimal, percent, currency)
+     *
+     * @return string
+     */
     public function format($number, $style = self::DECIMAL)
     {
         if (!is_numeric($number)) {
@@ -117,26 +125,40 @@ class Number
         }
 
         // Assemble the final number and insert it into the pattern.
-        $number = $majorDigits;
+        $formattedNumber = $majorDigits;
         if ($minorDigits) {
-            $number .= '.' . $minorDigits;
+            $formattedNumber .= '.' . $minorDigits;
         }
-        $pattern = $negative ? $this->getNegativeNumberPattern() : $this->getPositiveNumberPattern();
-        $number = preg_replace('/#(?:[\.,]#+)*0(?:[,\.][0#]+)*/', $number, $pattern);
+        $pattern         = $negative ? $this->getNegativeNumberPattern() : $this->getPositiveNumberPattern();
+        $formattedNumber = preg_replace('/#(?:[\.,]#+)*0(?:[,\.][0#]+)*/', $formattedNumber, $pattern);
         // Localize the number.
-        $number = $this->replaceDigits($number);
-        $number = $this->replaceSymbols($number);
+        $formattedNumber = $this->replaceDigits($formattedNumber);
+        $formattedNumber = $this->replaceSymbols($formattedNumber);
 
 
-        return $number;
+        return $formattedNumber;
     }
 
+    /**
+     * Replace latn digits with relevant numbering system's digits
+     *
+     * @param string $number The number process
+     *
+     * @return string The number with replaced digits
+     */
     protected function replaceDigits($number)
     {
         // TODO use digits set for the locale (cf. /localization/CLDR/core/common/supplemental/numberingSystems.xml)
         return $number;
     }
 
+    /**
+     * Replace placeholder number symbols with relevant numbering system's symbols
+     *
+     * @param string $number The number to process
+     *
+     * @return string The number with replaced symbols
+     */
     protected function replaceSymbols($number)
     {
         $replacements = $this->getNumberSymbols();
