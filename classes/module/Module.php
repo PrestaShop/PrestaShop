@@ -1877,19 +1877,20 @@ abstract class ModuleCore
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
+     * @param string|null $locale Give a context for the translation
      * @return string Translation
      */
-    public function l($string, $specific = false)
+    public function l($string, $specific = false, $locale = null)
     {
         if (self::$_generate_config_xml_mode) {
             return $string;
         }
 
-        if (($translation = Context::getContext()->getTranslator()->trans($string)) !== $string) {
+        if (($translation = Context::getContext()->getTranslator()->trans($string, array(), null, $locale)) !== $string) {
             return $translation;
         }
 
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
+        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, false, $locale);
     }
 
     /*
