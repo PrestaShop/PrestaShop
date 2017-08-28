@@ -65,16 +65,18 @@ class CheckRequirements
 
         $failRequired = in_array('fail', $paramsRequiredResults);
 
+        $testsErrors = $this->getErrorMessages();
+
         if ($failRequired && $paramsRequiredResults['files'] != 'ok') {
             $tmp = ConfigurationTest::test_files(true);
             if (is_array($tmp) && count($tmp)) {
-                $testsErrors['files'] = $this->errorMessages()['files'].'<br/>('.implode(', ', $tmp).')';
+                $testsErrors['files'] = $this->getErrorMessages()['files'].'<br/>('.implode(', ', $tmp).')';
             }
         }
 
         $results = array(
             'failRequired' => $failRequired,
-            'testsErrors' => $this->getErrorMessages(),
+            'testsErrors' => $testsErrors,
             'testsRequired' => $paramsRequiredResults,
         );
 

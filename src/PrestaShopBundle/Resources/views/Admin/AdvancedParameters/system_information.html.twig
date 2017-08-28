@@ -26,46 +26,6 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
-{% if system.notHostMode %}
-    <script type="text/javascript">
-        $(document).ready(function()
-        {
-            $.ajax({
-                type: 'POST',
-                url: '{{ path("admin_system_information_check_files") }}',
-                data: {},
-                dataType: 'json',
-                success: function(json)
-                {
-                    var tab = {
-                        'missing': '{{ "Missing files"|trans({}, "Admin.Advparameters.Notification") }}',
-                        'updated': '{{ "Updated files"|trans({}, "Admin.Advparameters.Notification") }}'
-                    };
-
-                    if (json.missing.length || json.updated.length)
-                        $('#changedFiles').html('<div class="alert alert-warning">{{ "Changed/missing files have been detected."|trans({}, "Admin.Advparameters.Notification") }}</div>');
-                    else
-                        $('#changedFiles').html('<div class="alert alert-success">{{ "No change has been detected in your files."|trans({}, "Admin.Advparameters.Notification") }}</div>');
-
-                        $.each(tab, function(key, lang)
-                        {
-                            if (json[key].length)
-                            {
-                                var html = $('<ul>').attr('id', key+'_files');
-                                $(json[key]).each(function(key, file)
-                                {
-                                    html.append($('<li>').html(file))
-                                });
-                                $('#changedFiles')
-                                    .append($('<h4>').html(lang+' ('+json[key].length+')'))
-                                    .append(html);
-                            }
-                        });
-                    }
-            });
-        });
-    </script>
-{% endif %}
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
@@ -277,5 +237,52 @@
             </div>
         </div>
     </div>
+{% endif %}
+{% if system.notHostMode %}
+    <script>
+        $(document).ready(function()
+        {
+            var translations = {
+                missing: '{{ "Missing files"|trans({}, "Admin.Advparameters.Notification") }}',
+                updated: '{{ "Updated files"|trans({}, "Admin.Advparameters.Notification") }}',
+                changesDetected: '{{ "Changed/missing files have been detected."|trans({}, "Admin.Advparameters.Notification") }}',
+                noChangeDetected: '{{ "No change has been detected in your files."|trans({}, "Admin.Advparameters.Notification") }}'
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ path("admin_system_information_check_files") }}',
+                data: {},
+                dataType: 'json',
+                success: function(json)
+                {
+                    var tab = {
+                        'missing': translations.missing,
+                        'updated': translations.updated
+                    };
+
+                    if (json.missing.length || json.updated.length)
+                        $('#changedFiles').html('<div class="alert alert-warning">'+ translations.changesDetected +'</div>');
+                    else
+                        $('#changedFiles').html('<div class="alert alert-success">'+ translations.noChangeDetected +'</div>');
+
+                    $.each(tab, function(key, lang)
+                    {
+                        if (json[key].length)
+                        {
+                            var html = $('<ul>').attr('id', key+'_files');
+                            $(json[key]).each(function(key, file)
+                            {
+                                html.append($('<li>').html(file))
+                            });
+                            $('#changedFiles')
+                                .append($('<h4>').html(lang+' ('+json[key].length+')'))
+                                .append(html);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 {% endif %}
 {% endblock %}
