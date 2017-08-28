@@ -24,9 +24,9 @@
  *-->
 <template>
   <tr>
-    <td class="flex p-r-1">
+    <td class="flex pr-1">
       <PSMedia
-        class="m-l-1"
+        class="ml-1"
         :thumbnail="thumbnail"
       >
         <p>

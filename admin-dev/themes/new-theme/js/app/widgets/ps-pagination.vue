@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav class="float-xs-right m-t-1" v-if="displayPagination">
+  <nav class="float-xs-right mt-1" v-if="displayPagination">
     <ul class="pagination" :class="{'multi':isMultiPagination}">
       <li v-if="isMultiPagination" class="page-item">
         <button v-show="activeLeftArrow" class="float-left page-link" @click="prev($event)">
@@ -37,8 +37,8 @@
           class="page-link"
           :class="{
             'current' : checkCurrentIndex(index),
-            'p-l-0' : showFirstDots(index),
-            'p-r-0' : showLastDots(index)
+            'pl-0' : showFirstDots(index),
+            'pr-0' : showLastDots(index)
           }"
           @click.prevent="changePage(index)"
           >

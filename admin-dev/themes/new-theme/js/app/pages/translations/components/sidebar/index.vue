@@ -24,7 +24,7 @@
  *-->
 <template>
   <div class="col-xs-3">
-    <div class="card p-a-1">
+    <div class="card pa-1">
       <PSTree
         ref="domainTree"
         :model="domainsTree"

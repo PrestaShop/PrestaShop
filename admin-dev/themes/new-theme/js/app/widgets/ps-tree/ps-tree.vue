@@ -24,7 +24,7 @@
  *-->
 <template>
   <div>
-    <div class="m-b-1 tree-header">
+    <div class="mb-1 tree-header">
       <span class="text-uppercase pointer" @click="expand">
         <i class="material-icons">keyboard_arrow_down</i>
         <strong v-if="translations">{{translations.expand}}</strong>

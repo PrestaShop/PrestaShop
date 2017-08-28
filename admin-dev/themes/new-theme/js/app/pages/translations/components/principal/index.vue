@@ -25,7 +25,7 @@
 <template>
   <transition name="fade">
     <div class="col-xs-9 card" v-if="principalReady">
-      <div class="p-a-1 row translations-wrapper">
+      <div class="pa-1 row translations-wrapper">
         <PSAlert v-if="noResult" alertType="ALERT_TYPE_WARNING" :hasClose="false">
           {{noResultInfo}}
         </PSAlert>
@@ -33,7 +33,7 @@
           <PSAlert v-if="searchActive" alertType="ALERT_TYPE_INFO" :hasClose="false">
             {{searchInfo}}
           </PSAlert>
-          <div class="col-xs-8 p-t-1" >
+          <div class="col-xs-8 pt-1" >
             <h1 class="domain-info">
               <span>{{ currentDomain }}</span>
               <span>{{ currentDomainTotalTranslations }}</span>
@@ -55,7 +55,7 @@
             @submit.prevent="saveTranslations"
           >
             <div class="row">
-              <div class="col-xs-12 m-b-2">
+              <div class="col-xs-12 mb-2">
                 <PSButton :primary="true" type="submit" class="float-xs-right">
                   {{ trans('button_save') }}
                 </PSButton>
@@ -72,7 +72,7 @@
               @editedAction="isEdited"
               >
             </TranslationInput>
-            <PSButton :primary="true" type="submit" class="float-xs-right m-t-3">
+            <PSButton :primary="true" type="submit" class="float-xs-right mt-3">
               {{ trans('button_save') }}
             </PSButton>
           </form>

@@ -23,9 +23,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="search" class="row m-b-2">
+  <div id="search" class="row mb-2">
     <div class="col-md-8">
-      <div class="m-b-2">
+      <div class="mb-2">
         <form class="search-form" @submit.prevent>
           <label>{{trans('product_search')}}</label>
           <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />

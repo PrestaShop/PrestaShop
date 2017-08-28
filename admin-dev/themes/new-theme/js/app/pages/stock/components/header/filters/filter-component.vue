@@ -55,7 +55,7 @@
       </PSTree>
     </div>
     <ul
-      class="m-t-1"
+      class="mt-1"
       v-else
     >
       <li

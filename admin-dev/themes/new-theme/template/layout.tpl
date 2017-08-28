@@ -20,7 +20,7 @@
     *}
 
     {* Logo *}
-    <i class="material-icons float-left p-x-1 js-mobile-menu d-md-none">menu</i>
+    <i class="material-icons float-left px-1 js-mobile-menu d-md-none">menu</i>
     <a class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
     <div class="component float-left d-none d-md-inline-block">{include file="components/layout/quick_access.tpl"}</div>

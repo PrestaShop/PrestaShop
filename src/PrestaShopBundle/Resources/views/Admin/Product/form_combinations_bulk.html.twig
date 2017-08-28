@@ -24,38 +24,38 @@
  *#}
 <div class="row">
   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-    <div class="col-xl-2 col-lg-6 custom-width m-b-1">
+    <div class="col-xl-2 col-lg-6 custom-width mb-1">
       <label class="form-control-label">{{ form.quantity.vars.label }}</label>
       {{ form_errors(form.quantity) }}
       {{ form_widget(form.quantity) }}
     </div>
   {% endif %}
 
-  <div class="col-xl-2 col-lg-6 custom-width m-b-1">
+  <div class="col-xl-2 col-lg-6 custom-width mb-1">
     <label class="form-control-label">{{ form.cost_price.vars.label }}</label>
     {{ form_errors(form.cost_price) }}
     {{ form_widget(form.cost_price) }}
   </div>
 
-  <div class="col-xl-2 col-lg-6 custom-width m-b-1">
+  <div class="col-xl-2 col-lg-6 custom-width mb-1">
     <label class="form-control-label">{{ form.impact_on_weight.vars.label }}</label>
     {{ form_errors(form.impact_on_weight) }}
     {{ form_widget(form.impact_on_weight) }}
   </div>
 
-  <div class="col-xl-3 col-lg-6 custom-width m-b-1">
+  <div class="col-xl-3 col-lg-6 custom-width mb-1">
     <label class="form-control-label">{{ form.impact_on_price_te.vars.label }}</label>
     {{ form_errors(form.impact_on_price_te) }}
     {{ form_widget(form.impact_on_price_te) }}
   </div>
 
-  <div class="col-xl-3 col-lg-6 custom-width m-b-1">
+  <div class="col-xl-3 col-lg-6 custom-width mb-1">
     <label class="form-control-label">{{ form.impact_on_price_ti.vars.label }}</label>
     {{ form_errors(form.impact_on_price_ti) }}
     {{ form_widget(form.impact_on_price_ti) }}
   </div>
 
-  <div class="col-xl-4 col-lg-6 custom-width m-b-1">
+  <div class="col-xl-4 col-lg-6 custom-width mb-1">
     <label class="form-control-label">{{ form.date_availability.vars.label }}</label>
     {{ form_errors(form.date_availability) }}
     {{ form_widget(form.date_availability) }}

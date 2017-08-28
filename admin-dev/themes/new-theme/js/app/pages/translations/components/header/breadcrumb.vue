@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="m-b-1">
+  <div class="mb-1">
     <small>
       <a :href="internationalLink">{{trans('link_international')}}</a> /
       <a :href="translationLink">{{trans('link_translations')}}</a>
