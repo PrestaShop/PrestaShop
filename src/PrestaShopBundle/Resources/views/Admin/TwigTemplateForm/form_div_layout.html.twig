@@ -99,18 +99,16 @@
 {%- endblock choice_widget_collapsed -%}
 
 {%- block choice_widget_options -%}
-  {% for group_label, choice in options %}
-    {%- if choice is iterable -%}
-      <optgroup label="{{ choice_translation_domain is same as(false) ? group_label : group_label }}">
-        {% set options = choice %}
-        {{- block('choice_widget_options') -}}
-      </optgroup>
-    {%- else -%}
-      {% set attr = choice.attr %}
-      <option
-        value="{{ choice.value }}" {{ block('attributes') }}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.label : choice.label }}</option>
-    {%- endif -%}
-  {% endfor %}
+    {% for group_label, choice in options %}
+        {%- if choice is iterable -%}
+            <optgroup label="{{ choice_translation_domain is same as(false) ? group_label : group_label|trans({}, choice_translation_domain) }}">
+                {% set options = choice %}
+                {{- block('choice_widget_options') -}}
+            </optgroup>
+        {%- else -%}
+            <option value="{{ choice.value }}"{% if choice.attr %} {% set attr = choice.attr %}{{ block('attributes') }}{% endif %}{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice_translation_domain is same as(false) ? choice.label : choice.label|trans({}, choice_translation_domain) }}</option>
+        {%- endif -%}
+    {% endfor %}
 {%- endblock choice_widget_options -%}
 
 {%- block checkbox_widget -%}

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,25 +22,34 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% macro form_label_tooltip(name, tooltip, placement) %}
-    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
-{% endmacro %}
+ */
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-{% macro check(variable) %}
-  {{ variable is defined and variable|length > 0 ? variable : false }}
-{% endmacro %}
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
-{% macro tooltip(text, icon, position) %}
-  <span data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
-    <i class="material-icons">{{ icon }}</i>
-  </span>
-{% endmacro %}
+/**
+ * Retrieve and Manage configuration (used to manage forms in "Configure" section of back office)
+ */
+interface DataConfigurationInterface
+{
+    /**
+     * @return array
+     */
+    public function getConfiguration();
 
-{% macro infotip(text)%}
-<div class="alert alert-info">
-  <ul>
-    <li>{{ text }} </li>
-  </ul>
-</div>
-{% endmacro %}
+    /**
+     * @param array $configuration
+     * @return array if not empty, populated by validation errors
+     * @throws UndefinedOptionsException
+     */
+    public function updateConfiguration(array $configuration);
+
+    /**
+     * Ensure the parameters passed are valid.
+     *
+     * @param array $configuration
+     * @return bool Returns true if no exception are thrown
+     * @throws UndefinedOptionsException
+     */
+    public function validateConfiguration(array $configuration);
+}

@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,25 +22,35 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% macro form_label_tooltip(name, tooltip, placement) %}
-    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
-{% endmacro %}
+ */
 
-{% macro check(variable) %}
-  {{ variable is defined and variable|length > 0 ? variable : false }}
-{% endmacro %}
+namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-{% macro tooltip(text, icon, position) %}
-  <span data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
-    <i class="material-icons">{{ icon }}</i>
-  </span>
-{% endmacro %}
+use Tools;
+use Media;
 
-{% macro infotip(text)%}
-<div class="alert alert-info">
-  <ul>
-    <li>{{ text }} </li>
-  </ul>
-</div>
-{% endmacro %}
+/**
+ * Class able to clear application caches
+ */
+class CacheClearer
+{
+    /**
+     * Clear all application caches
+     */
+    public function clearAllCaches()
+    {
+        Tools::clearSf2Cache();
+        Tools::clearSmartyCache();
+        Tools::clearXMLCache();
+        Media::clearCache();
+        Tools::generateIndex();
+    }
+
+    /**
+     * Clear Symfony cache
+     */
+    public function clearSymfonyCache()
+    {
+        Tools::clearSf2Cache();
+    }
+}

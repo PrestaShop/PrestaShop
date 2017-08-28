@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,25 +22,37 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% macro form_label_tooltip(name, tooltip, placement) %}
-    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
-{% endmacro %}
+ */
+namespace PrestaShopBundle\Form\Admin\Type;
 
-{% macro check(variable) %}
-  {{ variable is defined and variable|length > 0 ? variable : false }}
-{% endmacro %}
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Translation\TranslatorInterface;
 
-{% macro tooltip(text, icon, position) %}
-  <span data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
-    <i class="material-icons">{{ icon }}</i>
-  </span>
-{% endmacro %}
+/**
+ * PrestaShop forms needs custom domain name for field constraints
+ * This feature is not available in Symfony so we need to inject the translator
+ * for constraints messages only.
+ */
+abstract class TranslatorAwareType extends AbstractType
+{
+    private $translator;
 
-{% macro infotip(text)%}
-<div class="alert alert-info">
-  <ul>
-    <li>{{ text }} </li>
-  </ul>
-</div>
-{% endmacro %}
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * Get the translated chain from key
+     *
+     * @param $key the key to be translated
+     * @param $domain the domain to be selected
+     * @param $parameters Optional, pass parameters if needed (uncommon)
+     *
+     * @returns string
+     */
+    protected function trans($key, $domain, $parameters = array())
+    {
+        return $this->translator->trans($key, $parameters, $domain);
+    }
+}

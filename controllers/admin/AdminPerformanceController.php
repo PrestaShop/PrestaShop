@@ -614,7 +614,14 @@ class AdminPerformanceControllerCore extends AdminController
             return;
         }
 
+        /**
+         * /!\ Dont forget to migrate the HOOKS
+         */
         Hook::exec('action'.get_class($this).ucfirst($this->action).'Before', array('controller' => $this));
+        /**
+         * /!\ Dont forget to migrate the HOOKS
+         */
+
         if (Tools::isSubmit('submitAddServer')) {
             if ($this->access('add')) {
                 if (!Tools::getValue('memcachedIp')) {
@@ -916,7 +923,13 @@ class AdminPerformanceControllerCore extends AdminController
         }
 
         if ($redirectAdmin && (!isset($this->errors) || !count($this->errors))) {
+            /**
+             * MIGRATE HOOKS
+             */
             Hook::exec('action'.get_class($this).ucfirst($this->action).'After', array('controller' => $this, 'return' => ''));
+            /**
+             * MIGRATE HOOKS
+             */
             Tools::redirectAdmin(self::$currentIndex.'&token='.Tools::getValue('token').'&conf=4');
         }
     }

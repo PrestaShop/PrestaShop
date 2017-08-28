@@ -1,0 +1,75 @@
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+var PerformancePageUI = {
+    displaySmartyCache: function() {
+
+    },
+    displayCacheSystems: function() {
+        var CACHE_ENABLED = 1;
+        var cacheEnabledInput = document.getElementById('form_caching_use_cache');
+        var cachingSystemBlock = document.getElementById('caching_systems');
+
+        if(cacheEnabledInput.value == CACHE_ENABLED) {
+            cachingSystemBlock.style.display = "block";
+
+            return;
+        }
+        cachingSystemBlock.style.display = "none";
+    },
+    displayMemcacheServers: function() {
+        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
+        var memcacheServersListBlock = document.getElementById('servers-list');
+
+        if (cacheSelected == "CacheMemcache" || cacheSelected == "CacheMemcached") {
+            memcacheServersListBlock.style.display = "block";
+
+            return;
+        }
+
+        memcacheServersListBlock.style.display = "none";
+    }
+};
+
+/**
+ * Animations on form values.
+ */
+document.getElementById('form_caching_use_cache').addEventListener('change', function() {
+    PerformancePageUI.displayCacheSystems();
+});
+
+window.addEventListener('load', function() {
+    PerformancePageUI.displaySmartyCache();
+    PerformancePageUI.displayCacheSystems();
+    PerformancePageUI.displayMemcacheServers();
+});
+
+var cacheSystemInputs = document.querySelectorAll('input[type=radio]');
+var length = cacheSystemInputs.length;
+
+while(length--) {
+    cacheSystemInputs[length].addEventListener('change',function(){
+        PerformancePageUI.displayMemcacheServers();
+    });
+}

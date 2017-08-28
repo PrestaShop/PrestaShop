@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,25 +22,26 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% macro form_label_tooltip(name, tooltip, placement) %}
-    {{ form_label(name, null, {'label_attr': {'tooltip': tooltip, 'tooltip_placement': placement|default('top')}}) }}
-{% endmacro %}
+ */
+namespace PrestaShop\PrestaShop\Core\Form;
 
-{% macro check(variable) %}
-  {{ variable is defined and variable|length > 0 ? variable : false }}
-{% endmacro %}
+use Symfony\Component\Form\FormInterface;
 
-{% macro tooltip(text, icon, position) %}
-  <span data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
-    <i class="material-icons">{{ icon }}</i>
-  </span>
-{% endmacro %}
+/**
+ * Manage Symfony forms outside the controllers.
+ */
+interface FormHandlerInterface
+{
+    /**
+     * @return FormInterface
+     */
+    public function getForm();
 
-{% macro infotip(text)%}
-<div class="alert alert-info">
-  <ul>
-    <li>{{ text }} </li>
-  </ul>
-</div>
-{% endmacro %}
+    /**
+     * @param array $data data retrieved from form that need to be persisted in database
+     * @throws \Exception if the data can't be handled
+     *
+     * @return void
+     */
+    public function save(array $data);
+}
