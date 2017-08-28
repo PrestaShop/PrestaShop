@@ -172,14 +172,14 @@
             'button_id': "product_bulk_menu",
             'disabled': true,
             'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
-            'buttonType': "tertiary-outline",
+            'buttonType': "outline-secondary",
             'menu_icon': "icon-caret-up",
             'items': buttons_action
           }%}
         </div>
         <div id="product_catalog_category_tree_filter" class="float-right col-md-3">
           <button
-            class="btn btn-tertiary-outline"
+            class="btn btn-outline-secondary"
             data-toggle="collapse"
             data-target="#tree-categories"
           >
@@ -386,7 +386,7 @@
                   {% if has_category_filter == true %}
                     <th>
                       {% if not(activate_drag_and_drop) %}
-                        <input type="button" class="btn btn-tertiary-outline" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                        <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
                         {% else %}
                         <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
                     {% endif %}

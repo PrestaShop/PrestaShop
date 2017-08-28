@@ -231,7 +231,7 @@
                       </div>
                       <div class="row">
                         <div class="col-md-4">
-                          <button type="button" class="btn btn-primary-outline sensitive add" id="add_feature_button"><i class="material-icons">add_circle</i> {{ 'Add a feature'|trans({}, 'Admin.Catalog.Feature') }}</button>
+                          <button type="button" class="btn btn-outline-primary sensitive add" id="add_feature_button"><i class="material-icons">add_circle</i> {{ 'Add a feature'|trans({}, 'Admin.Catalog.Feature') }}</button>
                         </div>
                       </div>
                     </div>
@@ -1003,7 +1003,7 @@
                                 </div>
                                 <div class="module-container">
                                   <div class="module-quick-action-grid clearfix">
-                                    <button class="modules-list-button btn btn-primary-outline pull-xs-right" data-target="module-{{ module.id }}">
+                                    <button class="modules-list-button btn btn-outline-primary pull-xs-right" data-target="module-{{ module.id }}">
                                       {{ 'Configure'|trans({}, 'Admin.Actions') }}
                                     </button>
                                   </div>
@@ -1082,7 +1082,7 @@
         {% if is_shop_context %}
           <button
             type="button"
-            class="btn btn-tertiary-outline btn-submit hidden-xs uppercase duplicate"
+            class="btn btn-outline-secondary btn-submit hidden-xs uppercase duplicate"
             id="product_form_save_duplicate_btn"
             data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
             data-toggle="tooltip"
@@ -1093,7 +1093,7 @@
         {% endif %}
         <button
           type="button"
-          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase go-catalog"
+          class="btn btn-outline-secondary btn-submit hidden-xs uppercase go-catalog"
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
           data-toggle="tooltip"
@@ -1103,7 +1103,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-tertiary-outline btn-submit hidden-xs uppercase new-product"
+          class="btn btn-outline-secondary btn-submit hidden-xs uppercase new-product"
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="tooltip"
@@ -1174,7 +1174,7 @@
       {
         'type': 'button',
         'label': "No"|trans({}, 'Admin.Global'),
-        'class': 'btn btn-tertiary-outline btn-lg cancel'
+        'class': 'btn btn-outline-secondary btn-lg cancel'
       },
       {
         'type': 'button',
