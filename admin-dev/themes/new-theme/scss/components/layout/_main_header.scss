@@ -4,6 +4,8 @@
   background: #ffffff;
   height: $size-header-height;
   width: 100%;
+  display: flex;
+  align-items: center;
   @include media-breakpoint-down(sm) {
     box-shadow:rgba(black,0.7) 0 0 10px;
     padding: 0.625rem 0;
@@ -36,21 +38,15 @@
       left: 0.5rem;
       right: 0.5rem;
     }
-    > .ps-dropdown:not(.stores) {
-      margin-top: .2rem;
-      > .ps-dropdown-menu {
-        left: 1.063rem;
-        .dropdown-item {
-          justify-content: flex-start;
-          margin: 0;
-          padding-top: 0.625rem;
-          padding-bottom: 0.625rem;
-        }
-        .material-icons {
-          margin-top: 0.125rem;
-          margin-right: 0.625rem;
-          font-size: 1.25rem;
-        }
+    &:nth-child(5) {
+      margin-left: auto;
+    }
+    > .quick-accesses {
+      .dropdown-item {
+        border-bottom: 0;
+      }
+      .material-icons {
+        vertical-align: bottom;
       }
     }
     > .stores .ps-dropdown-menu {
