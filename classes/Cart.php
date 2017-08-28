@@ -2597,11 +2597,19 @@ class CartCore extends ObjectModel
         // The delivery option was selected
         if (isset($this->delivery_option) && $this->delivery_option != '') {
             $delivery_option = Tools::unSerialize($this->delivery_option);
-            $validated = true;
-            foreach ($delivery_option as $id_address => $key) {
-                if (!isset($delivery_option_list[$id_address][$key])) {
-                    $validated = false;
-                    break;
+            $validated = false;
+            foreach ($delivery_option as $key) {
+                foreach ($delivery_option_list as $id_address => $option) {
+                    if (isset($delivery_option_list[$id_address][$key])) {
+                        $validated = true;
+
+                        if (!isset($delivery_option[$id_address])) {
+                            $delivery_option = array();
+                            $delivery_option[$id_address] = $key;
+                        }
+
+                        break 2;
+                    }
                 }
             }
 
