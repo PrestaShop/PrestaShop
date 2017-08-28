@@ -14,5 +14,12 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements'
         arguments: ['@translator']
 
+    prestashop.adapter.system_information:
+        class: 'PrestaShop\PrestaShop\Adapter\System\SystemInformation'
+        arguments:
+            - '@prestashop.adapter.hosting_information'
+            - '@prestashop.adapter.mailing_information'
+            - '@prestashop.adapter.shop_information'
+
     prestashop.adapter.check_missing_files:
         class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'

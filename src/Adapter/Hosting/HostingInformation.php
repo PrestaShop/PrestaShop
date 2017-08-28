@@ -29,10 +29,8 @@ use Tools;
 use Db;
 
 /**
- * Class HostingInformation
+ * Provides hosting system information
  *
- * Depends on Db legacy class right now, needs to be migrated using Doctrine.
- * This class should not be used outside of PrestaShop context.
  */
 class HostingInformation
 {
@@ -66,7 +64,7 @@ class HostingInformation
     /**
      * @return array
      */
-    public function getPhpInformation()
+    private function getPhpInformation()
     {
         return array(
             'version' => phpversion(),
@@ -93,6 +91,8 @@ class HostingInformation
     }
 
     /**
+     * Check if the shop is hosted on PrestaCloud
+     *
      * @return bool
      */
     public function isHostMode()

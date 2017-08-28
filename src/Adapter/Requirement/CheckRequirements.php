@@ -49,13 +49,17 @@ class CheckRequirements
     }
 
     /**
+     * Returns a summary of all system requirements
+     *
      * @return array
      */
     public function getSummary()
     {
         $paramsRequiredResults = ConfigurationTest::check(ConfigurationTest::getDefaultTests());
 
-        if (!defined('_PS_HOST_MODE_')) {
+        $isHostMode = defined('_PS_HOST_MODE_');
+
+        if (!$isHostMode) {
             $paramsOptionalResults = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
         }
 
@@ -70,11 +74,11 @@ class CheckRequirements
 
         $results = array(
             'failRequired' => $failRequired,
-            'testsErrors' => $this->errorMessages(),
+            'testsErrors' => $this->getErrorMessages(),
             'testsRequired' => $paramsRequiredResults,
         );
 
-        if (!defined('_PS_HOST_MODE_')) {
+        if (!$isHostMode) {
             $results = array_merge($results, array(
                 'failOptional' => in_array('fail', $paramsOptionalResults),
                 'testsOptional' => $paramsOptionalResults,
@@ -87,7 +91,7 @@ class CheckRequirements
     /**
      * @return array
      */
-    private function errorMessages()
+    private function getErrorMessages()
     {
         return array(
             'phpversion' => $this->translator->trans('Update your PHP version.', array(), 'Admin.Advparameters.Notification'),

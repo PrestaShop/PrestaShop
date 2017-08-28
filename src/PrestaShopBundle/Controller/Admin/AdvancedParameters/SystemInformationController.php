@@ -36,12 +36,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SystemInformationController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'ADMINMODULESSF';
-
-    /**
-     * @deprecated
-     */
-    const controller_name = self::CONTROLLER_NAME;
+    const CONTROLLER_NAME = 'AdminInformation';
 
     /**
      * @param Request $request
@@ -49,7 +44,8 @@ class SystemInformationController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $summary = $this->getRequirementsChecker()->getSummary();
+        $requirementsSummary = $this->getRequirementsChecker()->getSummary();
+        $systemInformationSummary = $this->getSystemInformation()->getSummary();
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
@@ -62,18 +58,12 @@ class SystemInformationController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => 'ok',
-            'notHostMode' => !$this->getHosting()->isHostMode(),
-            'server' => $this->getHosting()->getServerInformation(),
-            'instaWebInstalled' => $this->getHosting()->isApacheInstawebModule(),
-            'database' => $this->getHosting()->getDatabaseInformation(),
-            'shop' => $this->getShop()->getShopInformation(),
-            'isNativePHPmail' => $this->getMailing()->isNativeMailUsed(),
-            'smtp' => $this->getMailing()->getSmtpInformation(),
+            'system' => $systemInformationSummary,
+            'requirements' => $requirementsSummary,
             'userAgent' => $request->headers->get('User-Agent'),
         );
 
-
-        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:system_information.html.twig', array_merge($twigValues, $summary));
+        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:system_information.html.twig', array_merge($twigValues, $requirementsSummary));
     }
 
     /**
@@ -85,31 +75,15 @@ class SystemInformationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return object|\PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation
+     * @return \PrestaShop\PrestaShop\Adapter\System\SystemInformation
      */
-    private function getHosting()
+    private function getSystemInformation()
     {
-        return $this->get('prestashop.adapter.hosting_information');
+        return $this->get('prestashop.adapter.system_information');
     }
 
     /**
-     * @return object|\PrestaShop\PrestaShop\Adapter\Mail\MailingInformation
-     */
-    private function getMailing()
-    {
-        return $this->get('prestashop.adapter.mailing_information');
-    }
-
-    /**
-     * @return object|\PrestaShop\PrestaShop\Adapter\Shop\ShopInformation
-     */
-    private function getShop()
-    {
-        return $this->get('prestashop.adapter.shop_information');
-    }
-
-    /**
-     * @return object|\PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements
+     * @return \PrestaShop\PrestaShop\Adapter\Requirement\CheckRequirements
      */
     private function getRequirementsChecker()
     {
@@ -117,7 +91,7 @@ class SystemInformationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return object|\PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles
+     * @return \PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles
      */
     private function getRequiredFilesChecker()
     {
