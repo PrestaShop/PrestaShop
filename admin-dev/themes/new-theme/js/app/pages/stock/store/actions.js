@@ -165,3 +165,15 @@ export const updateQtyByProductsId = ({ commit, state }, payload) => {
     showGrowl('error', error.statusText);
   });
 };
+
+export const updateBulkEditQty = ({ commit }, value) => {
+  commit(types.UPDATE_BULK_EDIT_QTY, value);
+};
+
+export const addProductToUpdate = ({ commit }, product) => {
+  commit(types.ADD_PRODUCT_TO_UPDATE, product);
+};
+
+export const removeProductToUpdate = ({ commit }, product) => {
+  commit(types.REMOVE_PRODUCT_TO_UPDATE, product);
+};

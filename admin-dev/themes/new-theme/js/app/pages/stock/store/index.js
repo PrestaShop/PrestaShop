@@ -53,6 +53,7 @@ const state = {
   isLoading: false,
   isReady: false,
   editBulkUrl: '',
+  bulkEditQty: 0,
 };
 
 // getters are functions

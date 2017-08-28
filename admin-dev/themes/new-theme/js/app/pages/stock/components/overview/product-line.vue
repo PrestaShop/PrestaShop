@@ -28,6 +28,7 @@
       <PSCheckbox
         :id="product.combination_id"
         :model="product"
+        @checked="productChecked"
       />
       <PSMedia
         class="ml-1"
@@ -71,7 +72,7 @@
       </span>
     </td>
     <td class="qty-spinner">
-      <Spinner :product="product" class="float-xs-right" />
+      <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />
     </td>
   </tr>
 </template>
@@ -105,6 +106,22 @@
         const productAvailableQty = Number(this.product.product_available_quantity);
         const productReservedQty = Number(this.product.product_reserved_quantity);
         return productAvailableQty + productReservedQty;
+      },
+    },
+    methods: {
+      productChecked(checkbox) {
+        if (checkbox.checked) {
+          this.$store.dispatch('addProductToUpdate', checkbox.item);
+        } else {
+          this.$store.dispatch('removeProductToUpdate', checkbox.item);
+        }
+      },
+      updateProductQty(productToUpdate) {
+        this.$store.dispatch('updateProductQty', {
+          product_id: productToUpdate.product.product_id,
+          combination_id: productToUpdate.product.combination_id,
+          delta: productToUpdate.delta,
+        });
       },
     },
     components: {

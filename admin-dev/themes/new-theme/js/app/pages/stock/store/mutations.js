@@ -98,11 +98,6 @@ export default {
   [types.UPDATE_PRODUCT_QTY](state, updatedProduct) {
     let hasQty = false;
 
-    const index = _.findIndex(state.productsToUpdate, {
-      product_id: updatedProduct.product_id,
-      combination_id: updatedProduct.combination_id,
-    });
-
     const productToUpdate = _.find(state.products, {
       product_id: updatedProduct.product_id,
       combination_id: updatedProduct.combination_id,
@@ -116,12 +111,21 @@ export default {
     });
 
     state.hasQty = hasQty;
-
-    if (index !== -1) {
-      return state.productsToUpdate.splice(index, 1, updatedProduct);
-    }
-    if (updatedProduct.delta) {
-      state.productsToUpdate.push(updatedProduct);
-    }
+  },
+  [types.ADD_PRODUCT_TO_UPDATE](state, updatedProduct) {
+    state.productsToUpdate.push(updatedProduct);
+  },
+  [types.REMOVE_PRODUCT_TO_UPDATE](state, updatedProduct) {
+    const index = _.findIndex(state.productsToUpdate, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
+    });
+    state.productsToUpdate.splice(index, 1);
+  },
+  [types.UPDATE_BULK_EDIT_QTY](state, value) {
+    state.bulkEditQty = value;
+    _.forEach(state.productsToUpdate, (product) => {
+      product.qty = value;
+    });
   },
 };

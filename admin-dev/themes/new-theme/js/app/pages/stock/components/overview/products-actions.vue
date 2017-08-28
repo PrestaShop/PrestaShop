@@ -26,9 +26,15 @@
   <div class="row product-actions">
     <div
       class="col-md-8 qty flex"
-      :class="classObject"
+      :class="{'active' : isActive}"
     >
-      <PSCheckbox id="bulk-action" class="m-t-1" />
+      <PSCheckbox
+        id="bulk-action"
+        class="m-t-1"
+        :checked="false"
+        :isIndeterminate="isIndeterminate"
+        @checked="bulkChecked"
+      />
       <div>
         <div class="m-l-1">
           <small>{{trans('title_bulk')}}</small>
@@ -37,24 +43,35 @@
           class="m-l-1"
           @focus="focusIn"
           @blur="focusOut"
+          @change="onChange"
         />
       </div>
     </div>
-    <MovementType />
+    <div class="col-md-4">
+      <PSButton
+        type="button"
+        class="update-qty pull-xs-right"
+        :class="{'btn-primary': disabled }"
+        :disabled="disabled"
+        :primary="true"
+        @click="sendQty"
+      >
+        <i class="material-icons">edit</i>
+        {{trans('button_movement_type')}}
+      </PSButton>
+    </div>
   </div>
 </template>
 
 <script>
-  import MovementType from './movement-type';
   import PSNumber from 'app/widgets/ps-number';
   import PSCheckbox from 'app/widgets/ps-checkbox';
+  import PSButton from 'app/widgets/ps-button';
 
   export default {
     computed: {
-      classObject() {
-        return {
-          active: this.isActive,
-        };
+      disabled() {
+        return !this.$store.state.hasQty;
       },
     },
     methods: {
@@ -64,14 +81,36 @@
       focusOut() {
         this.isActive = false;
       },
+      bulkChecked(state) {
+        //this.isIndeterminate = state.checked;
+      },
+      sendQty() {
+        this.$store.dispatch('updateQtyByProductsId');
+      },
+      onChange(value) {
+        this.$store.dispatch('updateBulkEditQty', value);
+      },
     },
     data: () => ({
       isActive: false,
+      isIndeterminate: false,
     }),
     components: {
-      MovementType,
       PSNumber,
       PSCheckbox,
+      PSButton,
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  @import "~PrestaKit/scss/custom/_variables.scss";
+
+  .update-qty {
+    color: white;
+    transition: background-color 0.2s ease;
+  }
+  .product-actions .qty {
+    padding-left: 20px;
+  }
+</style>

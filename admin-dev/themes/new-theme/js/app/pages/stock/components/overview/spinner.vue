@@ -112,9 +112,8 @@
     },
     watch: {
       value(val) {
-        this.$store.dispatch('updateProductQty', {
-          product_id: this.product.product_id,
-          combination_id: this.product.combination_id,
+        this.$emit('updateProductQty', {
+          product: this.product,
           delta: val,
         });
       },

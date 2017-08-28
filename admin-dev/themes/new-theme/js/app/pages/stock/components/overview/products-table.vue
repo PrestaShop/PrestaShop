@@ -77,7 +77,12 @@
           </PSAlert>
         </td>
       </tr>
-      <ProductLine v-else v-for="(product, index) in products" key=${index} :product="product" />
+      <ProductLine
+        v-else
+        v-for="(product, index) in products"
+        key=${index}
+        :product="product"
+      />
     </tbody>
   </PSTable>
 </template>
