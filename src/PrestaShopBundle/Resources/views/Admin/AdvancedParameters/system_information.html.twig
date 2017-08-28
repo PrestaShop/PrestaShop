@@ -30,7 +30,7 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Configuration information'|trans }}
                 </h3>
                 <div class="card-text">
@@ -41,7 +41,7 @@
         {% if system.notHostMode %}
         <div class="card">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Server information'|trans }}
                 </h3>
                 <div class="card-text">
@@ -74,7 +74,7 @@
 
         <div class="card">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Database information'|trans }}
                 </h3>
                 <div class="card-text">
@@ -107,7 +107,7 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Store information'|trans }}
                 </h3>
                 <div class="card-text">
@@ -126,7 +126,7 @@
 
         <div class="card">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Mail configuration'|trans }}
                 </h3>
                 <div class="card-text">
@@ -169,7 +169,7 @@
 
         <div class="card">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Your information'|trans }}
                 </h3>
                 <div class="card-text">
@@ -182,40 +182,40 @@
 
         <div class="card" id="checkConfiguration">
             <div class="card-block">
-                <h3 class="card-heading">
+                <h3 class="card-header">
                     <i class="material-icons">info_outline</i> {{ 'Check your configuration'|trans }}
                 </h3>
                 <div class="card-text">
                     <p>
                         <strong><i class="icon-info"></i>
                             {{ 'Required parameters:'|trans }}</strong>
-                        {% if failRequired == false %}
+                        {% if requirements.failRequired == false %}
                         <span class="text-success">{{ 'Ok'|trans({}, 'Admin.Advparameters.Notification') }}</span>
                     </p>
                     {% else %}
                         <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
                         </p>
                         <ul>
-                            {% for key, value in testsRequired %}
+                            {% for key, value in requirements.testsRequired %}
                                 {% if 'fail' == value and testsErrors[key] is defined %}
-                                    <li>{{ testsErrors[key] }}</li>
+                                    <li>{{ requirements.testsErrors[key] }}</li>
                                 {% endif %}
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    {% if failOptional == false %}
+                    {% if requirements.failOptional is defined %}
                         <p>
                         <strong>{{ 'Optional parameters:'|trans }}</strong>
-                        {% if failOptional is defined %}
+                        {% if requirements.failOptional == false %}
                             <span class="text-success">{{ 'Ok'|trans({}, 'Admin.Advparameters.Notification') }}</span>
                             </p>
                         {% else %}
                             <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
                             </p>
                             <ul>
-                                {% for key, value in testsOptional %}
+                                {% for key, value in requirements.testsOptional %}
                                     {% if 'fail' == value and testsErrors[key] is defined %}
-                                        <li>{{ testsErrors[key] }}</li>
+                                        <li>{{ requirements.testsErrors[key] }}</li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
@@ -229,7 +229,7 @@
 {% if system.notHostMode %}
     <div class="card">
         <div class="card-block">
-            <h3 class="card-heading">
+            <h3 class="card-header">
                 <i class="material-icons">info_outline</i> {{ 'List of changed files'|trans }}
             </h3>
             <div class="card-text" id="changedFiles">
@@ -243,10 +243,10 @@
         $(document).ready(function()
         {
             var translations = {
-                missing: '{{ "Missing files"|trans({}, "Admin.Advparameters.Notification") }}',
-                updated: '{{ "Updated files"|trans({}, "Admin.Advparameters.Notification") }}',
-                changesDetected: '{{ "Changed/missing files have been detected."|trans({}, "Admin.Advparameters.Notification") }}',
-                noChangeDetected: '{{ "No change has been detected in your files."|trans({}, "Admin.Advparameters.Notification") }}'
+                missing: '{{ "Missing files"|trans({}, "Admin.Advparameters.Notification")|e('js') }}',
+                updated: '{{ "Updated files"|trans({}, "Admin.Advparameters.Notification")|e('js') }}',
+                changesDetected: '{{ "Changed/missing files have been detected."|trans({}, "Admin.Advparameters.Notification")|e('js') }}',
+                noChangeDetected: '{{ "No change has been detected in your files."|trans({}, "Admin.Advparameters.Notification")|e('js') }}'
             };
 
             $.ajax({

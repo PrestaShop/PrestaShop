@@ -62,7 +62,7 @@ class SystemInformationController extends FrameworkBundleAdminController
             'userAgent' => $request->headers->get('User-Agent'),
         );
 
-        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:system_information.html.twig', array_merge($twigValues, $requirementsSummary));
+        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:system_information.html.twig', $twigValues);
     }
 
     /**
