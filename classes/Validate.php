@@ -661,6 +661,9 @@ class ValidateCore
      */
     public static function isInt($value)
     {
+        if (!is_scalar($value)) {
+            return false;
+        }
         return ((string)(int)$value === (string)$value || $value === false);
     }
 
