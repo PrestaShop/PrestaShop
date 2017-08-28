@@ -3019,11 +3019,24 @@ class ProductCore extends ObjectModel
 
         $result = self::$_pricesLevel2[$cache_id_2][(int)$id_product_attribute];
 
-        if (!$specific_price || $specific_price['price'] < 0) {
-            $price = (float)$result['price'];
-        } else {
+        $price = (float)$result['price'];
+
+        // Group reduction
+        if ($use_group_reduction) {
+            $reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
+            if ($reduction_from_category !== false) {
+                $group_reduction = $price * (float)$reduction_from_category;
+            } else { // apply group reduction if there is no group reduction for this category
+                $group_reduction = (($reduc = Group::getReductionByIdGroup($id_group)) != 0) ? ($price * $reduc / 100) : 0;
+            }
+
+            $price -= $group_reduction;
+        }
+
+        if ($specific_price && $specific_price['price'] >= 0) {
             $price = (float)$specific_price['price'];
         }
+
         // convert only if the specific price is in the default currency (id_currency = 0)
         if (!$specific_price || !($specific_price['price'] >= 0 && $specific_price['id_currency'])) {
             $price = Tools::convertPrice($price, $id_currency);
@@ -3033,7 +3046,7 @@ class ProductCore extends ObjectModel
         }
 
         // Attribute price
-        if (is_array($result) && (!$specific_price || !$specific_price['id_product_attribute'] || $specific_price['price'] < 0)) {
+        if (is_array($result)) {
             $attribute_price = Tools::convertPrice($result['attribute_price'] !== null ? (float)$result['attribute_price'] : 0, $id_currency);
             // If you want the default combination, please use NULL value instead
             if ($id_product_attribute !== false) {
@@ -3053,30 +3066,7 @@ class ProductCore extends ObjectModel
         if ($use_tax) {
             $price = $product_tax_calculator->addTaxes($price);
         }
-
-        // Eco Tax
-        if (($result['ecotax'] || isset($result['attribute_ecotax'])) && $with_ecotax) {
-            $ecotax = $result['ecotax'];
-            if (isset($result['attribute_ecotax']) && $result['attribute_ecotax'] > 0) {
-                $ecotax = $result['attribute_ecotax'];
-            }
-
-            if ($id_currency) {
-                $ecotax = Tools::convertPrice($ecotax, $id_currency);
-            }
-            if ($use_tax) {
-                // reinit the tax manager for ecotax handling
-                $tax_manager = TaxManagerFactory::getManager(
-                    $address,
-                    (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID')
-                );
-                $ecotax_tax_calculator = $tax_manager->getTaxCalculator();
-                $price += $ecotax_tax_calculator->addTaxes($ecotax);
-            } else {
-                $price += $ecotax;
-            }
-        }
-
+        
         // Reduction
         $specific_price_reduction = 0;
         if (($only_reduc || $use_reduc) && $specific_price) {
@@ -3106,20 +3096,31 @@ class ProductCore extends ObjectModel
             $price -= $specific_price_reduction;
         }
 
-        // Group reduction
-        if ($use_group_reduction) {
-            $reduction_from_category = GroupReduction::getValueForProduct($id_product, $id_group);
-            if ($reduction_from_category !== false) {
-                $group_reduction = $price * (float)$reduction_from_category;
-            } else { // apply group reduction if there is no group reduction for this category
-                $group_reduction = (($reduc = Group::getReductionByIdGroup($id_group)) != 0) ? ($price * $reduc / 100) : 0;
-            }
-
-            $price -= $group_reduction;
-        }
-
         if ($only_reduc) {
             return Tools::ps_round($specific_price_reduction, $decimals);
+        }
+
+        // Eco Tax
+        if (($result['ecotax'] || isset($result['attribute_ecotax'])) && $with_ecotax) {
+            $ecotax = $result['ecotax'];
+            if (isset($result['attribute_ecotax']) && $result['attribute_ecotax'] > 0) {
+                $ecotax = $result['attribute_ecotax'];
+            }
+
+            if ($id_currency) {
+                $ecotax = Tools::convertPrice($ecotax, $id_currency);
+            }
+            if ($use_tax) {
+                // reinit the tax manager for ecotax handling
+                $tax_manager = TaxManagerFactory::getManager(
+                    $address,
+                    (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID')
+                );
+                $ecotax_tax_calculator = $tax_manager->getTaxCalculator();
+                $price += $ecotax_tax_calculator->addTaxes($ecotax);
+            } else {
+                $price += $ecotax;
+            }
         }
 
         $price = Tools::ps_round($price, $decimals);
@@ -3441,7 +3442,7 @@ class ProductCore extends ObjectModel
         return true;
     }
 
-    public static function getAttributesColorList(Array $products, $have_stock = true)
+    public static function getAttributesColorList(array $products, $have_stock = true)
     {
         if (!count($products)) {
             return array();
@@ -3520,7 +3521,7 @@ class ProductCore extends ObjectModel
      */
     public function deleteAccessories()
     {
-    	return Db::getInstance()->delete('accessory', 'id_product_1 = '.(int)$this->id);
+        return Db::getInstance()->delete('accessory', 'id_product_1 = '.(int)$this->id);
     }
 
     /**
@@ -3530,7 +3531,7 @@ class ProductCore extends ObjectModel
      */
     public function deleteFromAccessories()
     {
-    	return Db::getInstance()->delete('accessory', 'id_product_2 = '.(int)$this->id);
+        return Db::getInstance()->delete('accessory', 'id_product_2 = '.(int)$this->id);
     }
 
     /**
