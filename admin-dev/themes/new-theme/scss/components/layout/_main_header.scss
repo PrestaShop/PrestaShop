@@ -54,14 +54,16 @@
       right: 0;
     }
     > .bo_search_form {
-      position: relative;
-      margin-top: 0.25rem;
-      .items-list {
-        list-style: none;
-        padding-left: 0;
+      .input-group-btn {
+        border: 0;
+        > .btn {
+          padding: 0.5625rem;
+        }
+      }
+      .dropdown-item {
+        border-bottom: 0;
         .material-icons {
-          vertical-align: middle;
-          margin-right: 0.625rem;
+          font-size: 0.875rem;
         }
       }
     }
