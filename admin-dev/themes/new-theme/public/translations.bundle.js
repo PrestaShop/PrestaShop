@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c31a338b163377b28b34"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "c4a3066d0f92d77aed33"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -30624,7 +30624,7 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "col-md-8 m-b-2",
+    staticClass: "col-md-8 mb-2",
     attrs: {
       "id": "search"
     }
@@ -31040,7 +31040,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "col-xs-3"
   }, [_c('div', {
-    staticClass: "card p-a-1"
+    staticClass: "card pa-1"
   }, [(_vm.treeReady) ? _c('PSTree', {
     ref: "domainTree",
     attrs: {
@@ -31183,7 +31183,7 @@ exports.default = {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "m-b-1"
+    staticClass: "mb-1"
   }, [_c('small', [_c('a', {
     attrs: {
       "href": _vm.internationalLink
@@ -31291,7 +31291,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }), _vm._v(" "), _c('PSButton', {
-    staticClass: "m-t-1 float-xs-right",
+    staticClass: "mt-1 float-xs-right",
     attrs: {
       "primary": false,
       "ghost": ""
@@ -31300,7 +31300,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.resetTranslation
     }
   }, [_vm._v("\n    " + _vm._s(_vm.trans('button_reset')) + "\n  ")]), _vm._v(" "), _c('small', {
-    staticClass: "m-t-1"
+    staticClass: "mt-1"
   }, [_vm._v(_vm._s(_vm.extraInfo))])], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -31324,7 +31324,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(_vm.principalReady) ? _c('div', {
     staticClass: "col-xs-9 card"
   }, [_c('div', {
-    staticClass: "p-a-1 row translations-wrapper"
+    staticClass: "pa-1 row translations-wrapper"
   }, [(_vm.noResult) ? _c('PSAlert', {
     attrs: {
       "alertType": "ALERT_TYPE_WARNING",
@@ -31338,7 +31338,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "hasClose": false
     }
   }, [_vm._v("\n          " + _vm._s(_vm.searchInfo) + "\n        ")]) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "col-xs-8 p-t-1"
+    staticClass: "col-xs-8 pt-1"
   }, [_c('h1', {
     staticClass: "domain-info"
   }, [_c('span', [_vm._v(_vm._s(_vm.currentDomain))]), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.currentDomainTotalTranslations))]), _vm._v(" "), _c('span', {
@@ -31377,7 +31377,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "row"
   }, [_c('div', {
-    staticClass: "col-xs-12 m-b-2"
+    staticClass: "col-xs-12 mb-2"
   }, [_c('PSButton', {
     staticClass: "float-xs-right",
     attrs: {
@@ -31398,7 +31398,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     })
   }), _vm._v(" "), _c('PSButton', {
-    staticClass: "float-xs-right m-t-3",
+    staticClass: "float-xs-right mt-3",
     attrs: {
       "primary": true,
       "type": "submit"
@@ -34598,7 +34598,7 @@ process.umask = function() { return 0; };
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [_c('div', {
-    staticClass: "m-b-1 tree-header"
+    staticClass: "mb-1 tree-header"
   }, [_c('span', {
     staticClass: "text-uppercase pointer",
     on: {
@@ -34742,7 +34742,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.displayPagination) ? _c('nav', {
-    staticClass: "float-xs-right m-t-1"
+    staticClass: "float-xs-right mt-1"
   }, [_c('ul', {
     staticClass: "pagination",
     class: {
@@ -34774,8 +34774,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "page-link",
       class: {
         'current': _vm.checkCurrentIndex(index),
-          'p-l-0': _vm.showFirstDots(index),
-          'p-r-0': _vm.showLastDots(index)
+          'pl-0': _vm.showFirstDots(index),
+          'pr-0': _vm.showLastDots(index)
       },
       on: {
         "click": function($event) {
