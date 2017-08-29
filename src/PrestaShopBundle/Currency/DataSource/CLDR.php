@@ -115,9 +115,11 @@ class CLDR implements DataSourceInterface
      */
     public function getCurrencyByIsoCode($isoCode)
     {
-        return $this->getReader()->getCurrencyByIsoCode(
+        $currency = $this->getReader()->getCurrencyByIsoCode(
             $isoCode,
             $this->getLocaleCode()
         );
+
+        return $currency;
     }
 }

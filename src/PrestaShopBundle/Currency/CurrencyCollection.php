@@ -26,7 +26,76 @@
 
 namespace PrestaShopBundle\Currency;
 
+use InvalidArgumentException;
+use PrestaShopBundle\Currency\Manager as CurrencyManager;
+
+/**
+ * Class CurrencyCollection
+ *
+ * This class agregates Currency objects.
+ * Currencies collection is lazy loaded thanks to the Currency Manager.
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class CurrencyCollection
 {
+    /**
+     * List of lazy loaded currencies
+     *
+     * @var array
+     */
+    protected $currencies;
 
+    /**
+     * Collection's Currency Manager
+     *
+     * Used for lazy Currency loading
+     *
+     * @var CurrencyManager
+     */
+    protected $currencyManager;
+
+    public function __construct(CurrencyManager $currencyManager)
+    {
+        $this->setCurrencyManager($currencyManager);
+    }
+
+    public function getCurrency($identifier)
+    {
+        if (!isset($this->currencies[$identifier])) {
+            try {
+                if (is_numeric($identifier)) {
+                    $currency = $this->getCurrencyManager()->getCurrency((int)$identifier);
+                } else {
+                    $currency = $this->getCurrencyManager()->getCurrencyByIsoCode($identifier);
+                }
+            } catch (InvalidArgumentException $e) {
+                throw new InvalidArgumentException("Unknown currency : $identifier");
+            }
+
+            $this->currencies[$currency->getIsoCode()] = $this->currencies[$currency->getId()] = $currency;
+        }
+
+        return $this->currencies[$identifier];
+    }
+
+    /**
+     * @return Manager
+     */
+    public function getCurrencyManager()
+    {
+        return $this->currencyManager;
+    }
+
+    /**
+     * @param $currencyManager
+     *
+     * @return $this
+     */
+    public function setCurrencyManager($currencyManager)
+    {
+        $this->currencyManager = $currencyManager;
+
+        return $this;
+    }
 }

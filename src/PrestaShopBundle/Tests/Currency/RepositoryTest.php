@@ -50,14 +50,14 @@ class RepositoryTest extends TestCase
      */
     public function testGetByCurrencyCodeWhenCodeExists($currencyCode, $expectedNumericIsoCode)
     {
-        $currency = $this->repository->getByCurrencyCode($currencyCode);
+        $currency = $this->repository->getCurrencyByIsoCode($currencyCode);
         $this->assertInstanceOf('PrestaShopBundle\Currency\Currency', $currency);
         $this->assertSame($expectedNumericIsoCode, $currency->getNumericIsoCode());
     }
 
     public function testGetByCurrencyCodeWhenCodeIsUnknown()
     {
-        $currency = $this->repository->getByCurrencyCode('random_invalid_code');
+        $currency = $this->repository->getCurrencyByIsoCode('random_invalid_code');
         $this->assertNull($currency);
     }
 

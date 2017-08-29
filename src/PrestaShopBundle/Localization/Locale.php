@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Localization;
 
 use InvalidArgumentException;
+use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShopBundle\Currency\CurrencyCollection;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
@@ -41,17 +43,23 @@ class Locale
     protected $numberFormatterFactory;
     protected $specification;
     protected $id;
+    protected $currencyCollection;
+    protected $roundMode = 2; // Round half up (recommended)
 
     public function __construct(
         $localeCode,
         NumberFormatterFactory $numberFormatterFactory,
         LocaleData $specification,
-        LocaleRepository $repository
+        LocaleRepository $repository,
+        CurrencyCollection $currencyCollection,
+        $roundMode
     ) {
         $this->localeCode             = $this->convertLocaleAsIETF($localeCode);
         $this->numberFormatterFactory = $numberFormatterFactory;
         $this->specification          = $specification;
         $this->repository             = $repository;
+        $this->currencyCollection     = $currencyCollection;
+        $this->roundMode              = (int)$roundMode;
     }
 
     /**
@@ -100,7 +108,7 @@ class Locale
     public function formatCurrency($number, $currencyId)
     {
         $number   = (string)$number;
-        $currency = $this->getRepository()->getCurrencyCollection()->getCurrency($currencyId);
+        $currency = $this->getCurrencyCollection()->getCurrency($currencyId);
 
         return $this->getNumberFormatter()->formatCurrency($number, $currency);
     }
@@ -220,5 +228,37 @@ class Locale
         }
 
         return $spec->numberingSystems[0];
+    }
+
+    public function getCurrency($identifier)
+    {
+        return $this->getCurrencyCollection()->getCurrency($identifier);
+    }
+
+    /**
+     * @return CurrencyCollection
+     */
+    public function getCurrencyCollection()
+    {
+        return $this->currencyCollection;
+    }
+
+    public function getRoundMode()
+    {
+        return $this->roundMode;
+    }
+
+    public function getPrestaShopDecimalRoundMode()
+    {
+        $roundModes = array(
+            PS_ROUND_UP        => Rounding::ROUND_CEIL,
+            PS_ROUND_DOWN      => Rounding::ROUND_FLOOR,
+            PS_ROUND_HALF_UP   => Rounding::ROUND_HALF_UP,
+            PS_ROUND_HALF_DOWN => Rounding::ROUND_HALF_DOWN,
+            PS_ROUND_HALF_EVEN => Rounding::ROUND_HALF_EVEN,
+            PS_ROUND_HALF_ODD  => Rounding::ROUND_HALF_EVEN, // Rounding::ROUND_HALF_ODD does not exist (never used)
+        );
+
+        return $roundModes[$this->getRoundMode()];
     }
 }
