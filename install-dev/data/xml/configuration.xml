@@ -240,7 +240,7 @@
     <value>3</value>
   </configuration>
   <configuration id="PS_SPECIFIC_PRICE_PRIORITIES" name="PS_SPECIFIC_PRICE_PRIORITIES">
-    <value>id_shop;id_currency;id_country;id_group</value>
+    <value>id_shop;id_currency;id_zone;id_country;id_group</value>
   </configuration>
   <configuration id="PS_TAX_DISPLAY" name="PS_TAX_DISPLAY">
     <value>0</value>
