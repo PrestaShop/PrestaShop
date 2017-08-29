@@ -28,21 +28,35 @@ namespace PrestaShopBundle\Localization;
 
 use Exception;
 use InvalidArgumentException;
-use PrestaShopBundle\Currency\CurrencyCollection;
+use PrestaShopBundle\Currency\CurrencyCollectionFactory;
 use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 
 class Repository
 {
-    protected $currencyCollection;
     protected $dataSources = array();
     protected $locales     = array();
+
+    /**
+     * @var NumberFormatterFactory
+     */
     protected $numberFormatterFactory;
+
+    /**
+     * @var CurrencyCollectionFactory
+     */
+    protected $currencyCollectionFactory;
+
+    /**
+     * @var int
+     */
+    protected $roundMode;
 
     public function __construct(
         array $dataSources,
         NumberFormatterFactory $numberFormatterFactory,
-        CurrencyCollection $currencyCollection
+        CurrencyCollectionFactory $currencyCollectionFactory,
+        $roundMode
     ) {
         foreach ($dataSources as $dataSource) {
             if (!$dataSource instanceof DataSourceInterface) {
@@ -51,8 +65,9 @@ class Repository
         }
 
         $this->setDataSources($dataSources);
-        $this->numberFormatterFactory = $numberFormatterFactory;
-        $this->currencyCollection     = $currencyCollection;
+        $this->numberFormatterFactory    = $numberFormatterFactory;
+        $this->currencyCollectionFactory = $currencyCollectionFactory;
+        $this->roundMode                 = $roundMode;
     }
 
     /**
@@ -106,7 +121,13 @@ class Repository
             $localeData = $dataSource->getLocaleById((int)$id);
 
             if (!empty($localeData)) {
-                $locale = new Locale($localeData->localeCode, $this->numberFormatterFactory, $localeData, $this);
+                $locale = new Locale(
+                    $localeData->localeCode,
+                    $this->numberFormatterFactory,
+                    $localeData,
+                    $this,
+                    $this->currencyCollectionFactory->build()
+                );
                 $this->addLocale($locale);
 
 //                $this->refreshDataSources($index - 1, $currencyData);
@@ -128,7 +149,14 @@ class Repository
             $localeData = $dataSource->getLocaleByCode($localeCode);
 
             if (!empty($localeData)) {
-                $locale = new Locale($localeData->localeCode, $this->numberFormatterFactory, $localeData, $this);
+                $locale = new Locale(
+                    $localeData->localeCode,
+                    $this->numberFormatterFactory,
+                    $localeData,
+                    $this,
+                    $this->currencyCollectionFactory->build(),
+                    $this->getRoundMode()
+                );
                 $this->addLocale($locale);
 
 //                $this->refreshDataSources($index - 1, $currencyData);
@@ -137,5 +165,10 @@ class Repository
         }
 
         return isset($locale) ? $locale : null;
+    }
+
+    public function getRoundMode()
+    {
+        return $this->roundMode;
     }
 }

@@ -26,52 +26,30 @@
 
 namespace PrestaShopBundle\Currency;
 
-class Manager
+use PrestaShopBundle\Currency\Manager as CurrencyManager;
+
+/**
+ * Class CurrencyCollection
+ *
+ * This class agregates Currency objects.
+ * Currencies collection is lazy loaded thanks to the Currency Manager.
+ *
+ * @package PrestaShopBundle\Currency
+ */
+class CurrencyCollectionFactory
 {
-    protected $installedCurrencyRepository;
-    protected $referenceRepository;
+    /**
+     * @var CurrencyManager
+     */
+    protected $currencyManager;
 
-    public function __construct(Repository $installedCurrencyRepository, Repository $referenceRepository)
+    public function __construct(CurrencyManager $currencyManager)
     {
-        $this->installedCurrencyRepository = $installedCurrencyRepository;
-        $this->referenceRepository         = $referenceRepository;
+        $this->currencyManager = $currencyManager;
     }
 
-    /**
-     * @return Repository
-     */
-    public function getInstalledCurrencyRepository()
+    public function build()
     {
-        return $this->installedCurrencyRepository;
-    }
-
-    /**
-     * @return Repository
-     */
-    public function getReferenceRepository()
-    {
-        return $this->referenceRepository;
-    }
-
-    /**
-     * @param $id
-     *
-     * @return null|Currency
-     */
-    public function getCurrency($id)
-    {
-        return $this->getInstalledCurrencyRepository()
-            ->getCurrency($id);
-    }
-
-    /**
-     * @param $isoCode
-     *
-     * @return Currency|null
-     */
-    public function getCurrencyByIsoCode($isoCode)
-    {
-        return $this->getReferenceRepository()
-            ->getCurrencyByIsoCode($isoCode);
+        return new CurrencyCollection($this->currencyManager);
     }
 }

@@ -82,6 +82,11 @@ class Repository
         return $this;
     }
 
+    /**
+     * @param $id
+     *
+     * @return Currency|null
+     */
     public function getCurrency($id)
     {
         if ((int)$id != $id) {
@@ -101,8 +106,8 @@ class Repository
                 $currency = $builder->setIsoCode($currencyData['isoCode'])
                     ->setNumericIsoCode($currencyData['numericIsoCode'])
                     ->setDecimalDigits($currencyData['decimalDigits'])
-                    ->setLocalizedNames($currencyData['localizedNames'])
-                    ->setLocalizedSymbols($currencyData['localizedSymbols'])
+                    ->setDisplayName($currencyData['localizedNames'])
+                    ->setSymbols($currencyData['localizedSymbols'])
                     ->build();
                 $this->addCurrency($currency);
 
@@ -111,10 +116,19 @@ class Repository
             }
         }
 
-        return isset($currency) ? $currency : null;
+        if (!isset($currency)) {
+            throw new \InvalidArgumentException("Unknown currency id : $id");
+        }
+
+        return $currency;
     }
 
-    public function getByCurrencyCode($currencyCode)
+    /**
+     * @param $currencyCode
+     *
+     * @return Currency|null
+     */
+    public function getCurrencyByIsoCode($currencyCode)
     {
         if (!empty($this->currencies[$currencyCode])) {
             return $this->currencies[$currencyCode];
@@ -129,8 +143,8 @@ class Repository
                 $currency = $builder->setIsoCode($currencyData['isoCode'])
                     ->setNumericIsoCode($currencyData['numericIsoCode'])
                     ->setDecimalDigits($currencyData['decimalDigits'])
-                    ->setLocalizedNames($currencyData['localizedNames'])
-                    ->setLocalizedSymbols($currencyData['localizedSymbols'])
+                    ->setDisplayName($currencyData['displayName'])
+                    ->setSymbols($currencyData['symbol'])
                     ->build();
                 $this->addCurrency($currency);
 
@@ -139,6 +153,10 @@ class Repository
             }
         }
 
-        return isset($currency) ? $currency : null;
+        if (!isset($currency)) {
+            throw new InvalidArgumentException("Unknown currency code : $currencyCode");
+        }
+
+        return $currency;
     }
 }

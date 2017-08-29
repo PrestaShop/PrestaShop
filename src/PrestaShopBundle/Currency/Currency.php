@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Currency;
 
+use InvalidArgumentException;
+
 class Currency
 {
     /**
@@ -54,18 +56,18 @@ class Currency
     protected $isoCode;
 
     /**
-     * All possible names depending on locale
+     * All possible names depending on context
      *
      * @var array
      */
-    protected $localizedNames;
+    protected $displayNames;
 
     /**
-     * All possible symbols depending on locale
+     * All possible symbols depending on context
      *
      * @var array
      */
-    protected $localizedSymbols;
+    protected $symbols;
 
     /**
      * Currency ISO 4217 number
@@ -79,7 +81,11 @@ class Currency
     public function __construct(Builder $builder)
     {
         $this->setIsoCode($builder->getIsoCode())
-            ->setNumericIsoCode($builder->getNumericIsoCode());
+            ->setNumericIsoCode($builder->getNumericIsoCode())
+            ->setDecimalDigits($builder->getDecimalDigits())
+            ->setDisplayNames($builder->getDisplayName())
+            ->setSymbols($builder->getSymbols())
+            ->setId($builder->getId());
     }
 
     /**
@@ -88,6 +94,18 @@ class Currency
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Currency
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -123,6 +141,80 @@ class Currency
     public function setNumericIsoCode($numericIsoCode)
     {
         $this->numericIsoCode = (int)$numericIsoCode;
+
+        return $this;
+    }
+
+    public function getName($localeCode)
+    {
+        return $this->displayNames[$localeCode];
+    }
+
+    public function getSymbol($type)
+    {
+        if (!isset($this->symbols[$type])) {
+            throw new InvalidArgumentException("$type symbol not found for");
+        }
+
+        return $this->symbols[$type];
+    }
+
+    /**
+     * @return int
+     */
+    public function getDecimalDigits()
+    {
+        return $this->decimalDigits;
+    }
+
+    /**
+     * @param int $decimalDigits
+     *
+     * @return Currency
+     */
+    public function setDecimalDigits($decimalDigits)
+    {
+        $this->decimalDigits = $decimalDigits;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDisplayNames()
+    {
+        return $this->displayNames;
+    }
+
+    /**
+     * @param $displayNames
+     *
+     * @return $this
+     */
+    public function setDisplayNames($displayNames)
+    {
+        $this->displayNames = $displayNames;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSymbols()
+    {
+        return $this->symbols;
+    }
+
+    /**
+     * @param $symbols
+     *
+     * @return $this
+     */
+    public function setSymbols($symbols)
+    {
+        $this->symbols = $symbols;
 
         return $this;
     }

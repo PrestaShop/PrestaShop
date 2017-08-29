@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Localization\Formatter;
 
+use Configuration;
 use InvalidArgumentException;
 use PrestaShop\Decimal\Number as DecimalNumber;
 use PrestaShopBundle\Currency\Currency;
@@ -47,8 +48,12 @@ class Number
     protected $groupingUsed;
     protected $primaryGroupSize;
     protected $secondaryGroupSize;
-    protected $positiveNumberPattern;
-    protected $negativeNumberPattern;
+    protected $positiveDecimalPattern;
+    protected $negativeDecimalPattern;
+    protected $positivePercentPattern;
+    protected $negativePercentPattern;
+    protected $positiveCurrencyPattern;
+    protected $negativeCurrencyPattern;
     protected $minimumFractionDigits;
     protected $maximumFractionDigits;
     protected $currencyDisplay;
@@ -91,7 +96,8 @@ class Number
         $decNumber = new DecimalNumber($number);
         $negative = $decNumber->isNegative();
         $signMultiplier = $negative ? new DecimalNumber('-1') : new DecimalNumber('1');
-        $number = $decNumber->dividedBy($signMultiplier, 12);
+        $number = $decNumber->dividedBy($signMultiplier, $this->getMaximumFractionDigits())
+            ->round($this->getMaximumFractionDigits(), $this->getLocale()->getPrestaShopDecimalRoundMode());
         // Split the number into major and minor digits.
         $numberParts = explode('.', $number);
         $majorDigits = $numberParts[0];
@@ -117,9 +123,12 @@ class Number
             $majorDigits = implode(',', $groups);
         }
 
-        if ($this->getMinimumFractionDigits() < $this->getMaximumFractionDigits()) {
+        if (strlen($minorDigits) > $this->getMaximumFractionDigits()) {
             // Strip any trailing zeroes.
             $minorDigits = rtrim($minorDigits, '0');
+        }
+
+        if (strlen($minorDigits) < $this->getMinimumFractionDigits()) {
             // Re-add needed zeroes
             $minorDigits = str_pad($minorDigits, $this->getMinimumFractionDigits(), '0');
         }
@@ -129,7 +138,7 @@ class Number
         if ($minorDigits) {
             $formattedNumber .= '.' . $minorDigits;
         }
-        $pattern         = $negative ? $this->getNegativeNumberPattern() : $this->getPositiveNumberPattern();
+        $pattern = $this->getPattern($style, $negative);
         $formattedNumber = preg_replace('/#(?:[\.,]#+)*0(?:[,\.][0#]+)*/', $formattedNumber, $pattern);
         // Localize the number.
         $formattedNumber = $this->replaceDigits($formattedNumber);
@@ -166,9 +175,38 @@ class Number
         return strtr($number, $replacements);
     }
 
+    /**
+     * Format a number as a price (with correct currency symbol and symbol positioning)
+     *
+     * @param float|string $number The number to be formatted as a price
+     * @param Currency $currency The price currency
+     *
+     * @return mixed
+     */
     public function formatCurrency($number, Currency $currency)
     {
-        return 'TODO';
+        $this->setMinimumFractionDigits(2)
+            ->setMaximumFractionDigits(2);
+
+        // Format the numeric part using the currency pattern
+        $formattedNumber = $this->format($number, self::CURRENCY);
+
+        $this->setMinimumFractionDigits(0)
+            ->setMaximumFractionDigits(3);
+
+        // Determine the symbole to use
+        if ($this->getCurrencyDisplay() == self::CURRENCY_DISPLAY_CODE) {
+            $symbol = $currency->getIsoCode();
+        } else {
+            try {
+                $symbol = $currency->getSymbol('narrow'); // To be changed when symbol type is configurable
+            } catch (InvalidArgumentException $e) {
+                $symbol = $currency->getSymbol('default');
+            }
+        }
+
+        // Replace the currency symbol placeholder
+        return str_replace('¤', $symbol, $formattedNumber);
     }
 
     /**
@@ -198,32 +236,98 @@ class Number
      */
     protected function initDecimalPatterns()
     {
-        if (!isset($this->positiveNumberPattern) || !isset($this->negativeNumberPattern)) {
+        if (!isset($this->positiveDecimalPattern) || !isset($this->negativeDecimalPattern)) {
             $patterns = explode(';', $this->getDecimalPattern());
             if (!isset($patterns[1])) {
                 // No explicit negative pattern was provided, construct it according to CLDR documentation.
                 $patterns[1] = '-' . $patterns[0];
             }
 
-            $this->positiveNumberPattern = $patterns[0];
-            $this->negativeNumberPattern = $patterns[1];
+            $this->positiveDecimalPattern = $patterns[0];
+            $this->negativeDecimalPattern = $patterns[1];
         }
 
         return $this;
     }
 
-    protected function getPositiveNumberPattern()
+    protected function getPositiveDecimalPattern()
     {
         $this->initDecimalPatterns();
 
-        return $this->positiveNumberPattern;
+        return $this->positiveDecimalPattern;
     }
 
-    protected function getNegativeNumberPattern()
+    protected function getNegativeDecimalPattern()
     {
         $this->initDecimalPatterns();
 
-        return $this->negativeNumberPattern;
+        return $this->negativeDecimalPattern;
+    }
+
+    /**
+     * Init positive and negative percent patterns from locale data
+     */
+    protected function initPercentPatterns()
+    {
+        if (!isset($this->positivePercentPattern) || !isset($this->negativePercentPattern)) {
+            $patterns = explode(';', $this->getPercentPattern());
+            if (!isset($patterns[1])) {
+                // No explicit negative pattern was provided, construct it according to CLDR documentation.
+                $patterns[1] = '-' . $patterns[0];
+            }
+
+            $this->positivePercentPattern = $patterns[0];
+            $this->negativePercentPattern = $patterns[1];
+        }
+
+        return $this;
+    }
+
+    protected function getPositivePercentPattern()
+    {
+        $this->initPercentPatterns();
+
+        return $this->positivePercentPattern;
+    }
+
+    protected function getNegativePercentPattern()
+    {
+        $this->initPercentPatterns();
+
+        return $this->negativePercentPattern;
+    }
+
+    /**
+     * Init positive and negative decimal patterns from locale data
+     */
+    protected function initCurrencyPatterns()
+    {
+        if (!isset($this->positiveCurrencyPattern) || !isset($this->negativeCurrencyPattern)) {
+            $patterns = explode(';', $this->getCurrencyPattern());
+            if (!isset($patterns[1])) {
+                // No explicit negative pattern was provided, construct it according to CLDR documentation.
+                $patterns[1] = '-' . $patterns[0];
+            }
+
+            $this->positiveCurrencyPattern = $patterns[0];
+            $this->negativeCurrencyPattern = $patterns[1];
+        }
+
+        return $this;
+    }
+
+    protected function getPositiveCurrencyPattern()
+    {
+        $this->initCurrencyPatterns();
+
+        return $this->positiveCurrencyPattern;
+    }
+
+    protected function getNegativeCurrencyPattern()
+    {
+        $this->initCurrencyPatterns();
+
+        return $this->negativeCurrencyPattern;
     }
 
     /**
@@ -234,7 +338,7 @@ class Number
     protected function groupingUsed()
     {
         if (!isset($this->groupingUsed)) {
-            $this->groupingUsed = (strpos($this->getPositiveNumberPattern(), ',') !== false);
+            $this->groupingUsed = (strpos($this->getPositiveDecimalPattern(), ',') !== false);
         }
 
         return $this->groupingUsed;
@@ -243,9 +347,9 @@ class Number
     protected function initGroupsSizes()
     {
         if (!isset($this->primaryGroupSize) || !isset($this->secondaryGroupSize)) {
-            preg_match('/#+0/', $this->getPositiveNumberPattern(), $primaryGroupMatches);
+            preg_match('/#+0/', $this->getPositiveDecimalPattern(), $primaryGroupMatches);
             $this->primaryGroupSize = $this->secondaryGroupSize = strlen($primaryGroupMatches[0]);
-            $numberGroups           = explode(',', $this->getPositiveNumberPattern());
+            $numberGroups           = explode(',', $this->getPositiveDecimalPattern());
             if (count($numberGroups) > 2) {
                 // This pattern has a distinct secondary group size.
                 $this->secondaryGroupSize = strlen($numberGroups[1]);
@@ -365,5 +469,14 @@ class Number
         $this->currencyDisplay = $currencyDisplay;
 
         return $this;
+    }
+
+    protected function getPattern($style, $negative = false)
+    {
+        $style = ucfirst($style);
+        $sign = $negative ? 'Negative' : 'Positive';
+        $method = 'get' . $sign . $style . 'Pattern';
+
+        return $this->$method();
     }
 }

@@ -45,18 +45,18 @@ class Builder
     protected $isoCode;
 
     /**
-     * All possible names depending on locale
+     * All possible names depending on count
      *
      * @var array
      */
-    protected $localizedNames;
+    protected $displayName;
 
     /**
-     * All possible symbols depending on locale
+     * All possible symbols depending on context
      *
      * @var array
      */
-    protected $localizedSymbols;
+    protected $symbols;
 
     /**
      * Currency ISO 4217 number
@@ -66,6 +66,13 @@ class Builder
      * @var int
      */
     protected $numericIsoCode;
+
+    /**
+     * Currency id in case it is installed and present in DB
+     *
+     * @var int
+     */
+    protected $id;
 
     /**
      * @return int
@@ -86,17 +93,17 @@ class Builder
     /**
      * @return array
      */
-    public function getLocalizedNames()
+    public function getDisplayName()
     {
-        return $this->localizedNames;
+        return $this->displayName;
     }
 
     /**
      * @return array
      */
-    public function getLocalizedSymbols()
+    public function getSymbols()
     {
-        return $this->localizedSymbols;
+        return $this->symbols;
     }
 
     /**
@@ -105,6 +112,14 @@ class Builder
     public function getNumericIsoCode()
     {
         return $this->numericIsoCode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -132,25 +147,25 @@ class Builder
     }
 
     /**
-     * @param array $localizedNames
+     * @param array $displayName
      *
      * @return Builder
      */
-    public function setLocalizedNames($localizedNames)
+    public function setDisplayName($displayName)
     {
-        $this->localizedNames = $localizedNames;
+        $this->displayName = $displayName;
 
         return $this;
     }
 
     /**
-     * @param array $localizedSymbols
+     * @param array $symbols
      *
      * @return Builder
      */
-    public function setLocalizedSymbols($localizedSymbols)
+    public function setSymbols($symbols)
     {
-        $this->localizedSymbols = $localizedSymbols;
+        $this->symbols = $symbols;
 
         return $this;
     }
@@ -167,6 +182,16 @@ class Builder
         return $this;
     }
 
+    public function setId($id)
+    {
+        $this->id = (int)$id;
+
+        return $this;
+    }
+
+    /**
+     * @return Currency
+     */
     public function build()
     {
         $this->validateProperties();
@@ -184,12 +209,12 @@ class Builder
             throw new Exception('Alphabetic ISO code must be set');
         }
 
-        if (is_null($this->getLocalizedNames())) {
-            throw new Exception('Localized names must be set');
+        if (is_null($this->getDisplayName())) {
+            throw new Exception('Display names must be set');
         }
 
-        if (is_null($this->getLocalizedSymbols())) {
-            throw new Exception('Localized symbols must be set');
+        if (is_null($this->getSymbols())) {
+            throw new Exception('Symbols must be set');
         }
 
         if (is_null($this->getNumericIsoCode())) {
