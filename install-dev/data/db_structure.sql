@@ -1714,7 +1714,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`id_shop_group` INT(11) UNSIGNED NOT NULL,
 	`id_currency` INT UNSIGNED NOT NULL,
 	`id_country` INT UNSIGNED NOT NULL,
-	`id_zone` int(10) unsigned NOT NULL,
+	`id_zone` int(10) UNSIGNED NOT NULL,
 	`id_group` INT UNSIGNED NOT NULL,
 	`id_customer` INT UNSIGNED NOT NULL,
 	`id_product_attribute` INT UNSIGNED NOT NULL,
