@@ -353,6 +353,8 @@ class DataReader implements DataReaderInterface
         // It also actually identifies the tag among others
         $currencyArray = array(
             'isoCode' => (string)$xmlCurrencyData['type'],
+            'numericIsoCode' => '', // TODO : use supplementalData.xml
+            'decimalDigits' => 2, // TODO : use supplementalData.xml (only 66 currencies are different)
         );
 
         // Display names (depending on count)
