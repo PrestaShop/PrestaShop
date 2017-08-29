@@ -31,7 +31,6 @@ let config = {
     main: [
       'prestakit/dist/js/prestashop-ui-kit.js',
       'jquery-ui-dist/jquery-ui.js',
-      // 'bootstrap/dist/js/npm.js',
       'moment/moment.js',
       'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
