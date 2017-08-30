@@ -313,12 +313,12 @@ class AdminModulesPositionsControllerCore extends AdminController
             'ad' => $admin_dir,
             'liveToken' => $this->token,
             'id_employee' => (int)$this->context->employee->id,
-            'id_shop' => (int)$this->context->shop->id
+            'id_shop' => (int)$this->context->shop->id,
         );
 
         $url_live_edit = $this->getLiveEditUrl($live_edit_params);
 
-        if ($id_hook = Hook::getIdByName('liveEditLink')) {
+        if (Hook::getIdByName('liveEditLink')) {
             $urls = Hook::exec('liveEditLink', array(), null, true);
             $links = reset($urls);
             if (!empty($links)) {

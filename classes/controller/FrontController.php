@@ -518,12 +518,12 @@ class FrontControllerCore extends Controller
                 'ad'        => Tools::getValue('ad'),
                 'live_edit' => true,
                 'hook_list' => Hook::$executed_hooks,
-                'id_shop'   => $this->context->shop->id
+                'id_shop'   => $this->context->shop->id,
             ));
             return $this->context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'live_edit.tpl', $data)->fetch();
-        } else {
-            return '';
         }
+        
+        return '';
     }
 
     /**

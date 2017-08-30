@@ -28,7 +28,7 @@ $(document).ready(function () {
         var search = this.search;
         var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop') + '&id_employee=' + get('id_employee');
 
-        if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir && !$(this).hasClass('settingModule')) {
+        if (href !== undefined && href !== '#' && href.substr(0, baseDir.length) == baseDir && !$(this).hasClass('settingModule')) {
             if (search.length === 0)
                 this.search = hrefAdd;
             else
@@ -169,7 +169,7 @@ $(document).ready(function () {
             change: function (evartent, ui) {
                 new_target_id = $(ui.placeholder).parent().attr('id');
                 ids = ui.item[0].id.split('_');
-                if ($.inArray(ids[5], hookable_list[new_target_id]) != -1) {
+                if ($.inArray(ids[5], hookable_list[new_target_id]) !== -1) {
                     cancel = false;
                     ui.placeholder.css({
                         visibility: 'visible',
@@ -204,7 +204,7 @@ $(document).ready(function () {
     });
 });
 // init hookable_list
-function getHookableList() {
+var getHookableList = function () {
     hooks_list = new Array();
     $("input[name^=hook_list]").each(function (e) {
         hooks_list.push($(this).val());
@@ -228,7 +228,7 @@ function getHookableList() {
             if (jsonData.hasError) {
                 var errors = '';
                 for (error in jsonData.errors) //IE6 bug fix
-                    if (error != 'indexOf')
+                    if (error !== 'indexOf')
                         errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
                 alert(errors);
             } else {
@@ -243,7 +243,7 @@ function getHookableList() {
         }
     });
 }
-function getHookableModuleList(hook) {
+var getHookableModuleList = function (hook) {
     $.ajax({
         type: 'GET',
         url: baseDir + ad + '/index.php',
@@ -270,7 +270,7 @@ function getHookableModuleList(hook) {
         }
     });
 }
-function saveModulePosition() {
+var saveModulePosition = function() {
     $("input.dynamic-input-save-position").remove();
     $("#live_edit_feedback_str").html('<div style="text-align:center; padding: 30px;"><img src="' + baseDir + 'img/loadingAnimation.gif"></div>');
     $("#fancy").attr('href', '#live_edit_feedback');
@@ -312,22 +312,22 @@ function saveModulePosition() {
 
     return true;
 }
-function closeFancybox() {
+var closeFancybox = function () {
     clearTimeout(timer);
     $.fancybox.close();
     $('#live_edit_feedback_str').html('');
 }
-function closeLiveEdit() {
+var closeLiveEdit = function () {
     window.location.href = window.location.protocol + '//' + window.location.host + window.location.pathname;
 }
-function hideFeedback() {
+var hideFeedback = function () {
     $('#live_edit_feed_back').fadeOut('slow', function () {
         $.fancybox.close();
         $('#live_edit_feedback_str').html('');
     });
 }
 
-function get(name) {
+var get = function (name) {
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.href);

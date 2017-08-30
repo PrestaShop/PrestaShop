@@ -220,6 +220,9 @@ class HookCore extends ObjectModel
 
     /**
      * Return hook live edit bool from ID
+     *
+     * @param $hook_id - int
+     * @return string
      */
     public static function getLiveEditById($hook_id)
     {
@@ -990,7 +993,7 @@ class HookCore extends ObjectModel
 					<i class="material-icons md-icon">zoom_out_map</i></a>
 				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
 					<i class="material-icons md-icon">delete_forever</i></a> ';
-        if(1 === $is_configurable) {
+        if (1 === $is_configurable) {
             $live_content .= '<a target="_blank" href="'.$link_module.'" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="settingModule">
 					<i class="material-icons md-icon">settings</i></a>';
         }
