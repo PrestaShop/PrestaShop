@@ -215,33 +215,48 @@ class SpecificPriceCore extends ObjectModel
      * @param string $field_name
      * @param int $field_value
      * @param int $threshold
+     * @param bool $checkDates
      * @return string
      * @throws PrestaShopDatabaseException
      */
-    protected static function filterOutField($field_name, $field_value, $threshold = 1000)
+    protected static function filterOutField($field_name, $field_value, $threshold = 1000, $checkDates = true)
     {
         $name = Db::getInstance()->escape($field_name, false, true);
-        $query_extra = 'AND `'.$name.'` = 0 ';
+        $threshold = (int) $threshold;
+        if ($threshold <= 0) { //If it is incorrect, set the default value
+            $threshold = 1000;
+		}
+        $query_extra = 'AND `' . $name . '` = 0 ';
         if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
             return $query_extra;
         }
-        $key_cache     = __FUNCTION__.'-'.$field_name.'-'.$threshold;
+        $key_cache = __FUNCTION__ . '-' . $field_name . '-' . $threshold;
         $specific_list = array();
         if (!array_key_exists($key_cache, SpecificPrice::$_filterOutCache)) {
-            $query_count    = 'SELECT COUNT(DISTINCT `'.$name.'`) FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$name.'` != 0';
-            $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
+            //First we need a base sql sentence
+            $baseSql = ' FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            if ($checkDates) {
+                $baseSql .= ' AND ( (`from` = \'0000-00-00 00:00:00\' OR `from` <= CURDATE() ) AND (`to` = \'0000-00-00 00:00:00\' OR `to` >= CURDATE() ))';
+            }
+
+            $queryCount = 'SELECT COUNT(DISTINCT `' . $name . '`)' . $baseSql;
+            $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($queryCount);
             if ($specific_count == 0) {
                 self::$_no_specific_values[$field_name] = true;
 
                 return $query_extra;
             }
-            if ($specific_count < $threshold) {
-                $query             = 'SELECT DISTINCT `'.$name.'` FROM `'._DB_PREFIX_.'specific_price` WHERE `'.$name.'` != 0';
+
+            $page = 0; //Init page value
+            do { //Lets play with threshold value in pagination mode in order to prevent an ddbb overloaded
+                $query = 'SELECT DISTINCT `' . $name . '`' . $baseSql . ' LIMIT ' . $page . ',' . (int) $threshold;
                 $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
                 foreach ($tmp_specific_list as $value) {
                     $specific_list[] = $value[$field_name];
                 }
-            }
+                $page++;
+            } while (!empty($tmp_specific_list));
+
             SpecificPrice::$_filterOutCache[$key_cache] = $specific_list;
         } else {
             $specific_list = SpecificPrice::$_filterOutCache[$key_cache];
@@ -249,7 +264,7 @@ class SpecificPriceCore extends ObjectModel
 
         // $specific_list is empty if the threshold is reached
         if (empty($specific_list) || in_array($field_value, $specific_list)) {
-            $query_extra = 'AND `'.$name.'` '.self::formatIntInQuery(0, $field_value).' ';
+            $query_extra = 'AND `' . $name . '` ' . self::formatIntInQuery(0, $field_value) . ' ';
         }
 
         return $query_extra;
