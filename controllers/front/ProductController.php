@@ -947,6 +947,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
+        $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
