@@ -112,16 +112,16 @@
 
       <div class="row">
         <div class="col-md-1">
-          <div class="checkbox">
-            <label>
-              <input
-                type="checkbox"
-                id="bulk_action_select_all"
-                onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
-              />
-              {{ "Select all"|trans({}, 'Admin.Actions') }}
-            </label>
-          </div>
+          <label class="form-check-label">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="bulk_action_select_all"
+              onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
+              value=""
+            >
+            {{ "Select all"|trans({}, 'Admin.Actions') }}
+          </label>
         </div>
 
         <div
@@ -168,7 +168,7 @@
           ]) %}
 
           {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
-            'div_style': "btn-group dropup",
+            'div_style': "btn-group dropup bulk-catalog",
             'button_id': "product_bulk_menu",
             'disabled': true,
             'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
@@ -177,7 +177,7 @@
             'items': buttons_action
           }%}
         </div>
-        <div id="product_catalog_category_tree_filter" class="float-right col-md-3">
+        <div id="product_catalog_category_tree_filter" class="col-md-3">
           <button
             class="btn btn-outline-secondary"
             data-toggle="collapse"
@@ -240,7 +240,7 @@
         <div class="row">
           <div class="col-md-12">
             <table
-              class="table table-condensed table-striped product mt-1"
+              class="table product mt-3"
               redirecturl="{{ path('admin_product_catalog', {
                 'limit': limit,
                 'offset': offset,
@@ -248,36 +248,36 @@
                 'sortOrder': sortOrder})
               }}"
             >
-              <thead>
+              <thead class="thead-default">
                 <tr class="column-headers">
-                  <th style="width: 8%">
+                  <th class="small-text" style="width: 8%">
                     {{ "ID"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'id_product'
                     } %}
                   </th>
-                  <th>
+                  <th class="small-text">
                     {{ "Image"|trans({}, 'Admin.Global') }}
                   </th>
-                  <th>
+                  <th class="small-text">
                     {{ "Name"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'name'
                     } %}
                   </th>
-                  <th style="width: 9%">
+                  <th class="small-text" style="width: 9%">
                     {{ "Reference"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'reference'
                     } %}
                   </th>
-                  <th>
+                  <th class="small-text">
                     {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'name_category'
                     } %}
                   </th>
-                  <th style="width: 9%">
+                  <th class="small-text" style="width: 9%">
                     {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'price'
@@ -285,7 +285,7 @@
                   </th>
 
                   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-                  <th style="width: 9%">
+                  <th class="small-text" style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'sav_quantity'
@@ -295,21 +295,21 @@
                     <th></th>
                   {% endif %}
 
-                  <th>
+                  <th class="small-text">
                     {{ "Status"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'active'
                     } %}
                   </th>
                   {% if has_category_filter == true %}
-                    <th>
+                    <th class="small-text">
                       {{ "Position"|trans({}, 'Admin.Global') }}
                       {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                         'column': 'position'
                       } %}
                     </th>
                   {% endif %}
-                  <th style="width: 6%"></th>
+                  <th class="small-text" style="width: 6%"></th>
                 </tr>
                 <tr class="column-filters">
                   <th>
@@ -377,11 +377,13 @@
                   {% endif %}
 
                   <th id="product_filter_column_active">
-                    <select data-toggle="select2" name="filter_column_active">
-                      <option value=""></option>
-                      <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
-                      <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
-                    </select>
+                    <div class="form-select">
+                      <select class="custom-select"  name="filter_column_active">
+                        <option value=""></option>
+                        <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
+                        <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
+                      </select>
+                    </div>
                   </th>
                   {% if has_category_filter == true %}
                     <th>
