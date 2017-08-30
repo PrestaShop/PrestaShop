@@ -844,6 +844,7 @@ CREATE TABLE `PREFIX_hook` (
   `title` varchar(64) NOT NULL,
   `description` text,
   `position` tinyint(1) NOT NULL DEFAULT '1',
+  `live_edit` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_hook`),
   UNIQUE KEY `hook_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

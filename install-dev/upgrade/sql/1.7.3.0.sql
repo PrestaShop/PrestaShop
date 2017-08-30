@@ -8,6 +8,8 @@ UPDATE `PREFIX_tab` SET `position` = 1 WHERE `class_name` = 'AdminCountries' AND
 
 /* PHP:ps_1730_move_some_aeuc_configuration_to_core(); */;
 
+ALTER TABLE `PREFIX_hook` ADD `live_edit` tinyint(1) NOT NULL DEFAULT '0' AFTER `position`;
+
 ALTER TABLE `PREFIX_product` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
 ALTER TABLE `PREFIX_product_shop` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
 
