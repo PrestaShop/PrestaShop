@@ -346,6 +346,12 @@ class AdminModulesPositionsControllerCore extends AdminController
         return $this->createTemplate('list_modules.tpl')->fetch();
     }
 
+    /**
+     * Get the URL of Live Edit link
+     *
+     * @param string $live_edit_params Get link Live Edit params
+     * @return string
+     */
     public function getLiveEditUrl($live_edit_params)
     {
         $lang = '';

@@ -29,7 +29,7 @@ $(document).ready(function () {
         var hrefAdd = 'live_edit&liveToken=' + get('liveToken') + '&ad=' + get('ad') + '&id_shop=' + get('id_shop') + '&id_employee=' + get('id_employee');
 
         if (href != undefined && href != '#' && href.substr(0, baseDir.length) == baseDir && !$(this).hasClass('settingModule')) {
-            if (search.length == 0)
+            if (search.length === 0)
                 this.search = hrefAdd;
             else
                 this.search += '&' + hrefAdd;
@@ -66,7 +66,7 @@ $(document).ready(function () {
             var ClassArray = ClassFirstElement.split(" ");
             $.each(ClassArray, function (key, value) {
                 var col = value.indexOf("col-");
-                if (col != -1) {
+                if (col !== -1) {
                     moduleBlock.addClass(value);
                     moduleBlock.find(' > *').removeClass(value);
                 }
@@ -78,7 +78,7 @@ $(document).ready(function () {
     getHookableList();
 
     $('.unregisterHook').unbind('click').click(function () {
-        ids = $(this).attr('id').split('_');
+        var ids = $(this).attr('id').split('_');
         $(this).closest(".toolbar").parent().parent().fadeOut('slow', function () {
             $(this).parent().data('id', +ids[0]);
             $(this).hide();
@@ -110,9 +110,9 @@ $(document).ready(function () {
     });
 
     $('#closeLiveEdit').unbind('click').click(function () {
-        if (!has_been_moved)
+        if (!has_been_moved) {
             closeLiveEdit();
-        else {
+        } else {
             $("#live_edit_feedback_str").html('<div style="padding:10px;margin-top:10px;"><div class="alert alert-info"><p>' + confirmClose + '</p></div><p style="height:1.6em;display:block"><a style="margin:auto;float:left" class="btn-live-edit" href="#" onclick="closeLiveEdit();">' + confirm + '</a><a style="margin:auto;float:right;" class="btn-live-edit" href="#" onclick="closeFancybox();">' + cancel + '</a></p></div>');
             $("#fancy").attr('href', '#live_edit_feedback');
             $("#fancy").trigger("click");
@@ -142,7 +142,7 @@ $(document).ready(function () {
             tolerance: 'pointer',
             connectWith: '.dndHook',
             receive: function (event, ui) {
-                if (new_target_id == '') {
+                if (new_target_id === '') {
                     new_target_id = event.target.id;
                 }
                 has_been_moved = true;
@@ -154,13 +154,12 @@ $(document).ready(function () {
             stop: function (event, ui) {
                 if (cancel) {
                     $(this).sortable('cancel');
-                }
-                else {
+                } else {
                     old_target = event.target.id;
                     cancelMove = old_target;
-                    if (new_target_id == '')
+                    if (new_target_id === '')
                         new_target_id = old_target;
-                    ids = $(ui.item[0]).attr('id').split('_');
+                    var ids = $(ui.item[0]).attr('id').split('_');
                     newHookId = $("input[value=" + new_target_id + "]").attr('name').substr(10);
                     newHookId = newHookId.substr(0, newHookId.length - 1);
                     new_id = ids[0] + "_" + newHookId + "_" + ids[2] + "_" + ids[3] + "_" + ids[4] + "_" + ids[5];
@@ -178,8 +177,7 @@ $(document).ready(function () {
                         background: '#DFFAD3',
                         'min-height': '100px'
                     });
-                }
-                else {
+                } else {
                     ui.placeholder.css({
                         visibility: 'visible',
                         border: '1px solid #EC9B9B',
@@ -205,7 +203,7 @@ $(document).ready(function () {
 
     });
 });
-// init hookable_list 
+// init hookable_list
 function getHookableList() {
     hooks_list = new Array();
     $("input[name^=hook_list]").each(function (e) {
@@ -224,7 +222,7 @@ function getHookableList() {
             hooks_list: hooks_list,
             modules_list: modules_list,
             id_shop: get('id_shop'),
-            token: get('liveToken')
+            token: get('liveToken'),
         },
         success: function (jsonData) {
             if (jsonData.hasError) {
@@ -233,9 +231,10 @@ function getHookableList() {
                     if (error != 'indexOf')
                         errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
                 alert(errors);
+            } else {
+                // create and fill input array
+                hookable_list = jsonData;
             }
-            else
-                hookable_list = jsonData;// create and fill input array
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ko" style="text-align:center; padding: 10px;"><div class="alert alert-danger"><h3>TECHNICAL ERROR:</h3></div>' + loadFail + '<br><br><a style="margin:auto" class="btn-live-edit" href="#" onclick="closeFancybox();">' + close + '</a></div>');
@@ -288,8 +287,7 @@ function saveModulePosition() {
                     $("#liveEdit-action-form").append('<input class="dynamic-input-save-position" type="hidden" name="hook[' + ids[1] + '][]" value="' + ids[3] + '" />');
                 }
             });
-        }
-        else if (typeof($('#' + hooks_list[i]).data('id')) !== 'undefined' && !$('input[name="hook[' + i + ']"]').length)
+        } else if (typeof($('#' + hooks_list[i]).data('id')) !== 'undefined' && !$('input[name="hook[' + i + ']"]').length)
             $("#liveEdit-action-form").append('<input class="dynamic-input-save-position" type="hidden" name="hook[' + parseInt($('#' + hooks_list[i]).data('id')) + '][0]" value="0" />');
     }
     $("#liveEdit-action-form").append('<input class="dynamic-input-save-position" type="hidden" name="saveHook" value="1" />');
@@ -333,10 +331,9 @@ function get(name) {
     var regexS = "[\\?&]" + name + "=([^&#]*)";
     var regex = new RegExp(regexS);
     var results = regex.exec(window.location.href);
-    if (results == null) {
+    if (results === null) {
         return "";
-    }
-    else {
+    } else {
         return results[1];
     }
 }

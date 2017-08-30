@@ -955,6 +955,14 @@ class HookCore extends ObjectModel
         }// Return html string
     }
 
+    /**
+     * Regenerate content of hook by adding html identifier
+     *
+     * @param string $display Get content for this hook
+     * @param string $moduleInstance Get modules content
+     * @param int $id_hook Get hook id
+     * @return string
+     */
     public static function wrapLiveEdit($display, $moduleInstance, $id_hook)
     {
 
