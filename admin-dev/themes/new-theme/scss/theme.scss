@@ -1,11 +1,13 @@
 // Tools
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
 @import "mixins/breakpoints";
+@import "mixins/cards";
+@import "mixins/hover";
+@import "mixins/stars";
 // Settings
 @import "config/settings";
 
@@ -16,8 +18,10 @@
 @import "components/layout/main_header";
 @import "components/layout/nav_bar";
 @import "components/layout/non_responsive";
+@import "components/cards";
 @import "components/category_tree";
 @import "components/dropzone";
+@import "components/modulescards";
 @import "components/notifications";
 @import "components/datepicker";
 
@@ -31,6 +35,10 @@
 
 // Other
 @import "components/tinymce";
+
+@import "../css/right-sidebar.css";
+@import "../css/module/drop.css";
+@import "../css/plugins/jquery.pstagger.css";
 
 // Main Layout
 body {

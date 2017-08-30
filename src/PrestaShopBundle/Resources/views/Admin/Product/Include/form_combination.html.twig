@@ -50,14 +50,14 @@
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
             <div class="col-xs-12 text-xs-right nav">
                 {# "Prev." is short for "Previous" #}
-                <a class="btn-sensitive prev pull-left"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
+                <a class="btn-sensitive prev float-left"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
                 <a class="next btn-sensitive">{{ 'Next combination'|trans({}, 'Admin.Catalog.Feature') }} <i class="material-icons">keyboard_arrow_right</i></a>
             </div>
-            <div class="panel col-md-12 p-t-2 p-b-2">
-                <div class="pull-left">
-                    <button type="button" class="btn btn-tertiary-outline btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
+            <div class="panel col-md-12 pt-2 pb-2">
+                <div class="float-left">
+                    <button type="button" class="btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
                 </div>
-                <h2 class="title p-t-2">
+                <h2 class="title pt-2">
                   {{ "Combination details"|trans({}, 'Admin.Catalog.Feature') }} -
                   {{ form.vars.value.name }}
                 </h2>

@@ -44,7 +44,7 @@
   };
 </script>
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   .custom-checkbox {
     width: 15px;
     height: 15px;

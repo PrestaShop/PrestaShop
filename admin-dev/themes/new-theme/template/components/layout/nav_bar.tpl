@@ -48,7 +48,7 @@
 
         {else}
 
-          <li class="category-title hidden-sm-down {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
+          <li class="category-title d-none d-sm-block {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -68,7 +68,7 @@
                     <span>
                     {$level2Name}
                     {if $level2.sub_tabs|@count}
-                      <i class="material-icons pull-right hidden-md-up">keyboard_arrow_down</i>
+                      <i class="material-icons float-right d-md-none">keyboard_arrow_down</i>
                     {/if}
                     </span>
 
@@ -104,7 +104,7 @@
     {/foreach}
   </ul>
 
-  <span class="menu-collapse hidden-md-down">
+  <span class="menu-collapse d-none d-md-inline-block">
     <i class="material-icons">&#xE8EE;</i>
   </span>
 

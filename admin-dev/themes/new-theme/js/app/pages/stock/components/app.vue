@@ -26,7 +26,7 @@
   <div v-if="isReady" id="app" class="stock-app">
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
-    <div class="card p-a-2">
+    <div class="card pa-2">
       <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
     </div>
     <PSPagination
@@ -100,7 +100,7 @@
 </script>
 
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
     z-index: 0;
     height: 128px;

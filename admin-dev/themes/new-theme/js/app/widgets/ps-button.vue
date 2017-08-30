@@ -52,7 +52,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   .btn {
     border-radius:0;
     min-height: 34px;

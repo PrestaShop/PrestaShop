@@ -27,10 +27,10 @@
 
 {% block javascripts %}
   {{ parent() }}
-  <script src="{{ asset('themes/default/js/bundle/product/catalog.js') }}"></script>
+  {# <script src="{{ asset('themes/default/js/bundle/product/catalog.js') }}"></script> #}
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/category-tree.js') }}"></script>
-  <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script>
+  {# <script src="{{ asset('../js/jquery/ui/jquery.ui.sortable.min.js') }}"></script> #}
 {% endblock %}
 
 {% block choice_tree_widget -%}
@@ -53,7 +53,7 @@
                    type="radio"
                    name="form[{{ form.vars.id }}][tree]"
                    value="{{ child.id_category }}" {{ checked }}
-                   class="category pull-right"
+                   class="category float-right"
                  >
              </label>
          </div>
@@ -93,7 +93,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <div class="pull-right">
+          <div class="float-right">
             <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
               {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
             </a>
@@ -172,21 +172,21 @@
             'button_id': "product_bulk_menu",
             'disabled': true,
             'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
-            'buttonType': "tertiary-outline",
+            'buttonType': "outline-secondary",
             'menu_icon': "icon-caret-up",
             'items': buttons_action
           }%}
         </div>
-        <div id="product_catalog_category_tree_filter" class="pull-right col-md-3">
+        <div id="product_catalog_category_tree_filter" class="float-right col-md-3">
           <button
-            class="btn btn-tertiary-outline"
+            class="btn btn-outline-secondary"
             data-toggle="collapse"
             data-target="#tree-categories"
           >
           {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
           <i class="material-icons">expand_more</i>
           </button>
-          <div id="tree-categories" class="collapse p-t-1">
+          <div id="tree-categories" class="collapse pt-1">
             <a
               class="categories-tree-actions"
               href="#"
@@ -240,7 +240,7 @@
         <div class="row">
           <div class="col-md-12">
             <table
-              class="table table-condensed table-striped product m-t-1"
+              class="table table-condensed table-striped product mt-1"
               redirecturl="{{ path('admin_product_catalog', {
                 'limit': limit,
                 'offset': offset,
@@ -386,7 +386,7 @@
                   {% if has_category_filter == true %}
                     <th>
                       {% if not(activate_drag_and_drop) %}
-                        <input type="button" class="btn btn-tertiary-outline" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                        <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
                         {% else %}
                         <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
                     {% endif %}

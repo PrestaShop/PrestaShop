@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
 
       {if $breadcrumbs2.container.name != ''}
-        <li>
+        <li class="breadcrumb-item">
           {if $breadcrumbs2.container.href != ''}
             <a href="{$breadcrumbs2.container.href|escape}">{$breadcrumbs2.container.name|escape}</a>
           {/if}
@@ -14,7 +14,7 @@
       {/if}
 
       {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
-        <li>
+        <li class="breadcrumb-item">
           {if $breadcrumbs2.tab.href != ''}
             <a href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
           {/if}
@@ -36,7 +36,7 @@
         {if $k != 'back' && $k != 'modules-list'}
           {* TODO: REFACTOR ALL THIS THINGS *}
           <a
-            class="m-b-2 m-r-1 btn btn-primary {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
+            class="mb-2 mr-1 btn btn-primary {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
             id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
             href="{$btn.href|escape}"{/if}
             title="{if isset($btn.help)}{$btn.help}{else}{$btn.desc|escape}{/if}"{if isset($btn.js) && $btn.js}
