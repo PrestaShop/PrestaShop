@@ -47,7 +47,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   [type="radio"]:checked,
   [type="radio"]:not(:checked) {
     position: absolute;
@@ -73,7 +73,7 @@
     height: 18px;
     border: 2px solid $gray-medium;
     border-radius: 100%;
-    background: $white;
+    background: #ffffff;
   }
   [type="radio"]:checked + label:before {
     border: 2px solid $primary;

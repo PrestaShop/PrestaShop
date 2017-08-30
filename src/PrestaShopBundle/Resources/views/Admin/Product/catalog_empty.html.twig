@@ -26,15 +26,15 @@
 
 {% block content %}
   <div class="col-md-12 text-md-center">
-    <div class="m-t-3 emptycatalog-icon">
+    <div class="mt-3 emptycatalog-icon">
       <i class="material-icons">add_shopping_cart</i>
     </div>
 
     {{ '[1]Add your first product[/1][2]or import a list of products (filetypes: .csv, .xls, .xlsx, .xlst, .ods, .ots).[/2]'|trans({}, 'Admin.Catalog.Feature')|
       replace({
-      '[1]': '<div class="m-t-1"><a class="btn btn-primary" id="product_empty_list_add_btn" href="'~ path('admin_product_new') ~'">',
+      '[1]': '<div class="mt-1"><a class="btn btn-primary" id="product_empty_list_add_btn" href="'~ path('admin_product_new') ~'">',
       '[/1]': '</a></div>',
-      '[2]': '<div class="m-t-1"><a href="'~ import_url ~'" class="external-link" id="product_empty_list_go_to_import">',
+      '[2]': '<div class="mt-1"><a href="'~ import_url ~'" class="external-link" id="product_empty_list_go_to_import">',
       '[/2]': '</a></div>',
       })|raw
     }}

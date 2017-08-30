@@ -55,7 +55,7 @@
       </PSTree>
     </div>
     <ul
-      class="m-t-1"
+      class="mt-1"
       v-else
     >
       <li
@@ -187,7 +187,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../../scss/config/_settings.scss";
   .filter-container {
     border: $gray-light 1px solid;
     padding: 10px;

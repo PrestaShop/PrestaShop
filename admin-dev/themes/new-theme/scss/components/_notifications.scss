@@ -30,7 +30,7 @@
   }
 
   .notifications {
-    font-size: $font-size-sm;
+    font-size: $font-size-base;
 
     .nav {
       .nav-item {
@@ -40,14 +40,14 @@
       }
 
       .nav-link {
-        color: $font-color-secondary;
+        color: $gray-medium;
         font-weight: $font-weight-normal;
         padding: 0.9375rem 0.9375rem 0.625rem 0.9375rem;
 
         &.active {
           border-top: 0;
           border-bottom: 2px solid $nav-tabs-active-link-hover-border-color;
-          color: $font-color-primary;
+          color: $gray-dark;
         }
 
         &:hover {
@@ -57,7 +57,7 @@
     }
 
     .tab-content {
-      border-top: 0.125rem solid $navbar-bottom-separtor-color;
+      border-top: 0.125rem solid $gray-light;
       padding: 0;
       margin-top: -0.0625rem;
 
@@ -96,7 +96,7 @@
       .notif {
         display: block;
         padding: 0.625rem 0.9375rem;
-        color: $font-color-secondary;
+        color: $gray-medium;
 
         .material-icons {
           vertical-align: top;
@@ -117,7 +117,7 @@
         }
 
         strong {
-          color: $font-color-primary;
+          color: $gray-dark;
         }
 
         &:hover {

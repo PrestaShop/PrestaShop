@@ -24,12 +24,12 @@
  *-->
 <template>
   <div>
-    <div class="m-b-1 tree-header">
+    <div class="mb-1 tree-header">
       <span class="text-uppercase pointer" @click="expand">
         <i class="material-icons">keyboard_arrow_down</i>
         <strong v-if="translations">{{translations.expand}}</strong>
       </span>
-      <span class="pull-right text-uppercase pointer" @click="reduce">
+      <span class="float-right text-uppercase pointer" @click="reduce">
         <i class="material-icons">keyboard_arrow_up</i>
         <strong v-if="translations">{{translations.reduce}}</strong>
       </span>
@@ -88,7 +88,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../scss/config/_settings.scss";
   ul {
     list-style-type: none;
     cursor: pointer;

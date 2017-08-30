@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <PSTable class="m-t-1">
+  <PSTable class="mt-1">
     <thead>
       <tr>
         <th width="40%" class="thead-title">
@@ -61,7 +61,7 @@
     <tbody>
       <tr v-if="this.isLoading">
         <td colspan="7">
-          <PSLoader v-for="(n, index) in 3" class="m-t-1" :key="index">
+          <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
             <div class="background-masker header-top"></div>
             <div class="background-masker header-left"></div>
             <div class="background-masker header-bottom"></div>
@@ -117,7 +117,7 @@
 </script>
 
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   .table {
     font-size: .9em;
     table-layout: fixed;

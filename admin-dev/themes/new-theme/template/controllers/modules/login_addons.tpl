@@ -59,7 +59,7 @@
 								<span class="input-group-addon"><i class="icon-key"></i></span>
 								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
-							<a class="btn btn-link pull-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
+							<a class="btn btn-link float-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
 							<br>
 						</div>
 					</div>

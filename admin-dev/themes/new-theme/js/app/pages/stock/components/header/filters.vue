@@ -25,14 +25,14 @@
 <template>
   <div>
     <button class="search-input collapse-button" type="button" data-toggle="collapse" data-target="#filters">
-      <i class="material-icons m-r-1">filter_list</i>
-      <i class="material-icons pull-right ">keyboard_arrow_down</i>
+      <i class="material-icons mr-1">filter_list</i>
+      <i class="material-icons float-right ">keyboard_arrow_down</i>
       {{trans('button_advanced_filter')}}
     </button>
     <div class="collapse" id="filters">
       <div class="row">
         <div class="col-md-4">
-          <div v-if="isOverview" class="p-y-2 p-x-2">
+          <div v-if="isOverview" class="py-2 px-2">
             <h2>{{trans('filter_suppliers')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_suppliers')"
@@ -42,16 +42,16 @@
               @active="onFilterActive"
             />
           </div>
-          <div v-else class="p-y-2 p-x-2">
+          <div v-else class="py-2 px-2">
             <h2>{{trans('filter_movements_type')}}</h2>
             <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="name" @change="onChange">
               {{trans('none')}}
             </PSSelect>
-            <h2 class="m-t-2">{{trans('filter_movements_employee')}}</h2>
+            <h2 class="mt-2">{{trans('filter_movements_employee')}}</h2>
             <PSSelect :items="employees" itemID="id_employee" itemName="name" @change="onChange">
              {{trans('none')}}
             </PSSelect>
-            <h2 class="m-t-2">{{trans('filter_movements_period')}}</h2>
+            <h2 class="mt-2">{{trans('filter_movements_period')}}</h2>
             <form class="row">
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_from')}}</label>
@@ -65,7 +65,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="p-y-2 p-x-2">
+          <div class="py-2 px-2">
             <h2>{{trans('filter_categories')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_category')"
@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="p-y-2 p-x-2">
+          <div class="py-2 px-2">
             <h2>{{trans('filter_status')}}</h2>
             <PSRadio
               id="enable"
@@ -102,8 +102,8 @@
             />
           </div>
         </div>
-        <!-- <PSButton type="button" class="pull-right m-y-2 m-x-2" :primary="true" :disabled="disabled" @click="onClick">
-          <i class="material-icons m-r-1">filter_list</i>
+        <!-- <PSButton type="button" class="float-right my-2 mx-2" :primary="true" :disabled="disabled" @click="onClick">
+          <i class="material-icons mr-1">filter_list</i>
           {{trans('button_apply_advanced_filter')}}
         </PSButton> -->
       </div>
@@ -216,7 +216,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   #filters {
     background: white;
     border-radius: 2px;

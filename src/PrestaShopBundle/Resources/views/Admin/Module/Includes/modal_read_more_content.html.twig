@@ -185,7 +185,7 @@
 
     <div class="modal-footer module-modal-footer">
       <div class="module-stars-price">
-        <div class="pull-right module-price">
+        <div class="float-right module-price">
           {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
             {{ module.attributes.price.displayPrice }}
           {% elseif module.attributes.url_active != 'buy' %}
@@ -194,13 +194,13 @@
         </div>
       </div>
       <div class="module-badges-action">
-        <div class="pull-left module-badges-display">
+        <div class="float-left module-badges-display">
           {% for badge in badges %}
             <img src="{{badge.img}}" alt="{{badge.label}}"/>
             {{badge.label}}
           {% endfor %}
         </div>
-        <div class="pull-right module-action">
+        <div class="float-right module-action">
           {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module, 'level' : level } %}
         </div>
       </div>

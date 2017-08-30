@@ -59,7 +59,7 @@
 
   // Components
   .product-header {
-    background: $white;
+    background: #ffffff;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     padding: 1.25rem 0;
@@ -110,7 +110,7 @@
       bottom: $grid-gutter-width / 2;
     }
     z-index: 10;
-    background: $white;
+    background: #ffffff;
     bottom: 0;
     left: $size-navbar-width;
     right: 0;
@@ -128,7 +128,7 @@
     }
     .preview,
     .save {
-      padding: 0.625rem $btn-padding-x-lg;
+      padding: 0.625rem map-get($spacing-widths, 'xxs');
     }
     .save {
       margin-top: 0.5rem;
@@ -202,7 +202,7 @@
   .product-combination-image {
     display: inline-block;
     border: 1px solid $gray-light;
-    outline: solid 4px $white;
+    outline: solid 4px #ffffff;
     margin: 0 0.625rem 0 0;
     border-radius: 0.1875rem;
   }
@@ -308,7 +308,7 @@
         .iscover {
           background: $gray-medium;
           font-size: 12px;
-          color: $white;
+          color: #ffffff;
           text-align: center;
           padding: 5px;
           position: absolute;
@@ -426,7 +426,7 @@
     .tt-menu {
       width: 100%;
       border: 1px solid $gray-medium;
-      background: $white;
+      background: #ffffff;
       padding: 0.3125rem 0;
       max-height: 19.5rem;
       overflow: auto;
@@ -437,7 +437,7 @@
       color: $gray-light;
       &:hover {
         background-color: $primary-hover;
-        color: $white;
+        color: #ffffff;
       }
     }
   }
@@ -790,7 +790,7 @@
       background: $primary-hover;
       cursor: pointer;
       a {
-        color: $white;
+        color: #ffffff;
         text-decoration: none;
       }
     }
@@ -840,7 +840,7 @@
           display: none;
           +.attribute-label {
             display: inline-block;
-            font-size: $font-size-sm;
+            font-size: $font-size-base;
             color: $gray-light;
             margin: 0;
             .pretty-checkbox {

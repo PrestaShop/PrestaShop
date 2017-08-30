@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="search" class="col-md-8 m-b-2">
+  <div id="search" class="col-md-8 mb-2">
     <form class="search-form" @submit.prevent>
       <label>{{trans('search_label')}}</label>
       <div class="search-group">
@@ -67,7 +67,7 @@
   };
 </script>
 <style lang="sass?outputStyle=expanded">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   #search {
     .search-input {
       box-shadow: none;

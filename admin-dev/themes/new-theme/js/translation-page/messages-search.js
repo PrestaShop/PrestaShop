@@ -23,7 +23,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import Jets from 'jets/jets';
-import $ from 'jquery';
 
 export default function () {
   $(() => {

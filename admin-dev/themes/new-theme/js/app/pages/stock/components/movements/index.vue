@@ -24,7 +24,7 @@
  *-->
 <template>
   <section>
-    <PSTable class="m-t-1">
+    <PSTable class="mt-1">
       <thead>
         <tr>
           <th width="30%">
@@ -53,7 +53,7 @@
       <tbody>
         <tr v-if="this.isLoading">
           <td colspan="7">
-            <PSLoader v-for="(n, index) in 3" class="m-t-1" :key="index">
+            <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
               <div class="background-masker header-top"></div>
               <div class="background-masker header-left"></div>
               <div class="background-masker header-bottom"></div>
