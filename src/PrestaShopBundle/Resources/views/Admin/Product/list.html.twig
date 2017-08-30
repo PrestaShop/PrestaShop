@@ -30,8 +30,8 @@
         <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
             <td class="checkbox-column">
               <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}" />
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
                   {{ product.id_product }}
                 </label>
               </div>
@@ -58,7 +58,7 @@
                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
                   {{ product.sav_quantity }}
                 {% else %}
-                  <span class="badge badge-danger">{{ product.sav_quantity|default('N/A'|trans({}, 'Admin.Global')) }}</span>
+                  {{ product.sav_quantity|default('N/A'|trans({}, 'Admin.Global')) }}
                 {% endif %}
               </a>
             </td>
