@@ -250,7 +250,7 @@ class AdminModuleDataProvider implements ModuleInterface
             $addon->attributes->set('urls', $urls);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
-            } elseif (array_key_exists($url_active, $urls)) {
+            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
                 $addon->attributes->set('url_active', $url_active);
             } else {
                 $addon->attributes->set('url_active', key($urls));
