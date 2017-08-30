@@ -807,6 +807,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 {
                     AttributeGroup::cleanPositions();
                 }
+                $id_attribute_group = Tools::getValue('id_attribute_group');
+                if (Tools::getValue('page') && $id_attribute_group && (int)Tools::getValue('submitFilter' . $this->list_id)) {
+                    $this->setRedirectAfter(self::$currentIndex . '&token=' . $this->token
+                        . ((Tools::isSubmit('submitFilter' . $this->list_id)) ? '&submitFilter' . $this->list_id . '=' . (int)Tools::getValue('submitFilter' . $this->list_id) : '')
+                        . '&id_attribute_group=' . (int)$id_attribute_group . '&viewattribute_group');
+                }
             }
         }
     }
