@@ -41,6 +41,7 @@
         </div>
         <PSNumber
           class="m-l-1"
+          :danger="danger"
           :value="bulkEditQty"
           @focus="focusIn"
           @blur="focusOut"
@@ -53,7 +54,6 @@
         type="button"
         class="update-qty pull-xs-right"
         :class="{'btn-primary': disabled }"
-        :disabled="disabled"
         :primary="true"
         @click="sendQty"
       >
@@ -93,17 +93,25 @@
     },
     watch: {
       selectedProductsLng(value) {
-        if (value === 0) {
+        if (value === 0 && this.$refs['bulk-action']) {
           this.$refs['bulk-action'].checked = false;
+        }
+        if (value === 1 && this.$refs['bulk-action']) {
+          this.$store.dispatch('updateBulkEditQty', 0);
         }
       },
     },
     methods: {
       focusIn() {
-        this.isFocused = true;
+        this.danger = !this.selectedProductsLng;
+        this.isFocused = !this.danger;
+        if (this.danger) {
+          EventBus.$emit('displayBulkAlert', 'error');
+        }
       },
       focusOut() {
         this.isFocused = false;
+        this.danger = false;
       },
       bulkChecked(checkbox) {
         if (!checkbox.checked) {
@@ -122,6 +130,7 @@
     },
     data: () => ({
       isFocused: false,
+      danger: false,
     }),
     components: {
       PSNumber,

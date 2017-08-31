@@ -85,6 +85,7 @@ export default {
   },
   [types.UPDATE_PRODUCTS_QTY](state, updatedProducts) {
     state.productsToUpdate = [];
+    state.selectedProducts = [];
     _.forEach(updatedProducts, (product) => {
       const index = _.findIndex(state.products, {
         product_id: product.product_id,
@@ -124,10 +125,11 @@ export default {
   },
   [types.UPDATE_BULK_EDIT_QTY](state, value) {
     state.bulkEditQty = value;
-    _.forEach(state.productsToUpdate, (product) => {
+    _.forEach(state.selectedProducts, (product) => {
       product.qty = value;
+      product.delta = state.bulkEditQty;
     });
-    if (!value) {
+    if (value === null) {
       state.selectedProducts = [];
     }
   },

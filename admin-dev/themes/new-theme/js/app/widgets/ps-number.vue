@@ -24,6 +24,7 @@
   <input
     type="number"
     class="ps-number"
+    :class="{'danger' : danger}"
     :value="value"
     @keyup="onKeyup($event)"
     @focus="focusIn"
@@ -37,6 +38,7 @@
       value: {
         type: Number,
       },
+      danger: false,
     },
     methods: {
       onKeyup($event) {
@@ -74,5 +76,13 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+  }
+  .danger {
+    border: 1px solid $danger;
+    background-color: $white;
+    color: $gray-dark;
+    &:focus {
+      outline: none;
+    }
   }
 </style>

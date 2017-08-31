@@ -37,6 +37,18 @@
       </div>
       <Filters @applyFilter="applyFilter"/>
     </div>
+    <div class="col-md-4 alert-box">
+      <transition name="fade">
+        <PSAlert
+          v-if="showAlert"
+          :alertType="alertType"
+          :hasClose="true"
+          @closeAlert="onCloseAlert"
+        >
+          {{trans('alert_bulk_edit')}}
+        </PSAlert>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -44,12 +56,15 @@
   import Filters from './filters';
   import PSTags from 'app/widgets/ps-tags';
   import PSButton from 'app/widgets/ps-button';
+  import PSAlert from 'app/widgets/ps-alert';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     components: {
       Filters,
       PSTags,
       PSButton,
+      PSAlert,
     },
     methods: {
       onClick() {
@@ -62,13 +77,29 @@
       applyFilter(filters) {
         this.$emit('applyFilter', filters);
       },
+      onCloseAlert() {
+        this.showAlert = false;
+      },
     },
     watch: {
       $route() {
         this.tags = [];
       },
     },
-    data: () => ({ tags: [] }),
+    mounted() {
+      EventBus.$on('displayBulkAlert', (type) => {
+        this.showAlert = true;
+        setTimeout(_ => {
+          this.showAlert = false;
+        }, 5000);
+      });
+    },
+    data: () => ({
+      tags: [],
+      showAlert: false,
+      alertType: 'ALERT_TYPE_DANGER',
+      duration: false,
+    }),
   };
 </script>
 
@@ -83,16 +114,25 @@
       outline: none;
       border-radius: 0;
     }
-  }
-  .search-form {
-    width: calc(100% - 130px);
-    .search-button {
-      float: right;
-      position: absolute;
-      right: 15px;
-      top: 1px;
-      margin-top: 28px;
-      height: 35px;
+    .alert-box {
+      padding-top: 68px;
+    }
+    .search-form {
+      width: calc(100% - 130px);
+      .search-button {
+        float: right;
+        position: absolute;
+        right: 15px;
+        top: 1px;
+        margin-top: 28px;
+        height: 35px;
+      }
+    }
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to {
+      opacity: 0;
     }
   }
 </style>
