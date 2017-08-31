@@ -168,6 +168,32 @@
     }
   }
 
+  .summary-description-container {
+    .nav-tabs {
+      overflow: hidden;
+
+      &.bordered {
+        .nav-link {
+          &.active {
+            border-left: 1px solid $gray-light;
+            border-right: 1px solid $gray-light;
+          }
+        }
+      }
+    }
+
+    .tab-content {
+      &.bordered {
+        border: 1px solid $gray-light;
+      }
+    }
+  }
+
+  .product-feature {
+    align-items: flex-end;
+    margin-bottom: 1rem;
+  }
+
   // Combination details form
   #accordion_combinations td.img img {
     max-width: 50px;
@@ -481,28 +507,6 @@
       &:-ms-input-placeholder,
       &:-moz-placeholder {
         font-size: 0.75rem;
-      }
-    }
-    > .pstaggerTagsWrapper {
-      border: none;
-      padding: 0;
-      > .pstaggerTag {
-        font-size: 0.75rem;
-        font-weight: 400;
-        padding-top: 0.125rem;
-        margin-bottom: 0.3125rem;
-        > .pstaggerClosingCross {
-          font-size: 0;
-          &::after {
-            font-size: 1rem;
-            font-family: 'Material Icons';
-            content: "\E5CD";
-            text-decoration: none;
-            vertical-align: middle;
-            position: relative;
-            bottom: 0.25rem;
-          }
-        }
       }
     }
   }

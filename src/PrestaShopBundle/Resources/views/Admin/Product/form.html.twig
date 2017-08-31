@@ -145,7 +145,7 @@
                       {{ form_widget(form.step1.inputPackItems) }}
                     </div>
 
-                    <div id="product-images-container" class="mb-2">
+                    <div id="product-images-container" class="mb-4">
                       <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
                            url-upload="{{ path('admin_product_image_upload', {'idProduct': id_product}) }}"
                            url-position="{{ path('admin_product_image_positions') }}"
@@ -199,23 +199,25 @@
 
                     </div>
 
-                    <ul class="nav nav-tabs bordered">
-                      <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-                      <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
-                    </ul>
+                    <div class="summary-description-container">
+                      <ul class="nav nav-tabs bordered">
+                        <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+                        <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
+                      </ul>
 
-                    <div class="tab-content bordered">
-                      <div class="tab-pane panel panel-default active" id="description_short">
-                        {{ form_widget(form.step1.description_short) }}
-                      </div>
-                      <div class="tab-pane panel panel-default " id="description">
-                        {{ form_widget(form.step1.description) }}
+                      <div class="tab-content bordered">
+                        <div class="tab-pane panel panel-default active" id="description_short">
+                          {{ form_widget(form.step1.description_short) }}
+                        </div>
+                        <div class="tab-pane panel panel-default " id="description">
+                          {{ form_widget(form.step1.description) }}
+                        </div>
                       </div>
                     </div>
 
                     {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
 
-                    <div id="features" class="mb-1 mt-1">
+                    <div id="features" class="mb-3 mt-3">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                         {{ form_errors(form.step1.features) }}

@@ -24,6 +24,7 @@
 @import "components/modulescards";
 @import "components/notifications";
 @import "components/datepicker";
+@import "components/help_box";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -37,8 +38,6 @@
 @import "components/tinymce";
 
 @import "../css/right-sidebar.css";
-@import "../css/module/drop.css";
-@import "../css/plugins/jquery.pstagger.css";
 
 // Main Layout
 body {
@@ -104,5 +103,13 @@ span.twitter-typeahead {
   width: 100% !important;
   input.tt-input {
     width: 100% !important;
+  }
+}
+
+.translation-field {
+  display: none;
+
+  &.visible {
+    display: block;
   }
 }
