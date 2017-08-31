@@ -1053,22 +1053,25 @@
 
     </div>
     {# FOOTER #}
-    <div class="product-footer row">
+    <div class="product-footer justify-content-md-center">
       <div class="col-lg-5">
         <a
           href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}"
-          class="btn btn-link btn-lg delete"
+          class="tooltip-link btn btn-lg"
           data-toggle="tooltip"
           id="product_form_delete_btn"
           title="{{ 'Permanently delete this product.'|trans({}, 'Admin.Catalog.Help') }}"
+          data-placement="left"
+          data-original-title="Delete"
         >
           <i class="material-icons">delete</i>
         </a>
         <a
+          href=""
           data-redirect="{{ preview_link }}"
           data-url_deactive="{{ preview_link_deactivate }}"
           target="_blank"
-          class="btn btn-tertiary btn-submit preview"
+          class="btn btn-secondary preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
           title="{{ 'See how your product sheet will look online: ALT+SHIFT+V'|trans({}, 'Admin.Catalog.Help') }}"
@@ -1081,6 +1084,7 @@
         <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
             title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
         <input
+          class="switch-input-lg"
           id="form_step1_active"
           data-toggle="switch"
           type="checkbox"
@@ -1090,7 +1094,7 @@
         />
         {% endif %}
       </div>
-      <div class="col-lg-6 text-lg-right">
+      <div class="col-lg-5 text-lg-right">
         {% if is_shop_context %}
           <button
             type="button"
