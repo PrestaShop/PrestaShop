@@ -164,6 +164,27 @@ class ProductQuantity extends CommonAbstractType
                 )
             )
             ->add(
+                'low_stock',
+                'Symfony\Component\Form\Extension\Core\Type\NumberType',
+                array(
+                    'label' => $this->translator->trans(
+                        'Low stock level',
+                        array(),
+                        'Admin.Catalog.Feature'
+                    ),
+                    'attr' => array(
+                        'placeholder' => $this->translator->trans(
+                            'Leave empty to disable',
+                            array(),
+                            'Admin.Catalog.Feature'
+                        ),
+                    ),
+                    'constraints' => array(
+                        new Assert\Type(array('type' => 'numeric')),
+                    ),
+                )
+            )
+            ->add(
                 'available_now',
                 'PrestaShopBundle\Form\Admin\Type\TranslateType',
                 array(

@@ -94,7 +94,19 @@ class ProductCombinationBulk extends CommonAbstractType
             ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
                 'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
+            ))
+            ->add('low_stock', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+                'required' => false,
+                'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
+                'attr' => array(
+                    'placeholder' => $this->translator->trans(
+                        'If empty, it keeps the original value',
+                        array(),
+                        'Admin.Catalog.Feature'
+                    ),
+                ),
             ));
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
