@@ -5,6 +5,7 @@ if [[ $EXTRA_TESTS != *"functional"* ]]; then
 fi
 
 echo "<?php define('_PS_MODE_DEV_', false);" > config/defines_custom.inc.php
+bash $TRAVIS_BUILD_DIR/travis-scripts/install-prestashop.sh
 
 echo "* Installing functional tests ...";
 

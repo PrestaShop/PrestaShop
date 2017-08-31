@@ -33,9 +33,9 @@ before_script:
 
 script:
   - tests/check_php_parse_errors.sh
-  - php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
+  - bash travis-scripts/install-prestashop.sh
   - cd tests && bash getcomposer.sh && php composer.phar install && php vendor/bin/phpunit -c .
-  - cd $TRAVIS_BUILD_DIR && bash $TRAVIS_BUILD_DIR/travis-scripts/run-functional-tests.sh
+  - cd $TRAVIS_BUILD_DIR && bash travis-scripts/run-functional-tests.sh
 
 after_failure:
   - curl -L http://localhost/
