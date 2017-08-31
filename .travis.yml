@@ -14,6 +14,7 @@ addons:
   apt:
     packages:
       - apache2
+      - libapache2-mod-fastcgi
 
 cache:
   directories:
@@ -25,5 +26,6 @@ before_script:
 
 script:
   - tests/check_php_parse_errors.sh
-  - php install-dev/index_cli.php --language=en --country=us --domain=localhostt --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --password=123456789
+  - php install-dev/index_cli.php --language=en --country=us --domain=localhostt --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
   - cd tests && bash getcomposer.sh && php composer.phar install && php vendor/bin/phpunit -c .
+  - bash $TRAVIS_BUILD_DIR/travis-scripts/run-functional-tests.sh
