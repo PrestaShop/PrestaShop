@@ -291,6 +291,7 @@ product_tabs['Combinations'] = new function(){
 					var eco_tax = data[0]['ecotax'];
 					var upc = data[0]['upc'];
 					var minimal_quantity = data[0]['minimal_quantity'];
+					var low_stock = data[0]['low_stock'];
 					var available_date = data[0]['available_date'];
 
 					if (wholesale_price != 0 && wholesale_price > 0)
@@ -318,7 +319,8 @@ product_tabs['Combinations'] = new function(){
 						eco_tax,
 						upc,
 						minimal_quantity,
-						available_date
+						available_date,
+						low_stock
 					);
 					calcImpactPriceTI();
 				}
@@ -432,7 +434,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.fillCombination = function(wholesale_price, price_impact, weight_impact, unit_impact, reference,
-	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date)
+	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, minimal_quantity, available_date, low_stock)
 	{
 		var link = '';
 		self.init_elems();
@@ -443,6 +445,7 @@ product_tabs['Combinations'] = new function(){
 		$('#attr_qty_stock').show();
 
 		$('#attribute_minimal_quantity').val(minimal_quantity);
+		$('#attribute_low_stock').val(low_stock);
 
 		getE('attribute_reference').value = reference;
 
@@ -1861,6 +1864,7 @@ var ProductMultishop = new function()
 		$.each(languages, function(k, v)
 		{
 			ProductMultishop.checkField($('input[name=\'multishop_check[minimal_quantity]\']').prop('checked'), 'minimal_quantity');
+			ProductMultishop.checkField($('input[name=\'multishop_check[low_stock]\']').prop('checked'), 'low_stock');
 			ProductMultishop.checkField($('input[name=\'multishop_check[available_later]['+v.id_lang+']\']').prop('checked'), 'available_later_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[available_now]['+v.id_lang+']\']').prop('checked'), 'available_now_'+v.id_lang);
 			ProductMultishop.checkField($('input[name=\'multishop_check[available_date]\']').prop('checked'), 'available_date');
@@ -1887,6 +1891,7 @@ var ProductMultishop = new function()
 		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_unit_impact]\']').prop('checked'), 'attribute_unit_impact', 'attribute_unit_impact');
 		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_ecotax]\']').prop('checked'), 'attribute_ecotax');
 		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_minimal_quantity]\']').prop('checked'), 'attribute_minimal_quantity');
+		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_low_stock]\']').prop('checked'), 'attribute_low_stock');
 		ProductMultishop.checkField($('input[name=\'multishop_check[available_date_attribute]\']').prop('checked'), 'available_date_attribute');
 		ProductMultishop.checkField($('input[name=\'multishop_check[attribute_default]\']').prop('checked'), 'attribute_default');
 	};

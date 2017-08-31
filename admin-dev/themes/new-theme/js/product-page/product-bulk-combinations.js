@@ -219,6 +219,7 @@ class Combination {
       case "quantity":
       case "reference":
       case "minimal_quantity":
+      case "low_stock":
         convertedInput = this.inputPattern + 'attribute_' + bulkInput;
         break;
       case "cost_price":
