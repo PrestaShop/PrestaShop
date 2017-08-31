@@ -101,6 +101,18 @@
                     </div>
                 </div>
                 <h2 class="title">
+                  {{ 'Stock alerts'|trans({}, 'Admin.Catalog.Feature') }}
+                </h2>
+                <div class="row">
+                  <div class="col-md-3">
+                    <fieldset class="form-group">
+                      <label class="form-control-label">{{ form.attribute_low_stock.vars.label|raw }}</label>
+                      {{ form_errors(form.attribute_low_stock) }}
+                      {{ form_widget(form.attribute_low_stock) }}
+                    </fieldset>
+                  </div>
+                </div>
+                <h2 class="title">
                   {{ "Price and impact"|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
                 <div class="row">
