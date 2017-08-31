@@ -26,20 +26,21 @@
 
 {% block content %}
 
-  <form name="form" id="form" method="post" class="form-horizontal product-page row" novalidate="novalidate">
+  <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
 
     {% if not editable %} <fieldset disabled id="field-disabled"> {% endif %}
     {# PRODUCT HEADER #}
-    <div class="product-header">
+    <div class="product-header col-md-12">
+      <div class="row justify-content-md-center">
       {% if is_multishop_context %}
-        <div class="col-md-12">
+        <div class="col-md-10">
           <div class="alert alert-warning" role="alert">
-            <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+            <p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
           </div>
         </div>
       {% endif %}
 
-      <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-10">
         <div class="row">
           <div class="col-md-7 big-input {{ 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
             {{ form_widget(form.step1.name) }}
@@ -51,14 +52,14 @@
           </div>
           <div class="col-md-1 form_switch_language">
             <div class="{{ languages|length == 1 ? 'hide' : '' }}">
-              <select id="form_switch_language" class="form-control" data-toggle="select2">
+              <select id="form_switch_language" class="custom-select">
                 {% for language in languages %}
                   <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
                 {% endfor %}
               </select>
             </div>
           </div>
-          <div class="toolbar col-lg-2 text-md-right">
+          <div class="toolbar col-md-2 text-md-right">
             <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
                id="product_form_go_to_sales">
               <i class="material-icons">assessment</i>
@@ -97,17 +98,17 @@
           </div>
         </div>
       </div>
-      <div class="clearfix"></div>
+    </div>
     </div>
 
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-10">
       <div id="form_bubbling_errors">
         {{ form_errors(form) }}
       </div>
     </div>
 
     {# FORM TABS CONTAINER #}
-    <div id="form-loading" class="col-md-10 col-md-offset-1">
+    <div id="form-loading" class="col-md-10">
       <div class="tabs js-tabs">
         <div class="arrow js-arrow left-arrow float-left">
           <i class="material-icons hide">chevron_left</i>
@@ -1052,7 +1053,7 @@
 
     </div>
     {# FOOTER #}
-    <div class="product-footer">
+    <div class="product-footer row">
       <div class="col-lg-5">
         <a
           href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}"
