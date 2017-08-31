@@ -155,7 +155,7 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
   });
 };
 
-export const updateQtyByProductsId = ({ commit, state }, payload) => {
+export const updateQtyByProductsId = ({ commit, state }) => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
   Vue.http.post(url, productsQty).then((res) => {
@@ -176,4 +176,12 @@ export const addProductToUpdate = ({ commit }, product) => {
 
 export const removeProductToUpdate = ({ commit }, product) => {
   commit(types.REMOVE_PRODUCT_TO_UPDATE, product);
+};
+
+export const addSelectedProduct = ({ commit }, product) => {
+  commit(types.ADD_SELECTED_PRODUCT, product);
+};
+
+export const removeSelectedProduct = ({ commit }, product) => {
+  commit(types.REMOVE_SELECTED_PRODUCT, product);
 };

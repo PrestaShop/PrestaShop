@@ -27,6 +27,7 @@
     <td class="flex p-r-1">
       <PSCheckbox
         :id="product.combination_id"
+        :ref="product.combination_id"
         :model="product"
         @checked="productChecked"
       />
@@ -82,6 +83,8 @@
   import PSCheckbox from 'app/widgets/ps-checkbox';
   import PSMedia from 'app/widgets/ps-media';
   import ProductDesc from 'app/pages/stock/mixins/product-desc';
+  import { EventBus } from 'app/utils/event-bus';
+  import _ from 'lodash';
 
   export default {
     props: ['product'],
@@ -111,19 +114,35 @@
     methods: {
       productChecked(checkbox) {
         if (checkbox.checked) {
-          this.$store.dispatch('addProductToUpdate', checkbox.item);
+          this.$store.dispatch('addSelectedProduct', checkbox.item);
         } else {
-          this.$store.dispatch('removeProductToUpdate', checkbox.item);
+          this.$store.dispatch('removeSelectedProduct', checkbox.item);
         }
       },
       updateProductQty(productToUpdate) {
-        this.$store.dispatch('updateProductQty', {
+        const updatedProduct = {
           product_id: productToUpdate.product.product_id,
           combination_id: productToUpdate.product.combination_id,
           delta: productToUpdate.delta,
-        });
+        };
+        this.$store.dispatch('updateProductQty', updatedProduct);
+        if (productToUpdate.delta) {
+          this.$store.dispatch('addProductToUpdate', updatedProduct);
+        } else {
+          this.$store.dispatch('removeProductToUpdate', updatedProduct);
+        }
       },
     },
+    mounted() {
+      const self = this;
+      EventBus.$on('toggleProductsCheck', (checked) => {
+        const ref = self.product.combination_id;
+        this.$refs[ref].checked = checked;
+      });
+    },
+    data: () => ({
+      bulkEdition: false,
+    }),
     components: {
       Spinner,
       PSMedia,

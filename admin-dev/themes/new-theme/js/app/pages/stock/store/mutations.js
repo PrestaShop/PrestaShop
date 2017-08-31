@@ -127,5 +127,19 @@ export default {
     _.forEach(state.productsToUpdate, (product) => {
       product.qty = value;
     });
+    if (!value) {
+      state.selectedProducts = [];
+    }
+  },
+  [types.ADD_SELECTED_PRODUCT](state, product) {
+    state.selectedProducts.push(product);
+  },
+  [types.REMOVE_SELECTED_PRODUCT](state, product) {
+    const index = _.findIndex(state.selectedProducts, {
+      product_id: product.product_id,
+      combination_id: product.combination_id,
+    });
+    state.selectedProducts.splice(index, 1);
   },
 };
+

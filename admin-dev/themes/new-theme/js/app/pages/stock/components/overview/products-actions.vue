@@ -26,12 +26,12 @@
   <div class="row product-actions">
     <div
       class="col-md-8 qty flex"
-      :class="{'active' : isActive}"
+      :class="{'active' : isFocused}"
     >
       <PSCheckbox
         id="bulk-action"
+        ref="bulk-action"
         class="m-t-1"
-        :checked="false"
         :isIndeterminate="isIndeterminate"
         @checked="bulkChecked"
       />
@@ -41,6 +41,7 @@
         </div>
         <PSNumber
           class="m-l-1"
+          :value="bulkEditQty"
           @focus="focusIn"
           @blur="focusOut"
           @change="onChange"
@@ -67,22 +68,50 @@
   import PSNumber from 'app/widgets/ps-number';
   import PSCheckbox from 'app/widgets/ps-checkbox';
   import PSButton from 'app/widgets/ps-button';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
     computed: {
       disabled() {
         return !this.$store.state.hasQty;
       },
+      bulkEditQty() {
+        return this.$store.state.bulkEditQty;
+      },
+      isIndeterminate() {
+        const selectedProductsLng = this.selectedProductsLng;
+        const productsLng = this.$store.state.products.length;
+        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+        if (isIndeterminate) {
+          this.$refs['bulk-action'].checked = true;
+        }
+        return isIndeterminate;
+      },
+      selectedProductsLng() {
+        return this.$store.getters.selectedProductsLng;
+      },
+    },
+    watch: {
+      selectedProductsLng(value) {
+        if (value === 0) {
+          this.$refs['bulk-action'].checked = false;
+        }
+      },
     },
     methods: {
       focusIn() {
-        this.isActive = true;
+        this.isFocused = true;
       },
       focusOut() {
-        this.isActive = false;
+        this.isFocused = false;
       },
-      bulkChecked(state) {
-        //this.isIndeterminate = state.checked;
+      bulkChecked(checkbox) {
+        if (!checkbox.checked) {
+          this.$store.dispatch('updateBulkEditQty', null);
+        }
+        if (!this.isIndeterminate) {
+          EventBus.$emit('toggleProductsCheck', checkbox.checked);
+        }
       },
       sendQty() {
         this.$store.dispatch('updateQtyByProductsId');
@@ -92,8 +121,7 @@
       },
     },
     data: () => ({
-      isActive: false,
-      isIndeterminate: false,
+      isFocused: false,
     }),
     components: {
       PSNumber,
