@@ -76,6 +76,9 @@ class ProductCore extends ObjectModel
     /** @var int Minimal quantity for add to cart */
     public $minimal_quantity = 1;
 
+    /** @var int Low stock for mail alert */
+    public $low_stock = null;
+
     /** @var string available_now */
     public $available_now;
 
@@ -279,60 +282,61 @@ class ProductCore extends ObjectModel
         'multilang_shop' => true,
         'fields' => array(
             /* Classic fields */
-            'id_shop_default' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_manufacturer' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supplier' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'reference' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
-            'supplier_reference' =>        array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
-            'location' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
-            'width' =>                        array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'height' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'depth' =>                        array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'weight' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'quantity_discount' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'ean13' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
-            'isbn' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
-            'upc' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
-            'cache_is_pack' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'cache_has_attachments' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'is_virtual' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'state' =>                     array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_shop_default' =>       array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_manufacturer' =>       array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_supplier' =>           array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'reference' =>             array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+            'supplier_reference' =>    array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+            'location' =>              array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
+            'width' =>                 array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'height' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'depth' =>                 array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'weight' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'quantity_discount' =>     array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'ean13' =>                 array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
+            'isbn' =>                  array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
+            'upc' =>                   array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
+            'cache_is_pack' =>         array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'cache_has_attachments' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'is_virtual' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'state' =>                 array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 
             /* Shop fields */
-            'id_category_default' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
-            'id_tax_rules_group' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
-            'on_sale' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'online_only' =>                array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'ecotax' =>                    array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
-            'minimal_quantity' =>            array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
-            'price' =>                        array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true),
-            'wholesale_price' =>            array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
-            'unity' =>                        array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
-            'unit_price_ratio' =>            array('type' => self::TYPE_FLOAT, 'shop' => true),
-            'additional_shipping_cost' =>    array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
-            'customizable' =>                array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
-            'text_fields' =>                array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
-            'uploadable_files' =>            array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
-            'active' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'redirect_type' =>                array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
-            'id_type_redirected' =>        array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
-            'available_for_order' =>        array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'available_date' =>            array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
-            'show_condition' =>            array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'condition' =>                    array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
-            'show_price' =>                array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'indexed' =>                    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'visibility' =>                array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isProductVisibility', 'values' => array('both', 'catalog', 'search', 'none'), 'default' => 'both'),
-            'cache_default_attribute' =>    array('type' => self::TYPE_INT, 'shop' => true),
-            'advanced_stock_management' =>    array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-            'date_add' =>                    array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
-            'date_upd' =>                    array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
-            'pack_stock_type' =>            array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+            'id_category_default' =>      array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
+            'id_tax_rules_group' =>       array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
+            'on_sale' =>                  array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'online_only' =>              array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'ecotax' =>                   array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
+            'minimal_quantity' =>         array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+            'low_stock' =>                array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isUnsignedInt'),
+            'price' =>                    array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true),
+            'wholesale_price' =>          array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
+            'unity' =>                    array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
+            'unit_price_ratio' =>         array('type' => self::TYPE_FLOAT, 'shop' => true),
+            'additional_shipping_cost' => array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
+            'customizable' =>             array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+            'text_fields' =>              array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+            'uploadable_files' =>         array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+            'active' =>                   array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'redirect_type' =>            array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
+            'id_type_redirected' =>       array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
+            'available_for_order' =>      array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'available_date' =>           array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+            'show_condition' =>           array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'condition' =>                array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isGenericName', 'values' => array('new', 'used', 'refurbished'), 'default' => 'new'),
+            'show_price' =>               array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'indexed' =>                  array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'visibility' =>               array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isProductVisibility', 'values' => array('both', 'catalog', 'search', 'none'), 'default' => 'both'),
+            'cache_default_attribute' =>  array('type' => self::TYPE_INT, 'shop' => true),
+            'advanced_stock_management' => array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+            'date_add' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
+            'date_upd' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
+            'pack_stock_type' =>          array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 
             /* Lang fields */
-            'meta_description' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_keywords' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'meta_title' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
+            'meta_description' =>         array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_keywords' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'meta_title' =>               array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
             'link_rewrite' =>    array(
                 'type' => self::TYPE_STRING,
                 'lang' => true,
@@ -344,19 +348,19 @@ class ProductCore extends ObjectModel
                     'modifier' => 'modifierWsLinkRewrite'
                 )
             ),
-            'name' =>                        array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => 128),
-            'description' =>                array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'description_short' =>            array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
-            'available_now' =>                array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
-            'available_later' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
+            'name' =>               array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => 128),
+            'description' =>        array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+            'description_short' =>  array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
+            'available_now' =>      array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'available_later' =>    array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255),
         ),
         'associations' => array(
-            'manufacturer' =>                array('type' => self::HAS_ONE),
-            'supplier' =>                    array('type' => self::HAS_ONE),
-            'default_category' =>            array('type' => self::HAS_ONE, 'field' => 'id_category_default', 'object' => 'Category'),
-            'tax_rules_group' =>            array('type' => self::HAS_ONE),
-            'categories' =>                    array('type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'),
-            'stock_availables' =>            array('type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'),
+            'manufacturer' =>        array('type' => self::HAS_ONE),
+            'supplier' =>            array('type' => self::HAS_ONE),
+            'default_category' =>    array('type' => self::HAS_ONE, 'field' => 'id_category_default', 'object' => 'Category'),
+            'tax_rules_group' =>     array('type' => self::HAS_ONE),
+            'categories' =>          array('type' => self::HAS_MANY, 'field' => 'id_category', 'object' => 'Category', 'association' => 'category_product'),
+            'stock_availables' =>    array('type' => self::HAS_MANY, 'field' => 'id_stock_available', 'object' => 'StockAvailable', 'association' => 'stock_availables'),
         ),
     );
 
@@ -1392,13 +1396,14 @@ class ProductCore extends ObjectModel
         $location,
         $upc,
         $minimal_quantity,
-        $isbn
+        $isbn,
+        $low_stock = null
     ) {
         Tools::displayAsDeprecated();
 
         $id_product_attribute = $this->addAttribute(
             $price, $weight, $unit_impact, $ecotax, $id_images,
-            $reference, $ean13, $default, $location, $upc, $minimal_quantity, array(), null, 0, $isbn
+            $reference, $ean13, $default, $location, $upc, $minimal_quantity, array(), null, 0, $isbn, $low_stock
         );
 
         if (!$id_product_attribute) {
@@ -1486,11 +1491,12 @@ class ProductCore extends ObjectModel
         $minimal_quantity = 1,
         array $id_shop_list = array(),
         $available_date = null,
-        $isbn = ''
+        $isbn = '',
+        $low_stock = null
     ) {
         $id_product_attribute = $this->addAttribute(
             $price, $weight, $unit_impact, $ecotax, $id_images,
-            $reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date, 0, $isbn);
+            $reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date, 0, $isbn, $low_stock);
         $this->addSupplierReference($id_supplier, $id_product_attribute);
         $result = ObjectModel::updateMultishopTable('Combination', array(
             'wholesale_price' => (float)$wholesale_price,
@@ -1607,13 +1613,14 @@ class ProductCore extends ObjectModel
         $upc,
         $minimal_quantity,
         $available_date,
-        $isbn = ''
+        $isbn = '',
+        $low_stock = null
     ) {
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
         $return = $this->updateAttribute(
             $id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-            $id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, true, array(), $isbn
+            $id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, true, array(), $isbn, $low_stock
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
 
@@ -1671,6 +1678,7 @@ class ProductCore extends ObjectModel
     * @param string $upc Upc barcode
     * @param string $minimal_quantity Minimal quantity
     * @param string $isbn ISBN reference
+    * @param int|null $low_stock Low stock alert
     * @return array Update result
     */
     public function updateAttribute(
@@ -1690,7 +1698,8 @@ class ProductCore extends ObjectModel
         $available_date = null,
         $update_all_fields = true,
         array $id_shop_list = array(),
-        $isbn = ''
+        $isbn = '',
+        $low_stock = null
     ) {
         $combination = new Combination($id_product_attribute);
 
@@ -1722,6 +1731,7 @@ class ProductCore extends ObjectModel
         $combination->upc = pSQL($upc);
         $combination->default_on = (int)$default;
         $combination->minimal_quantity = (int)$minimal_quantity;
+        $combination->low_stock = empty($low_stock) && '0' != $low_stock ? null : (int)$low_stock;
         $combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
 
         if (count($id_shop_list)) {
@@ -1769,6 +1779,7 @@ class ProductCore extends ObjectModel
      * @param bool $default Is default attribute for product
      * @param int $minimal_quantity Minimal quantity to add to cart
      * @param string $isbn ISBN reference
+     * @param int|null $low_stock Low stock alert
      * @return mixed $id_product_attribute or false
      */
     public function addAttribute(
@@ -1786,7 +1797,8 @@ class ProductCore extends ObjectModel
         array $id_shop_list = array(),
         $available_date = null,
         $quantity = 0,
-        $isbn = ''
+        $isbn = '',
+        $low_stock = null
     ) {
         if (!$this->id) {
             return;
@@ -1809,6 +1821,7 @@ class ProductCore extends ObjectModel
         $combination->upc = pSQL($upc);
         $combination->default_on = (int)$default;
         $combination->minimal_quantity = (int)$minimal_quantity;
+        $combination->low_stock = empty($low_stock) && '0' != $low_stock ? null : (int)$low_stock;
         $combination->available_date = $available_date;
 
         if (count($id_shop_list)) {
