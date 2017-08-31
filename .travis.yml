@@ -1,16 +1,21 @@
 language: php
 
 sudo: required
-dist: precise
-
+#dist: precise
+dist: trusty
 php:
-  - 5.3
-  - 5.4
-  - 5.5
   - 5.6
   - 7.0
 
+matrix:
+  include:
+#    - php: 5.3
+#      env: EXTRA_TESTS=functional
+    - php: 7.1
+      env: EXTRA_TESTS=functional
+
 addons:
+  chrome: stable
   apt:
     packages:
       - apache2
@@ -19,13 +24,20 @@ addons:
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.npm
 
 before_script:
   - bash travis-scripts/setup-php-fpm.sh
   - bash travis-scripts/setup-apache.sh
+  - bash travis-scripts/setup-selenium.sh
 
 script:
   - tests/check_php_parse_errors.sh
-  - php install-dev/index_cli.php --language=en --country=us --domain=localhostt --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
+  - php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_name=prestashop.unit.test --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
   - cd tests && bash getcomposer.sh && php composer.phar install && php vendor/bin/phpunit -c .
+  - cd $TRAVIS_BUILD_DIR && echo "<?php\n\ndefine('_PS_MODE_DEV_', false);" > config/defines_custom.inc.php # Disable DEV MODE
   - bash $TRAVIS_BUILD_DIR/travis-scripts/run-functional-tests.sh
+
+after_failure:
+  - curl -L http://localhost/
+  - sudo cat /var/log/apache2/other_vhosts_access.log

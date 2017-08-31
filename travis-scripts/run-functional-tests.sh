@@ -4,8 +4,6 @@ if [[ $EXTRA_TESTS != *"functional"* ]]; then
   exit 0
 fi
 
-bash $TRAVIS_BUILD_DIR/travis-scripts/install-prestashop
-
 echo "* Installing functional tests ...";
 
 cd $TRAVIS_BUILD_DIR && echo "<?php\n\ndefine('_PS_MODE_DEV_', false);" > config/defines_custom.inc.php # Disable DEV MODE
