@@ -82,7 +82,7 @@ class Tools
             return (string) $result;
         }
 
-        return ( string ) $ result->toPrecision( $scale);
+        return (string) $result->toPrecision($scale);
     }
 
     public function purifyHTML($html, $uri_unescape = null, $allow_style = false)
