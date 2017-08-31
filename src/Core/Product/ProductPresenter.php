@@ -717,6 +717,7 @@ class ProductPresenter
             "online_only",
             "ecotax",
             "minimal_quantity",
+            "low_stock",
             "price",
             "unity",
             "unit_price_ratio",
