@@ -309,7 +309,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $directory = _PS_STORE_IMG_DIR_;
                         break;
                     case 'product_option_values':
-                    	$directory = _PS_COL_IMG_DIR_;
+                        $directory = _PS_COL_IMG_DIR_;
                         break;
                 }
                 return $this->manageDeclinatedImages($directory);
@@ -631,11 +631,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     protected function manageDeclinatedImages($directory)
     {
         // Get available image sizes for the current image type
-        if($this->imageType=='product_option_values')
+        if ($this->imageType=='product_option_values')
         {      	
-        	$normal_image_sizes = array();
+            $normal_image_sizes = array();
         } else {
-        	$normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+            $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
         }
         
         switch ($this->wsObject->urlSegment[2]) {
@@ -1127,14 +1127,14 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         } elseif (!ImageManager::resize($tmp_name, $reception_path)) {
                             throw new WebserviceException('An error occurred while copying image', array(76, 400));
                         }
-                        if($this->imageType!='product_option_values')
-        				{
-	                        $images_types = ImageType::getImagesTypes($this->imageType);                        
-                        	foreach ($images_types as $imageType) {
-	                            if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
-                                	$this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
-                            	}
-                        	}
+                        if ($this->imageType!='product_option_values')
+                        {
+                            $images_types = ImageType::getImagesTypes($this->imageType);                        
+                            foreach ($images_types as $imageType) {
+                                if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
+                                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
+                                }
+                            }
                         }
                         @unlink(_PS_TMP_IMG_DIR_.$tmp_name);
                         $this->imgToDisplay = $reception_path;
