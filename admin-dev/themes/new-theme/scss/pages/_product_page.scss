@@ -62,10 +62,8 @@
     background: #ffffff;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
-    padding: 1.25rem 0;
-    .select2 {
-      margin-top: 0.5rem;
-    }
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
     .edit {
       background-size: 4%;
     }
@@ -74,7 +72,8 @@
       margin-top: 0.625rem;
     }
     .form_step1_type_product,
-    .form_switch_language {
+    .form_switch_language,
+    .toolbar {
       display: flex;
       align-items: center;
     }
