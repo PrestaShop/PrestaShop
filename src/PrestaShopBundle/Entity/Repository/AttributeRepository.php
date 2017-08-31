@@ -86,11 +86,17 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
 
     private function getAttributeRow($attribute)
     {
-        return array(
+        $attributes = array(
             'id' => $attribute['id'],
             'color' => $attribute['color'],
             'position' => $attribute['attributePosition'],
             'name' => $attribute['attributeName'],
+            'texture' => '',
         );
+        if (@file_exists(_PS_COL_IMG_DIR_ . $attribute['id'] . '.jpg')) {
+            $attributes['texture'] = _THEME_COL_DIR_ . $attribute['id'] . '.jpg';
+        }
+
+        return $attributes;
     }
 }

@@ -494,10 +494,10 @@ class LinkCore
     /**
      * Create a link to a CMS page.
      *
-     * @param CMS    $cms     CMS object
-     * @param string $alias
-     * @param bool   $ssl
-     * @param int    $idLang
+     * @param CMS|int $cms     CMS object
+     * @param string  $alias
+     * @param bool    $ssl
+     * @param int     $idLang
      *
      * @return string
      */
