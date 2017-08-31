@@ -108,7 +108,7 @@
 					<!-- Account -->
 					<div class="required form-group">
 						<label for="guest_email">{l s='Email address'} <sup>*</sup></label>
-						<input type="text" class="is_required validate form-control" data-validate="isEmail" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
+						<input type="email" class="is_required validate form-control" data-validate="isEmail" id="guest_email" name="guest_email" value="{if isset($smarty.post.guest_email)}{$smarty.post.guest_email}{/if}" />
 					</div>
 					<div class="cleafix gender-line">
 						<label>{l s='Title'}</label>
