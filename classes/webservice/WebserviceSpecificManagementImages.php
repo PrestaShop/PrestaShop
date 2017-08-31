@@ -631,8 +631,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     protected function manageDeclinatedImages($directory)
     {
         // Get available image sizes for the current image type
-        if ($this->imageType=='product_option_values')
-        {      	
+        if ($this->imageType=='product_option_values') {      	
             $normal_image_sizes = array();
         } else {
             $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
@@ -1127,8 +1126,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         } elseif (!ImageManager::resize($tmp_name, $reception_path)) {
                             throw new WebserviceException('An error occurred while copying image', array(76, 400));
                         }
-                        if ($this->imageType!='product_option_values')
-                        {
+                        if ($this->imageType!='product_option_values') {
                             $images_types = ImageType::getImagesTypes($this->imageType);                        
                             foreach ($images_types as $imageType) {
                                 if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
