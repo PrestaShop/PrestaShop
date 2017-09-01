@@ -27,34 +27,31 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Controller\FrontController;
 
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 
-class ProductControllerTest extends \PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase
+class ProductControllerTest extends IntegrationTestCase
 {
+
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
     private $controller;
-    private $contextBackup;
 
     public function setUp()
     {
         parent::setUp();
-        $this->contextBackup = \Context::getContext();
-        $context             = clone($this->contextBackup);
-        \Context::setInstanceForTesting($context);
-        $context->shop       = new \Shop((int) \Configuration::get('PS_SHOP_DEFAULT'));
-        $context->language   = new \Language;
-        $protocol_link       = (\Tools::usingSecureMode() && \Configuration::get('PS_SSL_ENABLED'))
-            ? 'https://' : 'http://';
-        $protocol_content    = (\Tools::usingSecureMode() && \Configuration::get('PS_SSL_ENABLED'))
-            ? 'https://' : 'http://';
-        $context->link       = new \Link($protocol_link, $protocol_content);
-        $context->smarty     = new \Smarty();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
         $this->controller = new \ProductControllerCore();
     }
 
     public function tearDown()
     {
         parent::tearDown();
-
-        \Context::setInstanceForTesting($this->contextBackup);
+        $this->contextMocker->resetContext();
     }
 
     /**
