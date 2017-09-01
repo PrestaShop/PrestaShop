@@ -269,7 +269,7 @@ class CartCore extends ObjectModel
         }
 
         Db::getInstance()->execute('
-			DELETE `' . _DB_PREFIX_ . 'customized_data`
+			DELETE cd
 			FROM `' . _DB_PREFIX_ . 'customized_data` cd, `' . _DB_PREFIX_ . 'customization` c
 			WHERE cd.`id_customization` = c.`id_customization`
 			AND `id_cart` = ' . (int) $this->id
