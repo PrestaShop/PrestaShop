@@ -901,7 +901,6 @@
     .tabs {
       overflow: hidden;
       width: auto;
-      background: white;
       .material-icons {
         display: inline-block;
       }
@@ -915,22 +914,22 @@
         background: $brand-primary;
         color: white;
         display: none;
+        position: absolute;
+        left: 15px;
+        top: 0;
         &.visible {
           visibility: visible;
         }
       }
       .right-arrow {
-        margin-top: 3.125rem;
+        right: 15px;
+        left: auto;
       }
     }
     .nav-tabs {
       height: 3.125rem;
       width: 125rem;
       position: relative;
-      .nav-link.active:not(.description-tab) {
-        border-top: transparent;
-        border-bottom: 3px solid $brand-primary;
-      }
     }
     .right-column {
       width: 30%;
