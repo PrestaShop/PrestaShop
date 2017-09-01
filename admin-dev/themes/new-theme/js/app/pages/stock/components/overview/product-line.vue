@@ -24,9 +24,9 @@
  *-->
 <template>
   <tr>
-    <td class="flex p-r-1">
+    <td class="flex pr-1">
       <PSMedia
-        class="m-l-1"
+        class="ml-1"
         :thumbnail="thumbnail"
       >
         <p>
@@ -42,6 +42,12 @@
     </td>
     <td>
       {{ product.supplier_name }}
+    </td>
+    <td v-if="product.active" class="text-xs-center">
+      <i class="material-icons enable">check</i>
+    </td>
+    <td v-else class="text-xs-center">
+      <i class="material-icons disable">close</i>
     </td>
     <td class="text-xs-center">
       {{ physical }}
@@ -61,7 +67,7 @@
       </span>
     </td>
     <td class="qty-spinner">
-      <Spinner :product="product" class="pull-xs-right" />
+      <Spinner :product="product" class="float-xs-right" />
     </td>
   </tr>
 </template>
@@ -106,7 +112,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   .qty-update {
     color: $brand-primary;
     .material-icons {
@@ -115,5 +121,11 @@
   }
   .checkbox {
     width: 5%;
+  }
+  .enable {
+    color: $success;
+  }
+  .disable {
+    color: $danger;
   }
 </style>

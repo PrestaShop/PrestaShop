@@ -69,6 +69,17 @@ Thanks for your patience.", array(), 'Admin.Shopparameters.Feature', $this->loca
                     // NW_CONDITIONS on configuration_lang table - From ps_emailsubscription module
                     $this->translator->trans('You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.', array(), 'Admin.Shopparameters.Feature', $this->locale),
 
+                md5('In Stock') =>
+                    // PS_LABEL_IN_STOCK_PRODUCTS on configuration_lang table
+                    $this->translator->trans('In Stock', array(), 'Admin.Shopparameters.Feature', $this->locale),
+
+                md5('Product available for orders') =>
+                    // PS_LABEL_OOS_PRODUCTS_BOA on configuration_lang table
+                    $this->translator->trans('Product available for orders', array(), 'Admin.Shopparameters.Feature', $this->locale),
+
+                md5('Out-of-Stock') =>
+                    // PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table
+                    $this->translator->trans('Out-of-Stock', array(), 'Admin.Shopparameters.Feature', $this->locale),
             ),
         );
     }

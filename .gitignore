@@ -23,6 +23,10 @@ admin-dev/import/*
 !admin-dev/import/.htaccess
 !admin-dev/import/index.php
 
+admin-dev/export/*
+!admin-dev/export/.htaccess
+!admin-dev/export/index.php
+
 themes/*/cache/*
 
 # Config

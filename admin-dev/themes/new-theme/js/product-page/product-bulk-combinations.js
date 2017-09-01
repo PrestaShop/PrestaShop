@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 /**
  * Combination bulk actions management
  */

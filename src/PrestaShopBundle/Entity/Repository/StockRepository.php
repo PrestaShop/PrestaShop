@@ -96,10 +96,8 @@ class StockRepository extends StockManagementRepository
     public function bulkUpdateStock(MovementsCollection $movements)
     {
         $products = $movements->map(function (Movement $movement) {
-            return $this->updateStock($movement, true);
+            return $this->updateStock($movement);
         });
-
-        $this->syncAllStock();
 
         return $products;
     }
@@ -133,7 +131,7 @@ class StockRepository extends StockManagementRepository
             }
 
             if (true === $syncStock) {
-                $this->syncAllStock();
+                $this->syncAllStock($productIdentity->getProductId());
             }
         }
 
@@ -143,12 +141,13 @@ class StockRepository extends StockManagementRepository
     /**
      * Sync all stock with Manager
      */
-    private function syncAllStock()
+    private function syncAllStock($idProduct)
     {
         (new StockManager())->updatePhysicalProductQuantity(
             $this->contextAdapter->getContext()->shop->id,
             $this->orderStates['error'],
-            $this->orderStates['cancellation']
+            $this->orderStates['cancellation'],
+            (int)$idProduct
         );
     }
 
@@ -262,6 +261,7 @@ class StockRepository extends StockManagementRepository
             COALESCE(s.name, "N/A") AS supplier_name,
             COALESCE(ic.id_image, 0) AS product_cover_id,
             COALESCE(i.id_image, 0) as combination_cover_id,
+            p.active,
             sa.quantity as product_available_quantity,
             sa.physical_quantity as product_physical_quantity,
             sa.reserved_quantity as product_reserved_quantity,

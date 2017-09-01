@@ -26,10 +26,10 @@
   <div class="form-group">
     <label>{{label}}</label>
     <textarea class="form-control" rows="2" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
-    <PSButton class="m-t-1 pull-xs-right" :primary="false" ghost @click="resetTranslation">
+    <PSButton class="mt-1 float-xs-right" :primary="false" ghost @click="resetTranslation">
       {{ trans('button_reset') }}
     </PSButton>
-    <small class="m-t-1">{{extraInfo}}</small>
+    <small class="mt-1">{{extraInfo}}</small>
   </div>
 </template>
 
@@ -88,7 +88,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
 
   .missing {
     border: 1px solid $danger;

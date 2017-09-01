@@ -95,7 +95,8 @@
         "prestashop/dashtrends": "dev-master",
         "beberlei/DoctrineExtensions": "^1.0",
         "composer/ca-bundle": "^1.0",
-        "nikic/php-parser": "^2.1"
+        "nikic/php-parser": "^2.1",
+        "prestashop/decimal": "^1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.5",

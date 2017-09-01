@@ -837,7 +837,7 @@ var warehouseCombinations = (function() {
 var form = (function() {
   var elem = $('#form');
 
-  function send(redirect, target) {
+  function send(redirect, target, callBack) {
     // target value by default
     if (typeof(target) == 'undefined') {
       target = false;
@@ -867,6 +867,9 @@ var form = (function() {
         $('#form-nav li.has-error').removeClass('has-error');
       },
       success: function(response) {
+        if (callBack) {
+          callBack();
+        }
         showSuccessMessage(translate_javascripts['Form update success']);
         //update the customization ids
         if (typeof response.customization_fields_ids != "undefined") {
@@ -1073,7 +1076,7 @@ var form = (function() {
       });
 
       /** show rendered form after page load */
-      $(window).load(function() {
+      $(window).on('load', function() {
         $('#form-loading').fadeIn(function() {
           /** Create Bloodhound engine */
           var engine = new Bloodhound({
@@ -1139,8 +1142,8 @@ var form = (function() {
         imagesProduct.initExpander();
       });
     },
-    'send': function() {
-      send();
+    'send': function(redirect, target, callBack) {
+      send(redirect, target, callBack);
     },
     'switchLanguage': function(iso_code) {
       switchLanguage(iso_code);

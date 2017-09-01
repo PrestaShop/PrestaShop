@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-   @import "~PrestaKit/scss/custom/_variables.scss";
+   @import "../../../scss/config/_settings.scss";
   .modal-header .close {
     font-size: 1.2rem;
     color: $gray-medium;

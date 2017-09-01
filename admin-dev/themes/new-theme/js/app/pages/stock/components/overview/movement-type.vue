@@ -27,7 +27,7 @@
     <div class="movements">
       <PSButton
         type="button"
-        class="update-qty pull-xs-right"
+        class="update-qty float-xs-right"
         :class="classObject"
         :disabled="disabled"
         :primary="true"
@@ -65,7 +65,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   .update-qty {
     color: white;
     transition: background-color 0.2s ease;

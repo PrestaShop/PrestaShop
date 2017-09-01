@@ -24,12 +24,6 @@
  *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
@@ -53,7 +47,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
-                            <div class="module-sorting module-bulk-actions pull-right">
+                            <div class="module-sorting module-bulk-actions float-right">
                                 <select data-toggle="select2" class="sort-component hidden-xs-up">
                                   <option value="" disabled selected>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</option>
                                   <option value="bulk-uninstall">{{ 'Uninstall'|trans({}, 'Admin.Actions') }}</option>
@@ -65,7 +59,7 @@
                                 </select>
                             </div>
                         {% endif %}
-                        <div class="module-sorting module-sorting-author pull-right">
+                        <div class="module-sorting module-sorting-author float-right">
                             <select data-toggle="select2" class="sort-component hidden-xs-up">
                               <option value="" disabled>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
                               <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>

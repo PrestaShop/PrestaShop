@@ -72,6 +72,7 @@ trait NormalizeFieldTrait
         false !== strpos($columnName, 'id_') ||
         false !== strpos($columnName, '_quantity') ||
         false !== strpos($columnName, 'sign') ||
+        false !== strpos($columnName, 'active') ||
         false !== strpos($columnName, 'total_');
     }
 }

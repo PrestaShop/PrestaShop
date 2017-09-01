@@ -185,7 +185,7 @@
                     {% endif %}
                 </label>
                 {% if defaultCategory is defined %}
-                <div class="radio pull-right">
+                <div class="radio float-right">
                     <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
                 </div>
                 {% endif %}
@@ -194,7 +194,7 @@
             <div class="radio">
                 <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category">{{ child.name }}</label>
                 {% if defaultCategory is defined %}
-                <div class="radio pull-right">
+                <div class="radio float-right">
                     <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
                 </div>
                 {% endif %}

@@ -28,7 +28,7 @@
         <img v-if="displayThumb" :src="thumbnail" class="thumbnail media-object"  />
         <div v-else class="no-img"></div>
       </div>
-      <div class="m-l-1 desc media-body">
+      <div class="ml-1 desc media-body">
         <slot />
       </div>
     </div>
@@ -45,7 +45,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   .product-title {
     .has-combination & {
       font-weight: 600;

@@ -49,6 +49,7 @@ GitHub contributors:
 - axi
 - Axome
 - Aylab
+- Azouz-Jribi
 - Balestrino
 - Bastien Bieri
 - bbsimon
@@ -117,7 +118,7 @@ GitHub contributors:
 - de saint leger
 - Debusschere Alexandre
 - Denis Yurevich
-- Denver Prophit Jr
+- Denver Prophit Jr.
 - Desbouche Christophe
 - DevNet
 - Dh42
@@ -181,7 +182,6 @@ GitHub contributors:
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- François Gaillard
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -353,6 +353,7 @@ GitHub contributors:
 - minic studio
 - Mirko Esposito
 - misthero
+- Molka DJEMAL
 - moncef102
 - montes
 - mplh

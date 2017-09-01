@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 export default function() {
   $(document).ready(function() {
     let $jsCombinationsList = $('.js-combinations-list');
@@ -21,7 +19,7 @@ export default function() {
         }
         $('#create-combinations').click(function(event) {
           event.preventDefault();
-          generate();
+          form.send(false, false, generate);
         });
       });
 

@@ -245,6 +245,7 @@ abstract class StockManagementRepository
             '{id_employee}' => 'sm.id_employee',
             '{date_add}' => 'sm.date_add',
             '{id_stock_mvt_reason}' => 'sm.id_stock_mvt_reason',
+            '{active}' => 'p.active',
         ));
 
         return $filters;

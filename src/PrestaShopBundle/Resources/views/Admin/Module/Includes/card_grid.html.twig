@@ -68,7 +68,7 @@
         {% endblock %}
       </div>
     </div>
-    <div class="module-quick-description-grid small no-padding m-b-0">
+    <div class="module-quick-description-grid small no-padding mb-0">
       {% block addon_description %}
         <div class="module-quick-description-text">
           {{ module.attributes.description|raw }}
@@ -99,7 +99,7 @@
           ({{ module.attributes.nbRates }})
         </div>
       {% endif %}
-      <div class="pull-right module-price">
+      <div class="float-right module-price">
       {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
         {{ module.attributes.price.displayPrice }}
       {% elseif module.attributes.url_active != 'buy' %}
@@ -107,7 +107,7 @@
       {% endif %}
       </div>
       {% if requireBulkActions is defined and requireBulkActions == true %}
-        <div class="pull-right module-checkbox-bulk-grid">
+        <div class="float-right module-checkbox-bulk-grid">
           <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
         </div>
       {% endif %}

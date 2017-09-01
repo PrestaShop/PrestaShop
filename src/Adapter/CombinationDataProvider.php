@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShop\PrestaShop\Adapter\Tools;
@@ -46,7 +47,6 @@ class CombinationDataProvider
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
         $this->cldrRepository = ToolsLegacy::getCldr($this->context->getContext());
-        $this->tools = new Tools();
     }
 
     /**
@@ -94,6 +94,10 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
+        $finalPrice = (new Number((string) $product->price))
+            ->plus(new Number((string) $combination['price']))
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+
         return array(
             'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
@@ -104,7 +108,7 @@ class CombinationDataProvider
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->context->getContext()->currency->iso_code),
-            'final_price' => $this->tools->bcadd($product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
+            'final_price' => (string) $finalPrice,
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
