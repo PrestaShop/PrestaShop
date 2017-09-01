@@ -57,47 +57,47 @@ class ProductCombinationBulk extends CommonAbstractType
         if ($is_stock_management) {
             $builder->add('quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => true,
-                'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
             ));
         }
 
         $builder->add('cost_price', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Cost Price', [], 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Cost Price', array(), 'Admin.Catalog.Feature'),
             'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
             'currency' => $this->isoCode,
         ))
             ->add('impact_on_weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on weight', array(), 'Admin.Catalog.Feature'),
             ))
             ->add('impact_on_price_te', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Impact on price (tax excl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price (tax excl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->isoCode,
             ))
             ->add('impact_on_price_ti', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
                 'required' => false,
                 'mapped' => false,
-                'label' => $this->translator->trans('Impact on price (tax incl.)', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Impact on price (tax incl.)', array(), 'Admin.Catalog.Feature'),
                 'currency' => $this->isoCode,
             ))
             ->add('date_availability', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),
                 'attr' => ['class' => 'date', 'placeholder' => 'YYYY-MM-DD'],
             ))
             ->add('reference', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Reference', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Reference', array(), 'Admin.Catalog.Feature'),
             ))
             ->add('minimal_quantity', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Minimum quantity', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Minimum quantity', array(), 'Admin.Catalog.Feature'),
             ))
             ->add('low_stock', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
-                'label' => $this->translator->trans('Low stock level', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
                 'attr' => array(
                     'placeholder' => $this->translator->trans(
                         'If empty, it keeps the original value',
