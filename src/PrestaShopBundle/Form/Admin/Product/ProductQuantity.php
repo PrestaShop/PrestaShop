@@ -160,7 +160,7 @@ class ProductQuantity extends CommonAbstractType
                 )
             )
             ->add(
-                'low_stock',
+                'low_stock_threshold',
                 'Symfony\Component\Form\Extension\Core\Type\NumberType',
                 array(
                     'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),

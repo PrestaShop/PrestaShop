@@ -3,12 +3,12 @@
 /******/ 		delete installedChunks[chunkId];
 /******/ 	}
 /******/ 	var parentHotUpdateCallback = this["webpackHotUpdate"];
-/******/ 	this["webpackHotUpdate"] = 
+/******/ 	this["webpackHotUpdate"] =
 /******/ 	function webpackHotUpdateCallback(chunkId, moreModules) { // eslint-disable-line no-unused-vars
 /******/ 		hotAddUpdateChunk(chunkId, moreModules);
 /******/ 		if(parentHotUpdateCallback) parentHotUpdateCallback(chunkId, moreModules);
 /******/ 	} ;
-/******/ 	
+/******/
 /******/ 	function hotDownloadUpdateChunk(chunkId) { // eslint-disable-line no-unused-vars
 /******/ 		var head = document.getElementsByTagName("head")[0];
 /******/ 		var script = document.createElement("script");
@@ -17,7 +17,7 @@
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + "." + hotCurrentHash + ".hot-update.js";
 /******/ 		head.appendChild(script);
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotDownloadManifest() { // eslint-disable-line no-unused-vars
 /******/ 		return new Promise(function(resolve, reject) {
 /******/ 			if(typeof XMLHttpRequest === "undefined")
@@ -56,15 +56,15 @@
 /******/ 		});
 /******/ 	}
 /******/
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	var hotCurrentHash = "3570c3ffd8593059ee8a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParentsTemp = []; // eslint-disable-line no-unused-vars
-/******/ 	
+/******/
 /******/ 	function hotCreateRequire(moduleId) { // eslint-disable-line no-unused-vars
 /******/ 		var me = installedModules[moduleId];
 /******/ 		if(!me) return __webpack_require__;
@@ -110,7 +110,7 @@
 /******/ 				finishChunkLoading();
 /******/ 				throw err;
 /******/ 			});
-/******/ 	
+/******/
 /******/ 			function finishChunkLoading() {
 /******/ 				hotChunksLoading--;
 /******/ 				if(hotStatus === "prepare") {
@@ -125,7 +125,7 @@
 /******/ 		};
 /******/ 		return fn;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotCreateModule(moduleId) { // eslint-disable-line no-unused-vars
 /******/ 		var hot = {
 /******/ 			// private stuff
@@ -135,7 +135,7 @@
 /******/ 			_selfDeclined: false,
 /******/ 			_disposeHandlers: [],
 /******/ 			_main: hotCurrentChildModule !== moduleId,
-/******/ 	
+/******/
 /******/ 			// Module API
 /******/ 			active: true,
 /******/ 			accept: function(dep, callback) {
@@ -168,7 +168,7 @@
 /******/ 				var idx = hot._disposeHandlers.indexOf(callback);
 /******/ 				if(idx >= 0) hot._disposeHandlers.splice(idx, 1);
 /******/ 			},
-/******/ 	
+/******/
 /******/ 			// Management API
 /******/ 			check: hotCheck,
 /******/ 			apply: hotApply,
@@ -183,23 +183,23 @@
 /******/ 				var idx = hotStatusHandlers.indexOf(l);
 /******/ 				if(idx >= 0) hotStatusHandlers.splice(idx, 1);
 /******/ 			},
-/******/ 	
+/******/
 /******/ 			//inherit from previous dispose call
 /******/ 			data: hotCurrentModuleData[moduleId]
 /******/ 		};
 /******/ 		hotCurrentChildModule = undefined;
 /******/ 		return hot;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	var hotStatusHandlers = [];
 /******/ 	var hotStatus = "idle";
-/******/ 	
+/******/
 /******/ 	function hotSetStatus(newStatus) {
 /******/ 		hotStatus = newStatus;
 /******/ 		for(var i = 0; i < hotStatusHandlers.length; i++)
 /******/ 			hotStatusHandlers[i].call(null, newStatus);
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	// while downloading
 /******/ 	var hotWaitingFiles = 0;
 /******/ 	var hotChunksLoading = 0;
@@ -207,15 +207,15 @@
 /******/ 	var hotRequestedFilesMap = {};
 /******/ 	var hotAvailableFilesMap = {};
 /******/ 	var hotDeferred;
-/******/ 	
+/******/
 /******/ 	// The update info
 /******/ 	var hotUpdate, hotUpdateNewHash;
-/******/ 	
+/******/
 /******/ 	function toModuleId(id) {
 /******/ 		var isNumber = (+id) + "" === id;
 /******/ 		return isNumber ? +id : id;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotCheck(apply) {
 /******/ 		if(hotStatus !== "idle") throw new Error("check() is only allowed in idle status");
 /******/ 		hotApplyOnUpdate = apply;
@@ -229,7 +229,7 @@
 /******/ 			hotWaitingFilesMap = {};
 /******/ 			hotAvailableFilesMap = update.c;
 /******/ 			hotUpdateNewHash = update.h;
-/******/ 	
+/******/
 /******/ 			hotSetStatus("prepare");
 /******/ 			var promise = new Promise(function(resolve, reject) {
 /******/ 				hotDeferred = {
@@ -249,7 +249,7 @@
 /******/ 			return promise;
 /******/ 		});
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotAddUpdateChunk(chunkId, moreModules) { // eslint-disable-line no-unused-vars
 /******/ 		if(!hotAvailableFilesMap[chunkId] || !hotRequestedFilesMap[chunkId])
 /******/ 			return;
@@ -263,7 +263,7 @@
 /******/ 			hotUpdateDownloaded();
 /******/ 		}
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotEnsureUpdateChunk(chunkId) {
 /******/ 		if(!hotAvailableFilesMap[chunkId]) {
 /******/ 			hotWaitingFilesMap[chunkId] = true;
@@ -273,7 +273,7 @@
 /******/ 			hotDownloadUpdateChunk(chunkId);
 /******/ 		}
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotUpdateDownloaded() {
 /******/ 		hotSetStatus("ready");
 /******/ 		var deferred = hotDeferred;
@@ -295,21 +295,21 @@
 /******/ 			deferred.resolve(outdatedModules);
 /******/ 		}
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	function hotApply(options) {
 /******/ 		if(hotStatus !== "ready") throw new Error("apply() is only allowed in ready status");
 /******/ 		options = options || {};
-/******/ 	
+/******/
 /******/ 		var cb;
 /******/ 		var i;
 /******/ 		var j;
 /******/ 		var module;
 /******/ 		var moduleId;
-/******/ 	
+/******/
 /******/ 		function getAffectedStuff(updateModuleId) {
 /******/ 			var outdatedModules = [updateModuleId];
 /******/ 			var outdatedDependencies = {};
-/******/ 	
+/******/
 /******/ 			var queue = outdatedModules.slice().map(function(id) {
 /******/ 				return {
 /******/ 					chain: [id],
@@ -364,7 +364,7 @@
 /******/ 					});
 /******/ 				}
 /******/ 			}
-/******/ 	
+/******/
 /******/ 			return {
 /******/ 				type: "accepted",
 /******/ 				moduleId: updateModuleId,
@@ -372,7 +372,7 @@
 /******/ 				outdatedDependencies: outdatedDependencies
 /******/ 			};
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		function addAllToSet(a, b) {
 /******/ 			for(var i = 0; i < b.length; i++) {
 /******/ 				var item = b[i];
@@ -380,17 +380,17 @@
 /******/ 					a.push(item);
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// at begin all updates modules are outdated
 /******/ 		// the "outdated" status can propagate to parents if they don't accept the children
 /******/ 		var outdatedDependencies = {};
 /******/ 		var outdatedModules = [];
 /******/ 		var appliedUpdate = {};
-/******/ 	
+/******/
 /******/ 		var warnUnexpectedRequire = function warnUnexpectedRequire() {
 /******/ 			console.warn("[HMR] unexpected require(" + result.moduleId + ") to disposed module");
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		for(var id in hotUpdate) {
 /******/ 			if(Object.prototype.hasOwnProperty.call(hotUpdate, id)) {
 /******/ 				moduleId = toModuleId(id);
@@ -463,7 +463,7 @@
 /******/ 				}
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Store self accepted outdated modules to require them later by the module system
 /******/ 		var outdatedSelfAcceptedModules = [];
 /******/ 		for(i = 0; i < outdatedModules.length; i++) {
@@ -474,7 +474,7 @@
 /******/ 					errorHandler: installedModules[moduleId].hot._selfAccepted
 /******/ 				});
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Now in "dispose" phase
 /******/ 		hotSetStatus("dispose");
 /******/ 		Object.keys(hotAvailableFilesMap).forEach(function(chunkId) {
@@ -482,16 +482,16 @@
 /******/ 				hotDisposeChunk(chunkId);
 /******/ 			}
 /******/ 		});
-/******/ 	
+/******/
 /******/ 		var idx;
 /******/ 		var queue = outdatedModules.slice();
 /******/ 		while(queue.length > 0) {
 /******/ 			moduleId = queue.pop();
 /******/ 			module = installedModules[moduleId];
 /******/ 			if(!module) continue;
-/******/ 	
+/******/
 /******/ 			var data = {};
-/******/ 	
+/******/
 /******/ 			// Call dispose handlers
 /******/ 			var disposeHandlers = module.hot._disposeHandlers;
 /******/ 			for(j = 0; j < disposeHandlers.length; j++) {
@@ -499,13 +499,13 @@
 /******/ 				cb(data);
 /******/ 			}
 /******/ 			hotCurrentModuleData[moduleId] = data;
-/******/ 	
+/******/
 /******/ 			// disable module (this disables requires from this module)
 /******/ 			module.hot.active = false;
-/******/ 	
+/******/
 /******/ 			// remove module from cache
 /******/ 			delete installedModules[moduleId];
-/******/ 	
+/******/
 /******/ 			// remove "parents" references from all children
 /******/ 			for(j = 0; j < module.children.length; j++) {
 /******/ 				var child = installedModules[module.children[j]];
@@ -516,7 +516,7 @@
 /******/ 				}
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// remove outdated dependency from module children
 /******/ 		var dependency;
 /******/ 		var moduleOutdatedDependencies;
@@ -533,19 +533,19 @@
 /******/ 				}
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Not in "apply" phase
 /******/ 		hotSetStatus("apply");
-/******/ 	
+/******/
 /******/ 		hotCurrentHash = hotUpdateNewHash;
-/******/ 	
+/******/
 /******/ 		// insert new code
 /******/ 		for(moduleId in appliedUpdate) {
 /******/ 			if(Object.prototype.hasOwnProperty.call(appliedUpdate, moduleId)) {
 /******/ 				modules[moduleId] = appliedUpdate[moduleId];
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// call accept handlers
 /******/ 		var error = null;
 /******/ 		for(moduleId in outdatedDependencies) {
@@ -580,7 +580,7 @@
 /******/ 				}
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// Load self accepted modules
 /******/ 		for(i = 0; i < outdatedSelfAcceptedModules.length; i++) {
 /******/ 			var item = outdatedSelfAcceptedModules[i];
@@ -623,13 +623,13 @@
 /******/ 				}
 /******/ 			}
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		// handle errors in accept handlers and self accepted module load
 /******/ 		if(error) {
 /******/ 			hotSetStatus("fail");
 /******/ 			return Promise.reject(error);
 /******/ 		}
-/******/ 	
+/******/
 /******/ 		hotSetStatus("idle");
 /******/ 		return new Promise(function(resolve) {
 /******/ 			resolve(outdatedModules);
@@ -26640,7 +26640,7 @@ var exports = false;
 
     // Extend options
     this.options = $.extend(true, {}, $.fn.tokenfield.defaults, { tokens: this.$element.val() }, this.$element.data(), options)
-    
+
     // Setup delimiters and trigger keys
     this._delimiters = (typeof this.options.delimiter === 'string') ? [this.options.delimiter] : this.options.delimiter
     this._triggerKeys = $.map(this._delimiters, function (delimiter) {
@@ -26684,7 +26684,7 @@ var exports = false;
     var hidingPosition = $('body').css('direction') === 'rtl' ? 'right' : 'left',
         originalStyles = { position: this.$element.css('position') };
     originalStyles[hidingPosition] = this.$element.css(hidingPosition);
-    
+
     this.$element
       .data('original-styles', originalStyles)
       .data('original-tabindex', this.$element.prop('tabindex'))
@@ -26714,7 +26714,7 @@ var exports = false;
 
     // Set up a copy helper to handle copy & paste
     this.$copyHelper = $('<input type="text" />').css('position', 'absolute').css(hidingPosition, '-10000px').prop('tabindex', -1).prependTo( this.$wrapper )
-    
+
     // Set wrapper width
     if (elStyleWidth) {
       this.$wrapper.css('width', elStyleWidth);
@@ -26741,13 +26741,13 @@ var exports = false;
     this.$mirror = $('<span style="position:absolute; top:-999px; left:0; white-space:pre;"/>');
     this.$input.css('min-width', this.options.minWidth + 'px')
     $.each([
-        'fontFamily', 
-        'fontSize', 
-        'fontWeight', 
-        'fontStyle', 
-        'letterSpacing', 
-        'textTransform', 
-        'wordSpacing', 
+        'fontFamily',
+        'fontSize',
+        'fontWeight',
+        'fontStyle',
+        'letterSpacing',
+        'textTransform',
+        'wordSpacing',
         'textIndent'
     ], function (i, val) {
         _self.$mirror[0].style[val] = _self.$input.css(val);
@@ -26760,7 +26760,7 @@ var exports = false;
 
     // Calculate inner input width
     this.update()
-    
+
     // Create initial tokens, if any
     this.setTokens(this.options.tokens, false, false)
 
@@ -26774,19 +26774,19 @@ var exports = false;
             minLength: this.options.showAutocompleteOnFocus ? 0 : null,
             position: { my: side + " top", at: side + " bottom", of: this.$wrapper }
           }, this.options.autocomplete )
-      
+
       this.$input.autocomplete( autocompleteOptions )
     }
 
     // Initialize typeahead, if necessary
     if ( ! $.isEmptyObject( this.options.typeahead ) ) {
-      
+
       var typeaheadOptions = this.options.typeahead
         , defaults = {
             minLength: this.options.showAutocompleteOnFocus ? 0 : null
           }
         , args = $.isArray( typeaheadOptions ) ? typeaheadOptions : [typeaheadOptions, typeaheadOptions]
-      
+
       args[0] = $.extend( {}, defaults, args[0] )
 
       this.$input.typeahead.apply( this.$input, args )
@@ -26850,7 +26850,7 @@ var exports = false;
       // Determine maximum possible token label width
       if (!this.maxTokenWidth) {
         this.maxTokenWidth =
-          this.$wrapper.width() - $closeButton.outerWidth() - 
+          this.$wrapper.width() - $closeButton.outerWidth() -
           parseInt($closeButton.css('margin-left'), 10) -
           parseInt($closeButton.css('margin-right'), 10) -
           parseInt($token.css('border-left-width'), 10) -
@@ -26883,8 +26883,8 @@ var exports = false;
             e.preventDefault()
             return _self.toggle( $token )
           }
-          
-          _self.activate( $token, e.shiftKey, e.shiftKey )          
+
+          _self.activate( $token, e.shiftKey, e.shiftKey )
         })
         .on('dblclick', function (e) {
           if (_self._disabled || _self._readonly || !_self.options.allowEditing ) return false
@@ -26911,7 +26911,7 @@ var exports = false;
 
       // Return original element
       return this.$element.get(0)
-    }    
+    }
 
   , setTokens: function (tokens, add, triggerChange) {
       if (!tokens) return
@@ -26968,7 +26968,7 @@ var exports = false;
   , getTokensList: function(delimiter, beautify, active) {
       delimiter = delimiter || this._firstDelimiter
       beautify = ( typeof beautify !== 'undefined' && beautify !== null ) ? beautify : this.options.beautify
-      
+
       var separator = delimiter + ( beautify && delimiter !== ' ' ? ' ' : '')
       return $.map( this.getTokens(active), function (token) {
         return token.value
@@ -26998,7 +26998,7 @@ var exports = false;
 
       this.$copyHelper
         .on('focus',    $.proxy(this.focus, this))
-        .on('blur',     $.proxy(this.blur, this))        
+        .on('blur',     $.proxy(this.blur, this))
         .on('keydown',  $.proxy(this.keydown, this))
         .on('keyup',    $.proxy(this.keyup, this))
 
@@ -27011,7 +27011,7 @@ var exports = false;
         .on('autocompletecreate', function() {
           // Set minimum autocomplete menu width
           var $_menuElement = $(this).data('ui-autocomplete').menu.element
-          
+
           var minWidth = _self.$wrapper.outerWidth() -
               parseInt( $_menuElement.css('border-left-width'), 10 ) -
               parseInt( $_menuElement.css('border-right-width'), 10 )
@@ -27068,7 +27068,7 @@ var exports = false;
 
         case 40: // down arrow
           upDown('next')
-          break        
+          break
 
         case 65: // a (to handle ctrl + a)
           if (this.$input.val().length > 0 || !(e.ctrlKey || e.metaKey)) break
@@ -27077,15 +27077,15 @@ var exports = false;
           break
 
         case 9: // tab
-        case 13: // enter     
+        case 13: // enter
 
           // We will handle creating tokens from autocomplete in autocomplete events
           if (this.$input.data('ui-autocomplete') && this.$input.data('ui-autocomplete').menu.element.find("li:has(a.ui-state-focus)").length) break
-          
+
           // We will handle creating tokens from typeahead in typeahead events
           if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-cursor').length ) break
           if (this.$input.hasClass('tt-input') && this.$wrapper.find('.tt-hint').val().length) break
-          
+
           // Create token
           if (this.$input.is(document.activeElement) && this.$input.val().length || this.$input.data('edit')) {
             return this.createTokensFromInput(e, this.$input.data('edit'));
@@ -27167,7 +27167,7 @@ var exports = false;
         case 8: // backspace
           if (this.$input.is(document.activeElement)) {
             if (this.$input.val().length || this.lastInputValue.length && this.lastKeyDown === 8) break
-            
+
             this.preventDeactivation = true
             var $prevToken = this.$input.hasClass('tt-input') ? this.$input.parent().prevAll('.token:first') : this.$input.prevAll('.token:first')
 
@@ -27211,16 +27211,16 @@ var exports = false;
       }
 
       if (!this.preventCreateTokens && (this.$input.data('edit') && !this.$input.is(document.activeElement) || this.options.createTokensOnBlur )) {
-        this.createTokensFromInput(e) 
+        this.createTokensFromInput(e)
       }
-      
+
       this.preventDeactivation = false
       this.preventCreateTokens = false
     }
 
   , paste: function (e) {
       var _self = this
-      
+
       // Add tokens to existing ones
       setTimeout(function () {
         _self.createTokensFromInput(e)
@@ -27229,7 +27229,7 @@ var exports = false;
 
   , change: function (e) {
       if ( e.initiator === 'tokenfield' ) return // Prevent loops
-      
+
       this.setTokens( this.$element.val() )
     }
 
@@ -27239,7 +27239,7 @@ var exports = false;
 
       var tokensBefore = this.getTokensList()
       this.setTokens( this.$input.val(), true )
-      
+
       if (tokensBefore == this.getTokensList() && this.$input.val().length)
         return false // No tokens were added, do nothing (prevent form submit)
 
@@ -27256,7 +27256,7 @@ var exports = false;
       }
 
       return false // Prevent form being submitted
-    }  
+    }
 
   , next: function (add) {
       if (add) {
@@ -27314,7 +27314,7 @@ var exports = false;
       if (!add) {
         this.$wrapper.find('.active').removeClass('active')
         if (remember) {
-          this.$firstActiveToken = $token 
+          this.$firstActiveToken = $token
         } else {
           delete this.$firstActiveToken
         }
@@ -27370,7 +27370,7 @@ var exports = false;
       var options = { attrs: attrs, relatedTarget: $token.get(0) }
       var editEvent = $.Event('tokenfield:edittoken', options)
       this.$element.trigger( editEvent )
-      
+
       // Edit event can be cancelled if default is prevented
       if (editEvent.isDefaultPrevented()) return
 
@@ -27397,13 +27397,13 @@ var exports = false;
   , unedit: function (focus) {
       var $_input = this.$input.hasClass('tt-input') ? this.$input.parent() : this.$input
       $_input.appendTo( this.$wrapper )
-      
+
       this.$input.data('edit', false)
       this.$mirror.text('')
 
       this.update()
 
-      // Because moving the input element around in DOM 
+      // Because moving the input element around in DOM
       // will cause it to lose focus, we provide an option
       // to re-focus the input after appending it to the wrapper
       if (focus) {
@@ -27418,7 +27418,7 @@ var exports = false;
       if (this.$input.is(document.activeElement) || this._disabled || this._readonly) return
 
       var $token = (e.type === 'click') ? $(e.target).closest('.token') : this.$wrapper.find('.token.active')
-      
+
       if (e.type !== 'click') {
         if (!direction) var direction = 'prev'
         this[direction]()
@@ -27430,7 +27430,7 @@ var exports = false;
       // Prepare events and their options
       var options = { attrs: this.getTokenData( $token ), relatedTarget: $token.get(0) }
         , removeEvent = $.Event('tokenfield:removetoken', options)
-      
+
       this.$element.trigger(removeEvent);
 
       // Remove event can be intercepted and cancelled
@@ -27476,7 +27476,7 @@ var exports = false;
         if (value === this.$mirror.text()) return
 
         this.$mirror.text(value)
-        
+
         var mirrorWidth = this.$mirror.width() + 10;
         if ( mirrorWidth > this.$wrapper.width() ) {
           return this.$input.width( this.$wrapper.width() )
@@ -27541,7 +27541,7 @@ var exports = false;
       // Restore styles and properties
       this.$element.css( this.$element.data('original-styles') );
       this.$element.prop( 'tabindex', this.$element.data('original-tabindex') );
-      
+
       // Re-route tokenfield labele to original input
       var $label = $( 'label[for="' + this.$input.prop('id') + '"]' )
       if ( $label.length ) {
@@ -27576,7 +27576,7 @@ var exports = false;
   $.fn.tokenfield = function (option, param) {
     var value
       , args = []
-    
+
     Array.prototype.push.apply( args, arguments );
 
     var elements = this.each(function () {
@@ -30286,24 +30286,24 @@ var exports = false;
 /*! Magnific Popup - v1.1.0 - 2016-02-20
 * http://dimsemenov.com/plugins/magnific-popup/
 * Copyright (c) 2016 Dmitry Semenov; */
-;(function (factory) { 
-if (typeof define === 'function' && define.amd) { 
- // AMD. Register as an anonymous module. 
- define(['jquery'], factory); 
- } else if (typeof exports === 'object') { 
- // Node/CommonJS 
- factory(__webpack_require__(24)); 
- } else { 
- // Browser globals 
- factory(window.jQuery || window.Zepto); 
- } 
- }(function($) { 
+;(function (factory) {
+if (typeof define === 'function' && define.amd) {
+ // AMD. Register as an anonymous module.
+ define(['jquery'], factory);
+ } else if (typeof exports === 'object') {
+ // Node/CommonJS
+ factory(__webpack_require__(24));
+ } else {
+ // Browser globals
+ factory(window.jQuery || window.Zepto);
+ }
+ }(function($) {
 
 /*>>core*/
 /**
- * 
+ *
  * Magnific Popup Core JS file
- * 
+ *
  */
 
 
@@ -30325,7 +30325,7 @@ var CLOSE_EVENT = 'Close',
 
 
 /**
- * Private vars 
+ * Private vars
  */
 /*jshint -W079 */
 var mfp, // As we have only one instance of MagnificPopup object, we define it locally to not to use 'this'
@@ -30394,15 +30394,15 @@ var _mfpOn = function(name, f) {
 			v = ['ms','O','Moz','Webkit']; // 'v' for vendor
 
 		if( s['transition'] !== undefined ) {
-			return true; 
+			return true;
 		}
-			
+
 		while( v.length ) {
 			if( v.pop() + 'Transition' in s ) {
 				return true;
 			}
 		}
-				
+
 		return false;
 	};
 
@@ -30416,7 +30416,7 @@ MagnificPopup.prototype = {
 	constructor: MagnificPopup,
 
 	/**
-	 * Initializes Magnific Popup plugin. 
+	 * Initializes Magnific Popup plugin.
 	 * This function is triggered only once when $.fn.magnificPopup or $.magnificPopup is executed
 	 */
 	init: function() {
@@ -30442,7 +30442,7 @@ MagnificPopup.prototype = {
 
 		var i;
 
-		if(data.isObj === false) { 
+		if(data.isObj === false) {
 			// convert jQuery collection to array to avoid conflicts later
 			mfp.items = data.items.toArray();
 
@@ -30469,8 +30469,8 @@ MagnificPopup.prototype = {
 			mfp.updateItemHTML();
 			return;
 		}
-		
-		mfp.types = []; 
+
+		mfp.types = [];
 		_wrapClasses = '';
 		if(data.mainEl && data.mainEl.length) {
 			mfp.ev = data.mainEl.eq(0);
@@ -30489,7 +30489,7 @@ MagnificPopup.prototype = {
 
 
 
-		mfp.st = $.extend(true, {}, $.magnificPopup.defaults, data ); 
+		mfp.st = $.extend(true, {}, $.magnificPopup.defaults, data );
 		mfp.fixedContentPos = mfp.st.fixedContentPos === 'auto' ? !mfp.probablyMobile : mfp.st.fixedContentPos;
 
 		if(mfp.st.modal) {
@@ -30498,7 +30498,7 @@ MagnificPopup.prototype = {
 			mfp.st.showCloseBtn = false;
 			mfp.st.enableEscapeKey = false;
 		}
-		
+
 
 		// Building markup
 		// main containers are created only once
@@ -30550,7 +30550,7 @@ MagnificPopup.prototype = {
 			_wrapClasses += ' mfp-align-top';
 		}
 
-	
+
 
 		if(mfp.fixedContentPos) {
 			mfp.wrap.css({
@@ -30559,7 +30559,7 @@ MagnificPopup.prototype = {
 				overflowY: mfp.st.overflowY
 			});
 		} else {
-			mfp.wrap.css({ 
+			mfp.wrap.css({
 				top: _window.scrollTop(),
 				position: 'absolute'
 			});
@@ -30571,7 +30571,7 @@ MagnificPopup.prototype = {
 			});
 		}
 
-		
+
 
 		if(mfp.st.enableEscapeKey) {
 			// Close on ESC key
@@ -30590,7 +30590,7 @@ MagnificPopup.prototype = {
 		if(!mfp.st.closeOnContentClick) {
 			_wrapClasses += ' mfp-auto-cursor';
 		}
-		
+
 		if(_wrapClasses)
 			mfp.wrap.addClass(_wrapClasses);
 
@@ -30598,7 +30598,7 @@ MagnificPopup.prototype = {
 		// this triggers recalculation of layout, so we get it once to not to trigger twice
 		var windowHeight = mfp.wH = _window.height();
 
-		
+
 		var windowStyles = {};
 
 		if( mfp.fixedContentPos ) {
@@ -30619,8 +30619,8 @@ MagnificPopup.prototype = {
 			}
 		}
 
-		
-		
+
+
 		var classesToadd = mfp.st.mainClass;
 		if(mfp.isIE7) {
 			classesToadd += ' mfp-ie7';
@@ -30636,16 +30636,16 @@ MagnificPopup.prototype = {
 
 		// remove scrollbar, add margin e.t.c
 		$('html').css(windowStyles);
-		
+
 		// add everything to DOM
 		mfp.bgOverlay.add(mfp.wrap).prependTo( mfp.st.prependTo || $(document.body) );
 
 		// Save last focused element
 		mfp._lastFocusedEl = document.activeElement;
-		
+
 		// Wait for next cycle to allow CSS transition
 		setTimeout(function() {
-			
+
 			if(mfp.content) {
 				mfp._addClassToMFP(READY_CLASS);
 				mfp._setFocus();
@@ -30653,7 +30653,7 @@ MagnificPopup.prototype = {
 				// if content is not defined (not loaded e.t.c) we add class only for BG
 				mfp.bgOverlay.addClass(READY_CLASS);
 			}
-			
+
 			// Trap the focus in popup
 			_document.on('focusin' + EVENT_NS, mfp._onFocusIn);
 
@@ -30712,7 +30712,7 @@ MagnificPopup.prototype = {
 			}
 			$('html').css(windowStyles);
 		}
-		
+
 		_document.off('keyup' + EVENT_NS + ' focusin' + EVENT_NS);
 		mfp.ev.off(EVENT_NS);
 
@@ -30732,14 +30732,14 @@ MagnificPopup.prototype = {
 		if(mfp.st.autoFocusLast && mfp._lastFocusedEl) {
 			$(mfp._lastFocusedEl).focus(); // put tab focus back
 		}
-		mfp.currItem = null;	
+		mfp.currItem = null;
 		mfp.content = null;
 		mfp.currTemplate = null;
 		mfp.prevHeight = 0;
 
 		_mfpTrigger(AFTER_CLOSE_EVENT);
 	},
-	
+
 	updateSize: function(winHeight) {
 
 		if(mfp.isIOS) {
@@ -52436,35 +52436,35 @@ var module = false;
  *
  */
 (function (global, exports) {
-    
+
     // Helper methods & vars:
     var $d = global.document
     ,   $ = (global.jQuery || global.Zepto || global.ender || $d)
     ,   $$
     ,   $b
     ,   ke = 'keydown';
-    
+
     function realTypeOf(v, s) {
         return (v === null) ? s === 'null'
         : (v === undefined) ? s === 'undefined'
         : (v.is && v instanceof $) ? s === 'element'
         : Object.prototype.toString.call(v).toLowerCase().indexOf(s) > 7;
     }
-    
+
     if ($ === $d) {
         $$ = function (selector, context) {
             return selector ? $.querySelector(selector, context || $) : $;
         };
-        
+
         $b = function (e, fn) { e.addEventListener(ke, fn, false); };
         $f = function (e, jwertyEv) {
             var ret = document.createEvent('Event')
             ,   i;
-            
+
             ret.initEvent(ke, true, true);
-            
+
             for (i in jwertyEv) ret[i] = jwertyEv[i];
-            
+
             return (e || $).dispatchEvent(ret);
         }
     } else {
@@ -52472,13 +52472,13 @@ var module = false;
         $b = function (e, fn) { $(e).bind(ke + '.jwerty', fn); };
         $f = function (e, ob) { $(e || $d).trigger($.Event(ke, ob)); };
     }
-    
+
     // Private
     var _modProps = { 16: 'shiftKey', 17: 'ctrlKey', 18: 'altKey', 91: 'metaKey' };
-    
+
     // Generate key mappings for common keys that are not printable.
     var _keys = {
-        
+
         // MOD aka toggleable keys
         mods: {
             // Shift key, ⇧
@@ -52490,7 +52490,7 @@ var module = false;
             // META, on Mac: ⌘ (CMD), on Windows (Win), on Linux (Super)
             '⌘': 91, meta: 91, cmd: 91, 'super': 91, win: 91
         },
-        
+
         // Normal keys
         keys: {
             // Backspace key, on Mac: ⌫ (Backspace)
@@ -52519,7 +52519,7 @@ var module = false;
             ins: 45, insert: 45,
             // Delete key, on Mac: ⌫ (Delete)
             del: 46, 'delete': 46,
-            
+
             // Left Arrow Key, or ←
             '←': 37, left: 37, 'arrow-left': 37,
             // Up Arrow Key, or ↑
@@ -52528,7 +52528,7 @@ var module = false;
             '→': 39, right: 39, 'arrow-right': 39,
             // Up Arrow Key, or ↓
             '↓': 40, down: 40, 'arrow-down': 40,
-            
+
             // odities, printing characters that come out wrong:
             // Num-Multiply, or *
             '*': 106, star: 106, asterisk: 106, multiply: 106,
@@ -52547,7 +52547,7 @@ var module = false;
             '.': 190, period: 190, 'full-stop': 190,
             // Slash, or /, or forward-slash
             '/': 191, slash: 191, 'forward-slash': 191,
-            // Tick, or `, or back-quote 
+            // Tick, or `, or back-quote
             '`': 192, tick: 192, 'back-quote': 192,
             // Open bracket, or [
             '[': 219, 'open-bracket': 219,
@@ -52558,36 +52558,36 @@ var module = false;
             // Apostraphe, or Quote, or '
             '\'': 222, quote: 222, apostraphe: 222
         }
-        
+
     };
-    
+
     // To minimise code bloat, add all of the NUMPAD 0-9 keys in a loop
     i = 95, n = 0;
     while(++i < 106) {
         _keys.keys['num-' + n] = i;
         ++n;
     }
-    
+
     // To minimise code bloat, add all of the top row 0-9 keys in a loop
     i = 47, n = 0;
     while(++i < 58) {
         _keys.keys[n] = i;
         ++n;
     }
-    
+
     // To minimise code bloat, add all of the F1-F25 keys in a loop
     i = 111, n = 1;
     while(++i < 136) {
         _keys.keys['f' + n] = i;
         ++n;
     }
-    
+
     // To minimise code bloat, add all of the letters of the alphabet in a loop
     var i = 64;
     while(++i < 91) {
         _keys.keys[String.fromCharCode(i).toLowerCase()] = i;
     }
-    
+
     function JwertyCode(jwertyCode) {
         var i
         ,   c
@@ -52598,33 +52598,33 @@ var module = false;
         ,   jwertyCodeFragment
         ,   rangeMatches
         ,   rangeI;
-        
+
         // In-case we get called with an instance of ourselves, just return that.
         if (jwertyCode instanceof JwertyCode) return jwertyCode;
-        
+
         // If jwertyCode isn't an array, cast it as a string and split into array.
         if (!realTypeOf(jwertyCode, 'array')) {
             jwertyCode = (String(jwertyCode)).replace(/\s/g, '').toLowerCase().
                 match(/(?:\+,|[^,])+/g);
         }
-        
+
         // Loop through each key sequence in jwertyCode
         for (i = 0, c = jwertyCode.length; i < c; ++i) {
-            
+
             // If the key combo at this part of the sequence isn't an array,
             // cast as a string and split into an array.
             if (!realTypeOf(jwertyCode[i], 'array')) {
                 jwertyCode[i] = String(jwertyCode[i])
                     .match(/(?:\+\/|[^\/])+/g);
             }
-            
+
             // Parse the key optionals in this sequence
             optionals = [], n = jwertyCode[i].length;
             while (n--) {
-                
+
                 // Begin creating the object for this key combo
                 var jwertyCodeFragment = jwertyCode[i][n];
-                
+
                 keyCombo = {
                     jwertyCombo: String(jwertyCodeFragment),
                     shiftKey: false,
@@ -52632,20 +52632,20 @@ var module = false;
                     altKey: false,
                     metaKey: false
                 }
-                
+
                 // If jwertyCodeFragment isn't an array then cast as a string
                 // and split it into one.
                 if (!realTypeOf(jwertyCodeFragment, 'array')) {
                     jwertyCodeFragment = String(jwertyCodeFragment).toLowerCase()
                         .match(/(?:(?:[^\+])+|\+\+|^\+$)/g);
                 }
-                
+
                 z = jwertyCodeFragment.length;
                 while (z--) {
-                    
+
                     // Normalise matching errors
                     if (jwertyCodeFragment[z] === '++') jwertyCodeFragment[z] = '+';
-                    
+
                     // Inject either keyCode or ctrl/meta/shift/altKey into keyCombo
                     if (jwertyCodeFragment[z] in _keys.mods) {
                         keyCombo[_modProps[_keys.mods[jwertyCodeFragment[z]]]] = true;
@@ -52660,7 +52660,7 @@ var module = false;
                     if (rangeMatches && (rangeMatches[1] in _keys.keys) && (rangeMatches[2] in _keys.keys)) {
                         rangeMatches[2] = _keys.keys[rangeMatches[2]];
                         rangeMatches[1] = _keys.keys[rangeMatches[1]];
-                        
+
                         // Go from match 1 and capture all key-comobs up to match 2
                         for (rangeI = rangeMatches[1]; rangeI < rangeMatches[2]; ++rangeI) {
                             optionals.push({
@@ -52671,7 +52671,7 @@ var module = false;
                                 keyCode: rangeI,
                                 jwertyCombo: String(jwertyCodeFragment)
                             });
-                            
+
                         }
                         keyCombo.keyCode = rangeI;
                     // Inject either keyCode or ctrl/meta/shift/altKey into keyCombo
@@ -52680,15 +52680,15 @@ var module = false;
                     }
                 }
                 optionals.push(keyCombo);
-            
+
             }
             this[i] = optionals;
         }
         this.length = i;
         return this;
     }
-    
-    var jwerty = exports.jwerty = {        
+
+    var jwerty = exports.jwerty = {
         /**
          * jwerty.event
          *
@@ -52710,27 +52710,27 @@ var module = false;
          *      preventDefault()
          *   @param {Object} callbackContext (Optional) The context to call
          *      `callback` with (i.e this)
-         *      
+         *
          */
         event: function (jwertyCode, callbackFunction, callbackContext /*? this */) {
-            
+
             // Construct a function out of callbackFunction, if it is a boolean.
             if (realTypeOf(callbackFunction, 'boolean')) {
                 var bool = callbackFunction;
                 callbackFunction = function () { return bool; }
             }
-            
+
             jwertyCode = new JwertyCode(jwertyCode);
-            
+
             // Initialise in-scope vars.
             var i = 0
             ,   c = jwertyCode.length - 1
             ,   returnValue
             ,   jwertyCodeIs;
-            
+
             // This is the event listener function that gets returned...
             return function (event) {
-                
+
                 // if jwertyCodeIs returns truthy (string)...
                 if ((jwertyCodeIs = jwerty.is(jwertyCode, event, i))) {
                     // ... and this isn't the last key in the sequence,
@@ -52743,24 +52743,24 @@ var module = false;
                     } else {
                         returnValue = callbackFunction.call(
                             callbackContext || this, event, jwertyCodeIs);
-                        
+
                         // If the callback returned false, then we should run
                         // preventDefault();
                         if (returnValue === false) event.preventDefault();
-                        
+
                         // Reset i for the next sequence to fire.
                         i = 0;
                         return;
                     }
                 }
-                
+
                 // If the event didn't hit this time, we should reset i to 0,
                 // that is, unless this combo was the first in the sequence,
                 // in which case we should reset i to 1.
                 i = jwerty.is(jwertyCode, event) ? 1 : 0;
             }
         },
-        
+
         /**
          * jwerty.is
          *
@@ -52778,7 +52778,7 @@ var module = false;
          *   @param {KeyboardEvent} event is the KeyboardEvent to assert against
          *   @param {Integer} i (Optional) checks the `i` key in jwertyCode
          *      sequence
-         *      
+         *
          */
         is: function (jwertyCode, event, i /*? 0*/) {
             jwertyCode = new JwertyCode(jwertyCode);
@@ -52789,12 +52789,12 @@ var module = false;
             // jQuery stores the *real* event in `originalEvent`, which we use
             // because it does annoything stuff to `metaKey`
             event = event.originalEvent || event;
-            
+
             // We'll look at each optional in this jwertyCode sequence...
             var key
             ,   n = jwertyCode.length
             ,   returnValue = false;
-            
+
             // Loop through each fragment of jwertyCode
             while (n--) {
                 returnValue = jwertyCode[n].jwertyCombo;
@@ -52808,7 +52808,7 @@ var module = false;
             }
             return returnValue;
         },
-        
+
         /**
          * jwerty.key
          *
@@ -52831,7 +52831,7 @@ var module = false;
          *      or an HTML*Element on which to bind the eventListener
          *   @param {Mixed} selectorContext can be a string, jQuery/Zepto/Ender
          *      object, or an HTML*Element on which to scope the selector
-         *  
+         *
          */
         key: function (jwertyCode, callbackFunction, callbackContext /*? this */, selector /*? document */, selectorContext /*? body */) {
             // Because callbackContext is optional, we should check if the
@@ -52845,14 +52845,14 @@ var module = false;
             // Finally if we did skip `callbackContext`, then shift
             // `selectorContext` to the left (take it from `selector`)
             ,    realSelectorContext = realSelector === callbackContext ? selector : selectorContext;
-            
+
             // If `realSelector` is already a jQuery/Zepto/Ender/DOM element,
             // then just use it neat, otherwise find it in DOM using $$()
             $b(realTypeOf(realSelector, 'element') ?
                realSelector : $$(realSelector, realSelectorContext)
             , jwerty.event(jwertyCode, callbackFunction, realcallbackContext));
         },
-        
+
         /**
          * jwerty.fire
          *
@@ -52868,22 +52868,22 @@ var module = false;
          *      or an HTML*Element on which to bind the eventListener
          *   @param {Mixed} selectorContext can be a string, jQuery/Zepto/Ender
          *      object, or an HTML*Element on which to scope the selector
-         *  
+         *
          */
         fire: function (jwertyCode, selector /*? document */, selectorContext /*? body */, i) {
             jwertyCode = new JwertyCode(jwertyCode);
             var realI = realTypeOf(selectorContext, 'number') ? selectorContext : i;
-            
+
             // If `realSelector` is already a jQuery/Zepto/Ender/DOM element,
             // then just use it neat, otherwise find it in DOM using $$()
             $f(realTypeOf(selector, 'element') ?
                 selector : $$(selector, selectorContext)
             , jwertyCode[realI || 0][0]);
         },
-        
+
         KEYS: _keys
     };
-    
+
 }(this, (typeof module !== 'undefined' && module.exports ? module.exports : this)));
 }.call(window));
 
@@ -53002,9 +53002,9 @@ var module = null;
 
     /*
     This is a list of all available events you can register on a dropzone object.
-    
+
     You can register an event handler like this:
-    
+
         dropzone.on("dragEnter", function() { });
      */
 
@@ -54683,7 +54683,7 @@ var module = null;
 
 
   /*
-  
+
   Bugfix for iOS 6 and 7
   Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
   based on the work of https://github.com/stomita/ios-imagefile-megapixel
@@ -56295,7 +56295,7 @@ class Combination {
       case "quantity":
       case "reference":
       case "minimal_quantity":
-      case "low_stock":
+      case "low_stock_threshold":
         convertedInput = this.inputPattern + 'attribute_' + bulkInput;
         break;
       case "cost_price":
@@ -58562,7 +58562,7 @@ define(function () {
 
     // should not be replaced by a completely new object - just overwrite existing methods
     MobileDetect._impl = impl;
-    
+
     MobileDetect.version = '1.3.6 2017-04-05';
 
     return MobileDetect;

@@ -140,7 +140,7 @@ class ProductCombination extends CommonAbstractType
                 new Assert\Type(array('type' => 'numeric')),
             )
         ))
-        ->add('attribute_low_stock', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
+        ->add('attribute_low_stock_threshold', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\Type(array('type' => 'numeric')),

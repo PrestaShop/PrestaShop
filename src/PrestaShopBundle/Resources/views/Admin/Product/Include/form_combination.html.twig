@@ -106,9 +106,9 @@
                 <div class="row">
                   <div class="col-md-3">
                     <fieldset class="form-group">
-                      <label class="form-control-label">{{ form.attribute_low_stock.vars.label|raw }}</label>
-                      {{ form_errors(form.attribute_low_stock) }}
-                      {{ form_widget(form.attribute_low_stock) }}
+                      <label class="form-control-label">{{ form.attribute_low_stock_threshold.vars.label }}</label>
+                      {{ form_errors(form.attribute_low_stock_threshold) }}
+                      {{ form_widget(form.attribute_low_stock_threshold) }}
                     </fieldset>
                   </div>
                 </div>
@@ -118,7 +118,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <fieldset class="form-group">
-                            <label class="form-control-label">{{ form.attribute_wholesale_price.vars.label|raw }}</label>
+                            <label class="form-control-label">{{ form.attribute_wholesale_price.vars.label }}</label>
                             {{ form_errors(form.attribute_wholesale_price) }}
                             {{ form_widget(form.attribute_wholesale_price) }}
                         </fieldset>
@@ -181,7 +181,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <fieldset class="form-group">
-                            <label class="form-control-label">{{ form.attribute_isbn.vars.label|raw }}</label>
+                            <label class="form-control-label">{{ form.attribute_isbn.vars.label }}</label>
                             {{ form_errors(form.attribute_isbn) }}
                             {{ form_widget(form.attribute_isbn) }}
                         </fieldset>
