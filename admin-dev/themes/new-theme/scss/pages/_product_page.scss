@@ -142,16 +142,27 @@
   }
 
   .token {
-    background: $brand-primary;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 0;
-    font-weight: lighter;
     display: inline-block;
-    margin: 2px;
-    min-height: 25px;
+    padding: .4rem;
+    margin-right: .4rem;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: $brand-primary;
+
     .close {
-      padding-left: 3px;
+      margin: 0 .4rem;
+      color: $gray-dark;
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 400;
+      text-shadow: none;
+
+      &:hover {
+        color: $gray-dark;
+      }
     }
   }
 
@@ -615,20 +626,6 @@
       opacity: 0.3;
       > * {
         pointer-events: none;
-      }
-    }
-  }
-
-  #supplier_combination_collection, #product-attachments, #supplier_collection {
-    .panel-body {
-      padding: 0;
-    }
-    .table-striped {
-      thead, th, tbody {
-        border:none;
-      }
-      td{
-        color: $gray-medium;
       }
     }
   }

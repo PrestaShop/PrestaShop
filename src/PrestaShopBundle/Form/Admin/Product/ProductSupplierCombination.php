@@ -76,6 +76,9 @@ class ProductSupplierCombination extends CommonAbstractType
             'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
             'choices_as_values' => true,
             'required' => true,
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
         ))
         ->add('id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
         ->add('product_id', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
