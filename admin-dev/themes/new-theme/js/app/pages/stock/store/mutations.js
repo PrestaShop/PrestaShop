@@ -64,6 +64,8 @@ export default {
     state.movementsTypes = movementsTypes.data;
   },
   [types.ADD_PRODUCTS](state, products) {
+    state.productsToUpdate = [];
+    state.selectedProducts = [];
     _.forEach(products.data.data, (product) => {
       product.qty = 0;
     });
@@ -114,7 +116,15 @@ export default {
     state.hasQty = hasQty;
   },
   [types.ADD_PRODUCT_TO_UPDATE](state, updatedProduct) {
-    state.productsToUpdate.push(updatedProduct);
+    const index = _.findIndex(state.productsToUpdate, {
+      product_id: updatedProduct.product_id,
+      combination_id: updatedProduct.combination_id,
+    });
+    if (index !== -1) {
+      state.productsToUpdate.splice(index, 1, updatedProduct);
+    } else {
+      state.productsToUpdate.push(updatedProduct);
+    }
   },
   [types.REMOVE_PRODUCT_TO_UPDATE](state, updatedProduct) {
     const index = _.findIndex(state.productsToUpdate, {
@@ -125,22 +135,50 @@ export default {
   },
   [types.UPDATE_BULK_EDIT_QTY](state, value) {
     state.bulkEditQty = value;
-    _.forEach(state.selectedProducts, (product) => {
-      product.qty = value;
-      product.delta = state.bulkEditQty;
-    });
+    if (value) {
+      _.forEach(state.selectedProducts, (product) => {
+        const index = _.findIndex(state.productsToUpdate, {
+          product_id: product.product_id,
+          combination_id: product.combination_id,
+        });
+        product.qty = value;
+        product.delta = state.bulkEditQty;
+        if (index !== -1) {
+          state.productsToUpdate.splice(index, 1, product);
+        } else {
+          state.productsToUpdate.push(product);
+        }
+      });
+      state.hasQty = true;
+    }
     if (value === null) {
+      _.forEach(state.selectedProducts, (product) => {
+        product.qty = 0;
+      });
+      state.productsToUpdate = [];
       state.selectedProducts = [];
+      state.hasQty = false;
     }
   },
   [types.ADD_SELECTED_PRODUCT](state, product) {
-    state.selectedProducts.push(product);
+    const index = _.findIndex(state.selectedProducts, {
+      product_id: product.product_id,
+      combination_id: product.combination_id,
+    });
+    if (index !== -1) {
+      state.selectedProducts.splice(index, 1, product);
+    } else {
+      state.selectedProducts.push(product);
+    }
   },
   [types.REMOVE_SELECTED_PRODUCT](state, product) {
     const index = _.findIndex(state.selectedProducts, {
       product_id: product.product_id,
       combination_id: product.combination_id,
     });
+    if (index !== -1) {
+      state.selectedProducts[index].qty = 0;
+    }
     state.selectedProducts.splice(index, 1);
   },
 };

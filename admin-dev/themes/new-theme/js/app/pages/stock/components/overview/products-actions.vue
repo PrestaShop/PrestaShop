@@ -54,6 +54,7 @@
         type="button"
         class="update-qty pull-xs-right"
         :class="{'btn-primary': disabled }"
+        :disabled="disabled"
         :primary="true"
         @click="sendQty"
       >
@@ -95,8 +96,10 @@
       selectedProductsLng(value) {
         if (value === 0 && this.$refs['bulk-action']) {
           this.$refs['bulk-action'].checked = false;
+          this.isFocused = false;
         }
         if (value === 1 && this.$refs['bulk-action']) {
+          this.isFocused = true;
           this.$store.dispatch('updateBulkEditQty', 0);
         }
       },

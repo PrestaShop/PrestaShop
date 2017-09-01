@@ -26,8 +26,8 @@
   <tr>
     <td class="flex p-r-1">
       <PSCheckbox
-        :id="product.combination_id"
-        :ref="product.combination_id"
+        :id="`product-${product.combination_id}`"
+        :ref="`product-${product.combination_id}`"
         :model="product"
         @checked="productChecked"
       />
@@ -136,8 +136,10 @@
     mounted() {
       const self = this;
       EventBus.$on('toggleProductsCheck', (checked) => {
-        const ref = self.product.combination_id;
-        this.$refs[ref].checked = checked;
+        const ref = `product-${self.product.combination_id}`;
+        if (this.$refs[ref]) {
+          this.$refs[ref].checked = checked;
+        }
       });
     },
     data: () => ({
