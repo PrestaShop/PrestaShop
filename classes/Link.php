@@ -374,7 +374,7 @@ class LinkCore
 
         // If the module has its own route ... just use it !
         if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop)) {
-            return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
+            return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params, false, $id_shop);
         } else {
             if ($id_shop) {
                 $allow = (int)Configuration::get('PS_REWRITING_SETTINGS', null, null, $id_shop);
