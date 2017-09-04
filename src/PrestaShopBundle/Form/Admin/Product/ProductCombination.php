@@ -149,7 +149,7 @@ class ProductCombination extends CommonAbstractType
                 'placeholder' => $this->translator->trans(
                     'Leave empty to disable',
                     array(),
-                    'Admin.Catalog.Feature'
+                    'Admin.Catalog.Help'
                 ),
             ),
         ))

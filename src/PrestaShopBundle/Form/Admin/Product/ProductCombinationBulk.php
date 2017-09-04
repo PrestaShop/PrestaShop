@@ -100,9 +100,9 @@ class ProductCombinationBulk extends CommonAbstractType
                 'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
                 'attr' => array(
                     'placeholder' => $this->translator->trans(
-                        'If empty, it keeps the original value',
+                        'This field can only add a value',
                         array(),
-                        'Admin.Catalog.Feature'
+                        'Admin.Catalog.Help'
                     ),
                 ),
             ));

@@ -165,7 +165,7 @@ class ProductQuantity extends CommonAbstractType
                 array(
                     'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
                     'attr' => array(
-                        'placeholder' => $this->translator->trans('Leave empty to disable', array(), 'Admin.Catalog.Feature'),
+                        'placeholder' => $this->translator->trans('Leave empty to disable', array(), 'Admin.Catalog.Help'),
                     ),
                     'constraints' => array(
                         new Assert\Type(array('type' => 'numeric')),
