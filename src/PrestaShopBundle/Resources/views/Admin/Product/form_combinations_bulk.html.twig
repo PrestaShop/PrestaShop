@@ -79,14 +79,13 @@
     {{ form_widget(form.low_stock_threshold) }}
   </div>
 </div>
-<div class="row mt-2">
-  <button id="delete-combinations" class="btn btn-outline-secondary btn-sm" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
-    <i class="material-icons">delete</i>
-    {{ 'Delete combinations'|trans({}, 'Admin.Catalog.Feature') }}
-  </button>&nbsp;
-  <button id="apply-on-combinations" class="btn btn-outline-primary">
-    {{ 'Apply'|trans({}, 'Admin.Actions') }}
-  </button>
-
+<div class="row justify-content-end mt-3">
+    <button id="delete-combinations" class="btn btn-outline-secondary mr-3" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">
+      <i class="material-icons">delete</i>
+      {{ 'Delete combinations'|trans({}, 'Admin.Catalog.Feature') }}
+    </button>
+    <button id="apply-on-combinations" class="btn btn-outline-primary mr-3">
+      {{ 'Apply'|trans({}, 'Admin.Actions') }}
+    </button>
   {{ form_widget(form) }}
 </div>

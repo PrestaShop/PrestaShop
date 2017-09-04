@@ -29,31 +29,31 @@
     <td class="attribute-price">
         <div class="input-group">
             <span class="input-group-addon">{{ default_currency }}</span>
-            <input type="text" class="attribute_priceTE form-control text-xs-right" value="{{ form.vars.value.attribute_price }}">
+            <input type="text" class="attribute_priceTE form-control text-sm-right" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
-    <td class="attribute-finalprice text-xs-right">
+    <td class="attribute-finalprice text-sm-right">
       <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
     </td>
     {% if 'PS_STOCK_MANAGEMENT'|configuration %}
       <td class="attribute-quantity">
           <div>
-              <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-xs-right">
+              <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-sm-right">
           </div>
       </td>
     {% endif %}
 
     <td class="attribute-actions">
         <div class="btn-group btn-group-sm" role="group">
-            <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open btn-link btn-sm"><i class="material-icons">mode_edit</i></a>
+            <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open tooltip-link btn-sm"><i class="material-icons">mode_edit</i></a>
         </div>
         <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
-            <div class="col-sm-12 text-xs-right nav">
+            <div class="col-sm-12 nav">
                 {# "Prev." is short for "Previous" #}
-                <a class="btn-sensitive prev float-left"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
+                <a class="btn-sensitive prev"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
                 <a class="next btn-sensitive">{{ 'Next combination'|trans({}, 'Admin.Catalog.Feature') }} <i class="material-icons">keyboard_arrow_right</i></a>
             </div>
-            <div class="panel col-md-12 pt-2 pb-2">
+            <div class="panel col-md-12 p-2">
                 <div class="float-left">
                     <button type="button" class="btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
                 </div>
@@ -232,7 +232,7 @@
         </div>
     </td>
     <td width="5%">
-      <a href="{{ path('admin_delete_attribute', {'idProduct': form.vars.value.id_product}) }}" class="btn btn-link btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
+      <a href="{{ path('admin_delete_attribute', {'idProduct': form.vars.value.id_product}) }}" class="btn tooltip-link btn-sm delete" data="{{ form.vars.value.id_product_attribute }}"><i class="material-icons">delete</i></a>
     </td>
     <td>
       {% set checked = form.vars.value.attribute_default == 1 ? 'checked' : '' %}

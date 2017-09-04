@@ -89,9 +89,8 @@
   }
 
   #bulk-combinations-container {
-    border: solid 1px $gray-light;
-    margin: -1.063rem 0.9375rem 0.9375rem;
-    padding: 0.9375rem;
+    margin: -1.063rem 0 0.9375rem;
+    padding: 0 0.9375rem;
     width: 97%;
     font-size: 0.75rem;
     font-weight: 600;
@@ -169,7 +168,6 @@
   // Combination generator
   .tokenfield {
     height: auto;
-    padding-bottom: 0;
     input.token-input[type="text"] {
       display: inline-block;
       border: 0;
@@ -246,6 +244,9 @@
       cursor: pointer;
       display: inline-block;
       margin-bottom: 0.625rem;
+    }
+    .panel {
+      background: #fff;
     }
   }
 
@@ -620,20 +621,8 @@
   }
 
   .combinations-list {
-    td,
     th {
-      color: $gray-medium;
-      vertical-align: middle;
-    }
-    .uppercase th {
-      text-transform: uppercase;
-      font-weight: $font-weight-normal;
       font-size: $font-size-xs;
-    }
-    .table-striped {
-      tbody tr:nth-of-type(odd) {
-        background-color: $notice;
-      }
     }
     .combination {
       &.loaded {
@@ -818,6 +807,12 @@
               width: 1rem;
               margin-right: 0.4375rem;
               border: 0.0625rem solid $gray-light;
+              &.not-color:before {
+                color: #fff;
+                display: block;
+                text-align: center;
+                line-height: 1rem;
+              }
             }
           }
           &:checked {
@@ -825,12 +820,10 @@
               font-weight: $font-weight-semibold;
               color: $gray-medium;
               .pretty-checkbox {
-                border-color: $gray-medium;
-                border-width: 0.125rem;
                 &.not-color:before {
                   content: "\E5CA";
                   font-family: "Material Icons";
-                  line-height: 0.75rem;
+                  background: $primary;
                 }
               }
             }
