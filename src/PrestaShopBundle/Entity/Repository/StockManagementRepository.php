@@ -186,7 +186,7 @@ abstract class StockManagementRepository
             $this->orderBy($queryParams)
         );
 
-        if ($export) {
+        if (!$export) {
             $query .= $this->paginate();
         }
 
