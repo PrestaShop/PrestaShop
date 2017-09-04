@@ -54,6 +54,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         'suppliers' => array(),
         'stores' => array(),
         'customizations' => array(),
+        'product_option_values' => array(),
     );
 
     /**
@@ -293,6 +294,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             case 'manufacturers':
             case 'suppliers':
             case 'stores':
+            case 'product_option_values':
                 switch ($this->wsObject->urlSegment[1]) {
                     case 'categories':
                         $directory = _PS_CAT_IMG_DIR_;
@@ -305,6 +307,17 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         break;
                     case 'stores':
                         $directory = _PS_STORE_IMG_DIR_;
+                        break;
+                    case 'product_option_values':
+<<<<<<< HEAD
+<<<<<<< HEAD
+                        $directory = _PS_COL_IMG_DIR_;
+=======
+                    	$directory = _PS_COL_IMG_DIR_;
+>>>>>>> ec9f77d8e8... WS: Allow product_option_values image
+=======
+                        $directory = _PS_COL_IMG_DIR_;
+>>>>>>> 9ee00caf5c... Fixed Issues
                         break;
                 }
                 return $this->manageDeclinatedImages($directory);
@@ -626,7 +639,32 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     protected function manageDeclinatedImages($directory)
     {
         // Get available image sizes for the current image type
-        $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+        if ($this->imageType=='product_option_values') {      	
+            $normal_image_sizes = array();
+        } else {
+            $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+=======
+        if($this->imageType=='product_option_values')
+=======
+        if ($this->imageType=='product_option_values')
+>>>>>>> 9ee00caf5c... Fixed Issues
+        {      	
+=======
+        if ($this->imageType=='product_option_values') {      	
+>>>>>>> c7362e7ef4... Fixed format issues.
+            $normal_image_sizes = array();
+        } else {
+<<<<<<< HEAD
+        	$normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+>>>>>>> ec9f77d8e8... WS: Allow product_option_values image
+=======
+            $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+>>>>>>> 9ee00caf5c... Fixed Issues
+        }
+        
         switch ($this->wsObject->urlSegment[2]) {
             // Match the default images
             case 'default':
@@ -796,7 +834,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $image = new Image((int)$this->wsObject->urlSegment[3]);
                     return $image->delete();
                 } elseif ($filename_exists) {
-                    if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'))) {
+                    if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores', 'product_option_values'))) {
                         /** @var ObjectModel $object */
                         $object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[2]);
                         return $object->deleteImage(true);
@@ -1110,17 +1148,42 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $this->output = $this->objOutput->renderEntity($image, 1);
                         $image_content = array('sqlId' => 'content', 'value' => base64_encode(file_get_contents($this->imgToDisplay)), 'encode' => 'base64');
                         $this->output .= $this->objOutput->objectRender->renderField($image_content);
-                    } elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores'))) {
+                    } elseif (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores', 'product_option_values'))) {
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                             throw new WebserviceException('An error occurred during the image upload', array(76, 400));
                         } elseif (!ImageManager::resize($tmp_name, $reception_path)) {
                             throw new WebserviceException('An error occurred while copying image', array(76, 400));
                         }
-                        $images_types = ImageType::getImagesTypes($this->imageType);
-                        foreach ($images_types as $imageType) {
-                            if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
-                                $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+                        if ($this->imageType!='product_option_values') {
+=======
+                        if ($this->imageType!='product_option_values')
+                        {
+>>>>>>> 9ee00caf5c... Fixed Issues
+=======
+                        if ($this->imageType!='product_option_values') {
+>>>>>>> c7362e7ef4... Fixed format issues.
+                            $images_types = ImageType::getImagesTypes($this->imageType);                        
+                            foreach ($images_types as $imageType) {
+                                if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
+                                    $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
+                                }
                             }
+<<<<<<< HEAD
+=======
+                        if($this->imageType!='product_option_values')
+        				{
+	                        $images_types = ImageType::getImagesTypes($this->imageType);                        
+                        	foreach ($images_types as $imageType) {
+	                            if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
+                                	$this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
+                            	}
+                        	}
+>>>>>>> ec9f77d8e8... WS: Allow product_option_values image
+=======
+>>>>>>> 9ee00caf5c... Fixed Issues
                         }
                         @unlink(_PS_TMP_IMG_DIR_.$tmp_name);
                         $this->imgToDisplay = $reception_path;
