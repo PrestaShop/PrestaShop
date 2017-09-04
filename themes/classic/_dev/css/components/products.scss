@@ -146,6 +146,15 @@
   .tax-shipping-delivery-label {
     font-size: 0.8125rem;
     color: $gray;
+
+    .delivery-information {
+      padding: 0 0 0 2px;
+
+      &::before {
+        content: "-";
+        padding: 0 2px 0 0;
+      }
+    }
   }
 }
 .product-discount {

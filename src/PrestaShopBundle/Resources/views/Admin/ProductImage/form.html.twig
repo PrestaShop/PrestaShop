@@ -29,7 +29,7 @@
       {{ form_widget(form.cover) }}
     </div>
     <div class="col-lg-12 col-xl-4">
-        <a href="{{ image.base_image_url }}.{{ image.format }}" class="btn btn-invisible btn-sm open-image" target="_blank">
+        <a href="{{ image.base_image_url }}.{{ image.format }}" class="btn btn-link btn-sm open-image" target="_blank">
           <i class="material-icons">zoom_in</i> {{ 'Zoom'|trans({}, 'Admin.Catalog.Feature') }}
         </a>
     </div>
@@ -41,5 +41,5 @@
 
 <div class="actions">
     <button type="button" class="btn btn-sm btn-primary pull-sm-right" onclick="formImagesProduct.send({{ image.id }})">{{ 'Save image settings'|trans({}, 'Admin.Actions') }}</button>
-    <button type="button" class="btn btn-sm btn-invisible" onclick="formImagesProduct.delete({{ image.id }})"><i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</button>
+    <button type="button" class="btn btn-sm btn-link" onclick="formImagesProduct.delete({{ image.id }})"><i class="material-icons">delete</i> {{ 'Delete'|trans({}, 'Admin.Actions') }}</button>
 </div>

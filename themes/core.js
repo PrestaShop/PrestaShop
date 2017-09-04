@@ -2263,6 +2263,7 @@
 	    pendingQuery = false;
 	    prestashop.emit('updateProductList', data);
 	    window.history.pushState(data, undefined, data.current_url);
+	    window.scrollTo(0, 0);
 	}
 	
 	function handleError() {

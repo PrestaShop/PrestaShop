@@ -7,6 +7,10 @@
       bottom: $grid-gutter-width / 2;
     }
     margin-bottom: 20px;
+
+    .row {
+      align-items: center;
+    }
   }
 
   > .content:last-child {
@@ -41,6 +45,15 @@
     }
   }
 
+  #product_catalog_category_tree_filter {
+    margin-left: auto;
+  }
+
+  .bulk-catalog {
+    .dropdown-item {
+      border: 0;
+    }
+  }
 }
 
 .emptycatalog-icon {
