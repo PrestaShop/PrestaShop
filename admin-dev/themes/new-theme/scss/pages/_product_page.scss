@@ -566,18 +566,7 @@
     }
   }
 
-  .seo-table thead th {
-    text-transform: uppercase;
-  }
-  .seo-table tbody tr:nth-of-type(odd) {
-    background: $gray-light;
-  }
-  .seo-table tbody tr td:last-child {
-    box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
-  }
-
-  .customFieldCollection .delete,
-  .seo-table .delete {
+  .customFieldCollection .delete {
     color: $gray-medium;
     .material-icons {
       font-size: 1.25rem;

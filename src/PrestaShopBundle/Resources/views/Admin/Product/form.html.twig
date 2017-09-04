@@ -574,7 +574,7 @@
                         {{ form_widget(form.step2.price_ttc) }}
                       </div>
 
-                      <div class="col-xl-4 col-lg-6 col-xl-offset-1 col-lg-offset-0">
+                      <div class="col-xl-4 col-lg-6 mx-auto">
                         <label class="form-control-label">
                           {{ form.step2.unit_price.vars.label }}
                           <span class="help-box" data-toggle="popover"
@@ -609,7 +609,7 @@
                       <div class="col-md-8">
                         <label class="form-control-label">&nbsp;</label>
                         <a class="form-control-static external-link" href="{{ getAdminLink("AdminTaxes") }}">
-                          <i class="material-icons">open_in_new</i> {{ 'Manage tax rules'|trans({}, 'Admin.Catalog.Feature') }}
+                          {{ 'Manage tax rules'|trans({}, 'Admin.Catalog.Feature') }}
                         </a>
                       </div>
                       <div class="col-md-12 pt-1">
@@ -619,7 +619,6 @@
                         <div class="row">
                           <div class="col-xl-5 col-lg-12">
                             <div class="alert alert-info" role="alert">
-                              <i class="material-icons">help</i>
                               <p class="alert-text">
                                 {{ 'Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<strong>', '[/1]': '</strong>', '[2]': '<span id="final_retail_price_ti">', '[/2]': '</span>', '[3]': '<span id="final_retail_price_te">', '[/3]': '</span>', })|raw }}
                               </p>
@@ -658,12 +657,12 @@
                       </div>
                       <div class="col-md-12">
                         <div id="specific-price" class="mb-2">
-                          <a class="btn btn-action mb-2" data-toggle="collapse" href="#specific_price_form" aria-expanded="false">
+                          <a class="btn btn-outline-primary mb-3" data-toggle="collapse" href="#specific_price_form" aria-expanded="false">
                             <i class="material-icons">add_circle</i>
                             {{ 'Add a specific price'|trans({}, 'Admin.Catalog.Feature') }}
                           </a>
-                          <table id="js-specific-price-list" class="table table-striped hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
-                            <thead>
+                          <table id="js-specific-price-list" class="table hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
+                            <thead class="thead-default">
                             <tr>
                               <th>{{ 'Rule'|trans({}, 'Admin.Catalog.Feature') }}</th>
                               <th>{{ 'Combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
