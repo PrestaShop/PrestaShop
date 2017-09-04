@@ -131,6 +131,26 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+     */
+    public function listProductsExportAction(Request $request)
+    {
+        try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+        } catch (InvalidPaginationParamsException $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+
+        $data = $this->stockRepository->getDataExport($queryParamsCollection);
+
+        return $this->csvResponse(
+            $data,
+            'stock_' . date('Y-m-d_His') . '.csv'
+        );
+    }
+
+    /**
+     * @param Request $request
      * @return int
      */
     private function guardAgainstMissingDeltaParameter(Request $request)

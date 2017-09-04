@@ -255,7 +255,7 @@ abstract class QueryParamsCollection
      */
     public function getSqlOrder()
     {
-        foreach ($this->queryParams['order'] as $key => &$order) {
+        foreach ($this->queryParams['order'] as &$order) {
             $descendingOrder = false !== strpos($order, 'desc');
             $filterColumn = $this->removeDirection($order);
 

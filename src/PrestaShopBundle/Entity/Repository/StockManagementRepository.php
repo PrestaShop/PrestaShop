@@ -175,15 +175,20 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     * @param bool $export
      * @return mixed
      */
-    public function getData(QueryParamsCollection $queryParams)
+    public function getData(QueryParamsCollection $queryParams, $export = false)
     {
         $query = $this->selectSql(
-                $this->andWhere($queryParams),
-                $this->having($queryParams),
-                $this->orderBy($queryParams)
-            ) . $this->paginate();
+            $this->andWhere($queryParams),
+            $this->having($queryParams),
+            $this->orderBy($queryParams)
+        );
+
+        if ($export) {
+            $query .= $this->paginate();
+        }
 
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, $queryParams);

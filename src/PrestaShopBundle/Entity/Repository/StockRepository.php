@@ -185,9 +185,10 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
+     * @param bool $export
      * @return mixed
      */
-    public function getData(QueryParamsCollection $queryParams)
+    public function getData(QueryParamsCollection $queryParams, $export = false)
     {
         $this->stockManager->updatePhysicalProductQuantity(
             $this->shopId,
@@ -195,9 +196,53 @@ class StockRepository extends StockManagementRepository
             $this->orderStates['cancellation']
         );
 
-        return parent::getData($queryParams);
+        return parent::getData($queryParams, $export);
     }
 
+    /**
+     * Specific function to export data
+     * @param QueryParamsCollection $queryParams
+     * @return array
+     */
+    public function getDataExport(QueryParamsCollection $queryParams)
+    {
+        $data = $this->getData($queryParams, true);
+
+        $formatedData = array(
+            array(
+                // headers columns
+                'product_id' => 'Product ID',
+                'combination_id' => 'Combination ID',
+                'product_reference' => 'Product reference',
+                'combination_reference' => 'Combination reference',
+                'product_name' => 'Product name',
+                'combination_name' => 'Combination name',
+                'supplier_name' => 'Supplier name',
+                'active' => 'Active',
+                'product_physical_quantity' => 'Physical quantity',
+                'product_reserved_quantity' => 'Reserved quantity',
+                'product_available_quantity' => 'Available quantity',
+                'product_low_stock_threshold' => 'Low stock quantity',
+            )
+        );
+
+        foreach ($data as $line) {
+            unset($line['supplier_id']);
+            unset($line['total_combinations']);
+            unset($line['product_cover_id']);
+            unset($line['combination_cover_id']);
+            unset($line['product_attributes']);
+            unset($line['product_features']);
+            unset($line['product_thumbnail']);
+            unset($line['combination_thumbnail']);
+            unset($line['combinations_product_url']);
+            unset($line['edit_url']);
+
+            $formatedData[] = $line;
+        }
+
+        return $formatedData;
+    }
 
     /**
      * @param string $andWhereClause
