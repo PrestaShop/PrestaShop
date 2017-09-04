@@ -203,7 +203,7 @@ class ModuleManager implements AddonManagerInterface
     public function install($source)
     {
         // in CLI mode, there is no employee set up
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to install modules.',
@@ -247,7 +247,7 @@ class ModuleManager implements AddonManagerInterface
         // Check permissions:
         // * Employee can delete
         // * Employee can delete this specific module
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to uninstall this module.',
@@ -281,7 +281,7 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to upgrade this module.',
@@ -318,7 +318,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable($name)
     {
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module.',
@@ -355,7 +355,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module.',
@@ -404,7 +404,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disableMobile($name)
     {
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module on mobile.',
@@ -452,7 +452,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enableMobile($name)
     {
-        if (!$this->adminModuleProvider->allowedAccess(__FUNCTION__, $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module on mobile.',
@@ -484,7 +484,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function reset($name, $keep_data = false)
     {
-        if (!$this->adminModuleProvider->allowedAccess('install') || !$this->adminModuleProvider->allowedAccess('uninstall', $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess('install') || !$this->adminModuleProvider->isAllowedAccess('uninstall', $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to reset this module.',

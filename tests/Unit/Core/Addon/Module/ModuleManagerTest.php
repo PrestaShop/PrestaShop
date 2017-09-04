@@ -183,7 +183,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->method('findByName')
             ->will($this->returnValueMap($findByNameReturnValues));
         $this->adminModuleProviderS
-            ->method('allowedAccess')
+            ->method('isAllowedAccess')
             ->willReturn(true);
     }
 

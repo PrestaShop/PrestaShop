@@ -51,7 +51,10 @@ class AdminModuleDataProvider implements ModuleInterface
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
-    protected $module_actions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
+    /**
+     * @var array of defined and callable module actions
+     */
+    protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
 
     private $languageISO;
     private $logger;
@@ -131,15 +134,15 @@ class AdminModuleDataProvider implements ModuleInterface
      * Check the permissions of the current context (CLI or employee) for a module
      *
      * @param array $actions Actions to check
-     * @param string $name The module nale
+     * @param string $name The module name
      * @return array of allowed actions
      */
     protected function filterAllowedActions(array $actions, $name = '')
     {
         $allowedActions = array();
-        foreach (array_keys($actions) as $action_name) {
-            if ($this->allowedAccess($action_name, $name)) {
-                $allowedActions[$action_name] = $actions[$action_name];
+        foreach (array_keys($actions) as $actionName) {
+            if ($this->isAllowedAccess($actionName, $name)) {
+                $allowedActions[$actionName] = $actions[$actionName];
             }
         }
         return $allowedActions;
@@ -152,7 +155,7 @@ class AdminModuleDataProvider implements ModuleInterface
      * @param string $name (Optionnal for 'install') The module name to check
      * @return boolean
      */
-    public function allowedAccess($action, $name = '')
+    public function isAllowedAccess($action, $name = '')
     {
         if (Tools::isPHPCLI()) {
             return true;
@@ -173,7 +176,7 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         foreach ($addons as &$addon) {
             $urls = array();
-            foreach ($this->module_actions as $action) {
+            foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
