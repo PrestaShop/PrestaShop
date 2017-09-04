@@ -104,7 +104,7 @@ class OrderCarrierCore extends ObjectModel
 
         $metadata = '';
         foreach ($products as $product) {
-            $prod_obj = new Product((int)$product['product_id']);
+            $prod_obj = new Product((int)$product['product_id'],false,(int) $order->id_lang);
 
             //try to get the first image for the purchased combination
             $img = $prod_obj->getCombinationImages($order->id_lang);
