@@ -69,15 +69,15 @@ trait NormalizeFieldTrait
      */
     private function shouldCastToInt($columnName, $columnValue)
     {
-        return (
-            false !== strpos($columnName, '_id') ||
+        $isConcernedColumn = false !== strpos($columnName, '_id') ||
             false !== strpos($columnName, 'id_') ||
             false !== strpos($columnName, '_quantity') ||
             false !== strpos($columnName, 'sign') ||
             false !== strpos($columnName, 'active') ||
             false !== strpos($columnName, 'total_') ||
             false !== strpos($columnName, 'product_low_stock_threshold') ||
-            false !== strpos($columnName, 'low_stock_alert')
-        ) && !is_null($columnValue) && 'N/A' !== $columnValue;
+            false !== strpos($columnName, 'low_stock_alert');
+
+        return $isConcernedColumn && !is_null($columnValue) && 'N/A' !== $columnValue;
     }
 }
