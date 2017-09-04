@@ -35,9 +35,7 @@
 <script>
   export default {
     props: {
-      value: {
-        type: Number,
-      },
+      value: 0,
       danger: false,
     },
     methods: {

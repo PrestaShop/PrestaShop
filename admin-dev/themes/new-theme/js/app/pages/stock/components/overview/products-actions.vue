@@ -46,6 +46,7 @@
           @focus="focusIn"
           @blur="focusOut"
           @change="onChange"
+          @keyup="onKeyUp"
         />
       </div>
     </div>
@@ -100,7 +101,6 @@
         }
         if (value === 1 && this.$refs['bulk-action']) {
           this.isFocused = true;
-          this.$store.dispatch('updateBulkEditQty', 0);
         }
       },
     },
@@ -129,6 +129,10 @@
       },
       onChange(value) {
         this.$store.dispatch('updateBulkEditQty', value);
+      },
+      onKeyUp(event) {
+        this.isFocused = true;
+        this.$store.dispatch('updateBulkEditQty', event.target.value);
       },
     },
     data: () => ({

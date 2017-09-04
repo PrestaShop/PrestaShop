@@ -115,7 +115,8 @@
       border-radius: 0;
     }
     .alert-box {
-      padding-top: 68px;
+      padding-top: 28px;
+      z-index: -1;
     }
     .search-form {
       width: calc(100% - 130px);
