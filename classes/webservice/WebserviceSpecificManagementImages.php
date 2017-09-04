@@ -310,10 +310,14 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         break;
                     case 'product_option_values':
 <<<<<<< HEAD
+<<<<<<< HEAD
                         $directory = _PS_COL_IMG_DIR_;
 =======
                     	$directory = _PS_COL_IMG_DIR_;
 >>>>>>> ec9f77d8e8... WS: Allow product_option_values image
+=======
+                        $directory = _PS_COL_IMG_DIR_;
+>>>>>>> 9ee00caf5c... Fixed Issues
                         break;
                 }
                 return $this->manageDeclinatedImages($directory);
@@ -636,17 +640,25 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     {
         // Get available image sizes for the current image type
 <<<<<<< HEAD
+<<<<<<< HEAD
         if ($this->imageType=='product_option_values') {      	
             $normal_image_sizes = array();
         } else {
             $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
 =======
         if($this->imageType=='product_option_values')
+=======
+        if ($this->imageType=='product_option_values')
+>>>>>>> 9ee00caf5c... Fixed Issues
         {      	
-        	$normal_image_sizes = array();
+            $normal_image_sizes = array();
         } else {
+<<<<<<< HEAD
         	$normal_image_sizes = ImageType::getImagesTypes($this->imageType);
 >>>>>>> ec9f77d8e8... WS: Allow product_option_values image
+=======
+            $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
+>>>>>>> 9ee00caf5c... Fixed Issues
         }
         
         switch ($this->wsObject->urlSegment[2]) {
@@ -1139,13 +1151,19 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                             throw new WebserviceException('An error occurred while copying image', array(76, 400));
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         if ($this->imageType!='product_option_values') {
+=======
+                        if ($this->imageType!='product_option_values')
+                        {
+>>>>>>> 9ee00caf5c... Fixed Issues
                             $images_types = ImageType::getImagesTypes($this->imageType);                        
                             foreach ($images_types as $imageType) {
                                 if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
                                     $this->_errors[] = Context::getContext()->getTranslator()->trans('An error occurred while copying this image: %s', array(stripslashes($imageType['name'])), 'Admin.Notifications.Error');
                                 }
                             }
+<<<<<<< HEAD
 =======
                         if($this->imageType!='product_option_values')
         				{
@@ -1156,6 +1174,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                             	}
                         	}
 >>>>>>> ec9f77d8e8... WS: Allow product_option_values image
+=======
+>>>>>>> 9ee00caf5c... Fixed Issues
                         }
                         @unlink(_PS_TMP_IMG_DIR_.$tmp_name);
                         $this->imgToDisplay = $reception_path;
