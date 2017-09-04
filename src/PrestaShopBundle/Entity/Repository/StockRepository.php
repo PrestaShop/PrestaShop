@@ -265,6 +265,7 @@ class StockRepository extends StockManagementRepository
             sa.quantity as product_available_quantity,
             sa.physical_quantity as product_physical_quantity,
             sa.reserved_quantity as product_reserved_quantity,
+            ps.low_stock_threshold as product_low_stock_threshold,
             COALESCE(product_attributes.attributes, "") AS product_attributes,
             COALESCE(product_features.features, "") AS product_features
             FROM {table_prefix}product p

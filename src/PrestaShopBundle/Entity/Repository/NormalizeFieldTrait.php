@@ -73,6 +73,7 @@ trait NormalizeFieldTrait
         false !== strpos($columnName, '_quantity') ||
         false !== strpos($columnName, 'sign') ||
         false !== strpos($columnName, 'active') ||
-        false !== strpos($columnName, 'total_');
+        false !== strpos($columnName, 'total_') ||
+        false !== strpos($columnName, 'low_stock_threshold');
     }
 }
