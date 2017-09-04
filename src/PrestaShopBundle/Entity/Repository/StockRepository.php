@@ -311,8 +311,16 @@ class StockRepository extends StockManagementRepository
             sa.quantity AS product_available_quantity,
             sa.physical_quantity AS product_physical_quantity,
             sa.reserved_quantity AS product_reserved_quantity,
-            COALESCE(ps.low_stock_threshold, "N/A") AS product_low_stock_threshold,
-            IF (sa.quantity < ps.low_stock_threshold, 1, 0) AS product_low_stock_alert,
+            IF (
+                COALESCE(pa.id_product_attribute, 0) > 0,
+                COALESCE(pas.low_stock_threshold, "N/A"),
+                COALESCE(ps.low_stock_threshold, "N/A")
+            ) AS product_low_stock_threshold,
+             IF (
+                COALESCE(pa.id_product_attribute, 0) > 0,
+                IF (sa.quantity < pas.low_stock_threshold, 1, 0),
+                IF (sa.quantity < ps.low_stock_threshold, 1, 0)
+             ) AS product_low_stock_alert,
             COALESCE(product_attributes.attributes, "") AS product_attributes,
             COALESCE(product_features.features, "") AS product_features
             FROM {table_prefix}product p

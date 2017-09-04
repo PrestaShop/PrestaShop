@@ -300,7 +300,7 @@ abstract class StockManagementRepository
             '{physical_quantity}' => 'product_physical_quantity',
             '{id_stock_mvt}' => 'id_stock_mvt',
             '{date_add}' => 'date_add',
-            '{low_stock_threshold}' => 'product_low_stock_threshold',
+            '{product_low_stock_alert}' => 'product_low_stock_alert',
         ));
     }
 
