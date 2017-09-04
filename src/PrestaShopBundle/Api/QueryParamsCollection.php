@@ -209,10 +209,20 @@ abstract class QueryParamsCollection
             $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
-        $queryParams['order'] = strtolower($queryParams['order']);
+        if (!is_array($queryParams['order'])) {
+            $queryParams['order'] = (array) $queryParams['order'];
+        }
 
-        $filterColumn = $this->removeDirection($queryParams['order']);
-        if (!in_array($filterColumn, $this->getValidOrderParams())) {
+        foreach ($queryParams['order'] as $key => &$order) {
+            $order = strtolower($order);
+            $filterColumn = $this->removeDirection($order);
+
+            if (!in_array($filterColumn, $this->getValidOrderParams())) {
+                unset($queryParams['order'][$key]);
+            }
+        }
+
+        if (empty($queryParams['order'])) {
             $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
@@ -245,16 +255,18 @@ abstract class QueryParamsCollection
      */
     public function getSqlOrder()
     {
-        $descendingOrder = false !== strpos($this->queryParams['order'], 'desc');
-        $filterColumn = $this->removeDirection($this->queryParams['order']);
+        foreach ($this->queryParams['order'] as $key => &$order) {
+            $descendingOrder = false !== strpos($order, 'desc');
+            $filterColumn = $this->removeDirection($order);
 
-        $orderByClause = 'ORDER BY {' . $filterColumn . '}';
+            $order = '{' . $filterColumn . '}';
 
-        if ($descendingOrder) {
-            $orderByClause = $orderByClause . ' DESC';
+            if ($descendingOrder) {
+                $order = $order . ' DESC';
+            }
         }
 
-        return $orderByClause . ' ';
+        return 'ORDER BY ' . implode(', ', $this->queryParams['order']) . ' ';
     }
 
     /**

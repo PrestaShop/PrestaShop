@@ -54,7 +54,9 @@ class QueryTranslationParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = 'unknown';
+        $queryParams['order'] = array(
+            0 => 'unknown'
+        );
 
         return $queryParams;
     }

@@ -56,6 +56,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'available_quantity',
             'physical_quantity',
             'active',
+            'low_stock_threshold'
         );
     }
 
@@ -65,7 +66,9 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = 'product';
+        $queryParams['order'] = array(
+            0 => 'product DESC'
+        );
 
         return $queryParams;
     }
