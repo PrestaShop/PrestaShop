@@ -83,6 +83,7 @@ class ProductSeo extends CommonAbstractType
             'label_attr' => [
                 'popover' => $this->translator->trans('Public title for the product\'s page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', [], 'Admin.Catalog.Help'),
                 'popover_placement' => 'right',
+                'class' => 'px-0',
             ],
             'required' => false
         ))
@@ -102,6 +103,7 @@ class ProductSeo extends CommonAbstractType
             'label_attr' => [
                 'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
                 'popover_placement' => 'right',
+                'class' => 'px-0',
             ],
             'required' => false
         ))
