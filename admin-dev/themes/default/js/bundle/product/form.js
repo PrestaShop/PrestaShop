@@ -1136,7 +1136,6 @@ var form = (function() {
         $('#attribute-generator-' + e.attrs.value).remove();
       });
     });
-    imagesProduct.initExpander();
     },
       'send': function(redirect, target, callBack) {
       send(redirect, target, callBack);
@@ -1601,6 +1600,7 @@ var imagesProduct = (function() {
           });
 
           dropZoneElem.disableSelection();
+          imagesProduct.initExpander();
         }
       };
 
