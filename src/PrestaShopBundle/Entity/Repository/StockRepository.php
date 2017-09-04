@@ -236,6 +236,7 @@ class StockRepository extends StockManagementRepository
             unset($line['product_thumbnail']);
             unset($line['combination_thumbnail']);
             unset($line['combinations_product_url']);
+            unset($line['product_low_stock_alert']);
             unset($line['edit_url']);
 
             $formatedData[] = $line;
@@ -282,17 +283,17 @@ class StockRepository extends StockManagementRepository
               COALESCE(pa.id_product_attribute, 0) = 0,
               "N/A",
               total_combinations
-            ) as total_combinations,
+            ) AS total_combinations,
             IF (
               COALESCE(p.reference, "") = "",
               "N/A",
               p.reference
-            ) as product_reference,
+            ) AS product_reference,
             IF (
               COALESCE(pa.reference, "") = "",
               "N/A",
               pa.reference
-            ) as combination_reference,
+            ) AS combination_reference,
             pl.name AS product_name,
             IF (
                 COALESCE(pa.id_product_attribute, 0) > 0,
@@ -305,12 +306,13 @@ class StockRepository extends StockManagementRepository
             p.id_supplier AS supplier_id,
             COALESCE(s.name, "N/A") AS supplier_name,
             COALESCE(ic.id_image, 0) AS product_cover_id,
-            COALESCE(i.id_image, 0) as combination_cover_id,
+            COALESCE(i.id_image, 0) AS combination_cover_id,
             p.active,
-            sa.quantity as product_available_quantity,
-            sa.physical_quantity as product_physical_quantity,
-            sa.reserved_quantity as product_reserved_quantity,
-            ps.low_stock_threshold as product_low_stock_threshold,
+            sa.quantity AS product_available_quantity,
+            sa.physical_quantity AS product_physical_quantity,
+            sa.reserved_quantity AS product_reserved_quantity,
+            COALESCE(ps.low_stock_threshold, "N/A") AS product_low_stock_threshold,
+            IF (sa.quantity < ps.low_stock_threshold, 1, 0) AS product_low_stock_alert,
             COALESCE(product_attributes.attributes, "") AS product_attributes,
             COALESCE(product_features.features, "") AS product_features
             FROM {table_prefix}product p
@@ -345,7 +347,7 @@ class StockRepository extends StockManagementRepository
                     ",",
                     1
                 ) image_ids,
-                pai.id_product_attribute as combination_id
+                pai.id_product_attribute AS combination_id
                 FROM {table_prefix}product_attribute_image pai
                 GROUP BY pai.id_product_attribute
             ) images_per_combination ON (

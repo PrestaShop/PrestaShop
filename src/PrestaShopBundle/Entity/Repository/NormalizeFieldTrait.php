@@ -35,7 +35,7 @@ trait NormalizeFieldTrait
     protected function castNumericToInt($rows)
     {
         $castIdentifiersToIntegers = function (&$columnValue, $columnName) {
-            if ($this->shouldCastToInt($columnName)) {
+            if ($this->shouldCastToInt($columnName, $columnValue)) {
                 $columnValue = (int)$columnValue;
             }
         };
@@ -52,7 +52,7 @@ trait NormalizeFieldTrait
     protected function castIdsToArray($rows)
     {
         $castIdentifiersToArray = function (&$columnValue, $columnName) {
-            if ($this->shouldCastToInt($columnName)) {
+            if ($this->shouldCastToInt($columnName, $columnValue)) {
                 $columnValue = array_map('intval', explode(',', $columnValue));
             }
         };
@@ -64,16 +64,20 @@ trait NormalizeFieldTrait
 
     /**
      * @param $columnName
+     * @param $columnValue
      * @return bool
      */
-    private function shouldCastToInt($columnName)
+    private function shouldCastToInt($columnName, $columnValue)
     {
-        return false !== strpos($columnName, '_id') ||
-        false !== strpos($columnName, 'id_') ||
-        false !== strpos($columnName, '_quantity') ||
-        false !== strpos($columnName, 'sign') ||
-        false !== strpos($columnName, 'active') ||
-        false !== strpos($columnName, 'total_') ||
-        false !== strpos($columnName, 'low_stock_threshold');
+        return (
+            false !== strpos($columnName, '_id') ||
+            false !== strpos($columnName, 'id_') ||
+            false !== strpos($columnName, '_quantity') ||
+            false !== strpos($columnName, 'sign') ||
+            false !== strpos($columnName, 'active') ||
+            false !== strpos($columnName, 'total_') ||
+            false !== strpos($columnName, 'product_low_stock_threshold') ||
+            false !== strpos($columnName, 'low_stock_alert')
+        ) && !is_null($columnValue) && 'N/A' !== $columnValue;
     }
 }
