@@ -641,6 +641,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         // Get available image sizes for the current image type
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         if ($this->imageType=='product_option_values') {      	
             $normal_image_sizes = array();
         } else {
@@ -651,6 +652,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         if ($this->imageType=='product_option_values')
 >>>>>>> 9ee00caf5c... Fixed Issues
         {      	
+=======
+        if ($this->imageType=='product_option_values') {      	
+>>>>>>> c7362e7ef4... Fixed format issues.
             $normal_image_sizes = array();
         } else {
 <<<<<<< HEAD
@@ -1152,11 +1156,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         if ($this->imageType!='product_option_values') {
 =======
                         if ($this->imageType!='product_option_values')
                         {
 >>>>>>> 9ee00caf5c... Fixed Issues
+=======
+                        if ($this->imageType!='product_option_values') {
+>>>>>>> c7362e7ef4... Fixed format issues.
                             $images_types = ImageType::getImagesTypes($this->imageType);                        
                             foreach ($images_types as $imageType) {
                                 if (!ImageManager::resize($tmp_name, $parent_path.$this->wsObject->urlSegment[2].'-'.stripslashes($imageType['name']).'.jpg', $imageType['width'], $imageType['height'])) {
