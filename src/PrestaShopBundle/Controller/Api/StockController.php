@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Api;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\StockRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
@@ -131,7 +132,7 @@ class StockController extends ApiController
 
     /**
      * @param Request $request
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\StreamedResponse
+     * @return CsvResponse|JsonResponse
      */
     public function listProductsExportAction(Request $request)
     {
@@ -141,12 +142,9 @@ class StockController extends ApiController
             return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
         }
 
-        $data = $this->stockRepository->getDataExport($queryParamsCollection);
-
-        return $this->csvResponse(
-            $data,
-            'stock_' . date('Y-m-d_His') . '.csv'
-        );
+        return (new CsvResponse())
+            ->setData($this->stockRepository->getDataExport($queryParamsCollection))
+            ->setFileName('stock_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
