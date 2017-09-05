@@ -25,12 +25,14 @@
 <div class="module-top-menu">
     <div class="row">
         <div class="col-md-8">
-            <div class="input-group module-search-block">
-                <input id="module-search-bar" class="module-search-bar form-control" type="text">
-                <button class="btn btn-primary float-right search-button">
-                    <i class="material-icons">search</i>
-                    {{ 'Search'|trans({}, 'Admin.Actions') }}
-                </button>
+            <div class="input-group">
+                <input type="text" id="module-search-bar" class="form-control">
+                <div class="input-group-btn">
+                    <button class="btn btn-primary float-right search-button">
+                        <i class="material-icons">search</i>
+                        {{ 'Search'|trans({}, 'Admin.Actions') }}
+                    </button>
+                </div>
             </div>
         </div>
 

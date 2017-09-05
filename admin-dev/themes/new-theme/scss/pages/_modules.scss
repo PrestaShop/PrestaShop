@@ -279,7 +279,6 @@
 }
 .module-search-block {
   background: white;
-  border: 1px solid #C7D6DB;
   width: 100%;
   .search-button {
     border-radius: 0;
@@ -322,43 +321,6 @@
 }
 .module-sort-switch {
   color: #C7D6DB;
-}
-.module-tag.pstaggerTag {
-  border-radius: 0;
-  height: auto;
-  span {
-    font-size: .8rem;
-    font-weight: lighter;
-    letter-spacing: 1px;
-  }
-  .pstaggerClosingCross  {
-    font-size: 0px;
-    &:before {
-      content: "\E5CD";
-      font-family: 'Material Icons';
-      font-size: 1rem;
-      vertical-align: top;
-    }
-  }
-}
-.module-tags-input {
-  border: 0;
-  height: 30px;
-  width: 100%;
-}
-.module-tags-labels {
-  border: 0;
-}
-.module-tags-clear-btn {
-  display: none;
-  margin-right: 10px;
-  margin-top: 10px;
-  position: absolute;
-  color: #2eacce;
-  font-size: 20px;
-  cursor: pointer;
-  top: 0;
-  right: 0;
 }
 .module-search-result-wording {
   color: #1E2024 !important;
