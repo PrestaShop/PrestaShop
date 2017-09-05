@@ -4350,8 +4350,8 @@ class AdminImportControllerCore extends AdminController
                     !$regenerate
                 )) {
                     // TODO : insert translation placeholder here
-                    $this->warnings[] = $manufacturer->image . ' ' . $this->trans('cannot be copied.',
-                        array(),
+                    $this->warnings[] = $this->trans('%image% cannot be copied.',
+                        array('%image%' => $manufacturer->image),
                         'Admin.Advparameters.Notification'
                     );
                 }
