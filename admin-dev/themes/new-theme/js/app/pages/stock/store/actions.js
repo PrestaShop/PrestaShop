@@ -41,6 +41,7 @@ export const getStock = ({ commit }, payload) => {
       supplier_id: payload.suppliers ? payload.suppliers : [],
       category_id: payload.categories ? payload.categories : [],
       active: payload.active !== 'null' ? payload.active : [],
+      low_stock: payload.low_stock,
     },
   }).then((response) => {
     commit(types.LOADING_STATE, false);

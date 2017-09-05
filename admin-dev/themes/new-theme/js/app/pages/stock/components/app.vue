@@ -26,6 +26,7 @@
   <div v-if="isReady" id="app" class="stock-app">
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
+    <LowFilter @lowStockChecked="onLowStockChecked" />
     <div class="card pa-2">
       <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
     </div>
@@ -40,6 +41,7 @@
 <script>
   import StockHeader from './header/stock-header';
   import Search from './header/search';
+  import LowFilter from './header/filters/low-filter';
   import PSPagination from 'app/widgets/ps-pagination';
 
   export default {
@@ -87,11 +89,19 @@
       resetFilters() {
         this.filters = {};
       },
+      onLowStockChecked(isChecked) {
+        console.log(isChecked)
+        Object.assign(this.filters, {
+          low_stock: isChecked,
+        });
+        this.fetch();
+      },
     },
     components: {
       StockHeader,
       Search,
       PSPagination,
+      LowFilter,
     },
     data: () => ({
       filters: {},
@@ -109,6 +119,7 @@
     padding-top: 3em;
   }
   .table tr td {
+    border: none;
     padding: 5px 5px 5px;
     vertical-align: top;
     &:not(.qty-spinner) {

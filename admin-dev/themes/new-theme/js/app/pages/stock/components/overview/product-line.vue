@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <tr>
+  <tr :class="{'low-stock':lowStock}">
     <td class="flex p-r-1">
       <PSCheckbox
         :id="`product-${product.combination_id}`"
@@ -49,28 +49,29 @@
     <td>
       {{ product.supplier_name }}
     </td>
-    <td v-if="product.active" class="text-xs-center">
+    <td v-if="product.active" class="text-sm-center">
       <i class="material-icons enable">check</i>
     </td>
-    <td v-else class="text-xs-center">
+    <td v-else class="text-sm-center">
       <i class="material-icons disable">close</i>
     </td>
-    <td class="text-xs-center">
+    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ physical }}
-      <span class="qty-update" v-if="updatedQty">
+      <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>
         {{physicalQtyUpdated}}
       </span>
     </td>
-    <td class="text-xs-center">
+    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-xs-center">
+    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_available_quantity }}
-      <span class="qty-update" v-if="updatedQty">
+      <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
+      <span v-if="lowStock" class="stock-warning ico ml-4">!</span>
     </td>
     <td class="qty-spinner">
       <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />
@@ -109,6 +110,9 @@
         const productAvailableQty = Number(this.product.product_available_quantity);
         const productReservedQty = Number(this.product.product_reserved_quantity);
         return productAvailableQty + productReservedQty;
+      },
+      lowStock() {
+        return this.product.product_low_stock_alert;
       },
     },
     methods: {
@@ -169,5 +173,17 @@
   }
   .disable {
     color: $danger;
+  }
+  .low-stock {
+    background: $danger-hover;
+    .stock-warning {
+      color: $danger;
+      font-weight: bold;
+      &.ico {
+        border: 1px solid $danger;
+        background: lighten($danger, 30%);
+        padding: 0 5px;
+      }
+    }
   }
 </style>

@@ -51,6 +51,7 @@
     width: 15px;
     height: 15px;
     position: relative;
+    background: white;
     label {
       width: 15px;
       height: 15px;

@@ -24,7 +24,7 @@
  *-->
 <template>
   <form
-    class="qty text-xs-right"
+    class="qty text-sm-right"
     :class="classObject"
     @mouseover="focusIn"
     @mouseleave="focusOut($event)"
