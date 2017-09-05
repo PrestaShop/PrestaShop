@@ -201,11 +201,14 @@ class StockRepository extends StockManagementRepository
 
     /**
      * Specific function to export data
+     *
      * @param QueryParamsCollection $queryParams
      * @return array
      */
     public function getDataExport(QueryParamsCollection $queryParams)
     {
+        $translator = $this->container->get('translator');
+
         $data = $this->getData($queryParams, true);
 
         $formatedData = array(
@@ -213,16 +216,16 @@ class StockRepository extends StockManagementRepository
                 // headers columns
                 'product_id' => 'Product ID',
                 'combination_id' => 'Combination ID',
-                'product_reference' => 'Product reference',
-                'combination_reference' => 'Combination reference',
-                'product_name' => 'Product name',
-                'combination_name' => 'Combination name',
-                'supplier_name' => 'Supplier name',
-                'active' => 'Active',
-                'product_physical_quantity' => 'Physical quantity',
-                'product_reserved_quantity' => 'Reserved quantity',
-                'product_available_quantity' => 'Available quantity',
-                'product_low_stock_threshold' => 'Low stock quantity',
+                'product_reference' => $translator->trans('Product reference', array(), 'Admin.Advparameters.Feature'),
+                'combination_reference' => $translator->trans('Combination reference', array(), 'Admin.Advparameters.Feature'),
+                'product_name' => $translator->trans('Product name', array(), 'Admin.Catalog.Feature'),
+                'combination_name' => $translator->trans('Combination name', array(), 'Admin.Catalog.Feature'),
+                'supplier_name' => $translator->trans('Supplier', array(), 'Admin.Global'),
+                'active' => $translator->trans('Status', array(), 'Admin.Catalog.Feature'),
+                'product_physical_quantity' => $translator->trans('Physical quantity', array(), 'Admin.Catalog.Feature'),
+                'product_reserved_quantity' => $translator->trans('Reserved quantity', array(), 'Admin.Catalog.Feature'),
+                'product_available_quantity' => $translator->trans('Available quantity', array(), 'Admin.Catalog.Feature'),
+                'product_low_stock_threshold' => $translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
             )
         );
 
