@@ -37,10 +37,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
         $queryParams = parent::parseOrderParams($queryParams);
 
         if (array_key_exists('low_stock', $queryParams) && 1 == $queryParams['low_stock']) {
-            $queryParams['order'] = array_merge(
-                array(0 => 'product_low_stock_alert desc'),
-                $queryParams['order']
-            );
+            array_unshift($queryParams['order'], 'product_low_stock_alert desc');
         }
 
         return $queryParams;
@@ -84,9 +81,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = array(
-            0 => 'product DESC'
-        );
+        $queryParams['order'] = array('product DESC');
 
         return $queryParams;
     }

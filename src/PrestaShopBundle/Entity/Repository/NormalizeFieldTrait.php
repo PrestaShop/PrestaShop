@@ -70,15 +70,10 @@ trait NormalizeFieldTrait
      */
     private function shouldCastToInt($columnName, $columnValue)
     {
-        $isConcernedColumn = false !== strpos($columnName, '_id') ||
-            false !== strpos($columnName, 'id_') ||
-            false !== strpos($columnName, '_quantity') ||
-            false !== strpos($columnName, 'sign') ||
-            false !== strpos($columnName, 'active') ||
-            false !== strpos($columnName, 'total_') ||
-            false !== strpos($columnName, 'product_low_stock_threshold') ||
-            false !== strpos($columnName, 'low_stock_alert');
+        if (null === $columnValue || 'N/A' === $columnValue) {
+            return false;
+        }
 
-        return $isConcernedColumn && !is_null($columnValue) && 'N/A' !== $columnValue;
+        return preg_match('/_id|id_|_quantity|sign|active|total_|low_stock_/', $columnName);
     }
 }

@@ -255,18 +255,22 @@ abstract class QueryParamsCollection
      */
     public function getSqlOrder()
     {
-        foreach ($this->queryParams['order'] as &$order) {
+        $implodableOrder = array();
+
+        foreach ($this->queryParams['order'] as $order) {
             $descendingOrder = false !== strpos($order, 'desc');
             $filterColumn = $this->removeDirection($order);
 
-            $order = '{' . $filterColumn . '}';
+            $orderFiltered = '{' . $filterColumn . '}';
 
             if ($descendingOrder) {
-                $order = $order . ' DESC';
+                $orderFiltered = $orderFiltered . ' DESC';
             }
+
+            $implodableOrder[] = $orderFiltered;
         }
 
-        return 'ORDER BY ' . implode(', ', $this->queryParams['order']) . ' ';
+        return 'ORDER BY ' . implode(', ', $implodableOrder) . ' ';
     }
 
     /**

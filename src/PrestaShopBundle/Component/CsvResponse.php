@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Component;
 
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvResponse extends StreamedResponse
@@ -55,9 +56,8 @@ class CsvResponse extends StreamedResponse
             $this->setCallback(array($this, 'processData'));
         }
 
-        $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
-
         $this->setFileName('export.csv');
+        $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
     }
 
     /**
@@ -79,7 +79,11 @@ class CsvResponse extends StreamedResponse
     {
         $this->fileName = $fileName;
 
-        $this->headers->set('Content-Disposition', 'attachment; filename="'.$this->fileName.'"');
+        $disposition = $this->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $this->fileName
+        );
+        $this->headers->set('Content-Disposition', $disposition);
 
         return $this;
     }

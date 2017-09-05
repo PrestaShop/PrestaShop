@@ -42,7 +42,7 @@ class StockApi extends AbstractApi
             'filter_categories' => $this->translator->trans('Filter by categories', array(), 'Admin.Actions'),
             'filter_datepicker_from' => $this->translator->trans('From', array(), 'Admin.Global'),
             'filter_datepicker_to' => $this->translator->trans('To', array(), 'Admin.Global'),
-            'filter_low_stock' => $this->translator->trans('Display products under low stock level first', array(), 'Admin.Catalog.Feature'),
+            'filter_low_stock' => $this->translator->trans('Display products below low level first', array(), 'Admin.Catalog.Feature'),
             'filter_movements_type' => $this->translator->trans('Filter by movement type', array(), 'Admin.Catalog.Feature'),
             'filter_movements_employee'=> $this->translator->trans('Filter by employee', array(), 'Admin.Catalog.Feature'),
             'filter_movements_period' => $this->translator->trans('Filter by period', array(), 'Admin.Catalog.Feature'),

@@ -65,9 +65,7 @@ class QueryStockMovementParamsCollection  extends QueryStockParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = array(
-            0 => 'id_stock_mvt DESC'
-        );
+        $queryParams['order'] = array('id_stock_mvt DESC');
 
         return $queryParams;
     }
