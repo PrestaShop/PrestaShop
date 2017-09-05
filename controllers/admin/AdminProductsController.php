@@ -1656,6 +1656,9 @@ class AdminProductsControllerCore extends AdminController
         if ($this->tabAccess['edit'] === '0') {
             return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
         }
+
+        $res = true;
+
         Image::deleteCover((int)Tools::getValue('id_product'));
         $img = new Image((int)Tools::getValue('id_image'));
         $img->cover = 1;
@@ -1663,7 +1666,21 @@ class AdminProductsControllerCore extends AdminController
         @unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$img->id_product.'.jpg');
         @unlink(_PS_TMP_IMG_DIR_.'product_mini_'.(int)$img->id_product.'_'.$this->context->shop->id.'.jpg');
 
-        if ($img->update()) {
+        $res &= Db::getInstance()->execute('
+                UPDATE `' . _DB_PREFIX_ . 'image`
+                SET `cover` = 1
+                WHERE `id_product` = ' . (int)Tools::getValue('id_product') . ' AND id_image = ' . (int)Tools::getValue('id_image') . ';'
+        );
+        $res &= Db::getInstance()->execute('
+                UPDATE `' . _DB_PREFIX_ . 'image_shop` image_shop
+                SET image_shop.`cover` = 1
+                WHERE image_shop.id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID())) . ') AND image_shop.`id_product` = ' . (int)Tools::getValue('id_product') . ' AND id_image = ' . (int)Tools::getValue('id_image') . ';'
+        );
+
+        $res &= $img->update();
+
+
+        if ($res) {
             $this->jsonConfirmation($this->_conf[26]);
         } else {
             $this->jsonError(Tools::displayError('An error occurred while attempting to update the cover picture.'));
