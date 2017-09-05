@@ -201,24 +201,24 @@ class Builder
 
     protected function validateProperties()
     {
-        if (is_null($this->getDecimalDigits())) {
-            throw new Exception('Decimal digits number must be set');
-        }
-
         if (is_null($this->getIsoCode())) {
             throw new Exception('Alphabetic ISO code must be set');
         }
 
+        if (is_null($this->getDecimalDigits())) {
+            throw new Exception('Decimal digits number must be set (' . $this->getIsoCode() . ')');
+        }
+
         if (is_null($this->getDisplayName())) {
-            throw new Exception('Display names must be set');
+            throw new Exception('Display names must be set (' . $this->getIsoCode() . ')');
         }
 
         if (is_null($this->getSymbols())) {
-            throw new Exception('Symbols must be set');
+            throw new Exception('Symbols must be set (' . $this->getIsoCode() . ')');
         }
 
         if (is_null($this->getNumericIsoCode())) {
-            throw new Exception('Numeric ISO code must be set');
+            throw new Exception('Numeric ISO code must be set (' . $this->getIsoCode() . ')');
         }
     }
 }
