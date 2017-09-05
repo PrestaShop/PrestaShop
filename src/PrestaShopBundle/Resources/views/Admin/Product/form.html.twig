@@ -1136,22 +1136,21 @@
           title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
           />
 
-          <div class="btn-group hide dropdown float-right">
-            <div class="js-spinner spinner hide btn-primary-reverse onclick float-left mr-1"></div>
+          <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
+          <div class="btn-group hide dropdown">
             <button
              class="btn btn-primary js-btn-save"
              type="submit"
              >
               <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
-            </button>
-            <button
-              class="btn btn-primary dropdown-toggle"
+            </button><button
+              class="btn btn-primary dropdown-toggle dropdown-toggle-split"
               type="button"
               id="dropdownMenu"
               data-toggle="dropdown"
               aria-expanded="false"
             >
-
+              <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
               {% if is_shop_context %}

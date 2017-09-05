@@ -1045,7 +1045,7 @@ var form = (function() {
 
       $('.js-btn-save').on('click', function (event) {
         event.preventDefault();
-        $('.js-spinner').show();
+        $('.js-spinner').css('display', 'inline-block');
         send($(this).attr('href'));
       });
 
