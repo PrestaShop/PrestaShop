@@ -426,7 +426,7 @@ class SpecificPriceCore extends ObjectModel
      * @param int $id_customer
      * @param int $id_cart
      * @param int $real_quantity
-     * @param int $idZone
+     * @param int $id_zone
      *
      * @return string
      */
@@ -441,7 +441,7 @@ class SpecificPriceCore extends ObjectModel
         $id_customer,
         $id_cart,
         $real_quantity,
-        $idZone
+        $id_zone
     )
     {
         if (self::$_no_specific_values !== null) {
@@ -454,7 +454,7 @@ class SpecificPriceCore extends ObjectModel
                 ${$variableName} = 0;
             }
         }
-        return ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$idZone.'-'.(int)$id_country.'-'.
+        return ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_zone.'-'.(int)$id_country.'-'.
             (int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.
             (int)$id_customer.'-'.(int)$real_quantity);
     }
