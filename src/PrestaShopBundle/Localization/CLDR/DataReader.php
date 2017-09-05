@@ -31,8 +31,19 @@ use SimplexmlElement;
 
 class DataReader implements DataReaderInterface
 {
-    const CLDR_ROOT = 'localization/CLDR/';
-    const CLDR_MAIN = 'localization/CLDR/core/common/main/';
+    const CLDR_ROOT         = 'localization/CLDR/';
+    const CLDR_MAIN         = 'localization/CLDR/core/common/main/';
+    const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
+
+    const SUPPL_DATA_CURRENCY       = 'currencyData';
+    const SUPPL_DATA_ISO_CODES      = 'codeMappings'; // for numeric currency ISO codes
+    const SUPPL_DATA_LANGUAGE       = 'languageData';
+    const SUPPL_DATA_NUMBERING      = 'numberingSystems';
+    const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
+
+    const DEFAULT_CURRENCY_DIGITS = 2;
+
+    protected $supplementalData = array(); // Let's save some disk accesses...
 
     /**
      * Get locale data by code (either language code or EITF locale tag)
@@ -154,6 +165,61 @@ class DataReader implements DataReaderInterface
     protected function mainPath($filename = '')
     {
         $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_MAIN . ($filename ? $filename : ''));
+        if (false === $path) {
+            throw new InvalidArgumentException("The file $filename does not exist");
+        }
+
+        return $path;
+    }
+
+    /**
+     * Get supplemental data from CLDR "supplemental" data files
+     *
+     * @param string $dataType Type of needed data
+     *
+     * @return SimpleXMLElement The supplemental CLDR data
+     */
+    protected function readSupplementalData($dataType)
+    {
+        $filename = $this->getSupplementalDataFilePath($dataType);
+
+        if (!isset($this->supplementalData[$filename])) {
+            $this->supplementalData[$filename] = simplexml_load_file($filename);
+        }
+
+        return $this->supplementalData[$filename]->$dataType;
+    }
+
+    /**
+     * Get path of the CLDR file containing $dataType data
+     *
+     * @param string $dataType Type of the needed data
+     *
+     * @return string Path to the appropriate CLDR supplemental data.
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getSupplementalDataFilePath($dataType)
+    {
+        switch ($dataType) {
+            case self::SUPPL_DATA_CURRENCY:
+            case self::SUPPL_DATA_ISO_CODES:
+            case self::SUPPL_DATA_LANGUAGE:
+            case self::SUPPL_DATA_PARENT_LOCALES:
+                $filename = 'supplementalData.xml';
+                break;
+
+            case self::SUPPL_DATA_NUMBERING:
+                $filename = 'numberingSystems.xml';
+                break;
+
+            default:
+                throw new InvalidArgumentException('Unknown supplemental data type : ' . $dataType);
+                break;
+        }
+
+        $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_SUPPLEMENTAL . $filename);
+
         if (false === $path) {
             throw new InvalidArgumentException("The file $filename does not exist");
         }
@@ -337,24 +403,37 @@ class DataReader implements DataReaderInterface
             return array();
         }
 
-        return $this->mapCurrencyData($currencyData[0]);
+        $supplementalXmlData = $this->readSupplementalData(self::SUPPL_DATA_CURRENCY);
+        $supplementalData    = $this->extractCurrencySupplementalData(
+            $supplementalXmlData,
+            $currencyCode
+        );
+
+        return $this->mapCurrencyData($currencyData[0], $supplementalData);
     }
 
     /**
      * Maps currency data from SimplexmlElement to a multidimensional array
      *
-     * @param SimplexmlElement $xmlCurrencyData XML currency data
+     * @param SimplexmlElement $xmlCurrencyData  XML currency data
+     * @param array            $supplementalData Supplemental currency data
      *
      * @return array The mapped data
      */
-    protected function mapCurrencyData(SimplexmlElement $xmlCurrencyData)
+    protected function mapCurrencyData(SimplexmlElement $xmlCurrencyData, $supplementalData)
     {
         // ISO 4217 currency code is carried by "type" attribute of <currency> tag
         // It also actually identifies the tag among others
-        $currencyArray = array(
-            'isoCode' => (string)$xmlCurrencyData['type'],
-            'numericIsoCode' => '', // TODO : use supplementalData.xml
-            'decimalDigits' => 2, // TODO : use supplementalData.xml (only 66 currencies are different)
+        $numericIsoCode = isset($supplementalData['numericIsoCode'])
+            ? (int)$supplementalData['numericIsoCode']
+            : null;
+        $decimalDigits  = isset($supplementalData['decimalDigits'])
+            ? (int)$supplementalData['decimalDigits']
+            : self::DEFAULT_CURRENCY_DIGITS;
+        $currencyArray  = array(
+            'isoCode'        => (string)$xmlCurrencyData['type'],
+            'numericIsoCode' => $numericIsoCode,
+            'decimalDigits'  => $decimalDigits,
         );
 
         // Display names (depending on count)
@@ -381,5 +460,50 @@ class DataReader implements DataReaderInterface
         }
 
         return ($currencyArray);
+    }
+
+    /**
+     * Extract currency supplemental data from passed XML
+     *
+     * Returned supplemental data is an indexed array.
+     * Example :
+     * [
+     *     'numericIsoCode' => 123,
+     *     'decimalDigits'  => 2,
+     * ]
+     *
+     * @param SimplexmlElement $supplementalXmlData XML to be searched for supplemental data
+     * @param string           $currencyCode        The target currency
+     *
+     * @return array The supplemental data
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function extractCurrencySupplementalData(SimplexmlElement $supplementalXmlData, $currencyCode)
+    {
+        $numericIsoCode = null;
+        $decimalDigits  = self::DEFAULT_CURRENCY_DIGITS;
+
+        $codesMapping = $supplementalXmlData->supplementalData->xpath(
+            '//codeMappings/currencyCodes[@type="' . $currencyCode . '"]'
+        );
+
+        if (!empty($codesMapping)) {
+            /** @var SimplexmlElement $codesMapping */
+            $codesMapping   = $codesMapping[0];
+            $numericIsoCode = (int)(string)$codesMapping->attributes()->numeric;
+        }
+
+        $fractionsData = $supplementalXmlData->supplementalData->xpath(
+            '//currencyData/fractions/info[@iso4217="' . $currencyCode . '"]'
+        );
+
+        if (!empty($fractionsData)) {
+            /** @var SimplexmlElement $fractionsData */
+            $fractionsData = $fractionsData[0];
+            $decimalDigits = (int)(string)$fractionsData->attributes()->digits;
+        }
+
+        return compact('numericIsoCode', 'decimalDigits');
     }
 }

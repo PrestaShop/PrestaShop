@@ -133,139 +133,139 @@ class LocaleTest extends TestCase
 
     public function provideValidNumberFormats()
     {
-        return [
-            [
+        return array(
+            array(
                 'number'  => 1234560.1234,
-                'formats' => [
+                'formats' => array(
                     'ar-IL' => '1,234,560.123', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '1,234,560.123', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.123',
                     'en-US' => '1,234,560.123',
                     'es-AR' => '1.234.560,123',
                     'fr-FR' => '1 234 560,123',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'  => 1234560.9876,
-                'formats' => [
+                'formats' => array(
                     'ar-IL' => '1,234,560.988', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '1,234,560.988', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.988',
                     'en-US' => '1,234,560.988',
                     'es-AR' => '1.234.560,988',
                     'fr-FR' => '1 234 560,988',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'  => 0.7,
-                'formats' => [
+                'formats' => array(
                     'ar-IL' => '0.7', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '0.7', // Needs to be changed when numbering system is configurable
                     'de-CH' => '0.7',
                     'en-US' => '0.7',
                     'es-AR' => '0,7',
                     'fr-FR' => '0,7',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'  => '0.7000',
-                'formats' => [
+                'formats' => array(
                     'ar-IL' => '0.7', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '0.7', // Needs to be changed when numbering system is configurable
                     'de-CH' => '0.7',
                     'en-US' => '0.7',
                     'es-AR' => '0,7',
                     'fr-FR' => '0,7',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'  => '1234560.78389',
-                'formats' => [
+                'formats' => array(
                     'ar-IL' => '1,234,560.784', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '1,234,560.784', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.784',
                     'en-US' => '1,234,560.784',
                     'es-AR' => '1.234.560,784',
                     'fr-FR' => '1 234 560,784',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'  => '1234560.7831111',
-                'formats' => [
+                'formats' => array(
                     'ar-IL' => '1,234,560.783', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '1,234,560.783', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.783',
                     'en-US' => '1,234,560.783',
                     'es-AR' => '1.234.560,783',
                     'fr-FR' => '1 234 560,783',
-                ],
-            ],
-        ];
+                ),
+            ),
+        );
     }
 
     public function provideValidCurrencyFormats()
     {
-        return [
-            [
+        return array(
+            array(
                 'number'   => 1234560.123,
                 'currency' => 'INR',
-                'formats'  => [
+                'formats'  => array(
                     'ar-IL' => '1,234,560.12 ₹', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '1,234,560.12 ₹', // Needs to be changed when numbering system is configurable
                     'de-CH' => '₹ 1’234’560.12',
                     'en-US' => '₹1,234,560.12',
                     'es-AR' => '₹ 1.234.560,12',
                     'fr-FR' => '1 234 560,12 ₹',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'   => 1234560.789,
                 'currency' => 'JPY',
-                'formats'  => [
-                    'ar-IL' => '1,234,560.79 ¥', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.79 ¥', // Needs to be changed when numbering system is configurable
-                    'de-CH' => '¥ 1’234’560.79',
-                    'en-US' => '¥1,234,560.79',
-                    'es-AR' => '¥ 1.234.560,79',
-                    'fr-FR' => '1 234 560,79 ¥',
-                ],
-            ],
-            [
+                'formats'  => array(
+                    'ar-IL' => '1,234,561 ¥', // Needs to be changed when numbering system is configurable
+//                    'bn-IN' => '1,234,561 ¥', // Needs to be changed when numbering system is configurable
+                    'de-CH' => '¥ 1’234’561',
+                    'en-US' => '¥1,234,561',
+                    'es-AR' => '¥ 1.234.561',
+                    'fr-FR' => '1 234 561 ¥',
+                ),
+            ),
+            array(
                 'number'   => '0.7000',
                 'currency' => 'GBP',
-                'formats'  => [
+                'formats'  => array(
                     'ar-IL' => '0.70 £', // Needs to be changed when numbering system is configurable
 //                    'bn-IN' => '0.70 £', // Needs to be changed when numbering system is configurable
                     'de-CH' => '£ 0.70',
                     'en-US' => '£0.70',
                     'es-AR' => '£ 0,70',
                     'fr-FR' => '0,70 £',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'   => '1234560.789898989898123',
                 'currency' => 'DEM',
-                'formats'  => [
+                'formats'  => array(
                     'ar-IL' => '1,234,560.79 DEM', // To be changed when numbering system is configurable
 //                    'bn-IN' => '1,234,560.79 DEM', // To be changed when numbering system is configurable
                     'de-CH' => 'DEM 1’234’560.79',
                     'en-US' => 'DEM1,234,560.79',
                     'es-AR' => 'DEM 1.234.560,79',
                     'fr-FR' => '1 234 560,79 DEM',
-                ],
-            ],
-            [
+                ),
+            ),
+            array(
                 'number'   => 1234560.789,
                 'currency' => 'COP',
-                'formats'  => [
-                    'ar-IL' => '1,234,560.79 $', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.79 $', // Needs to be changed when numbering system is configurable
-                    'de-CH' => '$ 1’234’560.79',
-                    'en-US' => '$1,234,560.79',
-                    'es-AR' => '$ 1.234.560,79',
-                    'fr-FR' => '1 234 560,79 $',
-                ],
-            ],
-        ];
+                'formats'  => array(
+                    'ar-IL' => '1,234,561 $', // Needs to be changed when numbering system is configurable
+//                    'bn-IN' => '1,234,561 $', // Needs to be changed when numbering system is configurable
+                    'de-CH' => '$ 1’234’561',
+                    'en-US' => '$1,234,561',
+                    'es-AR' => '$ 1.234.561',
+                    'fr-FR' => '1 234 561 $',
+                ),
+            ),
+        );
     }
 }
