@@ -185,8 +185,8 @@ class Number
      */
     public function formatCurrency($number, Currency $currency)
     {
-        $this->setMinimumFractionDigits(2)
-            ->setMaximumFractionDigits(2);
+        $this->setMinimumFractionDigits($currency->getDecimalDigits())
+            ->setMaximumFractionDigits($currency->getDecimalDigits());
 
         // Format the numeric part using the currency pattern
         $formattedNumber = $this->format($number, self::CURRENCY);
