@@ -61,7 +61,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $data
+     * @param array() $data
      * @return $this
      */
     public function setData($data)
@@ -72,7 +72,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param $fileName
+     * @param String $fileName
      * @return $this
      */
     public function setFileName($fileName)

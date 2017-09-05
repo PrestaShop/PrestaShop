@@ -63,8 +63,9 @@ trait NormalizeFieldTrait
     }
 
     /**
-     * @param $columnName
-     * @param $columnValue
+     * @param String $columnName
+     * @param String $columnValue
+     *
      * @return bool
      */
     private function shouldCastToInt($columnName, $columnValue)
