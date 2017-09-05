@@ -174,6 +174,7 @@ class ThemeManager implements AddonManagerInterface
                 ->doApplyConfiguration($theme->get('global_settings.configuration', array()))
                 ->doDisableModules($theme->get('global_settings.modules.to_disable', array()))
                 ->doEnableModules($theme->getModulesToEnable())
+                ->doResetModules($theme->get('global_settings.modules.to_reset', array()))
                 ->doApplyImageTypes($theme->get('global_settings.image_types'))
                 ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
 
@@ -288,6 +289,26 @@ class ThemeManager implements AddonManagerInterface
             }
             if (!$moduleManager->isEnabled($moduleName)) {
                 $moduleManager->enable($moduleName);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Reset the modules received in parameters if they are installed and enabled
+     *
+     * @param string[] $modules
+     * @return $this
+     */
+    private function doResetModules(array $modules)
+    {
+        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $moduleManager = $moduleManagerBuilder->build();
+
+        foreach ($modules as $moduleName) {
+            if ($moduleManager->isInstalled($moduleName)) {
+                $moduleManager->reset($moduleName);
             }
         }
 
