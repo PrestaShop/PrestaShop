@@ -31,7 +31,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -176,36 +175,5 @@ abstract class ApiController
         );
 
         return new JsonResponse($response, $status, $headers);
-    }
-
-    /**
-     * @param $data
-     * @param $fileName
-     * @param int $status
-     * @param array $headers
-     * @return StreamedResponse
-     */
-    protected function csvResponse(
-        $data,
-        $fileName,
-        $status = 200,
-        $headers = array()
-    ) {
-        $response = new StreamedResponse(null, $status, $headers);
-
-        $response->setCallback(function() use ($data) {
-            $handle = fopen('php://output', 'w+');
-
-            foreach ($data as $line) {
-                fputcsv($handle, $line, ';');
-            }
-
-            fclose($handle);
-        });
-
-        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'"');
-
-        return $response;
     }
 }
