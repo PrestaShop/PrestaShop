@@ -636,10 +636,6 @@ var AdminModuleController = function() {
     } else {
       this.currentDisplay = 'grid';
     }
-    $('.sort-component').select2({
-      minimumResultsForSearch: Infinity,
-      placeholder: false
-    });
   }
 
   this.initSortingDropdown = function () {

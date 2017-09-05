@@ -2,15 +2,17 @@
   @extend .card;
   @extend .card-block;
 
-  border: 1px solid $card-border-color;
-  border-radius: 0.25rem;
+  border: none;
+  border-radius: 0;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  min-height: 390px;
 
   .module-item-heading-grid {
     position: relative;
-    height: 55px;
-
+    text-align: center;
     .module-logo-thumb-grid {
+      text-align: center;
+      width: 100%;
       > img {
         max-width: $module-logo-size;
         max-height: $module-logo-size;
@@ -18,37 +20,36 @@
       width: $module-logo-size;
       height: $module-logo-size;
       text-align: center;
-      float: left;
-      border-radius: 0.25rem;
+      margin: 0 auto;
+      border-radius: 0;
     }
 
     .module-name-grid {
       @extend .card-title;
       position: relative;
-      margin: 0 0 0 57px;
+      text-align: center;
       font-weight: bolder;
-      color: $gray-medium;
+      margin: 1rem 0 .5rem;
+      min-height: 24px;
     }
 
     .module-version-author-grid {
       @extend .card-title;
 
-      margin: 0 0 0 57px;
-      position: relative;
-      font-weight: bold;
+      text-align: center;
+      font-weight: lighter;
       color: $gray-medium;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
       b {
-        font-weight: bold;
-        color: $gray-dark;
+        font-weight: lighter;
       }
     }
   }
 
   .module-container {
-    text-align: center;
+    text-align:center;
   }
 
   .module-star-ranking-grid {
@@ -57,20 +58,30 @@
 
   .module-quick-action-grid {
     display: inline;
-    color: $gray-light;
+    color: $gray-dark;
+    .form-action-button-container {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      left: 0;
+    }
     .light-button {
+      height: 32px;
       font-size: 0.625rem;
       padding: 0.5rem;
-      margin-left: -0.125rem;
+      width: 92%;
+      float: none;
+      margin: 0 auto;
     }
     .onclick {
-      margin-bottom: -0.4375rem;
+      margin-bottom: -7px;
     }
   }
 
   .module-quick-description-grid {
     margin: 15px 0;
-
+    text-align: center;
+    min-height: 100px;
     .module-read-more-grid {
       display: inline-block;
       .module-read-more-grid-btn {
@@ -98,15 +109,19 @@
   cursor: pointer;
   .module-addons-item-wrapper-grid {
     @extend .module-item-wrapper-grid;
-    display: table-cell;
+    height: 100%;
     vertical-align: middle;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     .module-icon-addons-exit-grid {
       display: block;
       padding-bottom: 20px;
     }
   }
 }
+
 
 /**
 * Facebook-like module cards
@@ -120,7 +135,6 @@
     background-position: 468px 0
   }
 }
-
 @keyframes placeHolderShimmer {
   0% {
     background-position: -468px 0
@@ -170,66 +184,54 @@
 .outlined .background-masker {
   border: 1px solid #ddd;
 }
-
 .outlined:hover .background-masker {
   border: none;
 }
-
 .outlined:hover .background-masker:hover {
   border: 1px solid #ccc;
   z-index: 1;
 }
-
 .background-masker.header-top, .background-masker.header-bottom, .background-masker.subheader-bottom {
   top: 0;
   left: 40px;
   right: 0;
   height: 10px;
 }
-
 .background-masker.header-left, .background-masker.subheader-left, .background-masker.header-right, .background-masker.subheader-right {
   top: 10px;
   left: 40px;
   height: 8px;
   width: 10px;
 }
-
 .background-masker.header-bottom {
   top: 18px;
   height: 6px;
 }
-
 .background-masker.subheader-left, .background-masker.subheader-right {
   top: 24px;
   height: 6px;
 }
-
 .background-masker.header-right, .background-masker.subheader-right {
   width: auto;
   left: 300px;
   right: 0;
 }
-
 .background-masker.subheader-right {
   left: 230px;
 }
-
 .background-masker.subheader-bottom {
   top: 30px;
   height: 10px;
 }
-
 .background-masker.content-top, .background-masker.content-second-line, .background-masker.content-third-line, .background-masker.content-second-end, .background-masker.content-third-end, .background-masker.content-first-end {
   top: 40px;
   left: 0;
   right: 0;
   height: 6px;
 }
-
 .background-masker.content-top {
   height: 20px;
 }
-
 .background-masker.content-first-end, .background-masker.content-second-end, .background-masker.content-third-end {
   width: auto;
   left: 380px;
@@ -237,25 +239,30 @@
   top: 60px;
   height: 8px;
 }
-
 .background-masker.content-second-line {
   top: 68px;
 }
-
 .background-masker.content-second-end {
   left: 420px;
   top: 74px;
 }
-
 .background-masker.content-third-line {
   top: 82px;
 }
-
 .background-masker.content-third-end {
   left: 300px;
   top: 88px;
 }
-
 .module-placeholders-wrapper {
   margin-top: 76px;
+}
+
+.modules-list {
+  .modal-dialog {
+    max-width: none;
+  }
+}
+
+.module-modal-footer {
+  display: block;
 }

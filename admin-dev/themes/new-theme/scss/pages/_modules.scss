@@ -4,7 +4,6 @@
 .module-modal-title {
   display: inline-block;
   padding-left: 1em;
-  display: table-cell;
   vertical-align: top;
 }
 .module-modal-title > h4 {
@@ -23,13 +22,10 @@
 .module-modal-header button.close .material-icons {
   font-size: 30px;
 }
-.module-modal-header > div {
-  display: table-row;
-}
 .module-modal-header {
   .read-more-stars {
-    bottom: 66px;
-    left: 105px;
+    bottom: 82px;
+    left: 120px;
 
     &:before, &:after {
       left: -80px;

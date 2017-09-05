@@ -42,11 +42,6 @@
   <!-- Modal content-->
   <div class="modal-content module-modal-content no-padding">
     <div class="modal-header module-modal-header">
-      <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">
-            <i class="material-icons">close</i>
-          </span>
-      </button>
       {% if nbRates > 0 %}
         <div class="read-more-stars module-star-ranking-grid-{{ starsRate }}">
           (
@@ -58,7 +53,7 @@
         <img class="module-logo-thumb" height="57" width="57" src="{{ img }}" alt="{{ displayName }}"/>
         <div class="modal-title module-modal-title">
           <h1>{{ displayName }}<br>
-            <small class="version">
+            <small class="version small-text">
               {% if serviceUrl is defined and serviceUrl|length > 0 %}
                 {{ 'Service by %author%'|trans({'%author%' : author}, 'Admin.Modules.Feature') }}
               {% else %}
@@ -69,6 +64,9 @@
 
         </div>
       </div>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
 
     <div class="modal-body row module-modal-body">
@@ -78,9 +76,9 @@
       <div class="col-md-12 module-menu-readmore">
         <nav class="navbar navbar-light">
           {# tab list #}
-          <ul class="nav navbar-nav navbar-separator">
-            <li class="nav-item active">
-              <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{ name }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a class="nav-link module-readmore-tab active" data-toggle="tab" href="#overview-{{ name }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
             </li>
             {% if additionalDescription %}
               <li class="nav-item">

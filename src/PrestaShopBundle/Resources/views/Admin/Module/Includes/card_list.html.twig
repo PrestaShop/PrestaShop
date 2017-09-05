@@ -61,7 +61,7 @@
         </h3>
       </div>
       <div class="col-sm-12 col-md-2">
-        <span class="text-ellipsis xsmall">
+        <span class="text-ellipsis small-text">
           {% block addon_version %}
             {% if module.attributes.productType == "service" %}
               {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
