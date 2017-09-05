@@ -1139,7 +1139,17 @@ var form = (function() {
           });
         });
         imagesProduct.initExpander();
+
+        /** On event "DOMSubtreeModified" : force normalizePrice on attribute_wholesale_price and attribute_priceTE */
+        $('#accordion_combinations').on('DOMSubtreeModified', function() {
+          $('.attribute_wholesale_price, .attribute_priceTE').each(function(){
+            $(this).val(priceCalculation.normalizePrice($(this).val()));
+          })
+        });
+
       });
+
+
     },
     'send': function(redirect, target, callBack) {
       send(redirect, target, callBack);
