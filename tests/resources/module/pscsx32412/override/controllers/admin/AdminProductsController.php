@@ -1384,9 +1384,9 @@ class AdminProductsController extends AdminProductsControllerCore
         }
     }
 
-    protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0, $id_zone)
+    protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0, $idZone)
     {
-        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_zone) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
+        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($idZone) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = Tools::displayError('Wrong IDs');
         } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction))) {
             $this->errors[] = Tools::displayError('Invalid price/discount amount');
@@ -1396,7 +1396,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('Please select a discount type (amount or percentage).');
         } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = Tools::displayError('The from/to date is invalid.');
-        } elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false, $id_zone)) {
+        } elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false, $idZone)) {
             $this->errors[] = Tools::displayError('A specific price already exists for these parameters.');
         } else {
             return true;
