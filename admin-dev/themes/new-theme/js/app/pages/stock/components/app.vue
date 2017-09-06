@@ -125,6 +125,9 @@
       z-index: 3;
       transition: all 0.2s ease;
       height: 20px;
+      .product-actions & {
+        right: 7px;
+      }
     }
     .ui-spinner-up::before {
       font-family: 'Material Icons';
