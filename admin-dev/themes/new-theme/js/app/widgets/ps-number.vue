@@ -61,7 +61,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "~prestakit/scss/custom/_variables.scss";
   .ps-number {
     text-indent: 5px;
     height: 33px;
