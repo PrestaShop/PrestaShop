@@ -901,6 +901,7 @@ class ProductController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($dataCallback)
             ->setHeadersData($headersData)
+            ->setLimit(5000)
             ->setModeType(CsvResponse::MODE_OFFSET)
             ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
