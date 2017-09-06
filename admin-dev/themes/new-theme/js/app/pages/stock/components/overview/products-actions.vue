@@ -148,7 +148,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~prestakit/scss/custom/_variables.scss";
+  @import "../../../../../../scss/config/_settings.scss";
 
   .update-qty {
     color: white;

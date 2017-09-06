@@ -25,6 +25,7 @@
 @import "components/notifications";
 @import "components/datepicker";
 @import "components/help_box";
+@import "components/ps_dropdown";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -38,6 +39,7 @@
 @import "components/tinymce";
 
 @import "../css/right-sidebar.css";
+@import "../css/module/drop.css";
 
 // Main Layout
 body {
