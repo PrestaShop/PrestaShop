@@ -26,20 +26,21 @@
 
 {% block content %}
 
-  <form name="form" id="form" method="post" class="form-horizontal product-page row" novalidate="novalidate">
+  <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
 
     {% if not editable %} <fieldset disabled id="field-disabled"> {% endif %}
     {# PRODUCT HEADER #}
-    <div class="product-header">
+    <div class="product-header col-md-12">
+      <div class="row justify-content-md-center">
       {% if is_multishop_context %}
-        <div class="col-md-12">
+        <div class="col-md-10">
           <div class="alert alert-warning" role="alert">
-            <i class="material-icons">info_outline</i><p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
+            <p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
           </div>
         </div>
       {% endif %}
 
-      <div class="col-md-10 col-md-offset-1">
+      <div class="col-md-10">
         <div class="row">
           <div class="col-md-7 big-input {{ 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
             {{ form_widget(form.step1.name) }}
@@ -51,14 +52,14 @@
           </div>
           <div class="col-md-1 form_switch_language">
             <div class="{{ languages|length == 1 ? 'hide' : '' }}">
-              <select id="form_switch_language" class="form-control" data-toggle="select2">
+              <select id="form_switch_language" class="custom-select">
                 {% for language in languages %}
                   <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
                 {% endfor %}
               </select>
             </div>
           </div>
-          <div class="toolbar col-lg-2 text-md-right">
+          <div class="toolbar col-md-2 text-md-right">
             <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
                id="product_form_go_to_sales">
               <i class="material-icons">assessment</i>
@@ -97,21 +98,18 @@
           </div>
         </div>
       </div>
-      <div class="clearfix"></div>
+    </div>
     </div>
 
-    <div class="col-md-10 col-md-offset-1">
+    <div class="col-md-10">
       <div id="form_bubbling_errors">
         {{ form_errors(form) }}
       </div>
     </div>
 
     {# FORM TABS CONTAINER #}
-    <div id="form-loading" class="col-md-10 col-md-offset-1">
+    <div id="form-loading" class="col-md-10">
       <div class="tabs js-tabs">
-        <div class="arrow js-arrow left-arrow float-left">
-          <i class="material-icons hide">chevron_left</i>
-        </div>
         <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
           <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
@@ -123,6 +121,9 @@
             <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           {% endif %}
         </ul>
+        <div class="arrow js-arrow left-arrow float-left">
+          <i class="material-icons hide">chevron_left</i>
+        </div>
         <div class="arrow js-arrow right-arrow visible float-right">
           <i class="material-icons hide">chevron_right</i>
         </div>
@@ -144,7 +145,7 @@
                       {{ form_widget(form.step1.inputPackItems) }}
                     </div>
 
-                    <div id="product-images-container" class="mb-2">
+                    <div id="product-images-container" class="mb-4">
                       <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
                            url-upload="{{ path('admin_product_image_upload', {'idProduct': id_product}) }}"
                            url-position="{{ path('admin_product_image_positions') }}"
@@ -191,30 +192,32 @@
                       <div id="product-images-form-container" class="col-md-4">
                         <div id="product-images-form"></div>
                       </div>
-                      <div class="dropzone-expander text-xs-center col-md-12">
+                      <div class="dropzone-expander text-sm-center col-md-12">
                         <span class="expand">{{ 'View all images'|trans({}, 'Admin.Catalog.Feature') }}</span>
                         <span class="compress">{{ 'View less'|trans({}, 'Admin.Catalog.Feature') }}</span>
                       </div>
 
                     </div>
 
-                    <ul class="nav nav-tabs bordered">
-                      <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-                      <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
-                    </ul>
+                    <div class="summary-description-container">
+                      <ul class="nav nav-tabs bordered">
+                        <li id="tab_description_short" class="nav-item"><a href="#description_short" data-toggle="tab" class="nav-link description-tab active">{{ 'Summary'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
+                        <li id="tab_description" class="nav-item"><a href="#description" data-toggle="tab" class="nav-link description-tab">{{ 'Description'|trans({}, 'Admin.Global') }}</a></li>
+                      </ul>
 
-                    <div class="tab-content bordered">
-                      <div class="tab-pane panel panel-default active" id="description_short">
-                        {{ form_widget(form.step1.description_short) }}
-                      </div>
-                      <div class="tab-pane panel panel-default " id="description">
-                        {{ form_widget(form.step1.description) }}
+                      <div class="tab-content bordered">
+                        <div class="tab-pane panel panel-default active" id="description_short">
+                          {{ form_widget(form.step1.description_short) }}
+                        </div>
+                        <div class="tab-pane panel panel-default " id="description">
+                          {{ form_widget(form.step1.description) }}
+                        </div>
                       </div>
                     </div>
 
                     {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
 
-                    <div id="features" class="mb-1 mt-1">
+                    <div id="features" class="mb-3 mt-3">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                         {{ form_errors(form.step1.features) }}
@@ -236,11 +239,11 @@
                       </div>
                     </div>
 
-                    <div id="manufacturer" class="mb-1">
+                    <div id="manufacturer" class="mb-3">
                       {{ include('PrestaShopBundle:Admin/Product/Include:form_manufacturer.html.twig', { 'form':form.step1.id_manufacturer }) }}
                     </div>
 
-                    <div id="related-product" class="mb-1">
+                    <div id="related-product" class="mb-3">
                       {{ include('PrestaShopBundle:Admin/Product/Include:form_related_products.html.twig', { 'form':form.step1.related_products }) }}
                     </div>
 
@@ -571,7 +574,7 @@
                         {{ form_widget(form.step2.price_ttc) }}
                       </div>
 
-                      <div class="col-xl-4 col-lg-6 col-xl-offset-1 col-lg-offset-0">
+                      <div class="col-xl-4 col-lg-6 mx-auto">
                         <label class="form-control-label">
                           {{ form.step2.unit_price.vars.label }}
                           <span class="help-box" data-toggle="popover"
@@ -606,7 +609,7 @@
                       <div class="col-md-8">
                         <label class="form-control-label">&nbsp;</label>
                         <a class="form-control-static external-link" href="{{ getAdminLink("AdminTaxes") }}">
-                          <i class="material-icons">open_in_new</i> {{ 'Manage tax rules'|trans({}, 'Admin.Catalog.Feature') }}
+                          {{ 'Manage tax rules'|trans({}, 'Admin.Catalog.Feature') }}
                         </a>
                       </div>
                       <div class="col-md-12 pt-1">
@@ -616,7 +619,6 @@
                         <div class="row">
                           <div class="col-xl-5 col-lg-12">
                             <div class="alert alert-info" role="alert">
-                              <i class="material-icons">help</i>
                               <p class="alert-text">
                                 {{ 'Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<strong>', '[/1]': '</strong>', '[2]': '<span id="final_retail_price_ti">', '[/2]': '</span>', '[3]': '<span id="final_retail_price_te">', '[/3]': '</span>', })|raw }}
                               </p>
@@ -655,12 +657,12 @@
                       </div>
                       <div class="col-md-12">
                         <div id="specific-price" class="mb-2">
-                          <a class="btn btn-action mb-2" data-toggle="collapse" href="#specific_price_form" aria-expanded="false">
+                          <a class="btn btn-outline-primary mb-3" data-toggle="collapse" href="#specific_price_form" aria-expanded="false">
                             <i class="material-icons">add_circle</i>
                             {{ 'Add a specific price'|trans({}, 'Admin.Catalog.Feature') }}
                           </a>
-                          <table id="js-specific-price-list" class="table table-striped hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
-                            <thead>
+                          <table id="js-specific-price-list" class="table hide seo-table" data="{{ path('admin_specific_price_list', { 'idProduct': 1 }) }}" data-action-delete="{{ path('admin_delete_specific_price', { 'idSpecificPrice': 1 }) }}">
+                            <thead class="thead-default">
                             <tr>
                               <th>{{ 'Rule'|trans({}, 'Admin.Catalog.Feature') }}</th>
                               <th>{{ 'Combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -797,23 +799,22 @@
                         <label class="form-control-label">{{ 'Tags'|trans({}, 'Admin.Catalog.Feature') }}</label>
                         {{ form_errors(form.step6.tags) }}
                         {{ form_widget(form.step6.tags) }}
-                        <div class="alert alert-info alert-drop mt-1" role="alert">
-                          <i class="material-icons">help</i>
-                          <p class="alert-text" data-title="{{ 'Read more'|trans({}, 'Admin.Actions')|raw }}">
-                            {{ 'Tags are meant to help your customers find your products via the search bar.'|trans({}, 'Admin.Catalog.Help')|raw }}
-                            <strong>{{ 'Read more'|trans({}, 'Admin.Actions')|raw }}</strong>
-                          </p>
-                        </div>
-                        <div class="alert alert-info alert-down" role="alert">
-                          <p class="alert-down-text">
-                            {{ 'Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
-                            {{ 'You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.'|trans({}, 'Admin.Catalog.Help')|
+                        <div class="alert expandable-alert alert-info mt-3" role="alert">
+                          <button type="button" class="read-more btn-link" data-toggle="collapse" data-target="#tagsInfo" aria-expanded="false" aria-controls="collapseDanger">
+                            {{ 'Read more'|trans({}, 'Admin.Actions')|raw }}
+                          </button>
+                          <p class="alert-text">{{ 'Tags are meant to help your customers find your products via the search bar.'|trans({}, 'Admin.Catalog.Help')|raw }}</p>
+                          <div class="alert-more collapse" id="tagsInfo">
+                            <p>
+                              {{ 'Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
+                              {{ 'You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.'|trans({}, 'Admin.Catalog.Help')|
                               replace({
                                 '[1]' : '<a href="'~ getAdminLink("AdminSearchConf") ~'" target="_blank">',
                                 '[/1]' : '</a>'
                               })|raw
-                            }}
-                          </p>
+                              }}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -887,7 +888,7 @@
                               </li>
                             {% endfor %}
                           </ul>
-                          <a href="#" class="btn btn-action add">
+                          <a href="#" class="btn btn-outline-secondary">
                             <i class="material-icons">add_circle</i>
                             {{ 'Add a customization field'|trans({}, 'Admin.Catalog.Feature') }}
                           </a>
@@ -905,7 +906,7 @@
                     <div class="row">
                       <div class="col-md-8">
                         <a
-                          class="btn btn-action add mb-1"
+                          class="btn btn-outline-secondary mb-3"
                           href="#collapsedForm"
                           data-toggle="collapse"
                           aria-expanded="false"
@@ -1052,22 +1053,25 @@
 
     </div>
     {# FOOTER #}
-    <div class="product-footer">
+    <div class="product-footer justify-content-md-center">
       <div class="col-lg-5">
         <a
           href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}"
-          class="btn btn-link btn-lg delete"
+          class="tooltip-link btn btn-lg"
           data-toggle="tooltip"
           id="product_form_delete_btn"
           title="{{ 'Permanently delete this product.'|trans({}, 'Admin.Catalog.Help') }}"
+          data-placement="left"
+          data-original-title="Delete"
         >
           <i class="material-icons">delete</i>
         </a>
         <a
+          href=""
           data-redirect="{{ preview_link }}"
           data-url_deactive="{{ preview_link_deactivate }}"
           target="_blank"
-          class="btn btn-tertiary btn-submit preview"
+          class="btn btn-secondary preview"
           data-toggle="tooltip"
           id="product_form_preview_btn"
           title="{{ 'See how your product sheet will look online: ALT+SHIFT+V'|trans({}, 'Admin.Catalog.Help') }}"
@@ -1080,6 +1084,7 @@
         <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
             title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
         <input
+          class="switch-input-lg"
           id="form_step1_active"
           data-toggle="switch"
           type="checkbox"
@@ -1089,7 +1094,7 @@
         />
         {% endif %}
       </div>
-      <div class="col-lg-6 text-lg-right">
+      <div class="col-lg-5 text-lg-right">
         {% if is_shop_context %}
           <button
             type="button"
@@ -1131,22 +1136,21 @@
           title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
           />
 
-          <div class="btn-group hide dropdown float-right">
-            <div class="js-spinner spinner hide btn-primary-reverse onclick float-left mr-1"></div>
+          <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
+          <div class="btn-group hide dropdown">
             <button
              class="btn btn-primary js-btn-save"
              type="submit"
              >
               <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
-            </button>
-            <button
-              class="btn btn-primary dropdown-toggle"
+            </button><button
+              class="btn btn-primary dropdown-toggle dropdown-toggle-split"
               type="button"
               id="dropdownMenu"
               data-toggle="dropdown"
               aria-expanded="false"
             >
-
+              <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenu">
               {% if is_shop_context %}

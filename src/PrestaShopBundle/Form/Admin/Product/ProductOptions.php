@@ -95,6 +95,9 @@ class ProductOptions extends CommonAbstractType
                 $this->translator->trans('Search only', [], 'Admin.Catalog.Feature') => 'search',
                 $this->translator->trans('Nowhere', [], 'Admin.Catalog.Feature') => 'none',
             ),
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'Admin.Catalog.Feature'),
@@ -104,7 +107,7 @@ class ProductOptions extends CommonAbstractType
             'options' => [
                 'attr' => [
                     'class' => 'tokenfield',
-                    'placeholder' => $this->translator->trans('Use a comma to create seperate tags. E.g.: dress, cotton, party dresses.', [], 'Admin.Catalog.Help')
+                    'placeholder' => $this->translator->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', [], 'Admin.Catalog.Help')
                 ]
             ],
             'locales' => $this->locales,
@@ -161,6 +164,9 @@ class ProductOptions extends CommonAbstractType
                  $this->translator->trans('Used', [], 'Shop.Theme.Catalog') => 'used',
                  $this->translator->trans('Refurbished', [], 'Shop.Theme.Catalog') => 'refurbished'
             ),
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
             'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'Admin.Catalog.Feature')
@@ -171,6 +177,9 @@ class ProductOptions extends CommonAbstractType
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
             'label' => $this->translator->trans('Suppliers', [], 'Admin.Global')
         ))
         ->add('default_supplier', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
@@ -179,6 +188,9 @@ class ProductOptions extends CommonAbstractType
             'expanded' =>  true,
             'multiple' =>  false,
             'required' =>  true,
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
             'label' => $this->translator->trans('Default suppliers', [], 'Admin.Catalog.Feature')
         ));
 
@@ -221,7 +233,10 @@ class ProductOptions extends CommonAbstractType
                 return $this->fullAttachmentList[$attachmentKey]['name'];
             },
             'required' => false,
-            'attr' => ['data' => $this->fullAttachmentList],
+            'attr' => array(
+                'class' => 'custom-select',
+                'data' => $this->fullAttachmentList
+            ),
             'label' => $this->translator->trans('Attachments for this product:', [], 'Admin.Catalog.Feature')
         ));
 

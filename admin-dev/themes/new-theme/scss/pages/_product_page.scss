@@ -62,10 +62,8 @@
     background: #ffffff;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
-    padding: 1.25rem 0;
-    .select2 {
-      margin-top: 0.5rem;
-    }
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
     .edit {
       background-size: 4%;
     }
@@ -74,7 +72,8 @@
       margin-top: 0.625rem;
     }
     .form_step1_type_product,
-    .form_switch_language {
+    .form_switch_language,
+    .toolbar {
       display: flex;
       align-items: center;
     }
@@ -90,9 +89,8 @@
   }
 
   #bulk-combinations-container {
-    border: solid 1px $gray-light;
-    margin: -1.063rem 0.9375rem 0.9375rem;
-    padding: 0.9375rem;
+    margin: -1.063rem 0 0.9375rem;
+    padding: 0 0.9375rem;
     width: 97%;
     font-size: 0.75rem;
     font-weight: 600;
@@ -110,30 +108,13 @@
     bottom: 0;
     left: $size-navbar-width;
     right: 0;
+    display: flex;
+    align-items: center;
     .for-switch {
       display: inline-block;
       margin-left: 1.25rem;
       margin-right: 0.25rem;
       font-size: 0.875rem;
-    }
-    .duplicate,
-    .go-catalog,
-    .new-product {
-      margin-right: 0.625rem;
-      margin-top: 0.625rem;
-    }
-    .preview,
-    .save {
-      padding: 0.625rem map-get($spacing-widths, 'xxs');
-    }
-    .save {
-      margin-top: 0.5rem;
-    }
-    .delete {
-      > .material-icons {
-        font-size: 1.563rem;
-        opacity: 0.8;
-      }
     }
   }
 
@@ -160,23 +141,33 @@
   }
 
   .token {
-    background: $brand-primary;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 0;
-    font-weight: lighter;
     display: inline-block;
-    margin: 2px;
-    min-height: 25px;
+    padding: .4rem;
+    margin-right: .4rem;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: $brand-primary;
+
     .close {
-      padding-left: 3px;
+      margin: 0 .4rem;
+      color: $gray-dark;
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 400;
+      text-shadow: none;
+
+      &:hover {
+        color: $gray-dark;
+      }
     }
   }
 
   // Combination generator
   .tokenfield {
     height: auto;
-    padding-bottom: 0;
     input.token-input[type="text"] {
       display: inline-block;
       border: 0;
@@ -184,6 +175,32 @@
       background-color: transparent;
       max-width: 100%;
     }
+  }
+
+  .summary-description-container {
+    .nav-tabs {
+      overflow: hidden;
+
+      &.bordered {
+        .nav-link {
+          &.active {
+            border-left: 1px solid $gray-light;
+            border-right: 1px solid $gray-light;
+          }
+        }
+      }
+    }
+
+    .tab-content {
+      &.bordered {
+        border: 1px solid $gray-light;
+      }
+    }
+  }
+
+  .product-feature {
+    align-items: flex-end;
+    margin-bottom: 1rem;
   }
 
   // Combination details form
@@ -227,6 +244,9 @@
       cursor: pointer;
       display: inline-block;
       margin-bottom: 0.625rem;
+    }
+    .panel {
+      background: #fff;
     }
   }
 
@@ -501,28 +521,6 @@
         font-size: 0.75rem;
       }
     }
-    > .pstaggerTagsWrapper {
-      border: none;
-      padding: 0;
-      > .pstaggerTag {
-        font-size: 0.75rem;
-        font-weight: 400;
-        padding-top: 0.125rem;
-        margin-bottom: 0.3125rem;
-        > .pstaggerClosingCross {
-          font-size: 0;
-          &::after {
-            font-size: 1rem;
-            font-family: 'Material Icons';
-            content: "\E5CD";
-            text-decoration: none;
-            vertical-align: middle;
-            position: relative;
-            bottom: 0.25rem;
-          }
-        }
-      }
-    }
   }
 
   .categories-tree {
@@ -569,18 +567,7 @@
     }
   }
 
-  .seo-table thead th {
-    text-transform: uppercase;
-  }
-  .seo-table tbody tr:nth-of-type(odd) {
-    background: $gray-light;
-  }
-  .seo-table tbody tr td:last-child {
-    box-shadow: -3px 0 10px -3px rgba(0,0,0,0.4);
-  }
-
-  .customFieldCollection .delete,
-  .seo-table .delete {
+  .customFieldCollection .delete {
     color: $gray-medium;
     .material-icons {
       font-size: 1.25rem;
@@ -633,35 +620,9 @@
     }
   }
 
-  #supplier_combination_collection, #product-attachments, #supplier_collection {
-    .panel-body {
-      padding: 0;
-    }
-    .table-striped {
-      thead, th, tbody {
-        border:none;
-      }
-      td{
-        color: $gray-medium;
-      }
-    }
-  }
-
   .combinations-list {
-    td,
     th {
-      color: $gray-medium;
-      vertical-align: middle;
-    }
-    .uppercase th {
-      text-transform: uppercase;
-      font-weight: $font-weight-normal;
       font-size: $font-size-xs;
-    }
-    .table-striped {
-      tbody tr:nth-of-type(odd) {
-        background-color: $notice;
-      }
     }
     .combination {
       &.loaded {
@@ -846,6 +807,12 @@
               width: 1rem;
               margin-right: 0.4375rem;
               border: 0.0625rem solid $gray-light;
+              &.not-color:before {
+                color: #fff;
+                display: block;
+                text-align: center;
+                line-height: 1rem;
+              }
             }
           }
           &:checked {
@@ -853,12 +820,10 @@
               font-weight: $font-weight-semibold;
               color: $gray-medium;
               .pretty-checkbox {
-                border-color: $gray-medium;
-                border-width: 0.125rem;
                 &.not-color:before {
                   content: "\E5CA";
                   font-family: "Material Icons";
-                  line-height: 0.75rem;
+                  background: $primary;
                 }
               }
             }
@@ -915,7 +880,6 @@
     .tabs {
       overflow: hidden;
       width: auto;
-      background: white;
       .material-icons {
         display: inline-block;
       }
@@ -929,22 +893,22 @@
         background: $brand-primary;
         color: white;
         display: none;
+        position: absolute;
+        left: 15px;
+        top: 0;
         &.visible {
           visibility: visible;
         }
       }
       .right-arrow {
-        margin-top: 3.125rem;
+        right: 15px;
+        left: auto;
       }
     }
     .nav-tabs {
       height: 3.125rem;
       width: 125rem;
       position: relative;
-      .nav-link.active:not(.description-tab) {
-        border-top: transparent;
-        border-bottom: 3px solid $brand-primary;
-      }
     }
     .right-column {
       width: 30%;

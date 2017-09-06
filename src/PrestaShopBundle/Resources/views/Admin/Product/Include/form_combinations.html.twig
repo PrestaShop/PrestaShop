@@ -34,7 +34,6 @@
     </h2>
     <div id="attributes-generator">
       <div class="alert alert-info" role="alert">
-        <i class="material-icons">help</i>
         <p class="alert-text">
           {{ 'To add combinations, you first need to create proper attributes and values in [1]Attributes & Features[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "Generate": it will automatically create all the combinations for you!'|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
         </p>
@@ -70,17 +69,18 @@
           </p>
         </div>
         <div class="col-md-12 collapse js-collapse" id="bulk-combinations-container">
-          {{ include('PrestaShopBundle:Admin/Product:form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
+          <div class="border p-3">
+            {{ include('PrestaShopBundle:Admin/Product:form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
+          </div>
         </div>
       </div>
     </div>
 
     <div class="combinations-list">
-      <table class="table table-striped table-no-bordered">
-        <thead id="combinations_thead" {% if not has_combinations %}style="display: none;"{% endif %}>
-          <tr class="uppercase">
+      <table class="table">
+        <thead class="thead-default" id="combinations_thead" {% if not has_combinations %}style="display: none;"{% endif %}>
+          <tr>
             <th>
-              <span>{{ 'Select'|trans([], 'Admin.Actions') }}</span>
               <input type="checkbox" id="toggle-all-combinations" >
             </th>
             <th></th>
@@ -90,7 +90,7 @@
             {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                 <th>{{ 'Quantity'|trans({}, 'Admin.Catalog.Feature') }}</th>
             {% endif %}
-            <th colspan="3" class="text-xs-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
+            <th colspan="3" class="text-sm-right">{{ 'Default combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
           </tr>
         </thead>
         <tbody class="js-combinations-list panel-group accordion" id="accordion_combinations" data-action-delete-all="{{ path('admin_delete_all_attributes', { 'idProduct': 1 }) }}" data-weight-unit="{{ 'PS_WEIGHT_UNIT'|configuration }}" data-action-refresh-images="{{ path('admin_get_form_images_combination', { 'idProduct': 1 }) }}"  data-id-product= {{ id_product }} data-ids-product-attribute="{{ ids_product_attribute }}" data-combinations-url="{{ path('admin_combination_generate_form', { 'combinationIds': 1 }) }}">
@@ -127,14 +127,14 @@
     {% for attribute_group in attribute_groups %}
       <div class="attribute-group">
         <a
-          class="attribute-group-name {% if loop.index <= 3 %} collapsed {% endif %}"
+          class="attribute-group-name {% if loop.index > 3 %} collapsed {% endif %}"
           data-toggle="collapse"
           href="#attribute-group-{{ attribute_group.id }}"
-          aria-expanded="false"
+          aria-expanded="{% if loop.index <= 3 %}true{% else %}false{% endif %}"
         >
           {{ attribute_group.name }}
         </a>
-        <div class="collapse {% if loop.index <= 3 %} in {% endif %} attributes " id="attribute-group-{{ attribute_group.id }}">
+        <div class="collapse {% if loop.index <= 3 %} show {% endif %} attributes " id="attribute-group-{{ attribute_group.id }}">
           <div class="attributes-overflow {% if attribute_group.attributes|length > 7 %} two-columns {% endif %}">
             {% for attribute in attribute_group.attributes %}
               <div class="attribute">

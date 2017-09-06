@@ -143,7 +143,11 @@ class ProductFeature extends CommonAbstractType
         $form->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
             'required' =>  false,
-            'attr' => array('class' => 'feature-value-selector'),
+            'attr' => array(
+                'class' => 'feature-value-selector',
+                'data-minimumResultsForSearch' => '7',
+                'data-toggle' => 'select2',
+            ),
             'choices' => $choices,
             'choices_as_values' => true,
             'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
