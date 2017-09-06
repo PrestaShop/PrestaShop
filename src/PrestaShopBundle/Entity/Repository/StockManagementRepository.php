@@ -175,20 +175,15 @@ abstract class StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
-     * @param bool $export
      * @return mixed
      */
-    public function getData(QueryParamsCollection $queryParams, $export = false)
+    public function getData(QueryParamsCollection $queryParams)
     {
         $query = $this->selectSql(
-            $this->andWhere($queryParams),
-            $this->having($queryParams),
-            $this->orderBy($queryParams)
-        );
-
-        if (!$export) {
-            $query .= $this->paginate();
-        }
+                $this->andWhere($queryParams),
+                $this->having($queryParams),
+                $this->orderBy($queryParams)
+            ) . $this->paginate();
 
         $statement = $this->connection->prepare($query);
         $this->bindStockManagementValues($statement, $queryParams);
@@ -212,7 +207,7 @@ abstract class StockManagementRepository
         $having = '',
         $orderByClause = null
     ) {
-        throw new RuntimeException('You need to implemante your own `selectSql` function.');
+        throw new RuntimeException('You need to implement your own `selectSql` function.');
     }
 
     /**

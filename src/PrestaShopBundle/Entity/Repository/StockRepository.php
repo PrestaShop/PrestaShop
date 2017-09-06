@@ -185,10 +185,9 @@ class StockRepository extends StockManagementRepository
 
     /**
      * @param QueryParamsCollection $queryParams
-     * @param bool $export
      * @return mixed
      */
-    public function getData(QueryParamsCollection $queryParams, $export = false)
+    public function getData(QueryParamsCollection $queryParams)
     {
         $this->stockManager->updatePhysicalProductQuantity(
             $this->shopId,
@@ -196,56 +195,21 @@ class StockRepository extends StockManagementRepository
             $this->orderStates['cancellation']
         );
 
-        return parent::getData($queryParams, $export);
+        return parent::getData($queryParams);
     }
 
     /**
-     * Specific function to export data
-     *
+     * @param $offset int
+     * @param $limit int
      * @param QueryParamsCollection $queryParams
      * @return array
      */
-    public function getDataExport(QueryParamsCollection $queryParams)
+    public function getDataExport($offset, $limit, QueryParamsCollection $queryParams)
     {
-        $translator = $this->container->get('translator');
+        $queryParams->setPageIndex($offset);
+        $queryParams->setPageSize($limit);
 
-        $data = $this->getData($queryParams, true);
-
-        $formatedData = array(
-            array(
-                // headers columns
-                'product_id' => 'Product ID',
-                'combination_id' => 'Combination ID',
-                'product_reference' => $translator->trans('Product reference', array(), 'Admin.Advparameters.Feature'),
-                'combination_reference' => $translator->trans('Combination reference', array(), 'Admin.Advparameters.Feature'),
-                'product_name' => $translator->trans('Product name', array(), 'Admin.Catalog.Feature'),
-                'combination_name' => $translator->trans('Combination name', array(), 'Admin.Catalog.Feature'),
-                'supplier_name' => $translator->trans('Supplier', array(), 'Admin.Global'),
-                'active' => $translator->trans('Status', array(), 'Admin.Catalog.Feature'),
-                'product_physical_quantity' => $translator->trans('Physical quantity', array(), 'Admin.Catalog.Feature'),
-                'product_reserved_quantity' => $translator->trans('Reserved quantity', array(), 'Admin.Catalog.Feature'),
-                'product_available_quantity' => $translator->trans('Available quantity', array(), 'Admin.Catalog.Feature'),
-                'product_low_stock_threshold' => $translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
-            )
-        );
-
-        foreach ($data as $line) {
-            unset($line['supplier_id']);
-            unset($line['total_combinations']);
-            unset($line['product_cover_id']);
-            unset($line['combination_cover_id']);
-            unset($line['product_attributes']);
-            unset($line['product_features']);
-            unset($line['product_thumbnail']);
-            unset($line['combination_thumbnail']);
-            unset($line['combinations_product_url']);
-            unset($line['product_low_stock_alert']);
-            unset($line['edit_url']);
-
-            $formatedData[] = $line;
-        }
-
-        return $formatedData;
+        return $this->getData($queryParams);
     }
 
     /**

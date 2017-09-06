@@ -31,6 +31,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvResponse extends StreamedResponse
 {
+    const MODE_PAGINATION = 1;
+
+    const MODE_OFFSET = 2;
+
     /**
      * @var array() CSV content
      */
@@ -40,6 +44,26 @@ class CsvResponse extends StreamedResponse
      * @var String Export filename
      */
     private $fileName;
+
+    /**
+     * @var array
+     */
+    private $headersData = array();
+
+    /**
+     * @var int, self::MODE_PAGINATION by default
+     */
+    private $modeType = self::MODE_PAGINATION;
+
+    /**
+     * @var int, default 1 because default modeType is pagination
+     */
+    private $start = 1;
+
+    /**
+     * @var int Default limit
+     */
+    private $limit = 100;
 
     /**
      * Constructor.
@@ -56,17 +80,62 @@ class CsvResponse extends StreamedResponse
             $this->setCallback(array($this, 'processData'));
         }
 
-        $this->setFileName('export.csv');
+        $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
         $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
     }
 
     /**
-     * @param array() $data
+     * @param array|callable $data
      * @return $this
      */
     public function setData($data)
     {
         $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * @param array $headersData
+     * @return $this
+     */
+    public function setHeadersData(array $headersData)
+    {
+        $this->headersData = $headersData;
+
+        return $this;
+    }
+
+    /**
+     * @param $modeType int
+     * @return $this
+     */
+    public function setModeType($modeType)
+    {
+        $this->modeType = (int) $modeType;
+
+        return $this;
+    }
+
+    /**
+     * @param $start int
+     * @return $this
+     */
+    public function setStart($start)
+    {
+        $this->start = (int) $start;
+
+        return $this;
+    }
+
+
+    /**
+     * @param $limit int
+     * @return $this
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = (int) $limit;
 
         return $this;
     }
@@ -93,6 +162,26 @@ class CsvResponse extends StreamedResponse
      */
     public function processData()
     {
+        if (is_array($this->data)) {
+            $this->processDataArray();
+
+            return;
+        }
+
+        if (is_callable($this->data)) {
+            $this->processDataCallback();
+
+            return;
+        }
+
+        throw new \LogicException('The data must be an array or a valid PHP callable function.');
+    }
+
+    /**
+     * Process to data export if $this->data is an array
+     */
+    private function processDataArray()
+    {
         $handle = fopen('php://output', 'w+');
 
         foreach ($this->data as $line) {
@@ -100,5 +189,62 @@ class CsvResponse extends StreamedResponse
         }
 
         fclose($handle);
+    }
+
+    /**
+     * Process to data export if $this->data is a callable function
+     */
+    private function processDataCallback()
+    {
+        $handle = fopen('php://output', 'w+');
+        fputcsv($handle, $this->headersData, ';');
+
+        do {
+            $data = call_user_func_array($this->data, array($this->start, $this->limit));
+
+            $count = count($data);
+            if ($count === 0) {
+                break;
+            }
+
+            $handle = fopen('php://output', 'w+');
+
+            foreach ($data as $line) {
+                $lineData = array();
+
+                foreach ($line as $column => $value) {
+                    if (array_key_exists($column, $this->headersData)) {
+                        $lineData[] = $value;
+                    }
+                }
+
+                fputcsv($handle, $lineData, ';');
+            }
+
+            fclose($handle);
+
+            $this->incrementData();
+
+        } while ($count === $this->limit);
+    }
+
+    /**
+     * Increment the start data for the process
+     */
+    private function incrementData()
+    {
+        if (self::MODE_PAGINATION === $this->modeType) {
+            $this->setStart($this->start + 1);
+
+            return;
+        }
+
+        if (self::MODE_OFFSET === $this->modeType) {
+            $this->setStart($this->start + $this->limit);
+
+            return;
+        }
+
+        throw new \LogicException('The modeType is not a valid value.');
     }
 }
