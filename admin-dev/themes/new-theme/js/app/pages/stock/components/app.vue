@@ -26,7 +26,7 @@
   <div v-if="isReady" id="app" class="stock-app">
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
-    <LowFilter @lowStockChecked="onLowStockChecked" />
+    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
     <div class="card pa-2">
       <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
     </div>
@@ -56,6 +56,9 @@
       currentPagination() {
         return this.$store.state.pageIndex;
       },
+      isOverview() {
+        return this.$route.name === 'overview';
+      },
     },
     methods: {
       onPageChanged(pageIndex) {
@@ -71,12 +74,14 @@
         }
         this.$store.dispatch('isLoading');
 
-        this.$store.dispatch(action, Object.assign(this.filters, {
+        this.filters = Object.assign({}, this.filters, {
           order: `${this.$store.state.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.state.pageIndex,
           keywords: this.$store.state.keywords,
-        }));
+        });
+
+        this.$store.dispatch(action, this.filters);
       },
       onSearch(keywords) {
         this.$store.dispatch('updateKeywords', keywords);
@@ -90,8 +95,7 @@
         this.filters = {};
       },
       onLowStockChecked(isChecked) {
-        console.log(isChecked)
-        Object.assign(this.filters, {
+        this.filters = Object.assign({}, this.filters, {
           low_stock: isChecked,
         });
         this.fetch();

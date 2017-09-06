@@ -123,7 +123,7 @@
       .search-button {
         float: right;
         position: absolute;
-        right: 15px;
+        right: 22px;
         top: 1px;
         margin-top: 28px;
         height: 35px;

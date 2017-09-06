@@ -71,7 +71,7 @@
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
-      <span v-if="lowStock" class="stock-warning ico ml-4">!</span>
+      <span v-if="lowStock" rel="tooltip" class="stock-warning ico ml-4" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
     </td>
     <td class="qty-spinner">
       <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />
@@ -114,6 +114,12 @@
       lowStock() {
         return this.product.product_low_stock_alert;
       },
+      lowStockLevel() {
+        return `<div class="text-sm-left">
+                  <p>${this.trans('product_low_stock')}</p>
+                  <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
+                </div>`;
+      },
     },
     methods: {
       productChecked(checkbox) {
@@ -145,6 +151,7 @@
           this.$refs[ref].checked = checked;
         }
       });
+      $('[data-toggle="pstooltip"]').pstooltip();
     },
     data: () => ({
       bulkEdition: false,
@@ -183,6 +190,7 @@
         border: 1px solid $danger;
         background: lighten($danger, 30%);
         padding: 0 5px;
+        cursor: pointer;
       }
     }
   }
