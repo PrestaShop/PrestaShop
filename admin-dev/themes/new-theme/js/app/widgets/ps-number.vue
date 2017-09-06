@@ -61,7 +61,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~prestakit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
   .ps-number {
     text-indent: 5px;
     height: 33px;
@@ -77,7 +77,7 @@
   }
   .danger {
     border: 1px solid $danger;
-    background-color: $white;
+    background-color: #fff;
     color: $gray-dark;
     &:focus {
       outline: none;
