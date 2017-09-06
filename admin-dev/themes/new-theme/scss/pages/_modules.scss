@@ -110,62 +110,61 @@
  */
 
 .module-item-list {
+  .container-fluid {
+    padding: {
+      top: $grid-gutter-width / 2;
+      bottom: $grid-gutter-width / 2;
+    }
+    background-color: white;
+  }
+  +:nth-child(even) {
     .container-fluid {
-      padding: {
-        top: $grid-gutter-width / 2;
-        bottom: $grid-gutter-width / 2;
+      background-color: #f5f8f9 !important;
+    }
+  }
+
+  .module-item-wrapper-list {
+    @media (max-width: 33.9em) {
+      text-align: center;
+    }
+
+    .module-logo-thumb-list {
+      height:64px;
+      max-width:64px;
+      margin: 0 auto;
+      @media (max-width: 33.9em) {
+        height: auto;
+        max-height: 64px;
       }
-      background-color: white;
+      img {
+        width: 100%;
+        max-width: 34px;
+        margin-bottom: 0.5em;
+      }
     }
-    +:nth-child(even) {
-      .container-fluid {
-        background-color: #f5f8f9 !important;
+    .module-name-list {
+      font-weight: bolder;
+      color: $gray-dark;
+      margin: 0;
+    }
+    .module-version-author-list {
+      font-weight: bold;
+      color: $gray-medium;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      b {
+        font-weight: bold;
+        color: $gray-dark;
       }
     }
 
-    .module-item-wrapper-list {
-
-        @media (max-width: 33.9em) {
-            text-align: center;
-        }
-
-        > .module-logo-thumb-list {
-            height:64px;
-            max-width:64px;
-            margin: 0 auto;
-            @media (max-width: 33.9em) {
-                height: auto;
-                max-height: 64px;
-            }
-            img {
-                width: 100%;
-                max-width: 64px;
-                margin-bottom: 0.5em;
-            }
-        }
-        .module-name-list {
-            font-weight: bolder;
-            color: $gray-dark;
-            margin: 0;
-        }
-        > .module-version-author-list {
-            font-weight: bold;
-            color: $gray-medium;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            b {
-                font-weight: bold;
-                color: $gray-dark;
-            }
-        }
-
-        .module-quick-action-list {
-            > [class^="module-star-ranking-"] {
-                display:none;
-            }
-        }
+    .module-quick-action-list {
+      > [class^="module-star-ranking-"] {
+        display:none;
+      }
     }
+  }
 }
 
 .badges-container {

@@ -40,7 +40,7 @@ $(function() {
     }, 1250 );
   }
 
-  $('body').on('click', 'a.module-read-more-grid-btn', function (event) {
+  $('body').on('click', 'a.module-read-more-grid-btn, a.module-read-more-list-btn', function (event) {
     event.preventDefault();
     var urlCallModule = event.target.href;
     var modulePoppin = $(event.target).data('target');
