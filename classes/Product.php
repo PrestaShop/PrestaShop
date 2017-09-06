@@ -1578,16 +1578,20 @@ class ProductCore extends ObjectModel
         $combination = new Combination($id_product_attribute);
 
         if (!$update_all_fields) {
-            $combination->setFieldsToUpdate(array(
-                'price' => !is_null($price),
-                'wholesale_price' => !is_null($wholesale_price),
-                'ecotax' => !is_null($ecotax),
-                'weight' => !is_null($weight),
-                'unit_price_impact' => !is_null($unit),
-                'default_on' => !is_null($default),
-                'minimal_quantity' => !is_null($minimal_quantity),
-                'available_date' => !is_null($available_date),
-            ));
+            $fieldsToUpdate = compact(
+                'price',
+                'wholesale_price',
+                'ecotax',
+                'weight',
+                'unit_price_impact',
+                'default_on',
+                'minimal_quantity',
+                'available_date'
+            );
+            $fieldsToUpdate = array_filter(
+                $fieldsToUpdate
+            );
+            $combination->setFieldsToUpdate($fieldsToUpdate);
         }
 
         $price = str_replace(',', '.', $price);
