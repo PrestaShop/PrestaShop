@@ -31,8 +31,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvResponse extends StreamedResponse
 {
+    // Mode used to paginate page per page, 1/100, 2/100, 3/000, etc
     const MODE_PAGINATION = 1;
 
+    // Mode used to paginate by offset, 1/100, 100/100, 200/100, etc (like MySql limit)
     const MODE_OFFSET = 2;
 
     /**
@@ -159,6 +161,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * Callback function for StreamedResponse
+     * @throws \LogicException
      */
     public function processData()
     {
@@ -230,6 +233,7 @@ class CsvResponse extends StreamedResponse
 
     /**
      * Increment the start data for the process
+     * @throws \LogicException
      */
     private function incrementData()
     {
