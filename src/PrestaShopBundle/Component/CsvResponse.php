@@ -63,7 +63,7 @@ class CsvResponse extends StreamedResponse
     /**
      * @var int Default limit
      */
-    private $limit = 100;
+    private $limit = 1000;
 
     /**
      * Constructor.
@@ -212,9 +212,9 @@ class CsvResponse extends StreamedResponse
             foreach ($data as $line) {
                 $lineData = array();
 
-                foreach ($line as $column => $value) {
-                    if (array_key_exists($column, $this->headersData)) {
-                        $lineData[] = $value;
+                foreach (array_keys($this->headersData) as $column) {
+                    if (array_key_exists($column, $line)) {
+                        $lineData[] = $line[$column];
                     }
                 }
 
