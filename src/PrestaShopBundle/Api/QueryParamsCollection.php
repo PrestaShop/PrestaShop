@@ -74,6 +74,28 @@ abstract class QueryParamsCollection
     }
 
     /**
+     * @param $pageSize int
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+        $this->queryParams['page_size'] = (int) $pageSize;
+
+        return $this;
+    }
+
+    /**
+     * @param $pageIndex int
+     * @return $this
+     */
+    public function setPageIndex($pageIndex)
+    {
+        $this->queryParams['page_index'] = (int) $pageIndex;
+
+        return $this;
+    }
+
+    /**
      * @param Request $request
      * @return $this
      */
