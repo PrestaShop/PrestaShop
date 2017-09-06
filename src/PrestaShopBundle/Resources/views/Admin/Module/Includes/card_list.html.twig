@@ -52,12 +52,13 @@
         <div class="col-sm-12 col-md-10 col-lg-11">
           <h3
             class="text-ellipsis module-name-list"
-            data-toggle="tooltip"
+            data-toggle="pstooltip"
             data-placement="top"
             title="{{ module.attributes.displayName|raw }}"
           >
             {% if module.attributes.displayName %}
               {{ module.attributes.displayName|raw }}
+
             {% else %}
               {{ module.attributes.name }}
             {% endif %}

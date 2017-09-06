@@ -254,7 +254,7 @@
     <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
       {% if label_attr['tooltip'] is defined %}
         {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
-        <i class="icon-question" data-toggle="tooltip" data-placement="{{ placement }}"
+        <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
            title="{{ label_attr['tooltip'] }}"></i>
       {% endif %}
 

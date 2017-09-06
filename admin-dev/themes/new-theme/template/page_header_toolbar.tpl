@@ -39,7 +39,7 @@
             onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target}
             data-target="{$btn.modal_target}"
             data-toggle="modal"{/if}{if isset($btn.help)}
-            data-toggle="tooltip"
+            data-toggle="pstooltip"
             data-placement="bottom"{/if}
           >
             <i class="material-icons">{$btn.icon}</i>
