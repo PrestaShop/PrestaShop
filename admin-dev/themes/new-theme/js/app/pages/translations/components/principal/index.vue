@@ -30,7 +30,7 @@
           {{noResultInfo}}
         </PSAlert>
         <div class="translations-catalog row p-0" v-else>
-          <PSAlert v-if="searchActive" alertType="ALERT_TYPE_INFO" :hasClose="false">
+          <PSAlert v-if="searchActive" class="col-sm-12" alertType="ALERT_TYPE_INFO" :hasClose="false">
             {{searchInfo}}
           </PSAlert>
           <div class="col-sm-8 pt-3">

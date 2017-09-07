@@ -24,11 +24,6 @@
  *-->
 <template>
   <div class="alert" :class="classObject" role="alert">
-    <i v-if="isInfo" class="material-icons">info_outline</i>
-    <i v-else class="material-icons">error_outline</i>
-    <p class="alert-text">
-      <slot />
-    </p>
     <button
       v-if="hasClose"
       type="button"
@@ -39,6 +34,9 @@
     >
       <span class="material-icons">close</span>
     </button>
+    <p class="alert-text">
+      <slot />
+    </p>
   </div>
 </template>
 
