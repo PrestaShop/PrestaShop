@@ -668,6 +668,7 @@
                               <th>{{ 'Combination'|trans({}, 'Admin.Catalog.Feature') }}</th>
                               <th>{{ 'Currency'|trans({}, 'Admin.Global') }}</th>
                               <th>{{ 'Country'|trans({}, 'Admin.Global') }}</th>
+                              <th>{{ 'Zone'|trans({}, 'Admin.Global') }}</th>
                               <th>{{ 'Group'|trans({}, 'Admin.Global') }}</th>
                               <th>{{ 'Customer'|trans({}, 'Admin.Global') }}</th>
                               <th>{{ 'Fixed price'|trans({}, 'Admin.Catalog.Feature') }}</th>
@@ -696,32 +697,39 @@
                             data-content="{{ "Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first."|trans({}, 'Admin.Catalog.Help') }}" ></span>
                         </h2>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <fieldset class="form-group">
                           <label>{{ 'Priorities'|trans({}, 'Admin.Catalog.Feature') }}</label>
                           {{ form_errors(form.step2.specificPricePriority_0) }}
                           {{ form_widget(form.step2.specificPricePriority_0) }}
                         </fieldset>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <fieldset class="form-group">
                           <label>&nbsp;</label>
                           {{ form_errors(form.step2.specificPricePriority_1) }}
                           {{ form_widget(form.step2.specificPricePriority_1) }}
                         </fieldset>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <fieldset class="form-group">
                           <label>&nbsp;</label>
                           {{ form_errors(form.step2.specificPricePriority_2) }}
                           {{ form_widget(form.step2.specificPricePriority_2) }}
                         </fieldset>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <fieldset class="form-group">
                           <label>&nbsp;</label>
                           {{ form_errors(form.step2.specificPricePriority_3) }}
                           {{ form_widget(form.step2.specificPricePriority_3) }}
+                        </fieldset>
+                      </div>
+                      <div class="col-md-2">
+                        <fieldset class="form-group">
+                          <label>&nbsp;</label>
+                          {{ form_errors(form.step2.specificPricePriority_4) }}
+                          {{ form_widget(form.step2.specificPricePriority_4) }}
                         </fieldset>
                       </div>
                       <div class="col-md-12">
