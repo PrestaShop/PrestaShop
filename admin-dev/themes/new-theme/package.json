@@ -13,7 +13,7 @@
     "author": "PrestaShop",
     "license": "OSL-3.0",
     "devDependencies": {
-        "PrestaKit": "git+https://github.com/PrestaShop/prestashop-ui-kit.git",
+        "PrestaKit": "git+https://github.com/PrestaShop/prestashop-ui-kit.git#0.0.34",
         "babel-core": "^6.4.5",
         "babel-loader": "^6.2.1",
         "babel-preset-env": "^1.2.1",
