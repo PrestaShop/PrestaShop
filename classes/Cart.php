@@ -3313,6 +3313,7 @@ class CartCore extends ObjectModel
 				FROM '._DB_PREFIX_.'cart c
 				WHERE NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'orders o WHERE o.`id_cart` = c.`id_cart`
 									AND o.`id_customer` = '.(int)$id_customer.')
+				AND c.`id_guest` <> 0
 				AND c.`id_customer` = '.(int)$id_customer.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
