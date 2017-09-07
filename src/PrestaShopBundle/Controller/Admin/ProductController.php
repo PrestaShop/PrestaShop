@@ -891,8 +891,8 @@ class ProductController extends FrameworkBundleAdminController
             'name' => $translator->trans('Name', array(), 'Admin.Global'),
             'reference' => $translator->trans('Reference', array(), 'Admin.Global'),
             'name_category' => $translator->trans('Category', array(), 'Admin.Global'),
-            'price' => $translator->trans('Base price', array(), 'Admin.Catalog.Feature'),
-            'price_final' => $translator->trans('Final price', array(), 'Admin.Catalog.Feature'),
+            'price' => $translator->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
+            'price_final' => $translator->trans('Price (tax incl.)', array(), 'Admin.Catalog.Feature'),
             'sav_quantity' => $translator->trans('Quantity', array(), 'Admin.Global'),
             'badge_danger' => $translator->trans('Status', array(), 'Admin.Global'),
             'position' => $translator->trans('Position', array(), 'Admin.Global'),
@@ -901,8 +901,8 @@ class ProductController extends FrameworkBundleAdminController
         return (new CsvResponse())
             ->setData($dataCallback)
             ->setHeadersData($headersData)
-            ->setLimit(5000)
             ->setModeType(CsvResponse::MODE_OFFSET)
+            ->setLimit(5000)
             ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
 

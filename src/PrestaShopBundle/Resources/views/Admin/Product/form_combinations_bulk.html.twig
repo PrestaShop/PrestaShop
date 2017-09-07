@@ -74,7 +74,9 @@
   </div>
 
   <div class="col-lg-4 col-md-3 col-sm-6">
-    <label class="form-control-label">{{ form.low_stock_threshold.vars.label }}</label>
+    <label class="form-control-label">{{ form.low_stock_threshold.vars.label }}
+      <span class="help-box" data-toggle="popover" data-content="{{ 'You can increase or decrease low stock levels in bulk. You cannot disable them in bulk: you have to do it on a per-combination basis.'|trans({}, 'Admin.Catalog.Feature') }}" ></span>
+    </label>
     {{ form_errors(form.low_stock_threshold) }}
     {{ form_widget(form.low_stock_threshold) }}
   </div>
