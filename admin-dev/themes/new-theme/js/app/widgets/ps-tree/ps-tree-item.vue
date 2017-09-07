@@ -24,8 +24,8 @@
  *-->
 <template>
   <div :class="{className}">
-    <div class="flex tree-name" :class="{active: active, disable: model.disable}" @click="clickElement">
-      <div class="flex" :class="chevron">
+    <div class="d-flex tree-name" :class="{active: active, disable: model.disable}" @click="clickElement">
+      <div class="d-flex" :class="chevron">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
       </div>

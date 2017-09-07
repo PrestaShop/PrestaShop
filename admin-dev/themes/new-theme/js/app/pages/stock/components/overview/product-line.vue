@@ -24,7 +24,7 @@
  *-->
 <template>
   <tr :class="{'low-stock':lowStock}">
-    <td class="flex p-r-1">
+    <td class="d-flex align-items-center pr-1">
       <PSCheckbox
         :id="`product-${product.combination_id}`"
         :ref="`product-${product.combination_id}`"
@@ -71,7 +71,7 @@
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
-      <span v-if="lowStock" rel="tooltip" class="stock-warning ico ml-4" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
+      <span v-if="lowStock" class="stock-warning ico ml-4" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
     </td>
     <td class="qty-spinner">
       <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />

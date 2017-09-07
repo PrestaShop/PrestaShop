@@ -117,7 +117,7 @@
   @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
     z-index: 0;
-    height: 128px;
+    height: 120px;
   }
   .stock-app {
     padding-top: 3em;
@@ -131,41 +131,6 @@
     }
     word-wrap: break-word;
     white-space: normal;
-  }
-  .ui-spinner {
-    .ui-spinner-button {
-      right: 30px;
-      cursor: pointer;
-      display: none;
-      z-index: 3;
-      transition: all 0.2s ease;
-      height: 20px;
-      .product-actions & {
-        right: 7px;
-      }
-    }
-    .ui-spinner-up::before {
-      font-family: 'Material Icons';
-      content: "\E5C7";
-      font-size: 20px;
-      color: $gray-dark;
-      position: relative;
-      top: -3px;
-    }
-    .ui-spinner-down::before {
-      font-family: 'Material Icons';
-      content: "\E5C5";
-      font-size: 20px;
-      color: $gray-dark;
-      bottom: 5px;
-      position: relative;
-    }
-    span {
-      display: none;
-    }
-  }
-  .qty.active .ui-spinner-button{
-    display: block;
   }
   #growls.default {
     top: 20px;
@@ -190,16 +155,6 @@
     .growl-close {
       color: $success;
       font-size: 20px
-    }
-  }
-  .d-inline {
-    display: inline;
-  }
-  .flex {
-    display: flex;
-    align-items: center;
-    &.column {
-      flex-direction: column;
     }
   }
   .btn:disabled {

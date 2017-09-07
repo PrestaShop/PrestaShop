@@ -30,12 +30,12 @@
 		  <p class="ml-2 low-filter-label" @click="onLabelClick">{{trans('filter_low_stock')}}</p>
     </div>
     <div class="col">
-      <a id="desc-product-export" class="float-sm-right ml-2" :href="stockImportUrl">
+      <a class="float-sm-right ml-2" :href="stockImportUrl" target="_blank">
         <span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
           <i class="material-icons">cloud_download</i>
         </span>
       </a>
-      <a id="desc-product-export" class="float-sm-right" :href="stockExporttUrl">
+      <a class="float-sm-right" :href="stockExporttUrl">
         <span data-toggle="pstooltip" :title="stockExportTitle" data-html="true" data-placement="top">
           <i class="material-icons">cloud_upload</i>
         </span>
