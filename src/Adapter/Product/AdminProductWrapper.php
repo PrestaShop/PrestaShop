@@ -224,6 +224,7 @@ class AdminProductWrapper
         $id_shop = $specificPriceValues['sp_id_shop'] ? $specificPriceValues['sp_id_shop'] : 0;
         $id_currency = $specificPriceValues['sp_id_currency'] ? $specificPriceValues['sp_id_currency'] : 0;
         $id_country = $specificPriceValues['sp_id_country'] ? $specificPriceValues['sp_id_country'] : 0;
+        $idZone = $specificPriceValues['sp_id_zone'] ? $specificPriceValues['sp_id_zone'] : 0;
         $id_group = $specificPriceValues['sp_id_group'] ? $specificPriceValues['sp_id_group'] : 0;
         $id_customer = !empty($specificPriceValues['sp_id_customer']['data']) ? $specificPriceValues['sp_id_customer']['data'][0] : 0;
         $price = isset($specificPriceValues['leave_bprice']) ? '-1' : $specificPriceValues['sp_price'];
@@ -247,13 +248,14 @@ class AdminProductWrapper
             $this->errors[] = $this->translator->trans('Invalid date range', array(), 'Admin.Catalog.Notification');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = $this->translator->trans('Submitted reduction value (0-100) is out-of-range', array(), 'Admin.Catalog.Notification');
-        } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
+        } elseif ($this->validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute, $idZone)) {
             $specificPrice = new SpecificPrice();
             $specificPrice->id_product = (int)$id_product;
             $specificPrice->id_product_attribute = (int)$id_product_attribute;
             $specificPrice->id_shop = (int)$id_shop;
             $specificPrice->id_currency = (int)($id_currency);
             $specificPrice->id_country = (int)($id_country);
+            $specificPrice->id_zone = (int)($idZone);
             $specificPrice->id_group = (int)($id_group);
             $specificPrice->id_customer = (int)$id_customer;
             $specificPrice->price = (float)($price);
@@ -275,9 +277,9 @@ class AdminProductWrapper
     /**
      * Validate a specific price
      */
-    private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
+    private function validateSpecificPrice($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0, $idZone = 0)
     {
-        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
+        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($idZone) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = 'Wrong IDs';
         } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction))) {
             $this->errors[] = 'Invalid price/discount amount';
@@ -287,7 +289,7 @@ class AdminProductWrapper
             $this->errors[] = 'Please select a discount type (amount or percentage).';
         } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = 'The from/to date is invalid.';
-        } elseif (SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (SpecificPrice::exists((int)$id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false, $idZone)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {
             return true;
@@ -307,7 +309,7 @@ class AdminProductWrapper
      *
      * @return array
      */
-    public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups)
+    public function getSpecificPricesList($product, $defaultCurrency, $shops, $currencies, $countries, $groups, $zones)
     {
         $content = array();
         $specific_prices = SpecificPrice::getByProductId((int)$product->id);
@@ -328,6 +330,14 @@ class AdminProductWrapper
             $tmp[$country['id_country']] = $country;
         }
         $countries = $tmp;
+
+
+        $tmp = array();
+        foreach ($zones as $zone) {
+            $tmp[$zone['id_zone']] = $zone;
+        }
+        $zones = $tmp;
+
 
         $tmp = array();
         foreach ($groups as $group) {
@@ -401,13 +411,14 @@ class AdminProductWrapper
                         'shop' => ($specific_price['id_shop'] ? $shops[$specific_price['id_shop']]['name'] : $this->translator->trans('All shops', array(), 'Admin.Global')),
                         'currency' => ($specific_price['id_currency'] ? $currencies[$specific_price['id_currency']]['name'] : $this->translator->trans('All currencies', array(), 'Admin.Global')),
                         'country' => ($specific_price['id_country'] ? $countries[$specific_price['id_country']]['name'] : $this->translator->trans('All countries', array(), 'Admin.Global')),
+                        'zone' => ($specific_price['id_zone'] ? $zones[$specific_price['id_zone']]['name'] : $this->translator->trans('All zones', array(), 'Admin.Global')),
                         'group' => ($specific_price['id_group'] ? $groups[$specific_price['id_group']]['name'] : $this->translator->trans('All groups', array(), 'Admin.Global')),
                         'customer' => (isset($customer_full_name) ? $customer_full_name : $this->translator->trans('All customers', array(), 'Admin.Global')),
                         'fixed_price' => $fixed_price,
                         'impact' => $impact,
                         'period' => $period,
                         'from_quantity' => $specific_price['from_quantity'],
-                        'can_delete' => (!$rule->id && $can_delete_specific_prices) ? true : false
+                        'can_delete' => (!$rule->id && $can_delete_specific_prices) ? true : false,
                     ];
 
                     unset($customer_full_name);
@@ -462,8 +473,9 @@ class AdminProductWrapper
             return [
                 0 => "id_shop",
                 1 => "id_currency",
-                2 => "id_country",
-                3 => "id_group"
+                2 => "id_zone",
+                3 => "id_country",
+                4 => "id_group",
             ];
         }
 
