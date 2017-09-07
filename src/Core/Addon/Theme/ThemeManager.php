@@ -283,9 +283,6 @@ class ThemeManager implements AddonManagerInterface
         $moduleManager = $moduleManagerBuilder->build();
 
         foreach ($modules as $key => $moduleName) {
-            if (is_array($moduleName)) {
-                $moduleName=key($moduleName);
-            }
             if (!$moduleManager->isInstalled($moduleName)) {
                 $moduleManager->install($moduleName);
             }
