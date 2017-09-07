@@ -58,7 +58,7 @@
         {{ form_widget(form.link_rewrite) }}
       </div>
       <div class="col-md-2">
-        <button type="button" class="btn-action btn btn-action btn-block text-uppercase" id="seo-url-regenerate">{{ 'Reset URL'|trans({}, 'Admin.Catalog.Feature') }}</button>
+        <button type="button" class="btn btn-block btn-outline-secondary" id="seo-url-regenerate">{{ 'Reset URL'|trans({}, 'Admin.Catalog.Feature') }}</button>
       </div>
     </div>
   </fieldset>
@@ -66,7 +66,6 @@
   <div class="row">
     <div class="col-md-9">
       <div class="alert alert-info" role="alert">
-        <i class="material-icons">help</i>
         <p class="alert-text">
           {% if 'PS_REWRITING_SETTINGS'|configuration == 0 %}
             <strong>{{ 'Friendly URLs are currently disabled.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
@@ -115,7 +114,6 @@
   <div class="row">
     <div class="col-md-9">
       <div class="alert alert-info" role="alert">
-        <i class="material-icons">help</i>
         <p class="alert-text">
           {{ 'No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.'|trans({}, 'Admin.Catalog.Help') }}<br>
           {{ 'Permanent redirection (301) = Permanently display another product or category instead.'|trans({}, 'Admin.Catalog.Help') }}<br>

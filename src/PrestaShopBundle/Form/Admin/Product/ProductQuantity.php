@@ -119,9 +119,9 @@ class ProductQuantity extends CommonAbstractType
                         ) => 0,
                     ),
                     'choices_as_values' => true,
-                    'expanded'          => true,
-                    'required'          => true,
-                    'multiple'          => false,
+                    'expanded' => true,
+                    'required' => true,
+                    'multiple' => false,
                 )
             );
 
@@ -130,8 +130,8 @@ class ProductQuantity extends CommonAbstractType
                 'qty_0',
                 'Symfony\Component\Form\Extension\Core\Type\NumberType',
                 array(
-                    'required'    => true,
-                    'label'       => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
+                    'required' => true,
+                    'label' => $this->translator->trans('Quantity', array(), 'Admin.Catalog.Feature'),
                     'constraints' => array(
                         new Assert\NotBlank(),
                         new Assert\Type(array('type' => 'numeric')),
@@ -151,14 +151,23 @@ class ProductQuantity extends CommonAbstractType
                 'minimal_quantity',
                 'Symfony\Component\Form\Extension\Core\Type\NumberType',
                 array(
-                    'required'    => true,
-                    'label'       => $this->translator->trans(
-                        'Minimum quantity for sale',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    ),
+                    'required' => true,
+                    'label' => $this->translator->trans('Minimum quantity for sale', array(), 'Admin.Catalog.Feature'),
                     'constraints' => array(
                         new Assert\NotBlank(),
+                        new Assert\Type(array('type' => 'numeric')),
+                    ),
+                )
+            )
+            ->add(
+                'low_stock_threshold',
+                'Symfony\Component\Form\Extension\Core\Type\NumberType',
+                array(
+                    'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+                    'attr' => array(
+                        'placeholder' => $this->translator->trans('Leave empty to disable', array(), 'Admin.Catalog.Feature'),
+                    ),
+                    'constraints' => array(
                         new Assert\Type(array('type' => 'numeric')),
                     ),
                 )
@@ -167,26 +176,22 @@ class ProductQuantity extends CommonAbstractType
                 'available_now',
                 'PrestaShopBundle\Form\Admin\Type\TranslateType',
                 array(
-                    'type'     => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-                    'options'  => array(),
-                    'locales'  => $this->locales,
+                    'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+                    'options' => array(),
+                    'locales' => $this->locales,
                     'hideTabs' => true,
-                    'label'    => $this->translator->trans('Label when in stock', array(), 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Label when in stock', array(), 'Admin.Catalog.Feature'),
                 )
             )
             ->add(
                 'available_later',
                 'PrestaShopBundle\Form\Admin\Type\TranslateType',
                 array(
-                    'type'     => 'Symfony\Component\Form\Extension\Core\Type\TextType',
-                    'options'  => array(),
-                    'locales'  => $this->locales,
+                    'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+                    'options' => array(),
+                    'locales' => $this->locales,
                     'hideTabs' => true,
-                    'label'    => $this->translator->trans(
-                        'Label when out of stock (and back order allowed)',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    ),
+                    'label' => $this->translator->trans('Label when out of stock (and back order allowed)', array(), 'Admin.Catalog.Feature'),
                 )
             )
             ->add(
@@ -194,8 +199,8 @@ class ProductQuantity extends CommonAbstractType
                 'PrestaShopBundle\Form\Admin\Type\DatePickerType',
                 array(
                     'required' => false,
-                    'label'    => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),
-                    'attr'     => array('placeholder' => 'YYYY-MM-DD'),
+                    'label' => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),
+                    'attr' => array('placeholder' => 'YYYY-MM-DD'),
                 )
             )
             ->add(
@@ -203,11 +208,7 @@ class ProductQuantity extends CommonAbstractType
                 'PrestaShopBundle\Form\Admin\Product\ProductVirtual',
                 array(
                     'required' => false,
-                    'label'    => $this->translator->trans(
-                        'Does this product have an associated file?',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    ),
+                    'label' => $this->translator->trans('Does this product have an associated file?', array(), 'Admin.Catalog.Feature'),
                 )
             );
 
@@ -217,11 +218,7 @@ class ProductQuantity extends CommonAbstractType
                 $form = $event->getForm();
 
                 //Manage out_of_stock field with contextual values/label
-                $defaultChoiceLabel = $this->translator->trans(
-                        'Use default behavior',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    ).' (';
+                $defaultChoiceLabel = $this->translator->trans('Use default behavior', array(), 'Admin.Catalog.Feature').' (';
                 $defaultChoiceLabel .= $this->configuration->get('PS_ORDER_OUT_OF_STOCK') == 1 ?
                     $this->translator->trans('Allow orders', array(), 'Admin.Catalog.Feature') :
                     $this->translator->trans('Deny orders', array(), 'Admin.Catalog.Feature');
@@ -231,20 +228,16 @@ class ProductQuantity extends CommonAbstractType
                     'out_of_stock',
                     'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
                     array(
-                        'choices'           => array(
+                        'choices' => array(
                             $this->translator->trans('Deny orders', array(), 'Admin.Catalog.Feature')  => '0',
                             $this->translator->trans('Allow orders', array(), 'Admin.Catalog.Feature') => '1',
-                            $defaultChoiceLabel                                                        => '2',
+                            $defaultChoiceLabel => '2',
                         ),
                         'choices_as_values' => true,
-                        'expanded'          => true,
-                        'required'          => false,
-                        'placeholder'       => false,
-                        'label'             => $this->translator->trans(
-                            'When out of stock',
-                            array(),
-                            'Admin.Catalog.Feature'
-                        ),
+                        'expanded' => true,
+                        'required' => false,
+                        'placeholder'=> false,
+                        'label' => $this->translator->trans('When out of stock', array(), 'Admin.Catalog.Feature'),
                     )
                 );
 
@@ -252,48 +245,28 @@ class ProductQuantity extends CommonAbstractType
                 $pack_stock_type = $this->configuration->get('PS_PACK_STOCK_TYPE');
                 $defaultChoiceLabel = $this->translator->trans('Default', array(), 'Admin.Global').': ';
                 if ($pack_stock_type == 0) {
-                    $defaultChoiceLabel .= $this->translator->trans(
-                        'Decrement pack only.',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    );
+                    $defaultChoiceLabel .= $this->translator->trans('Decrement pack only.', array(), 'Admin.Catalog.Feature');
                 } elseif ($pack_stock_type == 1) {
-                    $defaultChoiceLabel .= $this->translator->trans(
-                        'Decrement products in pack only.',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    );
+                    $defaultChoiceLabel .= $this->translator->trans('Decrement products in pack only.', array(), 'Admin.Catalog.Feature');
                 } else {
-                    $defaultChoiceLabel .= $this->translator->trans(
-                        'Decrement both.',
-                        array(),
-                        'Admin.Catalog.Feature'
-                    );
+                    $defaultChoiceLabel .= $this->translator->trans('Decrement both.', array(), 'Admin.Catalog.Feature');
                 }
 
                 $form->add(
                     'pack_stock_type',
                     'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
                     array(
-                        'choices'           => array(
+                        'choices' => array(
                             $this->translator->trans('Decrement pack only.', array(), 'Admin.Catalog.Feature') => '0',
-                            $this->translator->trans(
-                                'Decrement products in pack only.',
-                                array(),
-                                'Admin.Catalog.Feature'
-                            )                                                                                  => '1',
-                            $this->translator->trans('Decrement both.', array(), 'Admin.Catalog.Feature')      => '2',
-                            $defaultChoiceLabel                                                                => '3',
+                            $this->translator->trans('Decrement products in pack only.', array(), 'Admin.Catalog.Feature') => '1',
+                            $this->translator->trans('Decrement both.', array(), 'Admin.Catalog.Feature')  => '2',
+                            $defaultChoiceLabel => '3',
                         ),
                         'choices_as_values' => true,
-                        'expanded'          => false,
-                        'required'          => true,
-                        'placeholder'       => false,
-                        'label'             => $this->translator->trans(
-                            'Pack quantities',
-                            array(),
-                            'Admin.Catalog.Feature'
-                        ),
+                        'expanded' => false,
+                        'required' => true,
+                        'placeholder' => false,
+                        'label' => $this->translator->trans('Pack quantities', array(), 'Admin.Catalog.Feature'),
                     )
                 );
             }

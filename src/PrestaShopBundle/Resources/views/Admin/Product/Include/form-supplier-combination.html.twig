@@ -27,8 +27,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="alert alert-info" role="alert">
-        <i class="material-icons">help</i>
-        <p>
+        <p class="alert-text">
           {{ 'You can specify product reference(s) for each associated supplier. Click "Save" after changing selected suppliers to display the associated product references.'|trans({}, 'Admin.Catalog.Help')|raw }}
         </p>
       </div>
@@ -43,9 +42,9 @@
     <div class="panel-body" id="supplier_combination_{{ supplierId }}">
       <div>
         {{ form_errors(form[collectionName]) }}
-        <table class="table table-striped">
-          <thead>
-            <tr class="text-uppercase">
+        <table class="table">
+          <thead class="thead-default">
+            <tr >
               <th width="30%">{{ 'Product name'|trans({}, 'Admin.Catalog.Feature') }}</th>
               <th width="30%">{{ 'Supplier reference'|trans({}, 'Admin.Catalog.Feature') }}</th>
               <th width="20%">{{ 'Price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}</th>

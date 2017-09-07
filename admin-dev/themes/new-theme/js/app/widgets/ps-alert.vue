@@ -29,7 +29,14 @@
     <p class="alert-text">
       <slot />
     </p>
-    <button v-if="hasClose" type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <button
+      v-if="hasClose"
+      type="button"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+      @click.stop="onClick"
+    >
       <span class="material-icons">close</span>
     </button>
   </div>
@@ -42,6 +49,7 @@
 
   export default {
     props: {
+      duration: false,
       alertType: { type: String, required: true },
       hasClose: { type: Boolean, required: true },
     },
@@ -55,6 +63,11 @@
       },
       isInfo() {
         return this.alertType === ALERT_TYPE_INFO;
+      },
+    },
+    methods: {
+      onClick() {
+        this.$emit('closeAlert');
       },
     },
   };
@@ -85,6 +98,7 @@
     border-radius: 0;
     border-width: 0.125rem;
     padding: 0;
+    margin:0;
     &.alert-info {
       background: $notice;
     }

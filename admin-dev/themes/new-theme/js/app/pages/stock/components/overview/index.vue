@@ -25,7 +25,10 @@
 <template>
   <section>
     <ProductsActions />
-    <ProductsTable :isLoading="isLoading" @sort="sort" />
+    <ProductsTable
+      :isLoading="isLoading"
+      @sort="sort"
+    />
   </section>
 </template>
 

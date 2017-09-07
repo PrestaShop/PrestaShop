@@ -81,7 +81,7 @@
   {%- if required and placeholder is none and not placeholder_in_choices and not multiple -%}
     {% set required = false %}
   {%- endif -%}
-  <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %} data-toggle="select2">
+  <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
     {%- if placeholder is not none -%}
       <option
         value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? placeholder }}</option>
@@ -254,7 +254,7 @@
     <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ translation_domain is same as(false) ? label|raw : label|raw }}
       {% if label_attr['tooltip'] is defined %}
         {% set placement = label_attr['tooltip_placement'] is defined ? label_attr['tooltip_placement'] : 'top' %}
-        <i class="icon-question" data-toggle="tooltip" data-placement="{{ placement }}"
+        <i class="icon-question" data-toggle="pstooltip" data-placement="{{ placement }}"
            title="{{ label_attr['tooltip'] }}"></i>
       {% endif %}
 

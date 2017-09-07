@@ -31,7 +31,7 @@
 {% endmacro %}
 
 {% macro tooltip(text, icon, position) %}
-  <span data-toggle="tooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
+  <span data-toggle="pstooltip" class="label-tooltip" data-original-title="{{ text }}" data-html="true" data-placement="{{ position|default('top') }}">
     <i class="material-icons">{{ icon }}</i>
   </span>
 {% endmacro %}

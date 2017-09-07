@@ -47,7 +47,7 @@
       </div>
       <h3
         class="text-ellipsis module-name-grid"
-        data-toggle="tooltip"
+        data-toggle="pstooltip"
         data-placement="top"
         title="{{ module.attributes.displayName|raw }}"
       >
@@ -58,7 +58,7 @@
           {{ module.attributes.name }}
         {% endif %}
       </h3>
-      <div class="text-ellipsis xsmall module-version-author-grid">
+      <div class="text-ellipsis small-text module-version-author-grid">
         {% block addon_version %}
           {% if module.attributes.productType == "service" %}
             {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
@@ -78,7 +78,7 @@
         </div>
         <div class="module-read-more-grid">
           {% if module.attributes.id != "0" %}
-            <a class="module-read-more-grid-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+            <a class="module-read-more-grid-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
           {% endif %}
         </div>
       {% endblock %}

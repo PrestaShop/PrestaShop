@@ -24,7 +24,13 @@
  *-->
 <template>
   <tr>
-    <td class="flex pr-1">
+    <td class="flex p-r-1">
+      <PSCheckbox
+        :id="`product-${product.combination_id}`"
+        :ref="`product-${product.combination_id}`"
+        :model="product"
+        @checked="productChecked"
+      />
       <PSMedia
         class="ml-1"
         :thumbnail="thumbnail"
@@ -67,7 +73,7 @@
       </span>
     </td>
     <td class="qty-spinner">
-      <Spinner :product="product" class="float-xs-right" />
+      <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />
     </td>
   </tr>
 </template>
@@ -77,6 +83,8 @@
   import PSCheckbox from 'app/widgets/ps-checkbox';
   import PSMedia from 'app/widgets/ps-media';
   import ProductDesc from 'app/pages/stock/mixins/product-desc';
+  import { EventBus } from 'app/utils/event-bus';
+  import _ from 'lodash';
 
   export default {
     props: ['product'],
@@ -103,6 +111,40 @@
         return productAvailableQty + productReservedQty;
       },
     },
+    methods: {
+      productChecked(checkbox) {
+        if (checkbox.checked) {
+          this.$store.dispatch('addSelectedProduct', checkbox.item);
+        } else {
+          this.$store.dispatch('removeSelectedProduct', checkbox.item);
+        }
+      },
+      updateProductQty(productToUpdate) {
+        const updatedProduct = {
+          product_id: productToUpdate.product.product_id,
+          combination_id: productToUpdate.product.combination_id,
+          delta: productToUpdate.delta,
+        };
+        this.$store.dispatch('updateProductQty', updatedProduct);
+        if (productToUpdate.delta) {
+          this.$store.dispatch('addProductToUpdate', updatedProduct);
+        } else {
+          this.$store.dispatch('removeProductToUpdate', updatedProduct);
+        }
+      },
+    },
+    mounted() {
+      const self = this;
+      EventBus.$on('toggleProductsCheck', (checked) => {
+        const ref = `product-${self.product.combination_id}`;
+        if (this.$refs[ref]) {
+          this.$refs[ref].checked = checked;
+        }
+      });
+    },
+    data: () => ({
+      bulkEdition: false,
+    }),
     components: {
       Spinner,
       PSMedia,

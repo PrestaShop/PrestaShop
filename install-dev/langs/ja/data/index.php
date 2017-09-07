@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2017 PrestaShop
  *
@@ -22,36 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-.pstaggerAddTagInput:focus {
-     outline: 0;
-}
 
-.pstaggerAddTagWrapper {
-    width: 100%;
-}
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
 
-.pstaggerResetTagsBtn {
-    pointer: cursor !important;
-}
-.pstaggerTagsWrapper {
-    display: none;
-    position: relative;
-}
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 
-.pstaggerTag{
-    float: left;
-    border-radius: 5px;
-    height: 30px;
-    padding: 5px 10px;
-    margin-top: 10px;
-    margin-right: 5px;
-}
-
-.pstaggerClosingCross {
-    margin-left: 5px;
-    font-size: 12px;
-}
-
-.pstaggerWrapper {
-    position: relative;
-}
+header('Location: ../../../../');
+exit;

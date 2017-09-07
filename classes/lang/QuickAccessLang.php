@@ -44,6 +44,7 @@ class QuickAccessLangCore extends DataLangCore
                 md5('New voucher') => $this->translator->trans('New voucher', array(), 'Admin.Navigation.Header', $this->locale),
                 md5('Orders') => $this->translator->trans('Orders', array(), 'Admin.Navigation.Header', $this->locale),
                 md5('Installed modules') => $this->translator->trans('Installed modules', array(), 'Admin.Navigation.Header', $this->locale),
+                md5('Catalog evaluation') => $this->translator->trans('Catalog evaluation', array(), 'Admin.Navigation.Header', $this->locale),
             ),
         );
     }

@@ -23,15 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-    <div class="media">
-      <div class="media-left">
-        <img v-if="displayThumb" :src="thumbnail" class="thumbnail media-object"  />
-        <div v-else class="no-img"></div>
-      </div>
-      <div class="ml-1 desc media-body">
-        <slot />
-      </div>
+  <div>
+    <div class="media-left">
+      <img v-if="displayThumb" :src="thumbnail" class="thumbnail media-object"  />
+      <div v-else class="no-img"></div>
     </div>
+    <div class="m-l-1 desc media-body">
+      <slot />
+    </div>
+  </div>
 </template>
 <script>
   export default {

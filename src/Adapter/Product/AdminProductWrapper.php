@@ -117,6 +117,9 @@ class AdminProductWrapper
             $combination = new Combination($id_product_attribute);
             $combination->setImages(array());
         }
+        if (!isset($combinationValues['attribute_low_stock_threshold'])) {
+            $combinationValues['attribute_low_stock_threshold'] = null;
+        }
 
         $product->updateAttribute(
             $id_product_attribute,
@@ -135,7 +138,8 @@ class AdminProductWrapper
             $combinationValues['available_date_attribute'],
             false,
             array(),
-            $combinationValues['attribute_isbn']
+            $combinationValues['attribute_isbn'],
+            $combinationValues['attribute_low_stock_threshold']
         );
 
         StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, $id_product_attribute);
