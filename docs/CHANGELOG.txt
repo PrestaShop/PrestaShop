@@ -24,6 +24,32 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.1.17 - (2017-09-07)
+####################################
+
+    Fixed bugs:
+    BO: Enable the create_order button when ordering virtual products & there's no available carriers
+    BO: Fix the currency display in supply order
+    BO: Fix coverage calculations in Stock Cover Report
+    BO: Add paid order to stats dashboard even when there's no related invoice generated
+
+    FO: Wrong gift display in My Voucher page in My Account
+    FO: Fix the email validation in instant checkout
+    FO: Secure the contact_form from spammers
+    FO: Secure FO from JS injection in URL
+    FO: Fix select delivery_option when changing the address in OPC
+    FO: Display the price based on the feature Customer_Groups
+
+    CO: Speed up search queries
+    CO: Load id_shop routes when needed
+    CO: Fix error when deleting a cart
+    CO: Add is_object condition in isInt function to prevent the error 500
+    CO: Fix duplicate url for supplier list when try to access a supplier
+    CO: Update the encrypt and decrypt functions to support all PHP versions
+    CO: Check if CMS Category is associated to shop
+
+
+####################################
 #   v1.6.1.16 - (2017-08-01)
 ####################################
 

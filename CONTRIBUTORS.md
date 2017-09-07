@@ -203,6 +203,7 @@ GitHub contributors:
 - Joan
 - Joan Juvanteny
 - joce
+- jocelyn fournier
 - Joe Siwiak
 - joemartin247
 - Joep Hendrix
@@ -256,6 +257,7 @@ GitHub contributors:
 - Marco Cervellin
 - Marcos
 - Marius
+- Mark Sullivan
 - matiasiglesias
 - Mats Rynge
 - Matteo
