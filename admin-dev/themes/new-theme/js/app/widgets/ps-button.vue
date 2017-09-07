@@ -53,10 +53,6 @@
 
 <style lang="sass" scoped>
   @import "../../../scss/config/_settings.scss";
-  .btn {
-    border-radius:0;
-    min-height: 34px;
-  }
   .btn-secondary {
     background-color: $gray-medium;
     border: none;

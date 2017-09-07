@@ -26,10 +26,10 @@
   <div class="form-group">
     <label>{{label}}</label>
     <textarea class="form-control" rows="2" v-model="getTranslated" :class="{ missing : isMissing }"></textarea>
-    <PSButton class="mt-1 float-xs-right" :primary="false" ghost @click="resetTranslation">
+    <PSButton class="mt-3 float-sm-right" :primary="false" ghost @click="resetTranslation">
       {{ trans('button_reset') }}
     </PSButton>
-    <small class="mt-1">{{extraInfo}}</small>
+    <small class="mt-3">{{extraInfo}}</small>
   </div>
 </template>
 
@@ -90,6 +90,9 @@
 <style lang="sass" scoped>
   @import "../../../../../../scss/config/_settings.scss";
 
+  .form-group {
+    overflow: hidden;
+  }
   .missing {
     border: 1px solid $danger;
   }

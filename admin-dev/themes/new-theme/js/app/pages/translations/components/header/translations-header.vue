@@ -46,7 +46,7 @@
     top: 40px;
     background: white;
     width: 100%;
-    z-index: 2;
+    z-index: 3;
     border-bottom: 1px solid $gray-light;
     height: 128px;
   }
