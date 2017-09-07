@@ -58,9 +58,9 @@ class CsvResponse extends StreamedResponse
     private $modeType = self::MODE_PAGINATION;
 
     /**
-     * @var int, default 1 because default modeType is pagination
+     * @var null|int
      */
-    private $start = 1;
+    private $start = null;
 
     /**
      * @var int Default limit
@@ -76,7 +76,7 @@ class CsvResponse extends StreamedResponse
      */
     public function __construct($callback = null, $status = 200, $headers = array())
     {
-        parent::__construct(null, $status, $headers);
+        parent::__construct($callback, $status, $headers);
 
         if (is_null($callback)) {
             $this->setCallback(array($this, 'processData'));
@@ -165,6 +165,8 @@ class CsvResponse extends StreamedResponse
      */
     public function processData()
     {
+        $this->initStart();
+
         if (is_array($this->data)) {
             $this->processDataArray();
 
@@ -185,13 +187,14 @@ class CsvResponse extends StreamedResponse
      */
     private function processDataArray()
     {
-        $handle = fopen('php://output', 'w+');
+        $handle = tmpfile();
+        fputcsv($handle, $this->headersData, ';');
 
         foreach ($this->data as $line) {
             fputcsv($handle, $line, ';');
         }
 
-        fclose($handle);
+        $this->dumpFile($handle);
     }
 
     /**
@@ -199,7 +202,7 @@ class CsvResponse extends StreamedResponse
      */
     private function processDataCallback()
     {
-        $handle = fopen('php://output', 'w+');
+        $handle = tmpfile();
         fputcsv($handle, $this->headersData, ';');
 
         do {
@@ -209,8 +212,6 @@ class CsvResponse extends StreamedResponse
             if ($count === 0) {
                 break;
             }
-
-            $handle = fopen('php://output', 'w+');
 
             foreach ($data as $line) {
                 $lineData = array();
@@ -224,11 +225,29 @@ class CsvResponse extends StreamedResponse
                 fputcsv($handle, $lineData, ';');
             }
 
-            fclose($handle);
-
             $this->incrementData();
 
         } while ($count === $this->limit);
+
+        $this->dumpFile($handle);
+    }
+
+    /**
+     * Just init $this->start if it is null
+     */
+    private function initStart()
+    {
+        if (null !== $this->start) {
+            return;
+        }
+
+        if (self::MODE_PAGINATION === $this->modeType) {
+            $this->setStart(1);
+        }
+
+        if (self::MODE_OFFSET === $this->modeType) {
+            $this->setStart(0);
+        }
     }
 
     /**
@@ -250,5 +269,21 @@ class CsvResponse extends StreamedResponse
         }
 
         throw new \LogicException('The modeType is not a valid value.');
+    }
+
+    /**
+     * @param $handle, file pointer
+     */
+    private function dumpFile($handle)
+    {
+        fseek($handle, 0);
+
+        while (!feof($handle)) {
+            $buffer = fread($handle, 1024);
+            echo $buffer;
+            flush();
+        }
+
+        fclose($handle);
     }
 }
