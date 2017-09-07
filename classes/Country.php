@@ -207,6 +207,9 @@ class CountryCore extends ObjectModel
      */
     public static function getIdZone($idCountry)
     {
+        if (is_null($idCountry)) {
+            $idCountry = 0;
+        }
         if (!Validate::isUnsignedId($idCountry)) {
             die(Tools::displayError());
         }

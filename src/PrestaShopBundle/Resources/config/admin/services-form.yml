@@ -84,6 +84,7 @@ services:
             - "@prestashop.adapter.data_provider.group"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.customer"
+            - "@prestashop.adapter.data_provider.zone"
         tags:
             - { name: form.type }
 
@@ -126,6 +127,7 @@ services:
             - "@prestashop.adapter.data_provider.group"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.customer"
+            - "@prestashop.adapter.data_provider.zone"
         tags:
             - { name: form.type }
 

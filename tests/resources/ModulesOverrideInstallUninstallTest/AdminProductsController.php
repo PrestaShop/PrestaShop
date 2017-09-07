@@ -989,6 +989,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $id_shops = Tools::getValue('spm_id_shop');
         $id_currencies = Tools::getValue('spm_id_currency');
         $id_countries = Tools::getValue('spm_id_country');
+        $idZones = Tools::getValue('spm_id_zone');
         $id_groups = Tools::getValue('spm_id_group');
         $id_customers = Tools::getValue('spm_id_customer');
         $prices = Tools::getValue('spm_price');
@@ -1000,12 +1001,13 @@ class AdminProductsController extends AdminProductsControllerCore
         foreach ($id_specific_prices as $key => $id_specific_price) {
             if ($reduction_types[$key] == 'percentage' && ((float)$reductions[$key] <= 0 || (float)$reductions[$key] > 100)) {
                 $this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
-            } elseif ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key])) {
+            } elseif ($this->_validateSpecificPrice($id_shops[$key], $id_currencies[$key], $id_countries[$key], $id_groups[$key], $id_customers[$key], $prices[$key], $from_quantities[$key], $reductions[$key], $reduction_types[$key], $froms[$key], $tos[$key], $id_combinations[$key], $idZones[$key])) {
                 $specific_price = new SpecificPrice((int)($id_specific_price));
                 $specific_price->id_shop = (int)$id_shops[$key];
                 $specific_price->id_product_attribute = (int)$id_combinations[$key];
                 $specific_price->id_currency = (int)($id_currencies[$key]);
                 $specific_price->id_country = (int)($id_countries[$key]);
+                $specific_price->id_zone = (int)($idZones[$key]);
                 $specific_price->id_group = (int)($id_groups[$key]);
                 $specific_price->id_customer = (int)$id_customers[$key];
                 $specific_price->price = (float)($prices[$key]);
@@ -1038,6 +1040,7 @@ class AdminProductsController extends AdminProductsControllerCore
         $id_shop = Tools::getValue('sp_id_shop');
         $id_currency = Tools::getValue('sp_id_currency');
         $id_country = Tools::getValue('sp_id_country');
+        $idZone = Tools::getValue('sp_id_zone');
         $id_group = Tools::getValue('sp_id_group');
         $id_customer = Tools::getValue('sp_id_customer');
         $price = Tools::getValue('leave_bprice') ? '-1' : Tools::getValue('sp_price');
@@ -1060,13 +1063,14 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('Invalid date range');
         } elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100)) {
             $this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
-        } elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute)) {
+        } elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute, $idZone)) {
             $specificPrice = new SpecificPrice();
             $specificPrice->id_product = (int)$id_product;
             $specificPrice->id_product_attribute = (int)$id_product_attribute;
             $specificPrice->id_shop = (int)$id_shop;
             $specificPrice->id_currency = (int)($id_currency);
             $specificPrice->id_country = (int)($id_country);
+            $specificPrice->id_zone = (int)($idZone);
             $specificPrice->id_group = (int)($id_group);
             $specificPrice->id_customer = (int)$id_customer;
             $specificPrice->price = (float)($price);
@@ -1627,9 +1631,9 @@ class AdminProductsController extends AdminProductsControllerCore
     * date: 2015-07-13 16:05:32
     * version: 1
     */
-    protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0)
+    protected function _validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_combination = 0, $idZone = 0)
     {
-        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
+        if (!Validate::isUnsignedId($id_shop) || !Validate::isUnsignedId($id_currency) || !Validate::isUnsignedId($id_country) || !Validate::isUnsignedId($idZone) || !Validate::isUnsignedId($id_group) || !Validate::isUnsignedId($id_customer)) {
             $this->errors[] = Tools::displayError('Wrong IDs');
         } elseif ((!isset($price) && !isset($reduction)) || (isset($price) && !Validate::isNegativePrice($price)) || (isset($reduction) && !Validate::isPrice($reduction))) {
             $this->errors[] = Tools::displayError('Invalid price/discount amount');
@@ -1639,7 +1643,7 @@ class AdminProductsController extends AdminProductsControllerCore
             $this->errors[] = Tools::displayError('Please select a discount type (amount or percentage).');
         } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
             $this->errors[] = Tools::displayError('The from/to date is invalid.');
-        } elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
+        } elseif (SpecificPrice::exists((int)$this->object->id, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false, $idZone)) {
             $this->errors[] = Tools::displayError('A specific price already exists for these parameters.');
         } else {
             return true;

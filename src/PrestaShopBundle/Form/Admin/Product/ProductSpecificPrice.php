@@ -43,6 +43,7 @@ class ProductSpecificPrice extends CommonAbstractType
     private $currencies;
     private $groups;
     private $customerDataprovider;
+    private $zones;
 
     /**
      * Constructor.
@@ -55,7 +56,7 @@ class ProductSpecificPrice extends CommonAbstractType
      * @param object $groupDataprovider
      * @param object $legacyContext
      */
-    public function __construct($router, $translator, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider)
+    public function __construct($router, $translator, $shopContextAdapter, $countryDataprovider, $currencyDataprovider, $groupDataprovider, $legacyContext, $customerDataprovider, $zoneDataprovider)
     {
         $this->router = $router;
         $this->translator = $translator;
@@ -67,6 +68,7 @@ class ProductSpecificPrice extends CommonAbstractType
         $this->groups = $this->formatDataChoicesList($groupDataprovider->getGroups($this->locales[0]['id_lang']), 'id_group');
         $this->currency = $legacyContext->getContext()->currency;
         $this->customerDataprovider = $customerDataprovider;
+        $this->zones = $this->formatDataChoicesList($zoneDataprovider->getZones(), 'id_zone');
     }
 
     /**
@@ -113,6 +115,17 @@ class ProductSpecificPrice extends CommonAbstractType
                 'data-minimumResultsForSearch' => '7',
             ),
             'placeholder' => $this->translator->trans('All countries', array(), 'Admin.Global'),
+        ))
+        ->add('sp_id_zone', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'choices' => $this->zones,
+            'choices_as_values' => true,
+            'required' => false,
+            'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
+            'placeholder' => $this->translator->trans('All zones', array(), 'Admin.Global'),
         ))
         ->add('sp_id_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->groups,
