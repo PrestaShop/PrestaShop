@@ -211,7 +211,7 @@ class LocaleTest extends TestCase
                 'currency' => 'INR',
                 'formats'  => array(
                     'ar-IL' => '1,234,560.12 ₹', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.12 ₹', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,560.12₹', // Needs to be changed when numbering system is configurable
                     'de-CH' => '₹ 1’234’560.12',
                     'en-US' => '₹1,234,560.12',
                     'es-AR' => '₹ 1.234.560,12',
@@ -223,7 +223,7 @@ class LocaleTest extends TestCase
                 'currency' => 'JPY',
                 'formats'  => array(
                     'ar-IL' => '1,234,561 ¥', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,561 ¥', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,561¥', // Needs to be changed when numbering system is configurable
                     'de-CH' => '¥ 1’234’561',
                     'en-US' => '¥1,234,561',
                     'es-AR' => '¥ 1.234.561',
@@ -235,7 +235,7 @@ class LocaleTest extends TestCase
                 'currency' => 'GBP',
                 'formats'  => array(
                     'ar-IL' => '0.70 £', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '0.70 £', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '0.70£', // Needs to be changed when numbering system is configurable
                     'de-CH' => '£ 0.70',
                     'en-US' => '£0.70',
                     'es-AR' => '£ 0,70',
@@ -244,14 +244,14 @@ class LocaleTest extends TestCase
             ),
             array(
                 'number'   => '1234560.789898989898123',
-                'currency' => 'DEM',
+                'currency' => 'CHF',
                 'formats'  => array(
-                    'ar-IL' => '1,234,560.79 DEM', // To be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.79 DEM', // To be changed when numbering system is configurable
-                    'de-CH' => 'DEM 1’234’560.79',
-                    'en-US' => 'DEM1,234,560.79',
-                    'es-AR' => 'DEM 1.234.560,79',
-                    'fr-FR' => '1 234 560,79 DEM',
+                    'ar-IL' => '1,234,560.79 CHF', // To be changed when numbering system is configurable
+                    'bn-IN' => '1,234,560.79CHF', // To be changed when numbering system is configurable
+                    'de-CH' => 'CHF 1’234’560.79',
+                    'en-US' => 'CHF1,234,560.79',
+                    'es-AR' => 'CHF 1.234.560,79',
+                    'fr-FR' => '1 234 560,79 CHF',
                 ),
             ),
             array(
@@ -259,7 +259,7 @@ class LocaleTest extends TestCase
                 'currency' => 'COP',
                 'formats'  => array(
                     'ar-IL' => '1,234,561 $', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,561 $', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,561$', // Needs to be changed when numbering system is configurable
                     'de-CH' => '$ 1’234’561',
                     'en-US' => '$1,234,561',
                     'es-AR' => '$ 1.234.561',

@@ -36,7 +36,6 @@ class DataReader implements DataReaderInterface
     const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
 
     const SUPPL_DATA_CURRENCY       = 'currencyData';
-    const SUPPL_DATA_ISO_CODES      = 'codeMappings'; // for numeric currency ISO codes
     const SUPPL_DATA_LANGUAGE       = 'languageData';
     const SUPPL_DATA_NUMBERING      = 'numberingSystems';
     const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
@@ -46,7 +45,7 @@ class DataReader implements DataReaderInterface
     protected $supplementalData = array(); // Let's save some disk accesses...
 
     /**
-     * Get locale data by code (either language code or EITF locale tag)
+     * Get locale data by code (either language code or IETF locale tag)
      *
      * @param string $localeCode The wanted locale code
      *
@@ -54,16 +53,13 @@ class DataReader implements DataReaderInterface
      */
     public function getLocaleByCode($localeCode)
     {
-        $parts      = $this->getLocaleParts($localeCode);
-        $commonData = $this->readLocaleData($parts['language']);
+        $localeData = $this->readLocaleData($localeCode);
 
-        if (empty($parts['region'])) {
-            return $commonData;
+        while ($localeData->parentLocale) {
+            $localeData = $localeData->fill($this->getLocaleByCode($localeData->parentLocale));
         }
 
-        $regionalisedData = $this->readLocaleData($localeCode);
-
-        return $commonData->merge($regionalisedData);
+        return $localeData;
     }
 
     /**
@@ -203,7 +199,6 @@ class DataReader implements DataReaderInterface
     {
         switch ($dataType) {
             case self::SUPPL_DATA_CURRENCY:
-            case self::SUPPL_DATA_ISO_CODES:
             case self::SUPPL_DATA_LANGUAGE:
             case self::SUPPL_DATA_PARENT_LOCALES:
                 $filename = 'supplementalData.xml';
@@ -231,7 +226,7 @@ class DataReader implements DataReaderInterface
      * Extracts locale data from CLDR xml data.
      * XML data will be mapped in a LocaleData object
      *
-     * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an EITF tag (e.g.: en-US)
+     * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an IETF tag (e.g.: en-US)
      *
      * @return LocaleData
      */
@@ -239,20 +234,35 @@ class DataReader implements DataReaderInterface
     {
         $xmlData = $this->readMainData($localeTag);
 
-        return $this->mapLocaleData($xmlData);
+        $parentLocaleXmlData     = $this->readSupplementalData(self::SUPPL_DATA_PARENT_LOCALES);
+        $numberingSystemsXmlData = $this->readSupplementalData(self::SUPPL_DATA_NUMBERING);
+
+        $parentLocale = $this->extractParentLocale($parentLocaleXmlData, $localeTag);
+        $digits       = $this->extractDigits($numberingSystemsXmlData);
+
+        $supplementalData = array(
+            'parentLocale' => $parentLocale,
+            'digits'       => $digits,
+        );
+
+        return $this->mapLocaleData($xmlData, $supplementalData);
     }
 
     /**
      * Maps locale data from SimplexmlElement to a multidimensional array
      *
-     * @param SimplexmlElement $xmlLocaleData XML locale data
+     * @param SimplexmlElement $xmlLocaleData    XML locale data
+     * @param array            $supplementalData Supplemental locale data
      *
      * @return LocaleData The mapped data
      */
-    protected function mapLocaleData(SimplexmlElement $xmlLocaleData)
+    protected function mapLocaleData(SimplexmlElement $xmlLocaleData, $supplementalData)
     {
         $localeData = new LocaleData();
 
+        if (isset($supplementalData['parentLocale'])) {
+            $localeData->parentLocale = $supplementalData['parentLocale'];
+        }
         if (isset($xmlLocaleData->identity->language)) {
             $localeData->localeCode = (string)$xmlLocaleData->identity->language['type'];
         }
@@ -265,8 +275,6 @@ class DataReader implements DataReaderInterface
         // Default numbering system.
         if (isset($numbersData->defaultNumberingSystem)) {
             $localeData->defaultNumberingSystem = (string)$numbersData->defaultNumberingSystem;
-        } elseif (isset($xmlLocaleData->numbers->symbols)) {
-            $localeData->defaultNumberingSystem = (string)$xmlLocaleData->numbers->symbols[0]['numberSystem'];
         }
 
         // Minimum grouping digits value defines when we should start grouping digits.
@@ -342,19 +350,23 @@ class DataReader implements DataReaderInterface
             foreach ($numbersData->decimalFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem  = (string)$format['numberSystem'];
-                $patternResult = $format->xpath('decimalFormatLength[not(@type)]/decimalFormat/pattern');
+                $patternResult = $format->xpath('//decimalFormatLength[not(@type)]/decimalFormat/pattern');
 
-                $localeData->decimalPatterns[$numberSystem] = (string)$patternResult[0];
+                if (isset($patternResult[0])) {
+                    $localeData->decimalPatterns[$numberSystem] = (string)$patternResult[0];
+                }
             }
         }
 
         // Percent patterns (by numbering system)
         if (isset($numbersData->percentFormats)) {
             foreach ($numbersData->percentFormats as $format) {
-                $numberSystem = (string)$format['numberSystem'];
-                $pattern      = $format->percentFormatLength->percentFormat->pattern;
+                $numberSystem  = (string)$format['numberSystem'];
+                $patternResult = $format->xpath('//percentFormatLength/percentFormat/pattern');
 
-                $localeData->percentPatterns[$numberSystem] = (string)$pattern;
+                if (isset($patternResult[0])) {
+                    $localeData->percentPatterns[$numberSystem] = (string)$patternResult[0];
+                }
             }
         }
 
@@ -365,7 +377,9 @@ class DataReader implements DataReaderInterface
                 $numberSystem  = (string)$format['numberSystem'];
                 $patternResult = $format->xpath('currencyFormatLength/currencyFormat[@type="standard"]/pattern');
 
-                $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
+                if (isset($patternResult[0])) {
+                    $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
+                }
             }
         }
 
@@ -505,5 +519,57 @@ class DataReader implements DataReaderInterface
         }
 
         return compact('numericIsoCode', 'decimalDigits');
+    }
+
+    /**
+     * Extract parent locale code
+     *
+     * @param SimplexmlElement $parentLocaleXmlData
+     * @param string           $localeTag
+     *
+     * @return mixed|string
+     */
+    protected function extractParentLocale(SimplexmlElement $parentLocaleXmlData, $localeTag)
+    {
+        if ('root' === $localeTag) {
+            return null;
+        }
+
+        $parts = $this->getLocaleParts($localeTag);
+
+        if (empty($parts['region'])) {
+            return 'root';
+        }
+
+        $code = $parts['language'] . '_' . $parts['region'];
+
+        $results = $parentLocaleXmlData->xpath("//parentLocale[contains(@locales, '$code')]");
+        if (empty($results)) {
+            return $parts['language'];
+        }
+        $node = $results[0];
+
+        return (string)$node['parent'];
+    }
+
+    /**
+     * Extract all existing digits sets from supplemental xml data
+     *
+     * @param SimplexmlElement $numberingSystemsXmlData
+     *
+     * @return array|null
+     */
+    protected function extractDigits(SimplexmlElement $numberingSystemsXmlData)
+    {
+        $digitsSets = array();
+        $results    = $numberingSystemsXmlData->xpath('//numberingSystem[@type="numeric"]');
+        foreach ($results as $numberingSystem) {
+            $systemId = (string)$numberingSystem['id'];
+            $digits   = (string)$numberingSystem['digits'];
+
+            $digitsSets[$systemId] = $digits;
+        }
+
+        return $digitsSets;
     }
 }
