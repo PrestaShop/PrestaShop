@@ -134,7 +134,7 @@ class Repository
             return $this->currencies[$currencyCode];
         }
 
-        foreach ($this->getDataSources() as $index => $dataSource) {
+        foreach ($this->getDataSources() as $dataSource) {
             /** @var DataSourceInterface $dataSource */
             $currencyData = $dataSource->getCurrencyByIsoCode($currencyCode);
 

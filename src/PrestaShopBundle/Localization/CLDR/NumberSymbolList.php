@@ -164,47 +164,10 @@ class NumberSymbolList
      */
     public function fill(NumberSymbolList $defaultList)
     {
-        if (!isset($this->decimal) && isset($defaultList->decimal)) {
-            $this->decimal = $defaultList->decimal;
-        }
-        if (!isset($this->group) && isset($defaultList->group)) {
-            $this->group = $defaultList->group;
-        }
-        if (!isset($this->list) && isset($defaultList->list)) {
-            $this->list = $defaultList->list;
-        }
-        if (!isset($this->percentSign) && isset($defaultList->percentSign)) {
-            $this->percentSign = $defaultList->percentSign;
-        }
-        if (!isset($this->minusSign) && isset($defaultList->minusSign)) {
-            $this->minusSign = $defaultList->minusSign;
-        }
-        if (!isset($this->plusSign) && isset($defaultList->plusSign)) {
-            $this->plusSign = $defaultList->plusSign;
-        }
-        if (!isset($this->exponential) && isset($defaultList->exponential)) {
-            $this->exponential = $defaultList->exponential;
-        }
-        if (!isset($this->superscriptingExponent) && isset($defaultList->superscriptingExponent)) {
-            $this->superscriptingExponent = $defaultList->superscriptingExponent;
-        }
-        if (!isset($this->perMille) && isset($defaultList->perMille)) {
-            $this->perMille = $defaultList->perMille;
-        }
-        if (!isset($this->infinity) && isset($defaultList->infinity)) {
-            $this->infinity = $defaultList->infinity;
-        }
-        if (!isset($this->nan) && isset($defaultList->nan)) {
-            $this->nan = $defaultList->nan;
-        }
-        if (!isset($this->currencyDecimal) && isset($defaultList->currencyDecimal)) {
-            $this->currencyDecimal = $defaultList->currencyDecimal;
-        }
-        if (!isset($this->currencyGroup) && isset($defaultList->currencyGroup)) {
-            $this->currencyGroup = $defaultList->currencyGroup;
-        }
-        if (!isset($this->timeSeparator) && isset($defaultList->timeSeparator)) {
-            $this->timeSeparator = $defaultList->timeSeparator;
+        foreach (get_object_vars($this) as $property => &$value) {
+            if (is_null($value) && !is_null($defaultList->$property)) {
+                $value = $defaultList->$property;
+            }
         }
 
         return $this;
