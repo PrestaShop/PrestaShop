@@ -325,8 +325,8 @@ class AdminThemesControllerCore extends AdminController
                 $this->theme_manager->uninstall(Tools::getValue('theme_name'));
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
-        } elseif (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('IPS_GENERATE_RTL')) {
-            Language::installRtlStylesheets(false, true, Tools::getValue('IPS_THEMES_LIST'));
+        } elseif (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('PS_GENERATE_RTL')) {
+            Language::installRtlStylesheets(false, true, Tools::getValue('PS_THEMES_LIST'));
             $this->confirmations[] = $this->trans(
                 'Your RTL stylesheets has been generated successfully',
                 array(),
@@ -549,16 +549,16 @@ class AdminThemesControllerCore extends AdminController
                 $themes_list[] = array('theme' => $themeName, 'name' => $themeName);
             }
             $this->fields_options['RTL'] = array(
-                'title' => sprintf($this->trans('Adaptation to Right-to-Left languages', array(), 'Admin.Design.Feature'), $this->context->shop->name),
-                'description' => $this->trans('Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", the stylesheet created may delete any files you could have previously in your theme to adapt to RTL.', array(), 'Admin.Design.Help'),
+                'title' => $this->trans('Adaptation to Right-to-Left languages', array(), 'Admin.Design.Feature'),
+                'description' => $this->trans('Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.', array(), 'Admin.Design.Help'),
                 'fields' => array(
-                    'IPS_THEMES_LIST' => array(
+                    'PS_THEMES_LIST' => array(
                         'title' => $this->trans('Theme to adapt', array(), 'Admin.Design.Feature'),
                         'type' => 'select',
                         'identifier' => 'theme',
                         'list' => $themes_list,
                     ),
-                    'IPS_GENERATE_RTL' => array(
+                    'PS_GENERATE_RTL' => array(
                         'title' => $this->trans('Generate RTL stylesheet', array(), 'Admin.Design.Feature'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
