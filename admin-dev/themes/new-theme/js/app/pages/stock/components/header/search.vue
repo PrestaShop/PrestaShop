@@ -45,7 +45,8 @@
           :hasClose="true"
           @closeAlert="onCloseAlert"
         >
-          {{trans('alert_bulk_edit')}}
+          <span v-if="error">{{trans('alert_bulk_edit')}}</span>
+          <span v-else>{{trans('notification_stock_updated')}}</span>
         </PSAlert>
       </transition>
     </div>
@@ -65,6 +66,11 @@
       PSTags,
       PSButton,
       PSAlert,
+    },
+    computed: {
+      error() {
+        return (this.alertType === 'ALERT_TYPE_DANGER');
+      },
     },
     methods: {
       onClick() {
@@ -88,6 +94,7 @@
     },
     mounted() {
       EventBus.$on('displayBulkAlert', (type) => {
+        this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
         setTimeout(_ => {
           this.showAlert = false;

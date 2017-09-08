@@ -44,6 +44,7 @@
   const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
   const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
   const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
+  const ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
 
   export default {
     props: {
@@ -57,6 +58,7 @@
           'alert-info': this.alertType === ALERT_TYPE_INFO,
           'alert-warning': this.alertType === ALERT_TYPE_WARNING,
           'alert-danger': this.alertType === ALERT_TYPE_DANGER,
+          'alert-success': this.alertType === ALERT_TYPE_SUCCESS,
         };
       },
       isInfo() {
