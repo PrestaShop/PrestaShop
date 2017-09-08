@@ -153,11 +153,12 @@ class LocaleData
 
         // Array of scalar types -> simple array replace
         foreach ($arrayProps as $propName) {
-            if (!isset($this->$propName)) {
-                $this->$propName = $parentData->$propName;
-                continue;
-            }
             if (!empty($parentData->$propName)) {
+                if (!isset($this->$propName)) {
+                    $this->$propName = $parentData->$propName;
+                    continue;
+                }
+
                 $this->$propName = array_replace_recursive($parentData->$propName, $this->$propName);
             }
         }
