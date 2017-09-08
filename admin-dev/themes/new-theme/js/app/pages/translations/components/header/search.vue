@@ -23,15 +23,17 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div id="search" class="col-md-8 mb-2">
+  <div id="search" class="col-md-8 mb-4">
     <form class="search-form" @submit.prevent>
       <label>{{trans('search_label')}}</label>
-      <div class="search-group">
+      <div class="input-group">
         <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
-        <button type="button" class="btn btn-primary search-button" @click="onClick">
-          <i class="material-icons">search</i>
-          {{trans('button_search')}}
-        </button>
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="material-icons">search</i>
+            {{trans('button_search')}}
+          </button>
+        </div>
       </div>
     </form>
   </div>
@@ -66,31 +68,3 @@
     },
   };
 </script>
-<style lang="sass?outputStyle=expanded">
-  @import "../../../../../../scss/config/_settings.scss";
-  #search {
-    .search-input {
-      box-shadow: none;
-      border: $gray-light 1px solid;
-      background-color: white;
-      min-height: 35px;
-      outline: none;
-      border-radius: 0;
-      overflow: hidden;
-      float: left;
-      width: 70%;
-    }
-  }
-  .search-form {
-    .search-group {
-      overflow: hidden;
-    }
-    .search-button {
-      float: left;
-      border-radius: 0;
-      height:35px;
-      position: absolute;
-      bottom: 0;
-    }
-  }
-</style>
