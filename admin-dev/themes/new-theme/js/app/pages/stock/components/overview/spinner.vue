@@ -24,7 +24,7 @@
  *-->
 <template>
   <form
-    class="qty text-xs-right"
+    class="qty text-sm-right"
     :class="classObject"
     @mouseover="focusIn"
     @mouseleave="focusOut($event)"
@@ -37,6 +37,7 @@
       pattern="\d*"
       step="1"
       :value="qty"
+      :buttons="this.isActive"
       @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
@@ -54,9 +55,6 @@
     props: ['product'],
     computed: {
       qty() {
-        if (parseInt(this.product.qty, 10) === 0) {
-          this.deActivate();
-        }
         return this.product.qty;
       },
       id() {
@@ -95,7 +93,7 @@
       },
       focusOut(event) {
         if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
-          this.isActive = false;
+         // this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
@@ -123,7 +121,7 @@
     },
     data: () => ({
       value: null,
-      isActive: false,
+      isActive: true,
       isEnabled: false,
     }),
   };
@@ -142,14 +140,13 @@
         outline:none;
         opacity: 0;
         position: absolute;
-        top: 3.5px;
-        right: 0;
+        top: 1px;
+        right: 1px;
         border: none;
         height: 31px;
-        width: 40px;
+        width: 31px;
         background: $brand-primary;
         z-index: 2;
-        border-left: 10px solid white;
         .material-icons {
           color: white;
           vertical-align: middle;
@@ -162,6 +159,7 @@
   .qty.active {
     .check-button {
       opacity: 1;
+      cursor: pointer;
     }
   }
   .qty.disabled {
@@ -175,6 +173,11 @@
   }
   .fade-enter, .fade-leave-to {
     opacity: 0
+  }
+
+  .ui-widget.ui-widget-content {
+    border: none;
+    border-radius: 0;
   }
 
 </style>

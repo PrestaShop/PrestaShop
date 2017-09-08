@@ -38,10 +38,10 @@
           <th>
             {{trans('title_movements_type')}}
           </th>
-          <th class="text-xs-center">
+          <th class="text-sm-center">
             {{trans('title_quantity')}}
           </th>
-          <th class="text-xs-center">
+          <th class="text-sm-center">
             {{trans('title_date')}}
             <PSSort order="date_add" @sort="toggleSort" />
           </th>

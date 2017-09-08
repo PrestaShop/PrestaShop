@@ -38,21 +38,21 @@
           {{trans('title_supplier')}}
           <PSSort order="supplier" @sort="toggleSort" />
         </th>
-        <th class="text-xs-center">
+        <th class="text-sm-center align-middle">
           {{trans('title_status')}}
         </th>
-        <th class="text-xs-center">
+        <th class="text-sm-center">
           {{trans('title_physical')}}
           <PSSort order="physical_quantity" @sort="toggleSort" />
         </th>
-        <th class="text-xs-center">
+        <th class="text-sm-center align-middle">
           {{trans('title_reserved')}}
         </th>
-        <th class="text-xs-center">
+        <th class="text-sm-center pr-4">
           {{trans('title_available')}}
           <PSSort order="available_quantity" @sort="toggleSort" />
         </th>
-        <th class="text-xs-right">
+        <th class="text-sm-center align-middle">
           <i class="material-icons">edit</i>
           {{trans('title_edit_quantity')}}
         </th>
@@ -60,7 +60,7 @@
     </thead>
     <tbody>
       <tr v-if="this.isLoading">
-        <td colspan="7">
+        <td colspan="8">
           <PSLoader v-for="(n, index) in 3" class="mt-1" :key="index">
             <div class="background-masker header-top"></div>
             <div class="background-masker header-left"></div>

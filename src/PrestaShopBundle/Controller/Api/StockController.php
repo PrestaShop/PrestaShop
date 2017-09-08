@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Api;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 use PrestaShopBundle\Api\Stock\Movement;
 use PrestaShopBundle\Api\Stock\MovementsCollection;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\ProductIdentity;
 use PrestaShopBundle\Entity\Repository\StockRepository;
 use PrestaShopBundle\Exception\InvalidPaginationParamsException;
@@ -127,6 +128,47 @@ class StockController extends ApiController
         }
 
         return new JsonResponse($products);
+    }
+
+    /**
+     * @param Request $request
+     * @return CsvResponse|JsonResponse
+     */
+    public function listProductsExportAction(Request $request)
+    {
+        try {
+            $queryParamsCollection = $this->queryParams->fromRequest($request);
+        } catch (InvalidPaginationParamsException $exception) {
+            return $this->handleException(new BadRequestHttpException($exception->getMessage(), $exception));
+        }
+
+        $dataCallback = function ($page, $limit) use ($queryParamsCollection) {
+            return $this->stockRepository->getDataExport($page, $limit, $queryParamsCollection);
+        };
+
+        $translator = $this->container->get('translator');
+
+        // headers columns
+        $headersData = array(
+            'product_id' => 'Product ID',
+            'combination_id' => 'Combination ID',
+            'product_reference' => $translator->trans('Product reference', array(), 'Admin.Advparameters.Feature'),
+            'combination_reference' => $translator->trans('Combination reference', array(), 'Admin.Advparameters.Feature'),
+            'product_name' => $translator->trans('Product name', array(), 'Admin.Catalog.Feature'),
+            'combination_name' => $translator->trans('Combination name', array(), 'Admin.Catalog.Feature'),
+            'supplier_name' => $translator->trans('Supplier', array(), 'Admin.Global'),
+            'active' => $translator->trans('Status', array(), 'Admin.Global'),
+            'product_physical_quantity' => $translator->trans('Physical quantity', array(), 'Admin.Catalog.Feature'),
+            'product_reserved_quantity' => $translator->trans('Reserved quantity', array(), 'Admin.Catalog.Feature'),
+            'product_available_quantity' => $translator->trans('Available quantity', array(), 'Admin.Catalog.Feature'),
+            'product_low_stock_threshold' => $translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+        );
+
+        return (new CsvResponse())
+            ->setData($dataCallback)
+            ->setHeadersData($headersData)
+            ->setLimit(10000)
+            ->setFileName('stock_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

@@ -1,5 +1,8 @@
-<!--
-*
+<!--**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
@@ -21,15 +24,21 @@
  *-->
 
  <template>
-  <input
-    type="number"
-    class="ps-number"
-    :class="{'danger' : danger}"
-    :value="value"
-    @keyup="onKeyup($event)"
-    @focus="focusIn"
-    @blur="focusOut($event)"
-  />
+  <div class="ps-number">
+    <input
+      type="number"
+      class="ps-number form-control"
+      :class="{'danger' : danger}"
+      :value="value"
+      @keyup="onKeyup($event)"
+      @focus="focusIn"
+      @blur="focusOut($event)"
+    />
+    <div class="ps-number-button d-flex" v-if="buttons">
+      <span class="ps-number-up" @click="increment"></span>
+      <span class="ps-number-down" @click="decrement"></span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -37,6 +46,7 @@
     props: {
       value: 0,
       danger: false,
+      buttons: false,
     },
     methods: {
       onKeyup($event) {
@@ -48,27 +58,20 @@
       focusOut($event) {
         this.$emit('blur', $event);
       },
-    },
-    mounted() {
-      const self = this;
-      $(this.$el).spinner({
-        spin(event, ui) {
-          self.$emit('change', ui.value);
-        },
-      });
+      increment() {
+        const value = this.value + 1;
+        this.$emit('change', value);
+      },
+      decrement() {
+        const value = this.value - 1;
+        this.$emit('change', value);
+      },
     },
   };
 </script>
 
 <style lang="sass" scoped>
   @import "../../../scss/config/_settings.scss";
-  .ps-number {
-    text-indent: 5px;
-    height: 33px;
-    width: 100px;
-    border: 1px solid $gray-light;
-    margin: 3px 0;
-  }
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -81,6 +84,36 @@
     color: $gray-dark;
     &:focus {
       outline: none;
+    }
+  }
+  .ps-number {
+    position: relative;
+    .ps-number-button {
+      position: absolute;
+      top: 1px;
+      flex-direction: column;
+      right: 30px;
+      cursor: pointer;
+      line-height:17px;
+      transition: all 0.2s ease;
+      .product-actions & {
+        right: 7px;
+      }
+    }
+    .ps-number-up::before {
+      font-family: 'Material Icons';
+      content: "\E5C7";
+      font-size: 20px;
+      color: $gray-dark;
+      position: relative;
+    }
+    .ps-number-down::before {
+      font-family: 'Material Icons';
+      content: "\E5C5";
+      font-size: 20px;
+      color: $gray-dark;
+      bottom: 6px;
+      position: relative;
     }
   }
 </style>

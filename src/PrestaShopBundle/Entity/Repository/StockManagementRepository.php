@@ -207,7 +207,7 @@ abstract class StockManagementRepository
         $having = '',
         $orderByClause = null
     ) {
-        throw new RuntimeException('You need to implemante your own `selectSql` function.');
+        throw new RuntimeException('You need to implement your own `selectSql` function.');
     }
 
     /**
@@ -295,6 +295,7 @@ abstract class StockManagementRepository
             '{physical_quantity}' => 'product_physical_quantity',
             '{id_stock_mvt}' => 'id_stock_mvt',
             '{date_add}' => 'date_add',
+            '{product_low_stock_alert}' => 'product_low_stock_alert',
         ));
     }
 

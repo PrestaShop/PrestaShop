@@ -136,6 +136,7 @@ class AdminImportControllerCore extends AdminController
                     'ecotax' => array('label' => $this->trans('Ecotax', array(), 'Admin.Catalog.Feature')),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
                     'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
+                    'low_stock_threshold' => array('label' => $this->trans('Low stock level', array(), 'Admin.Catalog.Feature')),
                     'weight' => array('label' => $this->trans('Impact on weight', array(), 'Admin.Catalog.Feature')),
                     'default_on' => array('label' => $this->trans('Default (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
                     'available_date' => array('label' => $this->trans('Combination availability date', array(), 'Admin.Advparameters.Feature')),
@@ -172,6 +173,7 @@ class AdminImportControllerCore extends AdminController
                     'ecotax' => 0,
                     'quantity' => 0,
                     'minimal_quantity' => 1,
+                    'low_stock_threshold' => null,
                     'weight' => 0,
                     'default_on' => null,
                     'advanced_stock_management' => 0,
@@ -244,6 +246,7 @@ class AdminImportControllerCore extends AdminController
                     'weight' => array('label' => $this->trans('Weight', array(), 'Admin.Global')),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
                     'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
+                    'low_stock_threshold' => array('label' => $this->trans('Low stock level', array(), 'Admin.Catalog.Feature')),
                     'visibility' => array('label' => $this->trans('Visibility', array(), 'Admin.Catalog.Feature')),
                     'additional_shipping_cost' => array('label' => $this->trans('Additional shipping cost', array(), 'Admin.Advparameters.Feature')),
                     'unity' => array('label' => $this->trans('Unit for the price per unit', array(), 'Admin.Advparameters.Feature')),
@@ -316,6 +319,7 @@ class AdminImportControllerCore extends AdminController
                     'unit_price' => 0,
                     'quantity' => 0,
                     'minimal_quantity' => 1,
+                    'low_stock_threshold' => null,
                     'price' => 0,
                     'id_tax_rules_group' => 0,
                     'description_short' => array((int)Configuration::get('PS_LANG_DEFAULT') => ''),
@@ -2571,6 +2575,7 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     $info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
+                    $info['low_stock_threshold'] = empty($info['low_stock_threshold']) && '0' != $info['low_stock_threshold'] ? null : (int)$info['low_stock_threshold'];
 
                     $info['wholesale_price'] = str_replace(',', '.', $info['wholesale_price']);
                     $info['price'] = str_replace(',', '.', $info['price']);
@@ -2614,7 +2619,9 @@ class AdminImportControllerCore extends AdminController
                                         (int)$info['minimal_quantity'],
                                         $info['available_date'],
                                         null,
-                                        $id_shop_list
+                                        $id_shop_list,
+                                        '',
+                                        $info['low_stock_threshold']
                                     );
                                     $id_product_attribute_update = true;
                                     if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {
@@ -2644,7 +2651,9 @@ class AdminImportControllerCore extends AdminController
                             (string)$info['upc'],
                             (int)$info['minimal_quantity'],
                             $id_shop_list,
-                            $info['available_date']
+                            $info['available_date'],
+                            '',
+                            $info['low_stock_threshold']
                         );
 
                         if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {

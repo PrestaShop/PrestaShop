@@ -45,14 +45,14 @@
       </a>
       <span v-else>{{ product.movement_reason }}</span>
     </td>
-    <td class="text-xs-center">
+    <td class="text-sm-center">
       <span class="qty-number" :class="{'is-positive' : isPositive}">
         <span v-if="isPositive">+</span>
         <span v-else>-</span>
         {{ qty }}
       </span>
     </td>
-    <td class="text-xs-center">
+    <td class="text-sm-center">
       {{ product.date_add }}
     </td>
     <td>

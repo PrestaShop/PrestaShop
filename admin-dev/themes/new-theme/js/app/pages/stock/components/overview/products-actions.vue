@@ -25,24 +25,23 @@
 <template>
   <div class="row product-actions">
     <div
-      class="col-md-8 qty flex"
+      class="col-md-8 qty d-flex align-items-center"
       :class="{'active' : isFocused}"
     >
       <PSCheckbox
         id="bulk-action"
         ref="bulk-action"
-        class="m-t-1"
+        class="mt-3"
         :isIndeterminate="isIndeterminate"
         @checked="bulkChecked"
       />
-      <div>
-        <div class="m-l-1">
-          <small>{{trans('title_bulk')}}</small>
-        </div>
+      <div class="ml-1">
+        <small>{{trans('title_bulk')}}</small>
         <PSNumber
-          class="m-l-1"
+          class="bulk-qty"
           :danger="danger"
           :value="bulkEditQty"
+          :buttons="this.isFocused"
           @focus="focusIn"
           @blur="focusOut"
           @change="onChange"
@@ -53,7 +52,7 @@
     <div class="col-md-4">
       <PSButton
         type="button"
-        class="update-qty pull-xs-right"
+        class="update-qty float-sm-right my-4 mr-2"
         :class="{'btn-primary': disabled }"
         :disabled="disabled"
         :primary="true"
@@ -149,7 +148,9 @@
 
 <style lang="sass" scoped>
   @import "../../../../../../scss/config/_settings.scss";
-
+  .bulk-qty {
+    max-width: 100px;
+  }
   .update-qty {
     color: white;
     transition: background-color 0.2s ease;

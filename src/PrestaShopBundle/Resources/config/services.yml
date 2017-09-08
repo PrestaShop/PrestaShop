@@ -36,9 +36,6 @@ services:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
 
-    prestashop.csv:
-        class: PrestaShopBundle\Service\Csv
-
     prestashop.data_provider.modules.recommended:
         class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
         arguments: ["@router"]

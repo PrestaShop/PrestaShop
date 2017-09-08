@@ -27,7 +27,7 @@
     <div class="movements">
       <PSButton
         type="button"
-        class="update-qty float-xs-right"
+        class="update-qty float-sm-right"
         :class="classObject"
         :disabled="disabled"
         :primary="true"
