@@ -11,6 +11,7 @@ html {
   height: 100%;
 }
 body {
+  direction: ltr;
   font-family: 'Noto Sans', sans-serif;
   font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;

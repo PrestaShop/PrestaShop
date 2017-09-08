@@ -33,7 +33,7 @@
                     ]|classnames}"
   >
     <h1 class="step-title h3">
-      <i class="material-icons done">&#xE876;</i>
+      <i class="material-icons rtl-no-flip done">&#xE876;</i>
       <span class="step-number">{$position}</span>
       {$title}
       <span class="step-edit text-muted"><i class="material-icons edit">mode_edit</i> {l s='Edit' d='Shop.Theme.Actions'}</span>
