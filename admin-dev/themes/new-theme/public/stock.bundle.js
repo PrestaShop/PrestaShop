@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cf5c9e8034483dab4239"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9ea8fc4a4036b2f90fb3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -11613,14 +11613,14 @@ function useColors() {
 
   // is webkit? http://stackoverflow.com/a/16459606/376773
   // document is undefined in react-native: https://github.com/facebook/react-native/pull/1632
-  return (typeof document !== 'undefined' && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
+  return (typeof document !== 'undefined' && document && document.documentElement && document.documentElement.style && document.documentElement.style.WebkitAppearance) ||
     // is firebug? http://stackoverflow.com/a/398120/376773
-    (typeof window !== 'undefined' && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
+    (typeof window !== 'undefined' && window && window.console && (window.console.firebug || (window.console.exception && window.console.table))) ||
     // is firefox >= v31?
     // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
-    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
+    (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31) ||
     // double check webkit in userAgent just in case we are in a worker
-    (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
+    (typeof navigator !== 'undefined' && navigator && navigator.userAgent && navigator.userAgent.toLowerCase().match(/applewebkit\/(\d+)/));
 }
 
 /**
@@ -11755,6 +11755,43 @@ function localstorage() {
 
 /***/ }),
 /* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+const EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
+/* harmony export (immutable) */ __webpack_exports__["EventBus"] = EventBus;
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11815,43 +11852,6 @@ EventEmitter.prototype.on = EventEmitter.prototype.addListener = EventTarget.pro
 EventEmitter.prototype.removeListener = EventTarget.prototype.removeEventListener;
 
 module.exports.EventEmitter = EventEmitter;
-
-
-/***/ }),
-/* 11 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/**
- * 2007-2017 PrestaShop
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * https://opensource.org/licenses/OSL-3.0
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@prestashop.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
- * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
- *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
- * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
- */
-
-const EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
-/* harmony export (immutable) */ __webpack_exports__["EventBus"] = EventBus;
 
 
 /***/ }),
@@ -30076,7 +30076,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-button.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-button.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-button.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30236,7 +30236,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-checkbox.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-checkbox.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-checkbox.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30527,7 +30527,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-alert.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-alert.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-alert.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30555,7 +30555,7 @@ module.exports = Component.exports
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   ;
 
 var debug = function() {};
@@ -30665,7 +30665,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tags.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tags.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tags.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30703,7 +30703,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree-item.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree-item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tree-item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30818,6 +30818,7 @@ Object.defineProperty(exports, "__esModule", {
 var ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
 var ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
 var ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
+var ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
 
 exports.default = {
   props: {
@@ -30830,7 +30831,8 @@ exports.default = {
       return {
         'alert-info': this.alertType === ALERT_TYPE_INFO,
         'alert-warning': this.alertType === ALERT_TYPE_WARNING,
-        'alert-danger': this.alertType === ALERT_TYPE_DANGER
+        'alert-danger': this.alertType === ALERT_TYPE_DANGER,
+        'alert-success': this.alertType === ALERT_TYPE_SUCCESS
       };
     },
     isInfo: function isInfo() {
@@ -31221,7 +31223,7 @@ var _psCheckbox = __webpack_require__(26);
 
 var _psCheckbox2 = _interopRequireDefault(_psCheckbox);
 
-var _eventBus = __webpack_require__(11);
+var _eventBus = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31397,7 +31399,7 @@ var _psTreeItem = __webpack_require__(34);
 
 var _psTreeItem2 = _interopRequireDefault(_psTreeItem);
 
-var _eventBus = __webpack_require__(11);
+var _eventBus = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33555,7 +33557,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header-toolbar {\n  z-index: 0;\n  height: 120px;\n}\n.stock-app {\n  padding-top: 3em;\n}\n.table tr td {\n  border: none;\n  padding: 5px 5px 5px;\n  vertical-align: top;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table tr td:not(.qty-spinner) {\n    padding-top: 14px;\n}\n#growls.default {\n  top: 20px;\n}\n.growl.growl-notice {\n  background: white;\n  border: 2px solid #78D07D;\n  border-radius: 0;\n  padding: 0;\n  min-height: 50px;\n}\n.growl.growl-notice .growl-message {\n    color: #363a41;\n    line-height: 46px;\n}\n.growl.growl-notice .growl-message::before {\n      color: white;\n      text-align: center;\n      background: #78D07D;\n      height: 48px;\n      width: 48px;\n}\n.growl.growl-notice .growl-close {\n    color: #78D07D;\n    font-size: 20px;\n}\n.btn:disabled {\n  background-color: #BBCDD2;\n  border-color: #BBCDD2;\n}\n", ""]);
+exports.push([module.i, "\n.header-toolbar {\n  z-index: 0;\n  height: 120px;\n}\n.stock-app {\n  padding-top: 3em;\n}\n.table tr td {\n  border: none;\n  padding: 5px 5px 5px;\n  vertical-align: top;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table tr td:not(.qty-spinner) {\n    padding-top: 14px;\n}\n", ""]);
 
 // exports
 
@@ -33855,7 +33857,7 @@ module.exports = function(transport) {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process, global) {
 
-var EventEmitter = __webpack_require__(10).EventEmitter
+var EventEmitter = __webpack_require__(11).EventEmitter
   , inherits = __webpack_require__(7)
   , eventUtils = __webpack_require__(14)
   , browser = __webpack_require__(28)
@@ -34004,7 +34006,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-pagination.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-pagination.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-pagination.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -34042,7 +34044,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tree.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -40175,7 +40177,7 @@ module.exports = EventTarget;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var EventEmitter = __webpack_require__(10).EventEmitter
+var EventEmitter = __webpack_require__(11).EventEmitter
   , inherits = __webpack_require__(7)
   , JSON3 = __webpack_require__(13)
   , objectUtils = __webpack_require__(76)
@@ -40233,7 +40235,7 @@ module.exports = InfoAjax;
 
 
 var inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   , JSON3 = __webpack_require__(13)
   , XHRLocalObject = __webpack_require__(27)
   , InfoAjax = __webpack_require__(217)
@@ -40290,7 +40292,7 @@ module.exports = global.location || {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, process) {
 
-var EventEmitter = __webpack_require__(10).EventEmitter
+var EventEmitter = __webpack_require__(11).EventEmitter
   , inherits = __webpack_require__(7)
   , utils = __webpack_require__(14)
   , urlUtils = __webpack_require__(12)
@@ -40575,7 +40577,7 @@ module.exports = HtmlFileTransport;
 
 var inherits = __webpack_require__(7)
   , JSON3 = __webpack_require__(13)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   , version = __webpack_require__(228)
   , urlUtils = __webpack_require__(12)
   , iframeUtils = __webpack_require__(29)
@@ -41280,7 +41282,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-loader.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-loader.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-loader.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41318,7 +41320,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-media.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-media.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-media.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41356,7 +41358,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-number.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-number.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-number.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41394,7 +41396,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-sort.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-sort.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-sort.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41428,7 +41430,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-table.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-table.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-table.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41925,8 +41927,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_resource__ = __webpack_require__(86);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mutation_types__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_app_utils_growl__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_lodash__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_app_utils_event_bus__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_lodash__);
 /**
  * 2007-2017 PrestaShop
  *
@@ -41951,6 +41954,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 
 
 
@@ -42103,7 +42107,7 @@ const updateQtyByProductId = ({ commit, state }, payload) => {
     delta,
   }).then((res) => {
     commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["n" /* UPDATE_PRODUCT */], res.body);
-    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('notice', state.translations.notification_stock_updated);
+    __WEBPACK_IMPORTED_MODULE_4_app_utils_event_bus__["EventBus"].$emit('displayBulkAlert', 'success');
   }, (error) => {
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('error', error.statusText);
   });
@@ -42117,7 +42121,7 @@ const updateQtyByProductsId = ({ commit, state }) => {
 
   __WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.post(url, productsQty).then((res) => {
     commit(__WEBPACK_IMPORTED_MODULE_2__mutation_types__["o" /* UPDATE_PRODUCTS_QTY */], res.body);
-    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('notice', state.translations.notification_stock_updated);
+    __WEBPACK_IMPORTED_MODULE_4_app_utils_event_bus__["EventBus"].$emit('displayBulkAlert', 'success');
   }, (error) => {
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3_app_utils_growl__["a" /* showGrowl */])('error', error.statusText);
   });
@@ -43021,10 +43025,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
 
 exports.default = {
   computed: {
@@ -43142,7 +43142,7 @@ var _psTree = __webpack_require__(78);
 
 var _psTree2 = _interopRequireDefault(_psTree);
 
-var _eventBus = __webpack_require__(11);
+var _eventBus = __webpack_require__(10);
 
 var _lodash = __webpack_require__(20);
 
@@ -43460,7 +43460,7 @@ var _psAlert = __webpack_require__(30);
 
 var _psAlert2 = _interopRequireDefault(_psAlert);
 
-var _eventBus = __webpack_require__(11);
+var _eventBus = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43470,6 +43470,11 @@ exports.default = {
     PSTags: _psTags2.default,
     PSButton: _psButton2.default,
     PSAlert: _psAlert2.default
+  },
+  computed: {
+    error: function error() {
+      return this.alertType === 'ALERT_TYPE_DANGER';
+    }
   },
   methods: {
     onClick: function onClick() {
@@ -43495,6 +43500,7 @@ exports.default = {
     var _this = this;
 
     _eventBus.EventBus.$on('displayBulkAlert', function (type) {
+      _this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
       _this.showAlert = true;
       setTimeout(function (_) {
         _this.showAlert = false;
@@ -43511,6 +43517,7 @@ exports.default = {
     };
   }
 }; //
+//
 //
 //
 //
@@ -44051,7 +44058,7 @@ var _productDesc = __webpack_require__(96);
 
 var _productDesc2 = _interopRequireDefault(_productDesc);
 
-var _eventBus = __webpack_require__(11);
+var _eventBus = __webpack_require__(10);
 
 var _lodash = __webpack_require__(20);
 
@@ -44244,7 +44251,7 @@ var _psButton = __webpack_require__(21);
 
 var _psButton2 = _interopRequireDefault(_psButton);
 
-var _eventBus = __webpack_require__(11);
+var _eventBus = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44560,6 +44567,10 @@ exports.default = {
   props: ['product'],
   computed: {
     qty: function qty() {
+      if (!this.product.qty) {
+        this.isEnabled = false;
+        this.value = 0;
+      }
       return this.product.qty;
     },
     id: function id() {
@@ -44598,7 +44609,7 @@ exports.default = {
     },
     focusOut: function focusOut(event) {
       if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
-        // this.isActive = false;
+        this.isActive = false;
       }
       this.isEnabled = !!this.value;
     },
@@ -44627,7 +44638,7 @@ exports.default = {
   data: function data() {
     return {
       value: null,
-      isActive: true,
+      isActive: false,
       isEnabled: false
     };
   }
@@ -46253,11 +46264,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
  * Helpers.
  */
 
-var s = 1000;
-var m = s * 60;
-var h = m * 60;
-var d = h * 24;
-var y = d * 365.25;
+var s = 1000
+var m = s * 60
+var h = m * 60
+var d = h * 24
+var y = d * 365.25
 
 /**
  * Parse or format the given `val`.
@@ -46273,19 +46284,18 @@ var y = d * 365.25;
  * @api public
  */
 
-module.exports = function(val, options) {
-  options = options || {};
-  var type = typeof val;
+module.exports = function (val, options) {
+  options = options || {}
+  var type = typeof val
   if (type === 'string' && val.length > 0) {
-    return parse(val);
+    return parse(val)
   } else if (type === 'number' && isNaN(val) === false) {
-    return options.long ? fmtLong(val) : fmtShort(val);
+    return options.long ?
+			fmtLong(val) :
+			fmtShort(val)
   }
-  throw new Error(
-    'val is not a non-empty string or a valid number. val=' +
-      JSON.stringify(val)
-  );
-};
+  throw new Error('val is not a non-empty string or a valid number. val=' + JSON.stringify(val))
+}
 
 /**
  * Parse the given `str` and return milliseconds.
@@ -46296,55 +46306,53 @@ module.exports = function(val, options) {
  */
 
 function parse(str) {
-  str = String(str);
-  if (str.length > 100) {
-    return;
+  str = String(str)
+  if (str.length > 10000) {
+    return
   }
-  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(
-    str
-  );
+  var match = /^((?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|years?|yrs?|y)?$/i.exec(str)
   if (!match) {
-    return;
+    return
   }
-  var n = parseFloat(match[1]);
-  var type = (match[2] || 'ms').toLowerCase();
+  var n = parseFloat(match[1])
+  var type = (match[2] || 'ms').toLowerCase()
   switch (type) {
     case 'years':
     case 'year':
     case 'yrs':
     case 'yr':
     case 'y':
-      return n * y;
+      return n * y
     case 'days':
     case 'day':
     case 'd':
-      return n * d;
+      return n * d
     case 'hours':
     case 'hour':
     case 'hrs':
     case 'hr':
     case 'h':
-      return n * h;
+      return n * h
     case 'minutes':
     case 'minute':
     case 'mins':
     case 'min':
     case 'm':
-      return n * m;
+      return n * m
     case 'seconds':
     case 'second':
     case 'secs':
     case 'sec':
     case 's':
-      return n * s;
+      return n * s
     case 'milliseconds':
     case 'millisecond':
     case 'msecs':
     case 'msec':
     case 'ms':
-      return n;
+      return n
     default:
-      return undefined;
+      return undefined
   }
 }
 
@@ -46358,18 +46366,18 @@ function parse(str) {
 
 function fmtShort(ms) {
   if (ms >= d) {
-    return Math.round(ms / d) + 'd';
+    return Math.round(ms / d) + 'd'
   }
   if (ms >= h) {
-    return Math.round(ms / h) + 'h';
+    return Math.round(ms / h) + 'h'
   }
   if (ms >= m) {
-    return Math.round(ms / m) + 'm';
+    return Math.round(ms / m) + 'm'
   }
   if (ms >= s) {
-    return Math.round(ms / s) + 's';
+    return Math.round(ms / s) + 's'
   }
-  return ms + 'ms';
+  return ms + 'ms'
 }
 
 /**
@@ -46385,7 +46393,7 @@ function fmtLong(ms) {
     plural(ms, h, 'hour') ||
     plural(ms, m, 'minute') ||
     plural(ms, s, 'second') ||
-    ms + ' ms';
+    ms + ' ms'
 }
 
 /**
@@ -46394,12 +46402,12 @@ function fmtLong(ms) {
 
 function plural(ms, n, name) {
   if (ms < n) {
-    return;
+    return
   }
   if (ms < n * 1.5) {
-    return Math.floor(ms / n) + ' ' + name;
+    return Math.floor(ms / n) + ' ' + name
   }
-  return Math.ceil(ms / n) + ' ' + name + 's';
+  return Math.ceil(ms / n) + ' ' + name + 's'
 }
 
 
@@ -47397,7 +47405,7 @@ module.exports = function(SockJS, availableTransports) {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process, global) {
 
-var EventEmitter = __webpack_require__(10).EventEmitter
+var EventEmitter = __webpack_require__(11).EventEmitter
   , inherits = __webpack_require__(7)
   , JSON3 = __webpack_require__(13)
   , utils = __webpack_require__(14)
@@ -47474,7 +47482,7 @@ module.exports = InfoIframe;
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var EventEmitter = __webpack_require__(10).EventEmitter
+var EventEmitter = __webpack_require__(11).EventEmitter
   , inherits = __webpack_require__(7)
   , urlUtils = __webpack_require__(12)
   , XDR = __webpack_require__(75)
@@ -48505,7 +48513,7 @@ module.exports = JsonPTransport;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   ;
 
 var debug = function() {};
@@ -48600,7 +48608,7 @@ module.exports = BufferedSender;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   ;
 
 var debug = function() {};
@@ -48665,7 +48673,7 @@ module.exports = Polling;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   , EventSourceDriver = __webpack_require__(221)
   ;
 
@@ -48738,7 +48746,7 @@ module.exports = EventSourceReceiver;
 var inherits = __webpack_require__(7)
   , iframeUtils = __webpack_require__(29)
   , urlUtils = __webpack_require__(12)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   , random = __webpack_require__(25)
   ;
 
@@ -48835,7 +48843,7 @@ var utils = __webpack_require__(29)
   , browser = __webpack_require__(28)
   , urlUtils = __webpack_require__(12)
   , inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   ;
 
 var debug = function() {};
@@ -49128,7 +49136,7 @@ module.exports = function(url, payload, callback) {
 "use strict";
 
 
-var EventEmitter = __webpack_require__(10).EventEmitter
+var EventEmitter = __webpack_require__(11).EventEmitter
   , inherits = __webpack_require__(7)
   ;
 
@@ -49162,7 +49170,7 @@ module.exports = XHRFake;
 var utils = __webpack_require__(14)
   , urlUtils = __webpack_require__(12)
   , inherits = __webpack_require__(7)
-  , EventEmitter = __webpack_require__(10).EventEmitter
+  , EventEmitter = __webpack_require__(11).EventEmitter
   , WebsocketDriver = __webpack_require__(349)
   ;
 
@@ -50378,7 +50386,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/app.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/app.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] app.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50412,7 +50420,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/breadcrumb.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/breadcrumb.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] breadcrumb.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50450,7 +50458,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] filters.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50488,7 +50496,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] filter-component.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50526,7 +50534,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/low-filter.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/low-filter.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] low-filter.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50564,7 +50572,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/search.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/search.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] search.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50602,7 +50610,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/stock-header.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/stock-header.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] stock-header.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50640,7 +50648,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/tabs.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/tabs.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] tabs.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50674,7 +50682,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/index.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50712,7 +50720,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/movement-line.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/movement-line.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] movement-line.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50746,7 +50754,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/index.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50784,7 +50792,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/product-line.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/product-line.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] product-line.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50822,7 +50830,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-actions.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-actions.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] products-actions.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50860,7 +50868,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-table.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-table.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] products-table.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50898,7 +50906,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/spinner.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/spinner.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] spinner.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50942,7 +50950,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-datepicker.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-datepicker.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-datepicker.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50981,7 +50989,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-radio.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-radio.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-radio.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -51019,7 +51027,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/var/www/html/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-select.vue"
+Component.options.__file = "/Users/nMartin/Documents/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-select.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-select.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -52041,7 +52049,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'stock-warning': _vm.lowStock
     }
   }, [_vm._v("\n    " + _vm._s(_vm.product.product_reserved_quantity) + "\n  ")]), _vm._v(" "), _c('td', {
-    staticClass: "text-sm-left pl-4e",
+    staticClass: "text-sm-left pl-4",
     class: {
       'stock-warning': _vm.lowStock
     }
@@ -52168,7 +52176,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "closeAlert": _vm.onCloseAlert
     }
-  }, [_vm._v("\n        " + _vm._s(_vm.trans('alert_bulk_edit')) + "\n      ")]) : _vm._e()], 1)], 1)])
+  }, [(_vm.error) ? _c('span', [_vm._v(_vm._s(_vm.trans('alert_bulk_edit')))]) : _c('span', [_vm._v(_vm._s(_vm.trans('notification_stock_updated')))])]) : _vm._e()], 1)], 1)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
