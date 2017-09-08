@@ -137,21 +137,21 @@ class Locale
     {
         $spec = $this->getSpecification();
 
-        return $spec->decimalPatterns[$this->getUsedNumberingSystem()];
+        return $spec->decimalPatterns[$this->getNumberingSystem()];
     }
 
     public function getPercentPattern()
     {
         $spec = $this->getSpecification();
 
-        return $spec->percentPatterns[$this->getUsedNumberingSystem()];
+        return $spec->percentPatterns[$this->getNumberingSystem()];
     }
 
     public function getCurrencyPattern()
     {
         $spec = $this->getSpecification();
 
-        return $spec->currencyPatterns[$this->getUsedNumberingSystem()];
+        return $spec->currencyPatterns[$this->getNumberingSystem()];
     }
 
     /**
@@ -170,7 +170,7 @@ class Locale
             // TODO : get rid of this case when numbering system choice is implemented.
             $specSymbols = $spec->numberSymbols['latn'];
         } else {
-            $specSymbols = $spec->numberSymbols[$this->getUsedNumberingSystem()];
+            $specSymbols = $spec->numberSymbols[$this->getNumberingSystem()];
         }
 
         return array(
@@ -193,7 +193,7 @@ class Locale
      *
      * @return string The numbering system to use
      */
-    public function getUsedNumberingSystem()
+    public function getNumberingSystem()
     {
         $availableNumberingSystems = $this->getSpecification()->numberingSystems;
 
@@ -206,7 +206,7 @@ class Locale
             return 'latn';
         }
 
-        foreach (array('traditional', 'native', 'finance') as $system) {
+        foreach (array('native', 'traditional', 'finance') as $system) {
             if (isset($availableNumberingSystems[$system])) {
                 return $availableNumberingSystems[$system];
             }

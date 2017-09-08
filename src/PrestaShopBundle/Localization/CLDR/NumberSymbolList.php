@@ -155,49 +155,56 @@ class NumberSymbolList
      */
     public $timeSeparator;
 
-    public function merge(NumberSymbolList $newList)
+    /**
+     * Fills missing items of this list with default data
+     *
+     * @param NumberSymbolList $defaultList
+     *
+     * @return $this
+     */
+    public function fill(NumberSymbolList $defaultList)
     {
-        if (isset($newList->decimal)) {
-            $this->decimal = $newList->decimal;
+        if (!isset($this->decimal) && isset($defaultList->decimal)) {
+            $this->decimal = $defaultList->decimal;
         }
-        if (isset($newList->group)) {
-            $this->group = $newList->group;
+        if (!isset($this->group) && isset($defaultList->group)) {
+            $this->group = $defaultList->group;
         }
-        if (isset($newList->list)) {
-            $this->list = $newList->list;
+        if (!isset($this->list) && isset($defaultList->list)) {
+            $this->list = $defaultList->list;
         }
-        if (isset($newList->percentSign)) {
-            $this->percentSign = $newList->percentSign;
+        if (!isset($this->percentSign) && isset($defaultList->percentSign)) {
+            $this->percentSign = $defaultList->percentSign;
         }
-        if (isset($newList->minusSign)) {
-            $this->minusSign = $newList->minusSign;
+        if (!isset($this->minusSign) && isset($defaultList->minusSign)) {
+            $this->minusSign = $defaultList->minusSign;
         }
-        if (isset($newList->plusSign)) {
-            $this->plusSign = $newList->plusSign;
+        if (!isset($this->plusSign) && isset($defaultList->plusSign)) {
+            $this->plusSign = $defaultList->plusSign;
         }
-        if (isset($newList->exponential)) {
-            $this->exponential = $newList->exponential;
+        if (!isset($this->exponential) && isset($defaultList->exponential)) {
+            $this->exponential = $defaultList->exponential;
         }
-        if (isset($newList->superscriptingExponent)) {
-            $this->superscriptingExponent = $newList->superscriptingExponent;
+        if (!isset($this->superscriptingExponent) && isset($defaultList->superscriptingExponent)) {
+            $this->superscriptingExponent = $defaultList->superscriptingExponent;
         }
-        if (isset($newList->perMille)) {
-            $this->perMille = $newList->perMille;
+        if (!isset($this->perMille) && isset($defaultList->perMille)) {
+            $this->perMille = $defaultList->perMille;
         }
-        if (isset($newList->infinity)) {
-            $this->infinity = $newList->infinity;
+        if (!isset($this->infinity) && isset($defaultList->infinity)) {
+            $this->infinity = $defaultList->infinity;
         }
-        if (isset($newList->nan)) {
-            $this->nan = $newList->nan;
+        if (!isset($this->nan) && isset($defaultList->nan)) {
+            $this->nan = $defaultList->nan;
         }
-        if (isset($newList->currencyDecimal)) {
-            $this->currencyDecimal = $newList->currencyDecimal;
+        if (!isset($this->currencyDecimal) && isset($defaultList->currencyDecimal)) {
+            $this->currencyDecimal = $defaultList->currencyDecimal;
         }
-        if (isset($newList->currencyGroup)) {
-            $this->currencyGroup = $newList->currencyGroup;
+        if (!isset($this->currencyGroup) && isset($defaultList->currencyGroup)) {
+            $this->currencyGroup = $defaultList->currencyGroup;
         }
-        if (isset($newList->timeSeparator)) {
-            $this->timeSeparator = $newList->timeSeparator;
+        if (!isset($this->timeSeparator) && isset($defaultList->timeSeparator)) {
+            $this->timeSeparator = $defaultList->timeSeparator;
         }
 
         return $this;
