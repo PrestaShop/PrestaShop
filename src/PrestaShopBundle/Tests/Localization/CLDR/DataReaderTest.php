@@ -56,8 +56,8 @@ class DataReaderTest extends TestCase
         $localeData = $this->reader->getLocaleByCode($localeCode);
 
         foreach ($expectedData as $property => $value) {
+            // Assertions on number symbols lists (array of NumberSymbolList objects)
             if ($property === 'numberSymbols') {
-                // Assertions on number symbols lists (array of NumberSymbolList objects)
                 $expectedSymbolsSets = $value;
                 foreach ($expectedSymbolsSets as $expectedNumberingSystem => $expectedSymbolsSet) {
                     foreach ($expectedSymbolsSet as $symbolName => $symbolValue) {
@@ -69,14 +69,15 @@ class DataReaderTest extends TestCase
                         );
                     }
                 }
-            } else {
-                // Assertions on other properties
-                $this->assertSame(
-                    $value,
-                    $localeData->$property,
-                    'For ' . $localeCode . ' locale, ' . $property . ' value is not the same as expected'
-                );
+                continue;
             }
+
+            // Assertions on other properties
+            $this->assertSame(
+                $value,
+                $localeData->$property,
+                'For ' . $localeCode . ' locale, ' . $property . ' value is not the same as expected'
+            );
         }
     }
 
