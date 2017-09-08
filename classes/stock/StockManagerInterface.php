@@ -143,8 +143,8 @@ interface StockManagerInterface
      * @param int $id_product
      * @param int $id_product_attribute
      * @param int $coverage
-     * @param int $id_warehouse Optional
-     * @return int time
+     * @param int|null $id_warehouse Optional
+     * @return int Number of products sold over the coverage period
      */
     public function getProductOutForCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null);
 }
