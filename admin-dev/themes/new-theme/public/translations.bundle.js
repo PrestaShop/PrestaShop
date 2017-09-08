@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "39e477b79b59c381ed3c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cf5c9e8034483dab4239"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -34766,7 +34766,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       className: _vm.className
     }
   }, [_c('div', {
-    staticClass: "flex tree-name",
+    staticClass: "d-flex tree-name",
     class: {
       active: _vm.active, disable: _vm.model.disable
     },
@@ -34774,7 +34774,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.clickElement
     }
   }, [_c('div', {
-    staticClass: "flex",
+    staticClass: "d-flex",
     class: _vm.chevron
   }, [(_vm.open) ? _c('i', {
     staticClass: "material-icons"

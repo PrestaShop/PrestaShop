@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "39e477b79b59c381ed3c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cf5c9e8034483dab4239"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -33455,7 +33455,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.update-qty[data-v-0ae9cb18] {\n  color: white;\n  transition: background-color 0.2s ease;\n}\n.product-actions .qty[data-v-0ae9cb18] {\n  padding-left: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.bulk-qty[data-v-0ae9cb18] {\n  max-width: 100px;\n}\n.update-qty[data-v-0ae9cb18] {\n  color: white;\n  transition: background-color 0.2s ease;\n}\n.product-actions .qty[data-v-0ae9cb18] {\n  padding-left: 20px;\n}\n", ""]);
 
 // exports
 
@@ -33555,7 +33555,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header-toolbar {\n  z-index: 0;\n  height: 128px;\n}\n.stock-app {\n  padding-top: 3em;\n}\n.table tr td {\n  border: none;\n  padding: 5px 5px 5px;\n  vertical-align: top;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table tr td:not(.qty-spinner) {\n    padding-top: 14px;\n}\n.ui-spinner .ui-spinner-button {\n  right: 30px;\n  cursor: pointer;\n  display: none;\n  z-index: 3;\n  transition: all 0.2s ease;\n  height: 20px;\n}\n.product-actions .ui-spinner .ui-spinner-button {\n    right: 7px;\n}\n.ui-spinner .ui-spinner-up::before {\n  font-family: 'Material Icons';\n  content: \"\\E5C7\";\n  font-size: 20px;\n  color: #363a41;\n  position: relative;\n  top: -3px;\n}\n.ui-spinner .ui-spinner-down::before {\n  font-family: 'Material Icons';\n  content: \"\\E5C5\";\n  font-size: 20px;\n  color: #363a41;\n  bottom: 5px;\n  position: relative;\n}\n.ui-spinner span {\n  display: none;\n}\n.qty.active .ui-spinner-button {\n  display: block;\n}\n#growls.default {\n  top: 20px;\n}\n.growl.growl-notice {\n  background: white;\n  border: 2px solid #78D07D;\n  border-radius: 0;\n  padding: 0;\n  min-height: 50px;\n}\n.growl.growl-notice .growl-message {\n    color: #363a41;\n    line-height: 46px;\n}\n.growl.growl-notice .growl-message::before {\n      color: white;\n      text-align: center;\n      background: #78D07D;\n      height: 48px;\n      width: 48px;\n}\n.growl.growl-notice .growl-close {\n    color: #78D07D;\n    font-size: 20px;\n}\n.d-inline {\n  display: inline;\n}\n.flex {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center;\n}\n.flex.column {\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n}\n.btn:disabled {\n  background-color: #BBCDD2;\n  border-color: #BBCDD2;\n}\n", ""]);
+exports.push([module.i, "\n.header-toolbar {\n  z-index: 0;\n  height: 120px;\n}\n.stock-app {\n  padding-top: 3em;\n}\n.table tr td {\n  border: none;\n  padding: 5px 5px 5px;\n  vertical-align: top;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table tr td:not(.qty-spinner) {\n    padding-top: 14px;\n}\n#growls.default {\n  top: 20px;\n}\n.growl.growl-notice {\n  background: white;\n  border: 2px solid #78D07D;\n  border-radius: 0;\n  padding: 0;\n  min-height: 50px;\n}\n.growl.growl-notice .growl-message {\n    color: #363a41;\n    line-height: 46px;\n}\n.growl.growl-notice .growl-message::before {\n      color: white;\n      text-align: center;\n      background: #78D07D;\n      height: 48px;\n      width: 48px;\n}\n.growl.growl-notice .growl-close {\n    color: #78D07D;\n    font-size: 20px;\n}\n.btn:disabled {\n  background-color: #BBCDD2;\n  border-color: #BBCDD2;\n}\n", ""]);
 
 // exports
 
@@ -33583,7 +33583,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 exports.i(__webpack_require__(313), "");
 
 // module
-exports.push([module.i, "\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 3.5px;\n    right: 0;\n    border: none;\n    height: 31px;\n    width: 40px;\n    background: #25b9d7;\n    z-index: 2;\n    border-left: 10px solid white;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 1px;\n    right: 1px;\n    border: none;\n    height: 31px;\n    width: 31px;\n    background: #25b9d7;\n    z-index: 2;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n  cursor: pointer;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n.ui-widget.ui-widget-content[data-v-599c0dc5] {\n  border: none;\n  border-radius: 0;\n}\n", ""]);
 
 // exports
 
@@ -33597,7 +33597,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.ps-number[data-v-5cc3bac0] {\n  text-indent: 5px;\n  height: 33px;\n  width: 100px;\n  border: 1px solid #BBCDD2;\n  margin: 3px 0;\n}\ninput[type=number][data-v-5cc3bac0]::-webkit-inner-spin-button,\ninput[type=number][data-v-5cc3bac0]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n.danger[data-v-5cc3bac0] {\n  border: 1px solid #c05c67;\n  background-color: #fff;\n  color: #363a41;\n}\n.danger[data-v-5cc3bac0]:focus {\n    outline: none;\n}\n", ""]);
+exports.push([module.i, "\ninput[type=number][data-v-5cc3bac0]::-webkit-inner-spin-button,\ninput[type=number][data-v-5cc3bac0]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n.danger[data-v-5cc3bac0] {\n  border: 1px solid #c05c67;\n  background-color: #fff;\n  color: #363a41;\n}\n.danger[data-v-5cc3bac0]:focus {\n    outline: none;\n}\n.ps-number[data-v-5cc3bac0] {\n  position: relative;\n}\n.ps-number .ps-number-button[data-v-5cc3bac0] {\n    position: absolute;\n    top: 1px;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    right: 30px;\n    cursor: pointer;\n    line-height: 17px;\n    transition: all 0.2s ease;\n}\n.product-actions .ps-number .ps-number-button[data-v-5cc3bac0] {\n      right: 7px;\n}\n.ps-number .ps-number-up[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C7\";\n    font-size: 20px;\n    color: #363a41;\n    position: relative;\n}\n.ps-number .ps-number-down[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C5\";\n    font-size: 20px;\n    color: #363a41;\n    bottom: 6px;\n    position: relative;\n}\n", ""]);
 
 // exports
 
@@ -34349,7 +34349,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       className: _vm.className
     }
   }, [_c('div', {
-    staticClass: "flex tree-name",
+    staticClass: "d-flex tree-name",
     class: {
       active: _vm.active, disable: _vm.model.disable
     },
@@ -34357,7 +34357,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.clickElement
     }
   }, [_c('div', {
-    staticClass: "flex",
+    staticClass: "d-flex",
     class: _vm.chevron
   }, [(_vm.open) ? _c('i', {
     staticClass: "material-icons"
@@ -44170,6 +44170,9 @@ exports.default = {
     },
     lowStockLevel: function lowStockLevel() {
       return '<div class="text-sm-left">\n                <p>' + this.trans('product_low_stock') + '</p>\n                <p><strong>' + this.trans('product_low_stock_level') + ' ' + this.product.product_low_stock_threshold + '</strong></p>\n              </div>';
+    },
+    id: function id() {
+      return 'product-' + this.product.product_id + this.product.combination_id;
     }
   },
   methods: {
@@ -44197,9 +44200,8 @@ exports.default = {
   mounted: function mounted() {
     var _this = this;
 
-    var self = this;
     _eventBus.EventBus.$on('toggleProductsCheck', function (checked) {
-      var ref = 'product-' + self.product.combination_id;
+      var ref = _this.id;
       if (_this.$refs[ref]) {
         _this.$refs[ref].checked = checked;
       }
@@ -44246,7 +44248,6 @@ var _eventBus = __webpack_require__(11);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
 //
 //
 //
@@ -44559,9 +44560,6 @@ exports.default = {
   props: ['product'],
   computed: {
     qty: function qty() {
-      if (parseInt(this.product.qty, 10) === 0) {
-        this.deActivate();
-      }
       return this.product.qty;
     },
     id: function id() {
@@ -44600,7 +44598,7 @@ exports.default = {
     },
     focusOut: function focusOut(event) {
       if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
-        this.isActive = false;
+        // this.isActive = false;
       }
       this.isEnabled = !!this.value;
     },
@@ -44629,11 +44627,12 @@ exports.default = {
   data: function data() {
     return {
       value: null,
-      isActive: false,
+      isActive: true,
       isEnabled: false
     };
   }
 }; //
+//
 //
 //
 //
@@ -44851,8 +44850,6 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
-//
-//
 
 exports.default = {
   props: ['thumbnail'],
@@ -44911,11 +44908,18 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 exports.default = {
   props: {
     value: 0,
-    danger: false
+    danger: false,
+    buttons: false
   },
   methods: {
     onKeyup: function onKeyup($event) {
@@ -44926,15 +44930,15 @@ exports.default = {
     },
     focusOut: function focusOut($event) {
       this.$emit('blur', $event);
+    },
+    increment: function increment() {
+      var value = this.value + 1;
+      this.$emit('change', value);
+    },
+    decrement: function decrement() {
+      var value = this.value - 1;
+      this.$emit('change', value);
     }
-  },
-  mounted: function mounted() {
-    var self = this;
-    $(this.$el).spinner({
-      spin: function spin(event, ui) {
-        self.$emit('change', ui.value);
-      }
-    });
   }
 };
 
@@ -51096,7 +51100,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center"
+    staticClass: "text-sm-center align-middle"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_status')) + "\n      ")]), _vm._v(" "), _c('th', {
     staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_physical')) + "\n        "), _c('PSSort', {
@@ -51107,9 +51111,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center"
+    staticClass: "text-sm-center align-middle"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_reserved')) + "\n      ")]), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center"
+    staticClass: "text-sm-center pr-4"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_available')) + "\n        "), _c('PSSort', {
     attrs: {
       "order": "available_quantity"
@@ -51118,7 +51122,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center"
+    staticClass: "text-sm-center align-middle"
   }, [_c('i', {
     staticClass: "material-icons"
   }, [_vm._v("edit")]), _vm._v("\n        " + _vm._s(_vm.trans('title_edit_quantity')) + "\n      ")])])]), _vm._v(" "), _c('tbody', [(this.isLoading) ? _c('tr', [_c('td', {
@@ -51195,13 +51199,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "row product-actions"
   }, [_c('div', {
-    staticClass: "col-md-8 qty flex",
+    staticClass: "col-md-8 qty d-flex align-items-center",
     class: {
       'active': _vm.isFocused
     }
   }, [_c('PSCheckbox', {
     ref: "bulk-action",
-    staticClass: "m-t-1",
+    staticClass: "mt-3",
     attrs: {
       "id": "bulk-action",
       "isIndeterminate": _vm.isIndeterminate
@@ -51209,13 +51213,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "checked": _vm.bulkChecked
     }
-  }), _vm._v(" "), _c('div', [_c('div', {
-    staticClass: "m-l-1"
-  }, [_c('small', [_vm._v(_vm._s(_vm.trans('title_bulk')))])]), _vm._v(" "), _c('PSNumber', {
-    staticClass: "m-l-1",
+  }), _vm._v(" "), _c('div', {
+    staticClass: "ml-1"
+  }, [_c('small', [_vm._v(_vm._s(_vm.trans('title_bulk')))]), _vm._v(" "), _c('PSNumber', {
+    staticClass: "bulk-qty",
     attrs: {
       "danger": _vm.danger,
-      "value": _vm.bulkEditQty
+      "value": _vm.bulkEditQty,
+      "buttons": this.isFocused
     },
     on: {
       "focus": _vm.focusIn,
@@ -51226,7 +51231,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })], 1)], 1), _vm._v(" "), _c('div', {
     staticClass: "col-md-4"
   }, [_c('PSButton', {
-    staticClass: "update-qty pull-xs-right",
+    staticClass: "update-qty float-sm-right my-4 mr-2",
     class: {
       'btn-primary': _vm.disabled
     },
@@ -51272,17 +51277,17 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
-    staticClass: "media-left"
+  return _c('div', {
+    staticClass: "media"
   }, [(_vm.displayThumb) ? _c('img', {
-    staticClass: "thumbnail media-object",
+    staticClass: "thumbnail d-flex",
     attrs: {
       "src": _vm.thumbnail
     }
   }) : _c('div', {
     staticClass: "no-img"
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "m-l-1 desc media-body"
+  }), _vm._v(" "), _c('div', {
+    staticClass: "ml-1 desc media-body"
   }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -51582,8 +51587,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('a', {
     staticClass: "float-sm-right ml-2",
     attrs: {
-      "id": "desc-product-export",
-      "href": _vm.stockImportUrl
+      "href": _vm.stockImportUrl,
+      "target": "_blank"
     }
   }, [_c('span', {
     attrs: {
@@ -51597,7 +51602,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("cloud_download")])])]), _vm._v(" "), _c('a', {
     staticClass: "float-sm-right",
     attrs: {
-      "id": "desc-product-export",
       "href": _vm.stockExporttUrl
     }
   }, [_c('span', {
@@ -51750,7 +51754,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "placeholder": "0",
       "pattern": "\\d*",
       "step": "1",
-      "value": _vm.qty
+      "value": _vm.qty,
+      "buttons": this.isActive
     },
     on: {
       "change": _vm.onChange,
@@ -51824,8 +51829,10 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('input', {
-    staticClass: "ps-number",
+  return _c('div', {
+    staticClass: "ps-number"
+  }, [_c('input', {
+    staticClass: "ps-number form-control",
     class: {
       'danger': _vm.danger
     },
@@ -51844,7 +51851,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.focusOut($event)
       }
     }
-  })
+  }), _vm._v(" "), (_vm.buttons) ? _c('div', {
+    staticClass: "ps-number-button d-flex"
+  }, [_c('span', {
+    staticClass: "ps-number-up",
+    on: {
+      "click": _vm.increment
+    }
+  }), _vm._v(" "), _c('span', {
+    staticClass: "ps-number-down",
+    on: {
+      "click": _vm.decrement
+    }
+  })]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
@@ -51981,11 +52000,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'low-stock': _vm.lowStock
     }
   }, [_c('td', {
-    staticClass: "flex p-r-1"
+    staticClass: "d-flex align-items-center pr-1"
   }, [_c('PSCheckbox', {
-    ref: ("product-" + (_vm.product.combination_id)),
+    ref: _vm.id,
     attrs: {
-      "id": ("product-" + (_vm.product.combination_id)),
+      "id": _vm.id,
       "model": _vm.product
     },
     on: {
@@ -52022,7 +52041,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'stock-warning': _vm.lowStock
     }
   }, [_vm._v("\n    " + _vm._s(_vm.product.product_reserved_quantity) + "\n  ")]), _vm._v(" "), _c('td', {
-    staticClass: "text-sm-center",
+    staticClass: "text-sm-left pl-4e",
     class: {
       'stock-warning': _vm.lowStock
     }
@@ -52036,7 +52055,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("trending_flat")]), _vm._v("\n      " + _vm._s(_vm.availableQtyUpdated) + "\n    ")]) : _vm._e(), _vm._v(" "), (_vm.lowStock) ? _c('span', {
     staticClass: "stock-warning ico ml-4",
     attrs: {
-      "rel": "tooltip",
       "data-toggle": "pstooltip",
       "data-placement": "top",
       "data-html": "true",
