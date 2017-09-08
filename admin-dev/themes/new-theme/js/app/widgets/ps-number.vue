@@ -94,7 +94,6 @@
       flex-direction: column;
       right: 30px;
       cursor: pointer;
-      z-index: 3;
       line-height:17px;
       transition: all 0.2s ease;
       .product-actions & {

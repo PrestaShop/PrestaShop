@@ -26,8 +26,8 @@
   <tr :class="{'low-stock':lowStock}">
     <td class="d-flex align-items-center pr-1">
       <PSCheckbox
-        :id="`product-${product.combination_id}`"
-        :ref="`product-${product.combination_id}`"
+        :id="id"
+        :ref="id"
         :model="product"
         @checked="productChecked"
       />
@@ -65,7 +65,7 @@
     <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
+    <td class="text-sm-left pl-4e" :class="{'stock-warning':lowStock}">
       {{ product.product_available_quantity }}
       <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>
@@ -120,6 +120,9 @@
                   <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
                 </div>`;
       },
+      id() {
+        return `product-${this.product.product_id}${this.product.combination_id}`;
+      },
     },
     methods: {
       productChecked(checkbox) {
@@ -144,9 +147,8 @@
       },
     },
     mounted() {
-      const self = this;
       EventBus.$on('toggleProductsCheck', (checked) => {
-        const ref = `product-${self.product.combination_id}`;
+        const ref = this.id;
         if (this.$refs[ref]) {
           this.$refs[ref].checked = checked;
         }
