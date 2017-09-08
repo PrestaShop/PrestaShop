@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Localization\CLDR;
 interface DataReaderInterface
 {
     /**
-     * Get locale data by code (either language code or EITF locale tag)
+     * Get locale data by code (either language code or IETF locale tag)
      *
      * @param string $localeCode The wanted locale code
      *

@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Localization\CLDR;
 class LocaleData
 {
     /**
-     * The locale code for this data (either language code or EITF tag)
+     * The locale code for this data (either language code or IETF tag)
      *
      * @var string
      */
@@ -93,67 +93,91 @@ class LocaleData
     public $currencyPatterns;
 
     /**
-     * Override properties with data from another CLDRLocaleData object
+     * Parent locale code.
      *
-     * @param LocaleData $newData
+     * This code can be an IETF tag, an ISO 639-1 language code or a specific code used in CLDR to identify special
+     * "parent" locale data files (eg: en_CH parent data will be found in en_150.xml instead of regular en.xml).
+     * Parent locale is used when some data is not found in current locale.
+     *
+     * @var string
+     */
+    public $parentLocale;
+
+    /**
+     * Fills missing properties with "parent" data
+     *
+     * @param LocaleData $parentData
      *
      * @return $this
      */
-    public function merge(LocaleData $newData)
+    public function fill(LocaleData $parentData)
     {
-        $simpleProps         = array(
+        $simpleProps = array(
+            'digits',
             'localeCode',
             'minimumGroupingDigits',
+            'parentLocale',
         );
-        $objectProps         = array();
-        $arrayProps          = array(
-            'numberingSystems',
-            'decimalPatterns',
-            'percentPatterns',
+
+        $objectProps = array();
+
+        $arrayProps = array(
             'currencyPatterns',
+            'decimalPatterns',
+            'numberingSystems',
+            'percentPatterns',
         );
+
         $arrayOfObjectsProps = array(
             'numberSymbols',
         );
-        // Simple properties -> simple override
+
+        // Simple properties -> simple fill
         foreach ($simpleProps as $propName) {
-            if (!empty($newData->$propName)) {
-                $this->$propName = $newData->$propName;
+            if (isset($parentData->$propName) && !isset($this->$propName)) {
+                $this->$propName = $parentData->$propName;
             }
         }
 
-        // Object properties -> override properties via internal merge() method
+        // Object properties -> fill properties via internal fill() method
         foreach ($objectProps as $propName) {
-            if (!empty($newData->$propName)) {
+            if (isset($parentData->$propName)) {
                 if (!isset($this->$propName)) {
-                    $this->$propName = $newData->$propName;
+                    $this->$propName = $parentData->$propName;
                     continue;
                 }
 
-                $this->$propName->merge($newData->$propName);
+                $this->$propName->fill($parentData->$propName);
             }
         }
 
         // Array of scalar types -> simple array replace
         foreach ($arrayProps as $propName) {
-            if (!empty($newData->$propName)) {
-                $this->$propName = array_replace_recursive($this->$propName, $newData->$propName);
+            if (!isset($this->$propName)) {
+                $this->$propName = $parentData->$propName;
+                continue;
+            }
+            if (!empty($parentData->$propName)) {
+                $this->$propName = array_replace_recursive($parentData->$propName, $this->$propName);
             }
         }
 
         // Array of objects properties -> for each object, override properties via internal merge() method
         foreach ($arrayOfObjectsProps as $propName) {
-            if (!empty($newData->$propName)) {
-                foreach ($newData->$propName as $propKey => $propObject) {
+            if (!empty($parentData->$propName)) {
+                foreach ($parentData->$propName as $propKey => $propObject) {
                     if (!isset($this->$propName[$propKey])) {
                         $this->$propName[$propKey] = $propObject;
                         continue;
                     }
 
-                    $this->$propName[$propKey]->merge($propObject);
+                    $this->$propName[$propKey]->fill($propObject);
                 }
             }
         }
+
+        // 'parentLocale' should always be overridden by parent locale's 'parentLocale' (for recursivity purpose)
+        $this->parentLocale = $parentData->parentLocale;
 
         return $this;
     }
