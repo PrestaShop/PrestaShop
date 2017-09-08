@@ -102,10 +102,6 @@
             />
           </div>
         </div>
-        <!-- <PSButton type="button" class="float-right my-2 mx-2" :primary="true" :disabled="disabled" @click="onClick">
-          <i class="material-icons mr-1">filter_list</i>
-          {{trans('button_apply_advanced_filter')}}
-        </PSButton> -->
       </div>
     </div>
   </div>

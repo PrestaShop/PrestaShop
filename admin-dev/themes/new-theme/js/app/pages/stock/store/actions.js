@@ -26,6 +26,7 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import * as types from './mutation-types';
 import { showGrowl } from 'app/utils/growl';
+import { EventBus } from 'app/utils/event-bus';
 import _ from 'lodash';
 
 Vue.use(VueResource);
@@ -150,7 +151,7 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
     delta,
   }).then((res) => {
     commit(types.UPDATE_PRODUCT, res.body);
-    return showGrowl('notice', state.translations.notification_stock_updated);
+    EventBus.$emit('displayBulkAlert', 'success');
   }, (error) => {
     showGrowl('error', error.statusText);
   });
@@ -162,7 +163,7 @@ export const updateQtyByProductsId = ({ commit, state }) => {
 
   Vue.http.post(url, productsQty).then((res) => {
     commit(types.UPDATE_PRODUCTS_QTY, res.body);
-    return showGrowl('notice', state.translations.notification_stock_updated);
+    EventBus.$emit('displayBulkAlert', 'success');
   }, (error) => {
     showGrowl('error', error.statusText);
   });

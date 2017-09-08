@@ -65,7 +65,7 @@
     <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-sm-left pl-4e" :class="{'stock-warning':lowStock}">
+    <td class="text-sm-left pl-4" :class="{'stock-warning':lowStock}">
       {{ product.product_available_quantity }}
       <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>

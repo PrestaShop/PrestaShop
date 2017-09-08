@@ -55,6 +55,10 @@
     props: ['product'],
     computed: {
       qty() {
+        if (!this.product.qty) {
+          this.isEnabled = false;
+          this.value = 0;
+        }
         return this.product.qty;
       },
       id() {
@@ -93,7 +97,7 @@
       },
       focusOut(event) {
         if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
-         // this.isActive = false;
+          this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
@@ -121,7 +125,7 @@
     },
     data: () => ({
       value: null,
-      isActive: true,
+      isActive: false,
       isEnabled: false,
     }),
   };
