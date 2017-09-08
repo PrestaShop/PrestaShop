@@ -138,7 +138,7 @@ class LocaleTest extends TestCase
                 'number'  => 1234560.1234,
                 'formats' => array(
                     'ar-IL' => '1,234,560.123', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.123', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,560.123', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.123',
                     'en-US' => '1,234,560.123',
                     'es-AR' => '1.234.560,123',
@@ -149,7 +149,7 @@ class LocaleTest extends TestCase
                 'number'  => 1234560.9876,
                 'formats' => array(
                     'ar-IL' => '1,234,560.988', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.988', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,560.988', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.988',
                     'en-US' => '1,234,560.988',
                     'es-AR' => '1.234.560,988',
@@ -160,7 +160,7 @@ class LocaleTest extends TestCase
                 'number'  => 0.7,
                 'formats' => array(
                     'ar-IL' => '0.7', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '0.7', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '0.7', // Needs to be changed when numbering system is configurable
                     'de-CH' => '0.7',
                     'en-US' => '0.7',
                     'es-AR' => '0,7',
@@ -171,7 +171,7 @@ class LocaleTest extends TestCase
                 'number'  => '0.7000',
                 'formats' => array(
                     'ar-IL' => '0.7', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '0.7', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '0.7', // Needs to be changed when numbering system is configurable
                     'de-CH' => '0.7',
                     'en-US' => '0.7',
                     'es-AR' => '0,7',
@@ -182,7 +182,7 @@ class LocaleTest extends TestCase
                 'number'  => '1234560.78389',
                 'formats' => array(
                     'ar-IL' => '1,234,560.784', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.784', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,560.784', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.784',
                     'en-US' => '1,234,560.784',
                     'es-AR' => '1.234.560,784',
@@ -193,7 +193,7 @@ class LocaleTest extends TestCase
                 'number'  => '1234560.7831111',
                 'formats' => array(
                     'ar-IL' => '1,234,560.783', // Needs to be changed when numbering system is configurable
-//                    'bn-IN' => '1,234,560.783', // Needs to be changed when numbering system is configurable
+                    'bn-IN' => '1,234,560.783', // Needs to be changed when numbering system is configurable
                     'de-CH' => '1’234’560.783',
                     'en-US' => '1,234,560.783',
                     'es-AR' => '1.234.560,783',

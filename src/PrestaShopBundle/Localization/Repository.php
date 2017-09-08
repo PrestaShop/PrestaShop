@@ -116,7 +116,7 @@ class Repository
             return $this->locales[$id];
         }
 
-        foreach ($this->getDataSources() as $index => $dataSource) {
+        foreach ($this->getDataSources() as $dataSource) {
             /** @var DataSourceInterface $dataSource */
             $localeData = $dataSource->getLocaleById((int)$id);
 
