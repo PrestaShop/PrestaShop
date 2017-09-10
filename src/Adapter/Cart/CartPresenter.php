@@ -440,7 +440,7 @@ class CartPresenter implements PresenterInterface
                             '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
                             '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
                         ),
-                        'Shop.Theme.Checkout'
+                        'Shop.Theme.Checkout', ''
                     )
                 ) :
                 '',
