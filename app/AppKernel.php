@@ -24,8 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Kernel;
+use PrestaShopBundle\Kernel\ModuleRepository;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
@@ -54,6 +57,9 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
         }
 
+        /**
+         * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
+         */
         if (extension_loaded('apc')) {
             $_SERVER['SYMFONY__CACHE__DRIVER'] = 'apc';
         } else {
@@ -63,8 +69,98 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    /**
+     * @{inheritdoc}
+     */
+    protected function getKernelParameters()
+    {
+        $kernelParameters = parent::getKernelParameters();
+
+        $modules = array();
+        $modulesPaths = array();
+
+        if ($this->isParametersFile()) {
+            try {
+                $this->getConnection()->connect();
+                $modules = $this->getModuleRepository()->getActiveModules();
+                $modulesPaths = $this->getModuleRepository()->getActiveModulesPaths($modules);
+            } catch (\Exception $e) {}
+        }
+
+        return array_merge($kernelParameters,
+            array(
+                'kernel.modules' => $modules,
+                'kernel.modules_paths' => $modulesPaths,
+            )
+        );
+    }
+
+    /**
+     * @{inheritdoc}
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
+
+    /**
+     * Return the module repository.
+     *
+     * @return ModuleRepository
+     */
+    private function getModuleRepository()
+    {
+        $databasePrefix = $this->getParameters()['database_prefix'];
+
+        $modulesRepository = new ModuleRepository(
+            $this->getConnection(),
+            $databasePrefix
+        );
+
+        return $modulesRepository;
+    }
+
+    /**
+     * @return array The root parameters of PrestaShop
+     */
+    private function getParameters()
+    {
+        $parametersFile = $this->getRootDir().'/config/parameters.php';
+        if (file_exists($parametersFile)) {
+            $config = require($parametersFile);
+
+            return $config['parameters'];
+        }
+
+        return array();
+    }
+
+    /**
+     * @return  bool
+     */
+    private function isParametersFile()
+    {
+        $parametersFile = $this->getRootDir().'/config/parameters.php';
+
+        return file_exists($parametersFile);
+    }
+
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
+    private function getConnection()
+    {
+        $parameters = $this->getParameters();
+
+        return DriverManager::getConnection(array(
+            'dbname' => $parameters['database_name'],
+            'user' => $parameters['database_user'],
+            'password' => $parameters['database_password'],
+            'host' => $parameters['database_host'],
+            'port' => $parameters['database_port'],
+            'charset' => 'utf8',
+            'driver' => 'pdo_mysql',
+        ));
+    }
+
 }

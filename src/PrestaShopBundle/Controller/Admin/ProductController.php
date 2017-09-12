@@ -75,7 +75,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/catalog.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -250,7 +250,7 @@ class ProductController extends FrameworkBundleAdminController
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/list.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -374,7 +374,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/form.html.twig")
      * @param int $id The product ID
      * @param Request $request
      * @return array|Response Template vars
