@@ -65,13 +65,13 @@
     <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-sm-left pl-4" :class="{'stock-warning':lowStock}">
+    <td class="text-sm-left pl-2" :class="{'stock-warning':lowStock}">
       {{ product.product_available_quantity }}
       <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
-      <span v-if="lowStock" class="stock-warning ico ml-4" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
+      <span v-if="lowStock" class="stock-warning ico ml-2" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
     </td>
     <td class="qty-spinner">
       <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />
