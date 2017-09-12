@@ -26,7 +26,7 @@
   <PSTable class="mt-1">
     <thead>
       <tr>
-        <th width="30%" class="thead-title">
+        <th width="27%" class="thead-title">
           {{trans('title_product')}}
           <PSSort order="product" @sort="toggleSort" />
         </th>
@@ -48,11 +48,11 @@
         <th class="text-sm-center align-middle">
           {{trans('title_reserved')}}
         </th>
-        <th class="text-sm-center pr-4">
+        <th class="text-sm-left">
           {{trans('title_available')}}
           <PSSort order="available_quantity" @sort="toggleSort" />
         </th>
-        <th class="text-sm-center align-middle">
+        <th class="text-sm-left align-middle">
           <i class="material-icons">edit</i>
           {{trans('title_edit_quantity')}}
         </th>

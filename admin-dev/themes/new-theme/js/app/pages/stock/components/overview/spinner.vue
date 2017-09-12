@@ -96,7 +96,7 @@
         this.isActive = true;
       },
       focusOut(event) {
-        if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
+        if (!$(event.target).hasClass('ps-number') && !this.value) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
@@ -145,7 +145,7 @@
         opacity: 0;
         position: absolute;
         top: 1px;
-        right: 1px;
+        right: 25px;
         border: none;
         height: 31px;
         width: 31px;
@@ -177,11 +177,6 @@
   }
   .fade-enter, .fade-leave-to {
     opacity: 0
-  }
-
-  .ui-widget.ui-widget-content {
-    border: none;
-    border-radius: 0;
   }
 
 </style>

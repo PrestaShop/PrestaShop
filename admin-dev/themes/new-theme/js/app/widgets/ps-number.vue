@@ -88,6 +88,7 @@
   }
   .ps-number {
     position: relative;
+    width: 95px;
     .ps-number-button {
       position: absolute;
       top: 1px;
