@@ -116,8 +116,11 @@
 <style lang="sass">
   @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
-    z-index: 0;
-    height: 120px;
+    height: 0;
+    border: none;
+    .title {
+      display: none;
+    }
   }
   .stock-app {
     padding-top: 3em;

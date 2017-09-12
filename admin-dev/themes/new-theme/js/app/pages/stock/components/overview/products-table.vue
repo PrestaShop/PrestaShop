@@ -48,11 +48,11 @@
         <th class="text-sm-center align-middle">
           {{trans('title_reserved')}}
         </th>
-        <th class="text-sm-left">
+        <th class="text-sm-left text-md-center">
           {{trans('title_available')}}
           <PSSort order="available_quantity" @sort="toggleSort" />
         </th>
-        <th class="text-sm-left align-middle">
+        <th class="text-md-left align-middle">
           <i class="material-icons">edit</i>
           {{trans('title_edit_quantity')}}
         </th>
