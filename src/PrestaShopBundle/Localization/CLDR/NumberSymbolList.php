@@ -164,9 +164,9 @@ class NumberSymbolList
      */
     public function fill(NumberSymbolList $defaultList)
     {
-        foreach (get_object_vars($this) as $property => &$value) {
+        foreach (get_object_vars($this) as $property => $value) {
             if (is_null($value) && !is_null($defaultList->$property)) {
-                $value = $defaultList->$property;
+                $this->$property = $defaultList->$property;
             }
         }
 

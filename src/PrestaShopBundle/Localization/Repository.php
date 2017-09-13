@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Localization;
 
-use Exception;
 use InvalidArgumentException;
 use PrestaShopBundle\Currency\CurrencyCollectionFactory;
 use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
@@ -58,12 +57,6 @@ class Repository
         CurrencyCollectionFactory $currencyCollectionFactory,
         $roundMode
     ) {
-        foreach ($dataSources as $dataSource) {
-            if (!$dataSource instanceof DataSourceInterface) {
-                throw new Exception('Passed data sources must implement DataSourceInterface');
-            }
-        }
-
         $this->setDataSources($dataSources);
         $this->numberFormatterFactory    = $numberFormatterFactory;
         $this->currencyCollectionFactory = $currencyCollectionFactory;
@@ -79,13 +72,19 @@ class Repository
     }
 
     /**
-     * @param array|DataSourceInterface $dataSources Either a data source or an array of data sources (implementing
-     *                                               DataSourceInterface)
+     * @param array $dataSources Array of data sources (implementing DataSourceInterface)
      *
      * @return Repository
+     * @throws InvalidArgumentException
      */
     public function setDataSources($dataSources)
     {
+        foreach ($dataSources as $dataSource) {
+            if (!$dataSource instanceof DataSourceInterface) {
+                throw new InvalidArgumentException('Passed data sources must implement DataSourceInterface');
+            }
+        }
+
         $this->dataSources = $dataSources;
 
         return $this;
@@ -126,7 +125,8 @@ class Repository
                     $this->numberFormatterFactory,
                     $localeData,
                     $this,
-                    $this->currencyCollectionFactory->build()
+                    $this->currencyCollectionFactory->build(),
+                    $this->getRoundMode()
                 );
                 $this->addLocale($locale);
 

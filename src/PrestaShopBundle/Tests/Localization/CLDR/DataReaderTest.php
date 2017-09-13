@@ -72,6 +72,18 @@ class DataReaderTest extends TestCase
                 continue;
             }
 
+            if (in_array($property, array('decimalPatterns', 'percentPatterns', 'currencyPatterns'))) {
+                $expectedPatterns = $value;
+                foreach ($expectedPatterns as $numSystem => $pattern) {
+                    $this->assertSame(
+                        $pattern,
+                        $localeData->$property[$numSystem],
+                        $localeCode . ' - ' . $property . ' - ' . $numSystem . ' : pattern is not the same as expected '
+                    );
+                }
+                continue;
+            }
+
             // Assertions on other properties
             $this->assertSame(
                 $value,
@@ -120,7 +132,6 @@ class DataReaderTest extends TestCase
                 'localeCode'   => 'fr-FR',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'default' => 'latn',
                         'native'  => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
@@ -130,7 +141,7 @@ class DataReaderTest extends TestCase
                             'group'                  => '٬',
                             'list'                   => '؛',
                             'percentSign'            => '٪',
-                            'plusSign'               => null,
+                            'plusSign'               => '؜+',
                             'minusSign'              => '‏−',
                             'exponential'            => 'اس',
                             'superscriptingExponent' => '×',
@@ -153,7 +164,7 @@ class DataReaderTest extends TestCase
                             'perMille'               => '؉',
                             'infinity'               => '∞',
                             'nan'                    => 'NaN',
-                            'timeSeparator'          => null,
+                            'timeSeparator'          => '٫',
                             'currencyDecimal'        => null, // Optional
                             'currencyGroup'          => null, // Optional
                         ),
@@ -189,7 +200,6 @@ class DataReaderTest extends TestCase
                 'localeCode'   => 'fr-CH',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'default' => 'latn',
                         'native'  => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
@@ -199,7 +209,7 @@ class DataReaderTest extends TestCase
                             'group'                  => '٬',
                             'list'                   => '؛',
                             'percentSign'            => '٪',
-                            'plusSign'               => null,
+                            'plusSign'               => '؜+',
                             'minusSign'              => '‏−',
                             'exponential'            => 'اس',
                             'superscriptingExponent' => '×',
@@ -222,7 +232,7 @@ class DataReaderTest extends TestCase
                             'perMille'               => '؉',
                             'infinity'               => '∞',
                             'nan'                    => 'NaN',
-                            'timeSeparator'          => null,
+                            'timeSeparator'          => '٫',
                             'currencyDecimal'        => null, // Optional
                             'currencyGroup'          => null, // Optional
                         ),
@@ -258,7 +268,6 @@ class DataReaderTest extends TestCase
                 'localeCode'   => 'de', // No localization
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'default' => 'latn',
                         'native'  => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
@@ -295,7 +304,6 @@ class DataReaderTest extends TestCase
                 'localeCode'   => 'de-AT',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'default' => 'latn',
                         'native'  => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
@@ -332,7 +340,6 @@ class DataReaderTest extends TestCase
                 'localeCode'   => 'fa-IR',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'default' => 'arabext',
                         'native'  => 'arabext',
                     ),
                     'minimumGroupingDigits' => 1,
@@ -342,13 +349,13 @@ class DataReaderTest extends TestCase
                             'group'                  => '٬',
                             'list'                   => '؛', // RTL
                             'percentSign'            => '٪',
-                            'plusSign'               => null,
-                            'minusSign'              => null,
-                            'exponential'            => null,
+                            'plusSign'               => '؜+',
+                            'minusSign'              => '؜-',
+                            'exponential'            => 'اس',
                             'superscriptingExponent' => '×',
                             'perMille'               => '؉',
                             'infinity'               => '∞',
-                            'nan'                    => null,
+                            'nan'                    => 'NaN',
                             'timeSeparator'          => ':',
                             'currencyDecimal'        => null, // Optional
                             'currencyGroup'          => null, // Optional

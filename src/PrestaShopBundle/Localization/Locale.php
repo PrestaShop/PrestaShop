@@ -44,7 +44,7 @@ class Locale
     protected $specification;
     protected $id;
     protected $currencyCollection;
-    protected $roundMode = 2; // Round half up (recommended)
+    protected $roundMode;
 
     public function __construct(
         $localeCode,
