@@ -62,7 +62,7 @@ class LocaleTest extends TestCase
             [$localeCacheData],
             new NumberFormatterFactory(),
             new CurrencyCollectionFactory($currencyManager),
-            2 // Half Up
+            2 // Half Up (PS_ROUND_HALF_UP)
         );
 
         $localeCLDRData = new LocaleCLDRDataSource(new DataReader());
@@ -70,7 +70,7 @@ class LocaleTest extends TestCase
             [$localeCLDRData],
             new NumberFormatterFactory(),
             new CurrencyCollectionFactory($currencyManager),
-            2 // Half Up
+            2 // Half Up (PS_ROUND_HALF_UP)
         );
 
         $this->localeManager = new LocaleManager($localeCache, $localeCLDR);
