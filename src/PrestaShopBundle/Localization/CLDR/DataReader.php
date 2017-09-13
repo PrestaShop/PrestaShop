@@ -56,7 +56,7 @@ class DataReader implements DataReaderInterface
         $localeData = $this->readLocaleData($localeCode);
 
         while ($localeData->parentLocale) {
-            $localeData = $localeData->fill($this->getLocaleByCode($localeData->parentLocale));
+            $localeData->fill($this->getLocaleByCode($localeData->parentLocale));
         }
 
         return $localeData;
@@ -347,13 +347,36 @@ class DataReader implements DataReaderInterface
 
         // Decimal patterns (by numbering system)
         if (isset($numbersData->decimalFormats)) {
+            /** @var SimplexmlElement $format */
             foreach ($numbersData->decimalFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem  = (string)$format['numberSystem'];
-                $patternResult = $format->xpath('//decimalFormatLength[not(@type)]/decimalFormat/pattern');
+                $patternResult = $format->xpath('decimalFormatLength[not(@type)]/decimalFormat/pattern');
 
                 if (isset($patternResult[0])) {
                     $localeData->decimalPatterns[$numberSystem] = (string)$patternResult[0];
+                }
+            }
+
+            // Aliases nodes are in root.xml only. They avoid duplicated data.
+            // We browse aliases after all regular patterns have been defined, and duplicate data for target number
+            // systems.
+            foreach ($numbersData->decimalFormats as $format) {
+                /** @var SimplexmlElement $format */
+                $numberSystem = (string)$format['numberSystem'];
+
+                // If alias is set, we just copy data from another numbering system :
+                if ($alias = $format->alias) {
+                    if (preg_match(
+                        "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
+                        (string)$alias['path'],
+                        $matches
+                    )) {
+                        $aliasNumSys = $matches[1];
+                        $localeData->decimalPatterns[$numberSystem] = $localeData->decimalPatterns[$aliasNumSys];
+
+                        continue;
+                    }
                 }
             }
         }
@@ -362,10 +385,30 @@ class DataReader implements DataReaderInterface
         if (isset($numbersData->percentFormats)) {
             foreach ($numbersData->percentFormats as $format) {
                 $numberSystem  = (string)$format['numberSystem'];
-                $patternResult = $format->xpath('//percentFormatLength/percentFormat/pattern');
+                $patternResult = $format->xpath('percentFormatLength/percentFormat/pattern');
 
                 if (isset($patternResult[0])) {
                     $localeData->percentPatterns[$numberSystem] = (string)$patternResult[0];
+                }
+            }
+
+            // @see comments about aliases above
+            foreach ($numbersData->percentFormats as $format) {
+                /** @var SimplexmlElement $format */
+                $numberSystem = (string)$format['numberSystem'];
+
+                // If alias is set, we just copy data from another numbering system :
+                if ($alias = $format->alias) {
+                    if (preg_match(
+                        "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
+                        (string)$alias['path'],
+                        $matches
+                    )) {
+                        $aliasNumSys = $matches[1];
+                        $localeData->percentPatterns[$numberSystem] = $localeData->percentPatterns[$aliasNumSys];
+
+                        continue;
+                    }
                 }
             }
         }
@@ -379,6 +422,26 @@ class DataReader implements DataReaderInterface
 
                 if (isset($patternResult[0])) {
                     $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
+                }
+            }
+
+            // @see comments about aliases above
+            foreach ($numbersData->currencyFormats as $format) {
+                /** @var SimplexmlElement $format */
+                $numberSystem = (string)$format['numberSystem'];
+
+                // If alias is set, we just copy data from another numbering system :
+                if ($alias = $format->alias) {
+                    if (preg_match(
+                        "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
+                        (string)$alias['path'],
+                        $matches
+                    )) {
+                        $aliasNumSys = $matches[1];
+                        $localeData->currencyPatterns[$numberSystem] = $localeData->currencyPatterns[$aliasNumSys];
+
+                        continue;
+                    }
                 }
             }
         }

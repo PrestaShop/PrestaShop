@@ -152,11 +152,12 @@ class Currency
 
     public function getSymbol($type)
     {
-        if (!isset($this->symbols[$type])) {
-            throw new InvalidArgumentException("$type symbol not found for");
+        $symbols = $this->getSymbols();
+        if (!isset($symbols[$type])) {
+            throw new InvalidArgumentException("Unknown $type symbol");
         }
 
-        return $this->symbols[$type];
+        return $symbols[$type];
     }
 
     /**

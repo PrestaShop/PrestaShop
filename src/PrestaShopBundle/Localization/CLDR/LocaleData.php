@@ -154,16 +154,16 @@ class LocaleData
         // Array of scalar types -> simple array replace
         foreach ($arrayProps as $propName) {
             if (!empty($parentData->$propName)) {
-                if (!isset($this->$propName)) {
-                    $this->$propName = $parentData->$propName;
-                    continue;
+                foreach ($parentData->$propName as $parentKey => $parentValue) {
+                    if (!isset($this->$propName[$parentKey])) {
+                        $this->$propName[$parentKey] = $parentValue;
+                        continue;
+                    }
                 }
-
-                $this->$propName = array_replace_recursive($parentData->$propName, $this->$propName);
             }
         }
 
-        // Array of objects properties -> for each object, override properties via internal merge() method
+        // Array of objects properties -> for each object, fill missing properties via internal fill() method
         foreach ($arrayOfObjectsProps as $propName) {
             if (!empty($parentData->$propName)) {
                 foreach ($parentData->$propName as $propKey => $propObject) {
