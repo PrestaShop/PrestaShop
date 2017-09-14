@@ -1,8 +1,8 @@
-admin_international_translation_overview:
+admin_international_translation_others:
     path:     /translations
     methods:  [GET]
     defaults:
-        _controller: PrestaShopBundle:Admin/Translations:overview
+        _controller: PrestaShopBundle:Admin/Translations:others
 
 admin_international_translations_list:
     path: /translations/list

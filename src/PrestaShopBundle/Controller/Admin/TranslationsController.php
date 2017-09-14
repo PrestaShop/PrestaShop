@@ -30,6 +30,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Admin controller for the International pages.
@@ -45,7 +46,7 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     const controller_name = self::CONTROLLER_NAME;
 
-    // overview method on FrameworkBundleAdminController for all vue-js app
+    // index method on FrameworkBundleAdminController for all vue-js app
     // redirect to the new translation application
     // before, clean request params
     private function redirectToTranslationApp(Request $request)
@@ -63,7 +64,7 @@ class TranslationsController extends FrameworkBundleAdminController
             }
         }
 
-        return $this->redirectToRoute('admin_international_translation_overview', $params);
+        return $this->redirectToRoute('admin_international_translation_others', $params);
     }
 
     /**
@@ -133,5 +134,15 @@ class TranslationsController extends FrameworkBundleAdminController
         $themeExporter->cleanArtifacts($themeName);
 
         return $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+    }
+
+    /**
+    * @Template
+    *
+    * @return array Template vars
+    */
+    public function othersAction()
+    {
+        return parent::indexAction();
     }
 }

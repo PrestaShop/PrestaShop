@@ -26,20 +26,19 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 /**
  * Admin controller for the Stock pages.
  */
-class StockController extends FrameworkBundleAdminController
+class CurrenciesController extends FrameworkBundleAdminController
 {
-    protected $layoutTitle = 'Stock';
-
+    protected $layoutTitle = 'Currencies';
+    
     /**
     * @Template
     *
     * @return array Template vars
     */
-    public function overviewAction()
+    public function updateAction()
     {
         return parent::indexAction();
     }

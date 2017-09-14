@@ -55,7 +55,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @return array Template vars
      */
-    public function overviewAction()
+    public function indexAction()
     {
         return array(
             'is_shop_context' => (new Context())->isShopContext(),

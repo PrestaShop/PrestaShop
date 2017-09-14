@@ -51,6 +51,10 @@ _admin_stock_routing:
     resource: "admin/routing_stock.yml"
     prefix: /stock
 
+_admin_currencies_routing:
+    resource: "admin/routing_currencies.yml"
+    prefix: /currencies
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}/{view}

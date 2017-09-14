@@ -1,0 +1,5 @@
+admin_currencies_update:
+    path:     /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Currencies:update
