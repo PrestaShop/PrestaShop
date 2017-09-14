@@ -197,22 +197,23 @@ class Locale
     {
         $availableNumberingSystems = $this->getSpecification()->numberingSystems;
 
-        if (!$availableNumberingSystems) {
-            return $this->getDefaultNumberingSystem();
-        }
-
-        // TODO : get rid of this case when numbering system choice is implemented.
-        if (in_array('latn', $availableNumberingSystems)) {
+        // TODO : get rid of this when numbering system choice is implemented.
+        if ($availableNumberingSystems && in_array('latn', $availableNumberingSystems)) {
             return 'latn';
         }
 
-        foreach (array('native', 'traditional', 'finance') as $system) {
-            if (isset($availableNumberingSystems[$system])) {
-                return $availableNumberingSystems[$system];
+        $system = $this->getDefaultNumberingSystem();
+
+        if (!$system) {
+            foreach (array('native', 'traditional', 'finance') as $thisSystem) {
+                if (isset($availableNumberingSystems[$thisSystem])) {
+                    $system = $availableNumberingSystems[$thisSystem];
+                    break;
+                }
             }
         }
 
-        return $this->getDefaultNumberingSystem();
+        return $system;
     }
 
     /**
@@ -227,7 +228,7 @@ class Locale
             return $spec->defaultNumberingSystem;
         }
 
-        return $spec->numberingSystems[0];
+        return null;
     }
 
     public function getCurrency($identifier)

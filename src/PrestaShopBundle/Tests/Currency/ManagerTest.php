@@ -27,14 +27,28 @@
 namespace PrestaShopBundle\Tests\Currency;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Currency\Manager;
 use PrestaShopBundle\Currency\ManagerFactory;
 
 class ManagerTest extends TestCase
 {
+    /**
+     * @var Manager
+     */
     protected $manager;
 
     public function setUp()
     {
-        $this->manager = (new ManagerFactory())->build();
+        $this->manager = (new ManagerFactory())->build('fr-FR');
+    }
+
+    /**
+     * Given a valid currency id
+     * When asking a currency (with this id) to the currency manager
+     * It should return the expected Currency
+     */
+    public function testGetCurrencyById()
+    {
+        // TODO when database data source will be implemented
     }
 }

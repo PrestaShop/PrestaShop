@@ -60,6 +60,7 @@ class Manager
      */
     public function getCurrency($id)
     {
+        // TODO : not only installed repo.
         return $this->getInstalledCurrencyRepository()
             ->getCurrency($id);
     }
@@ -71,6 +72,7 @@ class Manager
      */
     public function getCurrencyByIsoCode($isoCode)
     {
+        // TODO : not only reference repo.
         return $this->getReferenceRepository()
             ->getCurrencyByIsoCode($isoCode);
     }

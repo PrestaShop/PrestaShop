@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Tests\Currency;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Currency\Repository as CurrencyRepository;
 
@@ -36,29 +37,70 @@ class RepositoryTest extends TestCase
 
     public function setUp()
     {
-        $dataSource = $this->getMock('PrestaShopBundle\Currency\Repository\DataSourceInterface');
-        $dataSource->method('getByIsoCode')
+        $dataSource = $this->getMock('PrestaShopBundle\Currency\DataSource\DataSourceInterface');
+        $dataSource->method('getCurrencyByIsoCode')
             ->willReturnMap($this->provideCurrencyDataMapByIsoCode());
         $this->repository = new CurrencyRepository([$dataSource]);
     }
 
     /**
+     * Given a valid currency code
+     * When requesting a currency (with this code) to the repository
+     * It should return the expected Currency instance (with expected data)
+     *
      * @param string $currencyCode           The valid currency ISO code
      * @param int    $expectedNumericIsoCode The expected numeric ISO code
      *
      * @dataProvider provideValidCurrencyCodes
      */
-    public function testGetByCurrencyCodeWhenCodeExists($currencyCode, $expectedNumericIsoCode)
+    public function testItReturnsCurrencyWithValidCode($currencyCode, $expectedNumericIsoCode)
     {
         $currency = $this->repository->getCurrencyByIsoCode($currencyCode);
         $this->assertInstanceOf('PrestaShopBundle\Currency\Currency', $currency);
         $this->assertSame($expectedNumericIsoCode, $currency->getNumericIsoCode());
     }
 
-    public function testGetByCurrencyCodeWhenCodeIsUnknown()
+    /**
+     * Given an invalid currency code
+     * When requesting a currency (with this code) to the repository
+     * It should throw an InvalidArgumentException
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testItFailsWithUnknownCurrencyCode()
     {
-        $currency = $this->repository->getCurrencyByIsoCode('random_invalid_code');
-        $this->assertNull($currency);
+        $this->repository->getCurrencyByIsoCode('random_invalid_code');
+    }
+
+    /**
+     * Given a valid currency id
+     * When requesting a currency (with this id) to the repository
+     * It should return the expected Currency instance (with expected data)
+     *
+     * @param int $currencyId             The valid currency id
+     * @param int $expectedNumericIsoCode The expected numeric ISO code
+     *
+     * @dataProvider provideValidCurrencyIds
+     */
+    public function testItReturnsCurrencyWithValidId($currencyId, $expectedNumericIsoCode)
+    {
+        // TODO when database data source is implemented
+
+//        $currency = $this->repository->getCurrency($currencyId);
+//        $this->assertInstanceOf('PrestaShopBundle\Currency\Currency', $currency);
+//        $this->assertSame($expectedNumericIsoCode, $currency->getNumericIsoCode());
+    }
+
+    /**
+     * Given an invalid currency id
+     * When requesting a currency (with this id) to the repository
+     * It should throw an InvalidArgumentException
+     *
+     * @expectedException InvalidArgumentException
+     */
+    public function testItFailsWithUnknownCurrencyId()
+    {
+        $this->repository->getCurrency(0);
     }
 
     public function provideValidCurrencyCodes()
@@ -70,37 +112,49 @@ class RepositoryTest extends TestCase
         );
     }
 
+
+    public function provideValidCurrencyIds()
+    {
+        // TODO when database data source is implemented
+
+        return array(
+//            'Euro'      => array('EUR', 978),
+//            'US Dollar' => array('USD', 840),
+//            'Pound'     => array('GBP', 826),
+        );
+    }
+
     public function provideCurrencyDataMapByIsoCode()
     {
         return array(
             array(
                 'EUR',
                 array(
-                    'isoCode'          => 'EUR',
-                    'numericIsoCode'   => 978,
-                    'decimalDigits'    => 2,
-                    'localizedNames'   => array('fr_FR' => 'euro', 'en_US' => 'euro', 'en_UK' => 'euro'),
-                    'localizedSymbols' => array('fr_FR' => '€', 'en_US' => '€', 'en_UK' => '€'),
+                    'isoCode'        => 'EUR',
+                    'displayName'    => 'euro',
+                    'symbol'         => '€',
+                    'numericIsoCode' => 978,
+                    'decimalDigits'  => 2,
                 ),
             ),
             array(
                 'USD',
                 array(
-                    'isoCode'          => 'USD',
-                    'numericIsoCode'   => 840,
-                    'decimalDigits'    => 2,
-                    'localizedNames'   => array('fr_FR' => 'dollar', 'en_US' => 'dollar', 'en_UK' => 'dollar'),
-                    'localizedSymbols' => array('fr_FR' => '$', 'en_US' => '$', 'en_UK' => '$'),
+                    'isoCode'        => 'USD',
+                    'displayName'    => 'dollar',
+                    'symbol'         => '$',
+                    'numericIsoCode' => 840,
+                    'decimalDigits'  => 2,
                 ),
             ),
             array(
                 'GBP',
                 array(
-                    'isoCode'          => 'GBP',
-                    'numericIsoCode'   => 826,
-                    'decimalDigits'    => 2,
-                    'localizedNames'   => array('fr_FR' => 'livre', 'en_US' => 'pound', 'en_UK' => 'pound'),
-                    'localizedSymbols' => array('fr_FR' => '£', 'en_US' => '£', 'en_UK' => '£'),
+                    'isoCode'        => 'GBP',
+                    'displayName'    => 'livre',
+                    'symbol'         => '£',
+                    'numericIsoCode' => 826,
+                    'decimalDigits'  => 2,
                 ),
             ),
         );
