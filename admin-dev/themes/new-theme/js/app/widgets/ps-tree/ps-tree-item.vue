@@ -24,15 +24,15 @@
  *-->
 <template>
   <div :class="{className}">
-    <div class="flex tree-name" :class="{active: active, disable: model.disable}" @click="clickElement">
-      <div class="flex" :class="chevron">
+    <div class="d-flex tree-name" :class="{active: active, disable: model.disable}" @click="clickElement">
+      <div class="d-flex" :class="chevron">
         <i class="material-icons" v-if="open">keyboard_arrow_down</i>
         <i class="material-icons" v-else>chevron_right</i>
       </div>
       <PSCheckbox :ref="model.name" :id="id" :model="model" @checked="onCheck" v-if="hasCheckbox"/>
       <span class="tree-label" :class="{warning: isWarning}">{{model.name}}</span>
-      <span class="tree-extra-label hidden-lg-down" v-if="displayExtraLabel">{{getExtraLabel}}</span>
-      <span class="tree-extra-label-mini hidden-xl-up" v-if="displayExtraLabel">{{this.model.extraLabel}}</span>
+      <span class="tree-extra-label d-sm-none d-xl-inline-block" v-if="displayExtraLabel">{{getExtraLabel}}</span>
+      <span class="tree-extra-label-mini d-xl-none" v-if="displayExtraLabel">{{this.model.extraLabel}}</span>
     </div>
     <ul v-show="open" v-if="isFolder" class="tree">
       <li v-for="(element, index) in model.children" class="tree-item" :class="{disable: model.disable}">

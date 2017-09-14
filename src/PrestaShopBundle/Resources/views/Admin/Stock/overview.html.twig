@@ -50,6 +50,8 @@
                 baseUrl: '{{ app.request.getBasePath() }}',
                 catalogUrl: '{{ url('admin_product_catalog') }}',
                 stockUrl: '{{ url('admin_stock_overview') }}',
+                stockExportUrl: '{{ url('api_stock_list_products_export') }}',
+                stockImportUrl: '{{ getAdminLink('AdminImport')|raw }}',
                 apiStockUrl: '{{ productId ? url('api_stock_list_product_combinations', {'productId' : productId}) : url('api_stock_list_products') }}',
                 apiMovementsUrl: '{{ productId ? url('api_stock_product_list_movements', {'productId' : productId}) : url('api_stock_list_movements') }}',
                 employeesUrl: '{{ url('api_stock_list_movements_employees') }}',

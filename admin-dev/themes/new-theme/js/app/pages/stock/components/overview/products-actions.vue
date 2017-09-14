@@ -23,20 +23,139 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="row">
-    <div class="col-md-8">
-      <button v-show="false" type="button" class="btn btn-tertiary-outline"><i class="material-icons">edit</i>{{trans('button_bulk_action')}}</button>
+  <div class="row product-actions">
+    <div
+      class="col-md-8 qty d-flex align-items-center"
+      :class="{'active' : isFocused}"
+    >
+      <PSCheckbox
+        id="bulk-action"
+        ref="bulk-action"
+        class="mt-3"
+        :isIndeterminate="isIndeterminate"
+        @checked="bulkChecked"
+      />
+      <div class="ml-1">
+        <small>{{trans('title_bulk')}}</small>
+        <PSNumber
+          class="bulk-qty"
+          :danger="danger"
+          :value="bulkEditQty"
+          :buttons="this.isFocused"
+          @focus="focusIn"
+          @blur="focusOut"
+          @change="onChange"
+          @keyup="onKeyUp"
+        />
+      </div>
     </div>
-    <MovementType />
+    <div class="col-md-4">
+      <PSButton
+        type="button"
+        class="update-qty float-sm-right my-4 mr-2"
+        :class="{'btn-primary': disabled }"
+        :disabled="disabled"
+        :primary="true"
+        @click="sendQty"
+      >
+        <i class="material-icons">edit</i>
+        {{trans('button_movement_type')}}
+      </PSButton>
+    </div>
   </div>
 </template>
 
 <script>
-  import MovementType from './movement-type';
+  import PSNumber from 'app/widgets/ps-number';
+  import PSCheckbox from 'app/widgets/ps-checkbox';
+  import PSButton from 'app/widgets/ps-button';
+  import { EventBus } from 'app/utils/event-bus';
 
   export default {
+    computed: {
+      disabled() {
+        return !this.$store.state.hasQty;
+      },
+      bulkEditQty() {
+        return this.$store.state.bulkEditQty;
+      },
+      isIndeterminate() {
+        const selectedProductsLng = this.selectedProductsLng;
+        const productsLng = this.$store.state.products.length;
+        const isIndeterminate = (selectedProductsLng > 0 && selectedProductsLng < productsLng);
+        if (isIndeterminate) {
+          this.$refs['bulk-action'].checked = true;
+        }
+        return isIndeterminate;
+      },
+      selectedProductsLng() {
+        return this.$store.getters.selectedProductsLng;
+      },
+    },
+    watch: {
+      selectedProductsLng(value) {
+        if (value === 0 && this.$refs['bulk-action']) {
+          this.$refs['bulk-action'].checked = false;
+          this.isFocused = false;
+        }
+        if (value === 1 && this.$refs['bulk-action']) {
+          this.isFocused = true;
+        }
+      },
+    },
+    methods: {
+      focusIn() {
+        this.danger = !this.selectedProductsLng;
+        this.isFocused = !this.danger;
+        if (this.danger) {
+          EventBus.$emit('displayBulkAlert', 'error');
+        }
+      },
+      focusOut() {
+        this.isFocused = false;
+        this.danger = false;
+      },
+      bulkChecked(checkbox) {
+        if (!checkbox.checked) {
+          this.$store.dispatch('updateBulkEditQty', null);
+        }
+        if (!this.isIndeterminate) {
+          EventBus.$emit('toggleProductsCheck', checkbox.checked);
+        }
+      },
+      sendQty() {
+        this.$store.dispatch('updateQtyByProductsId');
+      },
+      onChange(value) {
+        this.$store.dispatch('updateBulkEditQty', value);
+      },
+      onKeyUp(event) {
+        this.isFocused = true;
+        this.$store.dispatch('updateBulkEditQty', event.target.value);
+      },
+    },
+    data: () => ({
+      isFocused: false,
+      danger: false,
+    }),
     components: {
-      MovementType,
+      PSNumber,
+      PSCheckbox,
+      PSButton,
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  @import "../../../../../../scss/config/_settings.scss";
+  .bulk-qty {
+    max-width: 100px;
+  }
+  .update-qty {
+    color: white;
+    transition: background-color 0.2s ease;
+  }
+  .product-actions .qty {
+    padding-left: 20px;
+  }
+</style>

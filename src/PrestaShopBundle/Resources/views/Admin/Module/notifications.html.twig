@@ -40,8 +40,8 @@
     {# Module notification KPI's #}
     {% include 'PrestaShopBundle:Admin/Module/Includes:notification_kpis.html.twig' %}
     {# Actual Page Content #}
-    <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
             <div id="module-short-list-configure" class="module-short-list">
                 <span class="module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"

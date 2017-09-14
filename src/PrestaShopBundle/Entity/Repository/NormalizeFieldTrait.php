@@ -35,7 +35,7 @@ trait NormalizeFieldTrait
     protected function castNumericToInt($rows)
     {
         $castIdentifiersToIntegers = function (&$columnValue, $columnName) {
-            if ($this->shouldCastToInt($columnName)) {
+            if ($this->shouldCastToInt($columnName, $columnValue)) {
                 $columnValue = (int)$columnValue;
             }
         };
@@ -52,7 +52,7 @@ trait NormalizeFieldTrait
     protected function castIdsToArray($rows)
     {
         $castIdentifiersToArray = function (&$columnValue, $columnName) {
-            if ($this->shouldCastToInt($columnName)) {
+            if ($this->shouldCastToInt($columnName, $columnValue)) {
                 $columnValue = array_map('intval', explode(',', $columnValue));
             }
         };
@@ -63,16 +63,17 @@ trait NormalizeFieldTrait
     }
 
     /**
-     * @param $columnName
+     * @param String $columnName
+     * @param String $columnValue
+     *
      * @return bool
      */
-    private function shouldCastToInt($columnName)
+    private function shouldCastToInt($columnName, $columnValue)
     {
-        return false !== strpos($columnName, '_id') ||
-        false !== strpos($columnName, 'id_') ||
-        false !== strpos($columnName, '_quantity') ||
-        false !== strpos($columnName, 'sign') ||
-        false !== strpos($columnName, 'active') ||
-        false !== strpos($columnName, 'total_');
+        if (null === $columnValue || 'N/A' === $columnValue) {
+            return false;
+        }
+
+        return preg_match('/_id|id_|_quantity|sign|active|total_|low_stock_/', $columnName);
     }
 }

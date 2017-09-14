@@ -24,14 +24,14 @@
  *-->
 <template>
   <div class="custom-checkbox">
-    <input type="checkbox" :id="id" v-model="checked">
+    <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
     <label :for="id"></label>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['id', 'model'],
+    props: ['id', 'model', 'isIndeterminate'],
     watch: {
       checked(val) {
         this.$emit('checked', {
@@ -40,7 +40,9 @@
         });
       },
     },
-    data: () => ({ checked: false }),
+    data: () => ({
+      checked: false,
+    }),
   };
 </script>
 <style lang="sass" scoped>
@@ -49,6 +51,7 @@
     width: 15px;
     height: 15px;
     position: relative;
+    background: white;
     label {
       width: 15px;
       height: 15px;
@@ -91,6 +94,12 @@
       }
       &:checked + label:after {
         opacity: 1;
+      }
+      &.indeterminate + label:after {
+         transform: rotate(0);
+         height: 0;
+         width: 11px;
+         top: 4px;
       }
     }
   }

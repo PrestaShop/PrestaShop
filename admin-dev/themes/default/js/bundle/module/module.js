@@ -636,10 +636,6 @@ var AdminModuleController = function() {
     } else {
       this.currentDisplay = 'grid';
     }
-    $('.sort-component').select2({
-      minimumResultsForSearch: Infinity,
-      placeholder: false
-    });
   }
 
   this.initSortingDropdown = function () {
@@ -821,12 +817,6 @@ var AdminModuleController = function() {
       inputPlaceholder: translate_javascripts['Search - placeholder'],
       closingCross: true,
       context: self,
-      clearAllBtn: true,
-      clearAllIconClassAdditional: 'material-icons',
-      clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-      tagInputClassAdditional: 'module-tags-input',
-      tagClassAdditional: 'module-tag ',
-      tagsWrapperClassAdditional: 'module-tags-labels'
     });
 
     $('body').on('click', '.module-addons-search-link', function(event) {

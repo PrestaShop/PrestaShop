@@ -24,14 +24,19 @@
  *-->
 <template>
   <div class="alert" :class="classObject" role="alert">
-    <i v-if="isInfo" class="material-icons">info_outline</i>
-    <i v-else class="material-icons">error_outline</i>
+    <button
+      v-if="hasClose"
+      type="button"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+      @click.stop="onClick"
+    >
+      <span class="material-icons">close</span>
+    </button>
     <p class="alert-text">
       <slot />
     </p>
-    <button v-if="hasClose" type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span class="material-icons">close</span>
-    </button>
   </div>
 </template>
 
@@ -39,9 +44,11 @@
   const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
   const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
   const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
+  const ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
 
   export default {
     props: {
+      duration: false,
       alertType: { type: String, required: true },
       hasClose: { type: Boolean, required: true },
     },
@@ -51,10 +58,16 @@
           'alert-info': this.alertType === ALERT_TYPE_INFO,
           'alert-warning': this.alertType === ALERT_TYPE_WARNING,
           'alert-danger': this.alertType === ALERT_TYPE_DANGER,
+          'alert-success': this.alertType === ALERT_TYPE_SUCCESS,
         };
       },
       isInfo() {
         return this.alertType === ALERT_TYPE_INFO;
+      },
+    },
+    methods: {
+      onClick() {
+        this.$emit('closeAlert');
       },
     },
   };
@@ -85,6 +98,7 @@
     border-radius: 0;
     border-width: 0.125rem;
     padding: 0;
+    margin:0;
     &.alert-info {
       background: $notice;
     }

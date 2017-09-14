@@ -24,25 +24,25 @@
  *-->
 <template>
   <form
-    class="qty text-xs-right"
+    class="qty text-sm-right"
     :class="classObject"
     @mouseover="focusIn"
     @mouseleave="focusOut($event)"
     @submit.prevent="sendQty"
   >
-    <input
+    <PSNumber
       name="qty"
       class="edit-qty"
-      type="number"
       placeholder="0"
       pattern="\d*"
       step="1"
-      :id="id"
-      v-model="qty"
+      :value="qty"
+      :buttons="this.isActive"
+      @change="onChange"
       @keyup="onKeyup($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
-    >
+    />
     <transition name="fade">
       <button v-if="isActive" class="check-button"><i class="material-icons">check</i></button>
     </transition>
@@ -50,21 +50,14 @@
 </template>
 
 <script>
+  import PSNumber from 'app/widgets/ps-number';
   export default {
     props: ['product'],
-    mounted() {
-      const self = this;
-      $(`#${this.id}`).spinner({
-        spin(event, ui) {
-          self.value = ui.value;
-          self.isEnabled = !!self.value;
-        },
-      });
-    },
     computed: {
       qty() {
-        if (parseInt(this.product.qty, 10) === 0) {
-          this.deActivate();
+        if (!this.product.qty) {
+          this.isEnabled = false;
+          this.value = 0;
         }
         return this.product.qty;
       },
@@ -79,6 +72,10 @@
       },
     },
     methods: {
+      onChange(val) {
+        this.value = val;
+        this.isEnabled = !!val;
+      },
       deActivate() {
         this.isActive = false;
         this.isEnabled = false;
@@ -117,12 +114,14 @@
     },
     watch: {
       value(val) {
-        this.$store.dispatch('updateProductQty', {
-          product_id: this.product.product_id,
-          combination_id: this.product.combination_id,
+        this.$emit('updateProductQty', {
+          product: this.product,
           delta: val,
         });
       },
+    },
+    components: {
+      PSNumber,
     },
     data: () => ({
       value: null,
@@ -145,14 +144,13 @@
         outline:none;
         opacity: 0;
         position: absolute;
-        top: 3.5px;
-        right: 0;
+        top: 1px;
+        right: 1px;
         border: none;
         height: 31px;
-        width: 40px;
+        width: 31px;
         background: $brand-primary;
         z-index: 2;
-        border-left: 10px solid white;
         .material-icons {
           color: white;
           vertical-align: middle;
@@ -165,6 +163,7 @@
   .qty.active {
     .check-button {
       opacity: 1;
+      cursor: pointer;
     }
   }
   .qty.disabled {
@@ -179,21 +178,10 @@
   .fade-enter, .fade-leave-to {
     opacity: 0
   }
-  .edit-qty {
-    text-indent: 5px;
-    height: 33px;
-    width: 100px;
-    border: 1px solid $gray-light;
-    margin: 3px 0;
+
+  .ui-widget.ui-widget-content {
+    border: none;
+    border-radius: 0;
   }
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-input[type='number'] {
-    -moz-appearance:textfield;
-}
 
 </style>

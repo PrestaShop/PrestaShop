@@ -74,6 +74,28 @@ abstract class QueryParamsCollection
     }
 
     /**
+     * @param $pageSize int
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+        $this->queryParams['page_size'] = (int) $pageSize;
+
+        return $this;
+    }
+
+    /**
+     * @param $pageIndex int
+     * @return $this
+     */
+    public function setPageIndex($pageIndex)
+    {
+        $this->queryParams['page_index'] = (int) $pageIndex;
+
+        return $this;
+    }
+
+    /**
      * @param Request $request
      * @return $this
      */
@@ -209,10 +231,20 @@ abstract class QueryParamsCollection
             $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
-        $queryParams['order'] = strtolower($queryParams['order']);
+        if (!is_array($queryParams['order'])) {
+            $queryParams['order'] = (array) $queryParams['order'];
+        }
 
-        $filterColumn = $this->removeDirection($queryParams['order']);
-        if (!in_array($filterColumn, $this->getValidOrderParams())) {
+        foreach ($queryParams['order'] as $key => &$order) {
+            $order = strtolower($order);
+            $filterColumn = $this->removeDirection($order);
+
+            if (!in_array($filterColumn, $this->getValidOrderParams())) {
+                unset($queryParams['order'][$key]);
+            }
+        }
+
+        if (empty($queryParams['order'])) {
             $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
@@ -245,16 +277,22 @@ abstract class QueryParamsCollection
      */
     public function getSqlOrder()
     {
-        $descendingOrder = false !== strpos($this->queryParams['order'], 'desc');
-        $filterColumn = $this->removeDirection($this->queryParams['order']);
+        $implodableOrder = array();
 
-        $orderByClause = 'ORDER BY {' . $filterColumn . '}';
+        foreach ($this->queryParams['order'] as $order) {
+            $descendingOrder = false !== strpos($order, 'desc');
+            $filterColumn = $this->removeDirection($order);
 
-        if ($descendingOrder) {
-            $orderByClause = $orderByClause . ' DESC';
+            $orderFiltered = '{' . $filterColumn . '}';
+
+            if ($descendingOrder) {
+                $orderFiltered = $orderFiltered . ' DESC';
+            }
+
+            $implodableOrder[] = $orderFiltered;
         }
 
-        return $orderByClause . ' ';
+        return 'ORDER BY ' . implode(', ', $implodableOrder) . ' ';
     }
 
     /**

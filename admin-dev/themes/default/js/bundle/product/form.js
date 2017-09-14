@@ -614,7 +614,7 @@ var specificPrices = (function() {
             '<td>' + specific_price.impact + '</td>' +
             '<td>' + specific_price.period + '</td>' +
             '<td>' + specific_price.from_quantity + '</td>' +
-            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete"><i class="material-icons">delete</i></a>' : '') + '</td>' +
+            '<td>' + (specific_price.can_delete ? '<a href="' + $('#js-specific-price-list').attr('data-action-delete').replace(/delete\/\d+/, 'delete/' + specific_price.id_specific_price) + '" class="js-delete delete btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>' : '') + '</td>' +
             '</tr>';
 
           tbody.append(row);
@@ -964,8 +964,8 @@ var form = (function() {
   }
 
   function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.tab-pane:not(.translation-label-' + iso_code + ')').removeClass('active');
-    $('div.translations.tabbable > div > div.tab-pane.translation-label-' + iso_code).addClass('active');
+    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('visible');
+    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('visible');
   }
 
   function updateMissingTranslatedNames() {
@@ -1045,7 +1045,7 @@ var form = (function() {
 
       $('.js-btn-save').on('click', function (event) {
         event.preventDefault();
-        $('.js-spinner').show();
+        $('.js-spinner').css('display', 'inline-block');
         send($(this).attr('href'));
       });
 
@@ -1074,77 +1074,73 @@ var form = (function() {
         }).show();
       });
 
-      /** show rendered form after page load */
-      $(window).on('load', function() {
-        $('#form-loading').fadeIn(function() {
-          /** Create Bloodhound engine */
-          var engine = new Bloodhound({
-            datumTokenizer: function(d) {
-              return Bloodhound.tokenizers.whitespace(d.label);
-            },
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {
-              url: $('#form_step3_attributes').attr('data-prefetch'),
-              cache: false
-            }
-          });
-
-          /** init input typeahead */
-          $('#form_step3_attributes').tokenfield({
-            typeahead: [{
-              hint: false,
-              cache: false
-            }, {
-              source: function(query, syncResults) {
-                engine.search(query, function(suggestions) {
-                  syncResults(filter(suggestions));
-                });
-              },
-              display: 'label'
-            }],
-            minWidth: '768px'
-          });
-
-          /** Filter suggestion with selected tokens */
-          var filter = function(suggestions) {
-            var selected = [];
-            $('#attributes-generator input.attribute-generator').each(function() {
-              selected.push($(this).val());
-            });
-
-            return $.grep(suggestions, function(suggestion) {
-              return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
-            });
-          };
-
-          /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
-          $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
-            if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
-              return false;
-            }
-          });
-
-          /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
-          $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
-            if (e.attrs.data) {
-              $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
-            } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
-              $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
-            }
-          });
-
-          /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
-          $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
-            $('#attribute-generator-' + e.attrs.value).remove();
-          });
-        });
-        imagesProduct.initExpander();
+      $('#form-loading').fadeIn(function() {
+      /** Create Bloodhound engine */
+      var engine = new Bloodhound({
+        datumTokenizer: function(d) {
+          return Bloodhound.tokenizers.whitespace(d.label);
+        },
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+          url: $('#form_step3_attributes').attr('data-prefetch'),
+          cache: false
+        }
       });
+
+      /** init input typeahead */
+      $('#form_step3_attributes').tokenfield({
+        typeahead: [{
+          hint: false,
+          cache: false
+        }, {
+          source: function(query, syncResults) {
+            engine.search(query, function(suggestions) {
+              syncResults(filter(suggestions));
+            });
+          },
+          display: 'label'
+        }],
+        minWidth: '768px'
+      });
+
+      /** Filter suggestion with selected tokens */
+      var filter = function(suggestions) {
+        var selected = [];
+        $('#attributes-generator input.attribute-generator').each(function() {
+          selected.push($(this).val());
+        });
+
+        return $.grep(suggestions, function(suggestion) {
+          return $.inArray(suggestion.value, selected) === -1 && $.inArray('group-' + suggestion.data.id_group, selected) === -1;
+        });
+      };
+
+      /** On event "tokenfield:createtoken" : stop event if its not a typehead result */
+      $('#form_step3_attributes').on('tokenfield:createtoken', function(e) {
+        if (!e.attrs.data && e.handleObj.origType !== 'tokenfield:createtoken') {
+          return false;
+        }
+      });
+
+      /** On event "tokenfield:createdtoken" : store attributes in input when add a token */
+      $('#form_step3_attributes').on('tokenfield:createdtoken', function(e) {
+        if (e.attrs.data) {
+          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + e.attrs.value + '" class="attribute-generator" value="' + e.attrs.value + '" name="options[' + e.attrs.data.id_group + '][' + e.attrs.value + ']" />');
+        } else if (e.handleObj.origType == 'tokenfield:createdtoken') {
+          $('#attributes-generator').append('<input type="hidden" id="attribute-generator-' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" class="attribute-generator" value="' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + '" name="options[' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('group-id') + '][' + $('.js-attribute-checkbox[data-value="'+e.attrs.value+'"]').data('value') + ']" />');
+        }
+      });
+
+      /** On event "tokenfield:removedtoken" : remove stored attributes input when remove token */
+      $('#form_step3_attributes').on('tokenfield:removedtoken', function(e) {
+        $('#attribute-generator-' + e.attrs.value).remove();
+      });
+    });
     },
-    'send': function(redirect, target, callBack) {
+      'send': function(redirect, target, callBack) {
       send(redirect, target, callBack);
     },
-    'switchLanguage': function(iso_code) {
+      'switchLanguage': function(iso_code) {
       switchLanguage(iso_code);
     }
   };
@@ -1604,6 +1600,7 @@ var imagesProduct = (function() {
           });
 
           dropZoneElem.disableSelection();
+          imagesProduct.initExpander();
         }
       };
 

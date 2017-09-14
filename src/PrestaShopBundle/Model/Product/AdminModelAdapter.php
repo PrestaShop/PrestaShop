@@ -152,6 +152,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_unit_impact',
             'attribute_ecotax',
             'attribute_minimal_quantity',
+            'attribute_low_stock_threshold',
             'available_date_attribute',
             'attribute_default',
             'uploadable_files',
@@ -172,6 +173,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'unit_price',
             'on_sale',
             'minimal_quantity',
+            'low_stock_threshold',
             'available_date',
             'ecotax',
         );
@@ -474,6 +476,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_product_attributes' => $this->getProductAttributes(),
                 'out_of_stock' => $this->product->out_of_stock,
                 'minimal_quantity' => $this->product->minimal_quantity,
+                'low_stock_threshold' => $this->product->low_stock_threshold,
                 'available_now' => $this->product->available_now,
                 'available_later' => $this->product->available_later,
                 'available_date' => $this->product->available_date,

@@ -26,12 +26,12 @@
   <div v-if="isReady" id="app" class="translations-app">
     <TranslationsHeader />
     <div class="container-fluid">
-      <div class="row">
-        <div class="translations-summary float-xs-right">
+      <div class="row justify-content-between align-items-center">
+        <Search @search="onSearch" />
+        <div class="translations-summary">
           <span>{{ totalTranslations }}</span>
           <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
         </div>
-        <Search @search="onSearch" />
       </div>
 
       <div class="row">

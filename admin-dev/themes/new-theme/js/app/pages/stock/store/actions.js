@@ -26,6 +26,7 @@ import Vue from 'vue';
 import VueResource from 'vue-resource';
 import * as types from './mutation-types';
 import { showGrowl } from 'app/utils/growl';
+import { EventBus } from 'app/utils/event-bus';
 import _ from 'lodash';
 
 Vue.use(VueResource);
@@ -41,6 +42,7 @@ export const getStock = ({ commit }, payload) => {
       supplier_id: payload.suppliers ? payload.suppliers : [],
       category_id: payload.categories ? payload.categories : [],
       active: payload.active !== 'null' ? payload.active : [],
+      low_stock: payload.low_stock,
     },
   }).then((response) => {
     commit(types.LOADING_STATE, false);
@@ -149,19 +151,40 @@ export const updateQtyByProductId = ({ commit, state }, payload) => {
     delta,
   }).then((res) => {
     commit(types.UPDATE_PRODUCT, res.body);
-    return showGrowl('notice', state.translations.notification_stock_updated);
+    EventBus.$emit('displayBulkAlert', 'success');
   }, (error) => {
     showGrowl('error', error.statusText);
   });
 };
 
-export const updateQtyByProductsId = ({ commit, state }, payload) => {
+export const updateQtyByProductsId = ({ commit, state }) => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
+
   Vue.http.post(url, productsQty).then((res) => {
     commit(types.UPDATE_PRODUCTS_QTY, res.body);
-    return showGrowl('notice', state.translations.notification_stock_updated);
+    EventBus.$emit('displayBulkAlert', 'success');
   }, (error) => {
     showGrowl('error', error.statusText);
   });
+};
+
+export const updateBulkEditQty = ({ commit }, value) => {
+  commit(types.UPDATE_BULK_EDIT_QTY, value);
+};
+
+export const addProductToUpdate = ({ commit }, product) => {
+  commit(types.ADD_PRODUCT_TO_UPDATE, product);
+};
+
+export const removeProductToUpdate = ({ commit }, product) => {
+  commit(types.REMOVE_PRODUCT_TO_UPDATE, product);
+};
+
+export const addSelectedProduct = ({ commit }, product) => {
+  commit(types.ADD_SELECTED_PRODUCT, product);
+};
+
+export const removeSelectedProduct = ({ commit }, product) => {
+  commit(types.REMOVE_SELECTED_PRODUCT, product);
 };

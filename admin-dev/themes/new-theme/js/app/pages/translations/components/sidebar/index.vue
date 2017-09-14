@@ -23,8 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="col-xs-3">
-    <div class="card pa-1">
+  <div class="col-sm-3">
+    <div class="card p-3">
       <PSTree
         ref="domainTree"
         :model="domainsTree"
