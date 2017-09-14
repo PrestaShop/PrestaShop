@@ -43,9 +43,14 @@ class ManagerFactoryTest extends TestCase
         $this->managerFactory = new ManagerFactory();
     }
 
-    public function testGetInstance()
+    /**
+     * Given a valid locale code
+     * When trying to build a Manager instance with our ManagerFactory
+     * An actual valid and ready-to-use Manager instance should be returned
+     */
+    public function testItBuildsManagerInstance()
     {
-        $instance = $this->managerFactory->build();
+        $instance = $this->managerFactory->build('fr-FR');
         $this->assertInstanceOf('PrestaShopBundle\Currency\Manager', $instance);
     }
 }
