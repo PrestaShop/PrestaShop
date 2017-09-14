@@ -107,7 +107,9 @@ class SearchCore
         $string = preg_replace('/['.PREG_CLASS_SEARCH_EXCLUDE.']+/u', ' ', $string);
 
         if ($indexation) {
+            $fullWord = (preg_match('/[._-]+/', $string)) ? $string : "";
             $string = preg_replace('/[._-]+/', ' ', $string);
+            $string = empty($fullWord) ? $string : $string . ' ' . $fullWord;
         } else {
             $words = explode(' ', $string);
             $processed_words = array();
@@ -121,10 +123,6 @@ class SearchCore
                 }
             }
             $string = implode(' ', $processed_words);
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = ltrim(preg_replace('/([^ ])-/', '$1 ', ' '.$string));
-            $string = preg_replace('/[._]+/', '', $string);
-            $string = preg_replace('/[^\s]-+/', '', $string);
         }
 
         $blacklist = Tools::strtolower(Configuration::get('PS_SEARCH_BLACKLIST', $id_lang));
@@ -212,6 +210,8 @@ class SearchCore
 
                 if ($word[0] != '-') {
                     $score_array[] = 'sw.word LIKE \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\'';
+                } else {
+                    $score_array[] = 'sw.word LIKE \'' . $start_search . pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)) . $end_search . '\'';
                 }
             } else {
                 unset($words[$key]);
