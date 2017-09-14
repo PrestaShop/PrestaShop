@@ -546,8 +546,7 @@ class AdminOrdersControllerCore extends AdminController
                                     }
                                 }
                             }
-                        }
-			else{
+                        } else{
                             $this->errors[] = Tools::displayError('An error occurred while changing order status, or we were unable to send an email to the customer.');
 			}
                     } else {
