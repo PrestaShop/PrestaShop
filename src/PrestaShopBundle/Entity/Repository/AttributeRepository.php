@@ -50,11 +50,13 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
             ->addSelect('al.name AS attributeName')
             ->join('a.attributeGroup', 'ag')
             ->join('a.shops', 's')
+            ->join('ag.shops', 'gs')
             ->join('a.attributeLangs', 'al')
             ->join('ag.attributeGroupLangs', 'agl')
             ->where('al.lang = :idLang')
             ->andWhere('agl.lang = :idLang')
             ->andWhere('s.id = :idShop')
+            ->andWhere('gs.id = :idShop')
             ->orderBy('attributePosition')
             ->addOrderBy('attributeGroupPosition')
             ->setParameters(array(
