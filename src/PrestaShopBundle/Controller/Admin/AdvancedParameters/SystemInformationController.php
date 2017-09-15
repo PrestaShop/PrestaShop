@@ -35,6 +35,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SystemInformationController extends FrameworkBundleAdminController
 {
+    /**
+     * @var string The controller name for routing.
+     */
     const CONTROLLER_NAME = 'AdminInformation';
 
     /**

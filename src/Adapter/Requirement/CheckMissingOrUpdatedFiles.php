@@ -39,7 +39,7 @@ class CheckMissingOrUpdatedFiles
     {
         $fileList = array(
             'missing' => array(),
-            'updated' => array()
+            'updated' => array(),
         );
 
         $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
@@ -62,7 +62,7 @@ class CheckMissingOrUpdatedFiles
                 $fileList['missing'][] = $filename;
             } else {
                 $md5_local = md5_file(_PS_ROOT_DIR_.'/'.$filename);
-                if ($md5_local != (string)$file) {
+                if ($md5_local !== (string)$file) {
                     $fileList['updated'][] = $filename;
                 }
             }

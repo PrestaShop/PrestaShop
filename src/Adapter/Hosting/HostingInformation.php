@@ -70,7 +70,7 @@ class HostingInformation
             'version' => phpversion(),
             'memoryLimit' => ini_get('memory_limit'),
             'maxExecutionTime' => ini_get('max_execution_time'),
-            'maxFileSizeUpload' => ini_get('upload_max_filesize')
+            'maxFileSizeUpload' => ini_get('upload_max_filesize'),
         );
     }
 

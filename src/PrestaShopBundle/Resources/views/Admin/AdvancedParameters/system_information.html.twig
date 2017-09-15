@@ -257,7 +257,7 @@
                 {
                     var tab = {
                         'missing': translations.missing,
-                        'updated': translations.updated
+                        'updated': translations.updated,
                     };
 
                     if (json.missing.length || json.updated.length)
@@ -265,13 +265,10 @@
                     else
                         $('#changedFiles').html('<div class="alert alert-success">'+ translations.noChangeDetected +'</div>');
 
-                    $.each(tab, function(key, lang)
-                    {
-                        if (json[key].length)
-                        {
+                    $.each(tab, function(key, lang) {
+                        if (json[key].length) {
                             var html = $('<ul>').attr('id', key+'_files');
-                            $(json[key]).each(function(key, file)
-                            {
+                            $(json[key]).each(function(key, file) {
                                 html.append($('<li>').html(file))
                             });
                             $('#changedFiles')
