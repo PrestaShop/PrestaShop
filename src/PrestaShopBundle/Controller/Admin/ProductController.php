@@ -580,12 +580,14 @@ class ProductController extends FrameworkBundleAdminController
             $preview_url_deactive = $adminProductWrapper->getPreviewUrl($product, false);
             $preview_url = $adminProductWrapper->getPreviewUrlDeactivate($preview_url_deactive);
         }
+        
+        $shopIdsList = $shopContext->getContextListShopID();
 
         $attributeGroups = $this
             ->getDoctrine()
             ->getManager()
             ->getRepository('PrestaShopBundle:Attribute')
-            ->findByLangAndShop(1, 1);
+            ->findByLangAndShop($legacyContextService->getContext()->language->id, $shopIdsList[0]);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(array('product' => $product))
