@@ -155,8 +155,9 @@ class LocaleData
         foreach ($arrayProps as $propName) {
             if (!empty($parentData->$propName)) {
                 foreach ($parentData->$propName as $parentKey => $parentValue) {
-                    if (!isset($this->$propName[$parentKey])) {
-                        $this->$propName[$parentKey] = $parentValue;
+                    $thisProp =& $this->$propName;
+                    if (!isset($thisProp[$parentKey])) {
+                        $thisProp[$parentKey] = $parentValue;
                         continue;
                     }
                 }
@@ -167,12 +168,13 @@ class LocaleData
         foreach ($arrayOfObjectsProps as $propName) {
             if (!empty($parentData->$propName)) {
                 foreach ($parentData->$propName as $propKey => $propObject) {
-                    if (!isset($this->$propName[$propKey])) {
-                        $this->$propName[$propKey] = $propObject;
+                    $thisProp =& $this->$propName;
+                    if (!isset($thisProp[$propKey])) {
+                        $thisProp[$propKey] = $propObject;
                         continue;
                     }
 
-                    $this->$propName[$propKey]->fill($propObject);
+                    $thisProp[$propKey]->fill($propObject);
                 }
             }
         }
