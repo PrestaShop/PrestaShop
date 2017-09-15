@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Localization\CLDR;
 
+use Exception;
+
 class LocaleData
 {
     /**
@@ -112,75 +114,130 @@ class LocaleData
      */
     public function fill(LocaleData $parentData)
     {
-        $simpleProps = array(
+        $this->fillScalarProperties($parentData)
+            ->fillObjectProperties($parentData)
+            ->fillArrayOfScalarProperties($parentData)
+            ->fillArrayOfObjectProperties($parentData);
+
+        // 'parentLocale' should always be overridden by parent locale's 'parentLocale' (for recursion purpose)
+        $this->parentLocale = $parentData->parentLocale;
+
+        return $this;
+    }
+
+    /**
+     * Fill empty scalar properties with default data.
+     *
+     * @param LocaleData $defaultData
+     *
+     * @return $this
+     */
+    protected function fillScalarProperties(LocaleData $defaultData)
+    {
+        $propertyNames = array(
             'digits',
             'localeCode',
             'minimumGroupingDigits',
             'parentLocale',
         );
+        foreach ($propertyNames as $prop) {
+            if (isset($defaultData->$prop) && !isset($this->$prop)) {
+                $this->$prop = $defaultData->$prop;
+            }
+        }
 
-        $objectProps = array();
+        return $this;
+    }
 
-        $arrayProps = array(
+    /**
+     * Fill empty or incomplete object properties with default data.
+     * Filling will be delegated to the concerned object's fill() method.
+     *
+     * @param LocaleData $defaultData
+     *
+     * @return $this
+     */
+    protected function fillObjectProperties(LocaleData $defaultData)
+    {
+        $propertyNames = array(); // No object properties in LocaleData yet.
+        foreach ($propertyNames as $prop) {
+            if (isset($defaultData->$prop)) {
+                if (!isset($this->$prop)) {
+                    $this->$prop = $defaultData->$prop;
+                    continue;
+                }
+
+                if (!method_exists($this->$prop, 'fill')) {
+                    throw new \Exception("$prop object needs a fill() method.");
+                }
+
+                $this->$prop->fill($defaultData->$prop);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Fill empty or incomplete array properties containing scalar values.
+     *
+     * @param LocaleData $defaultData
+     *
+     * @return $this
+     */
+    protected function fillArrayOfScalarProperties(LocaleData $defaultData)
+    {
+        $propertyNames = array(
             'currencyPatterns',
             'decimalPatterns',
             'numberingSystems',
             'percentPatterns',
         );
+        foreach ($propertyNames as $prop) {
+            if (!empty($defaultData->$prop)) {
+                foreach ($defaultData->$prop as $key => $defaultValue) {
+                    $thisProp =& $this->$prop;
+                    if (!isset($thisProp[$key])) {
+                        $thisProp[$key] = $defaultValue;
+                    }
+                }
+            }
+        }
 
-        $arrayOfObjectsProps = array(
+        return $this;
+    }
+
+    /**
+     * Fill empty or incomplete array properties containing objects.
+     * Filling will be delegated to the concerned objects' fill() methods.
+     *
+     * @param LocaleData $defaultData
+     *
+     * @return $this
+     * @throws Exception
+     */
+    protected function fillArrayOfObjectProperties(LocaleData $defaultData)
+    {
+        $propertyNames = array(
             'numberSymbols',
         );
-
-        // Simple properties -> simple fill
-        foreach ($simpleProps as $propName) {
-            if (isset($parentData->$propName) && !isset($this->$propName)) {
-                $this->$propName = $parentData->$propName;
-            }
-        }
-
-        // Object properties -> fill properties via internal fill() method
-        foreach ($objectProps as $propName) {
-            if (isset($parentData->$propName)) {
-                if (!isset($this->$propName)) {
-                    $this->$propName = $parentData->$propName;
-                    continue;
-                }
-
-                $this->$propName->fill($parentData->$propName);
-            }
-        }
-
-        // Array of scalar types -> simple array replace
-        foreach ($arrayProps as $propName) {
-            if (!empty($parentData->$propName)) {
-                foreach ($parentData->$propName as $parentKey => $parentValue) {
-                    $thisProp =& $this->$propName;
-                    if (!isset($thisProp[$parentKey])) {
-                        $thisProp[$parentKey] = $parentValue;
-                        continue;
-                    }
-                }
-            }
-        }
-
-        // Array of objects properties -> for each object, fill missing properties via internal fill() method
-        foreach ($arrayOfObjectsProps as $propName) {
-            if (!empty($parentData->$propName)) {
-                foreach ($parentData->$propName as $propKey => $propObject) {
-                    $thisProp =& $this->$propName;
-                    if (!isset($thisProp[$propKey])) {
-                        $thisProp[$propKey] = $propObject;
+        foreach ($propertyNames as $prop) {
+            if (!empty($defaultData->$prop)) {
+                foreach ($defaultData->$prop as $key => $defaultObject) {
+                    $thisProp =& $this->$prop;
+                    if (!isset($thisProp[$key])) {
+                        $thisProp[$key] = $defaultObject;
                         continue;
                     }
 
-                    $thisProp[$propKey]->fill($propObject);
+                    if (!method_exists($thisProp[$key], 'fill')) {
+                        throw new Exception("$key object of $prop property needs a fill() method.");
+                    }
+
+                    $thisProp[$key]->fill($defaultObject);
                 }
             }
         }
-
-        // 'parentLocale' should always be overridden by parent locale's 'parentLocale' (for recursivity purpose)
-        $this->parentLocale = $parentData->parentLocale;
 
         return $this;
     }
