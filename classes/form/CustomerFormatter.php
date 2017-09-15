@@ -212,6 +212,10 @@ class CustomerFormatterCore implements FormFormatterInterface
 
         if (is_array($additionalCustomerFormFields)) {
             foreach ($additionalCustomerFormFields as $moduleName => $additionnalFormFields) {
+                if (!is_array($additionnalFormFields)) {
+                    continue;
+                }
+                
                 foreach ($additionnalFormFields as $formField) {
                     $formField->moduleName = $moduleName;
                     $format[$moduleName.'_'.$formField->getName()] = $formField;
