@@ -75,9 +75,10 @@ class DataReaderTest extends TestCase
             if (in_array($property, array('decimalPatterns', 'percentPatterns', 'currencyPatterns'))) {
                 $expectedPatterns = $value;
                 foreach ($expectedPatterns as $numSystem => $pattern) {
+                    $localeProp = $localeData->$property;
                     $this->assertSame(
                         $pattern,
-                        $localeData->$property[$numSystem],
+                        $localeProp[$numSystem],
                         $localeCode . ' - ' . $property . ' - ' . $numSystem . ' : pattern is not the same as expected '
                     );
                 }
