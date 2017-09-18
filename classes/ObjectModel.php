@@ -505,15 +505,17 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if (Shop::isTableAssociated($this->def['table'])) {
-            $id_shop_list = Shop::getContextListShopID();
+            $shopIds = Shop::getContextListShopID();
             if (count($this->id_shop_list) > 0) {
-                $id_shop_list = $this->id_shop_list;
+                $shopIds = $this->id_shop_list;
             }
         }
 
         // Database insertion
         if (Shop::checkIdShopDefault($this->def['table'])) {
-            $this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+            $this->id_shop_default = in_array(Configuration::get('PS_SHOP_DEFAULT'), $shopIds)
+                ? Configuration::get('PS_SHOP_DEFAULT')
+                : min($shopIds);
         }
         if (!$result = Db::getInstance()->insert($this->def['table'], $this->getFields(), $null_values)) {
             return false;
@@ -527,8 +529,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             $fields = $this->getFieldsShop();
             $fields[$this->def['primary']] = (int)$this->id;
 
-            foreach ($id_shop_list as $id_shop) {
-                $fields['id_shop'] = (int)$id_shop;
+            foreach ($shopIds as $shopId) {
+                $fields['id_shop'] = (int)$shopId;
                 $result &= Db::getInstance()->insert($this->def['table'].'_shop', $fields, $null_values);
             }
         }
@@ -552,8 +554,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     $field[$this->def['primary']] = (int)$this->id;
 
                     if ($asso !== false && $asso['type'] == 'fk_shop') {
-                        foreach ($shops as $id_shop) {
-                            $field['id_shop'] = (int)$id_shop;
+                        foreach ($shops as $shopId) {
+                            $field['id_shop'] = (int)$shopId;
                             $result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
                         }
                     } else {
