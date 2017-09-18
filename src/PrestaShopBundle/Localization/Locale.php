@@ -33,12 +33,10 @@ use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
-use PrestaShopBundle\Localization\Repository as LocaleRepository;
 
 class Locale
 {
     protected $localeCode;
-    protected $repository;
     protected $numberFormatter;
     protected $numberFormatterFactory;
     protected $specification;
@@ -50,14 +48,12 @@ class Locale
         $localeCode,
         NumberFormatterFactory $numberFormatterFactory,
         LocaleData $specification,
-        LocaleRepository $repository,
         CurrencyCollection $currencyCollection,
         $roundMode
     ) {
         $this->localeCode             = $this->convertLocaleAsIETF($localeCode);
         $this->numberFormatterFactory = $numberFormatterFactory;
         $this->specification          = $specification;
-        $this->repository             = $repository;
         $this->currencyCollection     = $currencyCollection;
         $this->roundMode              = (int)$roundMode;
     }
@@ -123,14 +119,6 @@ class Locale
         }
 
         return $this->numberFormatter;
-    }
-
-    /**
-     * @return LocaleRepository
-     */
-    public function getRepository()
-    {
-        return $this->repository;
     }
 
     public function getDecimalPattern()
