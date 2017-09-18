@@ -707,9 +707,9 @@ class HookCore extends ObjectModel
         }
 
         $hookRegistry = self::getHookRegistry();
-        $isRegistry = !is_null($hookRegistry);
+        $isRegistryEnabled = !is_null($hookRegistry);
 
-        if ($isRegistry) {
+        if ($isRegistryEnabled) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
             $hookRegistry->selectHook($hook_name, $hook_args, $backtrace[0]['file'], $backtrace[0]['line']);
         }
@@ -732,7 +732,7 @@ class HookCore extends ObjectModel
         // If no modules associated to hook_name or recompatible hook name, we stop the function
 
         if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
-            if ($isRegistry) {
+            if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
             if ($array_return) {
@@ -744,7 +744,7 @@ class HookCore extends ObjectModel
 
         // Check if hook exists
         if (!$id_hook = Hook::getIdByName($hook_name)) {
-            if ($isRegistry) {
+            if ($isRegistryEnabled) {
                 $hookRegistry->collect();
             }
             if ($array_return) {
@@ -842,7 +842,7 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ($isRegistry) {
+            if ($isRegistryEnabled) {
                 $hookRegistry->hookedByModule($moduleInstance);
             }
 
@@ -868,7 +868,7 @@ class HookCore extends ObjectModel
                         $output .= $display;
                     }
                 }
-                if ($isRegistry) {
+                if ($isRegistryEnabled) {
                     $hookRegistry->hookedByCallback($moduleInstance, $hook_args);
                 }
             } elseif (Hook::isDisplayHookName($hook_name)) {
@@ -891,7 +891,7 @@ class HookCore extends ObjectModel
                     }
                 }
 
-                if ($isRegistry) {
+                if ($isRegistryEnabled) {
                     $hookRegistry->hookedByWidget($moduleInstance, $hook_args);
                 }
             }
@@ -911,7 +911,7 @@ class HookCore extends ObjectModel
             }
         }
 
-        if ($isRegistry) {
+        if ($isRegistryEnabled) {
             $hookRegistry->hookWasCalled();
             $hookRegistry->collect();
         }

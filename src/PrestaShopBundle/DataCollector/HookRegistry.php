@@ -157,12 +157,6 @@ final class HookRegistry
             'modules' => $this->currentHook['modules'],
         );
 
-        if (array_key_exists($name, $this->hooks[$status])) {
-            $this->hooks[$status][$name][] = $hook;
-
-            return;
-        }
-
         $this->hooks[$status][$name][] = $hook;
     }
 }
