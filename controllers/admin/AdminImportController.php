@@ -223,6 +223,8 @@ class AdminImportControllerCore extends AdminController
                     'id' => array('label' => $this->trans('ID', array(), 'Admin.Global')),
                     'active' => array('label' => $this->trans('Active (0/1)', array(), 'Admin.Advparameters.Feature')),
                     'name' => array('label' => $this->trans('Name', array(), 'Admin.Global')),
+                    'redirect_type' => array('label' => $this->trans('Redirect type', array(), 'Admin.Advparameters.Feature')),
+                    'id_type_redirected' =>   array('label' => $this->trans('Product ID', array(), 'Admin.Advparameters.Feature')),
                     'category' => array('label' => $this->trans('Categories (x,y,z...)', array(), 'Admin.Advparameters.Feature')),
                     'price_tex' => array('label' => $this->trans('Price tax excluded', array(), 'Admin.Advparameters.Feature')),
                     'price_tin' => array('label' => $this->trans('Price tax included', array(), 'Admin.Advparameters.Feature')),
