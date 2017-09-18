@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 class HookCore extends ObjectModel
 {
@@ -705,6 +706,14 @@ class HookCore extends ObjectModel
             return;
         }
 
+        $hookRegistry = self::getHookRegistry();
+        $isRegistryEnabled = !is_null($hookRegistry);
+
+        if ($isRegistryEnabled) {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+            $hookRegistry->selectHook($hook_name, $hook_args, $backtrace[0]['file'], $backtrace[0]['line']);
+        }
+
         // $chain & $array_return are incompatible so if chained is set to true, we disable the array_return option
         if (true === $chain) {
             $array_return = false;
@@ -723,6 +732,9 @@ class HookCore extends ObjectModel
         // If no modules associated to hook_name or recompatible hook name, we stop the function
 
         if (!$module_list = Hook::getHookModuleExecList($hook_name)) {
+            if ($isRegistryEnabled) {
+                $hookRegistry->collect();
+            }
             if ($array_return) {
                 return array();
             } else {
@@ -732,6 +744,9 @@ class HookCore extends ObjectModel
 
         // Check if hook exists
         if (!$id_hook = Hook::getIdByName($hook_name)) {
+            if ($isRegistryEnabled) {
+                $hookRegistry->collect();
+            }
             if ($array_return) {
                 return array();
             } else {
@@ -827,6 +842,10 @@ class HookCore extends ObjectModel
                 continue;
             }
 
+            if ($isRegistryEnabled) {
+                $hookRegistry->hookedByModule($moduleInstance);
+            }
+
             if (Hook::isHookCallableOn($moduleInstance, $hook_name)) {
                 $hook_args['altern'] = ++$altern;
 
@@ -849,6 +868,9 @@ class HookCore extends ObjectModel
                         $output .= $display;
                     }
                 }
+                if ($isRegistryEnabled) {
+                    $hookRegistry->hookedByCallback($moduleInstance, $hook_args);
+                }
             } elseif (Hook::isDisplayHookName($hook_name)) {
                 if ($moduleInstance instanceof WidgetInterface) {
 
@@ -868,6 +890,10 @@ class HookCore extends ObjectModel
                         }
                     }
                 }
+
+                if ($isRegistryEnabled) {
+                    $hookRegistry->hookedByWidget($moduleInstance, $hook_args);
+                }
             }
         }
 
@@ -885,6 +911,11 @@ class HookCore extends ObjectModel
             }
         }
 
+        if ($isRegistryEnabled) {
+            $hookRegistry->hookWasCalled();
+            $hookRegistry->collect();
+        }
+
         return $output;
     }
 
@@ -896,5 +927,18 @@ class HookCore extends ObjectModel
     public static function coreRenderWidget($module, $hook_name, $params)
     {
         return $module->renderWidget($hook_name, $params);
+    }
+
+    /**
+     * @return null|\PrestaShopBundle\DataCollector\HookRegistry
+     */
+    private static function getHookRegistry()
+    {
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer) && "dev" === $sfContainer->getParameter('kernel.environment')) {
+            return $sfContainer->get('prestashop.hooks_registry');
+        }
+
+        return null;
     }
 }
