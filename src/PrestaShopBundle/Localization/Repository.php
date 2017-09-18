@@ -124,7 +124,6 @@ class Repository
                     $localeData->localeCode,
                     $this->numberFormatterFactory,
                     $localeData,
-                    $this,
                     $this->currencyCollectionFactory->build(),
                     $this->getRoundMode()
                 );
@@ -153,7 +152,6 @@ class Repository
                     $localeData->localeCode,
                     $this->numberFormatterFactory,
                     $localeData,
-                    $this,
                     $this->currencyCollectionFactory->build(),
                     $this->getRoundMode()
                 );

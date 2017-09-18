@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 
@@ -68,17 +70,51 @@ class LanguageCore extends ObjectModel
      * @see ObjectModel::$definition
      */
     public static $definition = array(
-        'table' => 'lang',
+        'table'   => 'lang',
         'primary' => 'id_lang',
-        'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 2),
-            'locale' => array('type' => self::TYPE_STRING, 'validate' => 'isLocale', 'size' => 5),
-            'language_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageCode', 'size' => 5),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'is_rtl' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_format_lite' => array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
-            'date_format_full' => array('type' => self::TYPE_STRING, 'validate' => 'isPhpDateFormat', 'required' => true, 'size' => 32),
+        'fields'  => array(
+            'name'             => array(
+                'type'     => self::TYPE_STRING,
+                'validate' => 'isGenericName',
+                'required' => true,
+                'size'     => 32,
+            ),
+            'iso_code'         => array(
+                'type'     => self::TYPE_STRING,
+                'validate' => 'isLanguageIsoCode',
+                'required' => true,
+                'size'     => 2,
+            ),
+            'locale'           => array(
+                'type'     => self::TYPE_STRING,
+                'validate' => 'isLocale',
+                'size'     => 5,
+            ),
+            'language_code'    => array(
+                'type'     => self::TYPE_STRING,
+                'validate' => 'isLanguageCode',
+                'size'     => 5,
+            ),
+            'active'           => array(
+                'type'     => self::TYPE_BOOL,
+                'validate' => 'isBool',
+            ),
+            'is_rtl'           => array(
+                'type'     => self::TYPE_BOOL,
+                'validate' => 'isBool',
+            ),
+            'date_format_lite' => array(
+                'type'     => self::TYPE_STRING,
+                'validate' => 'isPhpDateFormat',
+                'required' => true,
+                'size'     => 32,
+            ),
+            'date_format_full' => array(
+                'type'     => self::TYPE_STRING,
+                'validate' => 'isPhpDateFormat',
+                'required' => true,
+                'size'     => 32,
+            ),
         ),
     );
 
@@ -150,11 +186,17 @@ class LanguageCore extends ObjectModel
         $modulesList = Module::getModulesDirOnDisk();
         foreach ($modulesList as $moduleDir) {
             if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code)) {
-                rename(_PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code, _PS_MODULE_DIR_.$moduleDir.'/mails/'.$newIso);
+                rename(
+                    _PS_MODULE_DIR_.$moduleDir.'/mails/'.$this->iso_code,
+                    _PS_MODULE_DIR_.$moduleDir.'/mails/'.$newIso
+                );
             }
 
             if (file_exists(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php')) {
-                rename(_PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php', _PS_MODULE_DIR_.$moduleDir.'/'.$newIso.'.php');
+                rename(
+                    _PS_MODULE_DIR_.$moduleDir.'/'.$this->iso_code.'.php',
+                    _PS_MODULE_DIR_.$moduleDir.'/'.$newIso.'.php'
+                );
             }
         }
 
@@ -165,16 +207,25 @@ class LanguageCore extends ObjectModel
             /* @var Theme $theme */
             $theme_dir = $theme->getDirectory();
             if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php')) {
-                rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$newIso.'.php');
+                rename(
+                    _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php',
+                    _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$newIso.'.php'
+                );
             }
 
             if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$this->iso_code)) {
-                rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$this->iso_code, _PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$newIso);
+                rename(
+                    _PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$this->iso_code,
+                    _PS_ALL_THEMES_DIR_.$theme_dir.'/mails/'.$newIso
+                );
             }
 
             foreach ($modulesList as $module) {
                 if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$this->iso_code.'.php')) {
-                    rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$newIso.'.php');
+                    rename(
+                        _PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$this->iso_code.'.php',
+                        _PS_ALL_THEMES_DIR_.$theme_dir.'/modules/'.$module.'/'.$newIso.'.php'
+                    );
                 }
             }
         }
