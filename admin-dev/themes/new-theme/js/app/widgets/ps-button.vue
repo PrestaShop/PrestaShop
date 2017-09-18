@@ -33,19 +33,16 @@
    props: {
      primary: { type: Boolean },
      ghost: { type: Boolean },
+     lg: { type: Boolean },
    },
    computed: {
      classObject() {
-       if (this.ghost) {
-         return {
-           'btn-outline-primary': this.primary,
-           'btn-outline-secondary': !this.primary,
-         };
-       }
-
        return {
+         'btn-outline-primary': this.ghost && this.primary,
+         'btn-outline-secondary': this.ghost && !this.primary,
          'btn-primary': this.primary,
          'btn-secondary': !this.primary,
+         'btn-lg': this.lg,
        };
      },
    },

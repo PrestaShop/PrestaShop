@@ -3,6 +3,10 @@
     <div class="row">
       <div  class="col-sm-4">
         <label>{{trans('label_currency')}}</label>
+        <PSHelp 
+          content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+          placement="right"
+        />
         <PSSelect />
       </div>
       <div  class="col-sm-2">
@@ -26,18 +30,30 @@
     <div class="row mt-4">
       <div  class="col-sm-2">
         <label>{{trans('label_code')}}</label>
+        <PSHelp 
+          content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+          placement="right"
+        />
         <PSInput />
       </div>
       <div class="col-sm-2">
         <label>{{trans('label_code_numeric')}}</label>
+        <PSHelp 
+          content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+          placement="right"
+        />
         <PSInput />
       </div>
       <div class="col-sm-2">
         <label>{{trans('label_decimals')}}</label>
+        <PSHelp 
+          content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+          placement="right"
+        />
         <PSInput />
       </div>
       <div class="col-sm-2">
-        <label>{{trans('label_exchange')}}</label>
+        <label>{{trans('label_exchange')}}<sup class="danger">*</sup></label>
         <PSInput />
       </div>
     </div>
@@ -48,12 +64,21 @@
   import PSSelect from 'app/widgets/ps-select';
   import PSSwitch from 'app/widgets/ps-switch';
   import PSInput from 'app/widgets/ps-input';
+  import PSHelp from 'app/widgets/ps-help';
 
   export default {
     components: {
       PSSelect,
       PSSwitch,
       PSInput,
+      PSHelp,
     },
   };
 </script>
+
+<style lang="sass" scoped>
+  @import "../../../../../scss/config/_settings.scss";
+  sup {
+    color: $brand-danger;
+  }
+</style>
