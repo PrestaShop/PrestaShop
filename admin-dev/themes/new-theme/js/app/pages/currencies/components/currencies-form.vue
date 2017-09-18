@@ -7,7 +7,7 @@
           content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
           placement="right"
         />
-        <PSSelect />
+        <PSSelect data-toggle="select2">--</PSSelect>
       </div>
       <div  class="col-sm-2">
         <label class="d-block">{{trans('label_switch')}}</label>
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="row align-items-end mt-4">
-      <div  class="col-sm-6">
+      <div  class="col-sm-5">
         <label>{{trans('label_currency_name')}}</label>
         <PSInput />
       </div>
@@ -24,7 +24,7 @@
         <PSInput />
       </div>
       <div class="col-sm-1 align-content-end">
-        <PSSelect />
+        <PSSelect>en</PSSelect>
       </div>
     </div>
     <div class="row mt-4">
@@ -44,16 +44,16 @@
         />
         <PSInput />
       </div>
-      <div class="col-sm-2">
+      <div class="col-sm-1">
         <label>{{trans('label_decimals')}}</label>
         <PSHelp 
           content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
           placement="right"
         />
-        <PSInput />
+        <PSSelect :items="decimals" itemName="number">0</PSSelect>
       </div>
-      <div class="col-sm-2">
-        <label>{{trans('label_exchange')}}<sup class="danger">*</sup></label>
+      <div class="col-sm-1">
+        <label>{{trans('label_exchange')}}<sup>*</sup></label>
         <PSInput />
       </div>
     </div>
@@ -72,6 +72,22 @@
       PSSwitch,
       PSInput,
       PSHelp,
+    },
+    computed: {
+      decimals() {
+        return [{
+          number: 1,
+        }, {
+          number: 2,
+        }, {
+          number: 3,
+        }];
+      },
+    },
+    mounted() {
+      $('[data-toggle="select2"]').select2({
+        data: ['dollar', 'euro']
+      });
     },
   };
 </script>
