@@ -42,14 +42,14 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = __webpack_require__(1);
 
 
-/***/ }),
+/***/ },
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -95,9 +95,9 @@
 	  (0, _common.psShowHide)();
 	});
 
-/***/ }),
+/***/ },
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	 * jQuery JavaScript Library v2.2.4
@@ -1674,9 +1674,9 @@
 	// and CommonJS for browser emulators (#13566)
 	if(!noGlobal){window.jQuery = window.$ = jQuery;}return jQuery;}); // Otherwise append directly
 
-/***/ }),
+/***/ },
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1752,51 +1752,60 @@
 	
 	  $body.on('click', '[data-button-action="add-to-cart"]', function (event) {
 	    event.preventDefault();
+	    if ((0, _jquery2['default'])('#quantity_wanted').val() > (0, _jquery2['default'])('[data-stock]').data('stock') && (0, _jquery2['default'])('[data-allow-oosp]').data('allow-oosp').length === 0) {
+	      (0, _jquery2['default'])('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
+	    } else {
+	      var _ret = (function () {
+	        var $form = (0, _jquery2['default'])(event.target).closest('form');
+	        var query = $form.serialize() + '&add=1&action=update';
+	        var actionURL = $form.attr('action');
 	
-	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
-	    var query = $form.serialize() + '&add=1&action=update';
-	    var actionURL = $form.attr('action');
+	        var isQuantityInputValid = function isQuantityInputValid($input) {
+	          var validInput = true;
 	
-	    var isQuantityInputValid = function isQuantityInputValid($input) {
-	      var validInput = true;
+	          $input.each(function (index, input) {
+	            var $input = (0, _jquery2['default'])(input);
+	            var minimalValue = parseInt($input.attr('min'), 10);
+	            if (minimalValue && $input.val() < minimalValue) {
+	              onInvalidQuantity($input);
+	              validInput = false;
+	            }
+	          });
 	
-	      $input.each(function (index, input) {
-	        var $input = (0, _jquery2['default'])(input);
-	        var minimalValue = parseInt($input.attr('min'), 10);
-	        if (minimalValue && $input.val() < minimalValue) {
-	          onInvalidQuantity($input);
-	          validInput = false;
+	          return validInput;
+	        };
+	
+	        var onInvalidQuantity = function onInvalidQuantity($input) {
+	          $input.parents('.product-add-to-cart').first().find('.product-minimal-quantity').addClass('error');
+	          $input.parent().find('label').addClass('error');
+	        };
+	
+	        var $quantityInput = $form.find('input[min]');
+	        if (!isQuantityInputValid($quantityInput)) {
+	          onInvalidQuantity($quantityInput);
+	
+	          return {
+	            v: undefined
+	          };
 	        }
-	      });
 	
-	      return validInput;
-	    };
+	        _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	          _prestashop2['default'].emit('updateCart', {
+	            reason: {
+	              idProduct: resp.id_product,
+	              idProductAttribute: resp.id_product_attribute,
+	              linkAction: 'add-to-cart',
+	              cart: resp.cart
+	            },
+	            resp: resp
+	          });
+	        }).fail(function (resp) {
+	          _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
+	        });
+	      })();
 	
-	    var onInvalidQuantity = function onInvalidQuantity($input) {
-	      (0, _jquery2['default'])($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity').addClass('error');
-	      $input.parent().find('label').addClass('error');
-	    };
-	
-	    var $quantityInput = $form.find('input[min]');
-	    if (!isQuantityInputValid($quantityInput)) {
-	      onInvalidQuantity($quantityInput);
-	
-	      return;
+	      if (typeof _ret === 'object') return _ret.v;
 	    }
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      _prestashop2['default'].emit('updateCart', {
-	        reason: {
-	          idProduct: resp.id_product,
-	          idProductAttribute: resp.id_product_attribute,
-	          linkAction: 'add-to-cart',
-	          cart: resp.cart
-	        },
-	        resp: resp
-	      });
-	    }).fail(function (resp) {
-	      _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
-	    });
 	  });
 	
 	  $body.on('submit', '[data-link-action="add-voucher"]', function (event) {
@@ -1827,15 +1836,15 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 4 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = prestashop;
 
-/***/ }),
+/***/ },
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1922,9 +1931,9 @@
 	  }
 	});
 
-/***/ }),
+/***/ },
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -1981,9 +1990,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2061,9 +2070,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2221,9 +2230,9 @@
 	
 	module.exports = exports['default'];
 
-/***/ }),
+/***/ },
 /* 9 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2295,9 +2304,9 @@
 	    });
 	});
 
-/***/ }),
+/***/ },
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2344,9 +2353,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2496,9 +2505,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
@@ -2556,9 +2565,9 @@
 	  });
 	});
 
-/***/ }),
+/***/ },
 /* 13 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
 	//
@@ -2828,9 +2837,9 @@
 	  return arg === void 0;
 	}
 
-/***/ }),
+/***/ },
 /* 14 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * 2007-2017 PrestaShop
@@ -2874,6 +2883,6 @@
 	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
-/***/ })
+/***/ }
 /******/ ]);
 //# sourceMappingURL=core.js.map
