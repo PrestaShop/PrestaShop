@@ -70,7 +70,7 @@ class CheckRequirements
         if ($failRequired && 'ok' !== $paramsRequiredResults['files']) {
             $tmp = ConfigurationTest::test_files(true);
             if (is_array($tmp) && count($tmp)) {
-                $testsErrors['files'] = $this->getErrorMessages()['files'].'<br/>('.implode(', ', $tmp).')';
+                $testsErrors['files'] = $testsErrors['files'].'<br/>('.implode(', ', $tmp).')';
             }
         }
 
