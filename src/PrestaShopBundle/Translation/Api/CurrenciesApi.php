@@ -34,6 +34,8 @@ class CurrenciesApi extends AbstractApi
     public function getTranslations()
     {
         return array(
+            'button_cancel' => $this->translator->trans('Cancel', array(), 'Admin.Global'),
+            'button_save' => $this->translator->trans('Save', array(), 'Admin.Global'),
             'label_code' => $this->translator->trans('ISO code', array(), 'Admin.International'),
             'label_code_numeric' => $this->translator->trans('Numeric ISO code', array(), 'Admin.International'),
             'label_currency' => $this->translator->trans('Choose a currency', array(), 'Admin.International'),

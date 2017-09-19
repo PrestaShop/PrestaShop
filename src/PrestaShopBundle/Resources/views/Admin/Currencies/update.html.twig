@@ -25,6 +25,7 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
+<div id="currencies">
     <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
             <a class="nav-link" href="#" role="tab">{{ "Localisation"|trans({}, 'Admin.International') }}</a>
@@ -40,10 +41,17 @@
         </li>
     </ul>
     <div id="currencies-app"></div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
+    <script>
+        var data = {
+            translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'currencies'}) }}',
+        }
+    </script>
 
     {% if webpack_server %}
         <script src="http://localhost:8080/currencies.bundle.js"></script>
