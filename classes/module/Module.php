@@ -3165,6 +3165,28 @@ abstract class ModuleCore implements ModuleInterface
 
         return false;
     }
+
+    /**
+     * Check if the module is executed in Admin Legacy context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isAdminLegacyContext()
+    {
+        return defined('ADMIN_LEGACY_CONTEXT');
+    }
+
+    /**
+     * Check if the module is executed in Symfony context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isSymfonyContext()
+    {
+        return !defined('ADMIN_LEGACY_CONTEXT');
+    }
 }
 
 function ps_module_version_sort($a, $b)
