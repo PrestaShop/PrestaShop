@@ -49,7 +49,9 @@
                 <span class="sr-only">{l s='Regular price' d='Shop.Theme.Catalog'}</span>
                 <span class="regular-price">{$product.regular_price}</span>
                 {if $product.discount_type === 'percentage'}
-                  <span class="discount-percentage">{$product.discount_percentage}</span>
+                  <span class="discount-percentage discount-product">{$product.discount_percentage}</span>
+                {elseif $product.discount_type === 'amount'}
+                  <span class="discount-amount discount-product">{$product.discount_amount_to_display}</span>
                 {/if}
               {/if}
 

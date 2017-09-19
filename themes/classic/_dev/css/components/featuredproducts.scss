@@ -106,6 +106,7 @@
     .online-only,
     .on-sale,
     .discount-percentage,
+    .discount-amount,
     .pack {
       display: block;
       position: absolute;
@@ -119,7 +120,8 @@
       font-size: $base-font-size;
       font-weight: 600;
       @include box-shadow-light;
-      &.discount-percentage {
+      &.discount-percentage,
+      &.discount-amount {
         z-index: 2;
         background: $brand-secondary;
       }
