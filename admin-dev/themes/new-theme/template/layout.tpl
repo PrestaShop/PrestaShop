@@ -58,11 +58,8 @@
       <i class="icon-refresh icon-spin icon-fw"></i>
     </span>
     *}
-
-    {* TODO: ??? *}
-    {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
-
   </nav>
+  {hook h='displayBackOfficeTop'}
 </header>
 
 {include file='components/layout/nav_bar.tpl'}
