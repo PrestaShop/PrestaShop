@@ -34,7 +34,7 @@
     <div class="container">
         {{ form_start(form, {'attr' : {'class': 'form'} }) }}
         <div class="row">
-
+            {% block perfs_form_smarty_cache %}
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
@@ -74,7 +74,9 @@
                     </div>
                 </div>
             </div>
+            {% endblock %}
 
+            {% block perfs_form_debug_mode %}
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
@@ -104,9 +106,11 @@
                     </div>
                 </div>
             </div>
+            {% endblock %}
         </div>
 
         <div class="row">
+            {% block perfs_form_optional_features %}
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
@@ -116,7 +120,7 @@
                         <div class="card-text">
 
                             {{ ps.infotip('Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help')) }}
-                            
+
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Combinations'|trans({}, 'Admin.Global') }}</label>
                                 {{ form_errors(optionalFeaturesForm.combinations) }}
@@ -139,7 +143,9 @@
                     </div>
                 </div>
             </div>
+            {% endblock %}
 
+            {% block perfs_form_ccc %}
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
@@ -149,7 +155,7 @@
                         <div class="card-text">
 
                             {{ ps.infotip('CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help')) }}
-                            
+
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Smart cache for CSS'|trans }}</label>
                                 {{ form_errors(combineCompressCacheForm.smart_cache_css) }}
@@ -172,9 +178,11 @@
                     </div>
                 </div>
             </div>
+            {% endblock %}
         </div>
 
         <div class="row">
+            {% block perfs_form_media_servers %}
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
@@ -184,7 +192,7 @@
                         <div class="card-text">
 
                             {{ ps.infotip('You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature')) }}
-                            
+
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Media server #1'|trans }}</label>
                                 {{ form_errors(mediaServersForm.media_server_one) }}
@@ -207,7 +215,9 @@
                     </div>
                 </div>
             </div>
+            {% endblock %}
 
+            {% block perfs_form_caching %}
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
@@ -233,6 +243,7 @@
                     </div>
                 </div>
             </div>
+            {% endblock %}
         </div>
         {{ form_end(form) }}
     </div>
