@@ -35,36 +35,35 @@ class CheckMissingOrUpdatedFiles
     /**
      * @return array
      */
-    public function getListOfUpdatedFiles($path = '')
+    public function getListOfUpdatedFiles($dir = null, $path = '')
     {
-        $fileList = array(
-            'missing' => array(),
-            'updated' => array(),
-        );
+        if (is_null($dir)) {
+            $fileList = array(
+                'missing' => array(),
+                'updated' => array(),
+            );
 
-        $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
-        if (!$xml) {
-            return $fileList;
+            $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
+            if (!$xml) {
+                return $fileList;
+            }
+
+            $dir = $xml->ps_root_dir[0];
         }
-
-        $dir = $xml->ps_root_dir[0];
 
         $excludeRegexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload|modules|override/(:?.*)index.php$)';
         $adminDir = basename(_PS_ADMIN_DIR_);
 
         foreach ($dir->md5file as $file) {
-            $filename = preg_replace('#^admin/#', $adminDir.'/', $path.$file['name']);
-            if (preg_match('#^'.$excludeRegexp.'#', $filename)) {
+            $filename = preg_replace('#^admin/#', $adminDir . '/', $path . $file['name']);
+            if (preg_match('#^' . $excludeRegexp . '#', $filename)) {
                 continue;
             }
 
-            if (!file_exists(_PS_ROOT_DIR_.'/'.$filename)) {
+            if (!file_exists(_PS_ROOT_DIR_ . '/' . $filename)) {
                 $fileList['missing'][] = $filename;
-            } else {
-                $md5_local = md5_file(_PS_ROOT_DIR_.'/'.$filename);
-                if ($md5_local !== (string)$file) {
-                    $fileList['updated'][] = $filename;
-                }
+            } elseif (md5_file(_PS_ROOT_DIR_ . '/' . $filename) !== (string)$file) {
+                $fileList['updated'][] = $filename;
             }
         }
 
