@@ -34,10 +34,13 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use PrestaShopBundle\Service\Hook\HookEvent;
 
+/**
+ * @todo Extract logic outside of EventSubscriber
+ */
 class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 {
     const DISPATCHER_BEFORE_ACTION = 'actionDispatcherBefore';
-    const DISPATCHER_AFTER_ACTION = 'actionDispacterAfter';
+    const DISPATCHER_AFTER_ACTION = 'actionDispatcherAfter';
 
     /**
      * List of available front controllers types
@@ -61,32 +64,54 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
     {
         return array(
             KernelEvents::CONTROLLER => array (
-                'callActionDispatcherBeforeHook',
+                array('callActionDispatcherBeforeHook', 100),
             ),
             KernelEvents::RESPONSE => array(
-                'callActionDispatcherAfterHook',
+                array('callActionDispatcherAfterHook', 255),
             ),
         );
     }
 
     public function callActionDispatcherBeforeHook(FilterControllerEvent $event)
     {
+        $requestAttributes = $event->getRequest()->attributes;
         $controllerType = self::NA_CONTROLLER;
         $controller = $event->getController()[0];
 
         if($controller instanceof FrameworkBundleAdminController) {
             $controllerType = self::BACK_OFFICE_CONTROLLER;
         }
-        $hookEvent = new HookEvent();
-        $hookEvent->setHookParameters(array(
+
+        $this->dispatchHook(self::DISPATCHER_BEFORE_ACTION, array(
             'controller_type' => $controllerType
         ));
 
-        $this->hookDispacher->dispatch(self::DISPATCHER_BEFORE_ACTION, $hookEvent);
+        $requestAttributes->set('controller_type', $controllerType);
+        $requestAttributes->set('controller_name', get_class($controller));
     }
 
     public function callActionDispatcherAfterHook(FilterResponseEvent $event)
     {
+        $requestAttributes = $event->getRequest()->attributes;
 
+        if ($requestAttributes->has('controller_type') && $requestAttributes->has('controller_name')) {
+            $this->dispatchHook(self::DISPATCHER_AFTER_ACTION, array(
+                'controller_type' => $requestAttributes->get('controller_type'),
+                'controller_class' => $requestAttributes->get('controller_name'),
+                'is_module' => 0,
+            ));
+        }
+    }
+
+    /**
+     * @param array $parameters
+     * @return HookEvent
+     */
+    private function dispatchHook($eventName, array $parameters = array())
+    {
+        $hookEvent = new HookEvent();
+        $hookEvent->setHookParameters($parameters);
+
+        $this->hookDispacher->dispatch($eventName, $hookEvent);
     }
 }
