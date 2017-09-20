@@ -19,7 +19,7 @@
 							<div class="input-group fixed-width-md">
 								<span class="input-group-addon weight_unit">{$PS_WEIGHT_UNIT}</span>
 								<span class="input-group-addon price_unit">{$currency_sign}</span>
-								<input name="form-control range_inf[{$range.id_range|intval}]" type="text" />
+								<input class="form-control" name="range_inf[{$range.id_range|intval}]" type="text" />
 							</div>
 						</td>
 						{/foreach}
