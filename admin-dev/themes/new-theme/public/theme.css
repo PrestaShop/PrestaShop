@@ -2914,10 +2914,8 @@ ul.category-tree {
       position: relative;
       height: 3rem;
       z-index: 2;
-      visibility: hidden;
       background: #25b9d7;
       color: white;
-      display: none;
       position: absolute;
       left: 15px;
       top: 0; }
