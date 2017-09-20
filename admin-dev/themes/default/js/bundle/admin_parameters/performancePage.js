@@ -74,13 +74,18 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
         });
     };
 
-    this.removeServer = function(serverId) {
-        this.send(this.getRemoveServerlUrl(), 'DELETE', {'server_id': serverId}, function(results) {
-            if (results === undefined) {
-                var row = document.getElementById('row_'+serverId);
-                row.parentNode.removeChild(row);
-            }
-        });
+    this.removeServer = function(serverId, removeMsg) {
+        var removeOk = confirm(removeMsg);
+
+        if (removeOk) {
+            this.send(this.getRemoveServerlUrl(), 'DELETE', {'server_id': serverId}, function(results) {
+                if (results === undefined) {
+                    var row = document.getElementById('row_'+serverId);
+                    row.parentNode.removeChild(row);
+                }
+            });
+        }
+
     };
 
     this.testServer = function() {

@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
 use PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -57,7 +58,7 @@ class MemcacheServerController extends FrameworkBundleAdminController
             $isValid = $this->getMemcacheManager()
                 ->testConfiguration(
                     $queryValues->get('server_ip'),
-                    $queryValues->get('server_port')
+                    $queryValues->getInt('server_port')
                 );
 
             return new JsonResponse(array('test' => $isValid));
