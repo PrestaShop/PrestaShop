@@ -475,6 +475,7 @@ class ProductCore extends ObjectModel
     public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
     {
         parent::__construct($id_product, $id_lang, $id_shop);
+        $this->unit_price = (!empty($this->unit_price_ratio)) ? ($this->price / $this->unit_price_ratio) : 0;
         if ($full && $this->id) {
             if (!$context) {
                 $context = Context::getContext();
