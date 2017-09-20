@@ -264,3 +264,11 @@ services:
             cacheDir: "%kernel.cache_dir%"
         calls:
             - [ setExportDir, ["%kernel.cache_dir%/export"]]
+
+    # EVENT MANAGEMENT
+    prestashop.dispatcher.legacy_hooks.subscriber:
+        class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
+        arguments: ['@prestashop.hook.dispatcher']
+        tags:
+            - { name: kernel.event_subscriber }
+
