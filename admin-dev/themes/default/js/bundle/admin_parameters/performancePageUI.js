@@ -24,7 +24,20 @@
  */
 var PerformancePageUI = {
     displaySmartyCache: function() {
+        var CACHE_ENABLED = 1;
+        var smartyCacheSelected = document.getElementById('form_smarty_cache').value;
+        var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
+        if (smartyCacheSelected == CACHE_ENABLED) {
+          for(var i = 0; i < smartyCacheOptions.length; i++) {
+            smartyCacheOptions[i].style.display = 'block';
+          }
 
+          return;
+        }
+
+      for(var i = 0; i < smartyCacheOptions.length; i++) {
+        smartyCacheOptions[i].style.display = 'none';
+      }
     },
     displayCacheSystems: function() {
         var CACHE_ENABLED = 1;
@@ -69,7 +82,13 @@ var cacheSystemInputs = document.querySelectorAll('input[type=radio]');
 var length = cacheSystemInputs.length;
 
 while(length--) {
-    cacheSystemInputs[length].addEventListener('change',function(){
+    cacheSystemInputs[length].addEventListener('change', function() {
         PerformancePageUI.displayMemcacheServers();
     });
 }
+
+var smartyCacheOption = document.getElementById('form_smarty_cache');
+
+smartyCacheOption.addEventListener('change', function() {
+  PerformancePageUI.displaySmartyCache();
+});
