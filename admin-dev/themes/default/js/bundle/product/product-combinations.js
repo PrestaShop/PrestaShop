@@ -21,6 +21,7 @@ var combinations = (function() {
           url: elem.attr('href'),
           beforeSend: function() {
             elem.attr('disabled', 'disabled');
+            $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
           },
           success: function(response) {
             combinationElem.remove();
@@ -32,6 +33,7 @@ var combinations = (function() {
           },
           complete: function() {
             elem.removeAttr('disabled');
+            $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             supplierCombinations.refresh();
             warehouseCombinations.refresh();
             if ($('.js-combinations-list .combination').length <= 0) {
