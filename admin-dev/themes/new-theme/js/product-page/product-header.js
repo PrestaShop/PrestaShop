@@ -38,7 +38,7 @@ export default function() {
     }
     if ($(e.target).attr('href') === '#step1') {
       setTimeout(_=> {
-        $('#tab_description_short .description-tab').addClass('active');
+        $('#description_short, #tab_description_short .description-tab').addClass('active');
       }, 100); 
     }
   });
