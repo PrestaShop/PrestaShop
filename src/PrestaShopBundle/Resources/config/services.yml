@@ -446,6 +446,11 @@ services:
         class: PrestaShopBundle\Translation\Api\InternationalApi
         parent: prestashop.translation.api
 
+    prestashop.translation.api.currencies:
+        class: PrestaShopBundle\Translation\Api\CurrenciesApi
+        parent: prestashop.translation.api
+    
+
     # Managers
     prestashop.adapter.image_manager:
         class: PrestaShop\PrestaShop\Adapter\ImageManager
