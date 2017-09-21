@@ -145,10 +145,10 @@
         opacity: 0;
         position: absolute;
         top: 1px;
-        right: 25px;
+        right: 26px;
         border: none;
-        height: 31px;
-        width: 31px;
+        height: 32px;
+        width: 32px;
         background: $brand-primary;
         z-index: 2;
         .material-icons {

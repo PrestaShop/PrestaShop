@@ -78,6 +78,9 @@
     -moz-appearance: none;
     appearance: none;
   }
+  input[type=number] {
+    -moz-appearance:textfield;
+  }
   .danger {
     border: 1px solid $danger;
     background-color: #fff;
