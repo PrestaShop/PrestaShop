@@ -37,12 +37,12 @@ class CheckMissingOrUpdatedFiles
      */
     public function getListOfUpdatedFiles($dir = null, $path = '')
     {
+        $fileList = array(
+            'missing' => array(),
+            'updated' => array(),
+        );
+        
         if (is_null($dir)) {
-            $fileList = array(
-                'missing' => array(),
-                'updated' => array(),
-            );
-
             $xml = @simplexml_load_file(_PS_API_URL_.'/xml/md5/'._PS_VERSION_.'.xml');
             if (!$xml) {
                 return $fileList;
