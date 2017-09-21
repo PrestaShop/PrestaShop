@@ -183,7 +183,7 @@
 
     <div class="modal-footer module-modal-footer">
       <div class="module-stars-price">
-        <div class="float-right module-price">
+        <div class="module-price text-sm-right">
           {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
             {{ module.attributes.price.displayPrice }}
           {% elseif module.attributes.url_active != 'buy' %}
