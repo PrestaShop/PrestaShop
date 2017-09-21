@@ -28,8 +28,9 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
-abstract class ModuleCore
+abstract class ModuleCore implements ModuleInterface
 {
     /** @var int Module ID */
     public $id = null;
@@ -3163,6 +3164,28 @@ abstract class ModuleCore
         }
 
         return false;
+    }
+
+    /**
+     * Check if the module is executed in Admin Legacy context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isAdminLegacyContext()
+    {
+        return defined('ADMIN_LEGACY_CONTEXT');
+    }
+
+    /**
+     * Check if the module is executed in Symfony context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isSymfonyContext()
+    {
+        return !defined('ADMIN_LEGACY_CONTEXT');
     }
 }
 

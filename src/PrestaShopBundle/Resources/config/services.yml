@@ -478,7 +478,7 @@ services:
         tags:
             - { name: twig.extension }
 
-# Addons API Client
+    # Addons API Client
     prestashop.addons.client_api:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
         arguments:
@@ -487,3 +487,14 @@ services:
             - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
+
+    # Data Collectors
+    prestashop.hooks_registry:
+        class: 'PrestaShopBundle\DataCollector\HookRegistry'
+
+    prestashop.hooks_collector:
+        class: 'PrestaShopBundle\DataCollector\HookDataCollector'
+        arguments: ['@prestashop.hooks_registry']
+        public: false
+        tags:
+          - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}

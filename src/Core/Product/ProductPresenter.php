@@ -145,6 +145,7 @@ class ProductPresenter
         $presentedProduct['discount_percentage'] = null;
         $presentedProduct['discount_percentage_absolute'] = null;
         $presentedProduct['discount_amount'] = null;
+        $presentedProduct['discount_amount_to_display'] = null;
 
         if ($settings->include_taxes) {
             $price = $regular_price = $product['price'];
@@ -162,6 +163,7 @@ class ProductPresenter
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
                 $product['reduction']
             );
+            $presentedProduct['discount_amount_to_display'] = '-' . $presentedProduct['discount_amount'];
             $regular_price = $product['price_without_reduction'];
         }
 
@@ -793,6 +795,7 @@ class ProductPresenter
             "discount_percentage",
             "discount_percentage_absolute",
             "discount_amount",
+            "discount_amount_to_display",
             "price_amount",
             "unit_price_full",
             "add_to_cart_url",
