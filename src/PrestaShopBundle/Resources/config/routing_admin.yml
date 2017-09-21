@@ -51,6 +51,10 @@ _admin_stock_routing:
     resource: "admin/routing_stock.yml"
     prefix: /stock
 
+_admin_advanced_parameters_routing:
+    resource: "admin/routing_advanced_parameters.yml"
+    prefix: /configure/advanced/
+
 # include common routes for Admin interface
 admin_common_pagination:
     path:     /common/pagination/{offset}/{limit}/{total}/{view}
