@@ -3324,9 +3324,6 @@ ul.category-tree {
   .module-modal-header .read-more-stars:before, .module-modal-header .read-more-stars:after {
     left: -80px; }
 
-.module-modal-footer .module-stars-price, .module-modal-footer .module-badges-action {
-  overflow: hidden; }
-
 .module-modal-footer .module-badges-action {
   display: -webkit-box;
   display: -ms-flexbox;
