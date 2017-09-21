@@ -48,7 +48,10 @@ let config = {
     ],
     translations: [
       './js/app/pages/translations',
-    ]
+    ],
+    currencies: [
+      './js/app/pages/currencies',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'public'),
