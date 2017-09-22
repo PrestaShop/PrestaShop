@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Currency;
 
-use InvalidArgumentException;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
 
 /**

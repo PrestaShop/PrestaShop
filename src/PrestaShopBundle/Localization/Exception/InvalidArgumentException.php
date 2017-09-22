@@ -24,9 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Currency;
+namespace PrestaShopBundle\Localization\Exception;
 
-class Exception extends \Exception
+class InvalidArgumentException extends \InvalidArgumentException
 {
-
 }

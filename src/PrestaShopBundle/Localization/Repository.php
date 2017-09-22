@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Localization;
 
-use InvalidArgumentException;
 use PrestaShopBundle\Currency\CurrencyCollectionFactory;
 use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
+use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 
 class Repository
@@ -90,7 +90,7 @@ class Repository
         return $this;
     }
 
-    public function addLocale(Locale $locale)
+    protected function addLocale(Locale $locale)
     {
         $localeCode = $locale->getLocaleCode();
         if ($localeCode) {
@@ -168,5 +168,18 @@ class Repository
     public function getRoundMode()
     {
         return $this->roundMode;
+    }
+
+    public function saveLocale($locale)
+    {
+        /** @var DataSourceInterface $dataSource */
+        foreach ($this->getDataSources() as $dataSource) {
+            if ($locale->id) {
+                $dataSource->updateLocale($locale);
+                continue;
+            }
+
+            $dataSource->createLocale($locale);
+        }
     }
 }

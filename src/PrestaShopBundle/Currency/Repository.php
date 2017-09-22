@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Currency;
 
-use Exception;
-use InvalidArgumentException;
 use PrestaShopBundle\Currency\DataSource\DataSourceInterface;
+use PrestaShopBundle\Currency\Exception\Exception;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
 class Repository
 {
@@ -117,7 +117,7 @@ class Repository
         }
 
         if (!isset($currency)) {
-            throw new \InvalidArgumentException("Unknown currency id : $id");
+            throw new InvalidArgumentException("Unknown currency id : $id");
         }
 
         return $currency;

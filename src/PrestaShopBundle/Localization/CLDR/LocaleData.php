@@ -26,10 +26,17 @@
 
 namespace PrestaShopBundle\Localization\CLDR;
 
-use Exception;
+use PrestaShopBundle\Localization\Exception\Exception;
 
 class LocaleData
 {
+    /**
+     * The locale id when it exists in database
+     *
+     * @var int
+     */
+    public $id;
+
     /**
      * The locale code for this data (either language code or IETF tag)
      *
@@ -156,6 +163,7 @@ class LocaleData
      * @param LocaleData $defaultData
      *
      * @return $this
+     * @throws Exception
      */
     protected function fillObjectProperties(LocaleData $defaultData)
     {
@@ -168,7 +176,7 @@ class LocaleData
                 }
 
                 if (!method_exists($this->$prop, 'fill')) {
-                    throw new \Exception("$prop object needs a fill() method.");
+                    throw new Exception("$prop object needs a fill() method.");
                 }
 
                 $this->$prop->fill($defaultData->$prop);
