@@ -38,7 +38,7 @@ class LocalizationApi extends AbstractApi
             'button_save' => $this->translator->trans('Save', array(), 'Admin.Global'),
             'label_code' => $this->translator->trans('ISO code', array(), 'Admin.International'),
             'label_code_numeric' => $this->translator->trans('Numeric ISO code', array(), 'Admin.International'),
-            'label_code_language' => $this->translator->trans('Numeric ISO code', array(), 'Admin.International'),
+            'label_code_language' => $this->translator->trans('Language code', array(), 'Admin.International'),
             'label_currency' => $this->translator->trans('Choose a currency', array(), 'Admin.International'),
             'label_currency_format' => $this->translator->trans('Currency format', array(), 'Admin.International'),
             'label_currency_name' => $this->translator->trans('Currency name', array(), 'Admin.International'),

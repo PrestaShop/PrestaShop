@@ -7,7 +7,7 @@
           content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
           placement="right"
         />
-        <PSSelect id="select-currencies" data-toggle="select2">--</PSSelect>
+        <PSSelect id="select-languages" data-toggle="select2">--</PSSelect>
       </div>
       <div  class="col-sm-2">
         <label class="d-block">{{trans('label_switch')}}</label>
@@ -16,15 +16,18 @@
     </div>
     <div class="row align-items-end mt-4">
       <div  class="col-sm-5">
-        <label>{{trans('label_currency_name')}}</label>
+        <label>{{trans('label_language_name')}}</label>
         <PSInput />
       </div>
       <div class="col-sm-1">
-        <label>{{trans('label_symbol')}}</label>
-        <PSInput />
-      </div>
-      <div class="col-sm-1 align-content-end">
-        <PSSelect>en</PSSelect>
+        <label class="d-block">
+          {{trans('label_switch_rtl')}}
+          <PSHelp 
+            content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+            placement="right"
+          />
+        </label>
+        <PSSwitch />
       </div>
     </div>
     <div class="row mt-4">
@@ -37,24 +40,56 @@
         <PSInput />
       </div>
       <div class="col-sm-2">
-        <label>{{trans('label_code_numeric')}}</label>
+        <label>{{trans('label_code_language')}}</label>
         <PSHelp 
           content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
           placement="right"
         />
         <PSInput />
       </div>
-      <div class="col-sm-1">
-        <label>{{trans('label_decimals')}}</label>
+      <div class="col-sm-2">
+        <label>{{trans('label_date_format')}}</label>
         <PSHelp 
           content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
           placement="right"
         />
-        <PSSelect :items="decimals" itemName="number">0</PSSelect>
+        <PSDatePicker />
       </div>
-      <div class="col-sm-1">
-        <label>{{trans('label_exchange')}}<sup>*</sup></label>
-        <PSInput />
+      <div class="col-sm-2">
+        <label>
+          {{trans('label_date_format_full')}}<sup>*</sup>
+          <PSHelp 
+            content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+            placement="right"
+          />
+        </label>
+        <PSDatePicker />
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-sm-4">
+        <label>
+          {{trans('label_flag')}}<sup>*</sup>
+          <PSHelp 
+            content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+            placement="right"
+          />
+        </label>
+        <PSFile>
+          {{trans('label_file')}}
+        </PSFile>
+      </div>
+      <div class="col-sm-4">
+        <label>
+          {{trans('label_image')}}<sup>*</sup>
+          <PSHelp 
+            content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus." 
+            placement="right"
+          />
+        </label>
+        <PSFile>
+          {{trans('label_file')}}
+        </PSFile>
       </div>
     </div>
   </form>
@@ -65,6 +100,8 @@
   import PSSwitch from 'app/widgets/ps-switch';
   import PSInput from 'app/widgets/ps-input';
   import PSHelp from 'app/widgets/ps-help';
+  import PSDatePicker from 'app/widgets/ps-datepicker';
+  import PSFile from 'app/widgets/ps-file';
 
   export default {
     components: {
@@ -72,6 +109,8 @@
       PSSwitch,
       PSInput,
       PSHelp,
+      PSDatePicker,
+      PSFile,
     },
     computed: {
       decimals() {
@@ -85,8 +124,8 @@
       },
     },
     mounted() {
-      $('#select-currencies').select2({
-        data: ['dollar', 'euro']
+      $('#select-languages').select2({
+        data: ['english', 'french'],
       });
     },
   };
