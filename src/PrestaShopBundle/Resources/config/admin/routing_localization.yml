@@ -1,0 +1,5 @@
+admin_localization_update:
+    path:     /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Localization:index

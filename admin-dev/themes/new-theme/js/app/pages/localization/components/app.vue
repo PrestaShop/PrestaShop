@@ -1,5 +1,4 @@
-<?php
-/**
+<!--**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -22,24 +21,29 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- */
-namespace PrestaShopBundle\Controller\Admin;
+ *-->
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-/**
- * Admin controller for the Stock pages.
- */
-class CurrenciesController extends FrameworkBundleAdminController
-{
-    protected $layoutTitle = 'Currencies';
-    
-    /**
-    * @Template
-    *
-    * @return array Template vars
-    */
-    public function updateAction()
-    {
-        return parent::indexAction();
-    }
-}
+<template>
+  <div v-if="isReady" class="tab-content clearfix">
+    <CurrenciesTab />
+    <LanguagesTab />
+  </div>
+</template>
+
+<script>
+
+import CurrenciesTab from './currencies';
+import LanguagesTab from './languages';
+
+export default {
+  components: {
+    CurrenciesTab,
+    LanguagesTab,
+  },
+  computed: {
+    isReady() {
+      return this.$store.state.isReady;
+    },
+  },
+};
+</script>

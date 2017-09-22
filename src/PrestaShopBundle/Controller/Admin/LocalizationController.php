@@ -1,3 +1,4 @@
+<?php
 /**
  * 2007-2017 PrestaShop
  *
@@ -22,19 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import Vue from 'vue';
-import app from './components/app';
-import store from './store/';
-import Translation from './mixins/translate';
+namespace PrestaShopBundle\Controller\Admin;
 
-Vue.mixin(Translation);
-
-new Vue({
-  store,
-  el: '#currencies-app',
-  template: '<app />',
-  components: { app },
-  beforeMount() {
-    this.$store.dispatch('getTranslations');
-  },
-});
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+/**
+ * Admin controller for the Stock pages.
+ */
+class LocalizationController extends FrameworkBundleAdminController
+{
+    protected $layoutTitle = 'Localization';
+    
+    /**
+    * @Template
+    *
+    * @return array Template vars
+    */
+    public function indexAction()
+    {
+        return parent::indexAction();
+    }
+}

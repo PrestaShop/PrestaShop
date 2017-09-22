@@ -93,7 +93,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "../../../../../scss/config/_settings.scss";
+  @import "../../../../../../scss/config/_settings.scss";
   sup {
     color: $brand-danger;
   }

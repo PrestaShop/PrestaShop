@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Translation\Api;
 
-class CurrenciesApi extends AbstractApi
+class LocalizationApi extends AbstractApi
 {
     /**
      * @return string[] List of translations
@@ -49,6 +49,7 @@ class CurrenciesApi extends AbstractApi
             'table_title_example' => $this->translator->trans('Edit', array(), 'Admin.International'),
             'title_currency' => $this->translator->trans('Add new currency', array(), 'Admin.International'),
             'title_format' => $this->translator->trans('Format preview', array(), 'Admin.International'),
+            'title_languages' => $this->translator->trans('Language format', array(), 'Admin.International'),
         );
     }
 }

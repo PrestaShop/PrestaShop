@@ -1,4 +1,4 @@
-<!--**
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,39 +21,20 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *-->
+ */
+import Vue from 'vue';
+import app from './components/app';
+import store from './store/';
+import Translation from './mixins/translate';
 
-<template>
-  <div v-if="isReady" class="card p-3 clearfix">
-    <h2>{{trans('title_currency')}}</h2>
-    <CurrenciesForm />
-    <FormatTable />
-    <div class="float-sm-right">
-      <PSButton ghost lg>{{trans('button_cancel')}}</PSButton>
-      <PSButton primary lg>{{trans('button_save')}}</PSButton>
-    </div>
-  </div>
-</template>
+Vue.mixin(Translation);
 
-<script>
-  import CurrenciesForm from './currencies-form';
-  import FormatTable from './format-table';
-  import PSButton from 'app/widgets/ps-button';
-
-  export default {
-    components: {
-      CurrenciesForm,
-      FormatTable,
-      PSButton,
-    },
-    computed: {
-      isReady() {
-        return this.$store.state.isReady;
-      },
-    },
-  };
-</script>
-
-<style lang="sass">
-
-</style>
+new Vue({
+  store,
+  el: '#localization-app',
+  template: '<app />',
+  components: { app },
+  beforeMount() {
+    this.$store.dispatch('getTranslations');
+  },
+});

@@ -7,7 +7,7 @@
 </template>
 
 <style lang="sass" scoped>
-@import "../../../../../scss/config/_settings.scss";
+@import "../../../../../../scss/config/_settings.scss";
 .edit {
   color: $medium-gray;
 }

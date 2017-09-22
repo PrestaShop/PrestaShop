@@ -49,8 +49,8 @@ let config = {
     translations: [
       './js/app/pages/translations',
     ],
-    currencies: [
-      './js/app/pages/currencies',
+    localization: [
+      './js/app/pages/localization',
     ],
   },
   output: {

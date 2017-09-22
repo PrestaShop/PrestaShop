@@ -25,22 +25,22 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-<div id="currencies">
+<div id="localization">
     <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
             <a class="nav-link" href="#" role="tab">{{ "Localisation"|trans({}, 'Admin.International') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" role="tab">{{ "Langues"|trans({}, 'Admin.International') }}</a>
+            <a class="nav-link" data-toggle="pill" aria-controls="languages" aria-expanded="false" href="#languages" role="tab">{{ "Langues"|trans({}, 'Admin.International') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="#" role="tab">{{ "Devises"|trans({}, 'Admin.International') }}</a>
+            <a class="nav-link active" data-toggle="pill" aria-controls="currencies" aria-expanded="true" href="#currencies" role="tab">{{ "Devises"|trans({}, 'Admin.International') }}</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="#" role="tab">{{ "Géolocalisation"|trans({}, 'Admin.International') }}</a>
         </li>
     </ul>
-    <div id="currencies-app"></div>
+    <div id="localization-app"></div>
 </div>
 {% endblock %}
 
@@ -49,14 +49,14 @@
 
     <script>
         var data = {
-            translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'currencies'}) }}',
+            translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'localization'}) }}',
         }
     </script>
 
     {% if webpack_server %}
-        <script src="http://localhost:8080/currencies.bundle.js"></script>
+        <script src="http://localhost:8080/localization.bundle.js"></script>
     {% else %}
-        <script src="{{ asset('themes/new-theme/public/currencies.bundle.js') }}"></script>
+        <script src="{{ asset('themes/new-theme/public/localization.bundle.js') }}"></script>
     {% endif %}
 
 {% endblock %}

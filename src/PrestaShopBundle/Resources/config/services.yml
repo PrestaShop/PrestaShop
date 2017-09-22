@@ -446,8 +446,8 @@ services:
         class: PrestaShopBundle\Translation\Api\InternationalApi
         parent: prestashop.translation.api
 
-    prestashop.translation.api.currencies:
-        class: PrestaShopBundle\Translation\Api\CurrenciesApi
+    prestashop.translation.api.localization:
+        class: PrestaShopBundle\Translation\Api\LocalizationApi
         parent: prestashop.translation.api
     
 
