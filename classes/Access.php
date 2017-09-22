@@ -105,12 +105,15 @@ class AccessCore extends ObjectModel
         $result =  Db::getInstance()->executeS('
             SELECT r.`slug`
             FROM `'._DB_PREFIX_.'authorization_role` r
-            LEFT JOIN `'._DB_PREFIX_.'access` a
-            ON r.`id_authorization_role` = a.`id_authorization_role`
-            AND a.`id_profile` = "'.$idProfile.'"
-            LEFT JOIN `'._DB_PREFIX_.'module_access` ma
-            ON r.`id_authorization_role` = ma.`id_authorization_role`
-            AND ma.`id_profile` = "'.$idProfile.'"
+            WHERE r.`id_authorization_role` IN (
+                SELECT a.`id_authorization_role`
+                FROM `'._DB_PREFIX_.'access` a
+                WHERE a.`id_profile` = "'.$idProfile.'"
+                union all
+                SELECT ma.`id_authorization_role`
+                FROM `'._DB_PREFIX_.'module_access` ma 
+                WHERE ma.`id_profile` = "'.$idProfile.'"
+            )
         ');
 
         foreach ((array) $result as $key => $role) {
