@@ -99,17 +99,12 @@ class Number
             $this->getMaximumFractionDigits(),
             $this->getLocale()->getPrestaShopDecimalRoundMode()
         );
-        if ($negative) {
-            $decNumber = new DecimalNumber($number);
-            $decNumber = $decNumber->toPositive();
-            $number    = $decNumber->__toString();
-        }
-        // Split the number into major and minor digits.
-        $numberParts = explode('.', $number);
-        $majorDigits = $numberParts[0];
-        // Account for maximumFractionDigits = 0, where the number won't
-        // have a decimal point, and $numberParts[1] won't be set.
-        $minorDigits = isset($numberParts[1]) ? $numberParts[1] : '';
+        $decNumber = new DecimalNumber($number);
+        $decNumber = $decNumber->toPositive();
+        // Get the number's major and minor digits.
+        $majorDigits = $decNumber->getIntegerPart();
+        $minorDigits = $decNumber->getFractionalPart();
+        $minorDigits = ('0' === $minorDigits) ? '' : $minorDigits;
 
         if ($this->groupingUsed()) {
             // Reverse the major digits, since they are grouped from the right.
