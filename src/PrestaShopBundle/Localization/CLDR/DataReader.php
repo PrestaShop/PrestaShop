@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Localization\CLDR;
 
-use InvalidArgumentException;
+use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use SimplexmlElement;
 
 class DataReader implements DataReaderInterface

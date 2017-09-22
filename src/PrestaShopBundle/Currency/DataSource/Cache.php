@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Currency\DataSource;
 
-use InvalidArgumentException;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
 class Cache implements DataSourceInterface
 {

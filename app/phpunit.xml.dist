@@ -6,7 +6,7 @@
          backupGlobals="false"
          colors="true"
          bootstrap="bootstrap.php.cache"
-         processIsolation="true"
+         processIsolation="false"
   >
 
   <testsuites>

@@ -26,11 +26,11 @@
 
 namespace PrestaShopBundle\Localization;
 
-use InvalidArgumentException;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShopBundle\Currency\CurrencyCollection;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
+use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 

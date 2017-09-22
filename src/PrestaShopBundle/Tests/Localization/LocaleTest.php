@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Tests\Localization;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Decimal\Number as DecimalNumber;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShopBundle\Currency\CurrencyCollectionFactory;
 use PrestaShopBundle\Currency\DataSource\Cache as CurrencyCacheDataSource;
 use PrestaShopBundle\Currency\DataSource\CLDR as CurrencyCLDRDataSource;

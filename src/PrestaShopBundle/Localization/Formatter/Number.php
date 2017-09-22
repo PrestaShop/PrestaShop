@@ -26,10 +26,10 @@
 
 namespace PrestaShopBundle\Localization\Formatter;
 
-use Configuration;
-use InvalidArgumentException;
 use PrestaShop\Decimal\Number as DecimalNumber;
 use PrestaShopBundle\Currency\Currency;
+use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException as CurrencyInvalidArgumentException;
 use PrestaShopBundle\Localization\Locale;
 
 class Number
@@ -75,7 +75,7 @@ class Number
      * Format a number according to locale rules
      *
      * @param float|string $number The number to format
-     * @param string $style The format style (decimal, percent, currency)
+     * @param string       $style  The format style (decimal, percent, currency)
      *
      * @return string
      */
@@ -94,10 +94,16 @@ class Number
 
         // Ensure that the value is positive and has the right number of digits.
         $decNumber = new DecimalNumber($number);
-        $negative = $decNumber->isNegative();
-        $signMultiplier = $negative ? new DecimalNumber('-1') : new DecimalNumber('1');
-        $number = $decNumber->dividedBy($signMultiplier, $this->getMaximumFractionDigits())
-            ->round($this->getMaximumFractionDigits(), $this->getLocale()->getPrestaShopDecimalRoundMode());
+        $negative  = $decNumber->isNegative();
+        $number    = $decNumber->round(
+            $this->getMaximumFractionDigits(),
+            $this->getLocale()->getPrestaShopDecimalRoundMode()
+        );
+        if ($negative) {
+            $decNumber = new DecimalNumber($number);
+            $decNumber = $decNumber->toPositive();
+            $number    = $decNumber->__toString();
+        }
         // Split the number into major and minor digits.
         $numberParts = explode('.', $number);
         $majorDigits = $numberParts[0];
@@ -109,7 +115,7 @@ class Number
             // Reverse the major digits, since they are grouped from the right.
             $majorDigits = array_reverse(str_split($majorDigits));
             // Group the major digits.
-            $groups = [];
+            $groups   = [];
             $groups[] = array_splice($majorDigits, 0, $this->getPrimaryGroupSize());
             while (!empty($majorDigits)) {
                 $groups[] = array_splice($majorDigits, 0, $this->getSecondaryGroupSize());
@@ -138,7 +144,7 @@ class Number
         if ($minorDigits) {
             $formattedNumber .= '.' . $minorDigits;
         }
-        $pattern = $this->getPattern($style, $negative);
+        $pattern         = $this->getPattern($style, $negative);
         $formattedNumber = preg_replace('/#(?:[\.,]#+)*0(?:[,\.][0#]+)*/', $formattedNumber, $pattern);
         // Localize the number.
         $formattedNumber = $this->replaceDigits($formattedNumber);
@@ -178,8 +184,8 @@ class Number
     /**
      * Format a number as a price (with correct currency symbol and symbol positioning)
      *
-     * @param float|string $number The number to be formatted as a price
-     * @param Currency $currency The price currency
+     * @param float|string $number   The number to be formatted as a price
+     * @param Currency     $currency The price currency
      *
      * @return mixed
      */
@@ -200,7 +206,7 @@ class Number
         } else {
             try {
                 $symbol = $currency->getSymbol('narrow'); // To be changed when symbol type is configurable
-            } catch (InvalidArgumentException $e) {
+            } catch (CurrencyInvalidArgumentException $e) {
                 $symbol = $currency->getSymbol('default');
             }
         }
@@ -473,8 +479,8 @@ class Number
 
     protected function getPattern($style, $negative = false)
     {
-        $style = ucfirst($style);
-        $sign = $negative ? 'Negative' : 'Positive';
+        $style  = ucfirst($style);
+        $sign   = $negative ? 'Negative' : 'Positive';
         $method = 'get' . $sign . $style . 'Pattern';
 
         return $this->$method();

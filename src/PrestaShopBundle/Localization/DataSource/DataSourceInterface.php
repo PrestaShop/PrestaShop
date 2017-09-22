@@ -47,4 +47,31 @@ interface DataSourceInterface
      * @return LocaleData The locale data
      */
     public function getLocaleByCode($code);
+
+    /**
+     * Create a new locale in data source
+     *
+     * @param LocaleData $localeData
+     *
+     * @return int The id of newly created locale
+     */
+    public function createLocale(LocaleData $localeData);
+
+    /**
+     * Update an existing locale in data source
+     *
+     * @param LocaleData $localeData
+     *
+     * @return LocaleData The saved item
+     */
+    public function updateLocale(LocaleData $localeData);
+
+    /**
+     * Delete an existing locale in data source
+     *
+     * @param LocaleData $localeData
+     *
+     * @return bool True if deletion was successful (be it soft or hard)
+     */
+    public function deleteLocale(LocaleData $localeData);
 }

@@ -90,4 +90,9 @@ class Manager
 
         return $this;
     }
+
+    public function saveLocale(Locale $locale)
+    {
+        $this->getInstalledLocaleRepository()->saveLocale($locale);
+    }
 }

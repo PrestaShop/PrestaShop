@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Currency\DataSource;
 
-use Exception;
-use InvalidArgumentException;
+use PrestaShopBundle\Currency\Exception\Exception;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 
 class CLDR implements DataSourceInterface
