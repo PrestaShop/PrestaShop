@@ -48,12 +48,12 @@
                                 {{ form_widget(smartyForm.template_compilation) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Cache'|trans }}</label>
+                                {{ ps.label_with_help(('Cache'|trans), ('Should be enabled except for debugging.'|trans)) }}
                                 {{ form_errors(smartyForm.cache) }}
                                 {{ form_widget(smartyForm.cache) }}
                             </div>
                             <div class="form-group smarty-cache-option">
-                                <label class="form-control-label">{{ 'Multi-front optimizations'|trans }}</label>
+                                {{ ps.label_with_help(('Multi-front optimizations'|trans), ('Should be enabled if you want to avoid to store the smarty cache on NFS.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(smartyForm.multi_front_optimization) }}
                                 {{ form_widget(smartyForm.multi_front_optimization) }}
                             </div>
@@ -126,6 +126,11 @@
                                 {{ form_errors(optionalFeaturesForm.combinations) }}
                                 {{ form_widget(optionalFeaturesForm.combinations) }}
                             </div>
+
+                            {% if optionalFeaturesForm.combinations.vars.disabled %}
+                                {{ ps.warningtip('You cannot set this parameter to No when combinations are already used by some of your products'|trans({}, 'Admin.Advparameters.Help')) }}
+                            {% endif %}
+
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Features'|trans({}, 'Admin.Global') }}</label>
                                 {{ form_errors(optionalFeaturesForm.features) }}
@@ -167,7 +172,7 @@
                                 {{ form_widget(combineCompressCacheForm.smart_cache_js) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Apache optimization'|trans }}</label>
+                                {{ ps.label_with_help(('Apache optimization'|trans), ('This will add directives to your .htaccess file, which should improve caching and compression.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(combineCompressCacheForm.apache_optimization) }}
                                 {{ form_widget(combineCompressCacheForm.apache_optimization) }}
                             </div>
