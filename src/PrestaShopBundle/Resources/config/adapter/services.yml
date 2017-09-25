@@ -101,7 +101,7 @@ services:
 
     prestashop.adapter.memcache_server.manager:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
-        arguments: ['@database_connection']
+        arguments: ['@database_connection', '%database_prefix%']
 
     prestashop.adapter.php_parameters:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'

@@ -43,11 +43,12 @@ class MemcacheServerManager
     /**
      * @var string
      */
-    private $tableName = _DB_PREFIX_.'memcached_servers';
+    private $tableName;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, $dbPrefix)
     {
         $this->connection = $connection;
+        $this->tableName = $dbPrefix.'memcached_servers';
     }
 
     /**
