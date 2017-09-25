@@ -976,11 +976,15 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * Fetch the content of $template_name inside the folder current_theme/mails/current_iso_lang/ if found, otherwise in mails/current_iso_lang
+     * Fetch the content of $template_name inside the folder
+     * current_theme/mails/current_iso_lang/ if found, otherwise in
+     * current_theme/mails/en/ if found, otherwise in
+     * mails/current_iso_lang/ if found, otherwise in
+     * mails/en/
      *
      * @param string  $template_name template name with extension
-     * @param int $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
-     * @param array   $var           list send to smarty
+     * @param int     $mail_type     Mail::TYPE_HTML or Mail::TYPE_TEXT
+     * @param array   $var           sent to smarty as 'list'
      *
      * @return string
      */
@@ -991,17 +995,20 @@ abstract class PaymentModuleCore extends Module
             return '';
         }
 
-        $theme_template_path = _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
-        $default_mail_template_path = _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
+        $pathToFindEmail = array(
+            _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name,
+            _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.'en'.DIRECTORY_SEPARATOR.$template_name,
+            _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name,
+            _PS_MAIL_DIR_.'en'.DIRECTORY_SEPARATOR.$template_name,
+        );
 
-        if (Tools::file_exists_cache($theme_template_path)) {
-            $default_mail_template_path = $theme_template_path;
+        foreach ($pathToFindEmail as $path) {
+            if (Tools::file_exists_cache($path)) {
+                $this->context->smarty->assign('list', $var);
+                return $this->context->smarty->fetch($path);
+            }
         }
 
-        if (Tools::file_exists_cache($default_mail_template_path)) {
-            $this->context->smarty->assign('list', $var);
-            return $this->context->smarty->fetch($default_mail_template_path);
-        }
         return '';
     }
 }
