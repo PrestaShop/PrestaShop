@@ -70,6 +70,10 @@ class CartRuleCore extends ObjectModel
     public $free_shipping;
     public $reduction_percent;
     public $reduction_amount;
+
+    /**
+     * @var bool is this voucher value tax included (false = tax excluded value)
+     */
     public $reduction_tax;
     public $reduction_currency;
     public $reduction_product;
@@ -805,7 +809,22 @@ class CartRuleCore extends ObjectModel
         }
     }
 
-    protected function checkProductRestrictions(Context $context, $return_products = false, $display_error = true, $already_in_cart = false)
+    /**
+     * method used to decorrelate checkProductRestrictions from context
+     *
+     * @param \Context $context
+     * @param bool     $return_products
+     * @param bool     $display_error
+     * @param bool     $already_in_cart
+     *
+     * @return array|mixed|string
+     */
+    public function checkProductRestrictions(Context $context, $return_products = false, $display_error = true, $already_in_cart = false)
+    {
+        return $this->checkProductRestrictionsFromCart($context->cart, $return_products, $display_error, $already_in_cart);
+    }
+
+    public function checkProductRestrictionsFromCart(\Cart $cart, $return_products = false, $display_error = true, $already_in_cart = false)
     {
         $selected_products = array();
 
@@ -814,7 +833,7 @@ class CartRuleCore extends ObjectModel
             $product_rule_groups = $this->getProductRuleGroups();
             foreach ($product_rule_groups as $id_product_rule_group => $product_rule_group) {
                 $eligible_products_list = array();
-                if (isset($context->cart) && is_object($context->cart) && is_array($products = $context->cart->getProducts())) {
+                if (isset($cart) && is_object($cart) && is_array($products = $cart->getProducts())) {
                     foreach ($products as $product) {
                         $eligible_products_list[] = (int) $product['id_product'] . '-' . (int) $product['id_product_attribute'];
                     }
@@ -832,7 +851,7 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`, pac.`id_attribute`, cp.`id_product_attribute`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON cp.id_product_attribute = pac.id_product_attribute
-							WHERE cp.`id_cart` = ' . (int) $context->cart->id . '
+							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
 							AND cp.id_product_attribute > 0');
                             $count_matching_products = 0;
@@ -863,7 +882,7 @@ class CartRuleCore extends ObjectModel
                             $cart_products = Db::getInstance()->executeS('
 							SELECT cp.quantity, cp.`id_product`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
-							WHERE cp.`id_cart` = ' . (int) $context->cart->id . '
+							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
                             $matching_products_list = array();
@@ -891,7 +910,7 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`, cp.`id_product_attribute`, catp.`id_category`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'category_product` catp ON cp.id_product = catp.id_product
-							WHERE cp.`id_cart` = ' . (int) $context->cart->id . '
+							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')
 							AND cp.`id_product` <> ' . (int) $this->gift_product);
                             $count_matching_products = 0;
@@ -926,7 +945,7 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`, p.`id_manufacturer`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON cp.id_product = p.id_product
-							WHERE cp.`id_cart` = ' . (int) $context->cart->id . '
+							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
                             $matching_products_list = array();
@@ -951,7 +970,7 @@ class CartRuleCore extends ObjectModel
 							SELECT cp.quantity, cp.`id_product`, p.`id_supplier`
 							FROM `' . _DB_PREFIX_ . 'cart_product` cp
 							LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON cp.id_product = p.id_product
-							WHERE cp.`id_cart` = ' . (int) $context->cart->id . '
+							WHERE cp.`id_cart` = ' . (int) $cart->id . '
 							AND cp.`id_product` IN (' . implode(',', array_map('intval', $eligible_products_list)) . ')');
                             $count_matching_products = 0;
                             $matching_products_list = array();
