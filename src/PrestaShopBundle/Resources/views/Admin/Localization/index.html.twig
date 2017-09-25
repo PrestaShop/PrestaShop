@@ -28,16 +28,16 @@
 <div id="localization">
     <ul class="nav nav-pills" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" href="#" role="tab">{{ "Localisation"|trans({}, 'Admin.International') }}</a>
+            <a class="nav-link" href="{{ getAdminLink('AdminLocalization')}}" role="tab">{{ "Localisation"|trans({}, 'Admin.International') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-toggle="pill" aria-controls="languages" aria-expanded="false" href="#languages" role="tab">{{ "Langues"|trans({}, 'Admin.International') }}</a>
+            <a class="nav-link {% if app.request.attributes.get('_route') ends with 'languages' %}active{% endif %}" href="languages" role="tab">{{ "Langues"|trans({}, 'Admin.International') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" data-toggle="pill" aria-controls="currencies" aria-expanded="true" href="#currencies" role="tab">{{ "Devises"|trans({}, 'Admin.International') }}</a>
+            <a class="nav-link {% if app.request.attributes.get('_route') ends with 'currencies' %}active{% endif %}" href="{{ getAdminLink('AdminCurrencies')}}" role="tab">{{ "Devises"|trans({}, 'Admin.International') }}</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" role="tab">{{ "Géolocalisation"|trans({}, 'Admin.International') }}</a>
+            <a class="nav-link"  href="{{ getAdminLink('AdminGeolocation')}}" role="tab">{{ "Géolocalisation"|trans({}, 'Admin.International') }}</a>
         </li>
     </ul>
     <div id="localization-app"></div>
@@ -46,13 +46,12 @@
 
 {% block javascripts %}
     {{ parent() }}
-
     <script>
         var data = {
+            baseUrl: '{{ app.request.getBasePath() }}',
             translationUrl: '{{ url('api_i18n_translations_list', {'page' : 'localization'}) }}',
         }
     </script>
-
     {% if webpack_server %}
         <script src="http://localhost:8080/localization.bundle.js"></script>
     {% else %}

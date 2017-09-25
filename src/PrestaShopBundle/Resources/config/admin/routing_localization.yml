@@ -1,5 +1,17 @@
-admin_localization_update:
+admin_localization:
     path:     /
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Localization:index
+
+admin_localization_currencies:
+    path:     /currencies
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Localization:index
+
+admin_localization_languages:
+    path:     /languages
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Localization:index

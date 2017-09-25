@@ -1,4 +1,4 @@
-<!--**
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,28 +21,34 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *-->
+ */
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Currencies from 'app/pages/localization/components/currencies/index';
+import Languages from 'app/pages/localization/components/languages/index';
 
-<template>
-  <div v-if="isReady" class="tab-content clearfix">
-    <router-view class="view"></router-view>
-  </div>
-</template>
+Vue.use(VueRouter);
 
-<script>
-
-import CurrenciesTab from './currencies';
-import LanguagesTab from './languages';
-
-export default {
-  components: {
-    CurrenciesTab,
-    LanguagesTab,
-  },
-  computed: {
-    isReady() {
-      return this.$store.state.isReady;
+export default new VueRouter({
+  mode: 'history',
+  base: (() => {
+    const hasIndex = /(index\.php)/.exec(window.location.href);
+    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/localization`;
+  })(),
+  routes: [
+    {
+      path: '/',
+      redirect: '/languages',
     },
-  },
-};
-</script>
+    {
+      path: '/currencies',
+      name: 'currencies',
+      component: Currencies,
+    },
+    {
+      path: '/languages',
+      name: 'languages',
+      component: Languages,
+    },
+  ],
+});

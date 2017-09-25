@@ -26,10 +26,12 @@ import Vue from 'vue';
 import app from './components/app';
 import store from './store/';
 import Translation from './mixins/translate';
+import router from './router';
 
 Vue.mixin(Translation);
 
 new Vue({
+  router,
   store,
   el: '#localization-app',
   template: '<app />',
