@@ -158,10 +158,7 @@ class Module implements ModuleInterface
             $this->attributes->set('version_available', $this->disk->get('version'));
         }
 
-        $img = $this->attributes->get('img');
-        if (empty($img)) {
-            $this->attributes->set('img', __PS_BASE_URI__.'img/questionmark.png');
-        }
+        $this->fillLogo();
 
         $this->attributes->set('version', $version);
         $this->attributes->set('type', $this->convertType($this->get('origin_filter_value')));
@@ -322,15 +319,19 @@ class Module implements ModuleInterface
 
     public function fillLogo()
     {
-        $this->set('logo', '../../img/questionmark.png');
-
-        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$this->get('name')
-            .DIRECTORY_SEPARATOR.'logo.gif')) {
-            $this->set('logo', 'logo.gif');
+        $img = $this->attributes->get('img');
+        if (empty($img)) {
+            $this->attributes->set('img', __PS_BASE_URI__.'img/questionmark.png');
         }
-        if (@filemtime(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.basename(_PS_MODULE_DIR_).DIRECTORY_SEPARATOR.$this->get('name')
-            .DIRECTORY_SEPARATOR.'logo.png')) {
-            $this->set('logo', 'logo.png');
+        $this->attributes->set('logo', __PS_BASE_URI__.'img/questionmark.png');
+
+        foreach (array('logo.png', 'logo.gif') as $logo) {
+            $logo_path = _PS_MODULE_DIR_.$this->get('name').DIRECTORY_SEPARATOR.$logo;
+            if (file_exists($logo_path)) {
+                $this->attributes->set('img', __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$this->get('name').'/'.$logo);
+                $this->attributes->set('logo', $logo);
+                break;
+            }
         }
     }
 
