@@ -25,6 +25,7 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -102,6 +103,13 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $cacheProvider;
 
+    /**
+     * Keep loaded modules in cache
+     * 
+     * @var ArrayCache
+     */
+    private $loadedModules;
+
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
@@ -122,6 +130,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         // Cache related variables
         $this->cacheFilePath = $isoLang.'_local_modules';
         $this->cacheProvider = $cacheProvider;
+        $this->loadedModules = new ArrayCache();
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
@@ -368,13 +377,15 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name, $skip_main_class_attributes = false)
     {
+        if ($this->loadedModules->contains($name)) {
+            return $this->loadedModules->fetch($name);
+        }
+
         $path = _PS_MODULE_DIR_.$name;
         $php_file_path = $path.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
-        $disk = array('path' => $path);
-        $database = array();
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
         $current_filemtime = (int) @filemtime($php_file_path);
@@ -409,6 +420,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 'is_present' => (int) $this->moduleProvider->isOnDisk($name),
                 'is_valid' => 0,
                 'version' => null,
+                'path' => $path,
             );
             $main_class_attributes = array();
 
@@ -444,7 +456,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         // Get data from database
         $database = $this->moduleProvider->findByName($name);
 
-        return new Module($attributes, $disk, $database);
+        $module = new Module($attributes, $disk, $database);
+        $this->loadedModules->save($name, $module);
+        return $module;
     }
 
     public function getModuleAttributes($name)

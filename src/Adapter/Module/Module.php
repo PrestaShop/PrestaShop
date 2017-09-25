@@ -212,7 +212,9 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        return $this->instance->install();
+        $result = $this->instance->install();
+        $this->database->set('installed', $result);
+        return $result;
     }
 
     public function onUninstall()
@@ -221,7 +223,9 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->uninstall();
+        $result = $this->instance->uninstall();
+        $this->database->set('installed', !$result);
+        return $result;
     }
 
     /**
@@ -247,7 +251,9 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->enable();
+        $result = $this->instance->enable();
+        $this->database->set('active', $result);
+        return $result;
     }
 
     /**
@@ -263,7 +269,9 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->disable();
+        $result = $this->instance->disable();
+        $this->database->set('active', !$result);
+        return $result;
     }
 
     public function onMobileEnable()
@@ -272,7 +280,9 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->enableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $this->database->set('active_on_mobile', $result);
+        return $result;
     }
 
     public function onMobileDisable()
@@ -281,7 +291,9 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $result = $this->instance->disableDevice(AddonListFilterDeviceStatus::DEVICE_MOBILE);
+        $this->database->set('active_on_mobile', !$result);
+        return $result;
     }
 
     public function onReset()
