@@ -1,12 +1,13 @@
 <template>
-  <div class="input-group input-file" name="Fichier1">
-    <input type="text" class="form-control" />			
-    <span class="input-group-btn">
-      <PSButton :primary="false" >
-        <slot />
-      </PSButton>
+  <div class="ps-file d-flex">
+    <span class="file-ico p-1 align-self-center">
+      <i class="material-icons">insert_drive_file</i>
     </span>
-	</div>
+    <input type="text" class="form-control" />
+    <PSButton :primary="false" >
+      <slot />
+    </PSButton>
+  </div>
 </template>
 
 <script>
@@ -18,3 +19,14 @@ export default {
   },
 };
 </script>
+
+<style lang="sass">
+  @import "../../../scss/config/_settings.scss";
+  .ps-file {
+    .file-ico {
+      border: $gray-light 1px solid;
+      border-right: none;
+      color: $gray-medium;
+    }
+  }
+</style>

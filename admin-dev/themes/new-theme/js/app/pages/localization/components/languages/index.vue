@@ -1,5 +1,5 @@
 <template>
-  <div id="languages" class="tab-pane fade"  role="tabpanel">
+  <div id="languages">
     <h2>{{trans('title_languages')}}</h2>
     <LanguagesForm />
     <div class="float-sm-right">
