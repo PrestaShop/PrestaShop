@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "897250660b919bc93d18"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "8d088984cd6a56f19090"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -43610,6 +43610,7 @@ let setNotificationsNumber = function (id, number) {
         __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#create-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
       },
       success: function(response) {
+        refreshTotalCombinations(1, __WEBPACK_IMPORTED_MODULE_0_jquery___default()(response.form).filter('.combination.loaded').length);
         __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
         let url = __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + __WEBPACK_IMPORTED_MODULE_0_jquery___default()('.js-combinations-list').data('id-product'));
@@ -43912,6 +43913,8 @@ __WEBPACK_IMPORTED_MODULE_0_jquery___default()(() => {
             },
             success: function(response) {
               showSuccessMessage(response.message);
+              refreshTotalCombinations(-1, combinationsIds.length);
+              __WEBPACK_IMPORTED_MODULE_0_jquery___default()('span.js-bulk-combinations').text('0');
               combinationsIds.forEach((combinationId) => {
                 var combination = new Combination(combinationId);
                 combination.removeFromDOM();

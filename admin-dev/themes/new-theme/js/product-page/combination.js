@@ -157,6 +157,7 @@ export default function() {
         $('#create-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
       },
       success: function(response) {
+        refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
         let url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));

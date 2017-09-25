@@ -24,6 +24,7 @@ var combinations = (function() {
             $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
           },
           success: function(response) {
+            refreshTotalCombinations(-1, 1);
             combinationElem.remove();
             showSuccessMessage(response.message);
             displayFieldsManager.refresh();
@@ -279,3 +280,15 @@ var combinations = (function() {
 BOEvent.on("Product Combinations Management started", function initCombinationsManagement() {
   combinations.init();
 }, "Back office");
+
+/**
+ * Refresh bulk actions combination number after creating or deleting combinations
+ *
+ * @param {number} sign
+ * @param {number} number
+ */
+var refreshTotalCombinations = function (sign, number) {
+  var $bulkCombinationsTotal = $('#js-bulk-combinations-total');
+  var currentnumber = parseInt($bulkCombinationsTotal.text()) + (sign * number);
+  $bulkCombinationsTotal.text(currentnumber);
+}
