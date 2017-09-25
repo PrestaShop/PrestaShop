@@ -102,8 +102,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
              * allow showing the product
              * In all the others cases => 404 "Product is no longer available"
              */
-            if (!$this->product->isAssociatedToShop() || !$this->product->active) {
-                if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int) Tab::getIdFromClassName('AdminProducts').(int) Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
+            $isAssociatedToProduct = (
+                Tools::getValue('adtoken') == Tools::getAdminToken(
+                    'AdminProducts'
+                    .(int) Tab::getIdFromClassName('AdminProducts')
+                    .(int) Tools::getValue('id_employee')
+                )
+                && $this->product->isAssociatedToShop()
+            );
+            $isPreview = ('1' === Tools::getValue('preview'));
+            if ((!$this->product->isAssociatedToShop() || !$this->product->active) && !$isPreview) {
+                if ($isAssociatedToProduct) {
                     $this->adminNotifications['inactive_product'] = array(
                         'type' => 'warning',
                         'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
@@ -153,6 +162,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->errors[] = $this->trans('You do not have access to this product.', array(), 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
             } else {
+                if ($isAssociatedToProduct && $isPreview) {
+                    $this->adminNotifications['inactive_product'] = array(
+                        'type' => 'warning',
+                        'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
+                    );
+                }
                 // Load category
                 $id_category = false;
                 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == Tools::secureReferrer($_SERVER['HTTP_REFERER']) // Assure us the previous page was one of the shop
@@ -373,6 +388,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getMinimalProductOrDeclinationQuantity($product);
+        $isPreview = ('1' === Tools::getValue('preview'));
 
         ob_end_clean();
         header('Content-Type: application/json');
@@ -401,7 +417,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product['id_product_attribute'],
                 false,
                 false,
-                true
+                true,
+                $isPreview ? array('preview' => '1') : array()
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
