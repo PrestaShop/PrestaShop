@@ -440,14 +440,6 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cache[$name]['disk'] = $disk;
         }
 
-        foreach (array('logo.png', 'logo.gif') as $logo) {
-            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
-            if (file_exists($logo_path)) {
-                $attributes['img'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
-                break;
-            }
-        }
-
         // Get data from database
         $database = $this->moduleProvider->findByName($name);
 
