@@ -25,6 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Cart\Amount;
 
 class CartCore extends ObjectModel
 {
@@ -1949,33 +1950,35 @@ class CartCore extends ObjectModel
             // Then, calculate the contextual value for each one
             $flag = false;
             foreach ($cart_rules as $cart_rule) {
+                /** @var \CartRule $cartRule */
+                $cartRule = $cart_rule['obj'];
                 // If the cart rule offers free shipping, add the shipping cost
-                if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping && !$flag) {
-                    $order_shipping_discount = (float)Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), $compute_precision);
+                if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cartRule->free_shipping && !$flag) {
+                    $order_shipping_discount = (float)Tools::ps_round($cartRule->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), $compute_precision);
                     $flag = true;
                 }
 
                 // If the cart rule is a free gift, then add the free gift value only if the gift is in this package
-                if (!$this->shouldExcludeGiftsDiscount && (int)$cart_rule['obj']->gift_product) {
+                if (!$this->shouldExcludeGiftsDiscount && (int)$cartRule->gift_product) {
                     $in_order = false;
                     if (is_null($products)) {
                         $in_order = true;
                     } else {
                         foreach ($products as $product) {
-                            if ($cart_rule['obj']->gift_product == $product['id_product'] && $cart_rule['obj']->gift_product_attribute == $product['id_product_attribute']) {
+                            if ($cartRule->gift_product == $product['id_product'] && $cartRule->gift_product_attribute == $product['id_product_attribute']) {
                                 $in_order = true;
                             }
                         }
                     }
 
                     if ($in_order) {
-                        $order_total_discount += $cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_GIFT, $package, $use_cache);
+                        $order_total_discount += $cartRule->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_GIFT, $package, $use_cache);
                     }
                 }
 
                 // If the cart rule offers a reduction, the amount is prorated (with the products in the package)
-                if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0) {
-                    $order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), $compute_precision);
+                if ($cartRule->reduction_percent > 0 || $cartRule->reduction_amount > 0) {
+                    $order_total_discount += Tools::ps_round($cartRule->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), $compute_precision);
                 }
             }
 
@@ -1996,6 +1999,138 @@ class CartCore extends ObjectModel
         }
 
         return Tools::ps_round((float)$order_total, $compute_precision);
+    }
+
+    /**
+     * This function returns the total cart amount
+     *
+     * @param bool  $with_taxes With or without taxes
+     * @param int   $type       Total type enum
+     *                          - Cart::ONLY_PRODUCTS
+     *                          - Cart::ONLY_DISCOUNTS
+     *                          - Cart::BOTH
+     *                          - Cart::BOTH_WITHOUT_SHIPPING
+     *                          - Cart::ONLY_SHIPPING
+     *                          - Cart::ONLY_WRAPPING
+     *                          - Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
+     *                          - Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
+     * @param array $products
+     * @param int   $id_carrier
+     *
+     * @return float Order total
+     * @throws \Exception
+     *
+     */
+    public function getOrderTotalV2(
+        $with_taxes = true,
+        $type = Cart::BOTH,
+        $products = null,
+        $id_carrier = null
+    ) {
+        // deprecated type
+        if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
+            $type = Cart::ONLY_PRODUCTS;
+        }
+
+        // check type
+        $type = (int)$type;
+        $allowedTypes = array(
+            Cart::ONLY_PRODUCTS,
+            Cart::ONLY_DISCOUNTS,
+            Cart::BOTH,
+            Cart::BOTH_WITHOUT_SHIPPING,
+            Cart::ONLY_SHIPPING,
+            Cart::ONLY_WRAPPING,
+            Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
+        );
+        if (!in_array($type, $allowedTypes)) {
+            die(\Tools::displayError());
+        }
+
+        // EARLY RETURNS
+
+        // if cart rules are not used
+        if ($type == Cart::ONLY_DISCOUNTS && !CartRule::isFeatureActive()) {
+            return 0;
+        }
+        // no shipping cost if is a cart with only virtuals products
+        $virtual = $this->isVirtualCart();
+        if ($virtual && $type == Cart::ONLY_SHIPPING) {
+            return 0;
+        }
+        if ($virtual && $type == Cart::BOTH) {
+            $type = Cart::BOTH_WITHOUT_SHIPPING;
+        }
+
+        // filter products
+        if (is_null($products)) {
+            $products = $this->getProducts();
+        }
+
+        if ($type == Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING) {
+            foreach ($products as $key => $product) {
+                if ($product['is_virtual']) {
+                    unset($products[$key]);
+                }
+            }
+            $type = Cart::ONLY_PRODUCTS;
+        }
+
+
+        // CART CALCULATION
+
+        $calculator = $this->newCalculator($products, $this->getCartRules(), $id_carrier);
+        switch ($type) {
+            case Cart::ONLY_SHIPPING:
+                $amount = $calculator->getFees()->getInitialShippingFees();
+                break;
+            case Cart::ONLY_WRAPPING:
+                $amount = $calculator->getFees()->getInitialWrappingFees();
+                break;
+            case Cart::BOTH:
+                $amount = $calculator->getTotal();
+                break;
+            case Cart::BOTH_WITHOUT_SHIPPING:
+            case Cart::ONLY_PRODUCTS:
+                $amount = $calculator->getRowTotal();
+                break;
+            case Cart::ONLY_DISCOUNTS:
+                $amount = $calculator->getDiscountTotal();
+                break;
+            default:
+                throw new \Exception('unknown cart calculation type : ' . $type);
+        }
+
+        // TAXES ?
+
+        $value = $with_taxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+
+        // ROUND AND RETURN
+
+        $compute_precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        return Tools::ps_round($value, $compute_precision);
+    }
+
+    public function newCalculator($products, $cartRules, $id_carrier)
+    {
+        $calculator         = new \PrestaShop\PrestaShop\Core\Cart\Calculator();
+
+        $calculator->setCart($this);
+        $calculator->setCarrierId($id_carrier);
+
+        // set cart rows (products)
+        foreach($products as $product){
+            $calculator->addCartRow(new \PrestaShop\PrestaShop\Core\Cart\CartRow($product));
+        }
+
+        // set cart rules
+        foreach ($cartRules as $cartRule) {
+            $calculator->addCartRule(new \PrestaShop\PrestaShop\Core\Cart\CartRuleData($cartRule));
+        }
+
+        $calculator->processCalculation();
+
+        return $calculator;
     }
 
     /**
@@ -2103,7 +2238,7 @@ class CartCore extends ObjectModel
      * @param $product
      * @return int|null
      */
-    protected function getProductAddressId($product)
+    public function getProductAddressId($product)
     {
         $taxAddressType = $this->configuration->get('PS_TAX_ADDRESS_TYPE');
         if ($taxAddressType == 'id_address_invoice') {
