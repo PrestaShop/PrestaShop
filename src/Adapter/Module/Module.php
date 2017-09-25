@@ -114,6 +114,7 @@ class Module implements ModuleInterface
         'is_present' => 0,
         'is_valid' => 0,
         'version' => null,
+        'path' => '',
     );
 
     /**
@@ -192,7 +193,8 @@ class Module implements ModuleInterface
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
             } catch (\Exception $e) {
-                // ToDo: Send to log when PR merged
+                $this->disk->set('is_valid', false);
+                throw $e;
             }
         }
         $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
@@ -293,7 +295,11 @@ class Module implements ModuleInterface
 
     protected function instanciateLegacyModule()
     {
-        require_once _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
+        // Temporary: This test prevent an error when switching branches with the cache. Can be removed at the next release (when we will be sure that it is defined)
+        if (!$this->disk->has('path')) {
+            $this->disk->set('path', _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name'));
+        }
+        require_once $this->disk->get('path').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
         $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
 

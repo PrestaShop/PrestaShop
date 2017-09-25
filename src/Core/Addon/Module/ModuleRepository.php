@@ -368,11 +368,12 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name, $skip_main_class_attributes = false)
     {
-        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        $path = _PS_MODULE_DIR_.$name;
+        $php_file_path = $path.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
-        $disk = array();
+        $disk = array('path' => $path);
         $database = array();
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
