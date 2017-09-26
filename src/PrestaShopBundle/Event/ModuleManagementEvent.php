@@ -37,6 +37,7 @@ class ModuleManagementEvent extends Event
     const ENABLE = 'module.enable';
     const UPGRADE = 'module.upgrade';
     const RESET = 'module.reset';
+    const DOWNLOAD = 'module.download'; // Module download from addons or employee disk
 
     private $module;
 
