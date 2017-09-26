@@ -4,6 +4,10 @@ services:
     _defaults:
         public: true
 
+    _instanceof:
+        PrestaShop\PrestaShop\Core\Form\AbstractFormHandler:
+            tags: ['prestashop.form.handler']
+
     prestashop.adapter.hosting_information:
             class: 'PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
 

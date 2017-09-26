@@ -25,8 +25,6 @@
  */
 namespace PrestaShop\PrestaShop\Core\Form;
 
-use Symfony\Component\Form\FormInterface;
-
 /**
  * Symfony forms data provider.
  */

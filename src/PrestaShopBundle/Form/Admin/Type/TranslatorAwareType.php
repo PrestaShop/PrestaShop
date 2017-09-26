@@ -25,7 +25,6 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -33,7 +32,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * This feature is not available in Symfony so we need to inject the translator
  * for constraints messages only.
  */
-abstract class TranslatorAwareType extends AbstractType
+abstract class TranslatorAwareType extends CommonAbstractType
 {
     private $translator;
 
@@ -55,7 +54,7 @@ abstract class TranslatorAwareType extends AbstractType
      *
      * @param $key the key to be translated
      * @param $domain the domain to be selected
-     * @param $parameters Optional, pass parameters if needed (uncommon)
+     * @param array $parameters Optional, pass parameters if needed (uncommon)
      *
      * @returns string
      */
