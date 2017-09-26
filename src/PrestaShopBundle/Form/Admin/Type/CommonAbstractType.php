@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Form\FormProviderInterface;
 use Symfony\Component\Form\AbstractType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
@@ -34,6 +35,16 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 abstract class CommonAbstractType extends AbstractType
 {
     const PRESTASHOP_DECIMALS = 6;
+
+    /**
+     * @var FormProviderInterface
+     */
+    protected $formProvider;
+
+    public function __construct(FormProviderInterface $formProvider)
+    {
+        $this->formProvider = $formProvider;
+    }
 
     /**
      * Get the configuration adapter

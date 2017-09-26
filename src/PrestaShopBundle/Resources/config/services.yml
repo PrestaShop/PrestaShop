@@ -507,6 +507,7 @@ services:
         tags:
           - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}
 
+
     # Web Profiler Bundle
     data_collector.config:
         class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
@@ -516,3 +517,9 @@ services:
           - ["setKernel", ["@kernel"]]
         tags:
           - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
+
+    # Form Field Provider
+    prestashop.form_provider:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormProvider'
+        arguments: ['@form.factory']
+

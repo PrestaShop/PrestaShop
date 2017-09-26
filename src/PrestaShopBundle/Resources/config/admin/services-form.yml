@@ -265,3 +265,7 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
+
+    form.type.common_type:
+        abstract: true
+        arguments: ['@prestashop.form_provider']
