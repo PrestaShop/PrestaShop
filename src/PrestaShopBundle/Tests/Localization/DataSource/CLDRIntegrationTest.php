@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Localization\CLDR\DataReader;
 use PrestaShopBundle\Localization\DataSource\CLDR as CLDRLocaleRepository;
 
-class CLDRTest extends TestCase
+class CLDRIntegrationTest extends TestCase
 {
     /**
      * CLDR locale repository

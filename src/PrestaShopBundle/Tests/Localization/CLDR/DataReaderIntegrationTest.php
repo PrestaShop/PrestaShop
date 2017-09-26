@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Tests\Localization;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Localization\CLDR\DataReader;
 
-class DataReaderTest extends TestCase
+class DataReaderIntegrationTest extends TestCase
 {
     /**
      * @var DataReader

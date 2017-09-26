@@ -26,40 +26,20 @@
 
 namespace PrestaShopBundle\Tests\Localization;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Currency\CurrencyCollectionFactory;
-use PrestaShopBundle\Currency\DataSource\Cache as CurrencyCacheDataSource;
-use PrestaShopBundle\Currency\DataSource\CLDR as CurrencyCLDRDataSource;
-use PrestaShopBundle\Currency\Manager as CurrencyManager;
-use PrestaShopBundle\Currency\Repository as CurrencyRepository;
-use PrestaShopBundle\Localization\CLDR\DataReader;
-use PrestaShopBundle\Localization\DataSource\CLDR as LocaleCLDRDataSource;
-use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 use PrestaShopBundle\Localization\Locale;
 use PrestaShopBundle\Localization\Repository as LocaleRepository;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class RepositoryTest extends TestCase
+class RepositoryIntegrationTest extends KernelTestCase
 {
     /** @var LocaleRepository */
     protected $repository;
 
     public function setUp()
     {
-        $currencyCacheData = new CurrencyCacheDataSource('fr-FR');
-        $currencyCache     = new CurrencyRepository([$currencyCacheData]);
-
-        $currencyCLDRData = new CurrencyCLDRDataSource('fr-FR', new DataReader());
-        $currencyCLDR     = new CurrencyRepository([$currencyCLDRData]);
-
-        $currencyManager = new CurrencyManager($currencyCache, $currencyCLDR);
-        $localeCLDRData  = new LocaleCLDRDataSource(new DataReader());
-
-        $this->repository = new LocaleRepository(
-            [$localeCLDRData],
-            new NumberFormatterFactory(),
-            new CurrencyCollectionFactory($currencyManager),
-            2 // Half Up (PS_ROUND_HALF_UP)
-        );
+        $kernel = $this->createKernel();
+        $kernel->boot();
+        $this->repository = $kernel->getContainer()->get('prestashop.cldr.locale.repository.reference');
     }
 
     /**
