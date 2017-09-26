@@ -44,12 +44,13 @@ class ApiClient
     public function __construct(
         Client $addonsApiClient,
         $locale,
+        $isoCode,
         $toolsAdapter
     ) {
         $this->addonsApiClient = $addonsApiClient;
         $this->toolsAdapter = $toolsAdapter;
 
-        list($isoLang, $isoCode) = explode('-', $locale);
+        list($isoLang) = explode('-', $locale);
 
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)

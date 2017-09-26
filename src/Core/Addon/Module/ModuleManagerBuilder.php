@@ -158,6 +158,7 @@ class ModuleManagerBuilder
         $marketPlaceClient = new ApiClient(
             new Client($clientConfig),
             self::$translator->getLocale(),
+            $this->getCountryIso(),
             new Tools()
         );
 
@@ -225,5 +226,13 @@ class ModuleManagerBuilder
     protected function getConfigDir()
     {
         return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config';
+    }
+
+    /**
+     * Returns country iso from context.
+     */
+    private function getCountryIso()
+    {
+        return \CountryCore::getIsoById(\Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 }
