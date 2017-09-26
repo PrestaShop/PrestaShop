@@ -499,3 +499,8 @@ services:
         public: false
         tags:
           - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}
+
+    # Form Field Provider
+    prestashop.form_provider:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormProvider'
+        arguments: ['@form.factory']

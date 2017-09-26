@@ -27,6 +27,7 @@ namespace PrestaShopBundle;
 
 use PrestaShopBundle\DependencyInjection\Compiler\RemoveXmlCompiledContainerPass;
 use PrestaShopBundle\DependencyInjection\Compiler\PopulateTranslationProvidersPass;
+use PrestaShopBundle\DependencyInjection\Compiler\PopulateFormFieldProviderPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -34,9 +35,6 @@ use PrestaShopBundle\DependencyInjection\PrestaShopExtension;
 use PrestaShopBundle\DependencyInjection\Compiler\DynamicRolePass;
 use PrestaShopBundle\DependencyInjection\Compiler\RouterPass;
 
-/**
- * Symfony entry point: adds Extension, that will add other stuff.
- */
 class PrestaShopBundle extends Bundle
 {
     /**
@@ -53,6 +51,7 @@ class PrestaShopBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new DynamicRolePass());
+        $container->addCompilerPass(new PopulateFormFieldProviderPass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);

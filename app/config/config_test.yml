@@ -18,3 +18,16 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+services:
+    test.todo.type:
+        class: 'PrestaShopBundle\Tests\Form\TodoType'
+        parent: 'form.type.common_type'
+        tags:
+          - { name: form.type }
+
+    test.add_description_field:
+        class: 'PrestaShopBundle\Tests\Form\DescriptionField'
+        public: false
+        tags:
+            - { name: 'prestashop.field_provider'}
