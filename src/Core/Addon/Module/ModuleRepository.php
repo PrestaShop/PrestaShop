@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -81,6 +82,11 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     private $translator;
+
+    /**
+     * @var PrestaTrustChecker
+     */
+    private $prestaTrustChecker = null;
 
     /**
      * Module Data Provider.
@@ -135,6 +141,11 @@ class ModuleRepository implements ModuleRepositoryInterface
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
         }
+    }
+
+    public function setPrestaTrustChecker(PrestaTrustChecker $checker)
+    {
+        $this->prestaTrustChecker = $checker;
     }
 
     public function __destruct()
@@ -458,6 +469,9 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         $module = new Module($attributes, $disk, $database);
         $this->loadedModules->save($name, $module);
+        if ($this->prestaTrustChecker) {
+            $this->prestaTrustChecker->getDetails($module);
+        }
         return $module;
     }
 

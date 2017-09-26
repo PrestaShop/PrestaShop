@@ -264,6 +264,8 @@ services:
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
             - "@doctrine.cache.provider"
+        calls:
+            - [setPrestaTrustChecker, ['@prestashop.adapter.module.prestatrust.checker']]
 
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
