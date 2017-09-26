@@ -89,6 +89,9 @@ class RepositoryTest extends TestCase
 //        $currency = $this->repository->getCurrency($currencyId);
 //        $this->assertInstanceOf('PrestaShopBundle\Currency\Currency', $currency);
 //        $this->assertSame($expectedNumericIsoCode, $currency->getNumericIsoCode());
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
     }
 
     /**

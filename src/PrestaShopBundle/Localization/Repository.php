@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Localization;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Currency\CurrencyCollectionFactory;
 use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
@@ -47,20 +48,20 @@ class Repository
     protected $currencyCollectionFactory;
 
     /**
-     * @var int
+     * @var Configuration
      */
-    protected $roundMode;
+    protected $configuration;
 
     public function __construct(
         array $dataSources,
         NumberFormatterFactory $numberFormatterFactory,
         CurrencyCollectionFactory $currencyCollectionFactory,
-        $roundMode
+        Configuration $config
     ) {
         $this->setDataSources($dataSources);
         $this->numberFormatterFactory    = $numberFormatterFactory;
         $this->currencyCollectionFactory = $currencyCollectionFactory;
-        $this->roundMode                 = $roundMode;
+        $this->configuration             = $config;
     }
 
     /**
@@ -125,7 +126,7 @@ class Repository
                     $this->numberFormatterFactory,
                     $localeData,
                     $this->currencyCollectionFactory->build(),
-                    $this->getRoundMode()
+                    $this->getConfiguration()
                 );
                 $this->addLocale($locale);
 
@@ -153,7 +154,7 @@ class Repository
                     $this->numberFormatterFactory,
                     $localeData,
                     $this->currencyCollectionFactory->build(),
-                    $this->getRoundMode()
+                    $this->getConfiguration()
                 );
                 $this->addLocale($locale);
 
@@ -165,9 +166,9 @@ class Repository
         return isset($locale) ? $locale : null;
     }
 
-    public function getRoundMode()
+    public function getConfiguration()
     {
-        return $this->roundMode;
+        return $this->configuration;
     }
 
     public function saveLocale($locale)

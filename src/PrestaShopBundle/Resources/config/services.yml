@@ -60,6 +60,82 @@ services:
         properties:
             container: "@service_container"
 
+    prestashop.cldr.locale.manager:
+        class: PrestaShopBundle\Localization\Manager
+        arguments:
+            - "@prestashop.cldr.locale.repository.installed"
+            - "@prestashop.cldr.locale.repository.reference"
+
+    prestashop.cldr.locale.repository.installed:
+        class: PrestaShopBundle\Localization\Repository
+        arguments:
+            - ["@prestashop.cldr.locale.data_source.cache", "@prestashop.cldr.locale.data_source.database"]
+            - "@prestashop.cldr.locale.number_formatter_factory"
+            - "@prestashop.cldr.currency.collection_factory"
+            - "@prestashop.adapter.legacy.configuration"
+
+    prestashop.cldr.locale.repository.reference:
+        class: PrestaShopBundle\Localization\Repository
+        arguments:
+            - ["@prestashop.cldr.locale.data_source.cldr"]
+            - "@prestashop.cldr.locale.number_formatter_factory"
+            - "@prestashop.cldr.currency.collection_factory"
+            - "@prestashop.adapter.legacy.configuration"
+
+    prestashop.cldr.locale.data_source.cache:
+        class: PrestaShopBundle\Localization\DataSource\Cache
+
+    prestashop.cldr.locale.data_source.database:
+        class: PrestaShopBundle\Localization\DataSource\Database
+
+    prestashop.cldr.locale.data_source.cldr:
+        class: PrestaShopBundle\Localization\DataSource\CLDR
+        arguments:
+            - "@prestashop.cldr.data_reader"
+
+    prestashop.cldr.locale.number_formatter_factory:
+        class: PrestaShopBundle\Localization\Formatter\NumberFactory
+
+    prestashop.cldr.data_reader:
+        class: PrestaShopBundle\Localization\CLDR\DataReader
+
+    prestashop.cldr.currency.manager:
+        class: PrestaShopBundle\Currency\Manager
+        arguments:
+            - "@prestashop.cldr.currency.repository.installed"
+            - "@prestashop.cldr.currency.repository.reference"
+
+    prestashop.cldr.currency.collection_factory:
+        class: PrestaShopBundle\Currency\CurrencyCollectionFactory
+        arguments:
+            - "@prestashop.cldr.currency.manager"
+
+    prestashop.cldr.currency.repository.installed:
+        class: PrestaShopBundle\Currency\Repository
+        arguments:
+            - ["@prestashop.cldr.currency.data_source.cache", "@prestashop.cldr.currency.data_source.database"]
+
+    prestashop.cldr.currency.repository.reference:
+        class: PrestaShopBundle\Currency\Repository
+        arguments:
+            - ["@prestashop.cldr.currency.data_source.cldr"]
+
+    prestashop.cldr.currency.data_source.cache:
+        class: PrestaShopBundle\Currency\DataSource\Cache
+        arguments:
+            - "%locale%"
+
+    prestashop.cldr.currency.data_source.database:
+        class: PrestaShopBundle\Currency\DataSource\Database
+        arguments:
+            - "%locale%"
+
+    prestashop.cldr.currency.data_source.cldr:
+        class: PrestaShopBundle\Currency\DataSource\CLDR
+        arguments:
+            - "%locale%"
+            - "@prestashop.cldr.data_reader"
+
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:
         class: PrestaShopBundle\Service\DataProvider\StockInterface

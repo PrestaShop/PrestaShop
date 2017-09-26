@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Localization;
 
 use PrestaShop\Decimal\Operation\Rounding;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Currency\CurrencyCollection;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
@@ -49,13 +50,13 @@ class Locale
         NumberFormatterFactory $numberFormatterFactory,
         LocaleData $specification,
         CurrencyCollection $currencyCollection,
-        $roundMode
+        Configuration $config
     ) {
         $this->localeCode             = $this->convertLocaleAsIETF($localeCode);
         $this->numberFormatterFactory = $numberFormatterFactory;
         $this->specification          = $specification;
         $this->currencyCollection     = $currencyCollection;
-        $this->roundMode              = (int)$roundMode;
+        $this->roundMode              = (int)$config->get('PS_PRICE_ROUND_MODE');
     }
 
     /**
