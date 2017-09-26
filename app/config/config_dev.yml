@@ -49,10 +49,3 @@ prestashop:
     addons:
         api_client:
             ttl: 300 # 5min
-
-services:
-    test.add_description_field:
-        class: 'PrestaShopBundle\Tests\Form\DescriptionField'
-        public: false
-        tags:
-            - { name: 'prestashop.field_provider'}

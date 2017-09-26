@@ -31,6 +31,7 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "@router"
             - "@prestashop.adapter.data_provider.feature"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -39,6 +40,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -47,6 +49,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -55,6 +58,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -68,6 +72,7 @@ services:
             - "@prestashop.adapter.data_provider.product"
             - "@prestashop.adapter.data_provider.feature"
             - "@prestashop.adapter.data_provider.manufacturer"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -81,6 +86,7 @@ services:
             - "@prestashop.adapter.data_provider.currency"
             - "@prestashop.adapter.data_provider.attachment"
             - "@router"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -106,6 +112,7 @@ services:
             - "@translator"
             - "@router"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -126,6 +133,7 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.warehouse"
             - "@prestashop.adapter.data_provider.carrier"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -140,6 +148,7 @@ services:
             - "@prestashop.adapter.data_provider.group"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.customer"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -149,6 +158,7 @@ services:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.currency"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -157,6 +167,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -165,6 +176,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 

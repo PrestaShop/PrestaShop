@@ -31,23 +31,15 @@ class DescriptionField implements FormFieldProviderInterface
 {
     public function getFormFields()
     {
-        return [
-            'todo' => [
-                [
+        return array(
+            'todo' => array(
+                array(
                     'name' => 'description',
                     'type' => 'text',
                     'data' => 'A description',
                     'options' => [],
-                ],
-            ],
-            'product_seo' => [
-                [
-                    'name' => 'test',
-                    'type' => 'text',
-                    'data' => 'A description',
-                    'options' => [],
-                ],
-            ]
-        ];
+                ),
+            ),
+        );
     }
 }
