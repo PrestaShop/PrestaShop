@@ -26,49 +26,27 @@
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * Load services stored in installed modules.
+ * Enrich every form handlers to allow customization
+ * of Symfony forms from PrestaShop modules.
  */
-class LoadServicesFromModulesPass implements CompilerPassInterface
+class PopulateFormHandlersPass implements CompilerPassInterface
 {
+    const FORM_HANDLER = 'prestashop.form.handler';
+
     /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
     {
-        $this->registerServicesFromModules($container);
-    }
+        $formHandlers = $container->findTaggedServiceIds(self::FORM_HANDLER);
 
-    /**
-     * Load all services registered in every module.
-     *
-     * @param ContainerBuilder $container
-     * @return void
-     */
-    private function registerServicesFromModules(ContainerBuilder $container)
-    {
-        $installedModules = $container->getParameter('kernel.active_modules');
-
-        foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $installedModules)
-                && file_exists($modulePath.'/config/services.yml')
-            ) {
-                $loader = new YamlFileLoader($container, new FileLocator($modulePath.'/config/'));
-                $loader->load('services.yml');
-            }
+        foreach (array_keys($formHandlers) as $serviceId) {
+            $formHandler = $container->findDefinition($serviceId);
+            $formHandler->addMethodCall('setHookDispatcher', array(new Reference('prestashop.hook.dispatcher')));
         }
-    }
-
-    /**
-     * @return \Iterator
-     */
-    private function getModulesPaths()
-    {
-        return Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
     }
 }

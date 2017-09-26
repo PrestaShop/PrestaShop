@@ -756,5 +756,15 @@
       <title>Display new elements in back office page with dashboard, on icons list</title>
       <description>This hook launches modules when the back office with dashboard is displayed</description>
     </hook>
+    <hook id="displayAdministrationPageForm">
+      <name>displayAdministrationPageForm</name>
+      <title>Manage Administration Page form fields</title>
+      <description>This hook adds, update or remove fields of the Administration Page form</description>
+    </hook>
+    <hook id="actionAdministrationPageFormSave">
+      <name>actionAdministrationPageFormSave</name>
+      <title>Processing Administration page form</title>
+      <description>This hook is called when the Administration Page form is processed</description>
+    </hook>
   </entities>
 </entity_hook>
