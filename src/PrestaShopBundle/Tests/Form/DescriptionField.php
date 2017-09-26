@@ -40,6 +40,14 @@ class DescriptionField implements FormFieldProviderInterface
                     'options' => [],
                 ],
             ],
+            'product_seo' => [
+                [
+                    'name' => 'test',
+                    'type' => 'text',
+                    'data' => 'A description',
+                    'options' => [],
+                ],
+            ]
         ];
     }
 }

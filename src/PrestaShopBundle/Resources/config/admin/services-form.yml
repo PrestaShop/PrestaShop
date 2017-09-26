@@ -12,6 +12,18 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.product.categories_tree:
+        class: 'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType'
+        parent: 'form.type.common_type'
+        tags:
+            - { name: form.type }
+
+    form.type.product.translate:
+        class: 'PrestaShopBundle\Form\Admin\Type\TranslateType'
+        parent: 'form.type.common_type'
+        tags:
+            - { name: form.type }
+
     form.type.product.feature:
         class: PrestaShopBundle\Form\Admin\Feature\ProductFeature
         arguments:
@@ -84,6 +96,7 @@ services:
             - "@prestashop.adapter.data_provider.group"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.customer"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -102,6 +115,7 @@ services:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
             - "@router"
+        parent: 'form.type.common_type'
         tags:
             - { name: form.type }
 
@@ -268,4 +282,7 @@ services:
 
     form.type.common_type:
         abstract: true
-        arguments: ['@prestashop.form_provider']
+        calls:
+            - method: 'setFormProvider'
+              arguments:
+                  - '@prestashop.form_provider'

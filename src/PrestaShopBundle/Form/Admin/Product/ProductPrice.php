@@ -165,6 +165,8 @@ class ProductPrice extends CommonAbstractType
                 'required' => true
             ));
         }
+
+        $this->enableDynamicFormSubscriber($builder, $this);
     }
 
     /**

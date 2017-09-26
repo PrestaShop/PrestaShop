@@ -40,7 +40,6 @@ class FormFieldProviderTest extends KernelTestCase
         $kernel = $this->createKernel();
         $kernel->boot();
         $this->container = $kernel->getContainer();
-
     }
 
     public function testTodoTypeFormIsAppended()

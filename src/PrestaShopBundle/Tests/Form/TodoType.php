@@ -43,6 +43,6 @@ class TodoType extends CommonAbstractType
             ->add('save', 'Symfony\Component\Form\Extension\Core\Type\SubmitType')
         ;
 
-        $builder->addEventSubscriber(new AddFieldsSubscriber($formProvider, $this));
+        $this->enableDynamicFormSubscriber($builder, $this);
     }
 }

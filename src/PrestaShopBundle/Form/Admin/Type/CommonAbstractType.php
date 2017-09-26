@@ -26,8 +26,10 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\PrestaShop\Core\Form\FormProviderInterface;
+use PrestaShopBundle\Form\Admin\EventListener\AddFieldsSubscriber;
 use Symfony\Component\Form\AbstractType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * This subclass contains common functions for specific Form types needs.
@@ -41,9 +43,19 @@ abstract class CommonAbstractType extends AbstractType
      */
     protected $formProvider;
 
-    public function __construct(FormProviderInterface $formProvider)
+    public function setFormProvider(FormProviderInterface $formProvider)
     {
         $this->formProvider = $formProvider;
+    }
+
+    /**
+     * Make the form customizable from Symfony
+     * @param FormBuilderInterface $builder
+     * @param AbstractType $formType
+     */
+    protected function enableDynamicFormSubscriber(FormBuilderInterface $builder, AbstractType $formType)
+    {
+        $builder->addEventSubscriber(new AddFieldsSubscriber($this->formProvider, $formType));
     }
 
     /**

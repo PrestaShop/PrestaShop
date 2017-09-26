@@ -123,5 +123,7 @@
     </div>
   </div>
 
-  {{ renderhook('displayAdminProductsSeoStepBottom', { 'id_product': productId }) }}
+  {{ form_rest(form) }}
+
+  {{ renderhook('displayAdminProductsSeoStepBottom', { 'id_product': id_product }) }}
 </div>
