@@ -80,12 +80,12 @@ class Currency
 
     public function __construct(Builder $builder)
     {
-        $this->setIsoCode($builder->getIsoCode())
-            ->setNumericIsoCode($builder->getNumericIsoCode())
-            ->setDecimalDigits($builder->getDecimalDigits())
-            ->setDisplayNames($builder->getDisplayName())
-            ->setSymbols($builder->getSymbols())
-            ->setId($builder->getId());
+        $this->isoCode        = $builder->getIsoCode();
+        $this->numericIsoCode = $builder->getNumericIsoCode();
+        $this->decimalDigits  = $builder->getDecimalDigits();
+        $this->displayNames   = $builder->getDisplayName();
+        $this->symbols        = $builder->getSymbols();
+        $this->id             = $builder->getId();
     }
 
     /**
@@ -97,18 +97,6 @@ class Currency
     }
 
     /**
-     * @param int $id
-     *
-     * @return Currency
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getIsoCode()
@@ -116,33 +104,9 @@ class Currency
         return $this->isoCode;
     }
 
-    /**
-     * @param string $isoCode
-     *
-     * @return Currency
-     */
-    public function setIsoCode($isoCode)
-    {
-        $this->isoCode = $isoCode;
-
-        return $this;
-    }
-
     public function getNumericIsoCode()
     {
         return $this->numericIsoCode;
-    }
-
-    /**
-     * @param int $numericIsoCode
-     *
-     * @return Currency
-     */
-    public function setNumericIsoCode($numericIsoCode)
-    {
-        $this->numericIsoCode = (int)$numericIsoCode;
-
-        return $this;
     }
 
     public function getName($localeCode)
@@ -169,18 +133,6 @@ class Currency
     }
 
     /**
-     * @param int $decimalDigits
-     *
-     * @return Currency
-     */
-    public function setDecimalDigits($decimalDigits)
-    {
-        $this->decimalDigits = $decimalDigits;
-
-        return $this;
-    }
-
-    /**
      * @return array
      */
     public function getDisplayNames()
@@ -189,34 +141,10 @@ class Currency
     }
 
     /**
-     * @param $displayNames
-     *
-     * @return $this
-     */
-    public function setDisplayNames($displayNames)
-    {
-        $this->displayNames = $displayNames;
-
-        return $this;
-    }
-
-    /**
      * @return array
      */
     public function getSymbols()
     {
         return $this->symbols;
-    }
-
-    /**
-     * @param $symbols
-     *
-     * @return $this
-     */
-    public function setSymbols($symbols)
-    {
-        $this->symbols = $symbols;
-
-        return $this;
     }
 }
