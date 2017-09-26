@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
+namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -33,38 +33,37 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * This class subscribes to the events module installation / uninstallation
  * in order to install or remove its tabs as well
  */
-class ModuleTabManagementSubscriber implements EventSubscriberInterface
+class ModuleEventSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ModuleTabRegister
+     * @var PrestaTrustChecker
      */
-    private $moduleTabRegister;
+    private $checker;
+
     /**
-     * @var ModuleTabDeregister
+     * These events can be enabled/disabled via the config file
+     * @var boolean
      */
-    private $moduleTabUnregister;
+    public $enabled;
     
-    public function __construct(ModuleTabRegister $moduleTabRegister, ModuleTabUnregister $moduleTabUnregister)
+    public function __construct(PrestaTrustChecker $checker)
     {
-        $this->moduleTabRegister = $moduleTabRegister;
-        $this->moduleTabUnregister = $moduleTabUnregister;
+        $this->checker = $checker;
     }
     
     public static function getSubscribedEvents()
     {
-        return [
-            ModuleManagementEvent::INSTALL => 'onModuleInstall',
-            ModuleManagementEvent::UNINSTALL => 'onModuleUninstall',
-        ];
+        return array(
+            ModuleManagementEvent::DOWNLOAD => 'onNewModule',
+        );
     }
 
-    public function onModuleInstall(ModuleManagementEvent $event)
+    public function onNewModule(ModuleManagementEvent $event)
     {
-        $this->moduleTabRegister->registerTabs($event->getModule());
-    }
-    
-    public function onModuleUninstall(ModuleManagementEvent $event)
-    {
-        $this->moduleTabUnregister->unregisterTabs($event->getModule());
+        if (!$this->enabled) {
+            return;
+        }
+        
+        $this->checker->checkModule($event->getModule());
     }
 }
