@@ -18,3 +18,6 @@ CREATE TABLE `PREFIX_currency_lang` (
 
 ALTER TABLE `PREFIX_currency` DROP `name`;
 
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+  (NULL, 'displayAdministrationPageForm', 'Manage Administration Page form fields', 'This hook adds, update or remove fields of the Administration Page form', '1'),
+  (NULL, 'actionAdministrationPageFormSave', 'Processing Administration page form', 'This hook is called when the Administration Page form is processed', '1');

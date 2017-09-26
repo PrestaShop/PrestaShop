@@ -62,7 +62,7 @@ final class ModuleRepository
     }
 
     /**
-     * Returns installed module filepaths
+     * Returns installed module file paths
      * @return array
      */
     public function getActiveModulesPaths()
@@ -70,6 +70,7 @@ final class ModuleRepository
         $paths = array();
         $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../modules')->depth(0);
         $activeModules = array_keys($this->getActiveModules());
+
         foreach ($modulesFiles as $moduleFile) {
             if (in_array($moduleFile->getFilename(), $activeModules)) {
                 $paths[] = $moduleFile->getPathname();

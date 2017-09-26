@@ -306,3 +306,9 @@ services:
         tags:
           - { name: twig.loader, priority: 1}
 
+    # Abstract Form Provider
+    prestashop.abstract_form_provider:
+        abstract: true
+        class: PrestaShop\PrestaShop\Core\Form\AbstractFormProvider
+        calls:
+            - [setHookDispatcher, ['@prestashop.hook.dispatcher']]
