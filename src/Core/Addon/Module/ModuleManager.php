@@ -229,6 +229,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
+        $this->dispatch(ModuleManagementEvent::DOWNLOAD, $module);
         $result = $module->onInstall();
 
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
@@ -302,9 +303,12 @@ class ModuleManager implements AddonManagerInterface
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
+        $module = $this->moduleRepository->getModule($name);
+        $this->dispatch(ModuleManagementEvent::DOWNLOAD, $module);
+
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name);
-        $this->dispatch(ModuleManagementEvent::UPGRADE, $this->moduleRepository->getModule($name));
+        $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
     }
