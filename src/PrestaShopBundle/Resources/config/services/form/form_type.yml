@@ -15,6 +15,20 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.product.categories_tree:
+        class: 'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType'
+        parent: 'form.type.common_type'
+        public: true
+        tags:
+            - { name: form.type }
+
+    form.type.product.translate:
+        class: 'PrestaShopBundle\Form\Admin\Type\TranslateType'
+        parent: 'form.type.common_type'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.product.feature:
         class: PrestaShopBundle\Form\Admin\Feature\ProductFeature
         arguments:
@@ -22,6 +36,8 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "@router"
             - "@prestashop.adapter.data_provider.feature"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -30,6 +46,8 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -38,6 +56,8 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -46,6 +66,8 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -59,6 +81,8 @@ services:
             - "@prestashop.adapter.data_provider.product"
             - "@prestashop.adapter.data_provider.feature"
             - "@prestashop.adapter.data_provider.manufacturer"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -72,6 +96,8 @@ services:
             - "@prestashop.adapter.data_provider.currency"
             - "@prestashop.adapter.data_provider.attachment"
             - "@router"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -87,6 +113,8 @@ services:
             - "@prestashop.adapter.data_provider.group"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.customer"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -96,6 +124,8 @@ services:
             - "@translator"
             - "@router"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -105,6 +135,8 @@ services:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
             - "@router"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -115,6 +147,8 @@ services:
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.warehouse"
             - "@prestashop.adapter.data_provider.carrier"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -129,6 +163,8 @@ services:
             - "@prestashop.adapter.data_provider.group"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.customer"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -138,6 +174,8 @@ services:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
             - "@prestashop.adapter.data_provider.currency"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -146,6 +184,8 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -154,6 +194,8 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.legacy.context"
+        parent: 'form.type.common_type'
+        public: true
         tags:
             - { name: form.type }
 
@@ -189,6 +231,8 @@ services:
 
     form.type.translatable.aware:
         abstract: true
+        parent: 'form.type.common_type'
+        public: true
         arguments:
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
@@ -257,3 +301,7 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.common_type:
+        abstract: true
+
