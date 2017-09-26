@@ -59,6 +59,7 @@
                                 {{ form_errors(generalForm.back_cookie_lifetime) }}
                                 {{ form_widget(generalForm.back_cookie_lifetime) }}
                             </div>
+                            {{ form_rest(generalForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -66,7 +67,6 @@
                             <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
                         </div>
                     </div>
-                {{ form_rest(generalForm) }}
                 </div>
             </div>
         {% endblock %}
@@ -94,6 +94,7 @@
                                 {{ form_errors(uploadQuotaForm.max_size_product_image) }}
                                 {{ form_widget(uploadQuotaForm.max_size_product_image) }}
                             </div>
+                            {{ form_rest(uploadQuotaForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -101,7 +102,6 @@
                             <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
                         </div>
                     </div>
-                    {{ form_rest(uploadQuotaForm) }}
                 </div>
             </div>
         {% endblock %}
@@ -133,6 +133,7 @@
                                 {{ form_errors(notificationsForm.show_notifs_new_messages) }}
                                 {{ form_widget(notificationsForm.show_notifs_new_messages, {'attr' : {'class': 'custom-select'} }) }}
                             </div>
+                            {{ form_rest(notificationsForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -140,7 +141,6 @@
                             <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
                         </div>
                     </div>
-                    {{ form_rest(notificationsForm) }}
                 </div>
             </div>
         {% endblock %}
