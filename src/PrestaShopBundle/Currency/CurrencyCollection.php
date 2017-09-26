@@ -42,7 +42,7 @@ class CurrencyCollection
     /**
      * List of lazy loaded currencies
      *
-     * @var array
+     * @var Currency[]
      */
     protected $currencies;
 
@@ -60,6 +60,11 @@ class CurrencyCollection
         $this->setCurrencyManager($currencyManager);
     }
 
+    /**
+     * @param $identifier
+     *
+     * @return Currency
+     */
     public function getCurrency($identifier)
     {
         if (!isset($this->currencies[$identifier])) {
