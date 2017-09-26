@@ -148,6 +148,8 @@ class ProductSeo extends CommonAbstractType
             'required' => false,
             'label' => $this->translator->trans('Target', [], 'Admin.Catalog.Feature'),
         ));
+
+        $this->enableDynamicFormSubscriber($builder, $this);
     }
 
     /**
