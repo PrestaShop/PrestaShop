@@ -501,7 +501,7 @@ class FrontControllerCore extends Controller
             return false;
         }
 
-        return is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
+        return is_dir(Tools::safeOutput(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad')));
     }
 
     /**
@@ -700,8 +700,8 @@ class FrontControllerCore extends Controller
             }
         } else {
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
-            $live_edit_content = $this->getLiveEditFooter();
-            $html .= $live_edit_content;
+            $liveEditContent = $this->getLiveEditFooter();
+            $html .= $liveEditContent;
         }
 
         Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
@@ -947,7 +947,7 @@ class FrontControllerCore extends Controller
             $this->addJqueryUi('ui.sortable');
             $this->addJqueryPlugin('fancybox');
             $this->registerJavascript('hookLiveEdit', '/js/hookLiveEdit.js', ['position' => 'bottom', 'priority' => 0]);
-            $this->registerStylesheet('theme-rtl', '/themes/hookLiveEdit.css', ['media' => 'all', 'priority' => 1100]);
+            $this->registerStylesheet('themeLiveEdit', '/themes/hookLiveEdit.css', ['media' => 'all', 'priority' => 1100]);
         }
 
         // Execute Hook FrontController SetMedia

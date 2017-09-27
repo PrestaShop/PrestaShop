@@ -308,7 +308,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'desc' => $this->trans('Transplant a module', array(), 'Admin.Design.Feature')
         );
 
-        $live_edit_params = array(
+        $liveEditParams = array(
             'live_edit' => true,
             'ad' => $admin_dir,
             'liveToken' => $this->token,
@@ -316,13 +316,13 @@ class AdminModulesPositionsControllerCore extends AdminController
             'id_shop' => (int)$this->context->shop->id,
         );
 
-        $url_live_edit = $this->getLiveEditUrl($live_edit_params);
+        $urlLiveEdit = $this->getLiveEditUrl($liveEditParams);
 
         if (Hook::getIdByName('liveEditLink')) {
             $urls = Hook::exec('liveEditLink', array(), null, true);
             $links = reset($urls);
             if (!empty($links)) {
-                $url_live_edit = end($links);
+                $urlLiveEdit = end($links);
             }
         }
 
@@ -334,7 +334,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'token' => $this->token,
             'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
             'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
-            'url_live_edit' => $url_live_edit,
+            'url_live_edit' => $urlLiveEdit,
             'modules' => $module_instances,
             'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
             'display_key' => $this->display_key,
@@ -349,10 +349,10 @@ class AdminModulesPositionsControllerCore extends AdminController
     /**
      * Get the URL of Live Edit link
      *
-     * @param string $live_edit_params Get link Live Edit params
+     * @param string $liveEditParams Get link Live Edit params
      * @return string
      */
-    public function getLiveEditUrl($live_edit_params)
+    public function getLiveEditUrl($liveEditParams)
     {
         $lang = '';
 
@@ -364,7 +364,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
         // Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
         $this->context->shop = new Shop((int)$this->context->shop->id);
-        $url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+        $url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $liveEditParams);
 
         return $url;
     }

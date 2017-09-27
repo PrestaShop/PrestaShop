@@ -72,7 +72,6 @@ $(document).ready(function () {
                 }
             });
         }
-
     });
 
     getHookableList();
