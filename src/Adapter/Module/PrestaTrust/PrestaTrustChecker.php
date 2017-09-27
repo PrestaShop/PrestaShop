@@ -34,6 +34,11 @@ class PrestaTrustChecker
 {
     protected $checked_extensions = array('php', 'js', 'css', 'tpl');
 
+    const CHECKS_ALL_OK = 'Module authenticated.';
+    const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Marketplace';
+    const CHECKS_PROPERTY_NOK = 'Warning, the purchase proof is not found. This license has already been used on another shop.';
+    const CHECKS_ALL_NOK = 'Warning, the module has been modified and its purchase proof is not found.';
+
     /**
      * @var Cache
      */
@@ -60,7 +65,8 @@ class PrestaTrustChecker
     }
 
     /**
-     * If the module is compliant, this class checks its content to detect unwanted changes
+     * If the module is compliant, this class generates and adds all PrestaTrust related details
+     * Called by download event of module
      *
      * @param Module $module
      * @return void
@@ -71,9 +77,11 @@ class PrestaTrustChecker
             return;
         }*/
 
-        $details = array(
-            'hash' => $this->calculateHash($module->disk->get('path')),
-        );
+        $details = $module->attributes->get('prestatrust', array());
+        $details['hash'] = $this->calculateHash($module->disk->get('path'));
+        $details['check_list'] = $this->requestCheck($details['hash'], 'localhost');
+        $details['status'] = array_sum($details['check_list']) == count($details['check_list']); // True if all content is True
+        $details['message'] = $this->getMessage($details['check_list']);
 
         $this->cache->save($module->get('name'), $details);
 
@@ -102,6 +110,26 @@ class PrestaTrustChecker
             }
         }
         return hash('sha256', $preparehash);
+    }
+
+    /**
+     * Get message to display at the employee
+     *
+     * @param array $check_list
+     * @return string
+     */
+    protected function getMessage(array $check_list)
+    {
+        if ($check_list['integrity'] && $check_list['property']) {
+            return self::CHECKS_ALL_OK;
+        }
+        if (!$check_list['integrity'] && $check_list['property']) {
+            return self::CHECKS_INTEGRITY_NOK;
+        }
+        if (!$check_list['integrity'] && !$check_list['property']) {
+            return self::CHECKS_PROPERTY_NOK;
+        }
+        return self::CHECKS_ALL_NOK;
     }
 
     /**
@@ -135,5 +163,13 @@ class PrestaTrustChecker
     {
         $prefix = '0x';
         return substr($str, 0, strlen($prefix)) === $prefix;
+    }
+
+    protected function requestCheck($hash, $domain)
+    {
+        return array(
+            'integrity' => (bool)(rand()%2),
+            'property' => (bool)(rand()%2),
+        );
     }
 }
