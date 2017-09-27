@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Localization;
 
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Currency\CurrencyProvider;
+use PrestaShopBundle\Currency\Manager as CurrencyManager;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
@@ -42,20 +42,20 @@ class Locale
     protected $numberFormatterFactory;
     protected $specification;
     protected $id;
-    protected $currencyProvider;
+    protected $currencyManager;
     protected $roundMode;
 
     public function __construct(
         $localeCode,
         NumberFormatterFactory $numberFormatterFactory,
         LocaleData $specification,
-        CurrencyProvider $currencyProvider,
+        CurrencyManager $currencyManager,
         Configuration $config
     ) {
         $this->localeCode             = $this->convertLocaleAsIETF($localeCode);
         $this->numberFormatterFactory = $numberFormatterFactory;
         $this->specification          = $specification;
-        $this->currencyProvider       = $currencyProvider;
+        $this->currencyManager        = $currencyManager;
         $this->roundMode              = (int)$config->get('PS_PRICE_ROUND_MODE');
     }
 
@@ -102,10 +102,10 @@ class Locale
         return $this->getNumberFormatter()->format($number);
     }
 
-    public function formatCurrency($number, $currencyId)
+    public function formatCurrency($number, $isoCode)
     {
         $number   = (string)$number;
-        $currency = $this->getCurrencyProvider()->getCurrency($currencyId);
+        $currency = $this->getCurrencyManager()->getCurrencyByIsoCode($isoCode);
 
         return $this->getNumberFormatter()->formatCurrency($number, $currency);
     }
@@ -220,17 +220,17 @@ class Locale
         return null;
     }
 
-    public function getCurrency($identifier)
+    public function getCurrencyByIsoCode($isoCode)
     {
-        return $this->getCurrencyProvider()->getCurrency($identifier);
+        return $this->getCurrencyManager()->getCurrencyByIsoCode($isoCode);
     }
 
     /**
-     * @return CurrencyProvider
+     * @return CurrencyManager
      */
-    public function getCurrencyProvider()
+    public function getCurrencyManager()
     {
-        return $this->currencyProvider;
+        return $this->currencyManager;
     }
 
     public function getRoundMode()
