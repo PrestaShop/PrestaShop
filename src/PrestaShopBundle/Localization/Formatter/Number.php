@@ -200,9 +200,9 @@ class Number
             $symbol = $currency->getIsoCode();
         } else {
             try {
-                $symbol = $currency->getSymbol('narrow'); // To be changed when symbol type is configurable
+                $symbol = $currency->getSymbol()->getNarrow(); // To be changed when symbol type is configurable
             } catch (CurrencyInvalidArgumentException $e) {
-                $symbol = $currency->getSymbol('default');
+                $symbol = $currency->getSymbol()->getDefault();
             }
         }
 

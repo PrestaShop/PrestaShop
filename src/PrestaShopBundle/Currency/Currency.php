@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
+use PrestaShopBundle\Currency\Builder as CurrencyBuilder;
+use PrestaShopBundle\Currency\Symbol\Builder as SymbolBuilder;
 
 class Currency
 {
@@ -63,11 +64,11 @@ class Currency
     protected $displayNames;
 
     /**
-     * All possible symbols depending on context
+     * The currency symbol (has multiple available notations depending on context)
      *
-     * @var array
+     * @var Symbol
      */
-    protected $symbols;
+    protected $symbol;
 
     /**
      * Currency ISO 4217 number
@@ -78,14 +79,21 @@ class Currency
      */
     protected $numericIsoCode;
 
-    public function __construct(Builder $builder)
+    public function __construct(CurrencyBuilder $currencyBuilder)
     {
-        $this->isoCode        = $builder->getIsoCode();
-        $this->numericIsoCode = $builder->getNumericIsoCode();
-        $this->decimalDigits  = $builder->getDecimalDigits();
-        $this->displayNames   = $builder->getDisplayName();
-        $this->symbols        = $builder->getSymbols();
-        $this->id             = $builder->getId();
+        $this->isoCode        = $currencyBuilder->getIsoCode();
+        $this->numericIsoCode = $currencyBuilder->getNumericIsoCode();
+        $this->decimalDigits  = $currencyBuilder->getDecimalDigits();
+        $this->displayNames   = $currencyBuilder->getDisplayName();
+        $this->id             = $currencyBuilder->getId();
+
+        $symbolData    = $currencyBuilder->getSymbolData();
+        $symbolBuilder = new SymbolBuilder();
+        foreach ($symbolData as $type => $symbol) {
+            $methodName = 'set' . ucfirst($type);
+            $symbolBuilder->$methodName($symbol);
+        }
+        $this->symbol = $symbolBuilder->build();
     }
 
     /**
@@ -114,14 +122,12 @@ class Currency
         return $this->displayNames[$localeCode];
     }
 
-    public function getSymbol($type)
+    /**
+     * @return Symbol
+     */
+    public function getSymbol()
     {
-        $symbols = $this->getSymbols();
-        if (!isset($symbols[$type])) {
-            throw new InvalidArgumentException("Unknown $type symbol");
-        }
-
-        return $symbols[$type];
+        return $this->symbol;
     }
 
     /**
@@ -138,13 +144,5 @@ class Currency
     public function getDisplayNames()
     {
         return $this->displayNames;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSymbols()
-    {
-        return $this->symbols;
     }
 }

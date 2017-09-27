@@ -83,47 +83,6 @@ class Repository
     }
 
     /**
-     * @param $id
-     *
-     * @return Currency|null
-     */
-    public function getCurrency($id)
-    {
-        if ((int)$id != $id) {
-            throw new InvalidArgumentException('$id must be an integer');
-        }
-
-        if (!empty($this->currencies[$id])) {
-            return $this->currencies[$id];
-        }
-
-        foreach ($this->getDataSources() as $index => $dataSource) {
-            /** @var DataSourceInterface $dataSource */
-            $currencyData = $dataSource->getCurrencyById((int)$id);
-
-            if (!empty($currencyData)) {
-                $builder  = new Builder();
-                $currency = $builder->setIsoCode($currencyData['isoCode'])
-                    ->setNumericIsoCode($currencyData['numericIsoCode'])
-                    ->setDecimalDigits($currencyData['decimalDigits'])
-                    ->setDisplayName($currencyData['localizedNames'])
-                    ->setSymbols($currencyData['localizedSymbols'])
-                    ->build();
-                $this->addCurrency($currency);
-
-//                $this->refreshDataSources($index - 1, $currencyData);
-                break;
-            }
-        }
-
-        if (!isset($currency)) {
-            throw new InvalidArgumentException("Unknown currency id : $id");
-        }
-
-        return $currency;
-    }
-
-    /**
      * @param $currencyCode
      *
      * @return Currency|null
@@ -144,7 +103,7 @@ class Repository
                     ->setNumericIsoCode($currencyData['numericIsoCode'])
                     ->setDecimalDigits($currencyData['decimalDigits'])
                     ->setDisplayName($currencyData['displayName'])
-                    ->setSymbols($currencyData['symbol'])
+                    ->setSymbolData($currencyData['symbol'])
                     ->build();
                 $this->addCurrency($currency);
 
@@ -158,5 +117,15 @@ class Repository
         }
 
         return $currency;
+    }
+
+    /**
+     * @return Currency[]
+     */
+    public function getAvailableCurrencies()
+    {
+        foreach ($this->getDataSources() as $index => $dataSource) {
+            // TODO
+        }
     }
 }

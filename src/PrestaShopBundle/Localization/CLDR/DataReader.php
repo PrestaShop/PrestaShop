@@ -536,7 +536,7 @@ class DataReader implements DataReaderInterface
             $currencyArray['symbol']['default'] = $currencyArray['isoCode'];
         }
 
-        return ($currencyArray);
+        return $currencyArray;
     }
 
     /**
