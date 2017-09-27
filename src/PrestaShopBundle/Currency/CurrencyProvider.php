@@ -30,14 +30,14 @@ use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
 
 /**
- * Class CurrencyCollection
+ * Class CurrencyProvider
  *
- * This class agregates Currency objects.
+ * This class provides Currency objects.
  * Currencies collection is lazy loaded thanks to the Currency Manager.
  *
  * @package PrestaShopBundle\Currency
  */
-class CurrencyCollection
+class CurrencyProvider
 {
     /**
      * List of lazy loaded currencies

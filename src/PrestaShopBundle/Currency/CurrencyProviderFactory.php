@@ -29,14 +29,13 @@ namespace PrestaShopBundle\Currency;
 use PrestaShopBundle\Currency\Manager as CurrencyManager;
 
 /**
- * Class CurrencyCollection
+ * Class CurrencyProviderFactory
  *
- * This class agregates Currency objects.
- * Currencies collection is lazy loaded thanks to the Currency Manager.
+ * This class builds a CurrencyProvider object.
  *
  * @package PrestaShopBundle\Currency
  */
-class CurrencyCollectionFactory
+class CurrencyProviderFactory
 {
     /**
      * @var CurrencyManager
@@ -50,6 +49,6 @@ class CurrencyCollectionFactory
 
     public function build()
     {
-        return new CurrencyCollection($this->currencyManager);
+        return new CurrencyProvider($this->currencyManager);
     }
 }
