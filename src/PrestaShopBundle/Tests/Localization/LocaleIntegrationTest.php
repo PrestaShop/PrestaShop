@@ -86,7 +86,7 @@ class LocaleIntegrationTest extends KernelTestCase
             }
 
             if (!isset($cachedCurrencies[$currencyCode])) {
-                $cachedCurrencies[$currencyCode] = $cachedLocales[$localeCode]->getCurrency($currencyCode);
+                $cachedCurrencies[$currencyCode] = $cachedLocales[$localeCode]->getCurrencyByIsoCode($currencyCode);
             }
 
             /** @var Locale $locale */

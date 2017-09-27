@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Currency\CurrencyProviderFactory;
+use PrestaShopBundle\Currency\Manager as CurrencyManager;
 use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
@@ -43,9 +43,9 @@ class Repository
     protected $numberFormatterFactory;
 
     /**
-     * @var CurrencyProviderFactory
+     * @var CurrencyManager
      */
-    protected $currencyProviderFactory;
+    protected $currencyManager;
 
     /**
      * @var Configuration
@@ -55,13 +55,13 @@ class Repository
     public function __construct(
         array $dataSources,
         NumberFormatterFactory $numberFormatterFactory,
-        CurrencyProviderFactory $currencyProviderFactory,
+        CurrencyManager $currencyManager,
         Configuration $config
     ) {
         $this->setDataSources($dataSources);
-        $this->numberFormatterFactory  = $numberFormatterFactory;
-        $this->currencyProviderFactory = $currencyProviderFactory;
-        $this->configuration           = $config;
+        $this->numberFormatterFactory = $numberFormatterFactory;
+        $this->currencyManager        = $currencyManager;
+        $this->configuration          = $config;
     }
 
     /**
@@ -125,7 +125,7 @@ class Repository
                     $localeData->localeCode,
                     $this->numberFormatterFactory,
                     $localeData,
-                    $this->currencyProviderFactory->build(),
+                    $this->currencyManager,
                     $this->getConfiguration()
                 );
                 $this->addLocale($locale);
@@ -153,7 +153,7 @@ class Repository
                     $localeData->localeCode,
                     $this->numberFormatterFactory,
                     $localeData,
-                    $this->currencyProviderFactory->build(),
+                    $this->currencyManager,
                     $this->getConfiguration()
                 );
                 $this->addLocale($locale);
