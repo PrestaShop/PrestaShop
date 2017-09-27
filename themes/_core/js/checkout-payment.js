@@ -112,7 +112,7 @@ class Payment {
   confirm() {
     var option = this.getSelectedOption();
     if (option) {
-      $('#pay-with-' + option + '-form form').submit();
+      $('#pay-with-' + option + '-form form').trigger('submit');
     }
   }
 }
