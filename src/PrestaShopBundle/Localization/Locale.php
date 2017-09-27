@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Localization;
 
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Currency\CurrencyCollection;
+use PrestaShopBundle\Currency\CurrencyProvider;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\CLDR\NumberSymbolList;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
@@ -42,20 +42,20 @@ class Locale
     protected $numberFormatterFactory;
     protected $specification;
     protected $id;
-    protected $currencyCollection;
+    protected $currencyProvider;
     protected $roundMode;
 
     public function __construct(
         $localeCode,
         NumberFormatterFactory $numberFormatterFactory,
         LocaleData $specification,
-        CurrencyCollection $currencyCollection,
+        CurrencyProvider $currencyProvider,
         Configuration $config
     ) {
         $this->localeCode             = $this->convertLocaleAsIETF($localeCode);
         $this->numberFormatterFactory = $numberFormatterFactory;
         $this->specification          = $specification;
-        $this->currencyCollection     = $currencyCollection;
+        $this->currencyProvider       = $currencyProvider;
         $this->roundMode              = (int)$config->get('PS_PRICE_ROUND_MODE');
     }
 
@@ -105,7 +105,7 @@ class Locale
     public function formatCurrency($number, $currencyId)
     {
         $number   = (string)$number;
-        $currency = $this->getCurrencyCollection()->getCurrency($currencyId);
+        $currency = $this->getCurrencyProvider()->getCurrency($currencyId);
 
         return $this->getNumberFormatter()->formatCurrency($number, $currency);
     }
@@ -222,15 +222,15 @@ class Locale
 
     public function getCurrency($identifier)
     {
-        return $this->getCurrencyCollection()->getCurrency($identifier);
+        return $this->getCurrencyProvider()->getCurrency($identifier);
     }
 
     /**
-     * @return CurrencyCollection
+     * @return CurrencyProvider
      */
-    public function getCurrencyCollection()
+    public function getCurrencyProvider()
     {
-        return $this->currencyCollection;
+        return $this->currencyProvider;
     }
 
     public function getRoundMode()

@@ -71,7 +71,7 @@ services:
         arguments:
             - ["@prestashop.cldr.locale.data_source.cache", "@prestashop.cldr.locale.data_source.database"]
             - "@prestashop.cldr.locale.number_formatter_factory"
-            - "@prestashop.cldr.currency.collection_factory"
+            - "@prestashop.cldr.currency.provider_factory"
             - "@prestashop.adapter.legacy.configuration"
 
     prestashop.cldr.locale.repository.reference:
@@ -79,7 +79,7 @@ services:
         arguments:
             - ["@prestashop.cldr.locale.data_source.cldr"]
             - "@prestashop.cldr.locale.number_formatter_factory"
-            - "@prestashop.cldr.currency.collection_factory"
+            - "@prestashop.cldr.currency.provider_factory"
             - "@prestashop.adapter.legacy.configuration"
 
     prestashop.cldr.locale.data_source.cache:
@@ -105,8 +105,8 @@ services:
             - "@prestashop.cldr.currency.repository.installed"
             - "@prestashop.cldr.currency.repository.reference"
 
-    prestashop.cldr.currency.collection_factory:
-        class: PrestaShopBundle\Currency\CurrencyCollectionFactory
+    prestashop.cldr.currency.provider_factory:
+        class: PrestaShopBundle\Currency\CurrencyProviderFactory
         arguments:
             - "@prestashop.cldr.currency.manager"
 

@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Currency\CurrencyCollectionFactory;
+use PrestaShopBundle\Currency\CurrencyProviderFactory;
 use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
@@ -43,9 +43,9 @@ class Repository
     protected $numberFormatterFactory;
 
     /**
-     * @var CurrencyCollectionFactory
+     * @var CurrencyProviderFactory
      */
-    protected $currencyCollectionFactory;
+    protected $currencyProviderFactory;
 
     /**
      * @var Configuration
@@ -55,13 +55,13 @@ class Repository
     public function __construct(
         array $dataSources,
         NumberFormatterFactory $numberFormatterFactory,
-        CurrencyCollectionFactory $currencyCollectionFactory,
+        CurrencyProviderFactory $currencyProviderFactory,
         Configuration $config
     ) {
         $this->setDataSources($dataSources);
-        $this->numberFormatterFactory    = $numberFormatterFactory;
-        $this->currencyCollectionFactory = $currencyCollectionFactory;
-        $this->configuration             = $config;
+        $this->numberFormatterFactory  = $numberFormatterFactory;
+        $this->currencyProviderFactory = $currencyProviderFactory;
+        $this->configuration           = $config;
     }
 
     /**
@@ -125,7 +125,7 @@ class Repository
                     $localeData->localeCode,
                     $this->numberFormatterFactory,
                     $localeData,
-                    $this->currencyCollectionFactory->build(),
+                    $this->currencyProviderFactory->build(),
                     $this->getConfiguration()
                 );
                 $this->addLocale($locale);
@@ -153,7 +153,7 @@ class Repository
                     $localeData->localeCode,
                     $this->numberFormatterFactory,
                     $localeData,
-                    $this->currencyCollectionFactory->build(),
+                    $this->currencyProviderFactory->build(),
                     $this->getConfiguration()
                 );
                 $this->addLocale($locale);
