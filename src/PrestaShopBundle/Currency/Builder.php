@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Currency;
 
+use PrestaShopBundle\Currency\Exception\Exception;
+
 class Builder
 {
     /**
@@ -52,11 +54,11 @@ class Builder
     protected $displayName;
 
     /**
-     * All possible symbols depending on context
+     * All possible symbol notations depending on context
      *
      * @var array
      */
-    protected $symbols;
+    protected $symbolData;
 
     /**
      * Currency ISO 4217 number
@@ -101,9 +103,9 @@ class Builder
     /**
      * @return array
      */
-    public function getSymbols()
+    public function getSymbolData()
     {
-        return $this->symbols;
+        return $this->symbolData;
     }
 
     /**
@@ -159,13 +161,13 @@ class Builder
     }
 
     /**
-     * @param array $symbols
+     * @param array $symbolData
      *
      * @return Builder
      */
-    public function setSymbols($symbols)
+    public function setSymbolData($symbolData)
     {
-        $this->symbols = $symbols;
+        $this->symbolData = $symbolData;
 
         return $this;
     }
@@ -213,8 +215,8 @@ class Builder
             throw new Exception('Display names must be set (' . $this->getIsoCode() . ')');
         }
 
-        if (is_null($this->getSymbols())) {
-            throw new Exception('Symbols must be set (' . $this->getIsoCode() . ')');
+        if (is_null($this->getSymbolData())) {
+            throw new Exception('Symbol data must be set (' . $this->getIsoCode() . ')');
         }
 
         if (is_null($this->getNumericIsoCode())) {

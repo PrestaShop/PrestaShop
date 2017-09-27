@@ -103,7 +103,7 @@ class RepositoryTest extends TestCase
      */
     public function testItFailsWithUnknownCurrencyId()
     {
-        $this->repository->getCurrency(0);
+        $this->repository->getCurrencyByIsoCode(0);
     }
 
     public function provideValidCurrencyCodes()
@@ -135,7 +135,10 @@ class RepositoryTest extends TestCase
                 array(
                     'isoCode'        => 'EUR',
                     'displayName'    => 'euro',
-                    'symbol'         => '€',
+                    'symbol'         => array(
+                        'default' => '€',
+                        'narrow' => '€'
+                    ),
                     'numericIsoCode' => 978,
                     'decimalDigits'  => 2,
                 ),
@@ -145,7 +148,10 @@ class RepositoryTest extends TestCase
                 array(
                     'isoCode'        => 'USD',
                     'displayName'    => 'dollar',
-                    'symbol'         => '$',
+                    'symbol'         => array(
+                        'default' => '$',
+                        'narrow' => '$'
+                    ),
                     'numericIsoCode' => 840,
                     'decimalDigits'  => 2,
                 ),
@@ -155,7 +161,10 @@ class RepositoryTest extends TestCase
                 array(
                     'isoCode'        => 'GBP',
                     'displayName'    => 'livre',
-                    'symbol'         => '£',
+                    'symbol'         => array(
+                        'default' => '£',
+                        'narrow' => '£'
+                    ),
                     'numericIsoCode' => 826,
                     'decimalDigits'  => 2,
                 ),
