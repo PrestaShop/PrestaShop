@@ -33,8 +33,6 @@ class TodoType extends CommonAbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $formProvider = $this->formProvider;
-
         $builder
             ->add('todo', 'Symfony\Component\Form\Extension\Core\Type\TextType')
             ->add('dueDate', 'Symfony\Component\Form\Extension\Core\Type\DateType', array(
