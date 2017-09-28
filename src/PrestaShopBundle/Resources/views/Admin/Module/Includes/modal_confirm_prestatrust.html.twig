@@ -22,9 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% set alertlevel = module.attributes.prestatrust.status ? 'success':'warning' %}
 
-<div id="modal-prestatrust-{{ module.attributes.name }}" class="modal">
+<div id="modal-prestatrust" class="modal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -36,42 +35,44 @@
       <div class="modal-body">
         <div class="row">
             <div class="col-md-2 text-sm-center">
-              <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
+              <img id="pstrust-img" src="" alt=""/>
             </div>
             <div class="col-md-10">
               <dl class="row">
                 <dt class="col-sm-3">{{ "Module"|trans({}, 'Admin.Modules.Feature') }}</dt>
                 <dd class="col-sm-9">
-                    <strong>{% if module.attributes.displayName %}
-                        {{ module.attributes.displayName|raw }}
-                      {% else %}
-                        {{ module.attributes.name }}
-                      {% endif %}
-                  </strong>
+                    <strong id="pstrust-name"></strong>
                 </dd>
                 <dt class="col-sm-3">{{ "Author"|trans({}, 'Admin.Modules.Feature') }}</dt>
-                <dd class="col-sm-9">{{ module.attributes.author }}</dd>
+                <dd class="col-sm-9" id="pstrust-author"></dd>
                 <dt class="col-sm-3">{{ "Status"|trans({}, 'Admin.Modules.Feature') }}</dt>
-                <dd class="col-sm-9"><strong><span class="text-{{ alertlevel }}">{{ module.attributes.prestatrust.status ? 'OK': 'KO' }}</span></strong></dd>
+                <dd class="col-sm-9"><strong><span class="text-info" id="pstrust-label"></span></strong></dd>
               </dl>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="alert alert-{{ alertlevel }}" role="alert">
-                    <p>{{ module.attributes.prestatrust.message }}</p>
+                <div class="alert alert-info" id="pstrust-message" role="alert">
+                    <p></p>
                 </div>
             </div>
         </div>
       </div>
       <div class="modal-footer">
-        {% if module.attributes.prestatrust.check_list.property %}
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Back to modules list</button>
-            <button type="button" class="btn btn-primary">Proceed with the installation</button>
-        {% else %}
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Proceed with the installation</button>
-            <button type="button" class="btn btn-primary">Buy module</button>
-        {% endif %}
+        <div id="pstrust-btn-property-ok">
+            <form method="post" class="pstrust-install" action="">
+                <input type="hidden" name="actionParams[confirmPrestaTrust]" value="1" />
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{"Back to modules list"|trans({}, 'Admin.Actions')}}</button>
+                <button type="submit" class="btn btn-primary module_action_menu_install" data-confirm_modal="">{{"Proceed with the installation"|trans({}, 'Admin.Actions')}}</button>
+            </form>
+        </div>
+        <div id="pstrust-btn-property-nok">
+            <form method="post" class="pstrust-install" action="">
+                <input type="hidden" name="actionParams[confirmPrestaTrust]" value="1" />
+                <button type="submit" class="btn btn-outline-secondary module_action_menu_install" data-confirm_modal="">{{"Proceed with the installation"|trans({}, 'Admin.Actions')}}</button>
+                <a href="" class="btn btn-primary" id="pstrust-buy" target="_blank">{{"Buy module"|trans({}, 'Admin.Actions')}}</a>
+            </form>
+        </div>
       </div>
     </div>
   </div>

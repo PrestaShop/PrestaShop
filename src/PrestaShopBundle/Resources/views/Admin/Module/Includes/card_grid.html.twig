@@ -117,8 +117,5 @@
     </div>
     {% include 'PrestaShopBundle:Admin/Module/Includes:modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
     {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm.html.twig' with { 'module': module } %}
-    {% if module.attributes.prestatrust is defined %}
-        {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' with { 'module': module } %}
-    {% endif %}
   </div>
 </div>
