@@ -168,6 +168,50 @@ class CombinationCore extends ObjectModel
         return $return;
     }
 
+    /**
+     * @return mixed
+     */
+    protected function hasDefaultOn()
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            SELECT pa.`default_on`
+            FROM `' . _DB_PREFIX_ . 'product_attribute` pa
+            WHERE pa.`id_product` = ' . (int)$this->id_product . '
+            AND pa.`default_on` = 1 '
+        );
+    }
+
+    /**
+     * Saves current object into database (add or update)
+     *
+     * @param bool $null_values
+     * @param bool $auto_date
+     * @return bool
+     */
+    public function save($null_values = false, $auto_date = true)
+    {
+        $updateAttributeShop = false;
+        if ($this->hasDefaultOn() && $this->default_on == 1) {
+            $this->default_on = 0;
+            $updateAttributeShop = true;
+        }
+
+        $result = (int)$this->id > 0 ? $this->update($null_values) : $this->add($auto_date, $null_values);
+        if ($updateAttributeShop) {
+            $id_shop_list = Shop::getContextListShopID();
+            foreach ($id_shop_list as $id_shop) {
+                $fields = array('default_on' => 1);
+                $where = $this->def['primary'] . ' = ' . (int)$this->id . ' AND id_shop = ' . (int)$id_shop;
+                $shop_exists = Db::getInstance()->getValue('SELECT ' . $this->def['primary'] . ' FROM ' . _DB_PREFIX_ . $this->def['table'] . '_shop WHERE ' . $where);
+                if ($shop_exists) {
+                    $result &= Db::getInstance()->update($this->def['table'] . '_shop', $fields, $where, 0, $null_values);
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public function deleteAssociations()
     {
         $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = '.(int)$this->id);
