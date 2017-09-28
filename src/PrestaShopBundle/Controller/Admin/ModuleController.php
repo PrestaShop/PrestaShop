@@ -27,10 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
@@ -330,6 +332,19 @@ class ModuleController extends FrameworkBundleAdminController
                         'Admin.Modules.Notification'
                     );
                 }
+            } catch(UnconfirmedModuleActionException $e) {
+                $response[$module]['status'] = false;
+                $response[$module]['confirmation_subject'] = $e->getSubject();
+                $response[$module]['module'] = $this->getPresentedProducts($e->getModule())[0];
+                $response[$module]['msg'] = $translator->trans(
+                    'Confirmation needed by module %module% on %action% (%subject%).',
+                    array(
+                        '%subject%' => $e->getSubject(),
+                        '%action%' => $e->getAction(),
+                        '%module%' => $module,
+                    ),
+                    'Admin.Modules.Notification'
+                );
             } catch (Exception $e) {
                 $response[$module]['status'] = false;
                 $response[$module]['msg'] = $translator->trans(

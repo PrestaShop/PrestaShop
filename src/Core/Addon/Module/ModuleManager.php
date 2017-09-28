@@ -33,8 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
@@ -85,7 +87,20 @@ class ModuleManager implements AddonManagerInterface
     private $dispatcher;
 
     /**
+<<<<<<< HEAD
      * @param AdminModuleDataProvider $adminModuleProvider
+||||||| merged common ancestors
+     * @param AdminModuleDataProvider $adminModulesProvider
+=======
+     * Additionnal data used for module actions
+     *
+     * @var ParameterBag
+     */
+    private $actionParams;
+
+    /**
+     * @param AdminModuleDataProvider $adminModulesProvider
+>>>>>>> CO: Introduce confirmation steps in back end
      * @param ModuleDataProvider $modulesProvider
      * @param ModuleDataUpdater $modulesUpdater
      * @param ModuleRepository $moduleRepository
@@ -112,6 +127,21 @@ class ModuleManager implements AddonManagerInterface
         $this->translator = $translator;
         $this->employee = $employee;
         $this->dispatcher = $dispatcher;
+
+        $this->actionParams = new ParameterBag();
+    }
+
+    /**
+     * For some actions, you may need to add params like confirmation details.
+     * This setter is the way to register them in the manager.
+     * 
+     * @param array $actionParams
+     * @return $this
+     */
+    public function setActionParams(array $actionParams)
+    {
+        $this->actionParams->replace($actionParams);
+        return $this;
     }
 
     /**
@@ -230,6 +260,7 @@ class ModuleManager implements AddonManagerInterface
 
         $module = $this->moduleRepository->getModule($name);
         $this->dispatch(ModuleManagementEvent::DOWNLOAD, $module);
+        $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
@@ -596,6 +627,22 @@ class ModuleManager implements AddonManagerInterface
                     'The module %module% must be installed first',
                     array('%module%' => $name),
                 'Admin.Modules.Notification'));
+        }
+    }
+
+    /**
+     * We check the module does not ask for pre-requesites to be respected prior the action being executed.
+     *
+     * @param string $action
+     * @param Module $module
+     * @throws UnconfirmedModuleActionException
+     */
+    private function checkConfirmationGiven($action, Module $module)
+    {
+        if ($action === 'install') {
+            if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
+                throw (new UnconfirmedModuleActionException())->setModule($module)->setAction($action)->setSubject('PrestaTrust');
+            }
         }
     }
 }
