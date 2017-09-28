@@ -44,6 +44,12 @@ var PerformancePageUI = {
         var cacheEnabledInput = document.getElementById('form_caching_use_cache');
         var cachingElements = document.getElementsByClassName('memcache');
 
+        if(cacheEnabledInput.value == CACHE_ENABLED) {
+            for (var i = 0; i < cachingElements.length; i++) {
+                cachingElements[i].style.display = "block";
+            }
+
+
         if(cacheEnabledInput.value === CACHE_ENABLED) {
             for (var i = 0; i < cachingElements.length; i++) {
                 cachingElements[i].style.display = "block";
@@ -56,14 +62,17 @@ var PerformancePageUI = {
         }
     },
     displayMemcacheServers: function() {
-        var CACHE_ENABLED = '1';
+        var CACHE_ENABLED = 1;
         var cacheEnabledInput = document.getElementById('form_caching_use_cache');
-        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
+        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
         var memcacheServersListBlock = document.getElementById('servers-list');
         var newServerBtn = document.getElementById('new-server-btn');
         var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
 
-        if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
+        if (
+            (cacheSelected == "CacheMemcache" || cacheSelected == "CacheMemcached")
+            && cacheEnabledInput.value == CACHE_ENABLED
+        ) {
             memcacheServersListBlock.style.display = "block";
             newServerBtn.style.display = "block";
 
