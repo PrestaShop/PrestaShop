@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Currency\Builder as CurrencyBuilder;
-use PrestaShopBundle\Currency\Symbol\Builder as SymbolBuilder;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 class Currency
 {
@@ -35,6 +35,7 @@ class Currency
      * Number of digits needed to display the decimal part of the price.
      *
      * @var int
+     * @Groups({"default"})
      */
     protected $decimalDigits;
 
@@ -44,6 +45,7 @@ class Currency
      * This id might be empty if currency was built from external data
      *
      * @var int
+     * @Groups({"default"})
      */
     protected $id;
 
@@ -53,6 +55,7 @@ class Currency
      * Example : EUR for euro
      *
      * @var string
+     * @Groups({"default"})
      */
     protected $isoCode;
 
@@ -67,6 +70,7 @@ class Currency
      * The currency symbol (has multiple available notations depending on context)
      *
      * @var Symbol
+     * @Groups({"default"})
      */
     protected $symbol;
 
@@ -76,16 +80,24 @@ class Currency
      * Example : 978 for euro
      *
      * @var int
+     * @Groups({"default"})
      */
     protected $numericIsoCode;
 
-    public function __construct(CurrencyBuilder $currencyBuilder)
+    /**
+     * Currency constructor.
+     *
+     * @param \PrestaShopBundle\Currency\CurrencyParameters $parameters
+     */
+    public function __construct(CurrencyParameters $parameters)
     {
-        $this->isoCode        = $currencyBuilder->getIsoCode();
-        $this->numericIsoCode = $currencyBuilder->getNumericIsoCode();
-        $this->decimalDigits  = $currencyBuilder->getDecimalDigits();
-        $this->displayNames   = $currencyBuilder->getDisplayNameData();
-        $this->id             = $currencyBuilder->getId();
+        $parameters->validateProperties();
+        $this->isoCode        = $parameters->getIsoCode();
+        $this->numericIsoCode = $parameters->getNumericIsoCode();
+        $this->decimalDigits  = $parameters->getDecimalDigits();
+        $this->displayNames   = $parameters->getDisplayName();
+        $this->symbols        = $parameters->getSymbols();
+        $this->id             = $parameters->getId();
 
         $symbolData    = $currencyBuilder->getSymbolData();
         $symbolBuilder = new SymbolBuilder();
@@ -94,6 +106,7 @@ class Currency
             $symbolBuilder->$methodName($symbol);
         }
         $this->symbol = $symbolBuilder->build();
+
     }
 
     /**

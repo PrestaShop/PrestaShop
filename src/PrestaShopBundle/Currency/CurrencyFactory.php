@@ -26,9 +26,7 @@
 
 namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Currency\Exception\Exception;
-
-class Builder
+class CurrencyFactory
 {
     /**
      * Number of digits needed to display the decimal part of the price.
@@ -51,14 +49,14 @@ class Builder
      *
      * @var array
      */
-    protected $displayNameData;
+    protected $displayName;
 
     /**
-     * All possible symbol notations depending on context
+     * All possible symbols depending on context
      *
      * @var array
      */
-    protected $symbolData;
+    protected $symbols;
 
     /**
      * Currency ISO 4217 number
@@ -77,57 +75,9 @@ class Builder
     protected $id;
 
     /**
-     * @return int
-     */
-    public function getDecimalDigits()
-    {
-        return $this->decimalDigits;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIsoCode()
-    {
-        return $this->isoCode;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDisplayNameData()
-    {
-        return $this->displayNameData;
-    }
-
-    /**
-     * @return array
-     */
-    public function getSymbolData()
-    {
-        return $this->symbolData;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNumericIsoCode()
-    {
-        return $this->numericIsoCode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * @param int $decimalDigits
      *
-     * @return Builder
+     * @return CurrencyFactory
      */
     public function setDecimalDigits($decimalDigits)
     {
@@ -139,7 +89,7 @@ class Builder
     /**
      * @param string $isoCode
      *
-     * @return Builder
+     * @return CurrencyFactory
      */
     public function setIsoCode($isoCode)
     {
@@ -149,25 +99,25 @@ class Builder
     }
 
     /**
-     * @param array $displayNameData
+     * @param array $displayName
      *
-     * @return Builder
+     * @return CurrencyFactory
      */
-    public function setDisplayNameData($displayNameData)
+    public function setDisplayName($displayName)
     {
-        $this->displayNameData = $displayNameData;
+        $this->displayName = $displayName;
 
         return $this;
     }
 
     /**
-     * @param array $symbolData
+     * @param array $symbols
      *
-     * @return Builder
+     * @return CurrencyFactory
      */
-    public function setSymbolData($symbolData)
+    public function setSymbols($symbols)
     {
-        $this->symbolData = $symbolData;
+        $this->symbols = $symbols;
 
         return $this;
     }
@@ -175,7 +125,7 @@ class Builder
     /**
      * @param int $numericIsoCode
      *
-     * @return Builder
+     * @return CurrencyFactory
      */
     public function setNumericIsoCode($numericIsoCode)
     {
@@ -186,7 +136,7 @@ class Builder
 
     public function setId($id)
     {
-        $this->id = (int)$id;
+        $this->id = (int) $id;
 
         return $this;
     }
@@ -196,31 +146,13 @@ class Builder
      */
     public function build()
     {
-        $this->validateProperties();
+        $currencyParameters = new CurrencyParameters();
+        $currencyParameters->setIsoCode($this->isoCode)
+                           ->setNumericIsoCode($this->numericIsoCode)
+                           ->setDecimalDigits($this->decimalDigits)
+                           ->setDisplayName($this->displayName)
+                           ->setSymbols($this->symbols);
 
-        return new Currency($this);
-    }
-
-    protected function validateProperties()
-    {
-        if (is_null($this->getIsoCode())) {
-            throw new Exception('Alphabetic ISO code must be set');
-        }
-
-        if (is_null($this->getDecimalDigits())) {
-            throw new Exception('Decimal digits number must be set (' . $this->getIsoCode() . ')');
-        }
-
-        if (is_null($this->getDisplayNameData())) {
-            throw new Exception('Display name data must be set (' . $this->getIsoCode() . ')');
-        }
-
-        if (is_null($this->getSymbolData())) {
-            throw new Exception('Symbol data must be set (' . $this->getIsoCode() . ')');
-        }
-
-        if (is_null($this->getNumericIsoCode())) {
-            throw new Exception('Numeric ISO code must be set (' . $this->getIsoCode() . ')');
-        }
+        return new Currency($currencyParameters);
     }
 }
