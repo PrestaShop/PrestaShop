@@ -122,7 +122,7 @@ var AdminModuleCard = function () {
         var url = "//" + window.location.host + form.attr("action");
 
         if (forceDeletion === "true" || forceDeletion === true) {
-          url +="&deletion=true";
+          url +="&actionParams[deletion]=true";
         }
 
         $.ajax({
