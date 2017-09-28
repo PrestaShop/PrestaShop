@@ -132,6 +132,18 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
+        "create-test-db": [
+            "PrestaShopBundle\\Install\\Install::createTestDB"
+        ],
+        "test": [
+            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml",
+            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
+        ],
+        "test-admin": [
+            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
+        ],
         "git-hook-install": "php .github/contrib/install.php",
         "git-hook-uninstall": "php .github/contrib/uninstall.php",
         "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",

@@ -34,33 +34,6 @@ define('PS_IN_UPGRADE', 1);
 // remove old unsupported classes
 @unlink(__DIR__.'/../../classes/db/MySQL.php');
 
-// Set execution time and time_limit to infinite if available
-@set_time_limit(0);
-@ini_set('max_execution_time', '0');
-
-// setting the memory limit to 128M only if current is lower
-$memory_limit = ini_get('memory_limit');
-if (substr($memory_limit, -1) != 'G'
-    and ((substr($memory_limit, -1) == 'M' and substr($memory_limit, 0, -1) < 128)
-    or is_numeric($memory_limit) and (intval($memory_limit) < 131072) and $memory_limit > 0)
-) {
-    @ini_set('memory_limit', '128M');
-}
-
-// redefine REQUEST_URI if empty (on some webservers...)
-if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '') {
-    if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME'])) {
-        $_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
-    } else {
-        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
-    }
-}
-
-if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
-    $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
-}
-$_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
-
 if (isset($_GET['adminDir']) && $_GET['adminDir'] && !defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', base64_decode($_GET['adminDir']));
 }

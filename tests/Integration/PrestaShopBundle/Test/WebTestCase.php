@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
 
+use PrestaShopBundle\Install\Install;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 
 class WebTestCase extends TestCase
@@ -44,6 +45,11 @@ class WebTestCase extends TestCase
      * @var \Symfony\Component\Translation\Translator
      */
     protected $translator;
+
+    public static function setUpBeforeClass()
+    {
+        Install::restoreTestDB();
+    }
 
     public function setUp()
     {

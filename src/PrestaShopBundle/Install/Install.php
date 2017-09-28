@@ -27,6 +27,7 @@
 
 namespace PrestaShopBundle\Install;
 
+use Doctrine\DBAL\DBALException;
 use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
@@ -47,10 +48,12 @@ use PrestaShop\PrestaShop\Adapter\Entity\Search;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
 use InstallSession;
 use Language as LanguageLegacy;
+use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestashopInstallerException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
+use SebastianBergmann\GlobalState\RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use PhpEncryption;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
@@ -61,6 +64,34 @@ class Install extends AbstractInstall
     const BOOTSTRAP_FILE = 'config/bootstrap.php';
 
     protected $logger;
+
+    /**
+     * The path of the bootsrap file we want to use for the installation
+     * @var string
+     */
+    protected $bootstrapFile = null;
+
+    /**
+     * The path of the settings file we want to use for the installation
+     *
+     * @var string
+     */
+    protected $settingsFile = null;
+
+    public function __construct($settingsFile = null, $bootstrapFile = null)
+    {
+        if ($bootstrapFile === null) {
+            $bootstrapFile = self::BOOTSTRAP_FILE;
+        }
+
+        if ($settingsFile === null) {
+            $settingsFile = self::SETTINGS_FILE;
+        }
+
+        $this->settingsFile = $settingsFile;
+        $this->bootstrapFile = $bootstrapFile;
+        parent::__construct();
+    }
 
     public function setError($errors)
     {
@@ -98,18 +129,18 @@ class Install extends AbstractInstall
     ) {
         // Check permissions for settings file
         if (
-            file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
-            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
+            file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->settingsFile)
+            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->settingsFile)
         ) {
-            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file%' => self::SETTINGS_FILE), 'Install'));
+            $this->setError($this->translator->trans('%file% file is not writable (check permissions)', array('%file%' => $this->settingsFile), 'Install'));
             return false;
         } elseif (
-            !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.self::SETTINGS_FILE)
-            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname(self::SETTINGS_FILE))
+            !file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->settingsFile)
+            && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname($this->settingsFile))
         ) {
             $this->setError($this->translator->trans(
                 '%folder% folder is not writable (check permissions)',
-                array('%folder%' => dirname(self::SETTINGS_FILE)), 'Install')
+                array('%folder%' => dirname($this->settingsFile)), 'Install')
             );
             return false;
         }
@@ -159,7 +190,7 @@ class Install extends AbstractInstall
         $settings_content = "<?php\n";
         $settings_content .= "//@deprecated 1.7";
 
-        if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content)) {
+        if (!file_put_contents(_PS_ROOT_DIR_.'/'.$this->settingsFile, $settings_content)) {
             $this->setError($this->translator->trans('Cannot write settings file', array(), 'Install'));
             return false;
         }
@@ -229,7 +260,7 @@ class Install extends AbstractInstall
     public function installDatabase($clear_database = false)
     {
         // Clear database (only tables with same prefix)
-        require_once _PS_ROOT_DIR_.'/'.self::BOOTSTRAP_FILE;
+        require_once _PS_ROOT_DIR_.'/'.$this->bootstrapFile;
         if ($clear_database) {
             $this->clearDatabase();
         }
@@ -271,7 +302,7 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new UpgradeDatabase();
+        $schemaUpgrade = new UpgradeDatabase(defined('_PS_IN_TEST_')?'test':null);
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 
@@ -293,15 +324,136 @@ class Install extends AbstractInstall
     {
         $instance = Db::getInstance();
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
-        $sqlRequest = (($truncate) ? 'TRUNCATE' : 'DROP TABLE');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
-            if (!_DB_PREFIX_ || preg_match('#^'._DB_PREFIX_.'#i', $table)) {
-                $sqlRequest .= ' `'.$table.'`,';
+            if (!_DB_PREFIX_ || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
+                $instance->execute((($truncate) ? 'TRUNCATE TABLE ' : 'DROP TABLE ').'`' . $table . '`');
             }
         }
-        $instance->execute(rtrim($sqlRequest, ','));
+
         $instance->execute('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+    /**
+     * Install Cldr Datas
+     */
+    public function installCldrDatas()
+    {
+        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
+        $cldrUpdate->init();
+
+        //get each defined languages and fetch cldr datas
+        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+
+        foreach ($langs as $lang) {
+            $cldrRepository = \Tools::getCldr(null, $lang['locale']);
+            $language_code = explode('-', $cldrRepository->getCulture());
+            if (count($language_code) == 1) {
+                $cldrUpdate->fetchLocale($language_code['0']);
+            } else {
+                $cldrUpdate->fetchLocale($language_code['0'].'-'.\Tools::strtoupper($language_code[1]));
+            }
+        }
+    }
+
+
+    public function initializeTestContext()
+    {
+        $smarty = null;
+        // Clean all cache values
+        \Cache::clean('*');
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $this->language->setLanguage('en');
+        $context = Context::getContext();
+        $context->shop = new Shop(1);
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Configuration::loadConfiguration();
+        if (!isset($context->language) || !\Validate::isLoadedObject($context->language)) {
+            $context->language = new Language('en');
+        }
+
+        if (!isset($context->country) || !\Validate::isLoadedObject($context->country)) {
+            if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT')) {
+                $context->country = new Country((int)$id_country);
+            }
+        }
+        if (!isset($context->currency) || !\Validate::isLoadedObject($context->currency)) {
+            if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT')) {
+                $context->currency = new \Currency((int)$id_currency);
+            }
+        }
+
+        /* Instantiate cookie */
+        $cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : (int)Configuration::get('PS_COOKIE_LIFETIME_FO');
+        if ($cookie_lifetime > 0) {
+            $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
+        }
+
+        $cookie = new \Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, 'localhost', false, false);
+
+        $context->cookie = $cookie;
+
+        $context->cart = new \Cart();
+        $context->employee = new Employee(1);
+        if (!defined('_PS_SMARTY_FAST_LOAD_')) {
+            define('_PS_SMARTY_FAST_LOAD_', true);
+        }
+        require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
+
+        $context->smarty = $smarty;
+    }
+
+    public static function createTestDB() {
+        define('_PS_IN_TEST_', true);
+        define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
+        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
+        require_once(__DIR__.'/../../../install-dev/init.php');
+
+        $install = new Install();
+        \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
+        $install->clearDatabase();
+        $install->installDatabase();
+        $install->initializeTestContext();
+        $install->installDefaultData('test_shop', false, false, true);
+        $install->populateDatabase();
+        $install->installCldrDatas();
+        $install->configureShop(array(
+            'shop_name' => 'test shop',
+            'shop_activity' => 'shop activity',
+            'shop_country' => 'en',
+            'shop_timezone' => 'europe/paris',
+            'use_smtp' => false,
+            'admin_firstname' => 'puff',
+            'admin_lastname' => 'daddy',
+            'admin_password' => 'test',
+            'admin_email' => 'test@prestashop.com',
+            'configuration_agrement' => true,
+            'send_informations' => false,
+        ));
+        $install->installFixtures();
+        $install->installTheme();
+        $language = new \Language(1);
+        Context::getContext()->language = $language;
+        $install->installModules();
+        $install->installModulesAddons();
+
+        $output = exec('mysqldump -h '._DB_SERVER_.' -B '._DB_NAME_.' -u '.
+            _DB_USER_.' --password='._DB_PASSWD_.
+            ' > '._PS_ROOT_DIR_.'/tests/resources/test_db.sql');
+
+        return $output;
+    }
+
+    public static function restoreTestDB() {
+        if (!file_exists(_PS_ROOT_DIR_.'/tests/resources/test_db.sql')) {
+            throw new DBALException('You need to run composer create-test-db to create the initial test database');
+        }
+        exec('mysql -u '._DB_USER_.
+            ' --password='._DB_PASSWD_.
+            ' -h '._DB_SERVER_.
+            ' '._DB_NAME_.' < '._PS_ROOT_DIR_.'/tests/resources/test_db.sql'
+        );
     }
 
     /**
@@ -334,10 +486,10 @@ class Install extends AbstractInstall
                         }
                     }
                 }
+                $iso_codes_to_install = array_flip(array_flip($iso_codes_to_install));
             } else {
                 $iso_codes_to_install = null;
             }
-            $iso_codes_to_install = array_flip(array_flip($iso_codes_to_install));
             $languages = $this->installLanguages($iso_codes_to_install);
         } catch (PrestashopInstallerException $e) {
             $this->setError($e->getMessage());
