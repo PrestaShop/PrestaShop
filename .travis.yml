@@ -46,8 +46,8 @@ script:
   - composer install --prefer-dist --no-interaction --no-progress
   - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
-  - php bin/phpunit -c tests/
-  - php bin/phpunit -c tests/phpunit-admin.xml
+  - composer test
+  - composer test-admin
   - composer phpunit-sf
   - composer phpunit-controllers
   - bash ./travis-scripts/run-selenium-tests

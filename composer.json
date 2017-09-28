@@ -137,8 +137,7 @@
         ],
         "test": [
             "PrestaShopBundle\\Install\\Install::createTestDB",
-            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml",
-            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
+            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml"
         ],
         "test-admin": [
             "PrestaShopBundle\\Install\\Install::createTestDB",
@@ -147,8 +146,14 @@
         "git-hook-install": "php .github/contrib/install.php",
         "git-hook-uninstall": "php .github/contrib/uninstall.php",
         "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-        "phpunit-sf": "php bin/phpunit -c admin-dev/",
-        "phpunit-controllers": "php bin/phpunit -c app/"
+        "phpunit-sf": [
+            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c admin-dev/"
+        ],
+        "phpunit-controllers": [
+            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c app/"
+        ]
     },
     "config": {
         "bin-dir": "bin",

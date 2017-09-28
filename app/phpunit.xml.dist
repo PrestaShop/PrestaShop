@@ -19,6 +19,7 @@
 
     <php>
         <env name="kernel.environment" value="test" />
+        <env name="SYMFONY_ENV" value="test"/>
     </php>
 
     <groups>
