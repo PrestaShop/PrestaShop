@@ -32,9 +32,24 @@ use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
 class Repository
 {
+
+    /**
+     * @var DataSourceInterface[]
+     */
     protected $dataSources = array();
+
+    /**
+     * @var Currency[]
+     */
     protected $currencies  = array();
 
+    /**
+     * Repository constructor.
+     *
+     * @param DataSourceInterface[] $dataSources
+     *
+     * @throws \PrestaShopBundle\Currency\Exception\Exception
+     */
     public function __construct(array $dataSources)
     {
         foreach ($dataSources as $dataSource) {
@@ -83,6 +98,47 @@ class Repository
     }
 
     /**
+     * @param $id
+     *
+     * @return Currency|null
+     */
+    public function getCurrency($id)
+    {
+        if ((int)$id != $id) {
+            throw new InvalidArgumentException('$id must be an integer');
+        }
+
+        if (!empty($this->currencies[$id])) {
+            return $this->currencies[$id];
+        }
+
+        foreach ($this->getDataSources() as $index => $dataSource) {
+            /** @var DataSourceInterface $dataSource */
+            $currencyData = $dataSource->getCurrencyById((int)$id);
+
+            if (!empty($currencyData)) {
+                $factory  = new CurrencyFactory();
+                $currency = $factory->setIsoCode($currencyData['isoCode'])
+                    ->setNumericIsoCode($currencyData['numericIsoCode'])
+                    ->setDecimalDigits($currencyData['decimalDigits'])
+                    ->setDisplayName($currencyData['localizedNames'])
+                    ->setSymbols($currencyData['localizedSymbols'])
+                    ->build();
+                $this->addCurrency($currency);
+
+//                $this->refreshDataSources($index - 1, $currencyData);
+                break;
+            }
+        }
+
+        if (!isset($currency)) {
+            throw new InvalidArgumentException("Unknown currency id : $id");
+        }
+
+        return $currency;
+    }
+
+    /**
      * @param $currencyCode
      *
      * @return Currency|null
@@ -98,8 +154,8 @@ class Repository
             $currencyData = $dataSource->getCurrencyByIsoCode($currencyCode);
 
             if (!empty($currencyData)) {
-                $builder  = new Builder();
-                $currency = $builder->setIsoCode($currencyData['isoCode'])
+                $factory  = new CurrencyFactory();
+                $currency = $factory->setIsoCode($currencyData['isoCode'])
                     ->setNumericIsoCode($currencyData['numericIsoCode'])
                     ->setDecimalDigits($currencyData['decimalDigits'])
                     ->setDisplayNameData($currencyData['displayName'])
