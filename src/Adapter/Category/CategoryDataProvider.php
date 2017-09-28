@@ -154,7 +154,7 @@ class CategoryDataProvider
     {
         $context = \ContextCore::getContext();
         
-        return \DbCore::getInstance()->executeS('SELECT cl.`id_category` as "id", cl.`name`, (SELECT GROUP_CONCAT(cl.name SEPARATOR "'.$delimiter.'")
+        return \DbCore::getInstance()->executeS('SELECT cl.`id_category` as "id", cl.`name`, (SELECT GROUP_CONCAT(cl.name ORDER BY c.`nleft` SEPARATOR "'.$delimiter.'")
                                 FROM `'._DB_PREFIX_.'category` c
                                 INNER JOIN `'._DB_PREFIX_.'category_shop` category_shop ON (category_shop.id_category = c.id_category AND category_shop.id_shop = '.$context->shop->id.')
                                 INNER JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.id_shop = ' . $context->shop->id . ' AND cl.id_lang = ' . $context->language->id . ')
