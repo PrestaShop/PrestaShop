@@ -44,6 +44,8 @@
         <div class="col-lg-10 module-catalog-page">
             {# Addons connect modal #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+            {# PrestaTrust modal #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
             {# Contains toolbar-nav for module page #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
             {# Contains menu with Selection/Categories/Popular and Tag Search #}

@@ -56,6 +56,37 @@ var AdminModuleCard = function () {
         modal.first().modal('show');
         return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
     };
+    
+    this.confirmPrestaTrust = function(result) {
+        var modal = $("#modal-prestatrust");
+        var module = result.module.attributes;
+
+        if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
+            return;
+        }
+
+        const alertClass = module.prestatrust.status?'success':'warning';
+        
+        if (module.prestatrust.check_list.property) {
+            modal.find("#pstrust-btn-property-ok").show();
+            modal.find("#pstrust-btn-property-nok").hide();
+        } else {
+            modal.find("#pstrust-btn-property-ok").hide();
+            modal.find("#pstrust-btn-property-nok").show();
+            modal.find("#pstrust-buy").attr("href", module.url).toggle(module.url !== null);
+        }
+        
+        modal.find("#pstrust-img").attr({src: module.img, alt: module.name});
+        modal.find("#pstrust-name").text(module.displayName);
+        modal.find("#pstrust-author").text(module.author);
+        modal.find("#pstrust-name").text(module.displayName);
+        modal.find("#pstrust-label").attr("class", "text-"+alertClass).text(module.prestatrust.status?'OK':'KO');
+        modal.find("#pstrust-message").attr("class", "alert alert-"+alertClass);
+        modal.find("#pstrust-message > p").text(module.prestatrust.message);
+        modal.find(".pstrust-install").attr("action", module.urls.install);
+        modal.find(".module_action_menu_install").attr("data-confirm_modal", "module-modal-confirm-"+ module.name +"-install");
+        modal.modal();
+    };
 
     this.dispatchPreEvent = function (action, element) {
         var event = jQuery.Event('module_card_action_event');
@@ -79,6 +110,9 @@ var AdminModuleCard = function () {
         });
 
         $(document).on('click', this.moduleActionMenuInstallLinkSelector, function () {
+            if ($("#modal-prestatrust").length) {
+                $("#modal-prestatrust").modal('hide');
+            }
             return _this.dispatchPreEvent('install', this) && _this.confirmAction('install', this) && _this.requestToController('install', $(this));
         });
         $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
@@ -120,15 +154,17 @@ var AdminModuleCard = function () {
         var form = element.closest("form");
         var spinnerObj = $("<button class=\"btn-primary-reverse onclick unbind spinner \"></button>");
         var url = "//" + window.location.host + form.attr("action");
+        var actionParams = form.serializeArray();
 
         if (forceDeletion === "true" || forceDeletion === true) {
-          url +="&actionParams[deletion]=true";
+          actionParams.push({name: "actionParams[deletion]", value: true});
         }
 
         $.ajax({
             url: url,
             dataType: 'json',
             method: 'POST',
+            data: actionParams,
             beforeSend: function () {
                 jqElementObj.hide();
                 jqElementObj.after(spinnerObj);
@@ -139,6 +175,9 @@ var AdminModuleCard = function () {
             } else {
                 var moduleTechName = Object.keys(result)[0];
                 if (result[moduleTechName].status === false) {
+                    if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
+                        _this.confirmPrestaTrust(result[moduleTechName]);
+                    }
                     $.growl.error({message: result[moduleTechName].msg});
                 } else {
                     $.growl.notice({message: result[moduleTechName].msg});
