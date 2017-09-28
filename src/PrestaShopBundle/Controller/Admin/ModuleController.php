@@ -287,9 +287,9 @@ class ModuleController extends FrameworkBundleAdminController
 
         $action = $request->get('action');
         $module = $request->get('module_name');
-        $forceDeletion = $request->query->has('deletion');
 
         $moduleManager = $this->get('prestashop.module.manager');
+        $moduleManager->setActionParams($request->query->get('actionParams', array()));
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->get('translator');
@@ -306,11 +306,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         try {
-            if ($action == 'uninstall') {
-                $response[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
-            } else {
-                $response[$module]['status'] = $moduleManager->{$action}($module);
-            }
+            $response[$module]['status'] = $moduleManager->{$action}($module);
 
             if ($response[$module]['status'] === null) {
                 $response[$module]['status'] = false;
@@ -341,9 +337,10 @@ class ModuleController extends FrameworkBundleAdminController
                 );
             }
         } catch(UnconfirmedModuleActionException $e) {
+            $modules = array($e->getModule());
             $response[$module]['status'] = false;
             $response[$module]['confirmation_subject'] = $e->getSubject();
-            $response[$module]['module'] = $this->getPresentedProduct($e->getModule());
+            $response[$module]['module'] = $this->getPresentedProducts($modules)[0];
             $response[$module]['msg'] = $translator->trans(
                 'Confirmation needed by module %module% on %action% (%subject%).',
                 array(

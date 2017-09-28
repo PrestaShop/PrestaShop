@@ -274,7 +274,7 @@ class ModuleManager implements AddonManagerInterface
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
-    public function uninstall($name, $file_deletion = false)
+    public function uninstall($name)
     {
         // Check permissions:
         // * Employee can delete
@@ -293,7 +293,7 @@ class ModuleManager implements AddonManagerInterface
         $module = $this->moduleRepository->getModule($name);
         $result = $module->onUninstall();
 
-        if ($result && (bool)$file_deletion) {
+        if ($result && $this->actionParams->get('deletion', false)) {
             $result &= $this->removeModuleFromDisk($name);
         }
 
