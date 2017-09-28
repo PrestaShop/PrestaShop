@@ -289,7 +289,7 @@ class ModuleController extends FrameworkBundleAdminController
         $module = $request->get('module_name');
 
         $moduleManager = $this->get('prestashop.module.manager');
-        $moduleManager->setActionParams($request->query->get('actionParams', array()));
+        $moduleManager->setActionParams($request->request->get('actionParams', array()));
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->get('translator');
@@ -337,7 +337,7 @@ class ModuleController extends FrameworkBundleAdminController
                 );
             }
         } catch(UnconfirmedModuleActionException $e) {
-            $modules = array($e->getModule());
+            $modules = $modulesProvider->generateAddonsUrls(array($e->getModule()));
             $response[$module]['status'] = false;
             $response[$module]['confirmation_subject'] = $e->getSubject();
             $response[$module]['module'] = $this->getPresentedProducts($modules)[0];
