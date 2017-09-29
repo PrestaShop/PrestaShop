@@ -38,25 +38,28 @@ class NotificationsType extends TranslatorAwareType
     {
         $builder
             ->add('show_notifs_new_orders', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('show_notifs_new_customers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('show_notifs_new_messages', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,

@@ -41,11 +41,12 @@ class AdministrationController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminAdminPreferences';
 
     /**
+     * @var FormInterface
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(FormInterface $form = null)
     {
-        $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
+        $form = is_null($form) ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => array(),
@@ -60,5 +61,51 @@ class AdministrationController extends FrameworkBundleAdminController
         );
 
         return $this->render('PrestaShopBundle:Admin/AdvancedParameters:administration.html.twig', $twigValues);
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function processFormAction(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+            return $this->redirectToRoute('admin_performance');
+        }
+
+        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
+        $form->handleRequest($request);
+
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_administration');
+        }
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $saveErrors = $this->get('prestashop.adapter.administration.form_handler')->save($data);
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_administration');
+            }
+
+            $this->flashErrors($saveErrors);
+        }
+
+        return $this->redirectToRoute('admin_administration');
     }
 }

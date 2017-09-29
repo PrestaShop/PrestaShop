@@ -41,6 +41,7 @@ class PerformanceController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminPerformance';
 
     /**
+     * @var FormInterface
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
