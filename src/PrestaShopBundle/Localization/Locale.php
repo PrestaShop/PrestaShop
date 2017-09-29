@@ -35,6 +35,13 @@ use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 
+/**
+ * Class Locale
+ *
+ * This class is the representation of a locale's properties translated for a given locale.
+ *
+ * @package PrestaShopBundle\Localization
+ */
 class Locale
 {
     protected $localeCode;

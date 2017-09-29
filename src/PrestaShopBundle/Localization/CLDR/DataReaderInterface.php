@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Localization\CLDR;
 
+/**
+ * Interface DataReaderInterface
+ *
+ * Defines how a CLDR data reader should behave
+ *
+ * @package PrestaShopBundle\Localization\CLDR
+ */
 interface DataReaderInterface
 {
     /**

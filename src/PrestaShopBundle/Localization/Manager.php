@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Localization;
 
+/**
+ * Class Manager
+ *
+ * Entry point for the Locale objects manipulation
+ *
+ * @package PrestaShopBundle\Localization
+ */
 class Manager
 {
     protected $installedLocaleRepository;

@@ -28,6 +28,13 @@ namespace PrestaShopBundle\Localization\CLDR;
 
 use PrestaShopBundle\Localization\Exception\Exception;
 
+/**
+ * Class LocaleData
+ *
+ * Represents the Locale specification (data bag)
+ *
+ * @package PrestaShopBundle\Localization\CLDR
+ */
 class LocaleData
 {
     /**

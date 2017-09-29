@@ -29,6 +29,13 @@ namespace PrestaShopBundle\Localization\CLDR;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use SimplexmlElement;
 
+/**
+ * Class DataReader
+ *
+ * Reads XML CLDR data
+ *
+ * @package PrestaShopBundle\Localization\CLDR
+ */
 class DataReader implements DataReaderInterface
 {
     const CLDR_ROOT         = 'localization/CLDR/';

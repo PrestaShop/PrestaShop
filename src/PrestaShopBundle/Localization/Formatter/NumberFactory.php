@@ -29,6 +29,13 @@ namespace PrestaShopBundle\Localization\Formatter;
 use PrestaShopBundle\Localization\Formatter\Number as NumberFormatter;
 use PrestaShopBundle\Localization\Locale;
 
+/**
+ * Class NumberFactory
+ *
+ * Builds a number formatter for a given locale.
+ *
+ * @package PrestaShopBundle\Localization\Formatter
+ */
 class NumberFactory
 {
     public function build(Locale $locale)

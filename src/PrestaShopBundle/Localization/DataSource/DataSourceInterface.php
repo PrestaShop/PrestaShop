@@ -28,6 +28,13 @@ namespace PrestaShopBundle\Localization\DataSource;
 
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 
+/**
+ * Interface DataSourceInterface
+ *
+ * Defines how a Locale data source should behave
+ *
+ * @package PrestaShopBundle\Localization\DataSource
+ */
 interface DataSourceInterface
 {
     /**

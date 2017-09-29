@@ -32,6 +32,13 @@ use PrestaShopBundle\Localization\DataSource\DataSourceInterface;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\Formatter\NumberFactory as NumberFormatterFactory;
 
+/**
+ * Class Repository
+ *
+ * Combines data sources to read/save Locales
+ *
+ * @package PrestaShopBundle\Localization
+ */
 class Repository
 {
     protected $dataSources = array();

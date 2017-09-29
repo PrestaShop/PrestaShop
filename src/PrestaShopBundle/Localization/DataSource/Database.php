@@ -28,6 +28,13 @@ namespace PrestaShopBundle\Localization\DataSource;
 
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 
+/**
+ * Class Database
+ *
+ * Database Locale data source. Reads and writes CLDR data from / to the database.
+ *
+ * @package PrestaShopBundle\Localization\DataSource
+ */
 class Database implements DataSourceInterface
 {
     /**

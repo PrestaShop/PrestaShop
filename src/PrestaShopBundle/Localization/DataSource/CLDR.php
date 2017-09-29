@@ -32,6 +32,13 @@ use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\Exception\Exception;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 
+/**
+ * Class CLDR
+ *
+ * Official CLDR Locale data source. Reads CLDR data from official CLDR XML data files.
+ *
+ * @package PrestaShopBundle\Localization\DataSource
+ */
 class CLDR implements DataSourceInterface
 {
     const CLDR_ROOT = 'localization/CLDR/';

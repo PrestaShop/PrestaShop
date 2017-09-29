@@ -32,6 +32,14 @@ use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException as CurrencyInvalidArgumentException;
 use PrestaShopBundle\Localization\Locale;
 
+/**
+ * Class Number
+ *
+ * Number formatter.
+ * Formats numbers, percentages and prices for a given locale (and currency, when relevant)
+ *
+ * @package PrestaShopBundle\Localization\Formatter
+ */
 class Number
 {
     const DECIMAL  = 'decimal';
