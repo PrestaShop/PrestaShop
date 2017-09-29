@@ -28,6 +28,13 @@ namespace PrestaShopBundle\Currency;
 
 use PrestaShopBundle\Currency\Symbol\Builder as SymbolBuilder;
 
+/**
+ * Class Symbol
+ *
+ * Represents a currency symbol, with its different notations (standard, narrow...)
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class Symbol
 {
     protected $default;

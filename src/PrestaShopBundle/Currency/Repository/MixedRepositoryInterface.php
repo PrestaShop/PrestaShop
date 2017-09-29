@@ -28,6 +28,13 @@ namespace PrestaShopBundle\Currency\Repository;
 
 use PrestaShopBundle\Currency\Currency;
 
+/**
+ * Interface MixedRepositoryInterface
+ *
+ * TODO : description
+ *
+ * @package PrestaShopBundle\Currency\Repository
+ */
 interface MixedRepositoryInterface
 {
     /**

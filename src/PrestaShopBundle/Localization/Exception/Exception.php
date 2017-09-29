@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Localization\Exception;
 
+/**
+ * Class Exception
+ *
+ * Generic Exception but in the PrestaShopBundle\Localization context
+ *
+ * @package PrestaShopBundle\Localization\Exception
+ */
 class Exception extends \Exception
 {
 }

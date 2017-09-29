@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Currency\Exception;
 
+/**
+ * Class InvalidArgumentException
+ *
+ * Generic InvalidArgumentException but in the PrestaShopBundle\Currency context
+ *
+ * @package PrestaShopBundle\Currency\Exception
+ */
 class InvalidArgumentException extends \InvalidArgumentException
 {
 }

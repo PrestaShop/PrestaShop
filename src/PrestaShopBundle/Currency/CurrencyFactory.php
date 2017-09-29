@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Currency;
 
+/**
+ * Class CurrencyFactory
+ *
+ * Builds Currency object from a given parameters set.
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class CurrencyFactory
 {
     /**

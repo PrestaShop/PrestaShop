@@ -29,6 +29,15 @@ namespace PrestaShopBundle\Currency\Repository\Reference;
 use PrestaShopBundle\Currency\CurrencyFactory;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
+/**
+ * Class ReferenceRepository
+ *
+ * Provides Currency objects.
+ * Implements ReferenceRepositoryInterface which means it is able to provide Currency objects built from reference data.
+ * This currency repository interacts with reference data only.
+ *
+ * @package PrestaShopBundle\Currency\Repository\Reference
+ */
 class ReferenceRepository implements ReferenceRepositoryInterface
 {
 

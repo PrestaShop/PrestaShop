@@ -30,6 +30,13 @@ use PrestaShopBundle\Currency\DataSource\DataSourceInterface;
 use PrestaShopBundle\Currency\Exception\Exception;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
+/**
+ * Class Repository
+ *
+ * Combines data sources to read/save currencies.
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class Repository
 {
 

@@ -28,6 +28,15 @@ namespace PrestaShopBundle\Currency\Repository\Installed;
 
 use PrestaShopBundle\Currency\Currency;
 
+/**
+ * Interface InstalledRepositoryInterface
+ *
+ * Contract to specify how an "installed" currency repository should behave.
+ * A currency repository is used as a Currency CRUD
+ * An installed currency repository deals with installed currencies only
+ *
+ * @package PrestaShopBundle\Currency\Repository\Installed
+ */
 interface InstalledRepositoryInterface
 {
      /**

@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Currency;
 
+/**
+ * Class CurrencyParameters
+ *
+ * Parameters bag used for building Currency objects
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class CurrencyParameters
 {
     /**

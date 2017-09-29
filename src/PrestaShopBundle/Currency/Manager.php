@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Currency;
 
+/**
+ * Class Manager
+ *
+ * Entry point for Currency objects manipulation
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class Manager
 {
     protected $installedCurrencyRepository;

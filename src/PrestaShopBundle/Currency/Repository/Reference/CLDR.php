@@ -30,6 +30,14 @@ use PrestaShopBundle\Currency\Exception\Exception;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 
+/**
+ * Class CLDR
+ *
+ * Implements ReferenceReaderInterface which means it is able to read and extract elements from reference data.
+ * Here, CLDR reference data will be read. This data comes from xml files.
+ *
+ * @package PrestaShopBundle\Currency\Repository\Reference
+ */
 class CLDR implements ReferenceReaderInterface
 {
     const CLDR_ROOT = 'localization/CLDR/';
