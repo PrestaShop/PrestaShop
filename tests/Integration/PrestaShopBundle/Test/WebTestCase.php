@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
 
 use PrestaShopBundle\Install\Install;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 
 class WebTestCase extends TestCase
@@ -63,7 +64,6 @@ class WebTestCase extends TestCase
 
         $contextMock = $this->getMockBuilder('\Context')
             ->setMethods(array('getTranslator'))
-            ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -99,6 +99,7 @@ class WebTestCase extends TestCase
             ->will($this->returnValue($contextMock));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
+        self::$kernel->getContainer()->set('logger', new NullLogger());
     }
 
     protected function enableDemoMode()

@@ -115,6 +115,8 @@ class AdminTabsControllerTest extends UnitTestCase
                 return strpos($subject, 'tab') !== false ||
                     // It should select authorization
                     strpos($subject, 'authorization') !== false ||
+                    strpos($subject, 'ps_configuration') !== false ||
+                    strpos($subject, 'ps_shop') !== false ||
                     // It should select hook alias
                     strpos($subject, 'hook_alias') !== false;
 

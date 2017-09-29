@@ -437,7 +437,6 @@ class Install extends AbstractInstall
         Context::getContext()->language = $language;
         $install->installModules();
         $install->installModulesAddons();
-        \CacheCore::clean('*');
 
         $output = exec('mysqldump -h '._DB_SERVER_.' -B '._DB_NAME_.' -u '.
             _DB_USER_.' --password='._DB_PASSWD_.

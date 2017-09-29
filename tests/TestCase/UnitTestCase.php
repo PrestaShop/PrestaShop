@@ -129,7 +129,9 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->setupContextualCookieMock();
         $this->setupContextualCurrencyMock();
         $this->setupRequestMock();
-        define('_PS_TAB_MODULE_LIST_URL_', '');
+        if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
+            define('_PS_TAB_MODULE_LIST_URL_', '');
+        }
     }
 
     protected function setupContextualTemplateEngineMock()

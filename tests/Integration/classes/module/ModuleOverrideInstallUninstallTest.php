@@ -131,4 +131,12 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
         $this->assertFileNotExists($override_path_cart);
     }
+
+    public function tearDown()
+    {
+        $ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
+        @unlink($ressource_path.'/Cart.php');
+        @unlink($ressource_path.'/AdminProductsController.php');
+        parent::tearDown();
+    }
 }
