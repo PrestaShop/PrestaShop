@@ -25,40 +25,32 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * This class manages the data manipulated using forms
- * in "Configure > Advanced Parameters > Performance" page.
+ * in "Configure > Advanced Parameters > Administration" page.
  */
-class PerformanceFormHandler implements FormHandlerInterface
+class FormHandler implements FormHandlerInterface
 {
     /**
-     * @var FormFactoryInterface
+     * @var FormFactory
      */
     private $formFactory;
 
     /**
-     * @param CombinationFeature
-     */
-    private $combinationFeature;
-
-    /**
-     * @var PerformanceFormDataProvider
+     * @var FormDataProvider
      */
     private $formDataProvider;
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        PerformanceFormDataProvider $formDataProvider,
-        CombinationFeature $combinationFeature
+        PerformanceFormDataProvider $formDataProvider
     )
     {
         $this->formFactory = $formFactory;
-        $this->combinationFeature = $combinationFeature;
         $this->formDataProvider = $formDataProvider;
     }
 
@@ -68,15 +60,9 @@ class PerformanceFormHandler implements FormHandlerInterface
     public function getForm()
     {
         return $this->formFactory->createBuilder()
-            ->add('smarty', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType')
-            ->add('debug_mode', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType')
-            ->add('optional_features', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType', array(
-                'are_combinations_used' => $this->combinationFeature->isUsed()
-            ))
-            ->add('ccc', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType')
-            ->add('media_servers', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType')
-            ->add('caching', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType')
-            ->add('add_memcache_server', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType')
+            ->add('general', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType')
+            ->add('upload_quota', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\UploadQuotaType')
+            ->add('notifications', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\NotificationsType')
             ->setData($this->formDataProvider->getData())
             ->getForm()
         ;

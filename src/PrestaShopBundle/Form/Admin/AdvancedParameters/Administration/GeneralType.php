@@ -29,7 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class NotificationForm extends TranslatorAwareType
+class GeneralType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -37,7 +37,7 @@ class NotificationForm extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show_notifs_new_orders', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('check_modules_update', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
                     false => 'No',
                     true => 'Yes',
@@ -45,7 +45,7 @@ class NotificationForm extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('show_notifs_new_customers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('check_ip_address', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
                     false => 'No',
                     true => 'Yes',
@@ -53,12 +53,10 @@ class NotificationForm extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('show_notifs_new_messages', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('front_cookie_lifetime', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+                'required' => true,
+            ))
+            ->add('back_cookie_lifetime', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
                 'required' => true,
             ))
         ;
@@ -79,6 +77,6 @@ class NotificationForm extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'administration_notification_block';
+        return 'administration_general_block';
     }
 }

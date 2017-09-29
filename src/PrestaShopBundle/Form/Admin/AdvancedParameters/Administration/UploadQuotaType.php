@@ -29,7 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GeneralForm extends TranslatorAwareType
+class UploadQuotaType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -37,26 +37,13 @@ class GeneralForm extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('max_size_attached_files', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
                 'required' => true,
             ))
-            ->add('check_ip_address', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('max_size_downloadable_product', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
                 'required' => true,
             ))
-            ->add('front_cookie_lifetime', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-                'required' => true,
-            ))
-            ->add('back_cookie_lifetime', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('max_size_product_image', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
                 'required' => true,
             ))
         ;
@@ -77,6 +64,6 @@ class GeneralForm extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'administration_general_block';
+        return 'administration_upload_quota_block';
     }
 }

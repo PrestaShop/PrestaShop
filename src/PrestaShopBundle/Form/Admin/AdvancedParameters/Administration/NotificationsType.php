@@ -29,7 +29,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UploadQuotaForm extends TranslatorAwareType
+class NotificationsType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -37,13 +37,28 @@ class UploadQuotaForm extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('max_size_attached_files', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('show_notifs_new_orders', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices'  => array(
+                    false => 'No',
+                    true => 'Yes',
+                ),
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('max_size_downloadable_product', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('show_notifs_new_customers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices'  => array(
+                    false => 'No',
+                    true => 'Yes',
+                ),
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('max_size_product_image', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('show_notifs_new_messages', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices'  => array(
+                    false => 'No',
+                    true => 'Yes',
+                ),
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
         ;
@@ -64,6 +79,6 @@ class UploadQuotaForm extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'administration_upload_quota_block';
+        return 'administration_notification_block';
     }
 }
