@@ -52,11 +52,11 @@ class CurrencyFactory
     protected $displayName;
 
     /**
-     * All possible symbols depending on context
+     * All possible symbol data depending on context
      *
      * @var array
      */
-    protected $symbols;
+    protected $symbolData;
 
     /**
      * Currency ISO 4217 number
@@ -115,7 +115,7 @@ class CurrencyFactory
      *
      * @return CurrencyFactory
      */
-    public function setSymbols($symbols)
+    public function setSymbolData($symbols)
     {
         $this->symbols = $symbols;
 
@@ -151,7 +151,14 @@ class CurrencyFactory
                            ->setNumericIsoCode($this->numericIsoCode)
                            ->setDecimalDigits($this->decimalDigits)
                            ->setDisplayName($this->displayName)
-                           ->setSymbols($this->symbols);
+                           ->setSymbolData($this->symbolData);
+
+        $symbolBuilder = new Symbol\Builder();
+        foreach ($this->symbolData as $type => $symbol) {
+            $methodName = 'set' . ucfirst($type);
+            $symbolBuilder->$methodName($symbol);
+        }
+        $currencyParameters->setSymbol($symbolBuilder->build());
 
         return new Currency($currencyParameters);
     }
