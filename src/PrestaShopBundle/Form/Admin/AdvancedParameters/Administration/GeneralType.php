@@ -38,17 +38,19 @@ class GeneralType extends TranslatorAwareType
     {
         $builder
             ->add('check_modules_update', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('check_ip_address', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices_as_values' => true,
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
