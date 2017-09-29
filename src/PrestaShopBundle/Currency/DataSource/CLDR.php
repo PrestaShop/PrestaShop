@@ -30,6 +30,15 @@ use PrestaShopBundle\Currency\Exception\Exception;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 
+/**
+ * Class CLDR
+ *
+ * It implements DataSourceInterface which means it is used to read and write data from a specific place (can be local,
+ * cloud, API...)
+ * This class represents the CLDR data source. : data inputs/outputs are made from/to the official CLDR XML files.
+ *
+ * @package PrestaShopBundle\Currency\DataSource
+ */
 class CLDR implements DataSourceInterface
 {
     const CLDR_ROOT = 'localization/CLDR/';

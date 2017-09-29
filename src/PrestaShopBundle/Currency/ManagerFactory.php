@@ -31,6 +31,13 @@ use PrestaShopBundle\Currency\DataSource\CLDR;
 use PrestaShopBundle\Currency\DataSource\Database;
 use PrestaShopBundle\Localization\CLDR\DataReader;
 
+/**
+ * Class ManagerFactory
+ *
+ * Builds currency manager object for a given locale.
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class ManagerFactory
 {
     /**

@@ -27,8 +27,19 @@
 namespace PrestaShopBundle\Currency\Repository\Installed;
 
 use PrestaShopBundle\Currency\Currency;
+use PrestaShopBundle\Currency\CurrencyFactory;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
-class InstalledRepository implements InstalledRepositoryInterface
+/**
+ * Class InstalledDatabaseRepository
+ *
+ * Provides and saves Currency objects.
+ * Implements InstalledRepositoryInterface.
+ * This currency repository interacts with database.
+ *
+ * @package PrestaShopBundle\Currency\Repository\Installed
+ */
+class InstalledDatabaseRepository implements InstalledRepositoryInterface
 {
     /**
      * Get currency data by internal database identifier
@@ -56,7 +67,7 @@ class InstalledRepository implements InstalledRepositoryInterface
                                     ->setNumericIsoCode($currencyData['numericIsoCode'])
                                     ->setDecimalDigits($currencyData['decimalDigits'])
                                     ->setDisplayName($currencyData['localizedNames'])
-                                    ->setSymbols($currencyData['localizedSymbols'])
+                                    ->setSymbol($currencyData['localizedSymbols'])
                                     ->build();
                 $this->addCurrency($currency);
 

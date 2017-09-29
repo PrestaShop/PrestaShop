@@ -26,6 +26,14 @@
 
 namespace PrestaShopBundle\Currency\Repository\Reference;
 
+/**
+ * Interface ReferenceReaderInterface
+ *
+ * Contract to specify how a "reference" CLDR data reader should behave.
+ * A CLDR reader should be able to read and extract elements from reference data.
+ *
+ * @package PrestaShopBundle\Currency\Repository\Reference
+ */
 interface ReferenceReaderInterface
 {
     /**

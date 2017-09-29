@@ -29,6 +29,13 @@ namespace PrestaShopBundle\Currency\Symbol;
 use PrestaShopBundle\Currency\Exception\Exception;
 use PrestaShopBundle\Currency\Symbol;
 
+/**
+ * Class Builder
+ *
+ * Currency symbol builder. Provides a Symbol hydrated instance.
+ *
+ * @package PrestaShopBundle\Currency\Symbol
+ */
 class Builder
 {
     /**

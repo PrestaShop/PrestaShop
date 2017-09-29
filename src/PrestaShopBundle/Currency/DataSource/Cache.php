@@ -28,6 +28,15 @@ namespace PrestaShopBundle\Currency\DataSource;
 
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
+/**
+ * Class Cache
+ *
+ * It implements DataSourceInterface which means it is used to read and write data from a specific place (can be local,
+ * cloud, API...)
+ * This class represents the cache data source. : data inputs/outputs are made from/to the cache.
+ *
+ * @package PrestaShopBundle\Currency\DataSource
+ */
 class Cache implements DataSourceInterface
 {
     protected $stubData = array(

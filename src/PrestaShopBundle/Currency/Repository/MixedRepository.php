@@ -26,30 +26,40 @@
 
 namespace PrestaShopBundle\Currency\Repository;
 
+use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Currency\DataSource\DataSourceInterface;
 use PrestaShopBundle\Currency\Exception\Exception;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
+use PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface;
+use PrestaShopBundle\Currency\Repository\Reference\ReferenceRepositoryInterface;
 
-class MixedRepository implements \PrestaShopBundle\Currency\Repository\Installed\MixedRepositoryInterface
+/**
+ * Class MixedRepository
+ *
+ * TODO : description
+ *
+ * @package PrestaShopBundle\Currency\Repository
+ */
+class MixedRepository implements MixedRepositoryInterface
 {
 
     /**
-     * @var \PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface
+     * @var InstalledRepositoryInterface
      */
     protected $installedCurrencyRepository;
 
     /**
-     * @var \PrestaShopBundle\Currency\Repository\Installed\ReferenceRepositoryInterface
+     * @var ReferenceRepositoryInterface
      */
     protected $referenceCurrencyRepository;
 
     /**
-     * @param \PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface $installedCurrencyRepository
-     * @param \PrestaShopBundle\Currency\Repository\Installed\ReferenceRepositoryInterface $referenceCurrencyRepository
+     * @param InstalledRepositoryInterface $installedCurrencyRepository
+     * @param ReferenceRepositoryInterface $referenceCurrencyRepository
      */
     public function __construct(
-        \PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface $installedCurrencyRepository,
-        \PrestaShopBundle\Currency\Repository\Installed\ReferenceRepositoryInterface $referenceCurrencyRepository
+        InstalledRepositoryInterface $installedCurrencyRepository,
+        ReferenceRepositoryInterface $referenceCurrencyRepository
     ) {
         $this->installedCurrencyRepository = $installedCurrencyRepository;
         $this->referenceCurrencyRepository = $referenceCurrencyRepository;
@@ -79,17 +89,17 @@ class MixedRepository implements \PrestaShopBundle\Currency\Repository\Installed
         return $this->installedCurrencyRepository->getCurrencyById($id);
     }
 
-    public function addInstalledCurrency(\PrestaShopBundle\Currency\Currency $currency)
+    public function addInstalledCurrency(Currency $currency)
     {
         return $this->installedCurrencyRepository->addInstalledCurrency($currency);
     }
 
-    public function updateInstalledCurrency(\PrestaShopBundle\Currency\Currency $currency)
+    public function updateInstalledCurrency(Currency $currency)
     {
         return $this->installedCurrencyRepository->updateInstalledCurrency($currency);
     }
 
-    public function deleteInstalledCurrency(\PrestaShopBundle\Currency\Currency $currency)
+    public function deleteInstalledCurrency(Currency $currency)
     {
         return $this->installedCurrencyRepository->deleteInstalledCurrency($currency);
     }

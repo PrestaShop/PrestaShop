@@ -26,7 +26,13 @@
 
 namespace PrestaShopBundle\Currency\Exception;
 
+/**
+ * Class Exception
+ *
+ * Generic Exception but in the PrestaShopBundle\Currency context
+ *
+ * @package PrestaShopBundle\Currency\Exception
+ */
 class Exception extends \Exception
 {
-
 }

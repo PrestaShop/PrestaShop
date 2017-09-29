@@ -26,6 +26,13 @@
 
 namespace PrestaShopBundle\Currency\DataSource;
 
+/**
+ * Interface DataSourceInterface
+ *
+ * Contract to specify how a CLDR data source should behave.
+ *
+ * @package PrestaShopBundle\Currency\DataSource
+ */
 interface DataSourceInterface
 {
     /**

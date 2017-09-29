@@ -26,9 +26,13 @@
 
 namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Annotation\Groups;
-
+/**
+ * Class Currency
+ *
+ * This class is the representation of a currency's properties translated for a given locale.
+ *
+ * @package PrestaShopBundle\Currency
+ */
 class Currency
 {
     /**

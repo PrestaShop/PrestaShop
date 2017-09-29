@@ -26,6 +26,15 @@
 
 namespace PrestaShopBundle\Currency\Repository\Reference;
 
+/**
+ * Interface ReferenceRepositoryInterface
+ *
+ * Contract to specify how a "reference" currency repository should behave.
+ * A currency repository is used as a Currency data provider (read only).
+ * A reference currency repository deals with reference currency data from CLDR.
+ *
+ * @package PrestaShopBundle\Currency\Repository\Reference
+ */
 interface ReferenceRepositoryInterface
 {
     /**
