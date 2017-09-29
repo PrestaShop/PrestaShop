@@ -84,7 +84,7 @@ class Currency
         $this->isoCode        = $currencyBuilder->getIsoCode();
         $this->numericIsoCode = $currencyBuilder->getNumericIsoCode();
         $this->decimalDigits  = $currencyBuilder->getDecimalDigits();
-        $this->displayNames   = $currencyBuilder->getDisplayName();
+        $this->displayNames   = $currencyBuilder->getDisplayNameData();
         $this->id             = $currencyBuilder->getId();
 
         $symbolData    = $currencyBuilder->getSymbolData();
@@ -117,9 +117,9 @@ class Currency
         return $this->numericIsoCode;
     }
 
-    public function getName($localeCode)
+    public function getName($context)
     {
-        return $this->displayNames[$localeCode];
+        return $this->displayNames[$context];
     }
 
     /**

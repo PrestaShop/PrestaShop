@@ -102,7 +102,7 @@ class Repository
                 $currency = $builder->setIsoCode($currencyData['isoCode'])
                     ->setNumericIsoCode($currencyData['numericIsoCode'])
                     ->setDecimalDigits($currencyData['decimalDigits'])
-                    ->setDisplayName($currencyData['displayName'])
+                    ->setDisplayNameData($currencyData['displayName'])
                     ->setSymbolData($currencyData['symbol'])
                     ->build();
                 $this->addCurrency($currency);
