@@ -51,7 +51,7 @@ class Builder
      *
      * @var array
      */
-    protected $displayName;
+    protected $displayNameData;
 
     /**
      * All possible symbol notations depending on context
@@ -95,9 +95,9 @@ class Builder
     /**
      * @return array
      */
-    public function getDisplayName()
+    public function getDisplayNameData()
     {
-        return $this->displayName;
+        return $this->displayNameData;
     }
 
     /**
@@ -149,13 +149,13 @@ class Builder
     }
 
     /**
-     * @param array $displayName
+     * @param array $displayNameData
      *
      * @return Builder
      */
-    public function setDisplayName($displayName)
+    public function setDisplayNameData($displayNameData)
     {
-        $this->displayName = $displayName;
+        $this->displayNameData = $displayNameData;
 
         return $this;
     }
@@ -211,8 +211,8 @@ class Builder
             throw new Exception('Decimal digits number must be set (' . $this->getIsoCode() . ')');
         }
 
-        if (is_null($this->getDisplayName())) {
-            throw new Exception('Display names must be set (' . $this->getIsoCode() . ')');
+        if (is_null($this->getDisplayNameData())) {
+            throw new Exception('Display name data must be set (' . $this->getIsoCode() . ')');
         }
 
         if (is_null($this->getSymbolData())) {
