@@ -48,7 +48,7 @@ class Currency
      *
      * This id might be empty if currency was built from external data
      *
-     * @var int
+     * @var int|null
      * @Groups({"default"})
      */
     protected $id;

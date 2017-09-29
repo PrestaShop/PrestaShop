@@ -61,9 +61,9 @@ class CLDR implements DataSourceInterface
     /**
      * CLDR constructor.
      *
-     * @param DataReader $reader
+     * @param DataReaderInterface $reader
      */
-    public function __construct(DataReader $reader)
+    public function __construct(DataReaderInterface $reader)
     {
         $this->setReader($reader);
     }
@@ -98,7 +98,7 @@ class CLDR implements DataSourceInterface
      * @return DataReaderInterface
      * @throws Exception
      */
-    public function getReader()
+    protected function getReader()
     {
         if (!isset($this->reader)) {
             throw new Exception("Data reader has not been set");
@@ -114,7 +114,7 @@ class CLDR implements DataSourceInterface
      *
      * @return $this
      */
-    public function setReader(DataReaderInterface $reader)
+    protected function setReader(DataReaderInterface $reader)
     {
         $this->reader = $reader;
 

@@ -53,15 +53,20 @@ class CurrencyFactory
 
     /**
      * All possible names depending on count
+     * Possible counts :
+     * - default ("EU currency is named euro")
+     * - one ("one euro")
+     * - other (ten euros)
      *
-     * @var array
+     * @var string[]
      */
     protected $displayName;
 
     /**
-     * All possible symbol data depending on context
+     * Symbol data
+     * Contains all possible symbol notations (standard notation, narrow notation, etc)
      *
-     * @var array
+     * @var string[]
      */
     protected $symbolData;
 
@@ -77,7 +82,7 @@ class CurrencyFactory
     /**
      * Currency id in case it is installed and present in DB
      *
-     * @var int
+     * @var int|null
      */
     protected $id;
 
@@ -141,6 +146,13 @@ class CurrencyFactory
         return $this;
     }
 
+    /**
+     * Set currency's id
+     *
+     * @param $id
+     *
+     * @return $this
+     */
     public function setId($id)
     {
         $this->id = (int) $id;
@@ -149,6 +161,8 @@ class CurrencyFactory
     }
 
     /**
+     * Builds and returns a Currency object from the provided data
+     *
      * @return Currency
      */
     public function build()
