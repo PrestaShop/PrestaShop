@@ -28,6 +28,13 @@ namespace PrestaShopBundle\Localization\DataSource;
 
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 
+/**
+ * Class Cache
+ *
+ * Cache locale data source. Reads and writes CLDR data from / to the cache
+ *
+ * @package PrestaShopBundle\Localization\DataSource
+ */
 class Cache implements DataSourceInterface
 {
 

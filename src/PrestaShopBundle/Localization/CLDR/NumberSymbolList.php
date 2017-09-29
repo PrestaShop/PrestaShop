@@ -26,6 +26,14 @@
 
 namespace PrestaShopBundle\Localization\CLDR;
 
+/**
+ * Class NumberSymbolList
+ *
+ * Number's symbols data bag. Regroups all symbols used when formatting a number in a given locale.
+ * (decimal separator, thousands separator, etc)
+ *
+ * @package PrestaShopBundle\Localization\CLDR
+ */
 class NumberSymbolList
 {
     /**
