@@ -75,3 +75,10 @@ admin_administration:
     defaults:
         _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Administration:index'
         _legacy_controller: AdminAdminPreferences
+
+admin_administration_save:
+    path: administration
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Administration:processForm'
+        _legacy_controller: AdminAdminPreferences

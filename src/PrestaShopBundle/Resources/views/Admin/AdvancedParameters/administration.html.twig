@@ -25,6 +25,117 @@
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
+{% set generalForm, uploadQuotaForm, notificationsForm = form.general, form.upload_quota, form.notifications %}
+
 {% block content %}
-  {{ form(form) }}
+<div class="container">
+    {{ form_start(form, {'attr' : {'class': 'form'} }) }}
+    <div class="row">
+        {% block administration_form_general %}
+            <div class="col">
+                <div class="card">
+                    <h3 class="card-header">
+                        <i class="material-icons">business_center</i> {{ 'General'|trans }}
+                    </h3>
+                    <div class="card-block">
+                        <div class="card-text">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Automatically check for module updates'|trans }}</label>
+                                {{ form_errors(generalForm.check_modules_update) }}
+                                {{ form_widget(generalForm.check_modules_update) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ "Check the cookie's IP address"|trans }}</label>
+                                {{ form_errors(generalForm.check_ip_address) }}
+                                {{ form_widget(generalForm.check_ip_address) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Lifetime of front office cookies'|trans }}</label>
+                                {{ form_errors(generalForm.front_cookie_lifetime) }}
+                                {{ form_widget(generalForm.front_cookie_lifetime) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Lifetime of back office cookies'|trans }}</label>
+                                {{ form_errors(generalForm.back_cookie_lifetime) }}
+                                {{ form_widget(generalForm.back_cookie_lifetime) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                    </div>
+                {{ form_rest(generalForm) }}
+                </div>
+            </div>
+        {% endblock %}
+
+        {% block administration_form_upload_quota %}
+            <div class="col">
+                <div class="card">
+                    <h3 class="card-header">
+                        <i class="material-icons">business_center</i> {{ 'Upload Quota'|trans }}
+                    </h3>
+                    <div class="card-block">
+                        <div class="card-text">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Maximum size for attached files'|trans }}</label>
+                                {{ form_errors(uploadQuotaForm.max_size_attached_files) }}
+                                {{ form_widget(uploadQuotaForm.max_size_attached_files) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Maximum size for a downloadable product'|trans }}</label>
+                                {{ form_errors(uploadQuotaForm.max_size_downloadable_product) }}
+                                {{ form_widget(uploadQuotaForm.max_size_downloadable_product) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ "Maximum size for a product's image"|trans }}</label>
+                                {{ form_errors(uploadQuotaForm.max_size_product_image) }}
+                                {{ form_widget(uploadQuotaForm.max_size_product_image) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                    </div>
+                    {{ form_rest(uploadQuotaForm) }}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+    <div class="row">
+        {% block administration_form_notifications %}
+            <div class="col">
+                <div class="card">
+                    <h3 class="card-header">
+                        <i class="material-icons">business_center</i> {{ 'Notifications'|trans }}
+                    </h3>
+                    <div class="card-block">
+                        <div class="card-text">
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Show notifications for new orders'|trans }}</label>
+                                {{ form_errors(notificationsForm.show_notifs_new_orders) }}
+                                {{ form_widget(notificationsForm.show_notifs_new_orders) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Show notifications for new customers'|trans }}</label>
+                                {{ form_errors(notificationsForm.show_notifs_new_customers) }}
+                                {{ form_widget(notificationsForm.show_notifs_new_customers) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">{{ 'Show notifications for new messages'|trans }}</label>
+                                {{ form_errors(notificationsForm.show_notifs_new_messages) }}
+                                {{ form_widget(notificationsForm.show_notifs_new_messages) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                    </div>
+                    {{ form_rest(notificationsForm) }}
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+    {{ form_end(form) }}
+</div>
 {% endblock %}
