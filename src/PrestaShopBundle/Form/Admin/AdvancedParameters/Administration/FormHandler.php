@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
+namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -36,7 +36,7 @@ use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 class FormHandler implements FormHandlerInterface
 {
     /**
-     * @var FormFactory
+     * @var FormFactoryInterface
      */
     private $formFactory;
 
@@ -47,7 +47,7 @@ class FormHandler implements FormHandlerInterface
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        PerformanceFormDataProvider $formDataProvider
+        FormDataProvider $formDataProvider
     )
     {
         $this->formFactory = $formFactory;
@@ -61,8 +61,8 @@ class FormHandler implements FormHandlerInterface
     {
         return $this->formFactory->createBuilder()
             ->add('general', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType')
-            ->add('upload_quota', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\UploadQuotaType')
-            ->add('notifications', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\NotificationsType')
+            ->add('upload_quota', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType')
+            ->add('notifications', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType')
             ->setData($this->formDataProvider->getData())
             ->getForm()
         ;

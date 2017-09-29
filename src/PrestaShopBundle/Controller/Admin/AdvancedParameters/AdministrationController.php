@@ -45,6 +45,8 @@ class AdministrationController extends FrameworkBundleAdminController
      */
     public function indexAction()
     {
+        $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
+
         $twigValues = array(
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->get('translator')->trans('Administration', array(), 'Admin.Navigation.Menu'),
@@ -54,6 +56,7 @@ class AdministrationController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
+            'form' => $form->createView(),
         );
 
         return $this->render('PrestaShopBundle:Admin/AdvancedParameters:administration.html.twig', $twigValues);
