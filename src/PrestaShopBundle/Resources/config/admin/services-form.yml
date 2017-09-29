@@ -224,17 +224,33 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.admininistration.general:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType'
+        tags:
+            - { name: form.type }
+
+    form.type.administration.upload_quota:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType'
+        tags:
+            - { name: form.type }
+
+    form.type.administration.notification:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType'
+        tags:
+            - { name: form.type }
+
+# Form extension
     form.type.extension.textarea:
-        class: PrestaShopBundle\Form\Admin\Type\TextareaEmptyType
+        class: 'PrestaShopBundle\Form\Admin\Type\TextareaEmptyType'
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextareaType }
 
     form.type.extension.text:
-        class: PrestaShopBundle\Form\Admin\Type\TextEmptyType
+        class: 'PrestaShopBundle\Form\Admin\Type\TextEmptyType'
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextType }
 
     form.type.extension.money:
-        class: PrestaShopBundle\Form\Admin\Type\CustomMoneyType
+        class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'
         tags:
             - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\MoneyType }
