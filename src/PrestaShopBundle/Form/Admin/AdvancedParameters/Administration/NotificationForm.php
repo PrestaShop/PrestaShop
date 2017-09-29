@@ -36,7 +36,32 @@ class NotificationForm extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $builder
+            ->add('show_notifs_new_orders', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices'  => array(
+                    false => 'No',
+                    true => 'Yes',
+                ),
+                'choice_translation_domain' => 'Admin.Global',
+                'required' => true,
+            ))
+            ->add('show_notifs_new_customers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices'  => array(
+                    false => 'No',
+                    true => 'Yes',
+                ),
+                'choice_translation_domain' => 'Admin.Global',
+                'required' => true,
+            ))
+            ->add('show_notifs_new_messages', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+                'choices'  => array(
+                    false => 'No',
+                    true => 'Yes',
+                ),
+                'choice_translation_domain' => 'Admin.Global',
+                'required' => true,
+            ))
+        ;
     }
 
     /**
