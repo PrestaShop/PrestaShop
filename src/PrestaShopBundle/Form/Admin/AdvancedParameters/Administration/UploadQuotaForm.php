@@ -36,7 +36,17 @@ class UploadQuotaForm extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
+        $builder
+            ->add('max_size_attached_files', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+                'required' => true,
+            ))
+            ->add('max_size_downloadable_product', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+                'required' => true,
+            ))
+            ->add('max_size_product_image', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+                'required' => true,
+            ))
+        ;
     }
 
     /**
