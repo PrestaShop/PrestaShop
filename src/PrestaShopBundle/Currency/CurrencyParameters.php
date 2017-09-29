@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Currency;
 
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
+
 /**
  * Class CurrencyParameters
  *
@@ -59,9 +61,9 @@ class CurrencyParameters
     protected $displayNameData;
 
     /**
-     * symbol
+     * Currency's symbol
      *
-     * @var array
+     * @var Symbol
      */
     protected $symbol;
 
@@ -82,6 +84,8 @@ class CurrencyParameters
     protected $id;
 
     /**
+     * Get the number of decimal digits for this currency
+     *
      * @return int
      */
     public function getDecimalDigits()
@@ -90,6 +94,8 @@ class CurrencyParameters
     }
 
     /**
+     * Get currency's ISO code
+     *
      * @return string
      */
     public function getIsoCode()
@@ -98,13 +104,20 @@ class CurrencyParameters
     }
 
     /**
-     * @return array
+     * Get currency's display names
+     *
+     * @return string[]
      */
     public function getDisplayNameData()
     {
         return $this->displayNameData;
     }
 
+    /**
+     * Get currency's symbol
+     *
+     * @return Symbol
+     */
     public function getSymbol()
     {
         return $this->symbol;
@@ -133,7 +146,7 @@ class CurrencyParameters
      */
     public function setDecimalDigits($decimalDigits)
     {
-        $this->decimalDigits = $decimalDigits;
+        $this->decimalDigits = (int)$decimalDigits;
 
         return $this;
     }
@@ -145,7 +158,7 @@ class CurrencyParameters
      */
     public function setIsoCode($isoCode)
     {
-        $this->isoCode = $isoCode;
+        $this->isoCode = (string)$isoCode;
 
         return $this;
     }
@@ -157,6 +170,10 @@ class CurrencyParameters
      */
     public function setDisplayNameData($displayNameData)
     {
+        if (!is_array($displayNameData)) {
+            throw new InvalidArgumentException('$displayNameData must be an array');
+        }
+
         $this->displayNameData = $displayNameData;
 
         return $this;
@@ -164,7 +181,7 @@ class CurrencyParameters
 
     public function setSymbol($symbol)
     {
-        $this->symbol = $symbol;
+        $this->symbol = (string)$symbol;
 
         return $this;
     }
@@ -176,7 +193,7 @@ class CurrencyParameters
      */
     public function setNumericIsoCode($numericIsoCode)
     {
-        $this->numericIsoCode = $numericIsoCode;
+        $this->numericIsoCode = (int)$numericIsoCode;
 
         return $this;
     }

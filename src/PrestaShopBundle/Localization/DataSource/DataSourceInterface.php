@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Localization\DataSource;
 
 use PrestaShopBundle\Localization\CLDR\LocaleData;
+use PrestaShopBundle\Localization\Exception\Exception;
 
 /**
  * Interface DataSourceInterface
@@ -78,7 +79,7 @@ interface DataSourceInterface
      *
      * @param LocaleData $localeData
      *
-     * @return bool True if deletion was successful (be it soft or hard)
+     * @throws Exception If delete was unsuccessful
      */
     public function deleteLocale(LocaleData $localeData);
 }
