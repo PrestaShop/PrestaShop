@@ -52,11 +52,11 @@ class CurrencyParameters
     protected $displayNameData;
 
     /**
-     * All possible symbols depending on context
+     * symbol
      *
      * @var array
      */
-    protected $symbols;
+    protected $symbol;
 
     /**
      * Currency ISO 4217 number
@@ -98,12 +98,9 @@ class CurrencyParameters
         return $this->displayNameData;
     }
 
-    /**
-     * @return array
-     */
-    public function getSymbols()
+    public function getSymbol()
     {
-        return $this->symbols;
+        return $this->symbol;
     }
 
     /**
@@ -125,7 +122,7 @@ class CurrencyParameters
     /**
      * @param int $decimalDigits
      *
-     * @return CurrencyFactory
+     * @return static
      */
     public function setDecimalDigits($decimalDigits)
     {
@@ -137,7 +134,7 @@ class CurrencyParameters
     /**
      * @param string $isoCode
      *
-     * @return CurrencyFactory
+     * @return static
      */
     public function setIsoCode($isoCode)
     {
@@ -149,7 +146,7 @@ class CurrencyParameters
     /**
      * @param array $displayNameData
      *
-     * @return CurrencyFactory
+     * @return static
      */
     public function setDisplayNameData($displayNameData)
     {
@@ -158,14 +155,9 @@ class CurrencyParameters
         return $this;
     }
 
-    /**
-     * @param array $symbols
-     *
-     * @return CurrencyFactory
-     */
-    public function setSymbols($symbols)
+    public function setSymbol($symbol)
     {
-        $this->symbols = $symbols;
+        $this->symbol = $symbol;
 
         return $this;
     }
@@ -173,7 +165,7 @@ class CurrencyParameters
     /**
      * @param int $numericIsoCode
      *
-     * @return CurrencyFactory
+     * @return static
      */
     public function setNumericIsoCode($numericIsoCode)
     {
@@ -203,7 +195,7 @@ class CurrencyParameters
             throw new Exception('Display name data must be set (' . $this->getIsoCode() . ')');
         }
 
-        if (is_null($this->getSymbols())) {
+        if (is_null($this->getSymbolData())) {
             throw new Exception('Symbols must be set (' . $this->getIsoCode() . ')');
         }
 

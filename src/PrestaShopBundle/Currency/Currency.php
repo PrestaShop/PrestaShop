@@ -96,17 +96,8 @@ class Currency
         $this->numericIsoCode = $parameters->getNumericIsoCode();
         $this->decimalDigits  = $parameters->getDecimalDigits();
         $this->displayNames   = $parameters->getDisplayName();
-        $this->symbols        = $parameters->getSymbols();
+        $this->symbol         = $parameters->getSymbol();
         $this->id             = $parameters->getId();
-
-        $symbolData    = $currencyBuilder->getSymbolData();
-        $symbolBuilder = new SymbolBuilder();
-        foreach ($symbolData as $type => $symbol) {
-            $methodName = 'set' . ucfirst($type);
-            $symbolBuilder->$methodName($symbol);
-        }
-        $this->symbol = $symbolBuilder->build();
-
     }
 
     /**
