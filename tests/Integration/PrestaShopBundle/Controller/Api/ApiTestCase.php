@@ -59,6 +59,7 @@ abstract class ApiTestCase extends WebTestCase
 
         $container = self::$kernel->getContainer();
         $this->router = $container->get('router');
+        $this->mockContextAdapter();
     }
 
     public function tearDown()
