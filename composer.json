@@ -135,6 +135,12 @@
         "create-test-db": [
             "PrestaShopBundle\\Install\\Install::createTestDB"
         ],
+        "test-all": [
+            "composer test",
+            "composer test-admin",
+            "composer phpunit-sf",
+            "composer phpunit-controllers"
+        ],
         "test": [
             "PrestaShopBundle\\Install\\Install::createTestDB",
             "php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml"
