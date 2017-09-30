@@ -440,7 +440,7 @@ class Install extends AbstractInstall
 
         $output = exec('mysqldump -h '._DB_SERVER_.' -B '._DB_NAME_.' -u '.
             _DB_USER_.' --password='._DB_PASSWD_.
-            ' > '._PS_ROOT_DIR_.'/tests/resources/test_db.sql');
+            ' > '._PS_ROOT_DIR_.'/tests/resources/test_db.sql &> /dev/null');
 
         return $output;
     }
@@ -452,7 +452,7 @@ class Install extends AbstractInstall
         exec('mysql -u '._DB_USER_.
             ' --password='._DB_PASSWD_.
             ' -h '._DB_SERVER_.
-            ' '._DB_NAME_.' < '._PS_ROOT_DIR_.'/tests/resources/test_db.sql'
+            ' '._DB_NAME_.' < '._PS_ROOT_DIR_.'/tests/resources/test_db.sql 2>&1 /dev/null'
         );
     }
 
