@@ -167,8 +167,10 @@ class AdminModelAdapterTest extends KernelTestCase
         self::$kernel->boot();
         $this->container = self::$kernel->getContainer();
 
+        \Context::getContext()->shop = new \Shop(1);
+        \Context::getContext()->language = new \Language(1);
+        \Context::getContext()->currency = new \Currency(1);
         $this->product = $this->fakeProduct();
-
         $this->adminModelAdapter = new AdminModelAdapter(
             $this->product,
             $this->container->get('prestashop.adapter.legacy.context'),

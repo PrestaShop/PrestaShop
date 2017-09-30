@@ -10,7 +10,7 @@
     processIsolation            = "true"
     stopOnFailure               = "false"
     syntaxCheck                 = "true"
-    bootstrap                   = "bootstrap.php"
+    bootstrap                   = "../tests/bootstrap-admin.php"
     >
 
     <groups>
