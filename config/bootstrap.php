@@ -143,4 +143,6 @@ if ($lastParametersModificationTime) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
+} else if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+    require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 }

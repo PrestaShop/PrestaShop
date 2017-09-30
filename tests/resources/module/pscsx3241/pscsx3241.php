@@ -50,4 +50,10 @@ class pscsx3241 extends Module
         }
         return true;
     }
+
+    public function uninstall()
+    {
+        @unlink(_PS_ROOT_DIR_.'/override/controllers/admin/AdminProductsController.php');
+        @unlink(_PS_ROOT_DIR_.'/override/classes/Cart.php');
+    }
 }

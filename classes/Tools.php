@@ -50,6 +50,11 @@ class ToolsCore
         }
     }
 
+    public static function resetRequest()
+    {
+        self::$request = null;
+    }
+
     /**
     * Random password generator
     *

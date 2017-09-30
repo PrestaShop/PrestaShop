@@ -298,4 +298,8 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         return new Tools($requestProphecy->reveal());
     }
+
+    public static function tearDownAfterClass() {
+        Tools::resetRequest();
+    }
 }
