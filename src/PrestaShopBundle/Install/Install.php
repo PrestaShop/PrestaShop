@@ -418,12 +418,8 @@ class Install extends AbstractInstall
         $install->installDefaultData('test_shop', false, false, true);
         $install->populateDatabase();
         $install->installCldrDatas();
+
         $install->configureShop(array(
-            'shop_name' => 'test shop',
-            'shop_activity' => 'shop activity',
-            'shop_country' => 'en',
-            'shop_timezone' => 'europe/paris',
-            'use_smtp' => false,
             'admin_firstname' => 'puff',
             'admin_lastname' => 'daddy',
             'admin_password' => 'test',
