@@ -449,10 +449,11 @@ class Install extends AbstractInstall
         if (!file_exists(_PS_ROOT_DIR_.'/tests/resources/test_db.sql')) {
             throw new DBALException('You need to run composer create-test-db to create the initial test database');
         }
+
         exec('mysql -u '._DB_USER_.
             ' --password='._DB_PASSWD_.
             ' -h '._DB_SERVER_.
-            ' '._DB_NAME_.' < '._PS_ROOT_DIR_.'/tests/resources/test_db.sql 2>&1 /dev/null'
+            ' '._DB_NAME_.' < '._PS_ROOT_DIR_.'/tests/resources/test_db.sql 2> /dev/null'
         );
     }
 

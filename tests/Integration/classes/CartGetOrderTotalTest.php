@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Tests\Integration\classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
-use PrestaShop\PrestaShop\Tests\TestCase\DatabaseDump;
 use Exception;
 use Address;
 use Carrier;
@@ -41,6 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
+use PrestaShopBundle\Install\Install;
 use Product;
 use Tools;
 use Tax;
@@ -56,9 +56,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        // Save the database to restore it later: we're not the only test running so let's leave things
-        // the way we found them.
-        self::$dump = DatabaseDump::create();
+        Install::restoreTestDB();
+
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();
 
@@ -73,13 +72,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         // Create the address only once
         self::$id_address = self::makeAddress()->id;
-    }
-
-    public static function tearDownAfterClass()
-    {
-        // After the test, we restore the database in the state it was
-        // before we started.
-        self::$dump->restore();
     }
 
     /**
