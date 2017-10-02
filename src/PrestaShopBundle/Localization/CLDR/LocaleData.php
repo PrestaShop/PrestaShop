@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Localization\CLDR;
 
 use PrestaShopBundle\Localization\Exception\Exception;
+use PrestaShopBundle\Localization\Locale;
 
 /**
  * Class LocaleData
@@ -118,6 +119,43 @@ class LocaleData
      * @var string
      */
     public $parentLocale;
+
+    /**
+     * Get list of symbols used to format a number.
+     * Contains decimal separator, group separator, plus sign, minus sign and percent sign.
+     *
+     * @param string $numberingSystem
+     *
+     * @return string[]
+     */
+    public function getNumberSymbols($numberingSystem)
+    {
+        /** @var NumberSymbolList $specSymbols */
+        if (isset($spec->numberSymbols[Locale::SCRIPT_LATIN])) {
+            // TODO : get rid of this case when numbering system choice is implemented.
+            $specSymbols = $this->numberSymbols[Locale::SCRIPT_LATIN];
+        } else {
+            $specSymbols = $this->numberSymbols[$numberingSystem];
+        }
+
+        return array(
+            '.' => $specSymbols->decimal,
+            ',' => $specSymbols->group,
+            '+' => $specSymbols->plusSign,
+            '-' => $specSymbols->minusSign,
+            '%' => $specSymbols->percentSign,
+        );
+    }
+
+    /**
+     * Get the numbering system defined as default for this locale
+     *
+     * @return string The default numbering system
+     */
+    public function getDefaultNumberingSystem()
+    {
+        return $this->defaultNumberingSystem;
+    }
 
     /**
      * Fills missing properties with "parent" data

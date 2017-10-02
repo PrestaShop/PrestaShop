@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Localization\Formatter;
 
+use InvalidArgumentException as SplInvalidArgumentException;
 use PrestaShop\Decimal\Number as DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\RoundingMapper;
 use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException as CurrencyInvalidArgumentException;
@@ -42,28 +44,147 @@ use PrestaShopBundle\Localization\Locale;
  */
 class Number
 {
-    const DECIMAL  = 'decimal';
-    const PERCENT  = 'percent';
+    /**
+     * Decimal number format name
+     */
+    const DECIMAL = 'decimal';
+
+    /**
+     * Percent number format name
+     */
+    const PERCENT = 'percent';
+
+    /**
+     * Decimal number format name
+     */
     const CURRENCY = 'currency';
 
-    const MAXIMUM_FRACTION_DIGITS = 3; // Used for decimal and percent styles only
-    const MINIMUM_FRACTION_DIGITS = 0; // Used for decimal and percent styles only
+    /**
+     * Max number of digits for fraction parts.
+     * For decimal and percent formats only (currency digits are handled somewhere else)
+     */
+    const MAXIMUM_FRACTION_DIGITS = 3;
 
+    /**
+     * Min number of digits for fraction parts.
+     * For decimal and percent formats only (currency digits are handled somewhere else)
+     */
+    const MINIMUM_FRACTION_DIGITS = 0;
+
+    /**
+     * Currency display option : symbol notation
+     * eg: €
+     */
     const CURRENCY_DISPLAY_SYMBOL = 'symbol';
-    const CURRENCY_DISPLAY_CODE   = 'code';
 
+    /**
+     * Currency display option : ISO code notation
+     * eg: EUR
+     */
+    const CURRENCY_DISPLAY_CODE = 'code';
+
+    /**
+     * Locale used for formatting numbers
+     *
+     * @var Locale
+     */
     protected $locale;
+
+    /**
+     * Is digits grouping used ?
+     * eg: if yes -> "9 999 999". If no => "9999999"
+     *
+     * @var bool
+     */
     protected $groupingUsed;
+
+    /**
+     * Size of primary group in the number
+     * eg: primary group in this number is 999 : 1 234 999.567
+     *
+     * @var int
+     */
     protected $primaryGroupSize;
+
+    /**
+     * Size of secondary group in the number
+     * eg: secondary group in this number is 999 : 123 999 456.789
+     * eg: another secondary group (still 999 in this example) : 999 123 456.789
+     *
+     * @var int
+     */
     protected $secondaryGroupSize;
+
+    /**
+     * CLDR syntax pattern to use when formatting positive decimal numbers
+     * eg: #,##0.###
+     *
+     * @var string
+     */
     protected $positiveDecimalPattern;
+
+    /**
+     * CLDR syntax pattern to use when formatting negative decimal numbers
+     * eg: -#,##0.###
+     *
+     * @var string
+     */
     protected $negativeDecimalPattern;
+
+    /**
+     * CLDR syntax pattern to use when formatting positive percentage numbers
+     * eg: #,##0 %
+     *
+     * @var string
+     */
     protected $positivePercentPattern;
+
+    /**
+     * CLDR syntax pattern to use when formatting negative percentage numbers
+     * eg: -#,##0 %
+     *
+     * @var string
+     */
     protected $negativePercentPattern;
+
+    /**
+     * CLDR syntax pattern to use when formatting positive prices
+     * eg: #,##0.00 ¤
+     *
+     * @var string
+     */
     protected $positiveCurrencyPattern;
+
+    /**
+     * CLDR syntax pattern to use when formatting negative prices
+     * eg: -#,##0.00 ¤
+     *
+     * @var string
+     */
     protected $negativeCurrencyPattern;
+
+    /**
+     * Min number of decimal digits to use when formatting a number.
+     * eg: If $minimumFractionDigits is 2, the number 123.4 would be formatted as "123.40"
+     *
+     * @var int
+     */
     protected $minimumFractionDigits;
+
+    /**
+     * Max number of decimal digits to use when formatting a number (a rounding is applied when relevant).
+     * eg: If $maximumFractionDigits is 3, the number 123.4000 would be formatted as "123.400"
+     *
+     * @var int
+     */
     protected $maximumFractionDigits;
+
+    /**
+     * Type of display for currency symbol
+     * cf. self::CURRENCY_DISPLAY_SYMBOL and self::CURRENCY_DISPLAY_CODE constants
+     *
+     * @var string
+     */
     protected $currencyDisplay;
 
     /**
@@ -74,26 +195,24 @@ class Number
     public function __construct(Locale $locale)
     {
         $this->setLocale($locale);
-        $this->setMinimumFractionDigits(0)
-            ->setMaximumFractionDigits(3)
+        $this->setMinimumFractionDigits(self::MINIMUM_FRACTION_DIGITS)
+            ->setMaximumFractionDigits(self::MAXIMUM_FRACTION_DIGITS)
             ->setCurrencyDisplay(self::CURRENCY_DISPLAY_SYMBOL);
     }
 
     /**
      * Format a number according to locale rules
      *
-     * @param float|string $number The number to format
-     * @param string       $style  The format style (decimal, percent, currency)
+     * @param float|string|DecimalNumber $number
+     *   The number to format
+     *
+     * @param string                     $style
+     *   The format style (decimal, percent, currency)
      *
      * @return string
      */
     public function format($number, $style = self::DECIMAL)
     {
-        if (!is_numeric($number)) {
-            $message = sprintf('The provided value "%s" must be a valid number or numeric string.', $number);
-            throw new InvalidArgumentException($message);
-        }
-
         $availablePatterns = $this->getAvailablePatterns();
         if (!array_key_exists($style, $availablePatterns)) {
             $message = sprintf('The provided format style "%s" is invalid.', $style);
@@ -101,24 +220,29 @@ class Number
         }
 
         // Ensure that the value is positive and has the right number of digits.
-        $decNumber = new DecimalNumber($number);
-        $negative  = $decNumber->isNegative();
-        $number    = $decNumber->round(
+        try {
+            $decNumber = new DecimalNumber((string)$number);
+        } catch (SplInvalidArgumentException $e) {
+            throw new InvalidArgumentException($e->getMessage());
+        }
+
+        $isNegative = $decNumber->isNegative();
+        $number     = $decNumber->round(
             $this->getMaximumFractionDigits(),
-            $this->getLocale()->getPrestaShopDecimalRoundMode()
+            RoundingMapper::mapRounding($this->getLocale()->getRoundMode())
         );
-        $decNumber = new DecimalNumber($number);
-        $decNumber = $decNumber->toPositive();
+        $decNumber  = new DecimalNumber($number);
+        $decNumber  = $decNumber->toPositive();
         // Get the number's major and minor digits.
         $majorDigits = $decNumber->getIntegerPart();
         $minorDigits = $decNumber->getFractionalPart();
         $minorDigits = ('0' === $minorDigits) ? '' : $minorDigits;
 
-        if ($this->groupingUsed()) {
+        if ($this->isGroupingUsed()) {
             // Reverse the major digits, since they are grouped from the right.
             $majorDigits = array_reverse(str_split($majorDigits));
             // Group the major digits.
-            $groups   = [];
+            $groups   = array();
             $groups[] = array_splice($majorDigits, 0, $this->getPrimaryGroupSize());
             while (!empty($majorDigits)) {
                 $groups[] = array_splice($majorDigits, 0, $this->getSecondaryGroupSize());
@@ -147,12 +271,21 @@ class Number
         if ($minorDigits) {
             $formattedNumber .= '.' . $minorDigits;
         }
-        $pattern         = $this->getPattern($style, $negative);
-        $formattedNumber = preg_replace('/#(?:[\.,]#+)*0(?:[,\.][0#]+)*/', $formattedNumber, $pattern);
+        $pattern = $this->getPattern($style, $isNegative);
+
+        /*
+         * Use $pattern to add any new character (like "-", "%" or "¤") around our raw number.
+         * Regex groups explanation :
+         * #          : literal "#" character. Once.
+         * (,#+)*     : any other "#" characters group, separated by ",". Zero to infinity times.
+         * 0          : literal "0" character. Once.
+         * (\.[0#]+)* : any combination of "0" and "#" characters groups, separated by '.'. Zero to infinity times.
+         */
+        $formattedNumber = preg_replace('/#(,#+)*0(\.[0#]+)*/', $formattedNumber, $pattern);
+
         // Localize the number.
         $formattedNumber = $this->replaceDigits($formattedNumber);
         $formattedNumber = $this->replaceSymbols($formattedNumber);
-
 
         return $formattedNumber;
     }
@@ -160,7 +293,7 @@ class Number
     /**
      * Replace latn digits with relevant numbering system's digits
      *
-     * @param string $number The number process
+     * @param string $number The number to process
      *
      * @return string The number with replaced digits
      */
@@ -179,7 +312,8 @@ class Number
      */
     protected function replaceSymbols($number)
     {
-        $replacements = $this->getNumberSymbols();
+        $locale = $this->getLocale();
+        $replacements = $locale->getSpecification()->getNumberSymbols($locale->getNumberingSystem());
 
         return strtr($number, $replacements);
     }
@@ -190,7 +324,7 @@ class Number
      * @param float|string $number   The number to be formatted as a price
      * @param Currency     $currency The price currency
      *
-     * @return mixed
+     * @return string
      */
     public function formatCurrency($number, Currency $currency)
     {
@@ -200,15 +334,16 @@ class Number
         // Format the numeric part using the currency pattern
         $formattedNumber = $this->format($number, self::CURRENCY);
 
-        $this->setMinimumFractionDigits(0)
-            ->setMaximumFractionDigits(3);
+        $this->setMinimumFractionDigits(self::MINIMUM_FRACTION_DIGITS)
+            ->setMaximumFractionDigits(self::MAXIMUM_FRACTION_DIGITS);
 
-        // Determine the symbole to use
-        if ($this->getCurrencyDisplay() == self::CURRENCY_DISPLAY_CODE) {
+        // Determine the symbol to use
+        if (self::CURRENCY_DISPLAY_CODE === $this->getCurrencyDisplay()) {
             $symbol = $currency->getIsoCode();
         } else {
             try {
-                $symbol = $currency->getSymbol()->getNarrow(); // To be changed when symbol type is configurable
+                // TODO : change this when symbol type is configurable
+                $symbol = $currency->getSymbol()->getNarrow();
             } catch (CurrencyInvalidArgumentException $e) {
                 $symbol = $currency->getSymbol()->getDefault();
             }
@@ -219,34 +354,36 @@ class Number
     }
 
     /**
-     * @return array
+     * Get all available patterns to format a number (decimal, percent, currency).
+     * Each patterns may contain both positive and negative version, separated by ";".
+     * If there is no negative version, default is positive version preceded by "-" character.
+     *
+     * eg : [
+     *     'decimal'  => '#,##0.###;-#,##0.###',
+     *     'percent'  => '#,##0.### %;-#,##0.### %',
+     *     'currency' => '#,##0.00 ¤;-#,##0.00 ¤',
+     * ]
+     *
+     * @return string[]
      */
     protected function getAvailablePatterns()
     {
         return array(
-            self::DECIMAL  => $this->getDecimalPattern(),
-            self::PERCENT  => $this->getPercentPattern(),
-            self::CURRENCY => $this->getCurrencyPattern(),
+            self::DECIMAL  => $this->getLocale()->getDecimalPattern(),
+            self::PERCENT  => $this->getLocale()->getPercentPattern(),
+            self::CURRENCY => $this->getLocale()->getCurrencyPattern(),
         );
-    }
-
-    protected function getDecimalPattern()
-    {
-        return $this->getLocale()->getDecimalPattern();
-    }
-
-    protected function getNumberSymbols()
-    {
-        return $this->getLocale()->getNumberSymbols();
     }
 
     /**
      * Init positive and negative decimal patterns from locale data
+     *
+     * @return $this
      */
     protected function initDecimalPatterns()
     {
         if (!isset($this->positiveDecimalPattern) || !isset($this->negativeDecimalPattern)) {
-            $patterns = explode(';', $this->getDecimalPattern());
+            $patterns = explode(';', $this->getLocale()->getDecimalPattern());
             if (!isset($patterns[1])) {
                 // No explicit negative pattern was provided, construct it according to CLDR documentation.
                 $patterns[1] = '-' . $patterns[0];
@@ -259,6 +396,12 @@ class Number
         return $this;
     }
 
+    /**
+     * Get the pattern to use when formatting positive decimal numbers
+     * eg: #,##0.###
+     *
+     * @return string
+     */
     protected function getPositiveDecimalPattern()
     {
         $this->initDecimalPatterns();
@@ -266,6 +409,12 @@ class Number
         return $this->positiveDecimalPattern;
     }
 
+    /**
+     * Get the pattern to use when formatting negative decimal numbers
+     * eg: -#,##0.###
+     *
+     * @return string
+     */
     protected function getNegativeDecimalPattern()
     {
         $this->initDecimalPatterns();
@@ -275,11 +424,16 @@ class Number
 
     /**
      * Init positive and negative percent patterns from locale data
+     *
+     * @return $this
      */
     protected function initPercentPatterns()
     {
-        if (!isset($this->positivePercentPattern) || !isset($this->negativePercentPattern)) {
-            $patterns = explode(';', $this->getPercentPattern());
+        if (!isset(
+            $this->positivePercentPattern,
+            $this->negativePercentPattern
+        )) {
+            $patterns = explode(';', $this->getLocale()->getPercentPattern());
             if (!isset($patterns[1])) {
                 // No explicit negative pattern was provided, construct it according to CLDR documentation.
                 $patterns[1] = '-' . $patterns[0];
@@ -292,6 +446,12 @@ class Number
         return $this;
     }
 
+    /**
+     * Get the pattern to use when formatting positive percentage numbers
+     * eg: #,##0.### %
+     *
+     * @return string
+     */
     protected function getPositivePercentPattern()
     {
         $this->initPercentPatterns();
@@ -299,6 +459,12 @@ class Number
         return $this->positivePercentPattern;
     }
 
+    /**
+     * Get the pattern to use when formatting negative percentage numbers
+     * eg: -#,##0.### %
+     *
+     * @return string
+     */
     protected function getNegativePercentPattern()
     {
         $this->initPercentPatterns();
@@ -307,12 +473,17 @@ class Number
     }
 
     /**
-     * Init positive and negative decimal patterns from locale data
+     * Init positive and negative currency patterns from locale data
+     *
+     * @return $this
      */
     protected function initCurrencyPatterns()
     {
-        if (!isset($this->positiveCurrencyPattern) || !isset($this->negativeCurrencyPattern)) {
-            $patterns = explode(';', $this->getCurrencyPattern());
+        if (!isset(
+            $this->positiveCurrencyPattern,
+            $this->negativeCurrencyPattern
+        )) {
+            $patterns = explode(';', $this->getLocale()->getCurrencyPattern());
             if (!isset($patterns[1])) {
                 // No explicit negative pattern was provided, construct it according to CLDR documentation.
                 $patterns[1] = '-' . $patterns[0];
@@ -325,6 +496,12 @@ class Number
         return $this;
     }
 
+    /**
+     * Get pattern used to format a positive currency (price) number.
+     * eg : #,##0.00 ¤
+     *
+     * @return string
+     */
     protected function getPositiveCurrencyPattern()
     {
         $this->initCurrencyPatterns();
@@ -332,6 +509,12 @@ class Number
         return $this->positiveCurrencyPattern;
     }
 
+    /**
+     * Get pattern used to format a negative currency (price) number.
+     * eg : -#,##0.00 ¤
+     *
+     * @return string
+     */
     protected function getNegativeCurrencyPattern()
     {
         $this->initCurrencyPatterns();
@@ -340,11 +523,11 @@ class Number
     }
 
     /**
-     * Determine if grouping should be used to format numbers
+     * Check if digits grouping should be used to format numbers
      *
      * @return bool true if grouping is used
      */
-    protected function groupingUsed()
+    protected function isGroupingUsed()
     {
         if (!isset($this->groupingUsed)) {
             $this->groupingUsed = (strpos($this->getPositiveDecimalPattern(), ',') !== false);
@@ -353,6 +536,12 @@ class Number
         return $this->groupingUsed;
     }
 
+    /**
+     * Initializes primary and secondary digits group sizes.
+     * If they were already initialized, nothing will happen.
+     *
+     * @return $this
+     */
     protected function initGroupsSizes()
     {
         if (!isset($this->primaryGroupSize) || !isset($this->secondaryGroupSize)) {
@@ -368,9 +557,14 @@ class Number
         return $this;
     }
 
+    /**
+     * Get primary digits group size.
+     *
+     * @return int|null
+     */
     protected function getPrimaryGroupSize()
     {
-        if (!$this->groupingUsed()) {
+        if (!$this->isGroupingUsed()) {
             return null;
         }
 
@@ -379,9 +573,14 @@ class Number
         return $this->primaryGroupSize;
     }
 
+    /**
+     * Get secondary digits group size.
+     *
+     * @return int|null
+     */
     protected function getSecondaryGroupSize()
     {
-        if (!$this->groupingUsed()) {
+        if (!$this->isGroupingUsed()) {
             return null;
         }
 
@@ -390,30 +589,24 @@ class Number
         return $this->secondaryGroupSize;
     }
 
-    protected function getPercentPattern()
-    {
-        return $this->getLocale()->getPercentPattern();
-    }
-
-    protected function getCurrencyPattern()
-    {
-        return $this->getLocale()->getCurrencyPattern();
-    }
-
     /**
+     * Get locale used to format numbers.
+     *
      * @return Locale
      */
-    public function getLocale()
+    protected function getLocale()
     {
         return $this->locale;
     }
 
     /**
+     * Set locale used to format numbers.
+     *
      * @param $locale
      *
      * @return $this
      */
-    public function setLocale($locale)
+    protected function setLocale($locale)
     {
         $this->locale = $locale;
 
@@ -421,19 +614,23 @@ class Number
     }
 
     /**
-     * @return mixed
+     * Get the min number of decimal digits to use when formatting a number.
+     *
+     * @return int
      */
-    public function getMinimumFractionDigits()
+    protected function getMinimumFractionDigits()
     {
         return $this->minimumFractionDigits;
     }
 
     /**
+     * Set the min number of decimal digits to use when formatting a number.
+     *
      * @param $minimumFractionDigits
      *
      * @return $this
      */
-    public function setMinimumFractionDigits($minimumFractionDigits)
+    protected function setMinimumFractionDigits($minimumFractionDigits)
     {
         $this->minimumFractionDigits = $minimumFractionDigits;
 
@@ -441,19 +638,23 @@ class Number
     }
 
     /**
-     * @return mixed
+     * Get the max number of decimal digits to use when formatting a number.
+     *
+     * @return int
      */
-    public function getMaximumFractionDigits()
+    protected function getMaximumFractionDigits()
     {
         return $this->maximumFractionDigits;
     }
 
     /**
+     * Set the max number of decimal digits to use when formatting a number.
+     *
      * @param $maximumFractionDigits
      *
      * @return $this
      */
-    public function setMaximumFractionDigits($maximumFractionDigits)
+    protected function setMaximumFractionDigits($maximumFractionDigits)
     {
         $this->maximumFractionDigits = $maximumFractionDigits;
 
@@ -461,30 +662,53 @@ class Number
     }
 
     /**
-     * @return mixed
+     * Get the type of display for currency symbol (either symbol or ISO code).
+     *
+     * @return string
      */
-    public function getCurrencyDisplay()
+    protected function getCurrencyDisplay()
     {
         return $this->currencyDisplay;
     }
 
     /**
-     * @param $currencyDisplay
+     * Set the type of display for currency symbol (either symbol or ISO code).
+     *
+     * @param string $currencyDisplay
      *
      * @return $this
      */
-    public function setCurrencyDisplay($currencyDisplay)
+    protected function setCurrencyDisplay($currencyDisplay)
     {
         $this->currencyDisplay = $currencyDisplay;
 
         return $this;
     }
 
-    protected function getPattern($style, $negative = false)
+    /**
+     * Get a number formatting pattern.
+     *
+     * @param string $type
+     *   The formatting type (decimal, percent, currency).
+     *
+     * @param bool   $isNegative
+     *   Set to true if you want the negative version of this pattern.
+     *
+     * @return string
+     *   The wanted format.
+     *
+     * @throws InvalidArgumentException
+     *   When passed $type is unknown.
+     */
+    protected function getPattern($type, $isNegative = false)
     {
-        $style  = ucfirst($style);
-        $sign   = $negative ? 'Negative' : 'Positive';
-        $method = 'get' . $sign . $style . 'Pattern';
+        $type   = ucfirst($type);
+        $sign   = $isNegative ? 'Negative' : 'Positive';
+        $method = 'get' . $sign . $type . 'Pattern';
+
+        if (!method_exists($this, $method)) {
+            throw new InvalidArgumentException(strtolower($type) . ' is not a valid format type');
+        }
 
         return $this->$method();
     }
