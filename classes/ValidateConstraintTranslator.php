@@ -64,13 +64,10 @@ class ValidateConstraintTranslatorCore
             );
         }
 
-        return sprintf(
-            $this->translator->trans(
-                'Invalid format.',
-                array(),
-                'Shop.Forms.Errors'
-            ),
-            $validator
+        return $this->translator->trans(
+            'Invalid format.',
+            array(),
+            'Shop.Forms.Errors'
         );
     }
 }
