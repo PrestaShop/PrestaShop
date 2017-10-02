@@ -618,7 +618,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             $bread_extended[] =  $this->trans(
                                 'Edit: %value%',
                                 array(
-                                    '%svalue%' => $obj->name[$this->context->employee->id_lang]
+                                    '%value%' => $obj->name[$this->context->employee->id_lang]
                                     ),
                                 'Admin.Catalog.Feature'
                             );

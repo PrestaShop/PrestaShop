@@ -46,8 +46,8 @@ class StockMvtReasonLangCore extends DataLangCore
                 md5('Customer Order')
                     => $this->translator->trans('Customer Order', array(), 'Admin.Catalog.Feature', $this->locale),
 
-                md5('Regulation following an inventory of stock')
-                    => $this->translator->trans('Regulation following an inventory of stock', array(), 'Admin.Catalog.Feature', $this->locale),
+                md5('Adjustment following an inventory of stock')
+                    => $this->translator->trans('Adjustment following an inventory of stock', array(), 'Admin.Catalog.Feature', $this->locale),
 
                 md5('Transfer to another warehouse')
                     => $this->translator->trans('Transfer to another warehouse', array(), 'Admin.Catalog.Feature', $this->locale),
@@ -61,8 +61,8 @@ class StockMvtReasonLangCore extends DataLangCore
                 md5('Product Return')
                 => $this->translator->trans('Product Return', array(), 'Admin.Catalog.Feature', $this->locale),
 
-                md5('Employee Edition')
-                => $this->translator->trans('Employee Edition', array(), 'Admin.Catalog.Feature', $this->locale),
+                md5('Manual Entry')
+                => $this->translator->trans('Manual Entry', array(), 'Admin.Catalog.Feature', $this->locale),
 
             ),
         );
