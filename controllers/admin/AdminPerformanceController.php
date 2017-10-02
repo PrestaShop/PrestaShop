@@ -131,7 +131,7 @@ class AdminPerformanceControllerCore extends AdminController
                         array(
                             'id' => 'smarty_caching_type_filesystem',
                             'value' => 'filesystem',
-                            'label' => $this->trans('File System', array(), 'Admin.Advparameters.Feature').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->trans('(the directory %s must be writable)', array(), 'Admin.Advparameters.Notification'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
+                            'label' => $this->trans('File System', array(), 'Admin.Advparameters.Feature').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.$this->trans('(the directory %folder% must be writable)', array('%folder%' => realpath(_PS_CACHE_DIR_.'smarty/cache')), 'Admin.Advparameters.Notification'))
                         ),
                         array(
                             'id' => 'smarty_caching_type_mysql',

@@ -170,7 +170,7 @@ class AdminLanguagesControllerCore extends AdminController
                     'label' => $this->trans('Date format', array(), 'Admin.International.Feature'),
                     'name' => 'date_format_lite',
                     'required' => true,
-                    'hint' => sprintf($this->trans('Short date format (e.g., %s).', array(), 'Admin.International.Help'), 'Y-m-d')
+                    'hint' => $this->trans('Short date format (e.g., Y-m-d).', array(), 'Admin.International.Help'),
                     /* TO DO - ajouter les liens dans le hint ? */
                     /*'desc' => sprintf($this->trans('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')*/
                 ),
@@ -179,7 +179,7 @@ class AdminLanguagesControllerCore extends AdminController
                     'label' => $this->trans('Date format (full)', array(), 'Admin.International.Feature'),
                     'name' => 'date_format_full',
                     'required' => true,
-                    'hint' => sprintf($this->trans('Full date format (e.g., %s).', array(), 'Admin.International.Help'), 'Y-m-d H:i:s')
+                    'hint' => $this->trans('Full date format (e.g., Y-m-d H:i:s).', array(), 'Admin.International.Help'),
                     /* TO DO - ajouter les liens dans le hint ? */
                     /*'desc' => sprintf($this->trans('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')*/
                 ),
