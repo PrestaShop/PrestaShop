@@ -45,11 +45,10 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
     public function __construct(
         InstalledRepositoryInterface $nextRepository = null,
         Connection $connection,
-        $currencyProvider
+        $currencyProviderAdapter
     ) {
-        $this->nextRepository   = $nextRepository;
-        $this->currencyProvider = $currencyProvider;
-
+        $this->setNextRepository($nextRepository);
+        $this->currencyProvider = $currencyProviderAdapter;
     }
 
     /**
