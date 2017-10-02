@@ -41,7 +41,7 @@ class InstalledCacheRepository extends AbstractInstalledRepositoryMiddleware
         InstalledRepositoryInterface $nextRepository = null,
         \PSR\Cache\CacheItemPoolInterface $cacheService
     ) {
-        $this->nextRepository = $nextRepository;
+        $this->setNextRepository($nextRepository);
         $this->cacheService   = $cacheService;
     }
 
