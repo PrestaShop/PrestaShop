@@ -491,7 +491,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             }
         } else {
             $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
-            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array('%s' => $url), 'Admin.Catalog.Notification')));
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
         }
 
         $this->context->smarty->assign(array(
@@ -615,7 +615,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             $bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminAttributesGroups').'&id_attribute_group='.$id.'&viewattribute_group">'.$obj->name[$this->context->employee->id_lang].'</a>';
                         }
                         if (Validate::isLoadedObject($obj = new Attribute((int)$this->id_attribute))) {
-                            $bread_extended[] =  sprintf($this->trans('Edit: %s', array('%s' => $obj->name[$this->context->employee->id_lang]), 'Admin.Catalog.Feature'));
+                            $bread_extended[] =  $this->trans('Edit: %name%', array('%name%' => $obj->name[$this->context->employee->id_lang]), 'Admin.Catalog.Feature');
                         }
                     } else {
                         $bread_extended[] = $this->trans('Edit Value', array(), 'Admin.Catalog.Feature');

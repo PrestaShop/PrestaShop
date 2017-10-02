@@ -537,7 +537,7 @@ class AdminThemesControllerCore extends AdminController
         $other_themes = $this->theme_repository->getListExcluding([$this->context->shop->theme->getName()]);
         if (!empty($other_themes)) {
             $this->fields_options['theme'] = array(
-                'title' => sprintf($this->trans('Select a theme for the "%s" shop', array(), 'Admin.Design.Feature'), $this->context->shop->name),
+                'title' => $this->trans('Select a theme for the "%name%" shop', array('%name%' => $this->context->shop->name), 'Admin.Design.Feature'),
                 'description' => (!$this->can_display_themes) ? $this->trans('You must select a shop from the above list if you wish to choose a theme.', array(), 'Admin.Design.Help') : '',
                 'fields' => array(
                     'theme_for_shop' => array(
