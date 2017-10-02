@@ -421,11 +421,14 @@ class OrderHistoryCore extends ObjectModel
             ShopUrl::cacheMainDomainForShop($order->id_shop);
 
             $topic = $result['osname'];
+            $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+            $shipping_number = $order->getWsShippingNumber();
             $data = array(
                 '{lastname}' => $result['lastname'],
                 '{firstname}' => $result['firstname'],
                 '{id_order}' => (int)$this->id_order,
-                '{order_name}' => $order->getUniqReference()
+                '{order_name}' => $order->getUniqReference(),
+                '{followup}' => str_replace('@', $shipping_number, $carrier->url)
             );
 
             if ($result['module_name']) {
