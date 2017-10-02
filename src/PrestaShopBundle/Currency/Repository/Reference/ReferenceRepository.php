@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Currency\Repository\Reference;
 
+use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Currency\CurrencyFactory;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
@@ -56,7 +57,7 @@ class ReferenceRepository implements ReferenceRepositoryInterface
      *
      * @param string $isoCode
      *
-     * @return array The currency data
+     * @return Currency
      */
     public function getReferenceCurrencyByIsoCode($isoCode)
     {

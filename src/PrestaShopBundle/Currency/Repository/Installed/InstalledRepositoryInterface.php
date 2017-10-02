@@ -44,11 +44,28 @@ interface InstalledRepositoryInterface
      *
      * @param int $id
      *
-     * @return array The currency data
+     * @return Currency
      */
     public function getCurrencyById($id);
 
+    /**
+     * @param \PrestaShopBundle\Currency\Currency $currency
+     *
+     * @return Currency
+     */
     public function addInstalledCurrency(Currency $currency);
+
+    /**
+     * @param \PrestaShopBundle\Currency\Currency $currency
+     *
+     * @return Currency
+     */
     public function updateInstalledCurrency(Currency $currency);
+
+    /**
+     * @param \PrestaShopBundle\Currency\Currency $currency
+     *
+     * @return bool
+     */
     public function deleteInstalledCurrency(Currency $currency);
 }
