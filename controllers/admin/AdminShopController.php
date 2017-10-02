@@ -364,8 +364,12 @@ class AdminShopControllerCore extends AdminController
                 array(
                     'type' => 'text',
                     'label' => $this->trans('Shop name', array(), 'Admin.Shopparameters.Feature'),
-                    'desc' => array($this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.Shopparameters.Help'),
-                            sprintf($this->trans('Follow %sthis link%s to edit the shop name used on the front office.', array(), 'Admin.Shopparameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
+                    'desc' => array(
+                        $this->trans('This field does not refer to the shop name visible in the front office.', array(), 'Admin.Shopparameters.Help'),
+                        $this->trans('Follow [1]this link[/1] to edit the shop name used on the front office.', array(
+                            '[1]' => '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">',
+                            '[/1]' => '</a>'
+                        ), 'Admin.Shopparameters.Help')),
                     'name' => 'name',
                     'required' => true,
                 )
@@ -430,7 +434,10 @@ class AdminShopControllerCore extends AdminController
         $this->fields_form['input'][] = array(
             'type' => 'select',
             'label' => $this->trans('Category root', array(), 'Admin.Catalog.Feature'),
-            'desc' => sprintf($this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, %splease click here%s.', array(), 'Admin.Shopparameters.Help'), '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">', '</a>'),
+            'desc' => $this->trans('This is the root category of the store that you\'ve created. To define a new root category for your store, [1]please click here[/1].', array(
+                '[1]' => '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">',
+                '[/1]' => '</a>',
+            ), 'Admin.Shopparameters.Help'),
             'name' => 'id_category',
             'options' => array(
                 'query' => $categories,
