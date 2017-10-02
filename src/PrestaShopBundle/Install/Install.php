@@ -440,7 +440,7 @@ class Install extends AbstractInstall
     public static function restoreTestDB()
     {
         if (!file_exists(sys_get_temp_dir().'/'.'ps_dump.sql')) {
-            throw new DBALException('You need to run composer create-test-db to create the initial test database');
+            throw new DBALException('You need to run \'composer create-test-db\' to create the initial test database');
         }
 
         DatabaseDump::restoreDb();
