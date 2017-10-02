@@ -261,9 +261,9 @@
                     };
 
                     if (json.missing.length || json.updated.length)
-                        $('#changedFiles').html('<div class="alert alert-warning">'+ translations.changesDetected +'</div>');
+                        $('#changedFiles').html('<div class="alert alert-warning"><ul><li>'+ translations.changesDetected +'</li></ul></div>');
                     else
-                        $('#changedFiles').html('<div class="alert alert-success">'+ translations.noChangeDetected +'</div>');
+                        $('#changedFiles').html('<div class="alert alert-success"><ul><li>'+ translations.noChangeDetected +'</li></ul></div>');
 
                     $.each(tab, function(key, lang) {
                         if (json[key].length) {
