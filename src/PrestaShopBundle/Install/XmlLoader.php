@@ -769,7 +769,7 @@ class XmlLoader
                 // Resize the image if no cache was prepared in fixtures
                 $this->setError(
                     $this->translator->trans(
-                        'Cannot create image "%1$s" for entity "%2$s"',
+                        'Cannot create image "%identifier%" for entity "%entity%"',
                         array('%identifier%' => $identifier.'-'.$type['name'], '%entity%' => 'product'),
                         'Install'
                     )
