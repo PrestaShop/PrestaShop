@@ -806,13 +806,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'avg_msg_response_time':
-                $value = sprintf(
-                    $this->trans('%.1f hours', array(), 'Admin.Stats.Feature'),
-                    AdminStatsController::getAverageMessageResponseTime(
-                        date('Y-m-d', strtotime('-31 day')),
-                        date('Y-m-d', strtotime('-1 day'))
-                    )
-                );
+                $value = $this->trans('%average% hours', array('%average%' => AdminStatsController::getAverageMessageResponseTime(
+                    date('Y-m-d', strtotime('-31 day')),
+                    date('Y-m-d', strtotime('-1 day'))
+                )), 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME', $value);
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
                 break;

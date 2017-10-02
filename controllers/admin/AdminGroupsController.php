@@ -568,18 +568,9 @@ class AdminGroupsControllerCore extends AdminController
         $guest = new Group(Configuration::get('PS_GUEST_GROUP'));
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-        $unidentified_group_information = sprintf(
-            $this->trans('%s - All persons without a customer account or customers that are not logged in.', array(), 'Admin.Shopparameters.Help'),
-            '<b>'.$unidentified->name[$this->context->language->id].'</b>'
-        );
-        $guest_group_information = sprintf(
-            $this->trans('%s - All persons who placed an order through Guest Checkout.', array(), 'Admin.Shopparameters.Help'),
-            '<b>'.$guest->name[$this->context->language->id].'</b>'
-        );
-        $default_group_information = sprintf(
-            $this->trans('%s - All persons who created an account on this site.', array(), 'Admin.Shopparameters.Help'),
-            '<b>'.$default->name[$this->context->language->id].'</b>'
-        );
+        $unidentified_group_information = $this->trans('%group_name% - All persons without a customer account or customers that are not logged in.', array('%group_name%' => '<b>'.$unidentified->name[$this->context->language->id].'</b>'), 'Admin.Shopparameters.Help');
+        $guest_group_information = $this->trans('%group_name% - All persons who placed an order through Guest Checkout.', array('%group_name%' => '<b>'.$guest->name[$this->context->language->id].'</b>'), 'Admin.Shopparameters.Help');
+        $default_group_information = $this->trans('%group_name% - All persons who created an account on this site.', array('%group_name%' => '<b>'.$default->name[$this->context->language->id].'</b>'), 'Admin.Shopparameters.Help');
 
         $this->displayInformation($this->trans('PrestaShop has three default customer groups:', array(), 'Admin.Shopparameters.Help'));
         $this->displayInformation($unidentified_group_information);
