@@ -516,11 +516,11 @@ class AdminRequestSqlControllerCore extends AdminController
                     break;
 
                 case 'testedRequired':
-                    $this->errors[] = sprintf($this->trans('"%s" does not exist.', array(), 'Admin.Notifications.Error'), $e[$key]);
+                    $this->errors[] = $this->trans('"%key%" does not exist.', array('%key%' => $e[$key]), 'Admin.Notifications.Error');
                     break;
 
                 case 'testedUnauthorized':
-                    $this->errors[] = sprintf($this->trans('"%s" is an unauthorized keyword.', array(), 'Admin.Advparameters.Notification'), $e[$key]);
+                    $this->errors[] = $this->trans('"%key%" is an unauthorized keyword.', array('%key%' => $e[$key]), 'Admin.Advparameters.Notification');
                     break;
             }
         }

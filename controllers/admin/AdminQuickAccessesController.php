@@ -189,7 +189,7 @@ class AdminQuickAccessesControllerCore extends AdminController
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
             } elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
                 // voluntary do affectation here
-                PrestaShopLogger::addLog(sprintf($this->trans('%s addition', array(), 'Admin.Advparameters.Feature'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+                PrestaShopLogger::addLog($this->trans('%class_name% addition', array('%class_name%' => $this->className), 'Admin.Advparameters.Feature'), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
                 $this->afterAdd($this->object);
             }
         }

@@ -2003,10 +2003,7 @@ class AdminProductsControllerCore extends AdminController
                 if (Tools::getValue('id_'.$this->table) && $field == 'passwd') {
                     continue;
                 }
-                $this->errors[] = sprintf(
-                    $this->trans('The %s field is required.', array(), 'Admin.Notifications.Error'),
-                    call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)
-                );
+                $this->errors[] = $this->trans('The %name% field is required.', array('%name%' => call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)), 'Admin.Notifications.Error');
             }
         }
 

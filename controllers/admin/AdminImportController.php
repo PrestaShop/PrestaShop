@@ -1385,7 +1385,7 @@ class AdminImportControllerCore extends AdminController
             $category->link_rewrite = Tools::link_rewrite($category->name[$default_language_id]);
             if ($category->link_rewrite == '') {
                 $category->link_rewrite = 'friendly-url-autogeneration-failed';
-                $this->warnings[] = sprintf($this->trans('URL rewriting failed to auto-generate a friendly URL for: %s', array(), 'Admin.Advparameters.Notification'), $category->name[$default_language_id]);
+                $this->warnings[] = $this->trans('URL rewriting failed to auto-generate a friendly URL for: %category_name%', array('%category_name%' => $category->name[$default_language_id]), 'Admin.Advparameters.Notification');
             }
             $category->link_rewrite = AdminImportController::createMultiLangField($category->link_rewrite);
         }
@@ -2132,7 +2132,7 @@ class AdminImportControllerCore extends AdminController
                             $image->associateTo($shops);
                             if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
                                 $image->delete();
-                                $this->warnings[] = sprintf($this->trans('Error copying image: %s', array(), 'Admin.Advparameters.Notification'), $url);
+                                $this->warnings[] = $this->trans('Error copying image: %url%', array('%url%' => $url), 'Admin.Advparameters.Notification');
                             }
                         } else {
                             $error = true;
@@ -2142,7 +2142,7 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     if ($error) {
-                        $this->warnings[] = sprintf($this->trans('Product #%1$d: the picture (%2$s) cannot be saved.', array(), 'Admin.Advparameters.Notification'), $image->id_product, $url);
+                        $this->warnings[] = $this->trans('Product #%id%: the picture (%url%) cannot be saved.', array('%id%' => $image->id_product, '%url%'  => $url), 'Admin.Advparameters.Notification');
                     }
                 }
             }
@@ -2186,9 +2186,9 @@ class AdminImportControllerCore extends AdminController
             // set advanced stock managment
             if (!$validateOnly && isset($product->advanced_stock_management)) {
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management has incorrect value. Not set for product %1$s ', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = $this->trans('Advanced stock management has incorrect value. Not set for product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot enable on product %1$s ', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot enable on product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
                 } elseif ($update_advanced_stock_management_value) {
                     $product->setAdvancedStockManagement($product->advanced_stock_management);
                 }
@@ -2201,7 +2201,7 @@ class AdminImportControllerCore extends AdminController
             // Check if warehouse exists
             if (isset($product->warehouse) && $product->warehouse) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, warehouse not set on product %1$s ', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, warehouse not set on product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
                 } elseif (!$validateOnly) {
                     if (Warehouse::exists($product->warehouse)) {
                         // Get already associated warehouses
@@ -2221,7 +2221,7 @@ class AdminImportControllerCore extends AdminController
                         }
                         StockAvailable::synchronize($product->id);
                     } else {
-                        $this->warnings[] = sprintf($this->trans('Warehouse did not exist, cannot set on product %1$s.', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language_id]);
+                        $this->warnings[] = $this->trans('Warehouse did not exist, cannot set on product  %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
                     }
                 }
             }
@@ -2229,9 +2229,9 @@ class AdminImportControllerCore extends AdminController
             // stock available
             if (isset($product->depends_on_stock)) {
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
-                    $this->warnings[] = sprintf($this->trans('Incorrect value for "Depends on stock" for product %1$s ', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = $this->trans('Incorrect value for "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s ', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language_id]);
+                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language_id]), 'Admin.Advparameters.Notification');
                 } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
                 }
@@ -2449,7 +2449,7 @@ class AdminImportControllerCore extends AdminController
                         $image->associateTo($id_shop_list);
                         // FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
-                            $this->warnings[] = sprintf($this->trans('Error copying image: %s', array(), 'Admin.Advparameters.Notification'), $url);
+                            $this->warnings[] = $this->trans('Error copying image: %url%', array('%url%' => $url), 'Admin.Advparameters.Notification');
                             $image->delete();
                         } else {
                             $id_image[] = (int)$image->id;
@@ -2608,7 +2608,7 @@ class AdminImportControllerCore extends AdminController
                     $info['available_date'] = Validate::isDate($info['available_date']) ? $info['available_date'] : null;
 
                     if (!Validate::isEan13($info['ean13'])) {
-                        $this->warnings[] = sprintf($this->trans('EAN13 "%1s" has incorrect value for product with id %2d.', array(), 'Admin.Advparameters.Notification'), $info['ean13'], $product->id);
+                        $this->warnings[] = $this->trans('EAN13 "%ean13%" has incorrect value for product with id %id%.', array('%ean13%' => $info['ean13'], '%id%' => $product->id), 'Admin.Advparameters.Notification');
                         $info['ean13'] = '';
                     }
 
@@ -2725,9 +2725,9 @@ class AdminImportControllerCore extends AdminController
             // set advanced stock managment
             if (isset($info['advanced_stock_management'])) {
                 if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management has incorrect value. Not set for product with id %d.', array(), 'Admin.Advparameters.Notification'), $product->id);
+                    $this->warnings[] = $this->trans('Advanced stock management has incorrect value. Not set for product with id %id%.', array('%id%' => $product->id), 'Admin.Advparameters.Notification');
                 } elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot enable on product with id %d.', array(), 'Admin.Advparameters.Notification'), $product->id);
+                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot enable on product with id %id%.', array('%id%' => $product->id), 'Admin.Advparameters.Notification');
                 } elseif (!$validateOnly) {
                     $product->setAdvancedStockManagement($info['advanced_stock_management']);
                 }
@@ -2740,7 +2740,7 @@ class AdminImportControllerCore extends AdminController
             // Check if warehouse exists
             if (isset($info['warehouse']) && $info['warehouse']) {
                 if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, warehouse is not set on product with id %d.', array(), 'Admin.Advparameters.Notification'), $product->id);
+                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, warehouse is not set on product with id %id%.', array('%id%' => $product->id), 'Admin.Advparameters.Notification');
                 } else {
                     if (Warehouse::exists($info['warehouse'])) {
                         $warehouse_location_entity = new WarehouseProductLocation();
@@ -2756,7 +2756,7 @@ class AdminImportControllerCore extends AdminController
                             StockAvailable::synchronize($product->id);
                         }
                     } else {
-                        $this->warnings[] = sprintf($this->trans('Warehouse did not exist, cannot set on product %1$s.', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language]);
+                        $this->warnings[] = $this->trans('Warehouse did not exist, cannot set on product %name%.', array('%name%' => $product->name[$default_language]), 'Admin.Advparameters.Notification');
                     }
                 }
             }
@@ -2764,9 +2764,9 @@ class AdminImportControllerCore extends AdminController
             // stock available
             if (isset($info['depends_on_stock'])) {
                 if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1) {
-                    $this->warnings[] = sprintf($this->trans('Incorrect value for "Depends on stock" for product %1$s ', array(), 'Admin.Notifications.Error'), $product->name[$default_language]);
+                    $this->warnings[] = $this->trans('Incorrect value for "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language]), 'Admin.Notifications.Error');
                 } elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1) {
-                    $this->warnings[] = sprintf($this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s ', array(), 'Admin.Advparameters.Notification'), $product->name[$default_language]);
+                    $this->warnings[] = $this->trans('Advanced stock management is not enabled, cannot set "Depends on stock" for product %name% ', array('%name%' => $product->name[$default_language]), 'Admin.Advparameters.Notification');
                 } elseif (!$validateOnly) {
                     StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
                 }
@@ -3228,7 +3228,7 @@ class AdminImportControllerCore extends AdminController
                     }
                 }
             } else {
-                $this->errors[] = sprintf($this->trans('"%s" is not a valid email address.', array(), 'Admin.Advparameters.Notification'), $address->customer_email);
+                $this->errors[] = $this->trans('"%email%" is not a valid email address.', array('%email%' => $address->customer_email), 'Admin.Advparameters.Notification');
                 return;
             }
         } elseif (isset($address->id_customer) && !empty($address->id_customer)) {
@@ -3916,33 +3916,35 @@ class AdminImportControllerCore extends AdminController
         $error = '';
         // checks parameters
         if (!Supplier::supplierExists($id_supplier)) {
-            $error = sprintf($this->trans('Supplier ID (%d) is not valid (at line %d).', array(), 'Admin.Advparameters.Notification'), $id_supplier, $current_line + 1);
+            $error = $this->trans('Supplier ID (%id%) is not valid (at line %line%).', array('%id%' => $id_supplier, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
         if (!Language::getLanguage($id_lang)) {
-            $error = sprintf($this->trans('Lang ID (%d) is not valid (at line %d).', array(), 'Admin.Advparameters.Notification'), $id_lang, $current_line + 1);
+            $error = $this->trans('Lang ID (%id%) is not valid (at line %line%).', array('%id%' => $id_lang, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
         if (!Warehouse::exists($id_warehouse)) {
-            $error = sprintf($this->trans('Warehouse ID (%d) is not valid (at line %d).', array(), 'Admin.Advparameters.Notification'), $id_warehouse, $current_line + 1);
+            $error = $this->trans('Warehouse ID (%id%) is not valid (at line %line%).', array('%id%' => $id_warehouse, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
         if (!Currency::getCurrency($id_currency)) {
-            $error = sprintf($this->trans('Currency ID (%d) is not valid (at line %d).', array(), 'Admin.Advparameters.Notification'), $id_currency, $current_line + 1);
+            $error = $this->trans('Currency ID (%id%) is not valid (at line %line%).', array('%id%' => $id_currency, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
         if (empty($supply_order->reference) && SupplyOrder::exists($reference)) {
-            $error = sprintf($this->trans('Reference (%s) already exists (at line %d).', array(), 'Admin.Advparameters.Notification'), $reference, $current_line + 1);
+            $error = $this->trans('Reference (%ref%) already exists (at line %line%).', array('%ref%' => $reference, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
         if (!empty($supply_order->reference) && ($supply_order->reference != $reference && SupplyOrder::exists($reference))) {
-            $error = sprintf($this->trans('Reference (%s) already exists (at line %d).', array(), 'Admin.Advparameters.Notification'), $reference, $current_line + 1);
+            $error = $this->trans('Reference (%ref%) already exists (at line %line%).', array('%ref%' => $reference, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
         if (!Validate::isDateFormat($date_delivery_expected)) {
-            $error = sprintf($this->trans('Date format (%s) is not valid (at line %d). It should be: %s.', array(), 'Admin.Advparameters.Notification'), $date_delivery_expected, $current_line + 1, $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification'));
+            $error = $this->trans('Date format (%date%) is not valid (at line %line%). It should be: %date_format%.', array('%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification')), 'Admin.Advparameters.Notification');
         } elseif (new DateTime($date_delivery_expected) <= new DateTime('yesterday')) {
-            $error = sprintf($this->trans('Date (%s) cannot be in the past (at line %d). Format: %s.', array(), 'Admin.Advparameters.Notification'), $date_delivery_expected, $current_line + 1, $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification'));
+            $error = $this->trans('Date (%date%) cannot be in the past (at line %line%). Format: %date_format%.', array('%date%' => $date_delivery_expected, '%line%' => $current_line + 1, '%date_format%' => $this->trans('YYYY-MM-DD', array(), 'Admin.Advparameters.Notification')), 'Admin.Advparameters.Notification');
         }
         if ($discount_rate < 0 || $discount_rate > 100) {
-            $error = sprintf($this->trans('Discount rate (%d) is not valid (at line %d). %s.', array(), 'Admin.Advparameters.Notification'), $discount_rate, $current_line + 1, $this->trans('Format: Between 0 and 100', array(), 'Admin.Advparameters.Notification'));
+            $error = $this->trans('Discount rate (%rate%) is not valid (at line %line%). %format%.',
+                array('%rate%' => $discount_rate, '%line%' => $current_line + 1, '%format%' => $this->trans('Format: Between 0 and 100', array(), 'Admin.Advparameters.Notification')),
+                'Admin.Advparameters.Notification');
         }
         if ($supply_order->id > 0 && !$supply_order->isEditable()) {
-            $error = sprintf($this->trans('Supply Order (%d) is not editable (at line %d).', array(), 'Admin.Advparameters.Notification'), $supply_order->id, $current_line + 1);
+            $error = $this->trans('Supply Order (%id%) is not editable (at line %line%).', array('%id%' => $supply_order->id, '%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
         }
 
         // if no errors, sets supply order
@@ -3973,7 +3975,7 @@ class AdminImportControllerCore extends AdminController
 
             // errors
             if (!$res) {
-                $this->errors[] = sprintf($this->trans('Supply Order could not be saved (at line %d).', array(), 'Admin.Advparameters.Notification'), $current_line + 1);
+                $this->errors[] = $this->trans('Supply Order could not be saved (at line %line%).', array('%line%' => $current_line + 1), 'Admin.Advparameters.Notification');
             }
         } else {
             $this->errors[] = $error;

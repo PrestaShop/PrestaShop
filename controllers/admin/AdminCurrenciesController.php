@@ -323,7 +323,7 @@ class AdminCurrenciesControllerCore extends AdminController
             $cronJobs = new CronJobs();
             $cronJobs->addOneShotTask(
                 $cronJobUrl,
-                sprintf($this->trans('Live exchange Rate for %s', array(), 'Admin.International.Feature'), Configuration::get('PS_SHOP_NAME'))
+                $this->trans('Live exchange Rate for %shop_name%', array('%shop_name%' => Configuration::get('PS_SHOP_NAME')), 'Admin.International.Feature')
             );
 
             Configuration::updateValue('PS_ACTIVE_CRONJOB_EXCHANGE_RATE', Db::getInstance()->Insert_ID(), false, null, $this->context->shop->id);

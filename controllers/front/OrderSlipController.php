@@ -63,8 +63,8 @@ class OrderSlipControllerCore extends FrontController
         foreach ($orders_slip as $order_slip) {
             $order = new Order($order_slip['id_order']);
             $credit_slips[$order_slip['id_order_slip']] = $order_slip;
-            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.Customeraccount'), $order_slip['id_order_slip']);
-            $credit_slips[$order_slip['id_order_slip']]['order_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.Customeraccount'), $order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = $this->trans('#%id%', array('%id%' => $order_slip['id_order_slip']), 'Shop.Theme.Customeraccount');
+            $credit_slips[$order_slip['id_order_slip']]['order_number'] = $this->trans('#%id%', array('%id%' => $order_slip['id_order']), 'Shop.Theme.Customeraccount');
             $credit_slips[$order_slip['id_order_slip']]['order_reference'] = $order->reference;
             $credit_slips[$order_slip['id_order_slip']]['credit_slip_date'] = Tools::displayDate($order_slip['date_add'], null, false);
             $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', true, null, 'id_order_slip='.(int)$order_slip['id_order_slip']);

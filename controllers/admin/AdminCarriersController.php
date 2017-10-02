@@ -172,7 +172,7 @@ class AdminCarriersControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'hint' => array(
-                        sprintf($this->trans('Allowed characters: letters, spaces and %s', array(), 'Admin.Shipping.Help'), '().-'),
+                        $this->trans('Allowed characters: letters, spaces and "%special_chars%".', array('%special_chars%' => '().-'), 'Admin.Shipping.Help'),
                         $this->trans('Carrier name displayed during checkout', array(), 'Admin.Shipping.Help'),
                         $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', array(), 'Admin.Shipping.Help')
                     )
