@@ -917,7 +917,7 @@ class HookCore extends ObjectModel
                             .(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))
                     ) {
                         $liveEdit = true;
-                        $output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
+                        $output .= self::getLiveEditContent($display, $moduleInstance, $array['id_hook']);
                     } elseif ($array_return) {
                         $output[$moduleInstance->name] = $display;
                     } else {
@@ -969,7 +969,7 @@ class HookCore extends ObjectModel
      * @param int $hookId Get hook id
      * @return string
      */
-    public static function wrapLiveEdit($display, $moduleInstance, $hookId)
+    public static function getLiveEditContent($display, $moduleInstance, $hookId)
     {
 
         $context = Context::getContext();
@@ -982,24 +982,24 @@ class HookCore extends ObjectModel
             Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)Tools::getValue('id_employee'))
         );
 
-        $isConfigurable = method_exists($moduleInstance, 'getContent') ? 1 : 0;
+        $isConfigurable = method_exists($moduleInstance, 'getContent') ? true : false;
 
-        $liveContent = '<div rel="'.Tools::safeOutput($moduleInstance->name).'" id="hook_'.(int)$hookId.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name)).'"
-				class="dndModule">
-					<div class="toolbar">
-					    <div class="toolbar-content">
-						<img src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.png">
-                        <div class="toolbar-title">' . Tools::safeOutput($moduleInstance->displayName) . '</div></div><div class="toolbar-btn">
-				<a href="#" id="'.(int)$hookId.'_'.(int)$moduleInstance->id.'" class="moveModule">
-					<i class="material-icons md-icon">zoom_out_map</i></a>
-				<a href="#" id="'.(int)$hookId.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-					<i class="material-icons md-icon">delete_forever</i></a> ';
-        if (1 === $isConfigurable) {
-            $liveContent .= '<a target="_blank" href="'.$linkModule.'" id="'.(int)$hookId.'_'.(int)$moduleInstance->id.'" class="settingModule">
-					<i class="material-icons md-icon">settings</i></a>';
-        }
+        $id = 'hook_'.(int)$hookId.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name));
 
-        $liveContent .= '</div></div>'.$display.'</div>';
+        $data = $context->smarty->createData();
+
+        $data->assign(array(
+            'content'       => $display,
+            'name'          => Tools::safeOutput($moduleInstance->name),
+            'id'            => $id,
+            'img_src'       => _MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.png',
+            'hook_id'       => (int)$hookId,
+            'module_id'     => (int)$moduleInstance->id,
+            'configurable'  => $isConfigurable,
+            'link_module'   => $linkModule,
+        ));
+
+        $liveContent = $context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'hookLiveEdit.tpl', $data)->fetch();
 
         return $liveContent;
     }

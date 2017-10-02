@@ -78,7 +78,10 @@ $(document).ready(function () {
 
     $('.unregisterHook').unbind('click').click(function () {
         var ids = $(this).attr('id').split('_');
-        $(this).closest(".toolbar").parent().parent().fadeOut('slow', function () {
+
+        var idBeginWith = 'hook_' + ids[0] + '_module_' + ids[1];
+
+        $('.dndModule[id^='+ idBeginWith +']').fadeOut('slow', function () {
             $(this).parent().data('id', +ids[0]);
             $(this).hide();
         });

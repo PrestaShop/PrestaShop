@@ -497,11 +497,16 @@ class FrontControllerCore extends Controller
             return false;
         }
 
-        if (Tools::getValue('liveToken') != Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
+        if (Tools::getValue('liveToken') != $this->validateToken()) {
             return false;
         }
 
-        return is_dir(Tools::safeOutput(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad')));
+        $backAccess = realpath(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.Tools::getValue('ad'));
+        if ($backAccess === false) {
+            return false;
+        }
+
+        return is_dir($backAccess);
     }
 
     /**
@@ -624,6 +629,26 @@ class FrontControllerCore extends Controller
         }
 
         return $jsFileList;
+    }
+
+    /**
+     * Check live edit available
+     *
+     * @return bool
+     */
+    public function isLiveEditAvailable()
+    {
+        return Tools::isSubmit('live_edit') && Tools::getValue('ad');
+    }
+
+    /**
+     * Check token
+     *
+     * @return bool|string
+     */
+    public function validateToken()
+    {
+        return Tools::getAdminToken('AdminModulesPositions' . (int)Tab::getIdFromClassName('AdminModulesPositions') . (int)Tools::getValue('id_employee'));
     }
 
     /**
@@ -942,7 +967,7 @@ class FrontControllerCore extends Controller
             }
         }
 
-        if (Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee'))) {
+        if ($this->isLiveEditAvailable() && $this->validateToken()) {
 
             $this->addJqueryUi('ui.sortable');
             $this->addJqueryPlugin('fancybox');
