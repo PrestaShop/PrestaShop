@@ -386,7 +386,7 @@ class CartPresenter implements PresenterInterface
 
         $summary_string = $products_count === 1 ?
             $this->translator->trans('1 item', array(), 'Shop.Theme.Checkout') :
-            sprintf($this->translator->trans('%d items', array(), 'Shop.Theme.Checkout'), $products_count)
+            $this->translator->trans('%count% items', array('%count%' => $products_count), 'Shop.Theme.Checkout')
         ;
 
         $minimalPurchase = $this->priceFormatter->convertAmount((float) Configuration::get('PS_PURCHASE_MINIMUM'));
@@ -433,15 +433,13 @@ class CartPresenter implements PresenterInterface
             'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
             'minimalPurchaseRequired' => ($this->priceFormatter->convertAmount($productsTotalExcludingTax) < $minimalPurchase) ?
-                sprintf(
-                    $this->translator->trans(
-                        'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
-                        array(
-                            '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
-                            '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
-                        ),
-                        'Shop.Theme.Checkout'
-                    )
+                $this->translator->trans(
+                    'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
+                    array(
+                        '%amount%' => $this->priceFormatter->convertAndFormat($minimalPurchase),
+                        '%total%' => $this->priceFormatter->convertAndFormat($productsTotalExcludingTax),
+                    ),
+                    'Shop.Theme.Checkout'
                 ) :
                 '',
         );
