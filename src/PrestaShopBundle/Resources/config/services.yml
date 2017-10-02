@@ -270,6 +270,9 @@ services:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
         arguments: ['@prestashop.addons.client_api', '@logger']
 
+    prestashop.adapter.currency_provider:
+        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyRepository
+
     # Presenters
     prestashop.adapter.presenter.module:
         class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter

@@ -54,7 +54,7 @@ class PhpArrayCache implements CacheItemPoolInterface
      */
     public function getItem($key)
     {
-        if (isset($this->data[$key])) {
+        if ($this->hasItem($key)) {
             return $this->data[$key];
         }
 
@@ -127,7 +127,7 @@ class PhpArrayCache implements CacheItemPoolInterface
      */
     public function deleteItem($key)
     {
-        if (isset($this->data[$key])) {
+        if ($this->hasItem($key)) {
             unset($this->data[$key]);
 
             return true;
