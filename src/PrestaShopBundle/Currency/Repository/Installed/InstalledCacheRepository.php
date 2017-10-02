@@ -26,20 +26,23 @@
 
 namespace PrestaShopBundle\Currency\Repository\Installed;
 
-use Doctrine\DBAL\Driver\Connection;
 use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Currency\CurrencyFactory;
-use PrestaShopBundle\Currency\Exception\CurrencyNotFoundException;
 
-class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
+class InstalledCacheRepository extends AbstractInstalledRepositoryMiddleware
 {
 
-    protected $connection;
+    /**
+     * @var \PSR\Cache\CacheItemPoolInterface
+     */
+    protected $cacheService;
 
-    public function __construct(InstalledRepositoryInterface $nextRepository = null, Connection $connection)
-    {
+    public function __construct(
+        InstalledRepositoryInterface $nextRepository = null,
+        \PSR\Cache\CacheItemPoolInterface $cacheService
+    ) {
         $this->nextRepository = $nextRepository;
-        $this->connection     = $connection;
+        $this->cacheService   = $cacheService;
     }
 
     /**
@@ -47,25 +50,27 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
      *
      * @param int $id
      *
-     * @return Currency
+     * @return array The currency data
      */
     public function getCurrencyByIdOnCurrentRepository($id)
     {
-        $currencyModel = new \Currency($id);
-        if ($currencyModel->id > 0) {
+        $cacheItem    = $this->cacheService->getItem($id);
+        $currencyData = $cacheItem->get();
+        if (!empty($currencyData)) {
             $factory  = new CurrencyFactory();
-            $currency = $factory->setId($currencyModel->id)
-                                ->setIsoCode($currencyModel->iso_code)
-                                ->setNumericIsoCode($currencyModel->iso_code_num)
-                                ->setDecimalDigits($currencyModel->decimals)
-                                ->setDisplayName($currencyModel->name)
-                //->setSymbols($currencyModel->symbol)
+            $currency = $factory->setId($id)
+                                ->setIsoCode($currencyData['isoCode'])
+                                ->setNumericIsoCode($currencyData['numericIsoCode'])
+                                ->setDecimalDigits($currencyData['decimalDigits'])
+                                ->setDisplayName($currencyData['localizedNames'])
+                                ->setSymbols($currencyData['localizedSymbols'])
                                 ->build();
 
             return $currency;
         }
 
         return null;
+
     }
 
     /**
@@ -75,9 +80,7 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
      */
     protected function addInstalledCurrencyOnCurrentRepository(Currency $currency)
     {
-        $currencyModel = new \Currency;
-        $this->hydrateCurrencyModel($currencyModel, $currency);
-        $currencyModel->save();
+        $this->setInCache($currency);
 
         return $currency;
     }
@@ -89,25 +92,9 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
      */
     protected function updateInstalledCurrencyCurrentRepository(Currency $currency)
     {
-        $currencyModel = new \Currency($currency->getId());
-        if ($currencyModel->id <= 0) {
-            throw new CurrencyNotFoundException(
-                'Cannot update currency with id ' . $currency->getId() . ' : currency not found'
-            );
-        }
-        $this->hydrateCurrencyModel($currencyModel, $currency);
-        $currencyModel->save();
+        $this->setInCache($currency);
 
         return $currency;
-    }
-
-    protected function hydrateCurrencyModel(\Currency $currencyModel, Currency $currency)
-    {
-        $currencyModel->iso_code     = $currency->getIsoCode();
-        $currencyModel->iso_code_num = $currency->getNumericIsoCode();
-        $currencyModel->decimals     = $currency->getDecimalDigits();
-        $currencyModel->name         = $currency->getDisplayNames();
-        //$currencyModel->symbol = $currency->getSymbol();
     }
 
     /**
@@ -117,14 +104,26 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
      */
     protected function deleteInstalledCurrencyCurrentRepository(Currency $currency)
     {
-        $currencyModel = new \Currency($currency->getId());
-        if ($currencyModel->id <= 0) {
-            throw new CurrencyNotFoundException(
-                'Cannot update currency with id ' . $currency->getId() . ' : currency not found'
-            );
-        }
-        $currencyModel->delete();
+        $this->cacheService->deleteItem($currency->getId());
 
         return true;
+    }
+
+    protected function setInCache(Currency $currency)
+    {
+        if ((int) $currency->getId() > 0) {
+            // do not store currency if id was not set
+            $cacheItem = new InstalledCacheItem();
+            $cacheItem->setKey($currency->getId())
+                      ->set(
+                          array(
+                              'isoCode'          => $currency->getIsoCode(),
+                              'numericIsoCode'   => $currency->getNumericIsoCode(),
+                              'decimalDigits'    => $currency->getDecimalDigits(),
+                              'localizedNames'   => $currency->getName(),
+                              'localizedSymbols' => $currency->getSymbol(),
+                          )
+                      );
+        }
     }
 }

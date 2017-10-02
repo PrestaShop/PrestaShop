@@ -168,7 +168,8 @@ class CurrencyFactory
     public function build()
     {
         $currencyParameters = new CurrencyParameters();
-        $currencyParameters->setIsoCode($this->isoCode)
+        $currencyParameters->setId($this->id)
+                           ->setIsoCode($this->isoCode)
                            ->setNumericIsoCode($this->numericIsoCode)
                            ->setDecimalDigits($this->decimalDigits)
                            ->setDisplayName($this->displayName)

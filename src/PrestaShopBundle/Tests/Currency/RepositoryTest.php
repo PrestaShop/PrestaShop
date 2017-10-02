@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Tests\Currency;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Currency\Repository as CurrencyRepository;
+use PrestaShopBundle\Currency\Repository\Installed as CurrencyRepository;
 
 class RepositoryTest extends TestCase
 {
@@ -40,7 +40,7 @@ class RepositoryTest extends TestCase
         $dataSource = $this->getMock('PrestaShopBundle\Currency\DataSource\DataSourceInterface');
         $dataSource->method('getCurrencyByIsoCode')
             ->willReturnMap($this->provideCurrencyDataMapByIsoCode());
-        $this->repository = new CurrencyRepository([$dataSource]);
+        $this->repository = new PrestaShopBundle\Currency\Repository\Installed([$dataSource]);
     }
 
     /**
