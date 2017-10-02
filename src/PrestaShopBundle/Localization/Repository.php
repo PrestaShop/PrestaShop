@@ -85,7 +85,7 @@ class Repository
      * @return Repository
      * @throws InvalidArgumentException
      */
-    public function setDataSources($dataSources)
+    protected function setDataSources($dataSources)
     {
         foreach ($dataSources as $dataSource) {
             if (!$dataSource instanceof DataSourceInterface) {

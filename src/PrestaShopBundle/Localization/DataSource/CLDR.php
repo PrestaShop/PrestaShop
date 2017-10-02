@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Localization\DataSource;
 
-use PrestaShopBundle\Localization\CLDR\DataReader;
 use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 use PrestaShopBundle\Localization\CLDR\LocaleData;
 use PrestaShopBundle\Localization\Exception\Exception;
@@ -45,13 +44,6 @@ class CLDR implements DataSourceInterface
     const CLDR_MAIN = 'localization/CLDR/core/common/main/';
 
     /**
-     * The contextual locale code.
-     *
-     * @var string
-     */
-    protected $localeCode;
-
-    /**
      * The CLDR data reader (reads the CLDR data xml files)
      *
      * @var DataReaderInterface
@@ -68,29 +60,6 @@ class CLDR implements DataSourceInterface
         $this->setReader($reader);
     }
 
-    /**
-     * Get the locale code
-     *
-     * @return string
-     */
-    public function getLocaleCode()
-    {
-        return $this->localeCode;
-    }
-
-    /**
-     * Set the locale code
-     *
-     * @param string $localeCode
-     *
-     * @return $this
-     */
-    public function setLocaleCode($localeCode)
-    {
-        $this->localeCode = (string)$localeCode;
-
-        return $this;
-    }
 
     /**
      * Get the data reader
@@ -155,12 +124,12 @@ class CLDR implements DataSourceInterface
      *
      * @param LocaleData $localeData
      *
-     * @return int The id of newly created locale
+     * @return void
+     * @throws Exception
      */
     public function createLocale(LocaleData $localeData)
     {
-        // No write in CLDR data files
-        return $localeData->id;
+        throw new Exception('Cannot create a new locale in CLDR reference files');
     }
 
     /**
@@ -169,11 +138,11 @@ class CLDR implements DataSourceInterface
      * @param LocaleData $localeData
      *
      * @return LocaleData The saved item
+     * @throws Exception
      */
     public function updateLocale(LocaleData $localeData)
     {
-        // No write in CLDR data files
-        return $localeData;
+        throw new Exception('Cannot update a locale in CLDR reference files');
     }
 
     /**
@@ -182,10 +151,10 @@ class CLDR implements DataSourceInterface
      * @param LocaleData $localeData
      *
      * @return bool True if deletion was successful (be it soft or hard)
+     * @throws Exception
      */
     public function deleteLocale(LocaleData $localeData)
     {
-        // No deletion in CLDR data files
-        return true;
+        throw new Exception('Cannot delete a locale in CLDR reference files');
     }
 }

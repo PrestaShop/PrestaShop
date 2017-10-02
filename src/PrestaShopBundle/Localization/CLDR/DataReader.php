@@ -38,17 +38,56 @@ use SimplexmlElement;
  */
 class DataReader implements DataReaderInterface
 {
+    /**
+     * Root path for CLDR files
+     */
     const CLDR_ROOT         = 'localization/CLDR/';
+
+    /**
+     * Main CLDR data files directory
+     */
     const CLDR_MAIN         = 'localization/CLDR/core/common/main/';
+
+    /**
+     * Supplemental CLDR data files directory
+     */
     const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
 
+
+    /**
+     * Supplemental currency data type.
+     * This is also the xml root node for all supplemental currency data.
+     */
     const SUPPL_DATA_CURRENCY       = 'currencyData';
+
+    /**
+     * Supplemental language data type.
+     * This is also the xml root node for all supplemental language data.
+     */
     const SUPPL_DATA_LANGUAGE       = 'languageData';
+
+    /**
+     * Supplemental numbering systems data type.
+     * This is also the xml root node for all supplemental numbering systems data.
+     */
     const SUPPL_DATA_NUMBERING      = 'numberingSystems';
+
+    /**
+     * Supplemental parent locales data type.
+     * This is also the xml root node for all supplemental parent locales data.
+     */
     const SUPPL_DATA_PARENT_LOCALES = 'parentLocales'; // For specific locales hierarchy
 
+
+    /**
+     * Default number of decimal digits used for currency formatting.
+     */
     const DEFAULT_CURRENCY_DIGITS = 2;
 
+    /**
+     * @var SimplexmlElement[]
+     *   Supplemental data bag (to save multiple disk access when looking for the exact same supplemental data)
+     */
     protected $supplementalData = array(); // Let's save some disk accesses...
 
     /**

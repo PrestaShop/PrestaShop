@@ -32,6 +32,15 @@ use PrestaShop\Prestashop\Adapter\Currency\Currency as CurrencyAdapterModel;
 use PrestaShopBundle\Currency\CurrencyFactory;
 use PrestaShopBundle\Currency\Exception\CurrencyNotFoundException;
 
+/**
+ * Class InstalledDatabaseRepository
+ *
+ * Provides and saves Currency objects.
+ * Implements InstalledRepositoryInterface.
+ * This currency repository interacts with database.
+ *
+ * @package PrestaShopBundle\Currency\Repository\Installed
+ */
 class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
 {
 
