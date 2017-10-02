@@ -1355,11 +1355,9 @@ class AdminImportControllerCore extends AdminController
                     $category->id_parent = $category_to_create->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = sprintf(
-                            $this->trans('%1$s (ID: %2$s) cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                            $category_to_create->name[$id_lang],
-                            (isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
-                        );
+                        $this->errors[] =$this->trans('%category_name% (ID: %id%) cannot be saved', array(
+                            '%category_name%' => $category_to_create->name[$id_lang],
+                            '%id%' => (isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'), 'Admin.Advparameters.Notification');
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').

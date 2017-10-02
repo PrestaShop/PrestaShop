@@ -2542,7 +2542,9 @@ class AdminTranslationsControllerCore extends AdminController
         } else {
             $str_return .= '<p class="error">
                 '.$this->trans('There was a problem getting the mail files.', array(), 'Admin.International.Notification').'<br>
-                '.sprintf($this->trans('English language files must exist in %s folder', array(), 'Admin.International.Notification'), '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>').'
+                '.$this->trans('English language files must exist in [1]%folder%[/1] folder', array(
+                    '%folder%' => '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>'
+                ), 'Admin.International.Notification').'
             </p>';
         }
 
