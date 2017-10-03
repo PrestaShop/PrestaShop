@@ -51,6 +51,10 @@ class CLDRIntegrationTest extends TestCase
     }
 
     /**
+     * Given an invalid locale id (invalid type)
+     * When requesting a locale with this id
+     * Then an InvalidArgumentException should be raised
+     *
      * @expectedException InvalidArgumentException
      */
     public function testGetByIdWithWrongParameter()
@@ -59,6 +63,10 @@ class CLDRIntegrationTest extends TestCase
     }
 
     /**
+     * Given a valid locale code
+     * When requesting the locale having this code
+     * Then the expected locale data should be returned
+     *
      * @param $localeCode
      * @param $expectedData
      *
@@ -66,11 +74,10 @@ class CLDRIntegrationTest extends TestCase
      */
     public function testGetByLocaleCode($localeCode, $expectedData)
     {
-        $this->repo->setLocaleCode($localeCode);
         $localeData = $this->repo->getLocaleByCode($localeCode);
 
         foreach ($expectedData as $property => $value) {
-            // TODO : should be Locale instances, not plain array data
+            // TODO : should be LocaleData instances, not plain array data
             // TODO object comparison
             $this->assertSame($value, $localeData[$property]);
         }

@@ -46,7 +46,7 @@ class ManagerFactoryTest extends TestCase
     /**
      * Given a valid locale code
      * When trying to build a Manager instance with our ManagerFactory
-     * An actual valid and ready-to-use Manager instance should be returned
+     * Then an actual valid and ready-to-use Manager instance should be returned
      */
     public function testItBuildsManagerInstance()
     {

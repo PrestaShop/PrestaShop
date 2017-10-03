@@ -163,6 +163,7 @@ class LocaleData
      * @param LocaleData $parentData
      *
      * @return $this
+     *   Fluent interface
      */
     public function fill(LocaleData $parentData)
     {
@@ -183,6 +184,7 @@ class LocaleData
      * @param LocaleData $defaultData
      *
      * @return $this
+     *   Fluent interface
      */
     protected function fillScalarProperties(LocaleData $defaultData)
     {
@@ -206,9 +208,13 @@ class LocaleData
      * Filling will be delegated to the concerned object's fill() method.
      *
      * @param LocaleData $defaultData
+     *   Used to fill missing data
      *
      * @return $this
+     *   Fluent interface
+     *
      * @throws Exception
+     *   When a property is invalid
      */
     protected function fillObjectProperties(LocaleData $defaultData)
     {
@@ -235,8 +241,10 @@ class LocaleData
      * Fill empty or incomplete array properties containing scalar values.
      *
      * @param LocaleData $defaultData
+     *   Used to fill missing data
      *
      * @return $this
+     *   Fluent interface
      */
     protected function fillArrayOfScalarProperties(LocaleData $defaultData)
     {
@@ -265,9 +273,13 @@ class LocaleData
      * Filling will be delegated to the concerned objects' fill() methods.
      *
      * @param LocaleData $defaultData
+     *   Used to fill missing data
      *
      * @return $this
+     *   Fluent interface
+     *
      * @throws Exception
+     *   When a property is invalid
      */
     protected function fillArrayOfObjectProperties(LocaleData $defaultData)
     {

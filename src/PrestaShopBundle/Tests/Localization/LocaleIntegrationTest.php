@@ -45,8 +45,15 @@ class LocaleIntegrationTest extends KernelTestCase
     }
 
     /**
+     * Given a valid float number
+     * When asking the locale to format this number as a decimal
+     * Then the expected formatted number should be returned
+     *
      * @param $floatNumber
+     *   The number to be formatted
+     *
      * @param $expectedFormats
+     *   The expected results (by locale)
      *
      * @dataProvider provideValidNumberFormats
      */
@@ -69,9 +76,18 @@ class LocaleIntegrationTest extends KernelTestCase
     }
 
     /**
+     * Given an valid float number and a valid Currency object
+     * When asking to format this number as a price, using this currency
+     * Then the expected formatted price should be returned
+     *
      * @param $floatNumber
+     *   The number to be formatted as a price
+     *
      * @param $currencyCode
+     *   The price's currency
+     *
      * @param $expectedFormats
+     *   The expected results (by locale and by currency)
      *
      * @dataProvider provideValidCurrencyFormats
      */

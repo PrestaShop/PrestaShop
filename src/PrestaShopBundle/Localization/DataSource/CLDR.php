@@ -80,8 +80,10 @@ class CLDR implements DataSourceInterface
      * Set the data reader
      *
      * @param DataReaderInterface $reader
+     *   The data reader
      *
      * @return $this
+     *   Fluent interface
      */
     protected function setReader(DataReaderInterface $reader)
     {
@@ -94,9 +96,13 @@ class CLDR implements DataSourceInterface
      * Get currency data by internal database identifier
      *
      * @param int $id
+     *   The locale id
      *
-     * @return array The currency data
+     * @return array
+     *   The currency data
+     *
      * @throws InvalidArgumentException
+     *   When $id is invalid
      */
     public function getLocaleById($id)
     {
@@ -109,10 +115,14 @@ class CLDR implements DataSourceInterface
 
     /**
      * Get locale data by code (either language code or IETF locale tag)
+     * The IETF tag is the combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters country code)
+     * @see https://en.wikipedia.org/wiki/IETF_language_tag
      *
      * @param string $code
+     *   The locale code
      *
-     * @return array The locale data
+     * @return array
+     *   The locale data
      */
     public function getLocaleByCode($code)
     {

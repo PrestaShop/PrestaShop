@@ -45,7 +45,7 @@ class ManagerTest extends TestCase
     /**
      * Given a valid currency id
      * When asking a currency (with this id) to the currency manager
-     * It should return the expected Currency
+     * Then it should return the expected Currency
      */
     public function testGetCurrencyById()
     {

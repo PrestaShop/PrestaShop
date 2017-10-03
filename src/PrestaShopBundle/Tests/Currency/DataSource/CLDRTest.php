@@ -40,17 +40,30 @@ class CLDRTest extends TestCase
      */
     protected $dataSource;
 
+    /**
+     * Sets up a data source that will be used by tests
+     * This data source reads data from CLDR reference data files
+     */
     public function setUp()
     {
         $this->dataSource = new CLDRCurrencyDataSource('fr-FR', new DataReader());
     }
 
+    /**
+     * Given any integer id
+     * When requesting to the data source a currency having this id
+     * Then the result should be null (because reference CLDR data sources have no clue about internal currencies ids)
+     */
     public function testGetById()
     {
         $this->assertNull($this->dataSource->getCurrencyById(1));
     }
 
     /**
+     * Given an invalid currency id (wrong type)
+     * When requesting to the data source a currency having this id
+     * Then an InvalidArgumentException should be raised
+     *
      * @expectedException InvalidArgumentException
      */
     public function testGetByIdWithWrongParameter()
@@ -59,6 +72,10 @@ class CLDRTest extends TestCase
     }
 
     /**
+     * Given a valid locale code (IETF tag) and a valid currency ISO code
+     * When setting the used locale tag, then requesting currency data by its ISO code
+     * Then the data source should return the expected currency data
+     *
      * @param $currencyCode
      * @param $expectedData
      *
@@ -76,6 +93,11 @@ class CLDRTest extends TestCase
         }
     }
 
+    /**
+     * Provides valid currency data, by locale code and currency code.
+     *
+     * @return array
+     */
     public function provideValidCurrencyData()
     {
         return array(
@@ -126,7 +148,7 @@ class CLDRTest extends TestCase
                     ),
                     'symbol'      => array( // from en-DK.xml
                         'default' => 'kr.',
-                        'narrow' => 'kr',
+                        'narrow'  => 'kr',
                     ),
                 ),
             ),

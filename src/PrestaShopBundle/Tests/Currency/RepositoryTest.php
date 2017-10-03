@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Tests\Currency;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Currency\Repository\Installed as CurrencyRepository;
 
 class RepositoryTest extends TestCase
@@ -46,7 +46,7 @@ class RepositoryTest extends TestCase
     /**
      * Given a valid currency code
      * When requesting a currency (with this code) to the repository
-     * It should return the expected Currency instance (with expected data)
+     * Then it should return the expected Currency instance (with expected data)
      *
      * @param string $currencyCode           The valid currency ISO code
      * @param int    $expectedNumericIsoCode The expected numeric ISO code
@@ -137,7 +137,7 @@ class RepositoryTest extends TestCase
                     'displayName'    => 'euro',
                     'symbol'         => array(
                         'default' => '€',
-                        'narrow' => '€'
+                        'narrow'  => '€',
                     ),
                     'numericIsoCode' => 978,
                     'decimalDigits'  => 2,
@@ -150,7 +150,7 @@ class RepositoryTest extends TestCase
                     'displayName'    => 'dollar',
                     'symbol'         => array(
                         'default' => '$',
-                        'narrow' => '$'
+                        'narrow'  => '$',
                     ),
                     'numericIsoCode' => 840,
                     'decimalDigits'  => 2,
@@ -163,7 +163,7 @@ class RepositoryTest extends TestCase
                     'displayName'    => 'livre',
                     'symbol'         => array(
                         'default' => '£',
-                        'narrow' => '£'
+                        'narrow'  => '£',
                     ),
                     'numericIsoCode' => 826,
                     'decimalDigits'  => 2,

@@ -45,10 +45,13 @@ class RepositoryIntegrationTest extends KernelTestCase
     /**
      * Given a valid locale code
      * When requesting a Locale to the locale repository with this code
-     * It should return a valid Locale instance with expected data
+     * Then it should return a valid Locale instance with expected data
      *
      * @param $localeCode
+     *   The requested locale code
+     *
      * @param $expectedLocaleData
+     *   The expected Locale data (by locale code)
      *
      * @dataProvider provideValidLocaleData
      */
@@ -56,6 +59,7 @@ class RepositoryIntegrationTest extends KernelTestCase
     {
         /** @var Locale $locale */
         $locale = $this->repository->getLocaleByCode($localeCode);
+        $this->assertInstanceOf('\PrestaShopBundle\Localization\Locale', $locale);
         $this->assertSame($expectedLocaleData['localeCode'], $locale->getLocaleCode());
     }
 
@@ -65,37 +69,37 @@ class RepositoryIntegrationTest extends KernelTestCase
             'ar-IL' => array(
                 'localeCode'   => 'ar-IL',
                 'expectedData' => [
-                    'localeCode'   => 'ar-IL',
+                    'localeCode' => 'ar-IL',
                 ],
             ),
             'bn-IN' => array(
                 'localeCode'   => 'bn-IN',
                 'expectedData' => [
-                    'localeCode'   => 'bn-IN',
+                    'localeCode' => 'bn-IN',
                 ],
             ),
             'de-CH' => array(
                 'localeCode'   => 'de-CH',
                 'expectedData' => [
-                    'localeCode'   => 'de-CH',
+                    'localeCode' => 'de-CH',
                 ],
             ),
             'en-US' => array(
                 'localeCode'   => 'en-US',
                 'expectedData' => [
-                    'localeCode'   => 'en-US',
+                    'localeCode' => 'en-US',
                 ],
             ),
             'es-AR' => array(
                 'localeCode'   => 'es-AR',
                 'expectedData' => [
-                    'localeCode'   => 'es-AR',
+                    'localeCode' => 'es-AR',
                 ],
             ),
             'fr-FR' => array(
                 'localeCode'   => 'fr-FR',
                 'expectedData' => [
-                    'localeCode'   => 'fr-FR',
+                    'localeCode' => 'fr-FR',
                 ],
             ),
         );

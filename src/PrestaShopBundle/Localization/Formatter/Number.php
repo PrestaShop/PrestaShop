@@ -188,9 +188,10 @@ class Number
     protected $currencyDisplay;
 
     /**
-     * Create Number instance (NumberFormatter).
+     * Create a number formatter instance whose behavior depends on the passed locale
      *
      * @param Locale $locale
+     *   Locale influencing the formatter behavior
      */
     public function __construct(Locale $locale)
     {
@@ -312,7 +313,7 @@ class Number
      */
     protected function replaceSymbols($number)
     {
-        $locale = $this->getLocale();
+        $locale       = $this->getLocale();
         $replacements = $locale->getSpecification()->getNumberSymbols($locale->getNumberingSystem());
 
         return strtr($number, $replacements);
@@ -379,6 +380,7 @@ class Number
      * Init positive and negative decimal patterns from locale data
      *
      * @return $this
+     *   Fluent interface
      */
     protected function initDecimalPatterns()
     {
@@ -426,6 +428,7 @@ class Number
      * Init positive and negative percent patterns from locale data
      *
      * @return $this
+     *   Fluent interface
      */
     protected function initPercentPatterns()
     {
@@ -476,6 +479,7 @@ class Number
      * Init positive and negative currency patterns from locale data
      *
      * @return $this
+     *   Fluent interface
      */
     protected function initCurrencyPatterns()
     {
@@ -541,6 +545,7 @@ class Number
      * If they were already initialized, nothing will happen.
      *
      * @return $this
+     *   Fluent interface
      */
     protected function initGroupsSizes()
     {
@@ -605,6 +610,7 @@ class Number
      * @param $locale
      *
      * @return $this
+     *   Fluent interface
      */
     protected function setLocale($locale)
     {
@@ -629,6 +635,7 @@ class Number
      * @param $minimumFractionDigits
      *
      * @return $this
+     *   Fluent interface
      */
     protected function setMinimumFractionDigits($minimumFractionDigits)
     {
@@ -653,6 +660,7 @@ class Number
      * @param $maximumFractionDigits
      *
      * @return $this
+     *   Fluent interface
      */
     protected function setMaximumFractionDigits($maximumFractionDigits)
     {
@@ -675,8 +683,10 @@ class Number
      * Set the type of display for currency symbol (either symbol or ISO code).
      *
      * @param string $currencyDisplay
+     *   The currency display type
      *
      * @return $this
+     *   Fluent interface
      */
     protected function setCurrencyDisplay($currencyDisplay)
     {
