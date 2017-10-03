@@ -23,10 +23,22 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $liveEdit }
-    <div id="{$hook_name}" class="dndHook">
-        {$output nofilter}
+<div rel="{$name}" id="{$id}" class="dndModule">
+    <div class="toolbar">
+        <div class="toolbar-content">
+            <img src="{$img_src}">
+            <div class="toolbar-title">{$name}</div>
+        </div>
+        <div class="toolbar-btn">
+            <a href="#" id="{$hook_id}_{$module_id}" class="moveModule">
+                <i class="material-icons md-icon">zoom_out_map</i></a>
+            <a href="#" id="{$hook_id}_{$module_id}" class="unregisterHook">
+                <i class="material-icons md-icon">delete_forever</i></a>
+            {if $configurable}
+                <a target="_blank" href="{$base_link}{$ad}/index.php?controller=AdminModules&configure={$name}&token={$token}" id="{$hook_id}_{$module_id}" class="settingModule">
+                    <i class="material-icons md-icon">settings</i></a>
+            {/if}
+        </div>
     </div>
-{else}
-    {$output nofilter}
-{/if}
+    {$content nofilter}
+</div>

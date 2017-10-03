@@ -957,7 +957,18 @@ class HookCore extends ObjectModel
         if ($array_return) {
             return $output;
         }
-        return ($liveEdit ? '<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($liveEdit ? '</div>' : '');
+
+
+        $data = $context->smarty->createData();
+        $data->assign(array(
+            'output' => $output,
+            'liveEdit' => $liveEdit,
+            'hook_name' => $hook_name,
+        ));
+
+        $liveContent = $context->smarty->createTemplate(_PS_ALL_THEMES_DIR_ . 'hookLiveEdit.tpl', $data)->fetch();
+
+        return $liveContent;
         // Return html string
     }
 
@@ -974,14 +985,6 @@ class HookCore extends ObjectModel
 
         $context = Context::getContext();
 
-        $linkModule = sprintf(
-            '%s%s/index.php?controller=AdminModules&configure=%s&token=%s',
-            $context->link->getBaseLink(),
-            Tools::getValue('ad'),
-            Tools::safeOutput($moduleInstance->name),
-            Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)Tools::getValue('id_employee'))
-        );
-
         $isConfigurable = method_exists($moduleInstance, 'getContent') ? true : false;
 
         $id = 'hook_'.(int)$hookId.'_module_'.(int)$moduleInstance->id.'_moduleName_'.str_replace('_', '-', Tools::safeOutput($moduleInstance->name));
@@ -996,10 +999,12 @@ class HookCore extends ObjectModel
             'hook_id'       => (int)$hookId,
             'module_id'     => (int)$moduleInstance->id,
             'configurable'  => $isConfigurable,
-            'link_module'   => $linkModule,
+            'base_link'     => $context->link->getBaseLink(),
+            'ad'            => Tools::getValue('ad'),
+            'token'         => Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)Tools::getValue('id_employee')),
         ));
 
-        $liveContent = $context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'hookLiveEdit.tpl', $data)->fetch();
+        $liveContent = $context->smarty->createTemplate(_PS_ALL_THEMES_DIR_.'moduleLiveEdit.tpl', $data)->fetch();
 
         return $liveContent;
     }

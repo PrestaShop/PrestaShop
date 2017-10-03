@@ -1,3 +1,7 @@
+.dndHook {
+    min-height: 50px;
+}
+
 .dndModule {
     border: 1px dotted red;
     position: relative;
