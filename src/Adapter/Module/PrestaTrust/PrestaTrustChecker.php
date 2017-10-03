@@ -77,11 +77,11 @@ class PrestaTrustChecker
             return;
         }*/
 
-        $details = $module->attributes->get('prestatrust', array());
-        $details['hash'] = $this->calculateHash($module->disk->get('path'));
-        $details['check_list'] = $this->requestCheck($details['hash'], 'localhost');
-        $details['status'] = array_sum($details['check_list']) == count($details['check_list']); // True if all content is True
-        $details['message'] = $this->getMessage($details['check_list']);
+        $details = $module->attributes->get('prestatrust', new \stdClass);
+        $details->hash = $this->calculateHash($module->disk->get('path'));
+        $details->check_list = $this->requestCheck($details->hash, 'localhost');
+        $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
+        $details->message = $this->getMessage($details->check_list);
 
         $this->cache->save($module->get('name'), $details);
 
