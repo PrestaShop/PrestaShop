@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
-use Tools;
 
 class ApiClient
 {
@@ -35,6 +34,7 @@ class ApiClient
     private $queryParameters = array(
         'format' => 'json',
     );
+    private $defaultQueryParameters;
 
     /**
      * @var \PrestaShop\PrestaShop\Adapter\Tools
@@ -56,6 +56,7 @@ class ApiClient
             ->setIsoCode($isoCode)
             ->setVersion(_PS_VERSION_)
         ;
+        $this->defaultQueryParameters = $this->queryParameters;
     }
 
     public function setSslVerification($verifySsl)
@@ -73,6 +74,22 @@ class ApiClient
         $this->addonsApiClient = $client;
 
         return $this;
+    }
+
+    /**
+     * In case you reuse the Client, you may want to clean the previous parameters
+     */
+    public function init()
+    {
+        $this->queryParameters = $this->defaultQueryParameters;
+    }
+
+    public function getCheckCustomer()
+    {
+        $response = $this->setMethod('check_customer')
+            ->getResponse();
+
+        return json_decode($response);
     }
 
     public function getNativesModules()
@@ -146,6 +163,14 @@ class ApiClient
         }
     }
 
+    public function getModuleZip($moduleId)
+    {
+        return $this->setMethod('module')
+            ->setModuleId($moduleId)
+            ->getPostResponse()
+        ;
+    }
+
     public function getCustomerModules($userMail, $password)
     {
         $response = $this->setMethod('listing')
@@ -159,6 +184,21 @@ class ApiClient
 
         if (!empty($responseArray->modules)) {
             return $responseArray->modules;
+        }
+        return array();
+    }
+
+    public function getCustomerThemes()
+    {
+        $response = $this->setMethod('listing')
+            ->setAction('customer-themes')
+            ->getPostResponse()
+        ;
+
+        $responseArray = json_decode($response);
+
+        if (!empty($responseArray->themes)) {
+            return $responseArray->themes;
         }
         return array();
     }
@@ -220,6 +260,20 @@ class ApiClient
     public function setModuleId($moduleId)
     {
         $this->queryParameters['id_module'] = $moduleId;
+
+        return $this;
+    }
+
+    public function setModuleKey($moduleKey)
+    {
+        $this->queryParameters['module_key'] = $moduleKey;
+
+        return $this;
+    }
+
+    public function setModuleName($moduleName)
+    {
+        $this->queryParameters['module_name'] = $moduleName;
 
         return $this;
     }
