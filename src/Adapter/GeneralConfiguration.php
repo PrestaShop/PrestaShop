@@ -25,18 +25,33 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 class GeneralConfiguration implements DataConfigurationInterface
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
 
     /**
      * @{inheritdoc}
      */
     public function getConfiguration()
     {
-        // TODO: Implement getConfiguration() method.
+        return array(
+            'check_modules_update' => $this->configuration->get('PRESTASTORE_LIVE'),
+            'check_ip_address' => $this->configuration->get('PS_COOKIE_CHECKIP'),
+            'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
+            'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
+        );
     }
 
     /**
@@ -44,7 +59,15 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        return array();
+        $errors = array();
+
+        if ($this->validateConfiguration($configuration)) {
+            $this->configuration->set('PRESTASTORE_LIVE', (bool) $configuration['check_modules_update']);
+            $this->configuration->set('PS_COOKIE_CHECKIP', (bool) $configuration['check_ip_address']);
+            $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
+            $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
+        }
+        return $errors;
     }
 
     /**
@@ -52,6 +75,18 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        // TODO: Implement validateConfiguration() method.
+        $resolver = new OptionsResolver();
+        $resolver
+            ->setRequired(
+                array(
+                    'check_modules_update',
+                    'check_ip_address',
+                    'front_cookie_lifetime',
+                    'back_cookie_lifetime',
+                )
+            );
+        $resolver->resolve($configuration);
+
+        return true;
     }
 }
