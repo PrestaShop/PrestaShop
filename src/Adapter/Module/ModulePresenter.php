@@ -85,13 +85,13 @@ class ModulePresenter implements PresenterInterface
         $attributes['picos'] = array();
 
         // PrestaTrust display
-        if (!empty($attributes['prestatrust']['pico'])) {
+        if (!empty($attributes['prestatrust']) && !empty($attributes['prestatrust']->pico)) {
             $text = '';
-            if (isset($attributes['prestatrust']['status'])) {
-                $text = $attributes['prestatrust']['status'] ? 'OK' : 'KO';
+            if (isset($attributes['prestatrust']->status)) {
+                $text = $attributes['prestatrust']->status ? 'OK' : 'KO';
             }
             $attributes['picos']['prestatrust'] = array(
-                'img' => $attributes['prestatrust']['pico'],
+                'img' => $attributes['prestatrust']->pico,
                 'label' => 'prestatrust',
                 'text' => $text,
             );
