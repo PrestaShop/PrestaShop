@@ -23,91 +23,82 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 var PerformancePageUI = {
-    displaySmartyCache: function() {
-        var CACHE_ENABLED = '1';
-        var smartyCacheSelected = document.getElementById('form_smarty_cache');
-        var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
-        if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
-          for(var i = 0; i < smartyCacheOptions.length; i++) {
-            smartyCacheOptions[i].style.display = 'block';
+  displaySmartyCache: function() {
+      var CACHE_ENABLED = '1';
+      var smartyCacheSelected = document.getElementById('form_smarty_cache');
+      var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
+      if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
+        for(var i = 0; i < smartyCacheOptions.length; i++) {
+          smartyCacheOptions[i].style.display = 'block';
+        }
+
+        return;
+      }
+
+    for(var i = 0; i < smartyCacheOptions.length; i++) {
+      smartyCacheOptions[i].style.display = 'none';
+    }
+  },
+  displayCacheSystems: function() {
+      var CACHE_ENABLED = '1';
+      var cacheEnabledInput = document.getElementById('form_caching_use_cache');
+      var cachingElements = document.getElementsByClassName('memcache');
+
+      if(cacheEnabledInput.value === CACHE_ENABLED) {
+          for (var i = 0; i < cachingElements.length; i++) {
+              cachingElements[i].style.display = "block";
           }
+          return;
+      }
+
+      for (var i = 0; i < cachingElements.length; i++) {
+          cachingElements[i].style.display = "none";
+      }
+  },
+  displayMemcacheServers: function() {
+      var CACHE_ENABLED = '1';
+      var cacheEnabledInput = document.getElementById('form_caching_use_cache');
+      var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
+      var memcacheServersListBlock = document.getElementById('servers-list');
+      var newServerBtn = document.getElementById('new-server-btn');
+      var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
+
+      if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
+          memcacheServersListBlock.style.display = "block";
+          newServerBtn.style.display = "block";
 
           return;
-        }
-
-      for(var i = 0; i < smartyCacheOptions.length; i++) {
-        smartyCacheOptions[i].style.display = 'none';
       }
-    },
-    displayCacheSystems: function() {
-        var CACHE_ENABLED = '1';
-        var cacheEnabledInput = document.getElementById('form_caching_use_cache');
-        var cachingElements = document.getElementsByClassName('memcache');
 
-        if(cacheEnabledInput.value == CACHE_ENABLED) {
-            for (var i = 0; i < cachingElements.length; i++) {
-                cachingElements[i].style.display = "block";
-            }
-
-
-        if(cacheEnabledInput.value === CACHE_ENABLED) {
-            for (var i = 0; i < cachingElements.length; i++) {
-                cachingElements[i].style.display = "block";
-            }
-            return;
-        }
-
-        for (var i = 0; i < cachingElements.length; i++) {
-            cachingElements[i].style.display = "none";
-        }
-    },
-    displayMemcacheServers: function() {
-        var CACHE_ENABLED = 1;
-        var cacheEnabledInput = document.getElementById('form_caching_use_cache');
-        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
-        var memcacheServersListBlock = document.getElementById('servers-list');
-        var newServerBtn = document.getElementById('new-server-btn');
-        var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
-
-        if (
-            (cacheSelected == "CacheMemcache" || cacheSelected == "CacheMemcached")
-            && cacheEnabledInput.value == CACHE_ENABLED
-        ) {
-            memcacheServersListBlock.style.display = "block";
-            newServerBtn.style.display = "block";
-
-            return;
-        }
-
-        memcacheServersListBlock.style.display = "none";
-        newServerBtn.style.display = "none";
-    }
+      memcacheServersListBlock.style.display = "none";
+      newServerBtn.style.display = "none";
+  }
 };
 
 /**
- * Animations on form values.
- */
+* Animations on form values.
+*/
 document.getElementById('form_caching_use_cache').addEventListener('change', function() {
-    PerformancePageUI.displayCacheSystems();
+  PerformancePageUI.displayCacheSystems();
 });
 
 window.addEventListener('load', function() {
-    PerformancePageUI.displaySmartyCache();
-    PerformancePageUI.displayCacheSystems();
-    PerformancePageUI.displayMemcacheServers();
+  PerformancePageUI.displaySmartyCache();
+  PerformancePageUI.displayCacheSystems();
+  PerformancePageUI.displayMemcacheServers();
 });
 
 var cacheSystemInputs = document.querySelectorAll('input[type=radio]');
 var length = cacheSystemInputs.length;
 
 while(length--) {
-    cacheSystemInputs[length].addEventListener('change', function() {
-        PerformancePageUI.displayMemcacheServers();
-    });
+  cacheSystemInputs[length].addEventListener('change', function() {
+      PerformancePageUI.displayMemcacheServers();
+  });
 }
 
 var smartyCacheOption = document.getElementById('form_smarty_cache');
 
 smartyCacheOption.addEventListener('change', function() {
-  PerformancePageUI.displaySmartyCache();
+PerformancePageUI.displaySmartyCache();
 });
