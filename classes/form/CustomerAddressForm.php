@@ -112,8 +112,6 @@ class CustomerAddressFormCore extends AbstractForm
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
-                    // FIXME: the translator adapter is crap at the moment,
-                    // but once it is not, the sprintf needs to go away.
                     $postcode->addError($this->translator->trans('Invalid postcode - should look like "%zipcode%"',
                         array('%zipcode%' => $country->zip_code_format),
                         'Shop.Forms.Errors'));
