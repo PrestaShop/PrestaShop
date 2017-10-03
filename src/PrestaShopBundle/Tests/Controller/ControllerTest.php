@@ -99,7 +99,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminCustomerPreferencesController'),
             array('AdminLogsController'),
             array('AdminProfilesController'),
-            array('AdminAddonsCatalogController'),
             array('AdminCustomersController'),
             array('AdminMaintenanceController'),
             array('AdminQuickAccessesController'),

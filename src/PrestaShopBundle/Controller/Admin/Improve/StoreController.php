@@ -40,6 +40,10 @@ class StoreController extends FrameworkBundleAdminController
      */
     const CONTROLLER_NAME = 'AdminAddonsCatalog';
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function indexAction(Request $request)
     {
         return $this->render('@PrestaShop/Admin/Improve/Module/store.html.twig', array(
@@ -56,16 +60,20 @@ class StoreController extends FrameworkBundleAdminController
         ));
     }
 
+    /**
+     * @param Request $request
+     * @return string
+     */
     private function getAddonsUrl(Request $request)
     {
         $psVersion = $this->get('prestashop.adapter.legacy.configuration')->get('__PS_VERSION__');
         $parent_domain = $request->getSchemeAndHttpHost();
-        $currencyCode = $this->getContext()->currency->iso_code;
-        $languageCode = $this->getContext()->language->iso_code;
-        $countryCode = $this->getContext()->country->iso_code;
-
+        $context = $this->getContext();
+        $currencyCode = $context->currency->iso_code;
+        $languageCode = $context->language->iso_code;
+        $countryCode = $context->country->iso_code;
         $activity = (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_SHOP_ACTIVITY');
 
-       return "http://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
+        return "http://addons.prestashop.com/iframe/search-1.7.php?psVersion=$psVersion&isoLang=$languageCode&isoCurrency=$currencyCode&isoCountry=$countryCode&activity=$activity&parentUrl=$parent_domain";
     }
 }
