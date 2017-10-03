@@ -25,18 +25,33 @@
  */
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 class NotificationsConfiguration implements DataConfigurationInterface
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
 
     /**
      * @{inheritdoc}
      */
     public function getConfiguration()
     {
-        // TODO: Implement getConfiguration() method.
+        return array(
+            'show_notifs_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS'),
+            'show_notifs_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS'),
+            'show_notifs_new_messages' => $this->configuration->get('PS_SHOW_NEW_MESSAGES'),
+        );
     }
 
     /**
@@ -44,7 +59,15 @@ class NotificationsConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        return array();
+        $errors = array();
+
+        if ($this->validateConfiguration($configuration)) {
+            $this->configuration->set('PS_SHOW_NEW_ORDERS', (bool) $configuration['show_notifs_new_orders']);
+            $this->configuration->set('PS_SHOW_NEW_CUSTOMERS', (bool) $configuration['show_notifs_new_customers']);
+            $this->configuration->set('PS_SHOW_NEW_MESSAGES', (bool) $configuration['show_notifs_new_messages']);
+        }
+
+        return $errors;
     }
 
     /**
@@ -52,6 +75,17 @@ class NotificationsConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        // TODO: Implement validateConfiguration() method.
+        $resolver = new OptionsResolver();
+        $resolver
+            ->setRequired(
+                array(
+                    'show_notifs_new_orders',
+                    'show_notifs_new_customers',
+                    'show_notifs_new_messages',
+                )
+            );
+        $resolver->resolve($configuration);
+
+        return true;
     }
 }
