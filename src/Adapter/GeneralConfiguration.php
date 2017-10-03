@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
@@ -67,6 +68,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
             $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
         }
+
         return $errors;
     }
 
