@@ -59,7 +59,10 @@ class Manager
     }
 
     /**
+     * Get the "installed locales" repository
+     *
      * @return Repository
+     *   The repository
      */
     public function getInstalledLocaleRepository()
     {
@@ -67,9 +70,13 @@ class Manager
     }
 
     /**
+     * Set the "installed locales" repository
+     *
      * @param $installedLocaleRepository
+     *   The repository to store
      *
      * @return $this
+     *   Fluent interface
      */
     public function setInstalledLocaleRepository($installedLocaleRepository)
     {
@@ -90,6 +97,7 @@ class Manager
      * @param $referenceLocaleRepository
      *
      * @return $this
+     *   Fluent interface
      */
     public function setReferenceLocaleRepository($referenceLocaleRepository)
     {
@@ -100,6 +108,6 @@ class Manager
 
     public function saveLocale(Locale $locale)
     {
-        $this->getInstalledLocaleRepository()->saveLocale($locale);
+        $this->getInstalledLocaleRepository()->saveLocale($locale->getSpecification());
     }
 }

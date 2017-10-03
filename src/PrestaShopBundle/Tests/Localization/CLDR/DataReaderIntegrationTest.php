@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Tests\Localization;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Localization\CLDR\DataReader;
+use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 
 class DataReaderIntegrationTest extends TestCase
 {
@@ -44,7 +45,7 @@ class DataReaderIntegrationTest extends TestCase
     /**
      * Given a valid locale code
      * When reading this locale data
-     * Retrieved data should match the expectation
+     * Then the retrieved data should match the expectations
      *
      * @param $localeCode
      * @param $expectedData
@@ -64,8 +65,10 @@ class DataReaderIntegrationTest extends TestCase
                         $this->assertSame(
                             $symbolValue,
                             $localeData->numberSymbols[$expectedNumberingSystem]->$symbolName,
-                            'For "' . $localeCode . '" locale, "' . $expectedNumberingSystem . '" numbering system, "'
-                            . $symbolName . '" value is not the same as expected'
+                            sprintf(
+                                'For "%s" locale, "%s" numbering system, "%s" value is not the same as expected',
+                                array($localeCode, $expectedNumberingSystem, $symbolName)
+                            )
                         );
                     }
                 }
@@ -79,7 +82,10 @@ class DataReaderIntegrationTest extends TestCase
                     $this->assertSame(
                         $pattern,
                         $localeProp[$numSystem],
-                        $localeCode . ' - ' . $property . ' - ' . $numSystem . ' : pattern is not the same as expected '
+                        sprintf(
+                            '%s - %s - %s : pattern is not the same as expected ',
+                            array($localeCode, $property, $numSystem)
+                        )
                     );
                 }
                 continue;
@@ -89,7 +95,10 @@ class DataReaderIntegrationTest extends TestCase
             $this->assertSame(
                 $value,
                 $localeData->$property,
-                'For ' . $localeCode . ' locale, ' . $property . ' value is not the same as expected'
+                sprintf(
+                    'For %s locale, %s value is not the same as expected',
+                    array($localeCode, $property)
+                )
             );
         }
     }
@@ -99,7 +108,7 @@ class DataReaderIntegrationTest extends TestCase
      * When trying to read the locale data
      * An InvalidArgumentException should be thrown
      *
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function testItFailsReadingUnknownLocaleData()
     {
@@ -133,7 +142,7 @@ class DataReaderIntegrationTest extends TestCase
                 'localeCode'   => 'fr-FR',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'native'  => 'latn',
+                        'native' => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
                     'numberSymbols'         => array(
@@ -201,7 +210,7 @@ class DataReaderIntegrationTest extends TestCase
                 'localeCode'   => 'fr-CH',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'native'  => 'latn',
+                        'native' => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
                     'numberSymbols'         => array(
@@ -269,7 +278,7 @@ class DataReaderIntegrationTest extends TestCase
                 'localeCode'   => 'de', // No localization
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'native'  => 'latn',
+                        'native' => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
                     'numberSymbols'         => array(
@@ -305,7 +314,7 @@ class DataReaderIntegrationTest extends TestCase
                 'localeCode'   => 'de-AT',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'native'  => 'latn',
+                        'native' => 'latn',
                     ),
                     'minimumGroupingDigits' => 1,
                     'numberSymbols'         => array(
@@ -341,7 +350,7 @@ class DataReaderIntegrationTest extends TestCase
                 'localeCode'   => 'fa-IR',
                 'expectedData' => array(
                     'numberingSystems'      => array(
-                        'native'  => 'arabext',
+                        'native' => 'arabext',
                     ),
                     'minimumGroupingDigits' => 1,
                     'numberSymbols'         => array(

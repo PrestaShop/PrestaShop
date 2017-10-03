@@ -41,12 +41,12 @@ class DataReader implements DataReaderInterface
     /**
      * Root path for CLDR files
      */
-    const CLDR_ROOT         = 'localization/CLDR/';
+    const CLDR_ROOT = 'localization/CLDR/';
 
     /**
      * Main CLDR data files directory
      */
-    const CLDR_MAIN         = 'localization/CLDR/core/common/main/';
+    const CLDR_MAIN = 'localization/CLDR/core/common/main/';
 
     /**
      * Supplemental CLDR data files directory
@@ -58,19 +58,19 @@ class DataReader implements DataReaderInterface
      * Supplemental currency data type.
      * This is also the xml root node for all supplemental currency data.
      */
-    const SUPPL_DATA_CURRENCY       = 'currencyData';
+    const SUPPL_DATA_CURRENCY = 'currencyData';
 
     /**
      * Supplemental language data type.
      * This is also the xml root node for all supplemental language data.
      */
-    const SUPPL_DATA_LANGUAGE       = 'languageData';
+    const SUPPL_DATA_LANGUAGE = 'languageData';
 
     /**
      * Supplemental numbering systems data type.
      * This is also the xml root node for all supplemental numbering systems data.
      */
-    const SUPPL_DATA_NUMBERING      = 'numberingSystems';
+    const SUPPL_DATA_NUMBERING = 'numberingSystems';
 
     /**
      * Supplemental parent locales data type.
@@ -92,6 +92,9 @@ class DataReader implements DataReaderInterface
 
     /**
      * Get locale data by code (either language code or IETF locale tag)
+     * The IETF tag is the combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters country code)
+     *
+     * @see https://en.wikipedia.org/wiki/IETF_language_tag
      *
      * @param string $localeCode The wanted locale code
      *
@@ -111,10 +114,14 @@ class DataReader implements DataReaderInterface
     /**
      * Get currency data by ISO 4217 code
      *
-     * @param string $isoCode    The currency code
-     * @param string $localeCode The output locale code (in which language do you want the currency data ?)
+     * @param string $isoCode
+     *   The currency code
      *
-     * @return array The currency data
+     * @param string $localeCode
+     *   The output locale code (in which language do you want the currency data ?)
+     *
+     * @return array
+     *   The currency data
      */
     public function getCurrencyByIsoCode($isoCode, $localeCode)
     {
@@ -133,9 +140,11 @@ class DataReader implements DataReaderInterface
     /**
      * Extracts the relevant parts of an IETF locale tag
      *
-     * @param string $localeTag The locale tag (e.g.: fr-FR, en-US...)
+     * @param string $localeTag
+     *   The locale tag (e.g.: fr-FR, en-US...)
      *
-     * @return array The indexed locale parts (e.g.: ['langage' => 'en', 'region' => 'US'])
+     * @return string[]
+     *   The indexed locale parts (e.g.: ['langage' => 'en', 'region' => 'US'])
      */
     protected function getLocaleParts($localeTag)
     {
@@ -418,7 +427,7 @@ class DataReader implements DataReaderInterface
                         (string)$alias['path'],
                         $matches
                     )) {
-                        $aliasNumSys = $matches[1];
+                        $aliasNumSys                                = $matches[1];
                         $localeData->decimalPatterns[$numberSystem] = $localeData->decimalPatterns[$aliasNumSys];
 
                         continue;
@@ -450,7 +459,7 @@ class DataReader implements DataReaderInterface
                         (string)$alias['path'],
                         $matches
                     )) {
-                        $aliasNumSys = $matches[1];
+                        $aliasNumSys                                = $matches[1];
                         $localeData->percentPatterns[$numberSystem] = $localeData->percentPatterns[$aliasNumSys];
 
                         continue;
@@ -483,7 +492,7 @@ class DataReader implements DataReaderInterface
                         (string)$alias['path'],
                         $matches
                     )) {
-                        $aliasNumSys = $matches[1];
+                        $aliasNumSys                                 = $matches[1];
                         $localeData->currencyPatterns[$numberSystem] = $localeData->currencyPatterns[$aliasNumSys];
 
                         continue;
@@ -538,10 +547,14 @@ class DataReader implements DataReaderInterface
     /**
      * Maps currency data from SimplexmlElement to a multidimensional array
      *
-     * @param SimplexmlElement $xmlCurrencyData  XML currency data
-     * @param array            $supplementalData Supplemental currency data
+     * @param SimplexmlElement $xmlCurrencyData
+     *   XML currency data
      *
-     * @return array The mapped data
+     * @param array            $supplementalData
+     *   Supplemental currency data
+     *
+     * @return array
+     *   The mapped data
      */
     protected function mapCurrencyData(SimplexmlElement $xmlCurrencyData, $supplementalData)
     {
@@ -595,12 +608,14 @@ class DataReader implements DataReaderInterface
      *     'decimalDigits'  => 2,
      * ]
      *
-     * @param SimplexmlElement $supplementalXmlData XML to be searched for supplemental data
-     * @param string           $currencyCode        The target currency
+     * @param SimplexmlElement $supplementalXmlData
+     *   XML to be searched for supplemental data
      *
-     * @return array The supplemental data
+     * @param string           $currencyCode
+     *   The target currency
      *
-     * @throws InvalidArgumentException
+     * @return int[]
+     *   The supplemental data
      */
     protected function extractCurrencySupplementalData(SimplexmlElement $supplementalXmlData, $currencyCode)
     {
@@ -665,8 +680,10 @@ class DataReader implements DataReaderInterface
      * Extract all existing digits sets from supplemental xml data
      *
      * @param SimplexmlElement $numberingSystemsXmlData
+     *   The supplemental data
      *
-     * @return array|null
+     * @return string[]
+     *   The digits data
      */
     protected function extractDigits(SimplexmlElement $numberingSystemsXmlData)
     {

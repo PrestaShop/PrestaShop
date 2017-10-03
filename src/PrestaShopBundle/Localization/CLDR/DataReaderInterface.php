@@ -38,19 +38,25 @@ interface DataReaderInterface
     /**
      * Get locale data by code (either language code or IETF locale tag)
      *
-     * @param string $localeCode The wanted locale code
+     * @param string $localeCode
+     *   The wanted locale code
      *
-     * @return array The locale data
+     * @return array
+     *   The locale data
      */
     public function getLocaleByCode($localeCode);
 
     /**
      * Get currency data by ISO 4217 code
      *
-     * @param string $isoCode    The currency code
-     * @param string $localeCode The output locale code (in which language do you want the currency data ?)
+     * @param string $isoCode
+     *   The currency code
      *
-     * @return array The currency data
+     * @param string $localeCode
+     *   The output locale code (in which language do you want the currency data ?)
+     *
+     * @return array
+     *   The currency data
      */
     public function getCurrencyByIsoCode($isoCode, $localeCode);
 }

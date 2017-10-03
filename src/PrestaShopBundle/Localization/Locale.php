@@ -66,6 +66,8 @@ class Locale
 
     /**
      * The locale code (IETF notation)
+     * The IETF tag is the combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters country code)
+     * @see https://en.wikipedia.org/wiki/IETF_language_tag
      *
      * @var string
      */
@@ -140,6 +142,8 @@ class Locale
 
     /**
      * Get this locale code (IETF tag)
+     * The IETF tag is the combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters country code)
+     * @see https://en.wikipedia.org/wiki/IETF_language_tag
      *
      * @return string
      */
@@ -272,6 +276,7 @@ class Locale
 
         return $this->numberFormatter;
     }
+
     /**
      * Get the numbering system to use.
      *
