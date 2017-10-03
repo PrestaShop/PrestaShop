@@ -85,6 +85,7 @@ services:
 
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
 
     prestashop.adapter.upload_quota.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
