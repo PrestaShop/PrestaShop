@@ -501,9 +501,13 @@ class FrontControllerCore extends Controller
             return false;
         }
 
-        $adminDir = str_ireplace('.', '', Tools::getValue('ad'));
+        $adminDir = basename(Tools::getValue('ad'));
+        $adminDir = str_replace('.', '', $adminDir);
+        if ('' === $adminDir) {
+            return false;
+        }
 
-        $backAccess = realpath(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.$adminDir);
+        $backAccess = realpath(_PS_CORE_DIR_ . DIRECTORY_SEPARATOR . $adminDir);
         if ($backAccess === false) {
             return false;
         }
