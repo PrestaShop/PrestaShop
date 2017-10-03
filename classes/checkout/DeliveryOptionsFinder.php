@@ -97,14 +97,18 @@ class DeliveryOptionsFinderCore
                                     $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
-                                            '%price% tax incl.', array('%price%' => $carrier['price']), 'Shop.Theme.Checkout'
+                                            '%price% tax incl.',
+                                            array('%price%' => $carrier['price']),
+                                            'Shop.Theme.Checkout'
                                         );
                                     }
                                 } else {
                                     $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
                                     if ($display_taxes_label) {
                                         $carrier['price'] = $this->translator->trans(
-                                            '%price% tax excl.', array('%price%' => $carrier['price']), 'Shop.Theme.Checkout'
+                                            '%price% tax excl.',
+                                            array('%price%' => $carrier['price']),
+                                            'Shop.Theme.Checkout'
                                         );
                                     }
                                 }
