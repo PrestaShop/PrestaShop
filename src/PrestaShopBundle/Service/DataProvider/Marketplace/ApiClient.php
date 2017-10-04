@@ -106,10 +106,13 @@ class ApiClient
 
     public function getPreInstalledModules()
     {
-        return $this->setMethod('listing')
+        $response = $this->setMethod('listing')
             ->setAction('install-modules')
             ->getResponse()
         ;
+        $responseArray = json_decode($response);
+
+        return $responseArray->modules;
     }
 
     public function getMustHaveModules()
@@ -122,6 +125,16 @@ class ApiClient
         $responseArray = json_decode($response);
 
         return $responseArray->modules;
+    }
+
+    public function getPrestaTrustCheck($hash, $sc_address)
+    {
+        $this->queryParameters['hash'] = $hash;
+        $this->queryParameters['sc_address'] = $sc_address;
+
+        $response = $this->setMethod('trust')
+            ->getResponse();
+        return json_decode($response);
     }
 
     public function getServices()
@@ -274,6 +287,13 @@ class ApiClient
     public function setModuleName($moduleName)
     {
         $this->queryParameters['module_name'] = $moduleName;
+
+        return $this;
+    }
+
+    public function setShopUrl($shop_url)
+    {
+        $this->queryParameters['shop_url'] = $shop_url;
 
         return $this;
     }
