@@ -302,7 +302,7 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new UpgradeDatabase(defined('_PS_IN_TEST_')?'test':null);
+        $schemaUpgrade = new UpgradeDatabase(defined('_PS_IN_TEST_') ? 'test' : null);
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 
@@ -356,6 +356,9 @@ class Install extends AbstractInstall
         }
     }
 
+    /**
+     * Initialize the prestashop context with default values during tests
+     */
     public function initializeTestContext()
     {
         $smarty = null;
@@ -403,49 +406,6 @@ class Install extends AbstractInstall
         $context->smarty = $smarty;
     }
 
-    public static function createTestDB() {
-        define('_PS_IN_TEST_', true);
-        define('__PS_BASE_URI__', '/');
-        define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
-        define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
-        require_once(__DIR__.'/../../../install-dev/init.php');
-
-        $install = new Install();
-        \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
-        $install->clearDatabase();
-        $install->installDatabase();
-        $install->initializeTestContext();
-        $install->installDefaultData('test_shop', false, false, true);
-        $install->populateDatabase();
-        $install->installCldrDatas();
-
-        $install->configureShop(array(
-            'admin_firstname' => 'puff',
-            'admin_lastname' => 'daddy',
-            'admin_password' => 'test',
-            'admin_email' => 'test@prestashop.com',
-            'configuration_agrement' => true,
-            'send_informations' => false,
-        ));
-        $install->installFixtures();
-        $install->installTheme();
-        $language = new \Language(1);
-        Context::getContext()->language = $language;
-        $install->installModules();
-        $install->installModulesAddons();
-
-        DatabaseDump::create();
-    }
-
-    public static function restoreTestDB()
-    {
-        if (!file_exists(sys_get_temp_dir().'/'.'ps_dump.sql')) {
-            throw new DBALException('You need to run \'composer create-test-db\' to create the initial test database');
-        }
-
-        DatabaseDump::restoreDb();
-    }
-
     /**
      * PROCESS : installDefaultData
      * Create default shop and languages
@@ -476,7 +436,7 @@ class Install extends AbstractInstall
                         }
                     }
                 }
-                $iso_codes_to_install = array_flip(array_flip($iso_codes_to_install));
+                $iso_codes_to_install = array_unique($iso_codes_to_install);
             } else {
                 $iso_codes_to_install = null;
             }

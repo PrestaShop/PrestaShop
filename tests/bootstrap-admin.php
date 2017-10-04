@@ -25,7 +25,7 @@
  */
 define('_PS_ROOT_DIR_', __DIR__ . '/..');
 define('_PS_IN_TEST_', true);
-umask(0000); // This will let the permissions be 0775
+umask(0000); // This will let the permissions be 0777
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__."/admin-dev");
 }

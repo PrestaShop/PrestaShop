@@ -26,13 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Tests\TestCase;
 use PHPUnit_Framework_TestCase;
-use PrestaShopBundle\Install\Install;
+use PrestaShopBundle\Tests\Utils\Database;
 
 class IntegrationTestCase extends PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {
-        Install::restoreTestDB();
+        Database::restoreTestDB();
         require_once(__DIR__ . '/../../config/config.inc.php');
     }
 }

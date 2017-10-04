@@ -133,7 +133,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "PrestaShopBundle\\Install\\Install::createTestDB"
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB"
         ],
         "test-all": [
             "composer test",
@@ -142,22 +142,22 @@
             "composer phpunit-controllers"
         ],
         "test": [
-            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
             "php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml"
         ],
         "test-admin": [
-            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
             "php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
         ],
         "git-hook-install": "php .github/contrib/install.php",
         "git-hook-uninstall": "php .github/contrib/uninstall.php",
         "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
         "phpunit-sf": [
-            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
             "php -d date.timezone=UTC bin/phpunit -c admin-dev/"
         ],
         "phpunit-controllers": [
-            "PrestaShopBundle\\Install\\Install::createTestDB",
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
             "php -d date.timezone=UTC bin/phpunit -c app/"
         ]
     },

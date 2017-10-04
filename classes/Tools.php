@@ -50,6 +50,9 @@ class ToolsCore
         }
     }
 
+    /**
+     * Reset the request set during the first new Tools($request) call
+     */
     public static function resetRequest()
     {
         self::$request = null;
@@ -2136,7 +2139,8 @@ class ToolsCore
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
         if (defined('_PS_IN_TEST_')
-            || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)) {
+            || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
+        ) {
             return true;
         }
 

@@ -40,7 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
-use PrestaShopBundle\Install\Install;
+use PrestaShopBundle\Tests\Utils\Database;
 use Product;
 use Tools;
 use Tax;
@@ -56,7 +56,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        Install::restoreTestDB();
+        Database::restoreTestDB();
 
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
 
-use PrestaShopBundle\Install\Install;
+use PrestaShopBundle\Tests\Utils\Database;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 
@@ -49,7 +49,7 @@ class WebTestCase extends TestCase
 
     public static function setUpBeforeClass()
     {
-        Install::restoreTestDB();
+        Database::restoreTestDB();
     }
 
     public function setUp()
