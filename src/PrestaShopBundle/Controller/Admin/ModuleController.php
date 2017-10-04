@@ -338,7 +338,7 @@ class ModuleController extends FrameworkBundleAdminController
                     'Admin.Modules.Notification'
                 );
             }
-        } catch(UnconfirmedModuleActionException $e) {
+        } catch (UnconfirmedModuleActionException $e) {
             $modules = $modulesProvider->generateAddonsUrls(array($e->getModule()));
             $response[$module]['status'] = false;
             $response[$module]['confirmation_subject'] = $e->getSubject();

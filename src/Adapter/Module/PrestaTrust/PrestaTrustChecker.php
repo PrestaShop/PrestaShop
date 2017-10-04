@@ -139,7 +139,7 @@ class PrestaTrustChecker
         $finder->files()->contains(self::SMART_CONTRACT_PATTERN)->in($path);
 
         // Get the first file in the results
-        foreach($finder as $file) {
+        foreach ($finder as $file) {
             return trim(str_replace(self::SMART_CONTRACT_PATTERN, '', $file->getContents()));
         }
         return null;
@@ -159,7 +159,7 @@ class PrestaTrustChecker
         if (!$check_list['integrity'] && $check_list['property']) {
             return self::CHECKS_INTEGRITY_NOK;
         }
-        if (!$check_list['integrity'] && !$check_list['property']) {
+        if ($check_list['integrity'] && !$check_list['property']) {
             return self::CHECKS_PROPERTY_NOK;
         }
         return self::CHECKS_ALL_NOK;
