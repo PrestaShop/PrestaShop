@@ -3918,10 +3918,6 @@ div.mce-tinymce-inline {
   .mce-toolbar-grp .mce-flow-layout-item {
     margin-bottom: 0; }
 
-.mce-rtl .mce-wordcount {
-  left: 0;
-  right: auto; }
-
 .mce-container, .mce-container-body {
   display: block; }
 
@@ -4113,19 +4109,6 @@ div.mce-fullscreen {
   border-radius: 0; }
   .mce-window.mce-fullscreen .mce-foot {
     border-radius: 0; }
-
-.mce-rtl .mce-window-head .mce-close {
-  position: absolute;
-  right: auto;
-  left: 15px; }
-
-.mce-rtl .mce-window-head .mce-dragh {
-  left: auto;
-  right: 0; }
-
-.mce-rtl .mce-window-head .mce-title {
-  direction: rtl;
-  text-align: right; }
 
 .mce-abs-layout {
   position: relative; }
@@ -4343,9 +4326,6 @@ body .mce-abs-layout-item {
   border-bottom: 4px solid #333;
   border-top: 0; }
 
-.mce-rtl .mce-btn button {
-  direction: rtl; }
-
 .mce-btn-group .mce-btn {
   border: solid 1px #ccc;
   border-radius: 0;
@@ -4394,13 +4374,6 @@ i.mce-i-checkbox {
 .mce-checkbox.mce-disabled .mce-label, .mce-checkbox.mce-disabled i.mce-i-checkbox {
   color: #acacac; }
 
-.mce-rtl .mce-checkbox {
-  direction: rtl;
-  text-align: right; }
-
-.mce-rtl i.mce-i-checkbox {
-  margin: 0 0 0 3px; }
-
 .mce-colorbutton .mce-ico {
   position: relative; }
 
@@ -4439,25 +4412,6 @@ i.mce-i-checkbox {
 
 .mce-colorbutton.mce-btn-small .mce-open {
   padding: 0 3px 0 3px; }
-
-.mce-rtl .mce-colorbutton {
-  direction: rtl; }
-  .mce-rtl .mce-colorbutton .mce-preview {
-    margin-left: 0;
-    padding-right: 0;
-    padding-left: 4px;
-    margin-right: 14px; }
-  .mce-rtl .mce-colorbutton.mce-btn-small .mce-preview {
-    margin-left: 0;
-    padding-right: 0;
-    margin-right: -17px;
-    padding-left: 0; }
-  .mce-rtl .mce-colorbutton button {
-    padding-right: 10px;
-    padding-left: 10px; }
-  .mce-rtl .mce-colorbutton .mce-open {
-    padding-left: 4px;
-    padding-right: 4px; }
 
 .mce-combobox {
   display: inline-block;
@@ -4514,9 +4468,6 @@ i.mce-i-checkbox {
 .mce-disabled .mce-path-item {
   color: #aaa; }
 
-.mce-rtl .mce-path {
-  direction: rtl; }
-
 .mce-fieldset {
   border: 0 solid #9E9E9E;
   border-radius: 3px; }
@@ -4549,15 +4500,6 @@ i.mce-i-checkbox {
 .mce-tinymce-inline .mce-flow-layout {
   white-space: nowrap; }
 
-.mce-rtl .mce-flow-layout {
-  text-align: right;
-  direction: rtl; }
-
-.mce-rtl .mce-flow-layout-item {
-  margin: 2px 2px 2px 0; }
-  .mce-rtl .mce-flow-layout-item.mce-last {
-    margin-left: 2px; }
-
 .mce-iframe {
   border: 0 solid #9e9e9e;
   width: 100%;
@@ -4575,10 +4517,6 @@ i.mce-i-checkbox {
     color: #aaa; }
   .mce-label.mce-multiline {
     white-space: pre-wrap; }
-
-.mce-rtl .mce-label {
-  text-align: right;
-  direction: rtl; }
 
 .mce-menubar {
   border: 1px solid #EEEEEE; }
@@ -4623,10 +4561,6 @@ i.mce-i-checkbox {
 .mce-menubtn .mce-caret {
   *margin-top: 6px; }
 
-.mce-rtl .mce-menubtn button {
-  direction: rtl;
-  text-align: right; }
-
 .mce-listbox button {
   text-align: left;
   padding-right: 20px;
@@ -4637,14 +4571,6 @@ i.mce-i-checkbox {
   margin-top: -2px;
   right: 8px;
   top: 50%; }
-
-.mce-rtl .mce-listbox .mce-caret {
-  right: auto;
-  left: 8px; }
-
-.mce-rtl .mce-listbox button {
-  padding-right: 10px;
-  padding-left: 20px; }
 
 .mce-menu-item {
   display: block;
@@ -4726,28 +4652,6 @@ div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover {
   -webkit-filter: none;
           filter: none; }
 
-.mce-menu.mce-rtl {
-  direction: rtl; }
-
-.mce-rtl .mce-menu-item {
-  text-align: right;
-  direction: rtl;
-  padding: 6px 12px 6px 15px; }
-
-.mce-menu-align.mce-rtl .mce-menu-shortcut, .mce-menu-align.mce-rtl .mce-caret {
-  right: auto;
-  left: 0; }
-
-.mce-rtl .mce-menu-item .mce-caret {
-  margin-left: 6px;
-  margin-right: 0;
-  border-right: 4px solid #333;
-  border-left: 0; }
-
-.mce-rtl .mce-menu-item.mce-selected .mce-caret, .mce-rtl .mce-menu-item:focus .mce-caret, .mce-rtl .mce-menu-item:hover .mce-caret {
-  border-left-color: transparent;
-  border-right-color: #fff; }
-
 .mce-menu {
   position: absolute;
   left: 0;
@@ -4816,16 +4720,6 @@ i.mce-i-resize {
 .mce-splitbtn.mce-btn-small .mce-open {
   padding: 0 3px 0 3px; }
 
-.mce-rtl .mce-splitbtn {
-  direction: rtl;
-  text-align: right; }
-  .mce-rtl .mce-splitbtn button {
-    padding-right: 10px;
-    padding-left: 10px; }
-  .mce-rtl .mce-splitbtn .mce-open {
-    padding-left: 4px;
-    padding-right: 4px; }
-
 .mce-stack-layout-item {
   display: block; }
 
@@ -4850,13 +4744,6 @@ i.mce-i-resize {
     margin-bottom: -1px;
     height: 14px; }
 
-.mce-rtl .mce-tabs {
-  text-align: right;
-  direction: rtl; }
-
-.mce-rtl .mce-tab {
-  border-width: 0 0 0 1px; }
-
 .mce-textbox {
   background: #fff;
   border: 1px solid #c5c5c5;
@@ -4880,10 +4767,6 @@ i.mce-i-resize {
 
 .mce-textbox.mce-disabled {
   color: #adadad; }
-
-.mce-rtl .mce-textbox {
-  text-align: right;
-  direction: rtl; }
 
 .mce-throbber {
   position: absolute;
@@ -5074,6 +4957,9 @@ i.mce-i-resize {
 
 i.mce-i-backcolor {
   background: #bbb; }
+
+.mce-rtl i.mce-i-checkbox {
+  direction: rtl; }
 
 body {
   direction: ltr;
