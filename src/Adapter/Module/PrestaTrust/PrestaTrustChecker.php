@@ -28,11 +28,13 @@ namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
 use Doctrine\Common\Cache\Cache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Finder\Finder;
 
 class PrestaTrustChecker
 {
     protected $checked_extensions = array('php', 'js', 'css', 'tpl');
+    const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
 
     const CHECKS_ALL_OK = 'Module authenticated.';
     const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Marketplace';
@@ -44,9 +46,22 @@ class PrestaTrustChecker
      */
     protected $cache;
 
-    public function __construct(Cache $cache)
+    /**
+     * Addons marketplace API client
+     * @var ApiClient
+     */
+    protected $apiClient;
+
+    /**
+     * @var string Shop domain
+     */
+    protected $domain;
+
+    public function __construct(Cache $cache, ApiClient $apiClient, array $shop_info)
     {
         $this->cache = $cache;
+        $this->apiClient = $apiClient;
+        $this->domain = $shop_info['url'];
     }
 
     /**
@@ -79,7 +94,7 @@ class PrestaTrustChecker
 
         $details = $module->attributes->get('prestatrust', new \stdClass);
         $details->hash = $this->calculateHash($module->disk->get('path'));
-        $details->check_list = $this->requestCheck($details->hash, 'localhost');
+        $details->check_list = $this->requestCheck($details->hash, $this->domain, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
         $details->message = $this->getMessage($details->check_list);
 
@@ -110,6 +125,24 @@ class PrestaTrustChecker
             }
         }
         return hash('sha256', $preparehash);
+    }
+
+    /**
+     * Find and return the smart contract address to be checked with the API
+     *
+     * @param string $path
+     * @return string|null
+     */
+    public function findSmartContrat($path)
+    {
+        $finder = Finder::create();
+        $finder->files()->contains(self::SMART_CONTRACT_PATTERN)->in($path);
+
+        // Get the first file in the results
+        foreach($finder as $file) {
+            return trim(str_replace(self::SMART_CONTRACT_PATTERN, '', $file->getContents()));
+        }
+        return null;
     }
 
     /**
@@ -165,11 +198,12 @@ class PrestaTrustChecker
         return substr($str, 0, strlen($prefix)) === $prefix;
     }
 
-    protected function requestCheck($hash, $domain)
+    protected function requestCheck($hash, $shop_url, $contract)
     {
+        $result = $this->apiClient->setShopUrl($shop_url)->getPrestaTrustCheck($hash, $contract);
         return array(
-            'integrity' => (bool)(rand()%2),
-            'property' => (bool)(rand()%2),
+            'integrity' => (bool)($result->hash_trusted),
+            'property' => (bool)($result->property_trusted),
         );
     }
 }
