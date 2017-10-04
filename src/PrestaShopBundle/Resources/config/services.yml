@@ -263,6 +263,7 @@ services:
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
+            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
             - "@doctrine.cache.provider"
         calls:
             - [setPrestaTrustChecker, ['@prestashop.adapter.module.prestatrust.checker']]
