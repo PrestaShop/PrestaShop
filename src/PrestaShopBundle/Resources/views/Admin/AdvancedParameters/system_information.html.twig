@@ -74,7 +74,7 @@
 
         <div class="card">
             <h3 class="card-header">
-                <i class="material-icons">info_outline</i> {{ 'Database information'|trans }}
+                <i class="material-icons">info_outline</i> {{ 'Database information'|trans({}, 'Admin.Advparameters.Feature') }}
             </h3>
             <div class="card-block">
                 <div class="card-text">
@@ -189,7 +189,7 @@
                     <p>
                         <strong>{{ 'Required parameters:'|trans }}</strong>
                     {% if requirements.failRequired == false %}
-                        <span class="text-success">{{ 'Ok'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+                        <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
                     </p>
                     {% else %}
                         <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
@@ -206,7 +206,7 @@
                         <p>
                         <strong>{{ 'Optional parameters:'|trans }}</strong>
                         {% if requirements.failOptional == false %}
-                            <span class="text-success">{{ 'Ok'|trans({}, 'Admin.Advparameters.Notification') }}</span>
+                            <span class="text-success">{{ 'OK'|trans({}, 'Admin.Advparameters.Notification') }}</span>
                             </p>
                         {% else %}
                             <span class="text-danger">{{ 'Please fix the following error(s)'|trans({}, 'Admin.Advparameters.Notification') }}</span>
