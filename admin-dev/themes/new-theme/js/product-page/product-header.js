@@ -27,13 +27,20 @@ export default function() {
   let tabWidth = 0;
   let navWidth = 50;
 
-  $(window).on('resize', () => {
-    init();
-  });
-
   $('.js-nav-tabs li').each((index, item) => {
     navWidth += $(item).width();
     $('.js-nav-tabs').width(navWidth);
+  });
+
+  $('.js-nav-tabs [data-toggle="tab"]').on('click', (e) => {
+    if (!$(e.target).hasClass('active')) {
+      $('#form_content > .form-contenttab').removeClass('active');
+    }
+    if ($(e.target).attr('href') === '#step1') {
+      setTimeout(_=> {
+        $('#description_short, #tab_description_short .description-tab').addClass('active');
+      }, 100); 
+    }
   });
 
   $('.js-arrow').on('click', (e) => {
@@ -53,16 +60,4 @@ export default function() {
       });
     }
   });
-
-  var init = () => {
-    if($('.js-nav-tabs').width() < $('.js-tabs').width()) {
-      $('.js-nav-tabs').width($('.js-tabs').width());
-      return $('.js-arrow').hide();
-    }
-    else {
-      $('.js-arrow').show();
-    }
-  };
-
-  init();
 }

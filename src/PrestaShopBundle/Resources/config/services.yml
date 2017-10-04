@@ -1,6 +1,7 @@
 imports:
     - { resource: admin/services.yml }
     - { resource: admin/services-form.yml }
+    - { resource: adapter/services.yml }
 
 parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter

@@ -121,10 +121,10 @@
             <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
           {% endif %}
         </ul>
-        <div class="arrow js-arrow left-arrow float-left">
+        <div class="arrow d-xl-none js-arrow left-arrow float-left">
           <i class="material-icons hide">chevron_left</i>
         </div>
-        <div class="arrow js-arrow right-arrow visible float-right">
+        <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
           <i class="material-icons hide">chevron_right</i>
         </div>
       </div>
@@ -217,7 +217,7 @@
 
                     {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
 
-                    <div id="features" class="mb-3 mt-3">
+                    <div id="features" class="my-4">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                         {{ form_errors(form.step1.features) }}
@@ -258,7 +258,7 @@
                         <div class="col-md-12">
 
                           {% if is_combination_active %}
-                            <div class="form-group" id="show_variations_selector">
+                            <div class="form-group mb-3" id="show_variations_selector">
                               <h2>
                                 {{ "Combinations"|trans({}, 'Admin.Catalog.Feature') }}
                                 <span class="help-box" data-toggle="popover"
@@ -285,7 +285,7 @@
                             </div>
                           {% endif %}
 
-                          <div class="form-group">
+                          <div class="form-group mb-4">
                             <h2>
                               {{ "Reference"|trans({}, 'Admin.Catalog.Feature') }}
                               <span class="help-box" data-toggle="popover"
@@ -300,7 +300,7 @@
                           </div>
 
                           {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-                            <div class="form-group" id="product_qty_0_shortcut_div">
+                            <div class="form-group mb-4" id="product_qty_0_shortcut_div">
                               <h2>
                                 {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                                 <span class="help-box" data-toggle="popover"
@@ -319,7 +319,7 @@
                             </div>
                           {% endif %}
 
-                          <div class="form-group">
+                          <div class="form-group mb-4">
                             <h2>
                               {{ "Price"|trans({}, 'Admin.Global') }}
                               <span class="help-box" data-toggle="popover"
@@ -358,7 +358,7 @@
                             </div>
                           </div>
 
-                          <div class="form-group">
+                          <div class="form-group mb-4">
                             {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
                           </div>
 
@@ -618,7 +618,7 @@
                       <div class="col-md-12">
                         <div class="row">
                           <div class="col-xl-5 col-lg-12">
-                            <div class="alert alert-info" role="alert">
+                            <div class="alert alert-info mt-2" role="alert">
                               <p class="alert-text">
                                 {{ 'Final retail price: [1][2][/2] tax incl.[/1] / [3][/3] tax excl.'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<strong>', '[/1]': '</strong>', '[2]': '<span id="final_retail_price_ti">', '[/2]': '</span>', '[3]': '<span id="final_retail_price_te">', '[/3]': '</span>', })|raw }}
                               </p>
@@ -630,7 +630,7 @@
                   </div>
 
                   <div class="col-md-12">
-                    <div class="row">
+                    <div class="row mb-3">
                       <div class="col-md-12">
                         <h2>
                           {{ 'Cost price'|trans({}, 'Admin.Catalog.Feature') }}
@@ -647,7 +647,7 @@
                   </div>
 
                   <div class="col-md-12">
-                    <div class="row">
+                    <div class="row mb-3">
                       <div class="col-md-12">
                         <h2>
                           {{ 'Specific prices'|trans({}, 'Admin.Catalog.Feature') }}
@@ -874,7 +874,7 @@
 
                     <div class="row">
                       <div class="col-md-12">
-                        <div id="custom_fields" class="mb-2">
+                        <div id="custom_fields" class="mt-3">
                           <h2>{{ form.step6.custom_fields.vars.label }}</h2>
                           <p class="subtitle">{{ 'Customers can personalize the product by entering some text or by providing custom image files.'|trans({}, 'Admin.Catalog.Feature') }}</p>
                           {{ form_errors(form.step6.custom_fields) }}
@@ -896,14 +896,14 @@
                       </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-4">
                       <div class="col-md-8">
                         <h2>{{ 'Attached files'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                         <p class="subtitle">{{ 'Add files that customers can download directly on the product page (instructions, manual, recipe, etc.).'|trans({}, 'Admin.Catalog.Feature') }}</p>
                         {{ form_widget(form.step6.attachments) }}
                       </div>
                     </div>
-                    <div class="row">
+                    <div class="row mt-3">
                       <div class="col-md-8">
                         <a
                           class="btn btn-outline-secondary mb-3"
@@ -930,7 +930,7 @@
                       </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row mt-3">
                       <div class="col-md-8" id="supplier_collection">
                         {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-choice.html.twig', { 'form': form.step6 }) }}
                       </div>
@@ -1094,11 +1094,11 @@
         />
         {% endif %}
       </div>
-      <div class="col-lg-5 text-lg-right">
+      <div class="col-lg-6 text-lg-right">
         {% if is_shop_context %}
           <button
             type="button"
-            class="btn btn-outline-secondary btn-submit hidden-xs uppercase duplicate"
+            class="btn btn-outline-secondary btn-submit hidden-xs uppercase duplicate ml-3"
             id="product_form_save_duplicate_btn"
             data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
             data-toggle="pstooltip"
@@ -1109,7 +1109,7 @@
         {% endif %}
         <button
           type="button"
-          class="btn btn-outline-secondary btn-submit hidden-xs uppercase go-catalog"
+          class="btn btn-outline-secondary btn-submit hidden-xs uppercase go-catalog ml-3"
           id="product_form_save_go_to_catalog_btn"
           data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
           data-toggle="pstooltip"
@@ -1119,7 +1119,7 @@
         </button>
         <button
           type="button"
-          class="btn btn-outline-secondary btn-submit hidden-xs uppercase new-product"
+          class="btn btn-outline-secondary btn-submit hidden-xs uppercase new-product ml-3"
           id="product_form_save_new_btn"
           data-redirect="{{ path('admin_product_new') }}"
           data-toggle="pstooltip"
@@ -1130,7 +1130,7 @@
         <input
           id="submit"
           type="submit"
-          class="btn btn-primary save uppercase"
+          class="btn btn-primary save uppercase ml-3"
           value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
           data-toggle="pstooltip"
           title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
@@ -1139,7 +1139,7 @@
           <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
           <div class="btn-group hide dropdown">
             <button
-             class="btn btn-primary js-btn-save"
+             class="btn btn-primary js-btn-save ml-3"
              type="submit"
              >
               <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>

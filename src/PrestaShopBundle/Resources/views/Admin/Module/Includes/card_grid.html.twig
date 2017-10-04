@@ -103,7 +103,7 @@
       {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
         {{ module.attributes.price.displayPrice }}
       {% elseif module.attributes.url_active != 'buy' %}
-        {{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
+        <span class="pt-2">{{ 'Free'|trans({}, 'Admin.Modules.Feature') }}</span>
       {% endif %}
       </div>
       {% if requireBulkActions is defined and requireBulkActions == true %}
