@@ -44,7 +44,7 @@ function tinySetup(config) {
   if (typeof config.editor_selector != 'undefined') {
     config.selector = '.' + config.editor_selector;
   }
-  
+
   if (typeof lang_is_rtl === 'undefined') {
     var lang_is_rtl = '0';
   }
@@ -59,7 +59,7 @@ function tinySetup(config) {
     filemanager_title: "File manager",
     external_plugins: {"filemanager": baseAdminDir + "filemanager/plugin.min.js"},
     language: iso_user,
-	content_style : (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
+    content_style : (lang_is_rtl === '1' ? "body {direction:rtl;}" : ""),
     skin: "prestashop",
     menubar: false,
     statusbar: false,
