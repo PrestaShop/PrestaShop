@@ -356,7 +356,6 @@ class Install extends AbstractInstall
         }
     }
 
-
     public function initializeTestContext()
     {
         $smarty = null;

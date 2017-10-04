@@ -54,6 +54,7 @@ class WebTestCase extends TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->translator = self::$kernel->getContainer()->get('translator');
@@ -63,7 +64,7 @@ class WebTestCase extends TestCase
         $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder('\Context')
-            ->setMethods(array('getTranslator'))
+            ->setMethods(array('getTranslator', 'getBaseURL'))
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -71,6 +72,25 @@ class WebTestCase extends TestCase
             ->will($this->returnValue($this->translator));
 
         $contextMock->employee = $employeeMock;
+
+        $shopMock = $this->getMockBuilder('\Shop')
+            ->setMethods(array('getBaseURL'))
+            ->getMock();
+        $shopMock->id = 1;
+        $shopMock->method('getBaseURL')
+            ->willReturn('my-awesome-url.com');
+
+        $contextMock->shop = $shopMock;
+
+        $themeMock = $this->getMockBuilder('\Theme')
+            ->setMethods(array('getName'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $themeMock->method('getName')
+            ->willReturn('classic');
+
+        $contextMock->shop->theme = $themeMock;
 
         $languageMock = $this->getMockBuilder('\Language')
             ->disableAutoload()
