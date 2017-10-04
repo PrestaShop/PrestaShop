@@ -103,6 +103,8 @@ services:
         class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker
         arguments:
             - "@doctrine.cache.provider"
+            - "@prestashop.addons.client_api"
+            - "@=service('prestashop.adapter.shop_information').getShopInformation()"
         
     prestashop.adapter.module.prestatrust.eventsubscriber:
         class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\ModuleEventSubscriber
