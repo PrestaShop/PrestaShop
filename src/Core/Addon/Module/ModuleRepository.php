@@ -29,6 +29,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
@@ -70,7 +71,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $moduleProvider;
 
     /**
-     * Module Data Provider.
+     * Module Data Updater.
      *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
@@ -84,14 +85,23 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $translator;
 
     /**
+     * Path to the module directory, coming from Confiuration class
+     * 
+     * @var string
+     */
+    private $modulePath;
+
+    /**
      * @var PrestaTrustChecker
      */
     private $prestaTrustChecker = null;
 
+    #### CACHE PROPERTIES ####
+
     /**
-     * Module Data Provider.
+     * Key of the cache content
      *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var string
      */
     private $cacheFilePath;
 
@@ -116,12 +126,15 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $loadedModules;
 
+    #### END OF CACHE PROPERTIES ####
+
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
         TranslatorInterface $translator,
+        $modulePath,
         CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
@@ -130,6 +143,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
+        $this->modulePath = $modulePath;
 
         list($isoLang) = explode('-', $translator->getLocale());
 
@@ -392,7 +406,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             return $this->loadedModules->fetch($name);
         }
 
-        $path = _PS_MODULE_DIR_.$name;
+        $path = $this->modulePath.$name;
         $php_file_path = $path.'/'.$name.'.php';
 
         /* Data which design the module class */
@@ -512,14 +526,14 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules = array();
         $modulesDirsList = $this->finder->directories()
-            ->in(_PS_MODULE_DIR_)
+            ->in($this->modulePath)
             ->depth('== 0')
             ->exclude(array('__MACOSX'))
             ->ignoreVCS(true);
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php')) {
+            if (!file_exists($this->modulePath.$moduleName.'/'.$moduleName.'.php')) {
                 continue;
             }
             try {

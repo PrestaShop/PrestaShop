@@ -121,6 +121,7 @@ class ModuleManagerBuilder
                     self::$moduleDataUpdater,
                     self::$legacyLogger,
                     self::$translator,
+                    _PS_MODULE_DIR_,
                     self::$cacheProvider
                 );
             }
