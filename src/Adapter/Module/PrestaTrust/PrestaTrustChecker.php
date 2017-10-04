@@ -88,9 +88,9 @@ class PrestaTrustChecker
      */
     public function checkModule(Module $module)
     {
-        /*if (!$this->isModuleCompliant($module)) {
+        if (!$this->isModuleCompliant($module)) {
             return;
-        }*/
+        }
 
         $details = $module->attributes->get('prestatrust', new \stdClass);
         $details->hash = $this->calculateHash($module->disk->get('path'));
