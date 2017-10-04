@@ -13,7 +13,7 @@ $(document).ready(function () {
     $('[style]').each(function (index) {
         if (exceptionId.indexOf($(this).attr('id')) === -1) {
             var styles_old = $(this).attr('style');
-            styles_old = styles_old.split(';').filter(item = > item);
+            styles_old = styles_old.split(';').filter(item => item);
             var styles = {};
             var s = '';
             var i = '';

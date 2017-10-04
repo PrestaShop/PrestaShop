@@ -36,6 +36,7 @@
   <script type="text/javascript">
     var help_class_name = '{$controller_name|@addcslashes:'\''}';
     var iso_user = '{$iso_user|@addcslashes:'\''}';
+    var lang_is_rtl = '{$lang_is_rtl|intval}';
     var full_language_code = '{$full_language_code|@addcslashes:'\''}';
     var full_cldr_language_code = '{$full_cldr_language_code|@addcslashes:'\''}';
     var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
