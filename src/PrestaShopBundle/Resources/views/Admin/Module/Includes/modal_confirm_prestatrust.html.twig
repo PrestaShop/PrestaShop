@@ -60,18 +60,12 @@
       </div>
       <div class="modal-footer">
         <div id="pstrust-btn-property-ok">
-            <form method="post" class="pstrust-install" action="">
-                <input type="hidden" name="actionParams[confirmPrestaTrust]" value="1" />
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{"Back to modules list"|trans({}, 'Admin.Actions')}}</button>
-                <button type="submit" class="btn btn-primary module_action_menu_install" data-confirm_modal="">{{"Proceed with the installation"|trans({}, 'Admin.Actions')}}</button>
-            </form>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">{{"Back to modules list"|trans({}, 'Admin.Actions')}}</button>
+            <button type="submit" class="btn btn-primary pstrust-install">{{"Proceed with the installation"|trans({}, 'Admin.Actions')}}</button>
         </div>
         <div id="pstrust-btn-property-nok">
-            <form method="post" class="pstrust-install" action="">
-                <input type="hidden" name="actionParams[confirmPrestaTrust]" value="1" />
-                <button type="submit" class="btn btn-outline-secondary module_action_menu_install" data-confirm_modal="">{{"Proceed with the installation"|trans({}, 'Admin.Actions')}}</button>
-                <a href="" class="btn btn-primary" id="pstrust-buy" target="_blank">{{"Buy module"|trans({}, 'Admin.Actions')}}</a>
-            </form>
+            <button type="submit" class="btn btn-outline-secondary pstrust-install">{{"Proceed with the installation"|trans({}, 'Admin.Actions')}}</button>
+            <a href="" class="btn btn-primary" id="pstrust-buy" target="_blank">{{"Buy module"|trans({}, 'Admin.Actions')}}</a>
         </div>
       </div>
     </div>
