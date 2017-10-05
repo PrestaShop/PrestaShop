@@ -1596,26 +1596,23 @@ class AdminImportControllerCore extends AdminController
 
     protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, &$accessories, $validateOnly = false)
     {
+        if (!$force_ids) {
+            unset($info['id']);
+        }
+
         $id_product = null;
         // Use product reference as key
-        if ($match_ref && array_key_exists('reference', $info)) {
-            $idReference = (int) Db::getInstance()->getValue('
+        if (!empty($info['id'])) {
+            $id_product = (int) $info['id'];
+        } else if ($match_ref && isset($info['reference'])) {
+            $idProductByRef = (int) Db::getInstance()->getValue('
                                     SELECT p.`id_product`
                                     FROM `' . _DB_PREFIX_ . 'product` p
                                     ' . Shop::addSqlAssociation('product', 'p') . '
                                     WHERE p.`reference` = "' . pSQL($info['reference']) . '"
                                 ', false);
-            if ($idReference) {
-                $id_product = $idReference;
-            }
-        }
-
-        // Force all ID numbers, overrides option Use product reference as key
-        if (array_key_exists('id', $info) && (int) $info['id'] && Product::existsInDatabase((int) $info['id'], 'product')) {
-            if ($force_ids) {
-                $id_product = (int) $info['id'];
-            } else {
-                unset($info['id']);
+            if ($idProductByRef) {
+                $id_product = $idProductByRef;
             }
         }
 
