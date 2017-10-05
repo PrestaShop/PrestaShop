@@ -1001,6 +1001,7 @@ namespace PrestaShopBundle\Install {
 
         public function logError($quickInfo, $id, $transVariables = array(), $dbInfo = false)
         {
+            echo $quickInfo."\n";
             $info = $this->getTranslator()->trans($quickInfo, $transVariables, 'Install');
             if ($this->inAutoUpgrade) {
                 if ($dbInfo) {

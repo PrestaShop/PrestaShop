@@ -80,6 +80,12 @@
     {{ form_errors(form.low_stock_threshold) }}
     {{ form_widget(form.low_stock_threshold) }}
   </div>
+
+  <div class="col-lg-4 col-md-3 col-sm-6">
+    {{ form_errors(form.low_stock_alert) }}
+    {{ form_widget(form.low_stock_alert) }}
+    <span class="help-box" data-toggle="popover" data-content="{{ 'The email will be sent to all the users who have there right to run this page. To modify the permissions, go to Advanced Parameters > Team'|trans({}, 'Admin.Catalog.Feature') }}" ></span>
+  </div>
 </div>
 <div class="row justify-content-end mt-3">
     <button id="delete-combinations" class="btn btn-outline-secondary mr-3" data="{{ path('admin_delete_attribute', {'idProduct': id_product}) }}">

@@ -144,3 +144,7 @@ if ($upgrade->getInAutoUpgrade()) {
     header('Content-Type: text/xml');
     echo $result;
 }
+
+if ($upgrade->hasFailure()) {
+    die(1);
+}
