@@ -35,6 +35,11 @@ class CartControllerCore extends FrontController
     protected $id_address_delivery;
     protected $customization_id;
     protected $qty;
+    /**
+     * To specify if you are in the preview mode or not
+     * @var boolean
+     */
+    protected $preview;
     public $ssl = true;
 
     /**
@@ -63,6 +68,7 @@ class CartControllerCore extends FrontController
         $this->customization_id = (int)Tools::getValue('id_customization');
         $this->qty = abs(Tools::getValue('qty', 1));
         $this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+        $this->preview = ('1' === Tools::getValue('preview'));
     }
 
     /**
@@ -155,7 +161,10 @@ class CartControllerCore extends FrontController
                 false,
                 false,
                 true,
-                ['quantity_wanted' => (int)$this->qty]
+                [
+                    'quantity_wanted' => (int)$this->qty,
+                    'preview' => $this->preview,
+                ]
             );
         } else {
             $url = false;

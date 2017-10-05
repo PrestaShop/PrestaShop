@@ -698,6 +698,13 @@ img.mfp-img {
     height: 100%;
     width: 210.08px;
     width: 13.13rem; }
+  .main-header .ajax-spinner {
+    position: absolute;
+    left: 0;
+    margin-left: 0;
+    top: 5px;
+    width: 30px;
+    height: 30px; }
   .main-header > .component {
     display: inline-block;
     margin-left: 8px;

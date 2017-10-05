@@ -102,8 +102,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
              * allow showing the product
              * In all the others cases => 404 "Product is no longer available"
              */
-            if (!$this->product->isAssociatedToShop() || !$this->product->active) {
-                if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int) Tab::getIdFromClassName('AdminProducts').(int) Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
+            $isAssociatedToProduct = (
+                Tools::getValue('adtoken') == Tools::getAdminToken(
+                    'AdminProducts'
+                    .(int) Tab::getIdFromClassName('AdminProducts')
+                    .(int) Tools::getValue('id_employee')
+                )
+                && $this->product->isAssociatedToShop()
+            );
+            $isPreview = ('1' === Tools::getValue('preview'));
+            if ((!$this->product->isAssociatedToShop() || !$this->product->active) && !$isPreview) {
+                if ($isAssociatedToProduct) {
                     $this->adminNotifications['inactive_product'] = array(
                         'type' => 'warning',
                         'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
@@ -153,6 +162,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $this->errors[] = $this->trans('You do not have access to this product.', array(), 'Shop.Notifications.Error');
                 $this->setTemplate('errors/forbidden');
             } else {
+                if ($isAssociatedToProduct && $isPreview) {
+                    $this->adminNotifications['inactive_product'] = array(
+                        'type' => 'warning',
+                        'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
+                    );
+                }
                 // Load category
                 $id_category = false;
                 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == Tools::secureReferrer($_SERVER['HTTP_REFERER']) // Assure us the previous page was one of the shop
@@ -373,6 +388,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getMinimalProductOrDeclinationQuantity($product);
+        $isPreview = ('1' === Tools::getValue('preview'));
 
         ob_end_clean();
         header('Content-Type: application/json');
@@ -401,7 +417,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product['id_product_attribute'],
                 false,
                 false,
-                true
+                true,
+                $isPreview ? array('preview' => '1') : array()
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
@@ -817,6 +834,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
+    /**
+     * Calculation of currency-converted discounts for specific prices on product
+     *
+     * @param array $specific_prices array of specific prices definitions (DEFAULT currency)
+     * @param float $price           current price in CURRENT currency
+     * @param float $tax_rate        in percents
+     * @param float $ecotax_amount   in DEFAULT currency, with tax
+     *
+     * @return array
+     */
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
         $priceFormatter = new PriceFormatter();
@@ -826,25 +853,30 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             if ($row['price'] >= 0) {
                 // The price may be directly set
 
-                $cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
+                /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
+                $currentPriceDefaultCurrency = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
+                // Since this price is set in default currency,
+                // we need to convert it into current currency
+                $row['id_currency'];
+                $currentPriceCurrentCurrency = Tools::convertPrice($currentPriceDefaultCurrency, $this->context->currency, true, $this->context);
 
                 if ($row['reduction_type'] == 'amount') {
-                    $cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+                    $currentPriceCurrentCurrency -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
                     $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
                 } else {
-                    $cur_price *= 1 - $row['reduction'];
+                    $currentPriceCurrentCurrency *= 1 - $row['reduction'];
                 }
-                $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
+                $row['real_value'] = $price > 0 ? $price - $currentPriceCurrentCurrency : $currentPriceCurrentCurrency;
                 $discountPrice = $price - $row['real_value'];
 
                 if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($row['reduction_tax'] == 0 && !$row['price']) {
-                        $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
+                        $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                     } else {
-                        $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
+                        $row['discount'] = $priceFormatter->format($price - $row['real_value']);
                     }
                 } else {
-                    $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
+                    $row['discount'] = $priceFormatter->format($row['real_value']);
                 }
             } else {
                 if ($row['reduction_type'] == 'amount') {
@@ -857,21 +889,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $discountPrice = $price - $row['real_value'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0 && !$row['price']) {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
+                            $row['discount'] = $priceFormatter->format($price - $row['real_value']);
                         }
                     } else {
-                        $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
+                        $row['discount'] = $priceFormatter->format($row['real_value']);
                     }
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;
                     $discountPrice = $price - $price * $row['reduction'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0) {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction']));
+                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction']));
                         }
                     } else {
                         $row['discount'] = $row['real_value'].'%';
@@ -879,7 +911,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
             }
 
-            $row['save'] = $priceFormatter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
+            $row['save'] = $priceFormatter->format((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int) $specific_prices[$key + 1]['from_quantity'] : -1);
         }
 
@@ -932,6 +964,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
+        $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 

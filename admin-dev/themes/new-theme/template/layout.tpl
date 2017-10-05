@@ -12,6 +12,8 @@
 <header>
   <nav class="main-header">
 
+    <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
+
     {* TODO: BUTTON USED FOR THE MOBILE VERSION TO REACTIVATE *}
     {* TODO: TO REPLACE
     <button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">

@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0bb47c2a6f688cfc5a4a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "8087066dd965eab78136"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -55901,9 +55901,10 @@ let setNotificationsNumber = function (id, number) {
       url: $('#form_step3_attributes').attr('data-action'),
       data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
       beforeSend: function() {
-        $('#create-combinations').attr('disabled', 'disabled');
+        $('#create-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
       },
       success: function(response) {
+        refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
         let url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
@@ -55922,7 +55923,7 @@ let setNotificationsNumber = function (id, number) {
         $('#combinations_thead').fadeIn();
       },
       complete: function() {
-        $('#create-combinations').removeAttr('disabled');
+        $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
         supplierCombinations.refresh();
         warehouseCombinations.refresh();
       }
@@ -56190,8 +56191,13 @@ $(() => {
               'attribute-ids': combinationsIds
             },
             url: deletionURL,
+            beforeSend: function () {
+              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
+            },
             success: function(response) {
               showSuccessMessage(response.message);
+              refreshTotalCombinations(-1, combinationsIds.length);
+              $('span.js-bulk-combinations').text('0');
               combinationsIds.forEach((combinationId) => {
                 var combination = new Combination(combinationId);
                 combination.removeFromDOM();
@@ -56200,6 +56206,9 @@ $(() => {
             },
             error: function(response) {
               showErrorMessage(jQuery.parseJSON(response.responseText).message);
+            },
+            complete: function () {
+              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             },
           });
         }

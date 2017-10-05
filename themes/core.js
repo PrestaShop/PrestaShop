@@ -71,17 +71,17 @@
 	
 	__webpack_require__(11);
 	
-	__webpack_require__(12);
+	__webpack_require__(13);
 	
 	var _prestashop = __webpack_require__(4);
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _events = __webpack_require__(13);
+	var _events = __webpack_require__(14);
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(14);
+	var _common = __webpack_require__(12);
 	
 	// "inherit" EventEmitter
 	window.$ = _jquery2['default'];
@@ -1752,51 +1752,60 @@
 	
 	  $body.on('click', '[data-button-action="add-to-cart"]', function (event) {
 	    event.preventDefault();
+	    if ((0, _jquery2['default'])('#quantity_wanted').val() > (0, _jquery2['default'])('[data-stock]').data('stock') && (0, _jquery2['default'])('[data-allow-oosp]').data('allow-oosp').length === 0) {
+	      (0, _jquery2['default'])('[data-button-action="add-to-cart"]').attr('disabled', 'disabled');
+	    } else {
+	      var _ret = (function () {
+	        var $form = (0, _jquery2['default'])(event.target).closest('form');
+	        var query = $form.serialize() + '&add=1&action=update';
+	        var actionURL = $form.attr('action');
 	
-	    var $form = (0, _jquery2['default'])((0, _jquery2['default'])(event.target).closest('form'));
-	    var query = $form.serialize() + '&add=1&action=update';
-	    var actionURL = $form.attr('action');
+	        var isQuantityInputValid = function isQuantityInputValid($input) {
+	          var validInput = true;
 	
-	    var isQuantityInputValid = function isQuantityInputValid($input) {
-	      var validInput = true;
+	          $input.each(function (index, input) {
+	            var $input = (0, _jquery2['default'])(input);
+	            var minimalValue = parseInt($input.attr('min'), 10);
+	            if (minimalValue && $input.val() < minimalValue) {
+	              onInvalidQuantity($input);
+	              validInput = false;
+	            }
+	          });
 	
-	      $input.each(function (index, input) {
-	        var $input = (0, _jquery2['default'])(input);
-	        var minimalValue = parseInt($input.attr('min'), 10);
-	        if (minimalValue && $input.val() < minimalValue) {
-	          onInvalidQuantity($input);
-	          validInput = false;
+	          return validInput;
+	        };
+	
+	        var onInvalidQuantity = function onInvalidQuantity($input) {
+	          $input.parents('.product-add-to-cart').first().find('.product-minimal-quantity').addClass('error');
+	          $input.parent().find('label').addClass('error');
+	        };
+	
+	        var $quantityInput = $form.find('input[min]');
+	        if (!isQuantityInputValid($quantityInput)) {
+	          onInvalidQuantity($quantityInput);
+	
+	          return {
+	            v: undefined
+	          };
 	        }
-	      });
 	
-	      return validInput;
-	    };
+	        _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
+	          _prestashop2['default'].emit('updateCart', {
+	            reason: {
+	              idProduct: resp.id_product,
+	              idProductAttribute: resp.id_product_attribute,
+	              linkAction: 'add-to-cart',
+	              cart: resp.cart
+	            },
+	            resp: resp
+	          });
+	        }).fail(function (resp) {
+	          _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
+	        });
+	      })();
 	
-	    var onInvalidQuantity = function onInvalidQuantity($input) {
-	      (0, _jquery2['default'])($input.parents('.product-add-to-cart')[0]).find('.product-minimal-quantity').addClass('error');
-	      $input.parent().find('label').addClass('error');
-	    };
-	
-	    var $quantityInput = $form.find('input[min]');
-	    if (!isQuantityInputValid($quantityInput)) {
-	      onInvalidQuantity($quantityInput);
-	
-	      return;
+	      if (typeof _ret === 'object') return _ret.v;
 	    }
-	
-	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
-	      _prestashop2['default'].emit('updateCart', {
-	        reason: {
-	          idProduct: resp.id_product,
-	          idProductAttribute: resp.id_product_attribute,
-	          linkAction: 'add-to-cart',
-	          cart: resp.cart
-	        },
-	        resp: resp
-	      });
-	    }).fail(function (resp) {
-	      _prestashop2['default'].emit('handleError', { eventType: 'addProductToCart', resp: resp });
-	    });
 	  });
 	
 	  $body.on('submit', '[data-link-action="add-voucher"]', function (event) {
@@ -2384,6 +2393,8 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
+	var _common = __webpack_require__(12);
+	
 	(0, _jquery2['default'])(document).ready(function () {
 	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute]', function () {
 	    (0, _jquery2['default'])("input[name$='refresh']").click();
@@ -2398,7 +2409,14 @@
 	      eventType = extraParameters.eventType;
 	    }
 	
-	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh';
+	    var preview = (0, _common.psGetRequestParameter)('preview');
+	    if (preview !== null) {
+	      preview = '&preview=' + preview;
+	    } else {
+	      preview = '';
+	    }
+	
+	    var query = (0, _jquery2['default'])(event.target.form).serialize() + '&ajax=1&action=productrefresh' + preview;
 	    var actionURL = (0, _jquery2['default'])(event.target.form).attr('action');
 	
 	    _jquery2['default'].post(actionURL, query, null, 'json').then(function (resp) {
@@ -2500,6 +2518,71 @@
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
+	/**
+	 * 2007-2017 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * https://opensource.org/licenses/OSL-3.0
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2017 PrestaShop SA
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.psShowHide = psShowHide;
+	exports.psGetRequestParameter = psGetRequestParameter;
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function psShowHide() {
+	  (0, _jquery2['default'])('.ps-shown-by-js').show();
+	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
+	}
+	
+	/**
+	 * This function returns the value of the requested parameter from the URL
+	 * @param {string} paramName - the name of the requested parameter
+	 * @returns {string|null}
+	 */
+	
+	function psGetRequestParameter(paramName) {
+	  var vars = {};
+	  window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) {
+	    vars[key] = value !== undefined ? value : '';
+	  });
+	  if (paramName) {
+	    return vars[paramName] ? vars[paramName] : null;
+	  }
+	
+	  return vars;
+	}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -2557,7 +2640,7 @@
 	});
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -2826,52 +2909,6 @@
 	
 	function isUndefined(arg) {
 	  return arg === void 0;
-	}
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * 2007-2017 PrestaShop
-	 *
-	 * NOTICE OF LICENSE
-	 *
-	 * This source file is subject to the Open Software License (OSL 3.0)
-	 * that is bundled with this package in the file LICENSE.txt.
-	 * It is also available through the world-wide-web at this URL:
-	 * https://opensource.org/licenses/OSL-3.0
-	 * If you did not receive a copy of the license and are unable to
-	 * obtain it through the world-wide-web, please send an email
-	 * to license@prestashop.com so we can send you a copy immediately.
-	 *
-	 * DISCLAIMER
-	 *
-	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-	 * versions in the future. If you wish to customize PrestaShop for your
-	 * needs please refer to http://www.prestashop.com for more information.
-	 *
-	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
-	 * International Registered Trademark & Property of PrestaShop SA
-	 */
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.psShowHide = psShowHide;
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(2);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	function psShowHide() {
-	  (0, _jquery2['default'])('.ps-shown-by-js').show();
-	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
 	}
 
 /***/ })

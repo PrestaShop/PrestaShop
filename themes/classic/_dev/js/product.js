@@ -104,10 +104,15 @@ $(document).ready(function () {
       max: 1000000
     });
 
-    quantityInput.on('change', function (event) {
-      let $productRefresh = $('.product-refresh');
-      $(event.currentTarget).trigger('touchspin.stopspin');
-      $productRefresh.trigger('click', {eventType: 'updatedProductQuantity'});
+    var quantity = quantityInput.val();
+    quantityInput.on('keyup change', function (event) {
+      const newQuantity = $(this).val();
+      if (newQuantity !== quantity) {
+        quantity = newQuantity;
+        let $productRefresh = $('.product-refresh');
+        $(event.currentTarget).trigger('touchspin.stopspin');
+        $productRefresh.trigger('click', {eventType: 'updatedProductQuantity'});
+      }
       event.preventDefault();
 
       return false;

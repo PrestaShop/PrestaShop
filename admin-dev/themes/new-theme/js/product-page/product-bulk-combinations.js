@@ -115,8 +115,13 @@ export default function() {
               'attribute-ids': combinationsIds
             },
             url: deletionURL,
+            beforeSend: function () {
+              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
+            },
             success: function(response) {
               showSuccessMessage(response.message);
+              refreshTotalCombinations(-1, combinationsIds.length);
+              $('span.js-bulk-combinations').text('0');
               combinationsIds.forEach((combinationId) => {
                 var combination = new Combination(combinationId);
                 combination.removeFromDOM();
@@ -125,6 +130,9 @@ export default function() {
             },
             error: function(response) {
               showErrorMessage(jQuery.parseJSON(response.responseText).message);
+            },
+            complete: function () {
+              $('#create-combinations, #apply-on-combinations, #submit, .btn-submit').removeAttr('disabled');
             },
           });
         }

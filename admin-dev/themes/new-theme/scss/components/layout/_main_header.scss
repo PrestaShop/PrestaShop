@@ -32,6 +32,14 @@
     height: 100%;
     width: $size-navbar-width;
   }
+  .ajax-spinner {
+    position: absolute;
+    left: 0;
+    margin-left: 0;
+    top: 5px;
+    width: 30px;
+    height: 30px;
+  }
   > .component {
     display: inline-block;
     margin: {
