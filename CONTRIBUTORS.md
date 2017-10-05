@@ -80,6 +80,7 @@ GitHub contributors:
 - Chen.Zhidong
 - Chris
 - Chris Gurk
+- Christian Verardi
 - christianverardi
 - ChristopheBoucaut
 - CINS
@@ -94,6 +95,7 @@ GitHub contributors:
 - Conner Burnett
 - Corentin Delcourt
 - Cosmin Hutanu
+- Cristiano Verardi
 - Cyril Dussert
 - Cedric Mouleyre
 - damien
@@ -365,6 +367,7 @@ GitHub contributors:
 - Nicolas Lœuillet
 - Nicolas Martin
 - Nicolas Sorosac
+- Nicolas Giacconi
 - Niels Wouda
 - nihco2
 - Niklas Ekman
@@ -504,6 +507,7 @@ GitHub contributors:
 - Thomas
 - Thomas Blanc
 - Thomas Ferney
+- Thomas LEVIANDIER
 - Thomas N
 - Thomas Nabord
 - thomas-aw
