@@ -411,6 +411,11 @@
                             {{ form_errors(form.step3.low_stock_threshold) }}
                             {{ form_widget(form.step3.low_stock_threshold) }}
                           </div>
+                          <div class="col-md-8">
+                            {{ form_errors(form.step3.low_stock_alert) }}
+                            {{ form_widget(form.step3.low_stock_alert) }}
+                            <span class="help-box" data-toggle="popover" data-content="{{ "The email will be sent to all the users who have there right to run this page. To modify the permissions, go to Advanced Parameters > Team"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                          </div>
                         </div>
                       </fieldset>
                     </div>

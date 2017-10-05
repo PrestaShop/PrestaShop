@@ -120,6 +120,11 @@
                   <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
                 </div>`;
       },
+      lowStockAlert() {
+        return `<div class="text-sm-left">
+                  <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
+                </div>`;
+      },
       id() {
         return `product-${this.product.product_id}${this.product.combination_id}`;
       },

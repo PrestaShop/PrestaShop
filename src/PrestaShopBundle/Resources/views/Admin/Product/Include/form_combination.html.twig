@@ -111,6 +111,13 @@
                       {{ form_widget(form.attribute_low_stock_threshold) }}
                     </fieldset>
                   </div>
+                  <div class="col-md-3">
+                    <fieldset class="form-group">
+                      {{ form_errors(form.attribute_low_stock_alert) }}
+                      {{ form_widget(form.attribute_low_stock_alert) }}
+                        <span class="help-box" data-toggle="popover" data-content="{{ "The email will be sent to all the users who have there right to run this page. To modify the permissions, go to Advanced Parameters > Team"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                    </fieldset>
+                  </div>
                 </div>
                 <h2 class="title">
                   {{ "Price and impact"|trans({}, 'Admin.Catalog.Feature') }}

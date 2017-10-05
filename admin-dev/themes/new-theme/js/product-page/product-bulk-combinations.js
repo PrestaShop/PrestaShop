@@ -230,6 +230,9 @@ class Combination {
       case "low_stock_threshold":
         convertedInput = this.inputPattern + 'attribute_' + bulkInput;
         break;
+      case "low_stock_alert":
+        convertedInput = this.inputPattern + 'attribute_' + bulkInput;
+        break;
       case "cost_price":
         convertedInput = this.inputPattern + 'attribute_wholesale_price';
         break;

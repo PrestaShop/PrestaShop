@@ -783,7 +783,8 @@ class AdminProductsControllerCore extends AdminController
                                 false,
                                 array(),
                                 Tools::getValue('attribute_isbn'),
-                                Tools::getValue('attribute_low_stock_threshold')
+                                Tools::getValue('attribute_low_stock_threshold'),
+                                Tools::getValue('attribute_low_stock_alert')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
@@ -815,7 +816,8 @@ class AdminProductsControllerCore extends AdminController
                                 array(),
                                 Tools::getValue('available_date_attribute'),
                                 Tools::getValue('attribute_isbn'),
-                                Tools::getValue('attribute_low_stock_threshold')
+                                Tools::getValue('attribute_low_stock_threshold'),
+                                Tools::getValue('attribute_low_stock_alert')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
