@@ -414,4 +414,10 @@ class AdminCmsControllerCore extends AdminController
 
         return $preview_url;
     }
+    
+
+    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+    {
+        parent::getList($id_lang, $order_by, $order_way, $start, $limit, Context::getContext()->shop->id);
+    }
 }
