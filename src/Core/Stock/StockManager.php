@@ -192,22 +192,36 @@ class StockManager
             return false;
         }
 
-        $product_has_attributes = $product->hasAttributes();
-        if ($product_has_attributes && $id_product_attribute) {
+        $productHasAttributes = $product->hasAttributes();
+        if ($productHasAttributes && $id_product_attribute) {
             $combination = new \Combination($id_product_attribute);
-            if ($combination->low_stock_alert
-                && (int) $combination->low_stock_threshold > 0
-                && $newQuantity <= (int) $combination->low_stock_threshold
-            ) {
-                return true;
-            }
-        } elseif ($product_has_attributes && !$id_product_attribute) {
-            if ($product->low_stock_alert
-                && (int) $product->low_stock_threshold > 0
-                && $newQuantity <= (int) $product->low_stock_threshold
-            ) {
-                return true;
-            }
+            return $this->isCombinationQuantityUnderAlertThreshold($combination, $newQuantity);
+        } elseif ($productHasAttributes && !$id_product_attribute) {
+            return $this->isProductQuantityUnderAlertThreshold($product, $newQuantity);
+        }
+
+        return false;
+    }
+
+    protected function isProductQuantityUnderAlertThreshold($product, $newQuantity)
+    {
+        if ($product->low_stock_alert
+            && (int) $product->low_stock_threshold > 0
+            && $newQuantity <= (int) $product->low_stock_threshold
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function isCombinationQuantityUnderAlertThreshold(\Combination $combination, $newQuantity)
+    {
+        if ($combination->low_stock_alert
+            && (int) $combination->low_stock_threshold > 0
+            && $newQuantity <= (int) $combination->low_stock_threshold
+        ) {
+            return true;
         }
 
         return false;
@@ -216,31 +230,33 @@ class StockManager
     protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
         $context = \Context::getContext();
-        $id_shop = (int) $context->shop->id;
-        $id_lang = (int) $context->language->id;
+        $idShop = (int) $context->shop->id;
+        $idLang = (int) $context->language->id;
         $configuration = \Configuration::getMultiple(
             array(
                 'MA_LAST_QTIES',
                 'PS_STOCK_MANAGEMENT',
                 'PS_SHOP_EMAIL',
                 'PS_SHOP_NAME',
-            ), null, null, $id_shop
+            ),
+            null,
+            null,
+            $idShop
         );
-        $product_name = \Product::getProductName($product->id, $id_product_attribute, $id_lang);
+        $productName = \Product::getProductName($product->id, $id_product_attribute, $idLang);
         if ($id_product_attribute) {
             $combination = new \Combination($id_product_attribute);
             $lowStockThreshold = $combination->low_stock_threshold;
         } else {
             $lowStockThreshold = $product->low_stock_threshold;
         }
-        $template_vars = array(
+        $templateVars = array(
             '{qty}' => $newQuantity,
             '{last_qty}' => $lowStockThreshold,
-            '{product}' => $product_name,
+            '{product}' => $productName,
         );
         // get emails on employees who have right to run stock page
         $emails = array();
-        /** @var \Employee[] $employees */
         $employees = \Employee::getEmployees();
         foreach ($employees as $employee) {
             if ($employee->can('view', 'AdminProducts')) {
@@ -250,10 +266,10 @@ class StockManager
         // Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
         foreach ($emails as $email) {
             \Mail::Send(
-                $id_lang,
+                $idLang,
                 'productoutofstock',
-                \Mail::l('Product out of stock', $id_lang),
-                $template_vars,
+                \Mail::l('Product out of stock', $idLang),
+                $templateVars,
                 $email,
                 null,
                 (string) $configuration['PS_SHOP_EMAIL'],
@@ -262,7 +278,7 @@ class StockManager
                 null,
                 dirname(__FILE__) . '/mails/',
                 false,
-                $id_shop
+                $idShop
             );
         }
     }
