@@ -1367,6 +1367,11 @@ class AdminControllerCore extends Controller
     {
         $this->beforeUpdateOptions();
 
+        Hook::exec('action'.$this->controller_name.'OptionsModifier', array(
+            'options'     => &$this->fields_options,
+            'option_vars' => &$this->tpl_option_vars,
+        ));
+
         $languages = Language::getLanguages(false);
 
         $hide_multishop_checkbox = (Shop::getTotalShops(false, null) < 2) ? true : false;
