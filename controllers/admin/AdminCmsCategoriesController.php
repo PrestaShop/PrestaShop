@@ -304,4 +304,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
         $this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
         return parent::renderForm();
     }
+    
+    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+    {
+        parent::getList($id_lang, $order_by, $order_way, $start, $limit, Context::getContext()->shop->id);
+    }
 }
