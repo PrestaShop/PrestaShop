@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
+use SplFileInfo;
 use Doctrine\Common\Cache\Cache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
@@ -112,9 +113,12 @@ class PrestaTrustChecker
     protected function calculateHash($path)
     {
         $preparehash = '';
+        $sort = function (SplFileInfo $a, SplFileInfo $b) {
+            return strcmp($a->getPathname(), $b->getPathname());
+        };
 
         $finder = Finder::create();
-        $finder->files()->in($path);
+        $finder->files()->in($path)->sort($sort);
         foreach ($this->checked_extensions as $ext) {
             $finder->name('*.'.$ext);
         }
