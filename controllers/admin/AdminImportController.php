@@ -1600,25 +1600,27 @@ class AdminImportControllerCore extends AdminController
 
     protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, &$accessories, $validateOnly = false)
     {
-        if ($force_ids && isset($info['id']) && (int)$info['id']) {
-            $product = new Product((int)$info['id']);
-        } elseif ($match_ref && array_key_exists('reference', $info)) {
-            $datas = Db::getInstance()->getRow('
-					SELECT p.`id_product`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`reference` = "'.pSQL($info['reference']).'"
-				', false);
-            if (isset($datas['id_product']) && $datas['id_product']) {
-                $product = new Product((int)$datas['id_product']);
-            } else {
-                $product = new Product();
-            }
-        } elseif (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product')) {
-            $product = new Product((int)$info['id']);
-        } else {
-            $product = new Product();
+        if (!$force_ids) {
+            unset($info['id']);
         }
+
+        $id_product = null;
+        // Use product reference as key
+        if (!empty($info['id'])) {
+            $id_product = (int) $info['id'];
+        } else if ($match_ref && isset($info['reference'])) {
+            $idProductByRef = (int) Db::getInstance()->getValue('
+                                    SELECT p.`id_product`
+                                    FROM `' . _DB_PREFIX_ . 'product` p
+                                    ' . Shop::addSqlAssociation('product', 'p') . '
+                                    WHERE p.`reference` = "' . pSQL($info['reference']) . '"
+                                ', false);
+            if ($idProductByRef) {
+                $id_product = $idProductByRef;
+            }
+        }
+
+        $product = new Product($id_product);
 
         $update_advanced_stock_management_value = false;
         if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product')) {
