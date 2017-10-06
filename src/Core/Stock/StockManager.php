@@ -181,7 +181,7 @@ class StockManager
         $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
     }
 
-    protected function checkIfMustSendLowStockAlert(\Product $product, $id_product_attribute, $newQuantity)
+    protected function checkIfMustSendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
         if (!\Configuration::get('PS_STOCK_MANAGEMENT')) {
             return false;
@@ -213,7 +213,7 @@ class StockManager
         return false;
     }
 
-    protected function sendLowStockAlert(\Product $product, $id_product_attribute, $newQuantity)
+    protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
         $context = \Context::getContext();
         $id_shop = (int) $context->shop->id;
