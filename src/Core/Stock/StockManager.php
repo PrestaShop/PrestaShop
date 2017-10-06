@@ -195,11 +195,17 @@ class StockManager
         $product_has_attributes = $product->hasAttributes();
         if ($product_has_attributes && $id_product_attribute) {
             $combination = new \Combination($id_product_attribute);
-            if ($combination->low_stock_alert && $newQuantity <= $combination->low_stock_threshold) {
+            if ($combination->low_stock_alert
+                && (int) $combination->low_stock_threshold > 0
+                && $newQuantity <= (int) $combination->low_stock_threshold
+            ) {
                 return true;
             }
         } elseif ($product_has_attributes && !$id_product_attribute) {
-            if ($product->low_stock_alert && $newQuantity <= $product->low_stock_threshold) {
+            if ($product->low_stock_alert
+                && (int) $product->low_stock_threshold > 0
+                && $newQuantity <= (int) $product->low_stock_threshold
+            ) {
                 return true;
             }
         }
