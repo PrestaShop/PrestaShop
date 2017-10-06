@@ -57,11 +57,11 @@ class PrestaTrustChecker
      */
     protected $domain;
 
-    public function __construct(Cache $cache, ApiClient $apiClient, array $shop_info)
+    public function __construct(Cache $cache, ApiClient $apiClient, $shop_info)
     {
         $this->cache = $cache;
         $this->apiClient = $apiClient;
-        $this->domain = $shop_info['url'];
+        $this->domain = $shop_info;
     }
 
     /**
@@ -120,9 +120,7 @@ class PrestaTrustChecker
         }
 
         foreach ($finder as $file) {
-            if (in_array($file->getExtension(), $this->checked_extensions)) {
-                $preparehash .= $file->getContents();
-            }
+            $preparehash .= $file->getContents();
         }
         return hash('sha256', $preparehash);
     }
@@ -140,7 +138,10 @@ class PrestaTrustChecker
 
         // Get the first file in the results
         foreach ($finder as $file) {
-            return trim(str_replace(self::SMART_CONTRACT_PATTERN, '', $file->getContents()));
+            $sc = trim(str_replace(self::SMART_CONTRACT_PATTERN, '', $file->getContents()));
+            if ($sc === $file->getFilename()) {
+                return $sc;
+            }
         }
         return null;
     }
