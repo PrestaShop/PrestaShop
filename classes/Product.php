@@ -1407,8 +1407,23 @@ class ProductCore extends ObjectModel
         Tools::displayAsDeprecated();
 
         $id_product_attribute = $this->addAttribute(
-            $price, $weight, $unit_impact, $ecotax, $id_images,
-            $reference, $ean13, $default, $location, $upc, $minimal_quantity, array(), null, 0, $isbn, $low_stock_threshold, $low_stock_alert
+            $price,
+            $weight,
+            $unit_impact,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location,
+            $upc,
+            $minimal_quantity,
+            array(),
+            null,
+            0,
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert
         );
 
         if (!$id_product_attribute) {
@@ -1501,8 +1516,24 @@ class ProductCore extends ObjectModel
         $low_stock_alert = false
     ) {
         $id_product_attribute = $this->addAttribute(
-            $price, $weight, $unit_impact, $ecotax, $id_images,
-            $reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date, 0, $isbn, $low_stock_threshold, $low_stock_alert);
+            $price,
+            $weight,
+            $unit_impact,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location,
+            $upc,
+            $minimal_quantity,
+            $id_shop_list,
+            $available_date,
+            0,
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert
+        );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
         $result = ObjectModel::updateMultishopTable('Combination', array(
             'wholesale_price' => (float)$wholesale_price,
@@ -1626,8 +1657,25 @@ class ProductCore extends ObjectModel
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
         $return = $this->updateAttribute(
-            $id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-            $id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, true, array(), $isbn, $low_stock_threshold, $low_stock_alert
+            $id_product_attribute,
+            $wholesale_price,
+            $price,
+            $weight,
+            $unit,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location = null,
+            $upc = null,
+            $minimal_quantity,
+            $available_date,
+            true,
+            array(),
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
 
