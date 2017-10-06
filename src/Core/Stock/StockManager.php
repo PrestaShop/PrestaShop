@@ -258,8 +258,9 @@ class StockManager
         // get emails on employees who have right to run stock page
         $emails = array();
         $employees = \Employee::getEmployees();
-        foreach ($employees as $employee) {
-            if ($employee->can('view', 'AdminProducts')) {
+        foreach ($employees as $employeeData) {
+            $employee = new \Employee($employeeData['id_employee']);
+            if (\Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ',$employee->id_profile)) {
                 $emails[] = $employee->email;
             }
         }

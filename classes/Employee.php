@@ -297,7 +297,7 @@ class EmployeeCore extends ObjectModel
      *
      * @param bool $activeOnly Filter employee by active status
      *
-     * @return Employee[]|false Employees or false
+     * @return array|false Employees or false
      */
     public static function getEmployees($activeOnly = true)
     {
