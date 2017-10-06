@@ -129,7 +129,7 @@ class ApiClient
 
     public function getPrestaTrustCheck($hash, $sc_address)
     {
-        $this->queryParameters['hash'] = $hash;
+        $this->queryParameters['module_hash'] = $hash;
         $this->queryParameters['sc_address'] = $sc_address;
 
         $response = $this->setMethod('trust')
