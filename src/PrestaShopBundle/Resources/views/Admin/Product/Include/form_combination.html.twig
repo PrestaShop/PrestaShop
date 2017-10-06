@@ -115,7 +115,7 @@
                     <fieldset class="form-group">
                       {{ form_errors(form.attribute_low_stock_alert) }}
                       {{ form_widget(form.attribute_low_stock_alert) }}
-                        <span class="help-box" data-toggle="popover" data-content="{{ "The email will be sent to all the users who have there right to run this page. To modify the permissions, go to Advanced Parameters > Team"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                        <span class="help-box" data-toggle="popover" data-html="true" data-content="{{ "The email will be sent to all the users who have there right to run this page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" ></span>
                     </fieldset>
                   </div>
                 </div>
