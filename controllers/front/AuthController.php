@@ -439,7 +439,7 @@ class AuthControllerCore extends FrontController
         // Check the requires fields which are settings in the BO
         $this->errors = $this->errors + $customer->validateFieldsRequiredDatabase();
 
-        if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount')) {
+        if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !Tools::isSubmit('submitGuestAccount')) {
             if (!count($this->errors)) {
 
                 $this->processCustomerNewsletter($customer);
