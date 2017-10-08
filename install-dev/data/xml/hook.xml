@@ -196,6 +196,11 @@
       <title>Display new elements in the Back Office, tab AdminCustomers</title>
       <description>This hook launches modules when the AdminCustomers tab is displayed in the Back Office</description>
     </hook>
+    <hook id="displayAdminCustomersAddressesItemAction">
+      <name>displayAdminCustomersAddressesItemAction</name>
+      <title>Display new elements in the Back Office, tab AdminCustomers, Addresses actions</title>
+      <description>This hook launches modules when the Addresses list into the AdminCustomers tab is displayed in the Back Office</description>
+    </hook>
     <hook id="displayOrderConfirmation">
       <name>displayOrderConfirmation</name>
       <title>Order confirmation page</title>
