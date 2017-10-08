@@ -641,7 +641,7 @@
 													{l s='Delete' d='Admin.Actions'}
 												</a>
 											</li>
-                      {hook h="displayAdminCustomersAddressesItemAction" id_customer=$customer->id|intval}
+                      {hook h="displayAdminCustomersAddressesItemAction" id_address=$address['id_address']|intval}
 										</ul>
 									</div>
 								</td>
