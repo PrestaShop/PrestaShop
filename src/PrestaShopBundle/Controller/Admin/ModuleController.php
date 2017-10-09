@@ -132,7 +132,7 @@ class ModuleController extends FrameworkBundleAdminController
             $responseArray['msg'] = $translator->trans(
                 'Cannot get catalog data, please try again later. Reason: %error_details%',
                 array('%error_details%' => print_r($e->getMessage(), true)),
-                'AdminModules'
+                'Admin.Modules.Notification'
             );
             $responseArray['status'] = false;
         }
