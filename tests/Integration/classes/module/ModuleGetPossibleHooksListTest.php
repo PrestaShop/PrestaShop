@@ -27,7 +27,8 @@
 namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
+
 use Module;
 use Cache;
 use PrestaShopAutoload;

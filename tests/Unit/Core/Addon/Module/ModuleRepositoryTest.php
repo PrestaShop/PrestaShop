@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
+namespace Tests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeLogger;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\FakeLogger;
+use Tests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess
@@ -107,19 +107,18 @@ class ModuleRepositoryTest extends UnitTestCase
             ->method('trans')
             ->will($this->returnArgument(0));
 
-        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('getCatalogModulesNames'),
-            array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub)
-        );
+        $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
+            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub))
+            ->setMethods(array('getCatalogModulesNames'))
+            ->getMock()
+        ;
 
         $this->adminModuleDataProviderStub
             ->method('getCatalogModulesNames')
             ->willReturn(array());
 
-        $this->moduleRepositoryStub = $this->getMock(
-            'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
-            array('readCacheFile', 'generateCacheFile'),
-            array(
+        $this->moduleRepositoryStub = $this->getMockBuilder('PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository')
+            ->setConstructorArgs(array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
                 new ModuleDataUpdater(
@@ -135,8 +134,10 @@ class ModuleRepositoryTest extends UnitTestCase
                 new FakeLogger(),
                 $this->translatorStub,
                 __DIR__.'/../../../../resources/modules/'
-            )
-        );
+            ))
+            ->setMethods(array('readCacheFile', 'generateCacheFile'))
+            ->getMock()
+        ;
 
         /*
          * Mock function 'readCacheFile()' to disable the cache

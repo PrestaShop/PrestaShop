@@ -23,14 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace PrestaShop\PrestaShop\Tests\Unit\Adapter;
+namespace Tests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class AdapterServiceLocatorTest extends PHPUnit_Framework_TestCase
+class AdapterServiceLocatorTest extends TestCase
 {
     public function test_get_delegates_to_service_container()
     {

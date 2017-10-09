@@ -60,10 +60,6 @@ class PrestaShopExtension extends Extension
         if (!$container->hasParameter('prestashop.addons.api_client.ttl')) {
             $container->setParameter('prestashop.addons.api_client.ttl', $config['addons']['api_client']['ttl']);
         }
-
-        $this->addClassesToCompile(array(
-            $container->getDefinition('prestashop.router')->getClass(),
-        ));
     }
 
     /**
