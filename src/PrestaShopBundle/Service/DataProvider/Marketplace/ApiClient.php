@@ -78,11 +78,15 @@ class ApiClient
     /**
      * In case you reuse the Client, you may want to clean the previous parameters
      */
-    public function init()
+    public function reset()
     {
         $this->queryParameters = $this->defaultQueryParameters;
     }
 
+    /**
+     * Check Addons client account credentials
+     * @return object
+     */
     public function getCheckCustomer()
     {
         $response = $this->setMethod('check_customer')
@@ -109,9 +113,9 @@ class ApiClient
             ->setAction('install-modules')
             ->getResponse()
         ;
-        $responseArray = json_decode($response);
+        $responseDecoded = json_decode($response);
 
-        return $responseArray->modules;
+        return isset($responseDecoded->modules) ? $responseDecoded->modules : array();
     }
 
     public function getMustHaveModules()
@@ -126,6 +130,13 @@ class ApiClient
         return $responseArray->modules;
     }
 
+    /**
+     * Prepare and call API for PrestaTrust integrity and property module details
+     *
+     * @param string $hash
+     * @param string $sc_address
+     * @return object
+     */
     public function getPrestaTrustCheck($hash, $sc_address)
     {
         $this->queryParameters['module_hash'] = $hash;
@@ -175,6 +186,12 @@ class ApiClient
         }
     }
 
+    /**
+     * Call API for module ZIP content (= download)
+     * 
+     * @param int $moduleId
+     * @return binary content
+     */
     public function getModuleZip($moduleId)
     {
         return $this->setMethod('module')
@@ -200,6 +217,10 @@ class ApiClient
         return array();
     }
 
+    /**
+     * Get list of themes bought by customer
+     * @return object
+     */
     public function getCustomerThemes()
     {
         $response = $this->setMethod('listing')
@@ -207,10 +228,10 @@ class ApiClient
             ->getPostResponse()
         ;
 
-        $responseArray = json_decode($response);
+        $responseDecoded = json_decode($response);
 
-        if (!empty($responseArray->themes)) {
-            return $responseArray->themes;
+        if (!empty($responseDecoded->themes)) {
+            return $responseDecoded->themes;
         }
         return array();
     }
@@ -233,6 +254,11 @@ class ApiClient
                 )
             )->getBody();
     }
+
+    /*
+     * REQUEST PARAMETER SETTERS.
+     * All parameters will have the same label as their function name.
+     */
 
     public function setMethod($method)
     {
@@ -310,4 +336,8 @@ class ApiClient
 
         return $this;
     }
+
+    /*
+     * END OF REQUEST PARAMETER SETTERS.
+     */
 }

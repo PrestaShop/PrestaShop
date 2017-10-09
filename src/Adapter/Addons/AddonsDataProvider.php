@@ -108,7 +108,7 @@ class AddonsDataProvider implements AddonsInterface
             $params = array_merge($this->getAddonsCredentials(), $params);
         }
 
-        $this->marketplaceClient->init();
+        $this->marketplaceClient->reset();
 
         try {
             switch ($action) {
