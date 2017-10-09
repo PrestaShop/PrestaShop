@@ -10,7 +10,7 @@
     processIsolation            = "true"
     stopOnFailure               = "false"
     syntaxCheck                 = "true"
-    bootstrap                   = "bootstrap.php"
+    bootstrap                   = "admin-dev/bootstrap.php"
     >
 
     <groups>
@@ -20,12 +20,12 @@
     </groups>
 
     <testsuites>
-        <testsuite name="PrestaShop Test Suite">
-            <directory>../src/PrestaShopBundle/Tests</directory>
+        <testsuite name="PrestaShopBundle Test Suite">
+            <directory>tests/PrestaShopBundle</directory>
         </testsuite>
     </testsuites>
 
     <php>
-        <server name="KERNEL_DIR" value="../app/" />
+        <server name="KERNEL_DIR" value="app/" />
     </php>
 </phpunit>

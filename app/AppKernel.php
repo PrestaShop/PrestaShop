@@ -54,6 +54,10 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
         }
 
+        if ('dev' === $this->getEnvironment()) {
+            $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
+        }
+
         if (extension_loaded('apc')) {
             $_SERVER['SYMFONY__CACHE__DRIVER'] = 'apc';
         } else {
@@ -63,6 +67,33 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    /**
+     * @{inheritdoc}
+     */
+    public function getRootDir()
+    {
+        return __DIR__;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getCacheDir()
+    {
+        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getLogDir()
+    {
+        return dirname(__DIR__).'/var/logs';
+    }
+
+    /**
+     * @{inheritdoc}
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
