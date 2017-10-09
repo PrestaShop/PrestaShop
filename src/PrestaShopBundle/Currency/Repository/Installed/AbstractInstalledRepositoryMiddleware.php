@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Currency\Repository\Installed;
 
 use PrestaShopBundle\Currency\Currency;
+use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
 abstract class AbstractInstalledRepositoryMiddleware implements InstalledRepositoryInterface
 {
@@ -51,7 +52,7 @@ abstract class AbstractInstalledRepositoryMiddleware implements InstalledReposit
     public function getCurrencyById($id)
     {
         if ((int) $id != $id) {
-            throw new \PrestaShopBundle\Currency\Exception\InvalidArgumentException('$id must be an integer');
+            throw new InvalidArgumentException('$id must be an integer');
         }
 
         // get data from current repository

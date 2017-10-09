@@ -28,49 +28,58 @@ namespace PrestaShopBundle\Currency\Repository\Installed;
 
 use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Currency\CurrencyFactory;
+use PrestaShopBundle\Currency\CurrencyParameters;
+use PrestaShopBundle\Currency\Symbol;
+use PSR\Cache\CacheItemPoolInterface;
 
 class InstalledCacheRepository extends AbstractInstalledRepositoryMiddleware
 {
-
     /**
-     * @var \PSR\Cache\CacheItemPoolInterface
+     * @var CacheItemPoolInterface
      */
     protected $cacheService;
 
     public function __construct(
         InstalledRepositoryInterface $nextRepository = null,
-        \PSR\Cache\CacheItemPoolInterface $cacheService
+        CacheItemPoolInterface $cacheService
     ) {
         $this->setNextRepository($nextRepository);
-        $this->cacheService   = $cacheService;
+        $this->cacheService = $cacheService;
     }
 
     /**
      * Get currency data by internal database identifier
      *
      * @param int $id
+     *   The currency id
      *
-     * @return array The currency data
+     * @return Currency
+     *   The requested currency
      */
     public function getCurrencyByIdOnCurrentRepository($id)
     {
         $cacheItem    = $this->cacheService->getItem($id);
         $currencyData = $cacheItem->get();
         if (!empty($currencyData)) {
+            $currencyParameters = new CurrencyParameters();
+            $currencyParameters
+                ->setId($id)
+                ->setIsoCode($currencyData['isoCode'])
+                ->setNumericIsoCode($currencyData['numericIsoCode'])
+                ->setDecimalDigits($currencyData['decimalDigits'])
+                ->setDisplayNameData($currencyData['localizedNames'])
+                ->setSymbol(new Symbol(
+                    $currencyData['symbol']['default'],
+                    $currencyData['symbol']['narrow']
+                ));
+
             $factory  = new CurrencyFactory();
-            $currency = $factory->setId($id)
-                                ->setIsoCode($currencyData['isoCode'])
-                                ->setNumericIsoCode($currencyData['numericIsoCode'])
-                                ->setDecimalDigits($currencyData['decimalDigits'])
-                                ->setDisplayName($currencyData['localizedNames'])
-                                ->setSymbols($currencyData['localizedSymbols'])
-                                ->build();
+            $currency = $factory->build($currencyParameters);
 
             return $currency;
         }
 
         return null;
-
     }
 
     /**
@@ -111,19 +120,19 @@ class InstalledCacheRepository extends AbstractInstalledRepositoryMiddleware
 
     protected function setInCache(Currency $currency)
     {
-        if ((int) $currency->getId() > 0) {
+        if ((int)$currency->getId() > 0) {
             // do not store currency if id was not set
             $cacheItem = new InstalledCacheItem();
             $cacheItem->setKey($currency->getId())
-                      ->set(
-                          array(
-                              'isoCode'          => $currency->getIsoCode(),
-                              'numericIsoCode'   => $currency->getNumericIsoCode(),
-                              'decimalDigits'    => $currency->getDecimalDigits(),
-                              'localizedNames'   => $currency->getName(),
-                              'localizedSymbols' => $currency->getSymbol(),
-                          )
-                      );
+                ->set(
+                    array(
+                        'isoCode'          => $currency->getIsoCode(),
+                        'numericIsoCode'   => $currency->getNumericIsoCode(),
+                        'decimalDigits'    => $currency->getDecimalDigits(),
+                        'localizedNames'   => $currency->getName(),
+                        'localizedSymbols' => $currency->getSymbol(),
+                    )
+                );
         }
     }
 }

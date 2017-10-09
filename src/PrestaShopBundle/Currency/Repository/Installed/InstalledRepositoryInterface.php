@@ -39,7 +39,7 @@ use PrestaShopBundle\Currency\Currency;
  */
 interface InstalledRepositoryInterface
 {
-     /**
+    /**
      * Get currency data by internal database identifier
      *
      * @param int $id
@@ -49,9 +49,20 @@ interface InstalledRepositoryInterface
     public function getCurrencyById($id);
 
     /**
-     * @param \PrestaShopBundle\Currency\Currency $currency
+     * Get currency data by ISO 4217 alphabetic code
+     *
+     * @param string $isoCode
+     *   The requested currency's ISO code
      *
      * @return Currency
+     *   The requested Currency
+     */
+    public function getCurrencyByIsoCode($isoCode);
+
+    /**
+     * @param Currency $currency
+     *
+     * @return mixed
      */
     public function addInstalledCurrency(Currency $currency);
 

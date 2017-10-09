@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Currency;
 
+use PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface;
+use PrestaShopBundle\Currency\Repository\Reference\ReferenceRepositoryInterface;
+
 /**
  * Class Manager
  *
@@ -38,14 +41,16 @@ class Manager
     protected $installedCurrencyRepository;
     protected $referenceRepository;
 
-    public function __construct(Repository $installedCurrencyRepository, Repository $referenceRepository)
-    {
+    public function __construct(
+        InstalledRepositoryInterface $installedCurrencyRepository,
+        ReferenceRepositoryInterface $referenceRepository
+    ) {
         $this->installedCurrencyRepository = $installedCurrencyRepository;
         $this->referenceRepository         = $referenceRepository;
     }
 
     /**
-     * @return Repository
+     * @return InstalledRepositoryInterface
      */
     public function getInstalledCurrencyRepository()
     {
@@ -53,7 +58,7 @@ class Manager
     }
 
     /**
-     * @return Repository
+     * @return ReferenceRepositoryInterface
      */
     public function getReferenceRepository()
     {
@@ -65,11 +70,10 @@ class Manager
      *
      * @return null|Currency
      */
-    public function getCurrency($id)
+    public function getCurrencyById($id)
     {
-        // TODO : not only installed repo.
         return $this->getInstalledCurrencyRepository()
-            ->getCurrency($id);
+            ->getCurrencyById($id);
     }
 
     /**
@@ -79,7 +83,12 @@ class Manager
      */
     public function getCurrencyByIsoCode($isoCode)
     {
-        // TODO : not only reference repo.
+        $installedCurrency = $this->getInstalledCurrencyRepository()
+            ->getCurrencyByIsoCode($isoCode);
+        if ($installedCurrency) {
+            return $installedCurrency;
+        }
+
         return $this->getReferenceRepository()
             ->getCurrencyByIsoCode($isoCode);
     }

@@ -95,11 +95,10 @@ class Currency
      */
     public function __construct(CurrencyParameters $parameters)
     {
-        $parameters->validateProperties();
         $this->isoCode        = $parameters->getIsoCode();
         $this->numericIsoCode = $parameters->getNumericIsoCode();
         $this->decimalDigits  = $parameters->getDecimalDigits();
-        $this->displayNames   = $parameters->getDisplayName();
+        $this->displayNames   = $parameters->getDisplayNameData();
         $this->symbol         = $parameters->getSymbol();
         $this->id             = $parameters->getId();
     }

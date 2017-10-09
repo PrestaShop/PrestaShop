@@ -32,10 +32,10 @@ use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 
 /**
  * Class CLDR
+ * This class represents the CLDR data source. : data inputs/outputs are made from/to the official CLDR XML files.
  *
  * It implements DataSourceInterface which means it is used to read and write data from a specific place (can be local,
  * cloud, API...)
- * This class represents the CLDR data source. : data inputs/outputs are made from/to the official CLDR XML files.
  *
  * @package PrestaShopBundle\Currency\DataSource
  */
@@ -61,8 +61,8 @@ class CLDR implements DataSourceInterface
     /**
      * CLDR constructor.
      *
-     * @param                         $localeCode
-     * @param DataReaderInterface     $reader
+     * @param                     $localeCode
+     * @param DataReaderInterface $reader
      */
     public function __construct($localeCode, DataReaderInterface $reader)
     {
@@ -70,6 +70,27 @@ class CLDR implements DataSourceInterface
         $this->setReader($reader);
     }
 
+    /**
+     * Get data source locale code (IETF tag)
+     * This locale is the locale to use when retrieving currency data.
+     *
+     * @return string
+     *   The locale IETF tag
+     */
+    public function getLocaleCode()
+    {
+        return $this->localeCode;
+    }
+
+    /**
+     * Get CLDR data reader
+     *
+     * @return DataReaderInterface
+     *   The reader
+     *
+     * @throws Exception
+     *   When data reader was not set
+     */
     public function getReader()
     {
         if (!isset($this->reader)) {
@@ -79,21 +100,34 @@ class CLDR implements DataSourceInterface
         return $this->reader;
     }
 
-    public function setReader($reader)
+    /**
+     * Set used locale code (IETF tag)
+     *
+     * @param string $localeCode
+     *   The locale code to use when retrieving currency data
+     *
+     * @return $this
+     *   Fluent interface
+     */
+    public function setLocaleCode($localeCode)
     {
-        $this->reader = $reader;
+        $this->localeCode = (string)$localeCode;
 
         return $this;
     }
 
-    public function getLocaleCode()
+    /**
+     * Set CLDR data reader
+     *
+     * @param DataReaderInterface $reader
+     *   The reader
+     *
+     * @return $this
+     *   Fluent interface
+     */
+    public function setReader(DataReaderInterface $reader)
     {
-        return $this->localeCode;
-    }
-
-    public function setLocaleCode($localeCode)
-    {
-        $this->localeCode = (string)$localeCode;
+        $this->reader = $reader;
 
         return $this;
     }

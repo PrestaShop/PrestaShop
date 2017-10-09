@@ -27,9 +27,6 @@
 namespace PrestaShopBundle\Currency\Repository;
 
 use PrestaShopBundle\Currency\Currency;
-use PrestaShopBundle\Currency\DataSource\DataSourceInterface;
-use PrestaShopBundle\Currency\Exception\Exception;
-use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface;
 use PrestaShopBundle\Currency\Repository\Reference\ReferenceRepositoryInterface;
 
@@ -78,11 +75,11 @@ class MixedRepository implements MixedRepositoryInterface
     }
 
     /**
-     * Get currency data by internal database identifier
+     * Get currency by internal database identifier
      *
      * @param int $id
      *
-     * @return array The currency data
+     * @return Currency
      */
     public function getInstalledCurrencyById($id)
     {

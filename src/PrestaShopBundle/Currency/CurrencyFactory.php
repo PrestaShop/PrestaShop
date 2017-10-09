@@ -36,152 +36,22 @@ namespace PrestaShopBundle\Currency;
 class CurrencyFactory
 {
     /**
-     * Number of digits needed to display the decimal part of the price.
-     *
-     * @var int
+     * @var CurrencyParameters
      */
-    protected $decimalDigits;
-
-    /**
-     * Currency ISO 4217 code
-     *
-     * Example : EUR for euro
-     *
-     * @var string
-     */
-    protected $isoCode;
-
-    /**
-     * All possible names depending on count
-     * Possible counts :
-     * - default ("EU currency is named euro")
-     * - one ("one euro")
-     * - other (ten euros)
-     *
-     * @var string[]
-     */
-    protected $displayName;
-
-    /**
-     * Symbol data
-     * Contains all possible symbol notations (standard notation, narrow notation, etc)
-     *
-     * @var string[]
-     */
-    protected $symbolData;
-
-    /**
-     * Currency ISO 4217 number
-     *
-     * Example : 978 for euro
-     *
-     * @var int
-     */
-    protected $numericIsoCode;
-
-    /**
-     * Currency id in case it is installed and present in DB
-     *
-     * @var int|null
-     */
-    protected $id;
-
-    /**
-     * @param int $decimalDigits
-     *
-     * @return CurrencyFactory
-     */
-    public function setDecimalDigits($decimalDigits)
-    {
-        $this->decimalDigits = $decimalDigits;
-
-        return $this;
-    }
-
-    /**
-     * @param string $isoCode
-     *
-     * @return CurrencyFactory
-     */
-    public function setIsoCode($isoCode)
-    {
-        $this->isoCode = $isoCode;
-
-        return $this;
-    }
-
-    /**
-     * @param array $displayName
-     *
-     * @return CurrencyFactory
-     */
-    public function setDisplayName($displayName)
-    {
-        $this->displayName = $displayName;
-
-        return $this;
-    }
-
-    /**
-     * @param array $symbols
-     *
-     * @return CurrencyFactory
-     */
-    public function setSymbolData($symbols)
-    {
-        $this->symbols = $symbols;
-
-        return $this;
-    }
-
-    /**
-     * @param int $numericIsoCode
-     *
-     * @return CurrencyFactory
-     */
-    public function setNumericIsoCode($numericIsoCode)
-    {
-        $this->numericIsoCode = $numericIsoCode;
-
-        return $this;
-    }
-
-    /**
-     * Set currency's id
-     *
-     * @param $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = (int) $id;
-
-        return $this;
-    }
+    protected $currencyParameters;
 
     /**
      * Builds and returns a Currency object from the provided data
      *
+     * @param CurrencyParameters $parameters
+     *   The requested Currency's parameters
+     *
      * @return Currency
      */
-    public function build()
+    public function build(CurrencyParameters $parameters)
     {
-        $currencyParameters = new CurrencyParameters();
-        $currencyParameters->setId($this->id)
-                           ->setIsoCode($this->isoCode)
-                           ->setNumericIsoCode($this->numericIsoCode)
-                           ->setDecimalDigits($this->decimalDigits)
-                           ->setDisplayName($this->displayName)
-                           ->setSymbolData($this->symbolData);
+        $parameters->validateProperties();
 
-        $symbolBuilder = new Symbol\Builder();
-        foreach ($this->symbolData as $type => $symbol) {
-            $methodName = 'set' . ucfirst($type);
-            $symbolBuilder->$methodName($symbol);
-        }
-        $currencyParameters->setSymbol($symbolBuilder->build());
-
-        return new Currency($currencyParameters);
+        return new Currency($parameters);
     }
 }

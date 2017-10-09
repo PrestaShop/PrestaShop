@@ -90,13 +90,13 @@ class Cache implements DataSourceInterface
         $id = (int)$id;
 
         if (empty($this->stubData[$id])) {
-            return [];
+            return array();
         }
 
-        return [
+        return array(
             'id'             => $id,
             'numericIsoCode' => $this->stubData[$id],
-        ];
+        );
     }
 
     /**
@@ -109,7 +109,7 @@ class Cache implements DataSourceInterface
     public function getCurrencyByIsoCode($isoCode)
     {
         if (empty($this->stubData[$isoCode])) {
-            return [];
+            return array();
         }
 
         return [
