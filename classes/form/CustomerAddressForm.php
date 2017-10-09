@@ -106,7 +106,7 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function validate()
     {
-        $is_valid = parent::validate();
+        $is_valid = true;
 
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
@@ -125,11 +125,11 @@ class CustomerAddressFormCore extends AbstractForm
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) != '') {
+        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) !== '') {
             $is_valid &= (bool) $hookReturn;
         }
 
-        return $is_valid;
+        return $is_valid && parent::validate();
     }
 
     public function submit()
