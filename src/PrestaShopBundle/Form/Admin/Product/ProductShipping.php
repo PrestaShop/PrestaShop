@@ -117,8 +117,34 @@ class ProductShipping extends CommonAbstractType
             'multiple' =>  true,
             'required' =>  false,
             'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature')
+        ))
+        ->add('additional_delivery_times', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'choices' =>  array(
+                '0' => $this->translator->trans('None', [], 'Admin.Catalog.Feature'),
+                '1'   => $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature'),
+                '2'   => $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature'),
+            ),
+            'expanded' =>  true,
+            'multiple' =>  false,
+            'required' =>  false,
+            'empty_value' => false,
+            'preferred_choices' => array('default'),
+            'label' => $this->translator->trans('Delivery Time', [], 'Admin.Catalog.Feature')
+        ))
+        ->add('delivery_out_stock', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            'required' => false,
+            'label' => $this->translator->trans('Delivery time of out-of-stock products with allowed orders:', [], 'Admin.Catalog.Feature'),
+            'attr' => array(
+                'placeholder' => $this->translator->trans('Delivered within 5-7 days', [], 'Admin.Catalog.Feature'),
+            )
+        ))
+        ->add('delivery_in_stock', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            'required' => false,
+            'label' => $this->translator->trans('Delivery time of in-stock products:', [], 'Admin.Catalog.Feature'),
+            'attr' => array(
+                'placeholder' => $this->translator->trans('Delivered within 3-4 days', [], 'Admin.Catalog.Feature'),
+            )
         ));
-
         foreach ($this->warehouses as $warehouse) {
             $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
                 'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',
