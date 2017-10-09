@@ -64,7 +64,7 @@ class HookEvent extends Event
 
         $sfContainer = SymfonyContainer::getInstance();
         if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
-            $globalParameters['request'] = $sfContainer->get('request');
+            $globalParameters['request'] = $sfContainer->get('request_stack')->getCurrentRequest();
         }
 
         return array_merge($globalParameters, $this->hookParameters);
