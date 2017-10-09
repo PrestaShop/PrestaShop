@@ -129,18 +129,18 @@ class ModuleTabRegisterTest extends UnitTestCase
 
         $this->setupSfKernel();
 
-        $this->tabRegister = $this->getMock(
-            'PrestaShop\\PrestaShop\\Adapter\\Module\\Tab\\ModuleTabRegister',
-            array('getModuleAdminControllersFilename'),
-            array(
+        $this->tabRegister = $this->getMockBuilder('PrestaShop\\PrestaShop\\Adapter\\Module\\Tab\\ModuleTabRegister')
+            ->setMethods(array('getModuleAdminControllersFilename'))
+            ->setConstructorArgs(array(
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.tab.repository'),
                 $this->sfKernel->getContainer()->get('prestashop.core.admin.lang.repository'),
                 $this->sfKernel->getContainer()->get('logger'),
                 $this->sfKernel->getContainer()->get('translator'),
                 $this->sfKernel->getContainer()->get('filesystem'),
                 $this->languages,
-            )
-        );
+            ))
+            ->getMock()
+        ;
         $this->tabRegister
             ->method('getModuleAdminControllersFilename')
             ->will($this->returnValueMap($this->moduleAdminControllers));

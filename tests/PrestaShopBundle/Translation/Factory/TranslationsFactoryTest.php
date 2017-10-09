@@ -28,8 +28,9 @@ namespace Tests\PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Factory\TranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
+use PHPUnit\Framework\TestCase;
 
-class TranslationsFactoryTest extends \PHPUnit_Framework_TestCase
+class TranslationsFactoryTest extends TestCase
 {
     private $factory;
     private $providerMock;

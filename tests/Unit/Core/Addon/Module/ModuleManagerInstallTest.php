@@ -26,7 +26,9 @@
 
 namespace Tests\Core\Addon\Module;
 
-class ModuleManagerInstallTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ModuleManagerInstallTest extends TestCase
 {
     public function setUp()
     {

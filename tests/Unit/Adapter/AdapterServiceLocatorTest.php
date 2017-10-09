@@ -27,9 +27,9 @@ namespace Tests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class AdapterServiceLocatorTest extends PHPUnit_Framework_TestCase
+class AdapterServiceLocatorTest extends TestCase
 {
     public function test_get_delegates_to_service_container()
     {

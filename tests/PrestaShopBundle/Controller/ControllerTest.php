@@ -30,12 +30,13 @@ use Context;
 use Controller;
 use Prophecy\Argument;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PHPUnit\Framework\TestCase;
 use Tools;
 
 /**
  * @group controller
  */
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     private $context;
 
@@ -148,7 +149,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     protected function declareRequiredConstants()
     {
-        $configDirectory = __DIR__ . '/../../../../app/config';
+        $configDirectory = __DIR__ . '/../../../app/config';
         $configuration = require_once($configDirectory . '/parameters.php');
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
@@ -204,7 +205,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
     protected function requireAliasesFunctions()
     {
-        require_once(__DIR__ . '/../../../../config/alias.php');
+        require_once(__DIR__ . '/../../../config/alias.php');
     }
 
     /**

@@ -28,8 +28,9 @@ namespace Tests\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 
-class ThemeProviderTest extends \PHPUnit_Framework_TestCase
+class ThemeProviderTest extends TestCase
 {
     private $provider;
     private static $resourcesDir;

@@ -125,8 +125,8 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'success' => 1,
                     'checks' => array(
                         'config_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/config/'), 'Install'),
-                        'cache_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/cache/'), 'Install'),
-                        'log_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/logs/'), 'Install'),
+                        'cache_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/var/cache/'), 'Install'),
+                        'log_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/var/logs/'), 'Install'),
                         'img_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/img/'), 'Install'),
                         'mails_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/mails/'), 'Install'),
                         'module_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/modules/'), 'Install'),

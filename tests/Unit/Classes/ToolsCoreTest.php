@@ -26,10 +26,10 @@
 
 namespace Tests\Unit\Classes;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Tools;
 
-class ToolsCoreTest extends PHPUnit_Framework_TestCase
+class ToolsCoreTest extends TestCase
 {
     private function setPostAndGet(array $post = array(), array $get = array())
     {

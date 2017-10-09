@@ -26,10 +26,10 @@
 
 namespace Tests\Unit\Classes;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Validate;
 
-class ValidateCoreTest extends PHPUnit_Framework_TestCase
+class ValidateCoreTest extends TestCase
 {
     /**
      * @dataProvider isIp2LongDataProvider

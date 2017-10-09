@@ -27,8 +27,9 @@
 namespace Tests\Unit\classes\Smarty;
 
 use TemplateFinder;
+use PHPUnit\Framework\TestCase;
 
-class TemplateFinderTest extends \PHPUnit_Framework_TestCase
+class TemplateFinderTest extends TestCase
 {
     protected $templateFinder;
 

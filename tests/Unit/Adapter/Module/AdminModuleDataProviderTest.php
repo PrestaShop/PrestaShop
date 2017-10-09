@@ -160,17 +160,17 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testCallToAddonsShouldReturnSameResultOk()
     {
-        $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('convertJsonForNewCatalog'),
-            array(
+        $mock = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
+            ->setConstructorArgs(array(
                 'languageISO' => $this->translator,
                 'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
                 'moduleDataProvider' => $this->moduleDataProviderS,
                 'cacheProvider' => $this->cacheProviderS,
-            )
-        );
+            ))
+            ->setMethods(array('convertJsonForNewCatalog'))
+            ->getMock();
 
         $mock->clearCatalogCache();
 

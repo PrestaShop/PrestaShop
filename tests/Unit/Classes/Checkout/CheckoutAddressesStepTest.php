@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\classes\checkout;
+namespace Tests\Unit\Classes\Checkout;
 
 use CheckoutAddressesStep;
 use CheckoutProcess;

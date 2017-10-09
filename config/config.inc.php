@@ -31,9 +31,7 @@ if (is_file($currentDir.'/defines_custom.inc.php')) {
     include_once($currentDir.'/defines_custom.inc.php');
 }
 
-if (!defined('_PS_MODE_DEV_')) {
-    require_once($currentDir.'/defines.inc.php');
-}
+require_once($currentDir.'/defines.inc.php');
 
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 

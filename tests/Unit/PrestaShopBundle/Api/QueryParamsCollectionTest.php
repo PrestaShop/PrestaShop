@@ -27,7 +27,7 @@
 namespace Tests\Unit\PrestaShopBundle\Api;
 
 use Exception;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Api\QueryParamsCollection;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
 use Prophecy\Prophet;
@@ -35,7 +35,7 @@ use Prophecy\Prophet;
 /**
  * @group api
  */
-class QueryParamsCollectionTest extends PHPUnit_Framework_TestCase
+class QueryParamsCollectionTest extends TestCase
 {
     /**
      * @var Prophet

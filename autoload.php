@@ -24,24 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\classes;
-
-use PhpEncryption;
-
-class PhpEncryptionTest extends \PHPUnit_Framework_TestCase
-{
-    const FOO = 'foo';
-    private $engine;
-
-    public function setUp()
-    {
-        $randomKey = PhpEncryption::createNewRandomKey();
-        $this->engine = new PhpEncryption($randomKey);
-    }
-
-    public function testEncryptAndDecrypt()
-    {
-        $encryptedValue = $this->engine->encrypt(self::FOO);
-        $this->assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
-    }
-}
+/**
+ * Allow call of Legacy classes from classes in /src and /tests
+ * @see composer.json "files" property for custom autoloading
+ */
+require_once(__DIR__.'/config/defines.inc.php');
+require_once(__DIR__.'/classes/PrestaShopAutoload.php');

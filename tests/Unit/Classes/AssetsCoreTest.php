@@ -26,10 +26,10 @@
 
 namespace Tests\Unit\Classes;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 
-class AssetsCoreTest extends PHPUnit_Framework_TestCase
+class AssetsCoreTest extends TestCase
 {
     private $stylesheetManager;
     private $javascriptManager;

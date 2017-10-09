@@ -24,43 +24,29 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Product\Search;
+namespace Tests\Unit\Classes;
 
+use PhpEncryptionLegacyEngine;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Product\Search\URLFragmentSerializer;
 
-class URLFragmentSerializerTest extends Testcase
+class PhpEncryptionLegacyEngineTest extends TestCase
 {
-    private $serializer;
+    const FOO = 'foo';
+    private $engine;
 
-    public function setup()
+    public function setUp()
     {
-        $this->serializer = new URLFragmentSerializer;
+        if (version_compare(PHP_VERSION, '7.1', '>=')) {
+            $this->markTestSkipped('Legacy encryption with mcrypt is deprecated from PHP 7.1.');
+        }
+
+        $key = \Defuse\Crypto\Key::createNewRandomKey();
+        $this->engine = new PhpEncryptionLegacyEngine($key->saveToAsciiSafeString());
     }
 
-    private function doTest($expected, array $fragment)
+    public function testEncryptAndDecrypt()
     {
-        $this->assertEquals($expected, $this->serializer->serialize($fragment));
-        $this->assertEquals($fragment, $this->serializer->unserialize($expected));
-    }
-
-    public function test_serialize_single_monovalued_fragment()
-    {
-        $this->doTest('a-b', ['a' => ['b']]);
-    }
-
-    public function test_serialize_single_multivalued_fragment()
-    {
-        $this->doTest('a-b-c', ['a' => ['b', 'c']]);
-    }
-
-    public function test_serialize_multiple_multivalued_fragments()
-    {
-        $this->doTest('a-b-c/x-y-z', ['a' => ['b', 'c'], 'x' => ['y', 'z']]);
-    }
-
-    public function test_serialize_single_monovalued_fragment_with_dash_in_name()
-    {
-        $this->doTest('a-b--c', ['a' => ['b-c']]);
+        $encryptedValue = $this->engine->encrypt(self::FOO);
+        $this->assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
     }
 }

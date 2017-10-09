@@ -18,14 +18,13 @@ sudo: required
 dist: trusty
 
 php:
-  - 5.4
   - 5.6
   - 7.0
-  
+
 env:
     global:
         - SYMFONY_DEPRECATIONS_HELPER=disabled
-  
+
 matrix:
   include:
     - php: 7.1
@@ -46,10 +45,9 @@ script:
   - composer install --prefer-dist --no-interaction --no-progress
   - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
-  - php bin/phpunit -c tests/
-  - php bin/phpunit -c tests/phpunit-admin.xml
-  - composer phpunit-sf
-  - composer phpunit-controllers
+  - composer old-controllers-tests
+  - composer sf-tests
+  - composer tests
   - bash ./travis-scripts/run-selenium-tests
   - bash ./travis-scripts/run-functional-tests # Must run before starter theme
   - bash ./travis-scripts/test-startertheme

@@ -29,9 +29,10 @@ namespace Tests\Core\Addon;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Component\Filesystem\Filesystem;
+use PHPUnit\Framework\TestCase;
 use Phake;
 
-class ThemeRepositoryTest extends \PHPUnit_Framework_TestCase
+class ThemeRepositoryTest extends TestCase
 {
     const NOTICE = '[ThemeRepository] ';
     private $repository;

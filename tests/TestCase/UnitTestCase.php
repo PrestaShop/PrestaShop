@@ -30,7 +30,6 @@ use Cache;
 use Configuration;
 use Context;
 use Db;
-use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -40,7 +39,7 @@ use Tests\TestCase\FakeEntityMapper;
 use Tests\TestCase\FakeConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 
-class UnitTestCase extends PHPUnit_Framework_TestCase
+class UnitTestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Container
@@ -175,7 +174,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
     public function setupSfKernel()
     {
-        require_once __DIR__.'/../../app/autoload.php';
+        require_once __DIR__.'/../../vendor/autoload.php';
         require_once __DIR__.'/../../app/AppKernel.php';
         $this->sfKernel = new \AppKernel('test', true);
         $this->sfKernel->boot();

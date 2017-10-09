@@ -28,14 +28,14 @@ namespace Tests\Unit\Classes\Module;
 
 use DomDocument;
 use Module;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 class FakeModule extends Module
 {
 }
 
-class ModuleCoreTest extends PHPUnit_Framework_TestCase
+class ModuleCoreTest extends TestCase
 {
     private $error_string_res = '<div class="bootstrap">
 										<div class="module_error alert alert-danger" >

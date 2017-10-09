@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\classes;
+namespace Tests\Unit\Classes;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShopAutoload;
 
-class PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
+class PrestaShopAutoloadTest extends TestCase
 {
     private $file_index_content = null;
     private $file_index = null;
@@ -44,7 +44,7 @@ class PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
     public function testGenerateIndex()
     {
         $this->assertTrue(file_exists($this->file_index));
-        $data = include($this->file_index);
+        $data = require($this->file_index);
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
     }
 

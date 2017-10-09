@@ -88,7 +88,7 @@ class PrestaShopAutoload
      */
     public static function getCacheFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'var'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
     }
 
     /**
@@ -98,7 +98,7 @@ class PrestaShopAutoload
      */
     public static function getNamespacedStubFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'namespaced_class_stub.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'var'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'namespaced_class_stub.php';
     }
 
     /**
@@ -108,7 +108,7 @@ class PrestaShopAutoload
      */
     public static function getStubFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_stub.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'var'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_stub.php';
     }
 
     /**
@@ -260,7 +260,8 @@ class PrestaShopAutoload
     /**
      * Retrieve recursively all classes in a directory and its subdirectories
      *
-     * @param string $path Relativ path from root to the directory
+     * @param string $path Relative path from root to the directory
+     * @param bool $hostMode Since 1.7, deprecated.
      *
      * @return array
      */
