@@ -29,6 +29,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use PrestaShopBundle\Exception\ServiceDefinitionException;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
  * Sets dynamic role hierarchy in the voter.
@@ -52,7 +53,7 @@ class DynamicRolePass implements CompilerPassInterface
 
         $roleHierarchyVoterDefinition = $container->register(
             'security.access.role_hierarchy_voter',
-            '%security.access.role_hierarchy_voter.class%'
+            Voter::class
         );
 
         $roleHierarchyVoterDefinition
