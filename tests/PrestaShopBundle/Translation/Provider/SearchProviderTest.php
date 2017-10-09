@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Tests\Translation\Provider;
+namespace Tests\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\SearchProvider;
 

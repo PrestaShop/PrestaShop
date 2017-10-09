@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
+namespace Tests\Integration\PrestaShopBundle\Test;
 
 use PrestaShopBundle\Tests\Utils\Database;
 use Psr\Log\NullLogger;

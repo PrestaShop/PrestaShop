@@ -25,7 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Install;
+namespace Tests\TestCase;
 
 use Exception;
 

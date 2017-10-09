@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle;
+namespace Tests\Unit\PrestaShopBundle;
 
-use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Symfony\Component\Console\Command\Command;
@@ -55,7 +55,7 @@ class MultishopCommandListenerTest extends UnitTestCase
         $this->commandListener = $this->sfKernel->getContainer()->get('prestashop.multishop_command_listener');
         $this->multishopContext = $this->sfKernel->getContainer()->get('prestashop.adapter.shop.context');
     }
-    
+
     public function testDefaultMultishopContext()
     {
         $this->assertFalse($this->multishopContext->isShopContext());

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Tests\Translation\Factory;
+namespace Tests\PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;

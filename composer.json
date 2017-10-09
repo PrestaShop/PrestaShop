@@ -105,7 +105,7 @@
         "friendsofphp/php-cs-fixer": "^1.10"
     },
     "autoload-dev": {
-        "psr-4": { "PrestaShop\\PrestaShop\\Tests\\": "tests/" },
+        "psr-4": { "Tests\\": "tests/" },
         "files": [ "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php" ]
     },
     "autoload": {

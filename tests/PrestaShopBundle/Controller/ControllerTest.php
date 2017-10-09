@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Tests\Controller;
+namespace Tests\PrestaShopBundle\Controller;
 
 use Context;
 use Controller;

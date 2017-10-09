@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Crypto;
+
+namespace Tests\Unit\Core\Crypto;
 
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;

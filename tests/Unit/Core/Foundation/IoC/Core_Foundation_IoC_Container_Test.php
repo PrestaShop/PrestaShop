@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
+namespace Tests\Unit\Core\Foundation\IoC;
 
 use Exception;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
-use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
+use Tests\Unit\Core\Foundation\IoC\Fixtures\Dummy;
+use Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClosure;
 
 class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
 {

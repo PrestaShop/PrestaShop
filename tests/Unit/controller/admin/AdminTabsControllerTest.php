@@ -24,10 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace Tests\Unit\Controller\Admin;
 
-namespace Prestashop\Prestashop\Tests\Unit\Controller\Admin;
-
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Phake;
 use Tools;
 use Tab;
