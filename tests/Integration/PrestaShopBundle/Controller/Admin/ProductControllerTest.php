@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Admin;
+namespace Tests\Integration\PrestaShopBundle\Controller\Admin;
 
-use PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
 
 /**
  * @group demo

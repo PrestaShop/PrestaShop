@@ -171,7 +171,7 @@ class ModuleManagerBuilder
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator);
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
-        $kernelDir = dirname(__FILE__) . '/../../../../app';
+        $kernelDir = dirname(__FILE__) . '/../../../../var';
         self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/prod';
         if (_PS_MODE_DEV_) {
             self::$addonsDataProvider->cacheDir = $kernelDir . '/cache/dev';

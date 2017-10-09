@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace Tests\TestCase;
 
 use ReflectionClass;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ReflexionHelper
@@ -41,7 +41,7 @@ use PHPUnit_Framework_TestCase;
  *
  * In the end, this kind of features is here just for convenience to be able to test quickly dirty legacy code.
  */
-class ReflexionHelper extends PHPUnit_Framework_TestCase
+class ReflexionHelper extends TestCase
 {
     public static function invoke($object, $method)
     {

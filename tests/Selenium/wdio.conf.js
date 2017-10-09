@@ -34,6 +34,9 @@ exports.config = {
     //
     capabilities: [{
         browserName: require('./settings').browserName,
+        chromeOptions: {
+          args: ['--headless', '--disable-gpu', '--window-size=1600,1200'],
+        },
         tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
         screenResolution: "1600x1200",
         platform: "Windows 7",

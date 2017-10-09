@@ -641,11 +641,11 @@ namespace PrestaShopBundle\Install {
                 }
             }
 
-            if (file_exists(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/app/cache/dev/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php')) {
+                unlink(_PS_ROOT_DIR_.'/var/cache/dev/class_index.php');
             }
-            if (file_exists(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php')) {
-                unlink(_PS_ROOT_DIR_.'/app/cache/prod/class_index.php');
+            if (file_exists(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php')) {
+                unlink(_PS_ROOT_DIR_.'/var/cache/prod/class_index.php');
             }
 
             // Clear XML files
