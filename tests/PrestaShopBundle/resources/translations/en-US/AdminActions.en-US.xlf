@@ -218,12 +218,12 @@ File: admin-dev/themes/default/template/modal.tpl:39</note>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en" target-language="en" datatype="plaintext">
     <body>
-      
+
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en" target-language="en" datatype="plaintext">
     <body>
-      
+
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/configure.tpl" source-language="en" target-language="en" datatype="plaintext">
@@ -244,9 +244,9 @@ File: admin-dev/themes/default/template/controllers/modules/configure.tpl:67</no
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig" source-language="en" target-language="en" datatype="plaintext">
     <body>
-      
-      
-      
+
+
+
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/filters.tpl" source-language="en" target-language="en" datatype="plaintext">
@@ -313,12 +313,12 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinations.html.twig" source-language="en" target-language="en" datatype="plaintext">
     <body>
-      
+
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig" source-language="en" target-language="en" datatype="plaintext">
     <body>
-      
+
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en" target-language="en" datatype="plaintext">
