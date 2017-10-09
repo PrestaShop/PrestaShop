@@ -56,17 +56,23 @@ var AdminModuleCard = function () {
         modal.first().modal('show');
         return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
     };
-    
-    this.confirmPrestaTrust = function(result) {
-        var modal = $("#modal-prestatrust");
-        var module = result.module.attributes;
-        var that = this;
+
+    /**
+     * Update the content of a modal asking a confirmation for PrestaTrust and open it
+     * 
+     * @param {array} result containing module data
+     * @return {void}
+     */
+    this.confirmPrestaTrust = function confirmPrestaTrust(result) {
+        const modal = $("#modal-prestatrust");
+        const module = result.module.attributes;
+        const that = this;
 
         if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
             return;
         }
 
-        const alertClass = module.prestatrust.status?'success':'warning';
+        const alertClass = module.prestatrust.status ? 'success' : 'warning';
         
         if (module.prestatrust.check_list.property) {
             modal.find("#pstrust-btn-property-ok").show();
@@ -80,13 +86,12 @@ var AdminModuleCard = function () {
         modal.find("#pstrust-img").attr({src: module.img, alt: module.name});
         modal.find("#pstrust-name").text(module.displayName);
         modal.find("#pstrust-author").text(module.author);
-        modal.find("#pstrust-name").text(module.displayName);
-        modal.find("#pstrust-label").attr("class", "text-"+alertClass).text(module.prestatrust.status?'OK':'KO');
+        modal.find("#pstrust-label").attr("class", "text-" + alertClass).text(module.prestatrust.status ? 'OK' : 'KO');
         modal.find("#pstrust-message").attr("class", "alert alert-"+alertClass);
         modal.find("#pstrust-message > p").text(module.prestatrust.message);
         modal.find(".pstrust-install").off('click').on('click', function() {
             // Find related form, update it and submit it
-            var install_button = $(that.moduleActionMenuInstallLinkSelector, '.module-item[data-tech-name="'+module.name+'"]');
+            var install_button = $(that.moduleActionMenuInstallLinkSelector, '.module-item[data-tech-name="' + module.name + '"]');
             var form = install_button.parent("form");
             $('<input>').attr({
                 type: 'hidden',
