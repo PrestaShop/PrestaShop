@@ -45,12 +45,15 @@ class ModuleEventSubscriber implements EventSubscriberInterface
      * @var boolean
      */
     public $enabled;
-    
+
     public function __construct(PrestaTrustChecker $checker)
     {
         $this->checker = $checker;
     }
-    
+
+    /**
+     * @inheritdoc
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -58,6 +61,11 @@ class ModuleEventSubscriber implements EventSubscriberInterface
         );
     }
 
+    /**
+     * Event executed on module download (coming from the marketplace or the employee disk)
+     * @param ModuleManagementEvent $event
+     * @return void
+     */
     public function onNewModule(ModuleManagementEvent $event)
     {
         if (!$this->enabled) {

@@ -52,33 +52,60 @@ class UnconfirmedModuleActionException extends Exception
      */
     protected $subject;
 
+    /**
+     * Module getter
+     * @return Module
+     */
     public function getModule()
     {
         return $this->module;
     }
 
+    /**
+     * Action getter (install, uninstall, reset ...)
+     * @return string
+     */
     public function getAction()
     {
         return $this->action;
     }
 
+    /**
+     * Subject getter (PrestaTrust...)
+     * @return string
+     */
     public function getSubject()
     {
         return $this->subject;
     }
 
+    /**
+     * Module setter
+     * @param Module $module
+     * @return $this
+     */
     public function setModule(Module $module)
     {
         $this->module = $module;
         return $this;
     }
 
+    /**
+     * Action setter
+     * @param string $action
+     * @return $this
+     */
     public function setAction($action)
     {
         $this->action = $action;
         return $this;
     }
 
+    /**
+     * Subject setter
+     * @param string $subject
+     * @return $this
+     */
     public function setSubject($subject)
     {
         $this->subject = $subject;

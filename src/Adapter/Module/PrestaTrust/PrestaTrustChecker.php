@@ -31,6 +31,7 @@ use Doctrine\Common\Cache\Cache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class PrestaTrustChecker
 {
@@ -38,7 +39,7 @@ class PrestaTrustChecker
     const SMART_CONTRACT_PATTERN = 'prestatrust-license-verification: ';
 
     const CHECKS_ALL_OK = 'Module is authenticated.';
-    const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Marketplace.';
+    const CHECKS_INTEGRITY_NOK = 'Warning, the module has been modified since its purchase from the Addons Marketplace.';
     const CHECKS_PROPERTY_NOK = 'Warning, the purchase proof is invalid. This license has already been used on another shop.';
     const CHECKS_ALL_NOK = 'Warning, the module has been modified and its purchase proof is invalid.';
 
@@ -58,11 +59,17 @@ class PrestaTrustChecker
      */
     protected $domain;
 
-    public function __construct(Cache $cache, ApiClient $apiClient, $shop_info)
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    public function __construct(Cache $cache, ApiClient $apiClient, $shop_info, TranslatorInterface $translator)
     {
         $this->cache = $cache;
         $this->apiClient = $apiClient;
         $this->domain = $shop_info;
+        $this->translator = $translator;
     }
 
     /**
@@ -71,7 +78,7 @@ class PrestaTrustChecker
      * @param Module $module
      * @return void
      */
-    public function getDetails(Module $module)
+    public function loadDetailsIntoModule(Module $module)
     {
         if (!$this->cache->contains($module->get('name'))) {
             return;
@@ -85,7 +92,6 @@ class PrestaTrustChecker
      * Called by download event of module
      *
      * @param Module $module
-     * @return void
      */
     public function checkModule(Module $module)
     {
@@ -97,7 +103,7 @@ class PrestaTrustChecker
         $details->hash = $this->calculateHash($module->disk->get('path'));
         $details->check_list = $this->requestCheck($details->hash, $this->domain, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
-        $details->message = $this->getMessage($details->check_list);
+        $details->message = $this->translator($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
 
         $this->cache->save($module->get('name'), $details);
 
@@ -197,12 +203,27 @@ class PrestaTrustChecker
         return true;
     }
 
+    /**
+     * Check that the string starts with '0x'
+     *
+     * @param string $str
+     * @return bool
+     */
     protected function hasHexPrefix($str)
     {
         $prefix = '0x';
         return substr($str, 0, strlen($prefix)) === $prefix;
     }
 
+    /**
+     * Send to the Marketplace API our details about the module, and get results
+     * about its integrity and property
+     *
+     * @param string $hash Calculted hash from the modules files
+     * @param string $shop_url Shop domain
+     * @param string $contract Smart contract address from module
+     * @return array
+     */
     protected function requestCheck($hash, $shop_url, $contract)
     {
         $result = $this->apiClient->setShopUrl($shop_url)->getPrestaTrustCheck($hash, $contract);
