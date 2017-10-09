@@ -27,7 +27,6 @@
 
 namespace PrestaShopBundle\Install;
 
-use Doctrine\DBAL\DBALException;
 use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
@@ -46,6 +45,11 @@ use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use PrestaShop\PrestaShop\Adapter\Entity\Cache;
+use PrestaShop\PrestaShop\Adapter\Entity\Cookie;
+use PrestaShop\PrestaShop\Adapter\Entity\Currency;
+use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShop\PrestaShop\Adapter\Entity\Cart;
 use InstallSession;
 use Language as LanguageLegacy;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
@@ -53,7 +57,6 @@ use PrestashopInstallerException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
-use SebastianBergmann\GlobalState\RuntimeException;
 use Symfony\Component\Yaml\Yaml;
 use PhpEncryption;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
@@ -343,15 +346,15 @@ class Install extends AbstractInstall
         $cldrUpdate->init();
 
         //get each defined languages and fetch cldr datas
-        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
+        $langs = Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
 
         foreach ($langs as $lang) {
-            $cldrRepository = \Tools::getCldr(null, $lang['locale']);
+            $cldrRepository = Tools::getCldr(null, $lang['locale']);
             $language_code = explode('-', $cldrRepository->getCulture());
             if (count($language_code) == 1) {
                 $cldrUpdate->fetchLocale($language_code['0']);
             } else {
-                $cldrUpdate->fetchLocale($language_code['0'].'-'.\Tools::strtoupper($language_code[1]));
+                $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
             }
         }
     }
@@ -363,7 +366,7 @@ class Install extends AbstractInstall
     {
         $smarty = null;
         // Clean all cache values
-        \Cache::clean('*');
+        Cache::clean('*');
 
         $_SERVER['HTTP_HOST'] = 'localhost';
         $this->language->setLanguage('en');
@@ -371,18 +374,18 @@ class Install extends AbstractInstall
         $context->shop = new Shop(1);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
-        if (!isset($context->language) || !\Validate::isLoadedObject($context->language)) {
+        if (!isset($context->language) || !Validate::isLoadedObject($context->language)) {
             $context->language = new Language('en');
         }
 
-        if (!isset($context->country) || !\Validate::isLoadedObject($context->country)) {
+        if (!isset($context->country) || !Validate::isLoadedObject($context->country)) {
             if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT')) {
                 $context->country = new Country((int)$id_country);
             }
         }
-        if (!isset($context->currency) || !\Validate::isLoadedObject($context->currency)) {
+        if (!isset($context->currency) || !Validate::isLoadedObject($context->currency)) {
             if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT')) {
-                $context->currency = new \Currency((int)$id_currency);
+                $context->currency = new Currency((int)$id_currency);
             }
         }
 
@@ -392,11 +395,11 @@ class Install extends AbstractInstall
             $cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
         }
 
-        $cookie = new \Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, 'localhost', false, false);
+        $cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, 'localhost', false, false);
 
         $context->cookie = $cookie;
 
-        $context->cart = new \Cart();
+        $context->cart = new Cart();
         $context->employee = new Employee(1);
         if (!defined('_PS_SMARTY_FAST_LOAD_')) {
             define('_PS_SMARTY_FAST_LOAD_', true);
