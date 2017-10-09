@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit;
+namespace Tests\Unit;
 
 /**
  * This helper class provides methods to initialize context for front controller tests

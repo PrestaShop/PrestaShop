@@ -67,7 +67,7 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 if (!defined('_PS_CACHE_DIR_')) {
-    $prestashopCacheDir =  _PS_ROOT_DIR_.'/app/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
+    $prestashopCacheDir =  _PS_ROOT_DIR_.'/var/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
     define('_PS_CACHE_DIR_',$prestashopCacheDir);
 }
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');

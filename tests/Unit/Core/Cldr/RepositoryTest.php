@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cldr;
+namespace Tests\Unit\Core\Cldr;
 
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\Repository;
 use ICanBoogie\CLDR\RunTimeProvider;

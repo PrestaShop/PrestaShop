@@ -105,15 +105,15 @@
           PrestaShop installation requires at least the <b>zip extension</b> to be enabled.
       </li>
     <?php endif; ?>
-    <?php if (PHP_VERSION_ID < 50400): ?>
+    <?php if (PHP_VERSION_ID < 50509): ?>
       <li>
           PrestaShop requires at least PHP 5.4 or newer versions.
           <i>You can install PrestaShop 1.6 if you can't update your version of PHP.</i>
       </li>
     <?php endif; ?>
-        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache')): ?>
+        <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache')): ?>
       <li>
-          PrestaShop installation needs to write critical files in the folder app/cache.
+          PrestaShop installation needs to write critical files in the folder app/var.
           <i>Please review the permissions on your server.</i>
       </li>
     <?php endif; ?>

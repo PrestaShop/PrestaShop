@@ -24,8 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
+namespace Tests\Integration\PrestaShopBundle\Service\DataProvider\MarketPlace;
 
+use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Phake;
 
@@ -34,6 +35,9 @@ use Phake;
  */
 class ApiClientTest extends KernelTestCase
 {
+    /**
+     * @var ApiClient
+     */
     protected $apiClient;
 
     public function setUp()
@@ -45,6 +49,11 @@ class ApiClientTest extends KernelTestCase
 
         $this->apiClient = $kernel->getContainer()->get('prestashop.addons.client_api');
         $this->apiClient->setClient($this->mockClient());
+    }
+
+    protected function tearDown()
+    {
+        $this->apiClient = null;
     }
 
     public function testGetNativeModules()
@@ -88,7 +97,7 @@ class ApiClientTest extends KernelTestCase
     }
 
     /**
-     * @return mixed
+     * @return \PrestaShop\PrestaShop\Adapter\LegacyContext
      */
     protected function mockLegacyContext()
     {
