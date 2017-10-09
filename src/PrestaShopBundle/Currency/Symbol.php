@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Currency;
 
-use PrestaShopBundle\Currency\Symbol\Builder as SymbolBuilder;
-
 /**
  * Class Symbol
  *
@@ -40,10 +38,10 @@ class Symbol
     protected $default;
     protected $narrow;
 
-    public function __construct(SymbolBuilder $builder)
+    public function __construct($defaultNotation, $narrowNotation = null)
     {
-        $this->default = $builder->getDefault();
-        $this->narrow = $builder->getNarrow();
+        $this->default = $defaultNotation;
+        $this->narrow  = $narrowNotation;
     }
 
     /**
@@ -68,6 +66,6 @@ class Symbol
 
     public function __toString()
     {
-        return (string) $this->getDefault();
+        return (string)$this->getDefault();
     }
 }

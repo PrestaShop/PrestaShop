@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Currency;
 
+use PrestaShopBundle\Currency\Exception\Exception;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 
 /**
@@ -45,6 +46,25 @@ class CurrencyParameters
     protected $decimalDigits;
 
     /**
+     * Display names data (names depending on context)
+     * eg: [
+     *     'default' => 'euro',
+     *     'one' => 'euro',
+     *     'other' => 'euros',
+     * ]
+     *
+     * @var string[]
+     */
+    protected $displayNameData;
+
+    /**
+     * Currency id in case it is installed and present in DB
+     *
+     * @var int
+     */
+    protected $id;
+
+    /**
      * Currency ISO 4217 code
      *
      * Example : EUR for euro
@@ -52,20 +72,6 @@ class CurrencyParameters
      * @var string
      */
     protected $isoCode;
-
-    /**
-     * All possible names depending on count
-     *
-     * @var array
-     */
-    protected $displayNameData;
-
-    /**
-     * Currency's symbol
-     *
-     * @var Symbol
-     */
-    protected $symbol;
 
     /**
      * Currency ISO 4217 number
@@ -77,11 +83,11 @@ class CurrencyParameters
     protected $numericIsoCode;
 
     /**
-     * Currency id in case it is installed and present in DB
+     * Currency's symbol
      *
-     * @var int
+     * @var Symbol
      */
-    protected $id;
+    protected $symbol;
 
     /**
      * Get the number of decimal digits for this currency
@@ -91,16 +97,6 @@ class CurrencyParameters
     public function getDecimalDigits()
     {
         return $this->decimalDigits;
-    }
-
-    /**
-     * Get currency's ISO code
-     *
-     * @return string
-     */
-    public function getIsoCode()
-    {
-        return $this->isoCode;
     }
 
     /**
@@ -114,6 +110,27 @@ class CurrencyParameters
     }
 
     /**
+     * Get currency internal id
+     *
+     * @return int
+     *   The currency id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get currency's ISO code
+     *
+     * @return string
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
+    }
+
+    /**
      * Get currency's symbol
      *
      * @return Symbol
@@ -124,7 +141,14 @@ class CurrencyParameters
     }
 
     /**
+     * Get currency's numeric ISO 4217 code.
+     *
+     * eg :
+     * - US Dollar ISO 4217 alphabetic code = USD
+     * - US Dollar ISO 4217 numeric code    = 840
+     *
      * @return int
+     *   The numeric ISO code
      */
     public function getNumericIsoCode()
     {
@@ -132,17 +156,13 @@ class CurrencyParameters
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param int $decimalDigits
+     * Set the number of digits to display for this currency
      *
-     * @return static
+     * @param int $decimalDigits
+     *   The number of digits to use
+     *
+     * @return $this
+     *   Fluent interface
      */
     public function setDecimalDigits($decimalDigits)
     {
@@ -152,21 +172,17 @@ class CurrencyParameters
     }
 
     /**
-     * @param string $isoCode
+     * Set all needed data to display this currency's name in any situation.
+     * 3 types are commonly used :
+     * - default : when talking about the currency itself ("the euro currency")
+     * - one     : when talking about one unit of this currency ("one euro")
+     * - other   : when talking about several units of this currency ("ten euros")
      *
-     * @return static
-     */
-    public function setIsoCode($isoCode)
-    {
-        $this->isoCode = (string)$isoCode;
-
-        return $this;
-    }
-
-    /**
-     * @param array $displayNameData
+     * @param string[] $displayNameData
+     *   The contextualized display names
      *
-     * @return static
+     * @return $this
+     *   Fluent interface
      */
     public function setDisplayNameData($displayNameData)
     {
@@ -179,17 +195,46 @@ class CurrencyParameters
         return $this;
     }
 
-    public function setSymbol($symbol)
+    /**
+     * Set the currency's internal id
+     *
+     * @param int $id
+     *   The currency's internal id
+     *
+     * @return $this
+     *   Fluent interface
+     */
+    public function setId($id)
     {
-        $this->symbol = (string)$symbol;
+        $this->id = (int)$id;
 
         return $this;
     }
 
     /**
-     * @param int $numericIsoCode
+     * Set the currency's ISO 4217 alphabetic code
      *
-     * @return static
+     * @param string $isoCode
+     *   The ISO 4217 alphabetic code
+     *
+     * @return $this
+     *   Fluent interface
+     */
+    public function setIsoCode($isoCode)
+    {
+        $this->isoCode = (string)$isoCode;
+
+        return $this;
+    }
+
+    /**
+     * Set the currency's ISO 4217 numeric code
+     *
+     * @param int $numericIsoCode
+     *   The ISO 4217 numeric code
+     *
+     * @return $this
+     *   Fluent interface
      */
     public function setNumericIsoCode($numericIsoCode)
     {
@@ -198,19 +243,33 @@ class CurrencyParameters
         return $this;
     }
 
-    public function setId($id)
+    /**
+     * Set the currency symbol
+     * This object contains multiple symbol notations, depending on context
+     * eg: default symbol, narrow symbol, etc
+     *
+     * @param Symbol $symbol
+     *   The symbol object
+     *
+     * @return $this
+     *   Fluent notation
+     */
+    public function setSymbol(Symbol $symbol)
     {
-        $this->id = (int)$id;
+        $this->symbol = (string)$symbol;
 
         return $this;
     }
 
+    /**
+     * Validate all the Currency parameters.
+     * If any of the properties is missing or invalid, an exception will be raised.
+     *
+     * @throws Exception
+     *   When a Currency property is missing or invalid
+     */
     public function validateProperties()
     {
-        if (is_null($this->getIsoCode())) {
-            throw new Exception('Alphabetic ISO code must be set');
-        }
-
         if (is_null($this->getDecimalDigits())) {
             throw new Exception('Decimal digits number must be set (' . $this->getIsoCode() . ')');
         }
@@ -219,12 +278,16 @@ class CurrencyParameters
             throw new Exception('Display name data must be set (' . $this->getIsoCode() . ')');
         }
 
-        if (is_null($this->getSymbolData())) {
-            throw new Exception('Symbols must be set (' . $this->getIsoCode() . ')');
+        if (is_null($this->getIsoCode())) {
+            throw new Exception('Alphabetic ISO code must be set');
         }
 
         if (is_null($this->getNumericIsoCode())) {
             throw new Exception('Numeric ISO code must be set (' . $this->getIsoCode() . ')');
+        }
+
+        if (is_null($this->getSymbol())) {
+            throw new Exception('Currency symbol must be set (' . $this->getIsoCode() . ')');
         }
     }
 }

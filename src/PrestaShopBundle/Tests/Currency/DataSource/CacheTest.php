@@ -27,16 +27,15 @@
 namespace PrestaShopBundle\Tests\Currency\DataSource;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Currency\DataSource\CLDR as CLDRCurrencyDataSource;
+use PrestaShopBundle\Currency\DataSource\Cache as CacheCurrencyDataSource;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
-use PrestaShopBundle\Localization\CLDR\DataReader;
 
-class CLDRTest extends TestCase
+class CacheTest extends TestCase
 {
     /**
-     * CLDR currency data source
+     * CLDR currency repository
      *
-     * @var CLDRCurrencyDataSource
+     * @var CacheCurrencyDataSource
      */
     protected $dataSource;
 
@@ -46,15 +45,15 @@ class CLDRTest extends TestCase
      */
     public function setUp()
     {
-        $this->dataSource = new CLDRCurrencyDataSource('fr-FR', new DataReader());
+        $this->dataSource = new CacheCurrencyDataSource('fr-FR');
     }
 
     /**
      * Given any integer id
      * When requesting to the data source a currency having this id
-     * Then the result should be null (because reference CLDR data sources have no clue about internal currency ids)
+     * Then the result should be null (because reference CLDR data sources have no clue about internal currencies ids)
      */
-    public function testGetCurrencyById()
+    public function testGetById()
     {
         $this->assertNull($this->dataSource->getCurrencyById(1));
     }
@@ -87,6 +86,8 @@ class CLDRTest extends TestCase
         $currencyData = $this->dataSource->getCurrencyByIsoCode($currencyCode);
 
         foreach ($expectedData as $property => $value) {
+            // TODO : should be Currency instances, not plain array data
+            // TODO object comparison
             $this->assertSame($value, $currencyData[$property]);
         }
     }

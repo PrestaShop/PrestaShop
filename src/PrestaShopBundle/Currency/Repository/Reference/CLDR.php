@@ -44,13 +44,6 @@ class CLDR implements ReferenceReaderInterface
     const CLDR_MAIN = 'localization/CLDR/core/common/main/';
 
     /**
-     * The contextual locale code.. Data will be returned in this language.
-     *
-     * @var string
-     */
-    protected $localeCode;
-
-    /**
      * The CLDR data reader (reads the CLDR data xml files)
      *
      * @var DataReaderInterface
@@ -60,12 +53,10 @@ class CLDR implements ReferenceReaderInterface
     /**
      * CLDR constructor.
      *
-     * @param                         $localeCode
-     * @param DataReaderInterface     $reader
+     * @param DataReaderInterface $reader
      */
-    public function __construct($localeCode, DataReaderInterface $reader)
+    public function __construct(DataReaderInterface $reader)
     {
-        $this->localeCode = (string)$localeCode;
         $this->setReader($reader);
     }
 
@@ -85,30 +76,23 @@ class CLDR implements ReferenceReaderInterface
         return $this;
     }
 
-    public function getLocaleCode()
-    {
-        return $this->localeCode;
-    }
-
-    public function setLocaleCode($localeCode)
-    {
-        $this->localeCode = (string)$localeCode;
-
-        return $this;
-    }
-
     /**
      * Get currency data by ISO 4217 code
      *
      * @param string $isoCode
+     *   Requested currency code
      *
-     * @return array The currency data
+     * @param        $localeCode
+     *   Locale to use to retrieve currency data
+     *
+     * @return array
+     *   The currency data
      */
-    public function getReferenceCurrencyByIsoCode($isoCode)
+    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode)
     {
         $currency = $this->getReader()->getCurrencyByIsoCode(
             $isoCode,
-            $this->getLocaleCode()
+            $localeCode
         );
 
         return $currency;

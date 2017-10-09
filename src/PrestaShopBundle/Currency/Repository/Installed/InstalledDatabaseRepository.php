@@ -30,6 +30,7 @@ use Doctrine\DBAL\Driver\Connection;
 use PrestaShopBundle\Currency\Currency;
 use PrestaShop\Prestashop\Adapter\Currency\Currency as CurrencyAdapterModel;
 use PrestaShopBundle\Currency\CurrencyFactory;
+use PrestaShopBundle\Currency\CurrencyParameters;
 use PrestaShopBundle\Currency\Exception\CurrencyNotFoundException;
 
 /**
@@ -43,9 +44,6 @@ use PrestaShopBundle\Currency\Exception\CurrencyNotFoundException;
  */
 class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
 {
-
-    protected $connection;
-
     /**
      * @var \Prestashop\PrestaShop\Adapter\Currency\CurrencyRepository
      */
@@ -53,7 +51,6 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
 
     public function __construct(
         InstalledRepositoryInterface $nextRepository = null,
-        Connection $connection,
         $currencyProviderAdapter
     ) {
         $this->setNextRepository($nextRepository);
@@ -71,13 +68,15 @@ class InstalledDatabaseRepository extends AbstractInstalledRepositoryMiddleware
     {
         $currencyAdapterModel = $this->currencyProvider->getById($id);
         if ($currencyAdapterModel->getId() > 0) {
+            $currencyParameters = new CurrencyParameters();
+            $currencyParameters->setId($currencyAdapterModel->getId())
+                ->setIsoCode($currencyAdapterModel->getIsoCode())
+                ->setNumericIsoCode($currencyAdapterModel->getIsoCodeNum())
+                ->setDecimalDigits($currencyAdapterModel->getDecimals())
+                ->setDisplayNameData(array('default' => $currencyAdapterModel->getName()));
+
             $factory  = new CurrencyFactory();
-            $currency = $factory->setId($currencyAdapterModel->getId())
-                                ->setIsoCode($currencyAdapterModel->getIsoCode())
-                                ->setNumericIsoCode($currencyAdapterModel->getIsoCodeNum())
-                                ->setDecimalDigits($currencyAdapterModel->getDecimals())
-                                ->setDisplayName($currencyAdapterModel->getName())
-                                ->build();
+            $currency = $factory->build($currencyParameters);
 
             return $currency;
         }

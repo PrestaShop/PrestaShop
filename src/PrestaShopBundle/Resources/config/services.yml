@@ -60,6 +60,11 @@ services:
         properties:
             container: "@service_container"
 
+
+
+
+
+
     prestashop.cldr.locale.manager:
         class: PrestaShopBundle\Localization\Manager
         arguments:
@@ -99,6 +104,9 @@ services:
     prestashop.cldr.data_reader:
         class: PrestaShopBundle\Localization\CLDR\DataReader
 
+
+
+
     prestashop.cldr.currency.manager:
         class: PrestaShopBundle\Currency\Manager
         arguments:
@@ -106,30 +114,30 @@ services:
             - "@prestashop.cldr.currency.repository.reference"
 
     prestashop.cldr.currency.repository.installed:
-        class: PrestaShopBundle\Currency\Repository
+        class: PrestaShopBundle\Currency\Repository\Installed\InstalledDatabaseRepository
         arguments:
-            - ["@prestashop.cldr.currency.data_source.cache", "@prestashop.cldr.currency.data_source.database"]
+            - "@prestashop.cldr.currency.repository.installed.cache" # Next repository
+            - "@prestashop.adapter.currency_provider"                # Currency provider
+
+    prestashop.cldr.currency.repository.installed.cache:
+        class: PrestaShopBundle\Currency\Repository\Installed\InstalledCacheRepository
+        arguments:
+            - null # No new repository
+            - PrestaShopBundle\Currency\Repository\Installed\PhpArrayCache # Cache item pool
 
     prestashop.cldr.currency.repository.reference:
-        class: PrestaShopBundle\Currency\Repository
+        class: PrestaShopBundle\Currency\Repository\Reference\ReferenceRepository
         arguments:
-            - ["@prestashop.cldr.currency.data_source.cldr"]
+            - "@prestashop.cldr.currency.repository.reference.reader" # Reader
 
-    prestashop.cldr.currency.data_source.cache:
-        class: PrestaShopBundle\Currency\DataSource\Cache
+    prestashop.cldr.currency.repository.reference.reader:
+        class: PrestaShopBundle\Currency\Repository\Reference\CLDR
         arguments:
-            - "%locale%"
 
-    prestashop.cldr.currency.data_source.database:
-        class: PrestaShopBundle\Currency\DataSource\Database
-        arguments:
-            - "%locale%"
 
-    prestashop.cldr.currency.data_source.cldr:
-        class: PrestaShopBundle\Currency\DataSource\CLDR
-        arguments:
-            - "%locale%"
-            - "@prestashop.cldr.data_reader"
+
+
+
 
     # Interfaced services to decorate
     prestashop.core.data_provider.stock_interface:

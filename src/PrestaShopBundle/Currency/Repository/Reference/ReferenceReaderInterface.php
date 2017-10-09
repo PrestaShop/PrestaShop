@@ -40,8 +40,13 @@ interface ReferenceReaderInterface
      * Get currency data by ISO 4217 code
      *
      * @param string $isoCode
+     *   Requested currency code
      *
-     * @return array The currency data
+     * @param        $localeCode
+     *   Locale to use to retrieve currency data
+     *
+     * @return array
+     *   The currency data
      */
-    public function getReferenceCurrencyByIsoCode($isoCode);
+    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode);
 }
