@@ -24,12 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
-use PHPUnit_Framework_TestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
-use PrestaShopBundle\Tests\Utils\Database;
+namespace Tests\TestCase;
 
-class IntegrationTestCase extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use Tests\Unit\ContextMocker;
+use Tests\PrestaShopBundle\Utils\Database;
+
+class IntegrationTestCase extends TestCase
 {
 
     /**

@@ -3,7 +3,7 @@
     "description": "PrestaShop offers a free, fully scalable, Open Source e-commerce solution.",
     "type": "project",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=5.6.0",
         "symfony/symfony": "~3.3",
         "defuse/php-encryption": "~2.0.1",
         "doctrine/dbal": "~2.5.3",
@@ -100,13 +100,13 @@
         "prestashop/decimal": "^1.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.5",
+        "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0",
         "phake/phake": "@stable",
         "friendsofphp/php-cs-fixer": "^1.10"
     },
     "autoload-dev": {
-        "psr-4": { "PrestaShop\\PrestaShop\\Tests\\": "tests/" },
+        "psr-4": { "Tests\\": "tests/" },
         "files": [ "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php" ]
     },
     "autoload": {
@@ -114,7 +114,7 @@
             "PrestaShop\\PrestaShop\\": "src/",
             "PrestaShopBundle\\": "src/PrestaShopBundle/"
         },
-        "classmap": [ "app/AppKernel.php", "app/AppCache.php", "classes/PrestaShopAutoload.php" ]
+        "classmap": [ "app/AppKernel.php", "app/AppCache.php" ]
     },
     "scripts": {
         "post-install-cmd": [
@@ -133,37 +133,37 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB"
+            "Tests\\PrestaShopBundle\\Utils\\Database::createTestDB"
         ],
         "test-all": [
-            "composer test",
-            "composer test-admin",
+            "composer phpunit-legacy",
+            "composer phpunit-admin",
             "composer phpunit-sf",
             "composer phpunit-controllers"
         ],
-        "test": [
-            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-            "@php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml"
+        "phpunit-legacy": [
+          "@composer create-test-db",
+          "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
         ],
-        "test-admin": [
-            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-            "@php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
+        "phpunit-admin": [
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+        ],
+        "phpunit-sf": [
+          "@composer create-test-db",
+          "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+        ],
+        "phpunit-controllers": [
+          "@composer create-test-db",
+          "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
-        "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-        "phpunit-sf": [
-          "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-          "@php -d date.timezone=UTC bin/phpunit -c admin-dev/"
-        ],
-        "phpunit-controllers": [
-          "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-          "@php -d date.timezone=UTC bin/phpunit -c ."
-        ]
+        "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init"
     },
     "config": {
         "platform": {
-            "php": "5.5.9"
+            "php": "5.6.0"
         },
         "sort-packages": true
     },

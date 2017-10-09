@@ -76,6 +76,6 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     private function clearCache()
     {
         $fs = new \Symfony\Component\Filesystem\Filesystem();
-        $fs->remove(_PS_ROOT_DIR_ . '/app/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
+        $fs->remove(_PS_ROOT_DIR_ . '/var/cache/' . (_PS_MODE_DEV_ ? 'dev' : 'prod'));
     }
 }

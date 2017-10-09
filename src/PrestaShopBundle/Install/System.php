@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Install;
 use ConfigurationTest;
 use SymfonyRequirements;
 
-require_once(__DIR__.'/../../../app/SymfonyRequirements.php');
+require_once(__DIR__.'/../../../var/SymfonyRequirements.php');
 
 class System extends AbstractInstall
 {

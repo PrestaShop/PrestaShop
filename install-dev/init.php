@@ -106,6 +106,8 @@ require_once _PS_CORE_DIR_.'/config/alias.php';
 require_once _PS_INSTALL_PATH_.'classes/exception.php';
 require_once _PS_INSTALL_PATH_.'classes/session.php';
 
+\Symfony\Component\Debug\Debug::enable();
+
 @set_time_limit(0);
 if (!@ini_get('date.timezone')) {
     @date_default_timezone_set('Europe/Paris');
