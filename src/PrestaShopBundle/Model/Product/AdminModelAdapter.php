@@ -476,6 +476,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'weight' => $this->product->weight,
                 'additional_shipping_cost' => $this->product->additional_shipping_cost,
                 'selectedCarriers' => $this->getFormProductCarriers(),
+                'additional_delivery_times' => $this->product->additional_delivery_times,
+                'delivery_in_stock' => $this->product->delivery_in_stock,
+                'delivery_out_stock' => $this->product->delivery_out_stock,
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,

@@ -256,6 +256,15 @@ class ProductCore extends ObjectModel
      */
     public $pack_stock_type = 3;
 
+    /** @var integer type of delivery time */
+    public $additional_delivery_times = 0;
+
+    /** @var string delivery in-stock information */
+    public $delivery_in_stock;
+
+    /** @var string delivery out-stock information */
+    public $delivery_out_stock;
+
     public static $_taxCalculationMethod = null;
     protected static $_prices = array();
     protected static $_pricesLevel2 = array();
@@ -336,6 +345,9 @@ class ProductCore extends ObjectModel
             'date_add' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'date_upd' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'pack_stock_type' =>          array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
+            'additional_delivery_times' => array('type' => self::TYPE_INT, 'shop' => true),
+            'delivery_in_stock' =>        array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
+            'delivery_out_stock' =>       array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
 
             /* Lang fields */
             'meta_description' =>         array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
