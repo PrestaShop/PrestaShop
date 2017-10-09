@@ -25,9 +25,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\classes;
+namespace Tests\Integration\classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
 use PrestaShop\PrestaShop\Tests\TestCase\DatabaseDump;
 use Exception;

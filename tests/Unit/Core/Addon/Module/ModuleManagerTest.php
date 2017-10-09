@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
+
+namespace Tests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
@@ -315,7 +316,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->method('trans')
             ->will($this->returnArgument(0));
     }
-    
+
     private function mockDispatcher()
     {
         $this->dispatcherS = new NullDispatcher();

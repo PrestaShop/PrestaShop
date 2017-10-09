@@ -24,10 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
-use PHPUnit_Framework_TestCase;
+namespace Tests\TestCase;
 
-class IntegrationTestCase extends PHPUnit_Framework_TestCase
+class IntegrationTestCase extends \PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass()
     {

@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product\Search;
+namespace Tests\Unit\Core\Product\Search;
 
 use PHPUnit_Framework_Testcase;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;

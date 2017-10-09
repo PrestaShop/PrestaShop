@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes\Tax;
+namespace Tests\Unit\Classes\Tax;
 
 use Address;
 use Phake;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Tax;
 use TaxCalculator;
 use TaxRulesTaxManager;

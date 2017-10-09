@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+namespace Tests\Unit\Classes;
 
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
