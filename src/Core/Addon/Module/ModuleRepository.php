@@ -157,9 +157,15 @@ class ModuleRepository implements ModuleRepositoryInterface
         }
     }
 
+    /**
+     * Setter for the optional PrestaTrust checker
+     * @param PrestaTrustChecker $checker
+     * @return $this
+     */
     public function setPrestaTrustChecker(PrestaTrustChecker $checker)
     {
         $this->prestaTrustChecker = $checker;
+        return $this;
     }
 
     public function __destruct()
@@ -484,7 +490,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $module = new Module($attributes, $disk, $database);
         $this->loadedModules->save($name, $module);
         if ($this->prestaTrustChecker) {
-            $this->prestaTrustChecker->getDetails($module);
+            $this->prestaTrustChecker->loadDetailsIntoModule($module);
         }
         return $module;
     }
