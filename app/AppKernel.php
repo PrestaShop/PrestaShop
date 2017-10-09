@@ -82,8 +82,9 @@ class AppKernel extends Kernel
         if ($this->isParametersFile()) {
             try {
                 $this->getConnection()->connect();
-                $modules = $this->getModuleRepository()->getActiveModules();
-                $modulesPaths = $this->getModuleRepository()->getActiveModulesPaths($modules);
+                $moduleRepository = $this->getModuleRepository();
+                $modules = $moduleRepository->getActiveModules();
+                $modulesPaths = $moduleRepository->getActiveModulesPaths($modules);
             } catch (\Exception $e) {}
         }
 
