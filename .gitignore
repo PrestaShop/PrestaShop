@@ -76,6 +76,7 @@ themes/default-bootstrap/modules/*/mails/*
 
 # Symfony
 
+/bin/
 /.web-server-pid
 /app/config/parameters.yml
 /app/config/parameters.php

@@ -18,7 +18,6 @@ sudo: required
 dist: trusty
 
 php:
-  - 5.4
   - 5.6
   - 7.0
 
@@ -49,10 +48,11 @@ script:
   - bash travis-scripts/install-prestashop
   - php app/console lint:twig src
   - php app/console lint:twig app
-  - composer test
-  - composer test-admin
+  - composer phpunit-legacy
+  - composer phpunit-admin
   - composer phpunit-sf
   - composer phpunit-controllers
+  - bash travis-scripts/install-prestashop
   - bash ./travis-scripts/run-selenium-tests
   - bash ./travis-scripts/run-functional-tests # Must run before starter theme
   - bash ./travis-scripts/test-startertheme

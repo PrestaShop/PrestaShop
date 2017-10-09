@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://www.phpunit.de/manual/current/en/appendixes.configuration.html -->
+<phpunit
+  backupGlobals               = "false"
+  backupStaticAttributes      = "false"
+  colors                      = "true"
+  processIsolation            = "true"
+  bootstrap                   = "bootstrap-sf.php"
+>
+  <php>
+    <server name="KERNEL_DIR" value="app" />
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
+  </php>
+
+  <groups>
+    <exclude>
+      <group>controller</group>
+    </exclude>
+  </groups>
+
+  <testsuites>
+    <testsuite name="PrestaShop Bundle Test Suite">
+      <directory>PrestaShopBundle</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

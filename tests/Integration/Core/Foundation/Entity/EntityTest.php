@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
+namespace Tests\Integration\Core\Foundation\Entity;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Tests\TestCase\IntegrationTestCase;
+use Tests\Unit\ContextMocker;
 use Product;
 
 class EntityTest extends IntegrationTestCase

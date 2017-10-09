@@ -23,16 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Crypto;
 
-use PHPUnit_Framework_TestCase;
+namespace Tests\Unit\Core\Crypto;
+
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class Core_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
+class Core_Crypto_Hashing_Test extends TestCase
 {
     public function setUp()
     {

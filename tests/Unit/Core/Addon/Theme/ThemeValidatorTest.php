@@ -23,15 +23,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Core\Addon;
+
+namespace Tests\Core\Addon;
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeConfiguration;
+use Tests\TestCase\FakeConfiguration;
 use Symfony\Component\Yaml\Parser;
+use PHPUnit\Framework\TestCase;
 use Phake;
 
-class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
+class ThemeValidatorTest extends TestCase
 {
     const NOTICE = '[ThemeValidator] ';
 
