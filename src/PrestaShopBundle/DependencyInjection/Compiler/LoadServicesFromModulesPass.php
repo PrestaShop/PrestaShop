@@ -27,9 +27,7 @@ namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Config\FileLocator;
 
 /**
@@ -54,22 +52,13 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
     private function registerServicesFromModules(ContainerBuilder $container)
     {
         $installedModules = $container->getParameter('kernel.modules');
+        $installedModulesPaths = $container->getParameter('kernel.modules_paths');
 
-        foreach ($this->getModulesPaths() as $modulePath) {
-            if (in_array($modulePath->getFilename(), $installedModules)) {
-                if (file_exists($modulePath.'/config/services.yml')) {
-                    $loader = new YamlFileLoader($container, new FileLocator($modulePath.'/config/'));
-                    $loader->load('services.yml');
-                }
+        foreach ($installedModulesPaths as $moduleName => $modulePath) {
+            if (in_array($moduleName, $installedModules) && file_exists($modulePath.'/config/services.yml')) {
+                $loader = new YamlFileLoader($container, new FileLocator($modulePath.'/config/'));
+                $loader->load('services.yml');
             }
         }
-    }
-
-    /**
-     * @return \Iterator
-     */
-    private function getModulesPaths()
-    {
-        return Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
     }
 }
