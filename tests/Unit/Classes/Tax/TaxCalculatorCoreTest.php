@@ -23,17 +23,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-define('_PS_ROOT_DIR_', __DIR__ . '/..');
-define('_PS_IN_TEST_', true);
-umask(0000); // This will let the permissions be 0777
-if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', __DIR__."/admin-dev");
-}
-if (!defined('PS_ADMIN_DIR')) {
-    define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
-}
 
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
-require_once(dirname(__FILE__).'/../config/defines.inc.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
-require_once(dirname(__FILE__).'/../config/bootstrap.php');
+namespace Tests\Unit\Classes\Tax;
+
+use PHPUnit\Framework\TestCase;
+use Tax;
+use TaxCalculator;
+
+class TaxCalculatorCoreTest extends TestCase
+{
+    public function test_getTotalRate_OK()
+    {
+        $tax = new Tax();
+        $tax->rate = 20.6;
+        $tax2 = new Tax();
+        $tax2->rate = 5.5;
+
+        $tax_calculator = new TaxCalculator(array(
+            $tax, $tax2
+        ), TaxCalculator::COMBINE_METHOD);
+
+        $totalRate = $tax_calculator->getTotalRate();
+
+        $this->assertEquals(26.1, $totalRate);
+    }
+
+    public function test_getTotalRate_Bug()
+    {
+        $tax = new Tax();
+        $tax->rate = 20.6;
+        $tax2 = new Tax();
+        $tax2->rate = 5.5;
+
+        $tax_calculator = new TaxCalculator(array(
+            $tax, $tax2
+        ), TaxCalculator::ONE_AFTER_ANOTHER_METHOD);
+
+        $totalRate = $tax_calculator->getTotalRate();
+
+        $this->assertEquals(27.233, $totalRate);
+    }
+}

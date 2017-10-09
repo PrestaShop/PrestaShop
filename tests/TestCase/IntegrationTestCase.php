@@ -27,8 +27,9 @@
 namespace Tests\TestCase;
 
 use Tests\PrestaShopBundle\Utils\Database;
+use PHPUnit\Framework\TestCase;
 
-class IntegrationTestCase extends \PHPUnit_Framework_TestCase
+class IntegrationTestCase extends TestCase
 {
     public static function setUpBeforeClass()
     {

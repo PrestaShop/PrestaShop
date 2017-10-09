@@ -34,8 +34,9 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
+use PHPUnit\Framework\TestCase;
 
-class ThemeExporterTest extends \PHPUnit_Framework_TestCase
+class ThemeExporterTest extends TestCase
 {
     const THEME_NAME = 'theme';
 

@@ -24,11 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\classes;
+namespace Tests\Unit\Classes;
 
 use PhpEncryptionLegacyEngine;
+use PHPUnit\Framework\TestCase;
 
-class PhpEncryptionLegacyEngineTest extends \PHPUnit_Framework_TestCase
+class PhpEncryptionLegacyEngineTest extends TestCase
 {
     const FOO = 'foo';
     private $engine;

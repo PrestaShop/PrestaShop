@@ -24,24 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\classes;
-
-use PhpEncryption;
-
-class PhpEncryptionTest extends \PHPUnit_Framework_TestCase
-{
-    const FOO = 'foo';
-    private $engine;
-
-    public function setUp()
-    {
-        $randomKey = PhpEncryption::createNewRandomKey();
-        $this->engine = new PhpEncryption($randomKey);
-    }
-
-    public function testEncryptAndDecrypt()
-    {
-        $encryptedValue = $this->engine->encrypt(self::FOO);
-        $this->assertSame(self::FOO, $this->engine->decrypt($encryptedValue));
-    }
+umask(0000); // This will let the permissions be 0775
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
+if (!defined('PS_ADMIN_DIR')) {
+    define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
+}
+
+require_once(dirname(__FILE__).'/../config/config.inc.php');
+
+$loader = require_once(dirname(__FILE__).'/../var/bootstrap.php.cache');

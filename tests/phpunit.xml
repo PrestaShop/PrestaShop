@@ -1,21 +1,26 @@
-<phpunit bootstrap="bootstrap.php">
+<phpunit
+  backupGlobals               = "false"
+  backupStaticAttributes      = "false"
+  colors                      = "true"
+  convertErrorsToExceptions   = "true"
+  convertNoticesToExceptions  = "true"
+  convertWarningsToExceptions = "true"
+  processIsolation            = "true"
+  stopOnFailure               = "false"
+  syntaxCheck                 = "true"
+  bootstrap                   =" bootstrap.php"
+>
     <php>
-        <server name="KERNEL_DIR" value="../app/" />
+        <server name="KERNEL_DIR" value="app/" />
         <env name="SYMFONY_ENV" value="test"/>
         <env name="kernel.environment" value="test" />
+        <const name="_PS_IN_TEST_" value="1" />
     </php>
-    <groups>
-        <exclude>
-            <group>admin</group>
-            <group>demo</group>
-            <group>api</group>
-        </exclude>
-    </groups>
     <testsuites>
-        <testsuite name="Unit">
+        <testsuite name="Unit tests">
             <directory>Unit</directory>
         </testsuite>
-        <testsuite name="Integration">
+        <testsuite name="Integration tests">
             <directory>Integration</directory>
         </testsuite>
     </testsuites>

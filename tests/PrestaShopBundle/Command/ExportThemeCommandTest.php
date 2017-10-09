@@ -28,8 +28,9 @@ namespace Tests\PrestaShopBundle\Command;
 
 use PrestaShopBundle\Command\ExportThemeCommand;
 use Symfony\Component\Console\Tester\CommandTester;
+use PHPUnit\Framework\TestCase;
 
-class ExportThemeCommandTest extends \PHPUnit_Framework_TestCase
+class ExportThemeCommandTest extends TestCase
 {
     public function testExecute()
     {

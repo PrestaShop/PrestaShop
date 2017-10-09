@@ -30,9 +30,10 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
 use Tests\TestCase\FakeConfiguration;
 use Symfony\Component\Yaml\Parser;
+use PHPUnit\Framework\TestCase;
 use Phake;
 
-class ThemeValidatorTest extends \PHPUnit_Framework_TestCase
+class ThemeValidatorTest extends TestCase
 {
     const NOTICE = '[ThemeValidator] ';
 

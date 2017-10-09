@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\classes\tax;
+namespace Tests\Unit\Classes\Tax;
 
 use Tests\TestCase\UnitTestCase;
 use AverageTaxOfProductsTaxCalculator;

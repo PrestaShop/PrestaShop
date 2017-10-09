@@ -28,8 +28,9 @@ namespace Tests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
+use PHPUnit\Framework\TestCase;
 
-class ModuleManagerTest extends \PHPUnit_Framework_TestCase
+class ModuleManagerTest extends TestCase
 {
     const UNINSTALLED_MODULE = "uninstalled-module";
     const INSTALLED_MODULE = "installed-module";
@@ -160,29 +161,6 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->adminModuleProviderS;
-
-        $installedModule = [
-            self::INSTALLED_MODULE, [
-                'installed' => 1,
-                'active' => true
-            ]
-        ];
-
-        $nonInstalledModule = [
-            self::UNINSTALLED_MODULE, [
-                'installed' => 0,
-                'active' => false
-            ]
-        ];
-
-        $findByNameReturnValues = [
-            $installedModule,
-            $nonInstalledModule
-        ];
-        $this->adminModuleProviderS
-            ->method('findByName')
-            ->will($this->returnValueMap($findByNameReturnValues));
         $this->adminModuleProviderS
             ->method('isAllowedAccess')
             ->willReturn(true);
@@ -247,12 +225,6 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->willReturn(true);
         $this->moduleUpdaterS
             ->method('upgrade')
-            ->willReturn(true);
-        $this->moduleUpdaterS
-            ->method('installTabs')
-            ->willReturn(true);
-        $this->moduleUpdaterS
-            ->method('uninstallTabs')
             ->willReturn(true);
     }
 

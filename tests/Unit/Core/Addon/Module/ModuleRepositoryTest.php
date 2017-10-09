@@ -107,19 +107,18 @@ class ModuleRepositoryTest extends UnitTestCase
             ->method('trans')
             ->will($this->returnArgument(0));
 
-        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('getCatalogModulesNames'),
-            array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub)
-        );
+        $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
+            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS))
+            ->setMethods(array('getCatalogModulesNames'))
+            ->getMock()
+        ;
 
         $this->adminModuleDataProviderStub
             ->method('getCatalogModulesNames')
             ->willReturn(array());
 
-        $this->moduleRepositoryStub = $this->getMock(
-            'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
-            array('readCacheFile', 'generateCacheFile'),
-            array(
+        $this->moduleRepositoryStub = $this->getMockBuilder('PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository')
+            ->setConstructorArgs(array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
                 new ModuleDataUpdater(
@@ -134,8 +133,9 @@ class ModuleRepositoryTest extends UnitTestCase
                 ),
                 new FakeLogger(),
                 $this->translatorStub
-            )
-        );
+            ))
+            ->setMethods(array('readCacheFile', 'generateCacheFile'))
+        ;
 
         /*
          * Mock function 'readCacheFile()' to disable the cache

@@ -28,8 +28,9 @@ namespace Tests\PrestaShopBundle\Translation\Factory;
 
 use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
+use PHPUnit\Framework\TestCase;
 
-class ThemeTranslationsFactoryTest extends \PHPUnit_Framework_TestCase
+class ThemeTranslationsFactoryTest extends TestCase
 {
     const TEST_LOCALE = 'ab-CD';
 

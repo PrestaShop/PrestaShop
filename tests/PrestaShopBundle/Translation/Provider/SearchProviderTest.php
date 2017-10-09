@@ -27,8 +27,9 @@
 namespace Tests\PrestaShopBundle\Translation\Provider;
 
 use PrestaShopBundle\Translation\Provider\SearchProvider;
+use PHPUnit\Framework\TestCase;
 
-class SearchProviderTest extends \PHPUnit_Framework_TestCase
+class SearchProviderTest extends TestCase
 {
     // @see /resources/translations/en-US/AdminActions.en-US.xlf
     private $provider;

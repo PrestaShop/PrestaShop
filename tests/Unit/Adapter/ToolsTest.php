@@ -26,10 +26,10 @@
 namespace Tests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PHPUnit\Framework\TestCase;
 
-class ToolsTest extends \PHPUnit_Framework_TestCase
+class ToolsTest extends TestCase
 {
-
     /**
      * Given two numbers with arbitrary precision
      * When calling Tools:bcAdd with those numbers and a specific precision
