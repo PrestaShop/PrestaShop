@@ -101,7 +101,7 @@ class ProductCombinationBulk extends CommonAbstractType
         ))
         ->add('low_stock_alert', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'required' => false,
-            'label' => $this->translator->trans('Send me an email when the quantity is under this level', array(), 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
         ));
 
     }

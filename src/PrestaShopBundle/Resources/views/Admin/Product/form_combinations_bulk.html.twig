@@ -81,7 +81,7 @@
     {{ form_widget(form.low_stock_threshold) }}
   </div>
 
-  <div class="col-lg-4 col-md-3 col-sm-6">
+  <div class="col-lg-4 col-md-3 col-sm-6 widget-checkbox-inline">
     {{ form_errors(form.low_stock_alert) }}
     {{ form_widget(form.low_stock_alert) }}
     <span class="help-box" data-toggle="popover" data-content="{{ 'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to Advanced Parameters > Team'|trans({}, 'Admin.Catalog.Feature') }}" ></span>
