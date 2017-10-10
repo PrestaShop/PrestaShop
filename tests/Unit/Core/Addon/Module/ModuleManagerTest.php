@@ -258,7 +258,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->disableOriginalConstructor()
+            ->setConstructorArgs(array(array(), array(), array()))
             ->getMock();
         $moduleS
             ->method('onInstall')
