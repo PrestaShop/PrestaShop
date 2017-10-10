@@ -72,7 +72,7 @@ class DebugMode
      */
     public function enable()
     {
-        $this->changePsModeDevValue('true');
+        return $this->changePsModeDevValue('true');
     }
 
     /**
@@ -82,7 +82,7 @@ class DebugMode
      */
     public function disable()
     {
-        $this->changePsModeDevValue('false');
+        return $this->changePsModeDevValue('false');
     }
 
     /**
@@ -109,6 +109,7 @@ class DebugMode
      * Update Debug Mode value in main defines file
      *
      * @param string $value should be "true" or "false"
+     * @return int the debug mode
      */
     private function updateDebugModeValueInMainFile($value)
     {
@@ -136,6 +137,7 @@ class DebugMode
      * Update Debug Mode value in custom defines file
      *
      * @param string $value should be "true" or "false"
+     * @return int the debug mode
      */
     private function updateDebugModeValueInCustomFile($value)
     {
@@ -162,6 +164,7 @@ class DebugMode
      * Change value of _PS_MODE_DEV_ constant
      *
      * @param string $value should be "true" or "false"
+     * @return int the debug mode
      */
     private function changePsModeDevValue($value)
     {

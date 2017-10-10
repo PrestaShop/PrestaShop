@@ -198,11 +198,10 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     private function manageApacheOptimization($enabled)
     {
         $errors = array();
-        $isActuallyEnabled = (bool) $this->configuration->get('PS_HTACCESS_CACHE_CONTROL');
+        $isCurrentlyEnabled = (bool) $this->configuration->get('PS_HTACCESS_CACHE_CONTROL');
 
         // feature activation
-        if (false === $isActuallyEnabled && true === $enabled) {
-            dump($this->tools->generateHtaccess());
+        if (false === $isCurrentlyEnabled && true === $enabled) {
             if ($this->tools->generateHtaccess()) {
                 $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', true);
             } else {
@@ -221,7 +220,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
             }
         }
 
-        if (true === $isActuallyEnabled && false === $enabled) {
+        if (true === $isCurrentlyEnabled && false === $enabled) {
             $this->configuration->set('PS_HTACCESS_CACHE_CONTROL', false);
         }
 

@@ -51,6 +51,7 @@ services:
         arguments:
             - '@prestashop.adapter.debug_mode'
             - '@prestashop.adapter.legacy.configuration'
+            - '%ps_config_dir%/defines.inc.php'
 
     prestashop.adapter.optional_features.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'
