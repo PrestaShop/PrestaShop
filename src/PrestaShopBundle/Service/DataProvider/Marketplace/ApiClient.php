@@ -134,9 +134,9 @@ class ApiClient
     /**
      * Prepare and call API for PrestaTrust integrity and property module details
      *
-     * @param string $hash
-     * @param string $sc_address
-     * @return object
+     * @param string $hash Hash of module files
+     * @param string $sc_address Smart contract (Module licence)
+     * @return object List of checks made and their results
      */
     public function getPrestaTrustCheck($hash, $sc_address)
     {
@@ -191,7 +191,7 @@ class ApiClient
      * Call API for module ZIP content (= download)
      * 
      * @param int $moduleId
-     * @return binary content
+     * @return string binary content (zip format)
      */
     public function getModuleZip($moduleId)
     {
