@@ -108,7 +108,7 @@ class ModuleRepositoryTest extends UnitTestCase
             ->will($this->returnArgument(0));
 
         $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
-            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS))
+            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub))
             ->setMethods(array('getCatalogModulesNames'))
             ->getMock()
         ;

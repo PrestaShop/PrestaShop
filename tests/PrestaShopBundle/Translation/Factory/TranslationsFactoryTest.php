@@ -30,6 +30,9 @@ use PrestaShopBundle\Translation\Factory\TranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class TranslationsFactoryTest extends TestCase
 {
     private $factory;

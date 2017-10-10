@@ -32,6 +32,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\TranslationToolsBundle\Translation\Dumper\PhpDumper;
 
+/**
+ * @group sf
+ */
 class ThemeExtractorTest extends KernelTestCase
 {
     private $container;

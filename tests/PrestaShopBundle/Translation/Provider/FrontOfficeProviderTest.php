@@ -29,6 +29,9 @@ namespace Tests\PrestaShopBundle\Translation\Provider;
 use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class FrontOfficeProviderTest extends TestCase
 {
     // @see /resources/translations/en-US/ShopNotificationsWarning.en-US.xlf

@@ -29,6 +29,9 @@ namespace Tests\PrestaShopBundle\Translation\Provider;
 use PrestaShopBundle\Translation\Provider\BackOfficeProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class BackOfficeProviderTest extends TestCase
 {
     // @see /resources/translations/en-US/AdminActions.en-US.xlf
