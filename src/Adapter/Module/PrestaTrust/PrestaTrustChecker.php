@@ -76,7 +76,6 @@ class PrestaTrustChecker
      * Add the PrestaTrust data for a module, if it exists
      * 
      * @param Module $module
-     * @return void
      */
     public function loadDetailsIntoModule(Module $module)
     {
@@ -95,7 +94,7 @@ class PrestaTrustChecker
      */
     public function checkModule(Module $module)
     {
-        if (!$this->isModuleCompliant($module)) {
+        if (!$this->isCompliant($module)) {
             return;
         }
 
@@ -182,7 +181,7 @@ class PrestaTrustChecker
      * @param Module $module
      * @return boolean
      */
-    protected function isModuleCompliant(Module $module)
+    protected function isCompliant(Module $module)
     {
         if (!$module->attributes->has('author_address')) {
             return false;
@@ -222,7 +221,7 @@ class PrestaTrustChecker
      * @param string $hash Calculted hash from the modules files
      * @param string $shop_url Shop domain
      * @param string $contract Smart contract address from module
-     * @return array
+     * @return array of check list results.
      */
     protected function requestCheck($hash, $shop_url, $contract)
     {
