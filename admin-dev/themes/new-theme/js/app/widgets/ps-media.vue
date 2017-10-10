@@ -26,7 +26,7 @@
   <div class="media">
     <img v-if="displayThumb" :src="thumbnail" class="thumbnail d-flex"  />
     <div v-else class="no-img"></div>
-    <div class="ml-1 desc media-body">
+    <div class="ml-2 desc media-body">
       <slot />
     </div>
   </div>
