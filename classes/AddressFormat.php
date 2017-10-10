@@ -628,7 +628,7 @@ class AddressFormatCore extends ObjectModel
      */
     public static function getFieldsRequired()
     {
-        $address = new Address();
+        $address = new CustomerAddress();
 
         return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
     }
