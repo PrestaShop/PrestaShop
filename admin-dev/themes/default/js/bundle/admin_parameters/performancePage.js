@@ -47,7 +47,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
             'server_ip': serverIpInput.value,
             'server_port': serverPortInput.value,
             'server_weight': serverWeightInput.value,
-        }
+        };
     };
 
     this.createRow = function(params) {
@@ -108,6 +108,7 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
       }
     }
 
+    /* global $ */
     this.send = function(url, method, params, callback) {
         return $.ajax({
             url: url,
