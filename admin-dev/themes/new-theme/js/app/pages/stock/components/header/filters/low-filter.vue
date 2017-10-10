@@ -24,24 +24,24 @@
  *-->
 
 <template>
-	<div class="row py-2">
+  <div class="row py-2">
     <div class="col row ml-1">
-		  <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck" />
-		  <p class="ml-2 low-filter-label" @click="onLabelClick">{{trans('filter_low_stock')}}</p>
+      <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck"/>
+      <p class="ml-2 low-filter-label" @click="onLabelClick">{{trans('filter_low_stock')}}</p>
     </div>
-    <div class="col">
+    <div class="col mr-3">
       <a class="float-sm-right ml-2" :href="stockImportUrl" target="_blank">
-        <span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
-          <i class="material-icons">cloud_download</i>
-        </span>
+				<span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
+					<i class="material-icons">cloud_download</i>
+				</span>
       </a>
       <a class="float-sm-right" :href="stockExporttUrl">
-        <span data-toggle="pstooltip" :title="stockExportTitle" data-html="true" data-placement="top">
-          <i class="material-icons">cloud_upload</i>
-        </span>
+				<span data-toggle="pstooltip" :title="stockExportTitle" data-html="true" data-placement="top">
+					<i class="material-icons">cloud_upload</i>
+				</span>
       </a>
+    </div>
   </div>
-	</div>
 </template>
 
 <script>

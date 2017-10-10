@@ -24,7 +24,7 @@
  *-->
 <template>
   <tr :class="{'low-stock':lowStock}">
-    <td class="d-flex align-items-center pr-1">
+    <td class="d-flex align-items-center">
       <PSCheckbox
         :id="id"
         :ref="id"
@@ -32,7 +32,7 @@
         @checked="productChecked"
       />
       <PSMedia
-        class="ml-1"
+        class="d-flex align-items-center ml-2"
         :thumbnail="thumbnail"
       >
         <p>
@@ -65,7 +65,7 @@
     <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-sm-left pl-lg-4 pl-md-0" :class="{'stock-warning':lowStock}">
+    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_available_quantity }}
       <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>
@@ -171,7 +171,7 @@
   };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass" type="text/scss" scoped>
   @import "../../../../../../scss/config/_settings.scss";
   .qty-update {
     color: $brand-primary;

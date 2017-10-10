@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <nav class="float-sm-right mt-1" v-if="displayPagination">
+  <nav class="float-sm-right mt-1 mr-2" v-if="displayPagination">
     <ul class="pagination" :class="{'multi':isMultiPagination}">
       <li v-if="isMultiPagination" class="page-item previous">
         <a v-show="activeLeftArrow" class="float-left page-link" @click="prev($event)" href="#">

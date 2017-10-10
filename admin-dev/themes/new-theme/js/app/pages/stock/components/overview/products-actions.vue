@@ -35,7 +35,7 @@
         :isIndeterminate="isIndeterminate"
         @checked="bulkChecked"
       />
-      <div class="ml-1">
+      <div class="ml-2">
         <small>{{trans('title_bulk')}}</small>
         <PSNumber
           class="bulk-qty"

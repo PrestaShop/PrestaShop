@@ -24,8 +24,9 @@
  *-->
 <template>
   <tr>
-    <td>
+    <td class="d-flex align-items-center">
       <PSMedia
+        class="d-flex align-items-center"
         :thumbnail="thumbnail"
       >
         <p>
