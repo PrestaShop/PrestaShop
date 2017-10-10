@@ -1,7 +1,7 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block perfs_memcache_servers %}
-<div class="form-group">
+<div class="form-group memcache">
     <a
         class="btn btn-default"
         data-toggle="collapse"
@@ -32,13 +32,13 @@
 
     <div class="form-group">
         <div class="float-right">
-            <a href="#" onclick="app.addServer();" class="btn btn-primary">{{ 'Add Server'|trans }}</a>
-            <a href="#" onclick="app.testServer();" class="btn btn-primary">{{ 'Test Server'|trans }}</a>
+            <button id="add-server-btn" class="btn btn-primary">{{ 'Add Server'|trans }}</button>
+            <button id="test-server-btn" class="btn btn-primary">{{ 'Test Server'|trans }}</button>
         </div>
     </div>
 </div>
 
-<div id="servers-list">
+<div id="servers-list" class="memcache">
     <div class="form-group">
         <table class="table" id="servers-table">
             <thead>
@@ -59,7 +59,7 @@
                     <td>{{ server.weight }}</td>
                     <td>
                         {% set removeMsg = 'Do you really want to remove the server %serverIp%:%serverPort% ?'|trans({'%serverIp%': server.ip, '%serverPort%': server.port}, 'Admin.Advparameters.Notification')|json_encode|raw  %}
-                        <a class="btn btn-default" href="#" onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});"><i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}</a>
+                        <a class="btn btn-default" href="" onclick="app.removeServer({{ server.id_memcached_server }}, {{ removeMsg }});"><i class="material-icons">remove_circle</i> {{ 'Remove'|trans({}, 'Admin.Actions') }}</a>
                     </td>
                 </tr>
             {% endfor %}

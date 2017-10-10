@@ -89,16 +89,24 @@ function PerformancePage(addServerUrl, removeServerUrl, testServerUrl) {
     };
 
     this.testServer = function() {
-        this.send(this.getTestServerUrl(), 'GET', this.getFormValues(), function(results) {
-            if (!results.hasOwnProperty('error')) {
-                console.log('Connection OK');
+        var app = this;
 
+        this.send(this.getTestServerUrl(), 'GET', this.getFormValues(), function(results) {
+            if (!results.hasOwnProperty('error') || results.test === "false") {
+                app.addClass('is-invalid');
                 return;
             }
 
-            console.log('Sad story bro');
+            app.addClass('is-valid');
         });
     };
+
+    this.addClass = function(className) {
+      var serverFormInputs = document.querySelectorAll('#server-form input[type=text]');
+      for (var i = 0; i < serverFormInputs.length; i++) {
+        serverFormInputs[i].className = 'form-control '+ className;
+      }
+    }
 
     this.send = function(url, method, params, callback) {
         return $.ajax({

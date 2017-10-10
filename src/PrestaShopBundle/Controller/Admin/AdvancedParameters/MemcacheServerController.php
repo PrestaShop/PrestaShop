@@ -96,6 +96,10 @@ class MemcacheServerController extends FrameworkBundleAdminController
             $postValues->has('server_ip')
             && $postValues->has('server_port')
             && $postValues->has('server_weight')
+            && $this->getMemcacheManager()->testConfiguration(
+                $postValues->get('server_ip'),
+                $postValues->getInt('server_port')
+            )
         ) {
             $server = $this->getMemcacheManager()
                 ->addServer(

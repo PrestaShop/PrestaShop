@@ -92,9 +92,7 @@ class MemcacheServerManager
             return false === in_array('255.255.255', $memcached->getVersion(), true);
         }
 
-        $memcache = new Memcache();
-
-        return $memcache->connect($serverIp, $serverHost);
+        return true === @memcache_connect($serverIp, $serverHost);
     }
 
     /**
