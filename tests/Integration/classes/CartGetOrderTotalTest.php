@@ -58,7 +58,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         // Save the database to restore it later: we're not the only test running so let's leave things
         // the way we found them.
-        self::$dump = DatabaseDump::create();
+        //self::$dump = DatabaseDump::create();
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();
 
@@ -79,7 +79,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
     {
         // After the test, we restore the database in the state it was
         // before we started.
-        self::$dump->restore();
+        //self::$dump->restore();
     }
 
     /**
