@@ -31,7 +31,9 @@ use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
+ * @group sf
  * Tests about admin CommonController and its actions.
+ *
  */
 class HookDispatcherTest extends KernelTestCase
 {

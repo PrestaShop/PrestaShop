@@ -36,6 +36,9 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\MessageCatalogue;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class ThemeExporterTest extends TestCase
 {
     const THEME_NAME = 'theme';

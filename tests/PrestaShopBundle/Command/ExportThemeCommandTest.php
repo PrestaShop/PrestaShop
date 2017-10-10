@@ -30,6 +30,9 @@ use PrestaShopBundle\Command\ExportThemeCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class ExportThemeCommandTest extends TestCase
 {
     public function testExecute()

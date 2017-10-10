@@ -134,9 +134,10 @@
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
         "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-        "tests": "@php ./vendor/bin/phpunit -c tests/phpunit.xml tests/",
-        "sf-tests": "@php ./vendor/bin/phpunit -c tests/sf-tests.xml tests/",
-        "old-controllers-tests": "@php ./vendor/bin/phpunit -c tests/old-controllers.xml tests/"
+        "phpunit-legacy": "@php ./vendor/bin/phpunit -c tests/phpunit.xml",
+        "phpunit-admin": "@php ./vendor/bin/phpunit -c tests/phpunit-admin.xml",
+        "phpunit-sf": "@php ./vendor/bin/phpunit -c tests/sf-tests.xml",
+        "phpunit-controllers": "@php ./vendor/bin/phpunit -c tests/old-controllers.xml"
     },
     "config": {
         "platform": {

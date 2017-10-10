@@ -29,6 +29,9 @@ namespace Tests\PrestaShopBundle\Translation\Provider;
 use PrestaShopBundle\Translation\Provider\ModuleProvider;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class ModuleProviderTest extends TestCase
 {
     // @see /resources/translations/en-US/ModulesWirePaymentAdmin.en-US.xlf

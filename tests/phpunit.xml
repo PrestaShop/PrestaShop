@@ -1,24 +1,20 @@
-<phpunit
-  backupGlobals               = "false"
-  backupStaticAttributes      = "false"
-  colors                      = "true"
-  convertErrorsToExceptions   = "true"
-  convertNoticesToExceptions  = "true"
-  convertWarningsToExceptions = "true"
-  processIsolation            = "true"
-  stopOnFailure               = "false"
-  syntaxCheck                 = "true"
-  bootstrap                   =" bootstrap.php"
->
+<phpunit bootstrap="bootstrap.php">
     <php>
-        <server name="KERNEL_DIR" value="app" />
-        <const name="_PS_IN_TEST_" value="1" />
+        <server name="KERNEL_DIR" value="../app/" />
     </php>
+    <groups>
+        <exclude>
+            <group>admin</group>
+            <group>demo</group>
+            <group>api</group>
+            <group>sf</group>
+        </exclude>
+    </groups>
     <testsuites>
-        <testsuite name="Unit tests">
+        <testsuite name="Unit">
             <directory>Unit</directory>
         </testsuite>
-        <testsuite name="Integration tests">
+        <testsuite name="Integration">
             <directory>Integration</directory>
         </testsuite>
     </testsuites>

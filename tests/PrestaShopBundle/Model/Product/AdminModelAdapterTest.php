@@ -30,6 +30,9 @@ use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
 use Product;
 
+/**
+ * @group sf
+ */
 class AdminModelAdapterTest extends KernelTestCase
 {
     /* @var $adminModelAdapter AdminModelAdapter */

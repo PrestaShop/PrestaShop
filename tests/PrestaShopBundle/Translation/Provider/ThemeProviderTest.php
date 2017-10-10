@@ -30,6 +30,9 @@ use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class ThemeProviderTest extends TestCase
 {
     private $provider;

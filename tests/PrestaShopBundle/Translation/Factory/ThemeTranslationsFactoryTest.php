@@ -30,6 +30,9 @@ use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
 use Symfony\Component\Translation\MessageCatalogue;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @group sf
+ */
 class ThemeTranslationsFactoryTest extends TestCase
 {
     const TEST_LOCALE = 'ab-CD';
