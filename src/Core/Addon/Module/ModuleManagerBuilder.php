@@ -191,7 +191,8 @@ class ModuleManagerBuilder
                 self::$addonsDataProvider,
                 self::$categoriesProvider,
                 self::$moduleDataProvider,
-                self::$cacheProvider
+                self::$cacheProvider,
+                Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
 
