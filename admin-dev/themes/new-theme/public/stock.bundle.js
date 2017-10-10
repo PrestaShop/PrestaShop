@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8087066dd965eab78136"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d7a5765ad2af9ca12f1d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -33429,7 +33429,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.table {\n  font-size: .9em;\n  table-layout: fixed;\n  width: 100%;\n  white-space: nowrap;\n}\n.table thead {\n    border: none;\n}\n.table thead th {\n      border: none;\n      border-bottom: 2px solid #25b9d7;\n      color: #363a41;\n      padding: 10px 0;\n}\n.table thead th .material-icons {\n        margin-left: 5px;\n        vertical-align: middle;\n}\n.table thead th.thead-title {\n        padding-left: 98px;\n}\n.table thead th:last-child .material-icons {\n        color: #6c868e;\n        margin-right: 5px;\n}\n.table tbody {\n    border: none;\n}\n.table tbody tr {\n      border-bottom: #BBCDD2 1px solid;\n}\n", ""]);
+exports.push([module.i, "\n.table {\n  font-size: .9em;\n  table-layout: fixed;\n  width: 100%;\n  white-space: nowrap;\n}\n.table thead {\n    border: none;\n}\n.table thead th {\n      border: none;\n      border-bottom: 2px solid #25b9d7;\n      color: #363a41;\n      padding: 10px 0;\n}\n.table thead th.thead-title {\n        padding-left: 88px;\n}\n.table thead th:last-child {\n        overflow: hidden;\n        text-overflow: ellipsis;\n}\n.table thead th:last-child .material-icons {\n          margin-right: 5px;\n}\n.table tbody {\n    border: none;\n}\n.table tbody tr {\n      border-bottom: #BBCDD2 1px solid;\n}\n", ""]);
 
 // exports
 
@@ -33471,7 +33471,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.stock-header[data-v-1b577394] {\n  position: fixed;\n  top: 40px;\n  background: white;\n  width: 100%;\n  z-index: 3;\n}\n", ""]);
+exports.push([module.i, "\n.stock-header[data-v-1b577394] {\n  position: fixed;\n  top: 39px;\n  background: white;\n  width: 100%;\n  z-index: 3;\n  margin-left: -15px;\n}\n", ""]);
 
 // exports
 
@@ -33557,7 +33557,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header-toolbar {\n  z-index: 0;\n  height: 120px;\n}\n.stock-app {\n  padding-top: 3em;\n}\n.table tr td {\n  border: none;\n  padding: 5px 5px 5px;\n  vertical-align: top;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table tr td:not(.qty-spinner) {\n    padding-top: 14px;\n}\n", ""]);
+exports.push([module.i, "\n.header-toolbar {\n  height: 0;\n  border: none;\n}\n.header-toolbar .title {\n    display: none;\n}\n.stock-app {\n  padding: 3em 0 0 0;\n}\n.table td {\n  border: none;\n  padding: 5px 5px 5px;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table thead th {\n  padding: 5px inherit;\n  vertical-align: middle;\n}\n.table thead th .material-icons {\n    color: #6c868e;\n    vertical-align: middle;\n}\n.table td:first-child p {\n  margin-bottom: 0;\n}\n", ""]);
 
 // exports
 
@@ -33585,7 +33585,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 exports.i(__webpack_require__(313), "");
 
 // module
-exports.push([module.i, "\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 1px;\n    right: 1px;\n    border: none;\n    height: 31px;\n    width: 31px;\n    background: #25b9d7;\n    z-index: 2;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n  cursor: pointer;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n.ui-widget.ui-widget-content[data-v-599c0dc5] {\n  border: none;\n  border-radius: 0;\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 1px;\n    right: 26px;\n    border: none;\n    height: 32px;\n    width: 32px;\n    background: #25b9d7;\n    z-index: 2;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n  cursor: pointer;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -33599,7 +33599,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\ninput[type=number][data-v-5cc3bac0]::-webkit-inner-spin-button,\ninput[type=number][data-v-5cc3bac0]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n.danger[data-v-5cc3bac0] {\n  border: 1px solid #c05c67;\n  background-color: #fff;\n  color: #363a41;\n}\n.danger[data-v-5cc3bac0]:focus {\n    outline: none;\n}\n.ps-number[data-v-5cc3bac0] {\n  position: relative;\n}\n.ps-number .ps-number-button[data-v-5cc3bac0] {\n    position: absolute;\n    top: 1px;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    right: 30px;\n    cursor: pointer;\n    line-height: 17px;\n    transition: all 0.2s ease;\n}\n.product-actions .ps-number .ps-number-button[data-v-5cc3bac0] {\n      right: 7px;\n}\n.ps-number .ps-number-up[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C7\";\n    font-size: 20px;\n    color: #363a41;\n    position: relative;\n}\n.ps-number .ps-number-down[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C5\";\n    font-size: 20px;\n    color: #363a41;\n    bottom: 6px;\n    position: relative;\n}\n", ""]);
+exports.push([module.i, "\ninput[type=number][data-v-5cc3bac0]::-webkit-inner-spin-button,\ninput[type=number][data-v-5cc3bac0]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\ninput[type=number][data-v-5cc3bac0] {\n  -moz-appearance: textfield;\n}\n.danger[data-v-5cc3bac0] {\n  border: 1px solid #c05c67;\n  background-color: #fff;\n  color: #363a41;\n}\n.danger[data-v-5cc3bac0]:focus {\n    outline: none;\n}\n.ps-number[data-v-5cc3bac0] {\n  position: relative;\n  width: 95px;\n}\n.ps-number .ps-number-button[data-v-5cc3bac0] {\n    position: absolute;\n    top: 1px;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    right: 30px;\n    cursor: pointer;\n    line-height: 17px;\n    transition: all 0.2s ease;\n}\n.product-actions .ps-number .ps-number-button[data-v-5cc3bac0] {\n      right: 7px;\n}\n.ps-number .ps-number-up[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C7\";\n    font-size: 20px;\n    color: #363a41;\n    position: relative;\n}\n.ps-number .ps-number-down[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C5\";\n    font-size: 20px;\n    color: #363a41;\n    bottom: 6px;\n    position: relative;\n}\n", ""]);
 
 // exports
 
@@ -33660,7 +33660,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n#search .search-input {\n  box-shadow: none;\n  border: #BBCDD2 1px solid;\n  background-color: white;\n  min-height: 35px;\n  outline: none;\n  border-radius: 0;\n}\n#search .alert-box {\n  padding-top: 28px;\n  z-index: -1;\n}\n#search .search-form {\n  width: calc(100% - 130px);\n}\n#search .search-form .search-button {\n    float: right;\n    position: absolute;\n    right: 22px;\n    top: 1px;\n    margin-top: 28px;\n    height: 35px;\n}\n#search .fade-enter-active, #search .fade-leave-active {\n  transition: opacity .5s;\n}\n#search .fade-enter, #search .fade-leave-to {\n  opacity: 0;\n}\n", ""]);
+exports.push([module.i, "\n#search .search-input {\n  box-shadow: none;\n  border: #BBCDD2 1px solid;\n  background-color: white;\n  min-height: 35px;\n  outline: none;\n  border-radius: 0;\n}\n#search .alert-box {\n  padding-top: 28px;\n  z-index: 3;\n  position: fixed;\n  right: 5px;\n  top: 40px;\n}\n#search .search-form {\n  width: calc(100% - 130px);\n}\n#search .search-form .search-button {\n    float: right;\n    position: absolute;\n    right: 22px;\n    top: 1px;\n    margin-top: 28px;\n    height: 35px;\n}\n#search .fade-enter-active, #search .fade-leave-active {\n  transition: opacity .5s;\n}\n#search .fade-enter, #search .fade-leave-to {\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -34211,7 +34211,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.displayPagination) ? _c('nav', {
-    staticClass: "float-sm-right mt-1"
+    staticClass: "float-sm-right mt-1 mr-2"
   }, [_c('ul', {
     staticClass: "pagination",
     class: {
@@ -42128,7 +42128,7 @@ const state = {
   order: '',
   pageIndex: 1,
   totalPages: 0,
-  productsPerPage: 100,
+  productsPerPage: 30,
   products: [],
   hasQty: false,
   keywords: [],
@@ -43842,6 +43842,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 
 exports.default = {
   props: ['product'],
@@ -44281,8 +44282,8 @@ exports.default = {
         _eventBus.EventBus.$emit('displayBulkAlert', 'error');
       }
     },
-    focusOut: function focusOut() {
-      this.isFocused = false;
+    focusOut: function focusOut(event) {
+      this.isFocused = $(event.target).hasClass('ps-number');
       this.danger = false;
     },
     bulkChecked: function bulkChecked(checkbox) {
@@ -44526,7 +44527,7 @@ exports.default = {
       this.isActive = true;
     },
     focusOut: function focusOut(event) {
-      if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
+      if (!$(event.target).hasClass('ps-number') && !this.value) {
         this.isActive = false;
       }
       this.isEnabled = !!this.value;
@@ -44675,8 +44676,7 @@ exports.default = {
 
     $(this.$el).datetimepicker({
       format: 'MM/DD/YYYY',
-      showClear: true,
-      locale: this.locale
+      showClear: true
     }).on('dp.change', function (infos) {
       if (infos.date) {
         _this.$emit('dpChange', infos);
@@ -51006,7 +51006,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('thead', [_c('tr', [_c('th', {
     staticClass: "thead-title",
     attrs: {
-      "width": "30%"
+      "width": "27%"
     }
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_product')) + "\n        "), _c('PSSort', {
     attrs: {
@@ -51030,7 +51030,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center align-middle"
+    staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_status')) + "\n      ")]), _vm._v(" "), _c('th', {
     staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_physical')) + "\n        "), _c('PSSort', {
@@ -51041,9 +51041,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center align-middle"
+    staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_reserved')) + "\n      ")]), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center pr-4"
+    staticClass: "text-sm-left text-md-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_available')) + "\n        "), _c('PSSort', {
     attrs: {
       "order": "available_quantity"
@@ -51052,7 +51052,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center align-middle"
+    staticClass: "text-md-left",
+    attrs: {
+      "title": _vm.trans('title_edit_quantity')
+    }
   }, [_c('i', {
     staticClass: "material-icons"
   }, [_vm._v("edit")]), _vm._v("\n        " + _vm._s(_vm.trans('title_edit_quantity')) + "\n      ")])])]), _vm._v(" "), _c('tbody', [(this.isLoading) ? _c('tr', [_c('td', {
@@ -51144,7 +51147,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "checked": _vm.bulkChecked
     }
   }), _vm._v(" "), _c('div', {
-    staticClass: "ml-1"
+    staticClass: "ml-2"
   }, [_c('small', [_vm._v(_vm._s(_vm.trans('title_bulk')))]), _vm._v(" "), _c('PSNumber', {
     staticClass: "bulk-qty",
     attrs: {
@@ -51154,7 +51157,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "focus": _vm.focusIn,
-      "blur": _vm.focusOut,
+      "blur": function($event) {
+        _vm.focusOut($event)
+      },
       "change": _vm.onChange,
       "keyup": _vm.onKeyUp
     }
@@ -51191,7 +51196,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "stock-header"
+    staticClass: "stock-header px-3"
   }, [_c('Breadcrumb'), _vm._v(" "), _c('h1', [_vm._v(_vm._s(_vm.trans('head_title')))]), _vm._v(" "), _c('Tabs')], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -51217,7 +51222,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }) : _c('div', {
     staticClass: "no-img"
   }), _vm._v(" "), _c('div', {
-    staticClass: "ml-1 desc media-body"
+    staticClass: "ml-2 desc media-body"
   }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -51513,7 +51518,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "click": _vm.onLabelClick
     }
   }, [_vm._v(_vm._s(_vm.trans('filter_low_stock')))])], 1), _vm._v(" "), _c('div', {
-    staticClass: "col"
+    staticClass: "col mr-3"
   }, [_c('a', {
     staticClass: "float-sm-right ml-2",
     attrs: {
@@ -51584,7 +51589,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.isReady) ? _c('div', {
-    staticClass: "stock-app",
+    staticClass: "stock-app container-fluid",
     attrs: {
       "id": "app"
     }
@@ -51601,14 +51606,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "lowStockChecked": _vm.onLowStockChecked
     }
   }) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "card pa-2"
+    staticClass: "card container-fluid pa-2 clearfix"
   }, [_c('router-view', {
     staticClass: "view",
     on: {
       "resetFilters": _vm.resetFilters,
       "fetch": _vm.fetch
     }
-  })], 1), _vm._v(" "), _c('PSPagination', {
+  }), _vm._v(" "), _c('PSPagination', {
     attrs: {
       "currentIndex": _vm.currentPagination,
       "pagesCount": _vm.pagesCount
@@ -51616,7 +51621,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "pageChanged": _vm.onPageChanged
     }
-  })], 1) : _vm._e()
+  })], 1)], 1) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
@@ -51631,7 +51636,10 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_c('PSMedia', {
+  return _c('tr', [_c('td', {
+    staticClass: "d-flex align-items-center"
+  }, [_c('PSMedia', {
+    staticClass: "d-flex align-items-center",
     attrs: {
       "thumbnail": _vm.thumbnail
     }
@@ -51930,7 +51938,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'low-stock': _vm.lowStock
     }
   }, [_c('td', {
-    staticClass: "d-flex align-items-center pr-1"
+    staticClass: "d-flex align-items-center"
   }, [_c('PSCheckbox', {
     ref: _vm.id,
     attrs: {
@@ -51941,7 +51949,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "checked": _vm.productChecked
     }
   }), _vm._v(" "), _c('PSMedia', {
-    staticClass: "ml-1",
+    staticClass: "d-flex align-items-center ml-2",
     attrs: {
       "thumbnail": _vm.thumbnail
     }
@@ -51971,7 +51979,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'stock-warning': _vm.lowStock
     }
   }, [_vm._v("\n    " + _vm._s(_vm.product.product_reserved_quantity) + "\n  ")]), _vm._v(" "), _c('td', {
-    staticClass: "text-sm-left pl-4",
+    staticClass: "text-sm-center",
     class: {
       'stock-warning': _vm.lowStock
     }
@@ -51983,7 +51991,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "material-icons"
   }, [_vm._v("trending_flat")]), _vm._v("\n      " + _vm._s(_vm.availableQtyUpdated) + "\n    ")]) : _vm._e(), _vm._v(" "), (_vm.lowStock) ? _c('span', {
-    staticClass: "stock-warning ico ml-4",
+    staticClass: "stock-warning ico ml-2",
     attrs: {
       "data-toggle": "pstooltip",
       "data-placement": "top",
@@ -51991,9 +51999,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": _vm.lowStockLevel
     }
   }, [_vm._v("!")]) : _vm._e()]), _vm._v(" "), _c('td', {
-    staticClass: "qty-spinner"
+    staticClass: "qty-spinner text-sm-right"
   }, [_c('Spinner', {
-    staticClass: "pull-xs-right",
     attrs: {
       "product": _vm.product
     },

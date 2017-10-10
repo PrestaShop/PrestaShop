@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8087066dd965eab78136"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d7a5765ad2af9ca12f1d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -34626,7 +34626,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.displayPagination) ? _c('nav', {
-    staticClass: "float-sm-right mt-1"
+    staticClass: "float-sm-right mt-1 mr-2"
   }, [_c('ul', {
     staticClass: "pagination",
     class: {
