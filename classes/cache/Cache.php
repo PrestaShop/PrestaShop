@@ -27,6 +27,11 @@
 abstract class CacheCore
 {
     /**
+     * Max number of queries cached in memcached, for each SQL table
+     */
+    const MAX_CACHED_OBJECT_BY_TABLE = 10000;
+
+    /**
      * Name of keys index
      */
     const KEYS_NAME = '__keys__';
@@ -37,9 +42,23 @@ abstract class CacheCore
     const SQL_TABLES_NAME = 'tablesCached';
 
     /**
+     * Store the number of time a query is fetched from the cache
+     *
+     * @var array
+     */
+    protected $queryCounter = array();
+
+    /**
      * @var Cache
      */
     protected static $instance;
+
+    /**
+     * If a cache set this variable to true, we need to adjust the size of the table cache object
+     *
+     * @var bool
+     */
+    protected $adjustTableCacheSize = false;
 
     /**
      * @var array List all keys of cached data and their associated ttl
@@ -49,7 +68,7 @@ abstract class CacheCore
     /**
      * @var array Store list of tables and their associated keys for SQL cache (warning: this var must not be initialized here !)
      */
-    protected $sql_tables_cached;
+    protected $sql_tables_cached = array();
 
     /**
      * @var array List of blacklisted tables for SQL cache, these tables won't be indexed
@@ -110,6 +129,18 @@ abstract class CacheCore
     abstract protected function _delete($key);
 
     /**
+     * Delete at once multiple keys
+     *
+     * @param $array
+     */
+    protected function _deleteMulti($array)
+    {
+        foreach($array as $key) {
+            $this->_delete($key);
+        }
+    }
+
+    /**
      * Write keys index
      */
     abstract protected function _writeKeys();
@@ -143,6 +174,14 @@ abstract class CacheCore
     }
 
     /**
+     * @param $value
+     */
+    protected function setAdjustTableCacheSize($value)
+    {
+        $this->adjustTableCacheSize = (bool)$value;
+    }
+
+    /**
      * Unit testing purpose only
      */
     public static function deleteTestingInstance()
@@ -169,6 +208,7 @@ abstract class CacheCore
             $this->_writeKeys();
             return true;
         }
+
         return false;
     }
 
@@ -204,7 +244,7 @@ abstract class CacheCore
 
     /**
      * Delete one or several data from cache (* joker can be used)
-     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return array List of deleted keys
@@ -242,6 +282,20 @@ abstract class CacheCore
     }
 
     /**
+     * Increment the query counter for the given query
+     *
+     * @param $query
+     */
+    public function incrementQueryCounter($query)
+    {
+        if (isset($this->queryCounter[$query])) {
+            $this->queryCounter[$query]++;
+        } else {
+            $this->queryCounter[$query] = 1;
+        }
+    }
+
+    /**
      * Store a query in cache
      *
      * @param string $query
@@ -257,29 +311,78 @@ abstract class CacheCore
             $result = array();
         }
 
-        if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
-            if (!is_array($this->sql_tables_cached)) {
-                $this->sql_tables_cached = array();
-            }
-        }
-
         // Store query results in cache
         $key = Tools::hashIV($query);
-        // no need to check the key existence before the set : if the query is already
-        // in the cache, setQuery is not invoked
-        $this->set($key, $result);
 
         // Get all table from the query and save them in cache
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
-                if (!isset($this->sql_tables_cached[$table][$key])) {
-                    $this->adjustTableCacheSize($table);
-                    $this->sql_tables_cached[$table][$key] = true;
+                $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
+
+                if (!array_key_exists($table, $this->sql_tables_cached)) {
+                    $this->sql_tables_cached[$table] = $this->get($cacheKey);
+                    if (!is_array($this->sql_tables_cached[$table])) {
+                        $this->sql_tables_cached[$table] = array();
+                    }
+                }
+
+
+                if (!in_array($key, $this->sql_tables_cached[$table])) {
+                    $this->sql_tables_cached[$table][$key] = 1;
+                    $this->set($cacheKey, $this->sql_tables_cached[$table]);
+                    // if the set fail because the object is too big, the adjustTableCacheSize flag is set
+                    if ($this->adjustTableCacheSize
+                        || count($this->sql_tables_cached[$table]) > Cache::MAX_CACHED_OBJECT_BY_TABLE) {
+                        $this->adjustTableCacheSize($table);
+                        $this->set($cacheKey, $this->sql_tables_cached[$table]);
+                    }
                 }
             }
         }
-        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+
+        // no need to check the key existence before the set : if the query is already
+        // in the cache, setQuery is not invoked
+        $this->set($key, $result);
+
+        // use the query counter to update the cache statistics
+        $this->updateQueryCacheStatistics();
+    }
+
+    /**
+     * Use the query counter to update the query cache statistics
+     * So far its only called during a set operation to avoid overloading / slowing down the cache server
+     */
+    protected function updateQueryCacheStatistics()
+    {
+        $changedTables = array();
+
+        foreach($this->queryCounter as $query => $count) {
+            $key = Tools::hashIV($query);
+
+            if ($tables = $this->getTables($query)) {
+                foreach ($tables as $table) {
+                    if (!array_key_exists($table, $this->sql_tables_cached)) {
+                        $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME . '_' . $table);
+                        $this->sql_tables_cached[$table] = $this->get($cacheKey);
+                        if (!is_array($this->sql_tables_cached[$table])) {
+                            $this->sql_tables_cached[$table] = array();
+                        }
+                    }
+
+                    if (isset($this->sql_tables_cached[$table][$key])) {
+                        $this->sql_tables_cached[$table][$key] += $count;
+                        $changedTables[$table] = true;
+                    }
+                }
+            }
+        }
+
+        foreach(array_keys($changedTables) as $table) {
+            $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME . '_' . $table);
+            $this->set($cacheKey, $this->sql_tables_cached[$table]);
+        }
+
+        $this->queryCounter = array();
     }
 
     /**
@@ -289,16 +392,21 @@ abstract class CacheCore
      */
     protected function adjustTableCacheSize($table)
     {
-        if (isset($this->sql_tables_cached[$table])
-            && count($this->sql_tables_cached[$table]) > 5000) {
-            // make sure the cache doesn't contains too many elements : delete the first 1000
+        $invalidKeys = array();
+        if (isset($this->sql_tables_cached[$table])) {
+            // sort the array with the query with the lowest count first
+            asort($this->sql_tables_cached[$table], SORT_NUMERIC);
+            // reduce the size of the cache : delete the first 1000 (those with the lowest count)
             $table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
-            foreach ($table_buffer as $fs_key => $value) {
-                $this->delete($fs_key);
-                $this->delete($fs_key.'_nrows');
+            foreach (array_keys($table_buffer) as $fs_key) {
+                $invalidKeys[] = $fs_key;
+                $invalidKeys[] = $fs_key.'_nrows';
                 unset($this->sql_tables_cached[$table][$fs_key]);
             }
+            $this->_deleteMulti($invalidKeys);
         }
+
+        $this->adjustTableCacheSize = false;
     }
 
     protected function getTables($string)
@@ -326,25 +434,23 @@ abstract class CacheCore
             return;
         }
 
-        if (is_null($this->sql_tables_cached)) {
-            $this->sql_tables_cached = $this->get(Tools::hashIV(self::SQL_TABLES_NAME));
-            if (!is_array($this->sql_tables_cached)) {
-                $this->sql_tables_cached = array();
-            }
-        }
-
+        $invalidKeys = array();
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
+                $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
+
                 if (isset($this->sql_tables_cached[$table])) {
                     foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key) {
-                        $this->delete($fs_key);
-                        $this->delete($fs_key.'_nrows');
+                        $invalidKeys[] = $fs_key;
+                        $invalidKeys[] = $fs_key.'_nrows';
                     }
                     unset($this->sql_tables_cached[$table]);
+                    $this->_deleteMulti($invalidKeys);
                 }
+
+                $this->_delete($cacheKey);
             }
         }
-        $this->set(Tools::hashIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
     }
 
     /**
