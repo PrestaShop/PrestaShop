@@ -383,11 +383,11 @@ class AdminStoresControllerCore extends AdminController
                 $hours = array();
                 for ($i = 1; $i < 8; $i++) {
                     if (1 < count($langs)) {
-                        $hours[] = explode(' | ', $_POST['hours'][(int)$i][$lang['id_lang']]);
-                        unset($_POST['hours'][(int)$i][$lang['id_lang']]);
+                        $hours[] = explode(' | ', $_POST['hours'][$i][$lang['id_lang']]);
+                        unset($_POST['hours'][$i][$lang['id_lang']]);
                     } else {
-                        $hours[] = explode(' | ', $_POST['hours'][(int)$i]);
-                        unset($_POST['hours'][(int)$i]);
+                        $hours[] = explode(' | ', $_POST['hours'][$i]);
+                        unset($_POST['hours'][$i]);
                     }
                 }
                 $encodedHours[$lang['id_lang']] = json_encode($hours);

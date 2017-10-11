@@ -105,9 +105,9 @@ class StoreCore extends ObjectModel
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-            'address1' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
-            'address2' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 128),
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+            'address1' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255),
+            'address2' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255),
             'hours' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 65000),
             'note' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 65000),
         ),
