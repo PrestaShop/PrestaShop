@@ -102,7 +102,7 @@ class PrestaTrustChecker
         $details->hash = $this->calculateHash($module->disk->get('path'));
         $details->check_list = $this->requestCheck($details->hash, $this->domain, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
-        $details->message = $this->translator($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
+        $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
 
         $this->cache->save($module->get('name'), $details);
 
