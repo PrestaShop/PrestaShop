@@ -44,7 +44,7 @@ class PrestaShopAutoloadTest extends TestCase
     public function testGenerateIndex()
     {
         $this->assertTrue(file_exists($this->file_index));
-        $data = require($this->file_index);
+        $data = include($this->file_index);
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
     }
 
@@ -55,9 +55,10 @@ class PrestaShopAutoloadTest extends TestCase
         $this->assertTrue(class_exists('RequestSql', false));
     }
 
-    public function testClassLoadedFromCoreDir()
+    public function testClassFromCoreDirShouldntBeLoaded()
     {
         PrestaShopAutoload::getInstance()->load('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption');
-        $this->assertTrue(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
+
+        $this->assertFalse(class_exists('\\PrestaShop\\PrestaShop\\Core\\Payment\\PaymentOption', false));
     }
 }
