@@ -135,6 +135,7 @@ class ModuleRepositoryTest extends UnitTestCase
                 $this->translatorStub
             ))
             ->setMethods(array('readCacheFile', 'generateCacheFile'))
+            ->getMock()
         ;
 
         /*
