@@ -67,6 +67,7 @@ class CacheMemcachedCore extends Cache
         }
 
         $servers = self::getMemcachedServers();
+
         if (!$servers) {
             return;
         }
@@ -85,7 +86,16 @@ class CacheMemcachedCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
-        return $this->memcached->set($key, $value, $ttl);
+
+        $result = $this->memcached->set($key, $value, $ttl);
+
+        if ($result === false) {
+            if ($this->memcached->getResultCode() === memcached::RES_E2BIG) {
+                $this->setAdjustTableCacheSize(true);
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -120,6 +130,17 @@ class CacheMemcachedCore extends Cache
             return false;
         }
         return $this->memcached->delete($key);
+    }
+
+    /**
+     * @see Cache::_deleteMulti()
+     */
+    protected function _deleteMulti($array)
+    {
+        if (!$this->is_connected) {
+            return false;
+        }
+        return $this->memcached->deleteMulti($array);
     }
 
     /**
@@ -181,7 +202,7 @@ class CacheMemcachedCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return bool
@@ -202,6 +223,11 @@ class CacheMemcachedCore extends Cache
             }
         }
         return true;
+    }
+
+    public function deleteMulti($array)
+    {
+        $this->_deleteMulti($array);
     }
 
     /**
