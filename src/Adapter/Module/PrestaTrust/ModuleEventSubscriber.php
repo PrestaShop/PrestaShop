@@ -63,6 +63,9 @@ class ModuleEventSubscriber implements EventSubscriberInterface
 
     /**
      * Event executed on module download (coming from the marketplace or the employee disk)
+     * If the feature is enabled in the project configuration, we will trigger our class PrestaTrustChecker to verify
+     * if the module is compliant.
+     *
      * @param ModuleManagementEvent $event
      * @return void
      */

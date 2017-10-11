@@ -119,6 +119,16 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->modulePresenter = $this->sfKernel->getContainer()->get('prestashop.adapter.presenter.module');
     }
 
+    /**
+     * This test is about a module not concerned by PrestaTrust.
+     * This means its property "author_address" (= Ethereum address) does not exist or is invalid.
+     * In that case, we do not expect the class PrestaTrustChecker to modify it.
+     *
+     * module-under-dev could be a module name which is actually under development, or not available on the
+     * marketplace.
+     *
+     * To make sure the test is complete, we just have to check the dedicated attribute does not exist.
+     */
     public function testNotConcernedModuleIsNotModified()
     {
         $testedModule = $this->modules['module-under-dev'];
@@ -127,6 +137,16 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->assertFalse($testedModule->attributes->has('prestatrust'));
     }
 
+    /**
+     * Pico = Small badge to display near the module name on the module catalog.
+     *
+     * When we receive data from the Addons Marketplace API, it seems these picos will be grouped by feature
+     * and not in a single array. As we want a generic way to display picos on the module page, we implemented
+     * on the module presenter a function to gather all possible picos.
+     *
+     * In consequence, if the API returns data about PrestaTrust (with a pico inside), we must find it in the "picos"
+     * attribute once presented.
+     */
     public function testModuleHasPico()
     {
         $testedModule = $this->modules['module-verified-from-addons-api'];
@@ -136,6 +156,13 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->assertFalse(empty($presentedModule['attributes']['picos']));
     }
 
+    /**
+     * This test is the opposite of the previous one.
+     * Until another potential picos sent by the Addons Marketplace API, we can be sure that the pico list will be
+     * empty, although existing.
+     *
+     * As this information is gotten by the API, there is no way for a module developper to add another one.
+     */
     public function testModuleHasNotPico()
     {
         $testedModule = $this->modules['module-under-dev'];
@@ -145,6 +172,14 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->assertTrue(empty($presentedModule['attributes']['picos']));
     }
 
+    /**
+     * For this test, we use the module "ganalytics" available in the folder resources/modules of our tests.
+     *
+     * We are faking the PrestaTrust compliancy with a author_adress property which fits the checks (length + 0x).
+     * The Addons Marketplace API has been mocked to return a specific response: All checks are OK!
+     *
+     * This function tests we have all the needed information to display a modal on the module catalog.
+     */
     public function testModuleHasCompletePrestaTrustData()
     {
         $testedModule = $this->modules['module-prestatrust-checked'];
