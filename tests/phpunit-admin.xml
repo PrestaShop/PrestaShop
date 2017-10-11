@@ -1,6 +1,6 @@
 <phpunit
   bootstrap="bootstrap-admin.php"
-  processIsolation="true"
+  processIsolation="false"
 >
     <php>
         <env name="SYMFONY_ENV" value="test"/>
