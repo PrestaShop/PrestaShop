@@ -66,7 +66,7 @@ abstract class CacheCore
     protected $keys = array();
 
     /**
-     * @var array Store list of tables and their associated keys for SQL cache (warning: this var must not be initialized here !)
+     * @var array Store list of tables and their associated keys for SQL cache
      */
     protected $sql_tables_cached = array();
 
@@ -129,13 +129,13 @@ abstract class CacheCore
     abstract protected function _delete($key);
 
     /**
-     * Delete at once multiple keys
+     * Delete multiple keys from the cache
      *
-     * @param $array
+     * @param array $keyArray
      */
-    protected function _deleteMulti($array)
+    protected function _deleteMulti($keyArray)
     {
-        foreach($array as $key) {
+        foreach ($keyArray as $key) {
             $this->_delete($key);
         }
     }
@@ -174,7 +174,7 @@ abstract class CacheCore
     }
 
     /**
-     * @param $value
+     * @param bool $value
      */
     protected function setAdjustTableCacheSize($value)
     {
@@ -284,7 +284,7 @@ abstract class CacheCore
     /**
      * Increment the query counter for the given query
      *
-     * @param $query
+     * @param string $query
      */
     public function incrementQueryCounter($query)
     {
@@ -299,53 +299,105 @@ abstract class CacheCore
      * Store a query in cache
      *
      * @param string $query
-     * @param array $result
+     * @param array  $result
+     *
+     * @return void
      */
     public function setQuery($query, $result)
     {
         if ($this->isBlacklist($query)) {
-            return true;
+            return;
         }
 
         if (empty($result) || $result === false) {
             $result = array();
         }
 
+        $key = $this->updateTableToQueryMap($query);
+
         // Store query results in cache
-        $key = Tools::hashIV($query);
-
-        // Get all table from the query and save them in cache
-        if ($tables = $this->getTables($query)) {
-            foreach ($tables as $table) {
-                $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
-
-                if (!array_key_exists($table, $this->sql_tables_cached)) {
-                    $this->sql_tables_cached[$table] = $this->get($cacheKey);
-                    if (!is_array($this->sql_tables_cached[$table])) {
-                        $this->sql_tables_cached[$table] = array();
-                    }
-                }
-
-
-                if (!in_array($key, $this->sql_tables_cached[$table])) {
-                    $this->sql_tables_cached[$table][$key] = 1;
-                    $this->set($cacheKey, $this->sql_tables_cached[$table]);
-                    // if the set fail because the object is too big, the adjustTableCacheSize flag is set
-                    if ($this->adjustTableCacheSize
-                        || count($this->sql_tables_cached[$table]) > Cache::MAX_CACHED_OBJECT_BY_TABLE) {
-                        $this->adjustTableCacheSize($table);
-                        $this->set($cacheKey, $this->sql_tables_cached[$table]);
-                    }
-                }
-            }
-        }
-
         // no need to check the key existence before the set : if the query is already
         // in the cache, setQuery is not invoked
         $this->set($key, $result);
 
         // use the query counter to update the cache statistics
         $this->updateQueryCacheStatistics();
+    }
+
+    /**
+     * Return the hash associated with a query, used to store data into the cache
+     *
+     * @param string $query
+     *
+     * @return string
+     */
+    public function getQueryHash($query)
+    {
+        return Tools::hashIV($query);
+    }
+
+    /**
+     * Return the hash associated with a table name, used to store the "table to query hash" map
+     *
+     * @param string $table
+     *
+     * @return string
+     */
+    private function getTableMapCacheKey($table)
+    {
+        return Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
+    }
+
+    /**
+     * This function extract all the tables involded in a query, and in the each table map the query hash.
+     *
+     * @param string $query
+     *
+     * @return string
+     */
+    private function updateTableToQueryMap($query)
+    {
+        $key = $this->getQueryHash($query);
+
+        // Get all table from the query and save them in cache
+        if ($tables = $this->getTables($query)) {
+            foreach ($tables as $table) {
+                $this->addQueryKeyToTableMap($key, $table);
+            }
+        }
+
+        return $key;
+    }
+
+    /**
+     * Add the given query hash to the table to query key map
+     *
+     * @param string $key query hash
+     * @param string $table table name
+     */
+    private function addQueryKeyToTableMap($key, $table)
+    {
+        // the name of the cache entry which cache the table map
+        $cacheKey = $this->getTableMapCacheKey($table);
+
+        if (!array_key_exists($table, $this->sql_tables_cached)) {
+            $this->sql_tables_cached[$table] = $this->get($cacheKey);
+            if (!is_array($this->sql_tables_cached[$table])) {
+                $this->sql_tables_cached[$table] = array();
+            }
+        }
+
+
+        if (!in_array($key, $this->sql_tables_cached[$table])) {
+            $this->sql_tables_cached[$table][$key] = 1;
+            $this->set($cacheKey, $this->sql_tables_cached[$table]);
+            // if the set fail because the object is too big, the adjustTableCacheSize flag is set
+            if ($this->adjustTableCacheSize
+                || count($this->sql_tables_cached[$table]) > Cache::MAX_CACHED_OBJECT_BY_TABLE) {
+                $this->adjustTableCacheSize($table);
+                $this->set($cacheKey, $this->sql_tables_cached[$table]);
+            }
+        }
     }
 
     /**
@@ -356,14 +408,13 @@ abstract class CacheCore
     {
         $changedTables = array();
 
-        foreach($this->queryCounter as $query => $count) {
-            $key = Tools::hashIV($query);
+        foreach ($this->queryCounter as $query => $count) {
+            $key = $this->getQueryHash($query);
 
             if ($tables = $this->getTables($query)) {
                 foreach ($tables as $table) {
                     if (!array_key_exists($table, $this->sql_tables_cached)) {
-                        $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME . '_' . $table);
-                        $this->sql_tables_cached[$table] = $this->get($cacheKey);
+                        $this->sql_tables_cached[$table] = $this->get($this->getTableMapCacheKey($table));
                         if (!is_array($this->sql_tables_cached[$table])) {
                             $this->sql_tables_cached[$table] = array();
                         }
@@ -377,16 +428,15 @@ abstract class CacheCore
             }
         }
 
-        foreach(array_keys($changedTables) as $table) {
-            $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME . '_' . $table);
-            $this->set($cacheKey, $this->sql_tables_cached[$table]);
+        foreach (array_keys($changedTables) as $table) {
+            $this->set($this->getTableMapCacheKey($table), $this->sql_tables_cached[$table]);
         }
 
         $this->queryCounter = array();
     }
 
     /**
-     * Autoadjust the table cache size to avoid storing too big elements in the cache
+     * Remove the first 1000 less used query results from the cache
      *
      * @param $table
      */
@@ -409,9 +459,18 @@ abstract class CacheCore
         $this->adjustTableCacheSize = false;
     }
 
+    /**
+     * Get the tables used in a SQL query
+     *
+     * @param string $string
+     *
+     * @return array|bool
+     */
     protected function getTables($string)
     {
-        if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.'[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.'[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
+        if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.
+            '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.
+            '[0-9a-z_-]+)`?)?(?:`|\s+|\Z)(?!\s*,)/Umsi', $string, $res)) {
             foreach ($res[2] as $table) {
                 if ($table != '') {
                     $res[1][] = $table;
@@ -437,7 +496,7 @@ abstract class CacheCore
         $invalidKeys = array();
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
-                $cacheKey = Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
+                $cacheKey = $this->getTableMapCacheKey($table);
 
                 if (isset($this->sql_tables_cached[$table])) {
                     foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key) {
@@ -469,6 +528,10 @@ abstract class CacheCore
         return false;
     }
 
+    /**
+     * @param string $key
+     * @param string $value
+     */
     public static function store($key, $value)
     {
         // PHP is not efficient at storing array
@@ -485,21 +548,37 @@ abstract class CacheCore
         Cache::$local = array();
     }
 
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
     public static function retrieve($key)
     {
         return isset(Cache::$local[$key]) ? Cache::$local[$key] : null;
     }
 
+    /**
+     * @return array
+     */
     public static function retrieveAll()
     {
         return Cache::$local;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     public static function isStored($key)
     {
         return isset(Cache::$local[$key]);
     }
 
+    /**
+     * @param string $key
+     */
     public static function clean($key)
     {
         if (strpos($key, '*') !== false) {
