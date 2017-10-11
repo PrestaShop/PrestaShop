@@ -64,6 +64,12 @@ class PrestaTrustChecker
      */
     protected $translator;
 
+    /**
+     * @param Cache $cache Cache provider to keep data between two requests
+     * @param ApiClient $apiClient Addons Marketplace API client (Guzzle)
+     * @param string $shop_info Shop domain (ex.: http://localhost)
+     * @param TranslatorInterface $translator Translator for explanation messages
+     */
     public function __construct(Cache $cache, ApiClient $apiClient, $shop_info, TranslatorInterface $translator)
     {
         $this->cache = $cache;
@@ -73,7 +79,8 @@ class PrestaTrustChecker
     }
 
     /**
-     * Add the PrestaTrust data for a module, if it exists
+     * Add the PrestaTrust data for a module, if it exists in cache.
+     * If not, the module remains untouched. We do not execute checks to avoid slow performances.
      * 
      * @param Module $module
      */
@@ -87,8 +94,9 @@ class PrestaTrustChecker
     }
 
     /**
-     * If the module is compliant, this class generates and adds all PrestaTrust related details
-     * Called by download event of module
+     * If the module is compliant, this class generates and adds all PrestaTrust related details.
+     * Called by the "download" event from the module manager.
+     * Any module copy paster in the module folder won't go through this function.
      *
      * @param Module $module
      */
@@ -110,7 +118,7 @@ class PrestaTrustChecker
     }
 
     /**
-     * Find all files with defined extensions, and calculate hash from their content
+     * Find all files with defined extensions, and calculate md5 from their content.
      *
      * @param string $path Path to the module root
      * @return string Hash of the module
@@ -135,10 +143,12 @@ class PrestaTrustChecker
     }
 
     /**
-     * Find and return the smart contract address to be checked with the API
+     * Find and return the smart contract address to be checked with the API.
+     * To find the address, we must find a file which matches the pattern "'prestatrust-license-verification:".
+     * The address will be found right after it, and must also match the file name.
      *
-     * @param string $path
-     * @return string|null
+     * @param string $path Module root path
+     * @return string|null Smart contract address, if found.
      */
     public function findSmartContrat($path)
     {
@@ -156,10 +166,11 @@ class PrestaTrustChecker
     }
 
     /**
-     * Get message to display at the employee
+     * Get message to display at the employee. It is used to explain briefly what is PrestaTrust and what
+     * went right (or wrong).
      *
      * @param array $check_list
-     * @return string
+     * @return string Message displayed for confirmation
      */
     protected function getMessage(array $check_list)
     {
@@ -176,10 +187,11 @@ class PrestaTrustChecker
     }
 
     /**
-     * Check if a module can be checked with PrestaTrust
+     * Check if a module can be checked with PrestaTrust. To make it compliant, an attribute "author_address"
+     * must exist, start with "0x" and be 42 characters long.
      *
      * @param Module $module
-     * @return boolean
+     * @return boolean Module compliancy
      */
     protected function isCompliant(Module $module)
     {
@@ -203,10 +215,10 @@ class PrestaTrustChecker
     }
 
     /**
-     * Check that the string starts with '0x'
+     * Check that the string starts with '0x'.
      *
-     * @param string $str
-     * @return bool
+     * @param string $str Author address
+     * @return bool True if starts with '0x'
      */
     protected function hasHexPrefix($str)
     {
