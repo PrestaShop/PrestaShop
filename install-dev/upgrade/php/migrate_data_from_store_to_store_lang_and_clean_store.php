@@ -30,8 +30,4 @@ function migrate_data_from_store_to_store_lang_and_clean_store()
     foreach ($langs as $lang) {
         Db::getInstance()->execute("INSERT INTO `" . _DB_PREFIX_ . "store_lang` SELECT `id_store`, " . $lang['id_lang'] . " as id_lang , `name`, `address1`, `address2`, `hours`, `note` FROM `" . _DB_PREFIX_ . "store` ");
     }
-
-    /** clean store */
-    DB::getInstance()->execute('ALTER TABLE `' . _DB_PREFIX_ . 'store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`');
-
 }
