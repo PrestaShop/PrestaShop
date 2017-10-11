@@ -205,8 +205,10 @@ class StockManager
 
     protected function isProductQuantityUnderAlertThreshold($product, $newQuantity)
     {
+        // low_stock_threshold empty to disable (can be negative, null or zero)
         if ($product->low_stock_alert
-            && (int) $product->low_stock_threshold > 0
+            && $product->low_stock_threshold !== ''
+            && $product->low_stock_threshold !== null
             && $newQuantity <= (int) $product->low_stock_threshold
         ) {
             return true;
@@ -217,8 +219,10 @@ class StockManager
 
     protected function isCombinationQuantityUnderAlertThreshold(\Combination $combination, $newQuantity)
     {
+        // low_stock_threshold empty to disable (can be negative, null or zero)
         if ($combination->low_stock_alert
-            && (int) $combination->low_stock_threshold > 0
+            && $combination->low_stock_threshold !== ''
+            && $combination->low_stock_threshold !== null
             && $newQuantity <= (int) $combination->low_stock_threshold
         ) {
             return true;
