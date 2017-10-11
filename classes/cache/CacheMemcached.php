@@ -79,7 +79,7 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_set()
+     * @inheritdoc
      */
     protected function _set($key, $value, $ttl = 0)
     {
@@ -99,7 +99,7 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_get()
+     * @inheritdoc
      */
     protected function _get($key)
     {
@@ -111,7 +111,7 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_exists()
+     * @inheritdoc
      */
     protected function _exists($key)
     {
@@ -122,7 +122,7 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_delete()
+     * @inheritdoc
      */
     protected function _delete($key)
     {
@@ -133,14 +133,14 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_deleteMulti()
+     * @inheritdoc
      */
-    protected function _deleteMulti($array)
+    protected function _deleteMulti($keyArray)
     {
         if (!$this->is_connected) {
             return false;
         }
-        return $this->memcached->deleteMulti($array);
+        return $this->memcached->deleteMulti($keyArray);
     }
 
     /**
@@ -155,7 +155,7 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::flush()
+     * @inheritdoc
      */
     public function flush()
     {
@@ -166,12 +166,7 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * Store a data in cache
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param int $ttl
-     * @return bool
+     * @inheritdoc
      */
     public function set($key, $value, $ttl = 0)
     {
@@ -179,21 +174,16 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * Retrieve a data from cache
-     *
-     * @param string $key
-     * @return mixed
+     * @inheritdoc
      */
     public function get($key)
     {
         return $this->_get($key);
     }
 
+
     /**
-     * Check if a data is cached
-     *
-     * @param string $key
-     * @return bool
+     * @inheritdoc
      */
     public function exists($key)
     {
@@ -225,9 +215,14 @@ class CacheMemcachedCore extends Cache
         return true;
     }
 
-    public function deleteMulti($array)
+    /**
+     * Delete several keys at once from the cache
+     *
+     * @param array $keyArray
+     */
+    public function deleteMulti($keyArray)
     {
-        $this->_deleteMulti($array);
+        $this->_deleteMulti($keyArray);
     }
 
     /**
@@ -247,8 +242,10 @@ class CacheMemcachedCore extends Cache
      * Add a memcached server
      *
      * @param string $ip
-     * @param int $port
-     * @param int $weight
+     * @param int    $port
+     * @param int    $weight
+     *
+     * @return bool
      */
     public static function addServer($ip, $port, $weight)
     {
@@ -269,6 +266,8 @@ class CacheMemcachedCore extends Cache
      * Delete a memcached server
      *
      * @param int $id_server
+     *
+     * @return bool
      */
     public static function deleteServer($id_server)
     {
