@@ -580,6 +580,7 @@ abstract class DbCore
         if ($use_cache && $this->is_cache_enabled && $array) {
             $this->last_query_hash = Tools::hashIV($sql);
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
+                Cache::getInstance()->incrementQueryCounter($sql);
                 $this->last_cached = true;
                 return $result;
             }
@@ -635,6 +636,7 @@ abstract class DbCore
         if ($use_cache && $this->is_cache_enabled) {
             $this->last_query_hash = Tools::hashIV($sql);
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
+                Cache::getInstance()->incrementQueryCounter($sql);
                 $this->last_cached = true;
                 return $result;
             }
