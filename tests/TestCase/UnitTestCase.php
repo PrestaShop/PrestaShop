@@ -127,6 +127,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->setupContextualLanguageMock();
         $this->setupContextualEmployeeMock();
         $this->setupContextualCookieMock();
+        $this->setupContextualCurrencyMock();
         $this->setupRequestMock();
     }
 
@@ -155,6 +156,12 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->context->cookie = Phake::mock('Cookie');
 
         return $this->context->cookie;
+    }
+
+    protected function setupContextualCurrencyMock() {
+        $this->context->currency = Phake::mock('Currency');
+
+        return $this->context->currency;
     }
 
     protected function setupRequestMock()
