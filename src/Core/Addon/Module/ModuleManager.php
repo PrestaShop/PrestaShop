@@ -87,11 +87,6 @@ class ModuleManager implements AddonManagerInterface
     private $dispatcher;
 
     /**
-<<<<<<< HEAD
-     * @param AdminModuleDataProvider $adminModuleProvider
-||||||| merged common ancestors
-     * @param AdminModuleDataProvider $adminModulesProvider
-=======
      * Additionnal data used for module actions
      *
      * @var ParameterBag
@@ -100,7 +95,6 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * @param AdminModuleDataProvider $adminModulesProvider
->>>>>>> CO: Introduce confirmation steps in back end
      * @param ModuleDataProvider $modulesProvider
      * @param ModuleDataUpdater $modulesUpdater
      * @param ModuleRepository $moduleRepository
