@@ -37,7 +37,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     public function setUp() {
         parent::setUp();
 
-        $memcachedMock = $this->getMockBuilder(CacheMemcache::class)
+        $memcachedMock = $this->getMockBuilder('CacheMemcache')
             ->setMethods(array('_set', '_get', 'isConnected', '_delete', '_deleteMulti'))
             ->getMock();
 
