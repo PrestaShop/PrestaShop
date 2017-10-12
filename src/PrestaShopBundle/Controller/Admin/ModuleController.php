@@ -53,8 +53,6 @@ class ModuleController extends FrameworkBundleAdminController
     const controller_name = self::CONTROLLER_NAME;
 
     /**
-     * Controller responsible for displaying "Catalog" section of Module management pages.
-     *
      * @return Response
      */
     public function catalogAction()
