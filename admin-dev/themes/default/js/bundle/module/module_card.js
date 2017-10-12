@@ -64,15 +64,15 @@ var AdminModuleCard = function () {
      * @return {void}
      */
     this.confirmPrestaTrust = function confirmPrestaTrust(result) {
-        const modal = $("#modal-prestatrust");
-        const module = result.module.attributes;
-        const that = this;
+        var modal = $("#modal-prestatrust");
+        var module = result.module.attributes;
+        var that = this;
 
         if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
             return;
         }
 
-        const alertClass = module.prestatrust.status ? 'success' : 'warning';
+        var alertClass = module.prestatrust.status ? 'success' : 'warning';
         
         if (module.prestatrust.check_list.property) {
             modal.find("#pstrust-btn-property-ok").show();
