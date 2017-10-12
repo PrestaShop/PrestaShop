@@ -405,12 +405,15 @@ abstract class CacheCore
 
 
         if (!isset($this->sql_tables_cached[$table][$key])) {
+            if ((count($this->sql_tables_cached[$table])+1) > $this->maxCachedObjectsByTable) {
+                $this->adjustTableCacheSize($table);
+            }
+
             $this->sql_tables_cached[$table][$key] = 1;
             $this->set($cacheKey, $this->sql_tables_cached[$table]);
-            // if the set fail because the object is too big, the adjustTableCacheSize flag is set
-            if ($this->adjustTableCacheSize
-                || count($this->sql_tables_cached[$table]) > $this->maxCachedObjectsByTable) {
-                $this->adjustTableCacheSize($table);
+            // if the set fails because the object is too big, the adjustTableCacheSize flag is set
+            if ($this->adjustTableCacheSize) {
+                $this->adjustTableCacheSize($table, $key);
                 $this->set($cacheKey, $this->sql_tables_cached[$table]);
             }
         }
@@ -454,12 +457,18 @@ abstract class CacheCore
     /**
      * Remove the first less used query results from the cache
      *
-     * @param $table
+     * @param string $table
+     * @param string $keyToKeep the keep we want to keep inside the table cache
      */
-    protected function adjustTableCacheSize($table)
+    protected function adjustTableCacheSize($table, $keyToKeep = null)
     {
         $invalidKeys = array();
         if (isset($this->sql_tables_cached[$table])) {
+            if ($keyToKeep && isset($this->sql_tables_cached[$table][$keyToKeep])) {
+                // remove the key we plan to keep before adjusting the table cache size
+                unset($this->sql_tables_cached[$table][$keyToKeep]);
+            }
+
             // sort the array with the query with the lowest count first
             asort($this->sql_tables_cached[$table], SORT_NUMERIC);
             // reduce the size of the cache : delete the first entries (those with the lowest count)
@@ -470,8 +479,11 @@ abstract class CacheCore
                 unset($this->sql_tables_cached[$table][$fs_key]);
             }
             $this->_deleteMulti($invalidKeys);
-        }
 
+            if ($keyToKeep) {
+                $this->sql_tables_cached[$table][$keyToKeep] = 1;
+            }
+        }
         $this->adjustTableCacheSize = false;
     }
 
