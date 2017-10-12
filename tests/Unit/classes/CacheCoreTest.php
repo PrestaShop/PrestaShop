@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use PrestaShop\PrestaShop\Adapter\Entity\CacheMemcache;
-use PrestaShop\PrestaShop\Tests\Unit\UnitTestCase;
+use PHPUnit_Framework_TestCase;
 use Cache;
 
-class CacheCoreTest extends UnitTestCase
+class CacheCoreTest extends PHPUnit_Framework_TestCase
 {
     private $cacheArray = array();
 
@@ -38,7 +38,7 @@ class CacheCoreTest extends UnitTestCase
         parent::setUp();
 
         $memcachedMock = $this->getMockBuilder(CacheMemcache::class)
-            ->setMethods(['_set', '_get', 'isConnected', '_delete', '_deleteMulti'])
+            ->setMethods(array('_set', '_get', 'isConnected', '_delete', '_deleteMulti'))
             ->getMock();
 
         $memcachedMock->method('isConnected')->willReturn(true);
