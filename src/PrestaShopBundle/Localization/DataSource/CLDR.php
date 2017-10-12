@@ -126,7 +126,7 @@ class CLDR implements DataSourceInterface
      */
     public function getLocaleByCode($code)
     {
-        return $this->getReader()->getLocaleByCode($code);
+        return $this->getReader()->getLocaleDataByCode($code);
     }
 
     /**

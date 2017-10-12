@@ -28,7 +28,9 @@ namespace PrestaShopBundle\Currency\Repository\Reference;
 
 use PrestaShopBundle\Currency\Currency;
 use PrestaShopBundle\Currency\CurrencyFactory;
+use PrestaShopBundle\Currency\CurrencyParameters;
 use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
+use PrestaShopBundle\Currency\Symbol;
 
 /**
  * Class ReferenceRepository
@@ -41,7 +43,6 @@ use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
  */
 class ReferenceRepository implements ReferenceRepositoryInterface
 {
-
     /**
      * @var ReferenceReaderInterface
      */
@@ -53,27 +54,36 @@ class ReferenceRepository implements ReferenceRepositoryInterface
     }
 
     /**
-     * Get currency data by ISO 4217 code
+     * Get Currency by ISO 4217 code
      *
      * @param string $isoCode
+     *   The requested currency(s ISO 4217 code
+     *
+     * @param string $localeCode
+     *   To localize the currency's data
      *
      * @return Currency
+     *   The requested currency
      */
-    public function getReferenceCurrencyByIsoCode($isoCode)
+    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode)
     {
-        $currencyData = $this->referenceReader->getReferenceCurrencyByIsoCode($isoCode);
+        $currencyData = $this->referenceReader->getReferenceCurrencyDataByIsoCode($isoCode, $localeCode);
 
         if (empty($currencyData)) {
             throw new InvalidArgumentException('Unknown currency code : ' . $isoCode);
         }
 
         $factory  = new CurrencyFactory();
-        $currency = $factory->setIsoCode($currencyData['isoCode'])
-                            ->setNumericIsoCode($currencyData['numericIsoCode'])
-                            ->setDecimalDigits($currencyData['decimalDigits'])
-                            ->setDisplayName($currencyData['displayName'])
-                            ->setSymbolData($currencyData['symbol'])
-                            ->build();
+        $currencyParameters = new CurrencyParameters();
+        $currencyParameters->setIsoCode($currencyData['isoCode'])
+            ->setNumericIsoCode($currencyData['numericIsoCode'])
+            ->setDecimalDigits($currencyData['decimalDigits'])
+            ->setDisplayNameData($currencyData['displayName'])
+            ->setSymbol(new Symbol(
+                $currencyData['symbol']['default'],
+                $currencyData['symbol']['default']
+            ));
+        $currency = $factory->build($currencyParameters);
 
         return $currency;
     }

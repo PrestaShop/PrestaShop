@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\Tests\Currency;
 
-use MyProject\Proxies\__CG__\stdClass;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Currency\Manager;
-use PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface;
-use PrestaShopBundle\Currency\Repository\Reference\ReferenceRepositoryInterface;
+use stdClass;
 
 class ManagerTest extends TestCase
 {
@@ -41,37 +39,37 @@ class ManagerTest extends TestCase
      * @var Manager
      */
     protected $manager;
-    protected $mockedCurrency;
+    protected $mockedCurrencyById;
+    protected $mockedCurrencyByCode;
 
     public function setUp()
     {
         // No behavior to be mocked. We just need to test if this very object is retrieved at the end.
-        $this->mockedCurrency        = (object)array('id' => self::STUB_CURRENCY_ID);
+        $this->mockedCurrencyById    = (object)array('id' => self::STUB_CURRENCY_ID);
+        $this->mockedCurrencyByCode  = (object)array('isoCode' => self::STUB_CURRENCY_CODE);
         $installedCurrencyRepository = $this->getMock(
             'PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface'
         );
         $installedCurrencyRepository->method('getCurrencyById')
             ->with($this->equalTo(self::STUB_CURRENCY_ID))
-            ->willReturn($this->mockedCurrency);
+            ->willReturn($this->mockedCurrencyById);
         $installedCurrencyRepository->method('getCurrencyByISoCode')
-            ->with($this->equalTo(self::STUB_CURRENCY_ID))
-            ->willReturn($this->mockedCurrency);
+            ->with($this->equalTo(self::STUB_CURRENCY_CODE))
+            ->willReturn($this->mockedCurrencyByCode);
 
         $referenceCurrencyRepository = $this->getMock(
             'PrestaShopBundle\Currency\Repository\Reference\ReferenceRepositoryInterface'
         );
 
-        /** @var InstalledRepositoryInterface $installedCurrencyRepository */
-        /** @var ReferenceRepositoryInterface $referenceCurrencyRepository */
         $this->manager = new Manager($installedCurrencyRepository, $referenceCurrencyRepository);
     }
 
     /**
      * Given a valid currency id
      * When asking a currency (with this id) to the currency manager
-     * Then it should return the expected Currency
+     * Then it should return the expected Currency object
      *
-     * This test is about the manager being able to use the good method of the good repository to retrieve the wanted
+     * This test is about the manager being able to use the good method from the good repository to retrieve the wanted
      * currency.
      */
     public function testGetCurrencyById()
@@ -81,6 +79,14 @@ class ManagerTest extends TestCase
         $this->assertSame(self::STUB_CURRENCY_ID, $currency->id);
     }
 
+    /**
+     * Given a valid currency code
+     * When asking a currency (with this iso code) to the currency manager
+     * Then it should return the expected Currency object
+     *
+     * This test is about the manager being able to use the good method from the good repository to retrieve the wanted
+     * currency.
+     */
     public function testGetCurrencyByIsoCode()
     {
         $currency = $this->manager->getCurrencyByIsoCode(self::STUB_CURRENCY_CODE);

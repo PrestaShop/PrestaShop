@@ -48,5 +48,5 @@ interface ReferenceReaderInterface
      * @return array
      *   The currency data
      */
-    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode);
+    public function getReferenceCurrencyDataByIsoCode($isoCode, $localeCode);
 }

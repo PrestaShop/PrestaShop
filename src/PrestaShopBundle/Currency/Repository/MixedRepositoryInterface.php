@@ -38,13 +38,18 @@ use PrestaShopBundle\Currency\Currency;
 interface MixedRepositoryInterface
 {
     /**
-     * Get currency data by ISO 4217 code
+     * Get currency by ISO 4217 code
      *
      * @param string $isoCode
+     *   The requested currency's ISO code
      *
-     * @return array The currency data
+     * @param string $localeCode
+     *   To localize currency's data
+     *
+     * @return Currency
+     *   The requested currency
      */
-    public function getReferenceCurrencyByIsoCode($isoCode);
+    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode);
 
     /**
      * Get currency data by internal database identifier

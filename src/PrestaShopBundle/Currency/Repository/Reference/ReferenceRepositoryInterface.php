@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Currency\Repository\Reference;
 
+use PrestaShopBundle\Currency\Currency;
+
 /**
  * Interface ReferenceRepositoryInterface
  *
@@ -38,12 +40,16 @@ namespace PrestaShopBundle\Currency\Repository\Reference;
 interface ReferenceRepositoryInterface
 {
     /**
-     * Get currency data by ISO 4217 code
+     * Get Currency by ISO 4217 code
      *
      * @param string $isoCode
+     *   The requested currency(s ISO 4217 code
      *
-     * @return array The currency data
+     * @param string $localeCode
+     *   To localize the currency's data
+     *
+     * @return Currency
+     *   The requested currency
      */
-    public function getReferenceCurrencyByIsoCode($isoCode);
-
+    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode);
 }
