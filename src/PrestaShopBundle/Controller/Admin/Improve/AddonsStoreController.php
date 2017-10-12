@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Responsible of "Improve > Modules > Modules Catalog" page display
  */
-class StoreController extends FrameworkBundleAdminController
+class AddonsStoreController extends FrameworkBundleAdminController
 {
     /**
      * @var string The controller name for routing.
@@ -46,7 +46,7 @@ class StoreController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        return $this->render('@PrestaShop/Admin/Improve/Module/store.html.twig', array(
+        return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
             'pageContent' => file_get_contents($this->getAddonsUrl($request)),
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->get('translator')->trans('Modules catalog', array(), 'Admin.Navigation.Menu'),

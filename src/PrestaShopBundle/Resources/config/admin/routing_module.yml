@@ -81,9 +81,9 @@ admin_module_notification:
         _controller: PrestaShopBundle:Admin/Module:notification
         _legacy_controller: AdminModules
 
-admin_module_store:
-    path:     /store
+admin_module_addons_store:
+    path:     /addons_store
     methods:  [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\Improve\Store:index'
+        _controller: 'PrestaShopBundle:Admin\Improve\AddonsStore:index'
         _legacy_controller: AdminAddonsCatalog
