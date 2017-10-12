@@ -493,4 +493,32 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $this->assertEquals($preTax, $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, null, $id_carrier));
         $this->assertEquals(5, $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, null, $id_carrier));
     }
+
+    /**
+     * Check getOrderTotal return the same value with and without when PS_TAX is disable
+     */
+    public function testSameTotalWithoutTax()
+    {
+        Configuration::set('PS_TAX', false);
+        $product = self::makeProduct('Hello Product', 10, self::getIdTaxRulesGroup(20));
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product->id);
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
+            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::BOTH),
+            $cart->getOrderTotal(true, Cart::BOTH));
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
+            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
+            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
+    }
 }

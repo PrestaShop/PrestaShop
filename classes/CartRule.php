@@ -967,6 +967,9 @@ class CartRuleCore extends ObjectModel
         if (!CartRule::isFeatureActive()) {
             return 0;
         }
+
+        static $cartAmountCache = array();
+
         if (!$context) {
             $context = Context::getContext();
         }
@@ -979,8 +982,18 @@ class CartRuleCore extends ObjectModel
 
         $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
 
-        $cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-        $cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+        if (!array_key_exists($context->cart->id, $cartAmountCache)) {
+            if (Tax::excludeTaxeOption()) {
+                $cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                $cartAmountCache[$context->cart->id]['ti'] = $cartAmountCache[$context->cart->id]['te'];
+            } else {
+                $cartAmountCache[$context->cart->id]['ti'] = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+                $cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+            }
+        }
+
+        $cart_amount_te = $cartAmountCache[$context->cart->id]['te'];
+        $cart_amount_ti = $cartAmountCache[$context->cart->id]['ti'];
 
         $reduction_value = 0;
 
@@ -1014,10 +1027,15 @@ class CartRuleCore extends ObjectModel
         }
 
         if (in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_REDUCTION))) {
+            $order_package_products_total = 0;
+            if ((float) $this->reduction_amount > 0
+                || $this->reduction_percent && $this->reduction_product == 0) {
+                $order_package_products_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
+            }
             // Discount (%) on the whole order
             if ($this->reduction_percent && $this->reduction_product == 0) {
                 // Do not give a reduction on free products!
-                $order_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
+                $order_total = $order_package_products_total;
                 foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule) {
                     $order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_COMPUTE_PRECISION_);
                 }
@@ -1104,9 +1122,9 @@ class CartRuleCore extends ObjectModel
             if ((float) $this->reduction_amount > 0) {
                 $prorata = 1;
                 if (!is_null($package) && count($all_products)) {
-                    $total_products = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+                    $total_products = $use_tax ? $cart_amount_ti : $cart_amount_te;
                     if ($total_products) {
-                        $prorata = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package['products']) / $total_products;
+                        $prorata = $order_package_products_total / $total_products;
                     }
                 }
 
@@ -1131,7 +1149,7 @@ class CartRuleCore extends ObjectModel
                 if ($this->reduction_tax == $use_tax) {
                     // The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
                     if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP) {
-                        $cart_amount = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
+                        $cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
                         $reduction_amount = min($reduction_amount, $cart_amount);
                     }
                     $reduction_value += $prorata * $reduction_amount;
