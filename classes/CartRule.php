@@ -356,8 +356,8 @@ class CartRuleCore extends ObjectModel
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
 				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
-        $sql_part2 = ' AND cr.date_from < "' . date('Y-m-d H:i:00') . '"
-				AND cr.date_to > "' . date('Y-m-d H:i:00') . '"
+        $sql_part2 = ' AND cr.date_from < "' . date('Y-m-d H:i:59') . '"
+				AND cr.date_to > "' . date('Y-m-d H:i:59') . '"
 				' . ($active ? 'AND cr.`active` = 1' : '') . '
 				' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
