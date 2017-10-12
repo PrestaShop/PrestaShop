@@ -48,6 +48,11 @@ class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
     }
 
+    /**
+     * Given PS_DISABLE_OVERRIDES is enabled
+     * When the class index is regenerated and we have override
+     * Then the override shouldn't be include in the class index
+     */
     public function testGenerateIndexWithoutOverride()
     {
         \Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 1);
@@ -79,5 +84,10 @@ class    PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
     {
         PrestaShopAutoload::getInstance()->load('Core_Business_Payment_PaymentOption');
         $this->assertTrue(class_exists('Core_Business_Payment_PaymentOption', false));
+    }
+
+    public static function tearDownAfterClass()
+    {
+        @unlink(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override/classes/Connection.php');
     }
 }
