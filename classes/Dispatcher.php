@@ -262,7 +262,7 @@ class DispatcherCore
             $this->controller = $this->useDefaultController();
         }
         // Execute hook dispatcher before
-        Hook::exec('actionDispatcherBefore', array ('controller_type' => $this->front_controller));
+        Hook::exec('actionDispatcherBefore', array('controller_type' => $this->front_controller));
 
         // Dispatch with right front controller
         switch ($this->front_controller) {
@@ -550,8 +550,12 @@ class DispatcherCore
     }
 
     /**
+     * Create the route array, by computing the final regex & keywords
+     *
      * @param string $rule Url rule
      * @param string $controller Controller to call if request uri match the rule
+     * @param array  $keywords keywords associated with the route
+     * @param array  $params optional params of the route
      *
      * @return array
      */
@@ -560,8 +564,12 @@ class DispatcherCore
         $regexp = preg_quote($rule, '#');
         if ($keywords) {
             $transform_keywords = array();
-            preg_match_all('#\\\{(([^{}]*)\\\:)?(' .
-                implode('|', array_keys($keywords)) . ')(\\\:([^{}]*))?\\\}#', $regexp, $m);
+            preg_match_all(
+                '#\\\{(([^{}]*)\\\:)?(' .
+                implode('|', array_keys($keywords)) . ')(\\\:([^{}]*))?\\\}#',
+                $regexp,
+                $m
+            );
             for ($i = 0, $total = count($m[0]); $i < $total; $i++) {
                 $prepend = $m[2][$i];
                 $keyword = $m[3][$i];
@@ -579,13 +587,21 @@ class DispatcherCore
                 }
 
                 if (isset($keywords[$keyword]['param'])) {
-                    $regexp = str_replace($m[0][$i], $prepend_regexp .
+                    $regexp = str_replace(
+                        $m[0][$i],
+                        $prepend_regexp .
                         '(?P<' . $keywords[$keyword]['param'] . '>' . $keywords[$keyword]['regexp'] . ')' .
-                        $append_regexp, $regexp);
+                        $append_regexp,
+                        $regexp
+                    );
                 } else {
-                    $regexp = str_replace($m[0][$i], $prepend_regexp .
+                    $regexp = str_replace(
+                        $m[0][$i],
+                        $prepend_regexp .
                         '(' . $keywords[$keyword]['regexp'] . ')' .
-                        $append_regexp, $regexp);
+                        $append_regexp,
+                        $regexp
+                    );
                 }
             }
             $keywords = $transform_keywords;
@@ -612,9 +628,15 @@ class DispatcherCore
      * @param array $params
      * @param int $id_shop
      */
-    public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(),
-                             array $params = array(), $id_shop = null)
-    {
+    public function addRoute(
+        $route_id,
+        $rule,
+        $controller,
+        $id_lang = null,
+        array $keywords = array(),
+        array $params = array(),
+        $id_shop = null
+    ) {
         $context = Context::getContext();
 
         if (isset($context->language) && $id_lang === null) {
