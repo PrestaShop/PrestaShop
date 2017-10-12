@@ -27,11 +27,6 @@
 abstract class CacheCore
 {
     /**
-     * Max number of queries cached in memcached, for each SQL table
-     */
-    const MAX_CACHED_OBJECT_BY_TABLE = 10000;
-
-    /**
      * Name of keys index
      */
     const KEYS_NAME = '__keys__';
@@ -52,6 +47,11 @@ abstract class CacheCore
      * @var Cache
      */
     protected static $instance;
+
+    /**
+     * Max number of queries cached in memcached, for each SQL table
+     */
+    protected $maxCachedObjectsByTable = 10000;
 
     /**
      * If a cache set this variable to true, we need to adjust the size of the table cache object
@@ -151,6 +151,22 @@ abstract class CacheCore
      * @return bool
      */
     abstract public function flush();
+
+    /**
+     * @return mixed
+     */
+    public function getMaxCachedObjectsByTable()
+    {
+        return $this->maxCachedObjectsByTable;
+    }
+
+    /**
+     * @param mixed $maxCachedObjectsByTable
+     */
+    public function setMaxCachedObjectsByTable($maxCachedObjectsByTable)
+    {
+        $this->maxCachedObjectsByTable = $maxCachedObjectsByTable;
+    }
 
     /**
      * @return Cache
@@ -393,7 +409,7 @@ abstract class CacheCore
             $this->set($cacheKey, $this->sql_tables_cached[$table]);
             // if the set fail because the object is too big, the adjustTableCacheSize flag is set
             if ($this->adjustTableCacheSize
-                || count($this->sql_tables_cached[$table]) > Cache::MAX_CACHED_OBJECT_BY_TABLE) {
+                || count($this->sql_tables_cached[$table]) > $this->maxCachedObjectsByTable) {
                 $this->adjustTableCacheSize($table);
                 $this->set($cacheKey, $this->sql_tables_cached[$table]);
             }
