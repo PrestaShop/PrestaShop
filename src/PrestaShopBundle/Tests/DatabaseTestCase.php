@@ -1,6 +1,4 @@
 <?php
-use PrestaShopBundle\Install\Install;
-
 /**
  * 2007-2017 PrestaShop
  *
@@ -25,11 +23,15 @@ use PrestaShopBundle\Install\Install;
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-define('_PS_IN_TEST_', true);
-define('_PS_ROOT_DIR_', __DIR__ . '/..');
-define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
-require_once(dirname(__FILE__).'/../config/defines.inc.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
-require_once(dirname(__FILE__).'/../config/bootstrap.php');
 
+namespace PrestaShop\PrestaShop\Tests\TestCase;
+use PHPUnit_Framework_TestCase;
+use PrestaShopBundle\Tests\Utils\Database;
 
+abstract class DatabaseTestCase extends PHPUnit_Framework_TestCase
+{
+    public static function setUpBeforeClass()
+    {
+        Database::restoreTestDB();
+    }
+}

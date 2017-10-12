@@ -520,8 +520,6 @@ class AdminControllerCore extends Controller
 
         $this->initShopContext();
 
-        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
         if (defined('_PS_ADMIN_DIR_')) {
             $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
             $this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
@@ -2934,6 +2932,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
     }
 
     /**

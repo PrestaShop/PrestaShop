@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration;
 
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Module;
 use Cache;
@@ -41,6 +42,7 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
      */
     public function testGetRightListForModule()
     {
+        ModuleManagerBuilder::getInstance()->build()->install('bankwire');
         $module = Module::getInstanceByName('bankwire');
         Cache::clean('hook_alias');
         $possible_hooks_list = $module->getPossibleHooksList();
@@ -49,5 +51,10 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 
         $this->assertEquals('displayPaymentReturn', $possible_hooks_list[0]['name']);
         $this->assertEquals('paymentOptions', $possible_hooks_list[1]['name']);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        Module::getInstanceByName('bankwire')->uninstall();
     }
 }

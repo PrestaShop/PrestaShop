@@ -127,7 +127,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->setupContextualLanguageMock();
         $this->setupContextualEmployeeMock();
         $this->setupContextualCookieMock();
+        $this->setupContextualCurrencyMock();
         $this->setupRequestMock();
+        if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
+            define('_PS_TAB_MODULE_LIST_URL_', '');
+        }
     }
 
     protected function setupContextualTemplateEngineMock()
@@ -135,6 +139,13 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
        $this->context->smarty = Phake::mock('Smarty');
 
        return $this->context->smarty;
+    }
+
+    protected function setupContextualCurrencyMock()
+    {
+        $this->context->currency = Phake::mock('Currency');
+
+        return $this->context->currency;
     }
 
     protected function setupContextualEmployeeMock()

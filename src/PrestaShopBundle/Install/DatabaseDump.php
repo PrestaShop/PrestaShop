@@ -25,7 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace PrestaShopBundle\Install;
 
 use Exception;
 
@@ -41,8 +41,10 @@ class DatabaseDump
     /**
      * Constructor extracts database connection info from PrestaShop's configuration,
      * but we use mysqldump and mysql for dump / restore.
+     *
+     * @param string $dumpFile dump file name
      */
-    private function __construct()
+    private function __construct($dumpFile = null)
     {
         $host_and_maybe_port = explode(':', _DB_SERVER_);
 
@@ -54,24 +56,23 @@ class DatabaseDump
             $this->port = $host_and_maybe_port[1];
         }
 
+        if ($dumpFile === null) {
+            $this->dumpFile = sys_get_temp_dir() . '/' . 'ps_dump.sql';
+        } else {
+            $this->dumpFile = $dumpFile;
+        }
         $this->databaseName = _DB_NAME_;
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
     }
 
     /**
-     * Clean the temporary file.
-     */
-    public function __destruct()
-    {
-        if ($this->dumpFile && file_exists($this->dumpFile)) {
-            unlink($this->dumpFile);
-            $this->dumpFile = null;
-        }
-    }
-
-    /**
      * Wrapper to easily build mysql commands: sets password, port, user
+     *
+     * @param string $executable
+     * @param array  $arguments
+     *
+     * @return string
      */
     private function buildMySQLCommand($executable, array $arguments = array())
     {
@@ -93,6 +94,11 @@ class DatabaseDump
 
     /**
      * Like exec, but will raise an exception if the command failed.
+     *
+     * @param string $command
+     *
+     * @return array
+     * @throws Exception
      */
     private function exec($command)
     {
@@ -113,8 +119,7 @@ class DatabaseDump
     private function dump()
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
-        $this->dumpFile = tempnam(sys_get_temp_dir(), 'ps_dump');
-        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile);
+        $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile). ' 2> /dev/null';
         $this->exec($dumpCommand);
     }
 
@@ -124,19 +129,27 @@ class DatabaseDump
     public function restore()
     {
         $restoreCommand = $this->buildMySQLCommand('mysql', array($this->databaseName));
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile);
+        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($restoreCommand);
     }
 
     /**
-     * Make a database dump and return an object on which you can call `restore` to restore the dump.
+     * Make a database dump
      */
     public static function create()
     {
         $dump = new DatabaseDump();
 
         $dump->dump();
+    }
 
-        return $dump;
+    /**
+     * Restore a database dump
+     */
+    public static function restoreDb()
+    {
+        $dump = new DatabaseDump();
+
+        $dump->restore();
     }
 }

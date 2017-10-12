@@ -50,7 +50,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 <p>Yolo</p>
 <form>
     <input type='text' name='card_number'>
-    <button style='display:none' id='pay-with-OPTION_ID' type='submit'></button>
+<button style='display:none' id='pay-with-OPTION_ID' type='submit'></button>
 </form>
 </div>";
 

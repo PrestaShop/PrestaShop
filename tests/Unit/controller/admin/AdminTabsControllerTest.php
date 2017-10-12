@@ -38,7 +38,7 @@ class AdminTabsControllerTest extends UnitTestCase
 {
     private $controller;
 
-    public function setup()
+    public function setUp()
     {
         parent::setUp();
 
@@ -115,6 +115,8 @@ class AdminTabsControllerTest extends UnitTestCase
                 return strpos($subject, 'tab') !== false ||
                     // It should select authorization
                     strpos($subject, 'authorization') !== false ||
+                    strpos($subject, 'ps_configuration') !== false ||
+                    strpos($subject, 'ps_shop') !== false ||
                     // It should select hook alias
                     strpos($subject, 'hook_alias') !== false;
 
@@ -128,5 +130,9 @@ class AdminTabsControllerTest extends UnitTestCase
             }));
 
         parent::setupDatabaseMock($dbMock);
+    }
+
+    public static function tearDownAfterClass() {
+        Tools::resetRequest();
     }
 }

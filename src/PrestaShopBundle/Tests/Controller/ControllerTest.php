@@ -160,7 +160,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         define('_DB_SERVER_', 'localhost');
         define('_DB_USER_', $configuration['parameters']['database_user']);
         define('_DB_PASSWD_', $configuration['parameters']['database_password']);
-        define('_DB_NAME_', $configuration['parameters']['database_name']);
+        define('_DB_NAME_', 'test_'.$configuration['parameters']['database_name']);
         define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
         define('_COOKIE_KEY_', Tools::passwdGen(56));
         define('_PS_VERSION_', '1.7');
@@ -297,5 +297,9 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $requestProphecy->query = $queryParameterBagProphecy->reveal();
 
         return new Tools($requestProphecy->reveal());
+    }
+
+    public static function tearDownAfterClass() {
+        Tools::resetRequest();
     }
 }

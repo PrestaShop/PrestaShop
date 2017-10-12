@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use Context;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Prophecy\Prophecy\ObjectProphecy;
 use Prophecy\Prophet;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -59,6 +61,8 @@ abstract class ApiTestCase extends WebTestCase
 
         $container = self::$kernel->getContainer();
         $this->router = $container->get('router');
+        $legacyContextMock = $this->mockContextAdapter();
+        $container->set('prestashop.adapter.legacy.context', $legacyContextMock->reveal());
     }
 
     public function tearDown()
@@ -69,11 +73,11 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Adapter\LegacyContext
+     * @return \Prophecy\Prophecy\ObjectProphecy
      */
     protected function mockContextAdapter()
     {
-        /** @var \PrestaShop\PrestaShop\Adapter\LegacyContext $legacyContextMock */
+        /** @var LegacyContext|ObjectProphecy $legacyContextMock */
         $legacyContextMock = $this->prophet->prophesize('\PrestaShop\PrestaShop\Adapter\LegacyContext');
 
         $contextMock = $this->mockContext();
@@ -82,6 +86,7 @@ abstract class ApiTestCase extends WebTestCase
         $legacyContextMock->getEmployeeLanguageIso()->willReturn(null);
         $legacyContextMock->getEmployeeCurrency()->willReturn(null);
         $legacyContextMock->getRootUrl()->willReturn(null);
+        $legacyContextMock->getLanguage()->willReturn(new \Language());
 
         return $legacyContextMock;
     }
@@ -152,6 +157,7 @@ abstract class ApiTestCase extends WebTestCase
         /** @var \Shop $shopMock */
         $shopMock = $this->prophet->prophesize('\Shop');
         $shopMock->getContextualShopId()->willReturn(1);
+        $shopMock->getCategory()->willReturn(1);
         $shopMock->getContextType()->willReturn(Shop::CONTEXT_SHOP);
         $shopMock->id = 1;
 

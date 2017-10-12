@@ -51,7 +51,7 @@ class HookRepositoryTest extends IntegrationTestCase
     {
         $modules = [
             'ps_emailsubscription',
-            'ps_shoppingcart'
+            'ps_featuredproducts'
         ];
 
         $this->hookRepository->persistHooksConfiguration([
@@ -67,14 +67,14 @@ class HookRepositoryTest extends IntegrationTestCase
     public function test_only_display_hooks_are_retrieved()
     {
         $this->hookRepository->persistHooksConfiguration([
-            'displayTestHookName' => ['ps_emailsubscription', 'ps_shoppingcart'],
+            'displayTestHookName' => ['ps_emailsubscription', 'ps_featuredproducts'],
             'notADisplayTestHookName' => ['ps_languageselector', 'ps_currencyselector']
         ]);
 
         $actual = $this->hookRepository->getDisplayHooksWithModules();
 
         $this->assertEquals(
-            ['ps_emailsubscription', 'ps_shoppingcart'],
+            ['ps_emailsubscription', 'ps_featuredproducts'],
             $actual['displayTestHookName']
         );
 
