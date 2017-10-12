@@ -141,12 +141,8 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
             break;
         }
 
-        // check the cache only contains the two latest key
-        $queryHash = Cache::getInstance()->getQueryHash($queries[8]);
-        $this->assertArrayHasKey($queryHash, $this->cacheArray);
-
-        $queryHash = Cache::getInstance()->getQueryHash($queries[9]);
-        $this->assertArrayHasKey($queryHash, $this->cacheArray);
+        // check the cache only contains two keys (+ 2 table keys)
+        $this->assertCount(4, $this->cacheArray);
     }
 
     public function testCacheLRUWithCacheFull()
