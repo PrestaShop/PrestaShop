@@ -388,7 +388,7 @@ abstract class CacheCore
         }
 
 
-        if (!in_array($key, $this->sql_tables_cached[$table])) {
+        if (!isset($this->sql_tables_cached[$table][$key])) {
             $this->sql_tables_cached[$table][$key] = 1;
             $this->set($cacheKey, $this->sql_tables_cached[$table]);
             // if the set fail because the object is too big, the adjustTableCacheSize flag is set
@@ -498,16 +498,22 @@ abstract class CacheCore
             foreach ($tables as $table) {
                 $cacheKey = $this->getTableMapCacheKey($table);
 
-                if (isset($this->sql_tables_cached[$table])) {
+                if (!array_key_exists($table, $this->sql_tables_cached)) {
+                    $this->sql_tables_cached[$table] = $this->get($cacheKey);
+                    if (!is_array($this->sql_tables_cached[$table])) {
+                        $this->sql_tables_cached[$table] = array();
+                    }
+                }
+
+                if (!empty($this->sql_tables_cached[$table])) {
                     foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key) {
                         $invalidKeys[] = $fs_key;
                         $invalidKeys[] = $fs_key.'_nrows';
                     }
                     unset($this->sql_tables_cached[$table]);
                     $this->_deleteMulti($invalidKeys);
+                    $this->_delete($cacheKey);
                 }
-
-                $this->_delete($cacheKey);
             }
         }
     }
