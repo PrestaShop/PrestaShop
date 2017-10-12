@@ -168,12 +168,6 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         return $this->context->cookie;
     }
 
-    protected function setupContextualCurrencyMock() {
-        $this->context->currency = Phake::mock('Currency');
-
-        return $this->context->currency;
-    }
-
     protected function setupRequestMock()
     {
         $this->request = Request::createFromGlobals();
