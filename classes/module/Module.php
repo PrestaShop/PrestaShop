@@ -2719,10 +2719,14 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getAuthorizedModules($group_id, $shops = array(1))
     {
-        return Db::getInstance()->executeS('
-        SELECT m.`id_module`, m.`name` FROM `' . _DB_PREFIX_.'module_group` mg
-        LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
-        WHERE mg.`id_group` = ' . (int)$group_id . ' AND `id_shop` IN (' . (implode(',', $shops)) . ')');
+        return Db::getInstance()->executeS(
+            'SELECT m.`id_module`, m.`name` FROM `' . _DB_PREFIX_ . 'module_group` mg
+            LEFT JOIN `'._DB_PREFIX_.'module` m ON (m.`id_module` = mg.`id_module`)
+            WHERE mg.`id_group` = ' . (int) $group_id . '
+            AND `id_shop` IN ('
+                . (implode(',', array_map('intval', $shops)))
+            . ')'
+        );
     }
 
     /**
