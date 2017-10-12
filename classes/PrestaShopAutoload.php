@@ -131,7 +131,7 @@ class PrestaShopAutoload
         }
 
         // If $classname has not core suffix (E.g. Shop, Product)
-        if (substr($className, -4) != 'Core') {
+        if (substr($className, -4) != 'Core' && !class_exists($className, false)) {
             $classDir = (isset($this->index[$className]['override'])
                 && $this->index[$className]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
