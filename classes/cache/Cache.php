@@ -329,15 +329,15 @@ abstract class CacheCore
             $result = array();
         }
 
+        // use the query counter to update the cache statistics
+        $this->updateQueryCacheStatistics();
+
         $key = $this->updateTableToQueryMap($query);
 
         // Store query results in cache
         // no need to check the key existence before the set : if the query is already
         // in the cache, setQuery is not invoked
         $this->set($key, $result);
-
-        // use the query counter to update the cache statistics
-        $this->updateQueryCacheStatistics();
     }
 
     /**
@@ -359,7 +359,7 @@ abstract class CacheCore
      *
      * @return string
      */
-    private function getTableMapCacheKey($table)
+    public function getTableMapCacheKey($table)
     {
         return Tools::hashIV(self::SQL_TABLES_NAME.'_'.$table);
     }
@@ -452,7 +452,7 @@ abstract class CacheCore
     }
 
     /**
-     * Remove the first 1000 less used query results from the cache
+     * Remove the first less used query results from the cache
      *
      * @param $table
      */
@@ -462,9 +462,9 @@ abstract class CacheCore
         if (isset($this->sql_tables_cached[$table])) {
             // sort the array with the query with the lowest count first
             asort($this->sql_tables_cached[$table], SORT_NUMERIC);
-            // reduce the size of the cache : delete the first 1000 (those with the lowest count)
-            $table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
-            foreach (array_keys($table_buffer) as $fs_key) {
+            // reduce the size of the cache : delete the first entries (those with the lowest count)
+            $tableBuffer = array_slice($this->sql_tables_cached[$table], 0, ceil($this->maxCachedObjectsByTable/3), true);
+            foreach (array_keys($tableBuffer) as $fs_key) {
                 $invalidKeys[] = $fs_key;
                 $invalidKeys[] = $fs_key.'_nrows';
                 unset($this->sql_tables_cached[$table][$fs_key]);
@@ -482,7 +482,7 @@ abstract class CacheCore
      *
      * @return array|bool
      */
-    protected function getTables($string)
+    public function getTables($string)
     {
         if (preg_match_all('/(?:from|join|update|into)\s+`?('._DB_PREFIX_.
             '[0-9a-z_-]+)(?:`?\s{0,},\s{0,}`?('._DB_PREFIX_.

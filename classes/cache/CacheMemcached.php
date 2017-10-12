@@ -42,12 +42,16 @@ class CacheMemcachedCore extends Cache
     public function __construct()
     {
         $this->connect();
-        if ($this->is_connected) {
+        if ($this->isConnected()) {
             $this->memcached->setOption(Memcached::OPT_PREFIX_KEY, _DB_PREFIX_);
             if ($this->memcached->getOption(Memcached::HAVE_IGBINARY)) {
                 $this->memcached->setOption(Memcached::OPT_SERIALIZER, Memcached::SERIALIZER_IGBINARY);
             }
         }
+    }
+
+    public function isConnected() {
+        return $this->is_connected;
     }
 
     public function __destruct()
@@ -83,7 +87,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function _set($key, $value, $ttl = 0)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
 
@@ -103,7 +107,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function _get($key)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
 
@@ -115,7 +119,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function _exists($key)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return ($this->memcached->get($key) !== false);
@@ -126,7 +130,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function _delete($key)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->delete($key);
@@ -137,7 +141,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function _deleteMulti($keyArray)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->deleteMulti($keyArray);
@@ -148,7 +152,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function _writeKeys()
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return true;
@@ -159,7 +163,7 @@ class CacheMemcachedCore extends Cache
      */
     public function flush()
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->flush();
@@ -232,7 +236,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function close()
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->quit();
