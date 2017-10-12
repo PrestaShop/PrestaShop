@@ -40,7 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
-use PrestaShopBundle\Tests\Utils\Database;
+use Tests\PrestaShopBundle\Utils\Database;
 use Product;
 use Tools;
 use Tax;

@@ -26,7 +26,7 @@
 
 namespace Tests\Integration\PrestaShopBundle\Test;
 
-use PrestaShopBundle\Tests\Utils\Database;
+use Tests\PrestaShopBundle\Utils\Database;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 

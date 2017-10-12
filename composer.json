@@ -132,37 +132,33 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB"
+            "Tests\\PrestaShopBundle\\Utils\\Database::createTestDB"
         ],
         "test-all": [
-            "composer test",
-            "composer test-admin",
+            "composer phpunit-legacy",
+            "composer phpunit-admin",
             "composer phpunit-sf",
             "composer phpunit-controllers"
         ],
         "phpunit-legacy": [
-            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-            "@php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml tests/"
+          "@composer create-test-db",
+          "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
         ],
         "phpunit-admin": [
-            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-            "@php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
+            "@composer create-test-db",
+            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
         ],
         "phpunit-sf": [
-          "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-          "@php -d date.timezone=UTC bin/phpunit -c tests/sf-tests.xml tests/"
+          "@composer create-test-db",
+          "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
         ],
         "phpunit-controllers": [
-          "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
-          "@php -d date.timezone=UTC bin/phpunit -c tests/old-controllers.xml tests/"
+          "@composer create-test-db",
+          "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
-        "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-        "phpunit-legacy": "@php ./vendor/bin/phpunit -c tests/phpunit.xml",
-        "phpunit-admin": "@php ./vendor/bin/phpunit -c tests/phpunit-admin.xml",
-        "phpunit-sf": "@php ./vendor/bin/phpunit -c tests/sf-tests.xml",
-        "phpunit-controllers": "@php ./vendor/bin/phpunit -c tests/old-controllers.xml"
+        "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init"
     },
     "config": {
         "platform": {

@@ -24,14 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
-use PHPUnit_Framework_TestCase;
-use PrestaShopBundle\Tests\Utils\Database;
-
-abstract class DatabaseTestCase extends PHPUnit_Framework_TestCase
-{
-    public static function setUpBeforeClass()
-    {
-        Database::restoreTestDB();
-    }
-}
+/**
+ * Allow call of Legacy classes from classes in /src and /tests
+ * @see composer.json "files" property for custom autoloading
+ */
+require_once(__DIR__.'/config/defines.inc.php');
+require_once(__DIR__.'/classes/PrestaShopAutoload.php');
