@@ -24,6 +24,9 @@
     <field name="depth"/>
     <field name="weight"/>
     <field name="out_of_stock"/>
+    <field name="additional_delivery_times"/>
+    <field name="delivery_in_stock"/>
+    <field name="delivery_out_stock"/>
     <field name="quantity_discount"/>
     <field name="customizable"/>
     <field name="uploadable_files"/>
