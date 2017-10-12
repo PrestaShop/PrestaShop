@@ -52,7 +52,7 @@ class Manager
     /**
      * @return InstalledRepositoryInterface
      */
-    public function getInstalledCurrencyRepository()
+    protected function getInstalledCurrencyRepository()
     {
         return $this->installedCurrencyRepository;
     }
@@ -60,7 +60,7 @@ class Manager
     /**
      * @return ReferenceRepositoryInterface
      */
-    public function getReferenceRepository()
+    protected function getReferenceRepository()
     {
         return $this->referenceRepository;
     }
@@ -90,6 +90,6 @@ class Manager
         }
 
         return $this->getReferenceRepository()
-            ->getCurrencyByIsoCode($isoCode);
+            ->getReferenceCurrencyByIsoCode($isoCode);
     }
 }

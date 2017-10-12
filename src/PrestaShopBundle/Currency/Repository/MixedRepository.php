@@ -66,12 +66,17 @@ class MixedRepository implements MixedRepositoryInterface
      * Get currency data by ISO 4217 code
      *
      * @param string $isoCode
+     *   The requested currency's ISO code
      *
-     * @return array The currency data
+     * @param string $localeCode
+     *   To localize currency's data
+     *
+     * @return Currency
+     *   The requested currency
      */
-    public function getReferenceCurrencyByIsoCode($isoCode)
+    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode)
     {
-        return $this->referenceCurrencyRepository->getReferenceCurrencyByIsoCode($isoCode);
+        return $this->referenceCurrencyRepository->getReferenceCurrencyByIsoCode($isoCode, $localeCode);
     }
 
     /**

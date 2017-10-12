@@ -44,6 +44,11 @@ class Symbol
         $this->narrow  = $narrowNotation;
     }
 
+    public function __toString()
+    {
+        return (string)$this->getNarrow();
+    }
+
     /**
      * @return string
      */
@@ -62,10 +67,5 @@ class Symbol
         }
 
         return $this->getDefault();
-    }
-
-    public function __toString()
-    {
-        return (string)$this->getDefault();
     }
 }

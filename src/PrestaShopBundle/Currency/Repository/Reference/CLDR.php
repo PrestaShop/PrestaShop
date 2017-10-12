@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Currency\Repository\Reference;
 
 use PrestaShopBundle\Currency\Exception\Exception;
-use PrestaShopBundle\Currency\Exception\InvalidArgumentException;
 use PrestaShopBundle\Localization\CLDR\DataReaderInterface;
 
 /**
@@ -88,9 +87,9 @@ class CLDR implements ReferenceReaderInterface
      * @return array
      *   The currency data
      */
-    public function getReferenceCurrencyByIsoCode($isoCode, $localeCode)
+    public function getReferenceCurrencyDataByIsoCode($isoCode, $localeCode)
     {
-        $currency = $this->getReader()->getCurrencyByIsoCode(
+        $currency = $this->getReader()->getCurrencyDataByIsoCode(
             $isoCode,
             $localeCode
         );

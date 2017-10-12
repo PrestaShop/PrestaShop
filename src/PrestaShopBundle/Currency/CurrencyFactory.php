@@ -36,11 +36,6 @@ namespace PrestaShopBundle\Currency;
 class CurrencyFactory
 {
     /**
-     * @var CurrencyParameters
-     */
-    protected $currencyParameters;
-
-    /**
      * Builds and returns a Currency object from the provided data
      *
      * @param CurrencyParameters $parameters

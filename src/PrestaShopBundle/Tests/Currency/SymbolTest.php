@@ -24,39 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\CLDR;
+namespace PrestaShopBundle\Tests\Currency;
 
-/**
- * Interface DataReaderInterface
- *
- * Defines how a CLDR data reader should behave
- *
- * @package PrestaShopBundle\Localization\CLDR
- */
-interface DataReaderInterface
+use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Currency\Symbol;
+
+class SymbolTest extends TestCase
 {
-    /**
-     * Get locale data by code (either language code or IETF locale tag)
-     *
-     * @param string $localeCode
-     *   The wanted locale code
-     *
-     * @return array
-     *   The locale data
-     */
-    public function getLocaleDataByCode($localeCode);
+    const STUB_SYMBOL_DEFAULT = 'PS$';
+    const STUB_SYMBOL_NARROW  = '$';
 
     /**
-     * Get currency data by ISO 4217 code
-     *
-     * @param string $isoCode
-     *   The currency code
-     *
-     * @param string $localeCode
-     *   The output locale code (in which language do you want the currency data ?)
-     *
-     * @return array
-     *   The currency data
+     * @var Symbol
      */
-    public function getCurrencyDataByIsoCode($isoCode, $localeCode);
+    protected $symbol;
+
+    public function setUp()
+    {
+        $this->symbol = new Symbol(self::STUB_SYMBOL_DEFAULT, self::STUB_SYMBOL_NARROW);
+    }
+
+    /**
+     * Given a valid currency symbol object
+     * When casting it as a string
+     * This symbol's narrow notation should be retrieved
+     */
+    public function testToString()
+    {
+        $this->assertSame(self::STUB_SYMBOL_NARROW, (string)$this->symbol);
+    }
 }

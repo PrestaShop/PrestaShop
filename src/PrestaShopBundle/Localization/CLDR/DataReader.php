@@ -100,12 +100,12 @@ class DataReader implements DataReaderInterface
      *
      * @return LocaleData The locale data object
      */
-    public function getLocaleByCode($localeCode)
+    public function getLocaleDataByCode($localeCode)
     {
         $localeData = $this->readLocaleData($localeCode);
 
         while ($localeData->parentLocale) {
-            $localeData->fill($this->getLocaleByCode($localeData->parentLocale));
+            $localeData->fill($this->getLocaleDataByCode($localeData->parentLocale));
         }
 
         return $localeData;
@@ -123,7 +123,7 @@ class DataReader implements DataReaderInterface
      * @return array
      *   The currency data
      */
-    public function getCurrencyByIsoCode($isoCode, $localeCode)
+    public function getCurrencyDataByIsoCode($isoCode, $localeCode)
     {
         $parts      = $this->getLocaleParts($localeCode);
         $commonData = $this->readCurrencyData($isoCode, $parts['language']);

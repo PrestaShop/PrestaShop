@@ -124,8 +124,12 @@ class Currency
         return $this->numericIsoCode;
     }
 
-    public function getName($context)
+    public function getName($context = null)
     {
+        if (!isset($context)) {
+            $context = 'default';
+        }
+
         return $this->displayNames[$context];
     }
 

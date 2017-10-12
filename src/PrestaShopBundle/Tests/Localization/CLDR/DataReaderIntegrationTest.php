@@ -54,7 +54,7 @@ class DataReaderIntegrationTest extends TestCase
      */
     public function testItReadsLocaleData($localeCode, $expectedData)
     {
-        $localeData = $this->reader->getLocaleByCode($localeCode);
+        $localeData = $this->reader->getLocaleDataByCode($localeCode);
 
         foreach ($expectedData as $property => $value) {
             // Assertions on number symbols lists (array of NumberSymbolList objects)
@@ -112,7 +112,7 @@ class DataReaderIntegrationTest extends TestCase
      */
     public function testItFailsReadingUnknownLocaleData()
     {
-        $this->reader->getLocaleByCode('foo');
+        $this->reader->getLocaleDataByCode('foo');
     }
 
     /**
@@ -128,7 +128,7 @@ class DataReaderIntegrationTest extends TestCase
      */
     public function testItReadsCurrencyData($localeCode, $currencyCode, $expectedData)
     {
-        $currencyData = $this->reader->getCurrencyByIsoCode($currencyCode, $localeCode);
+        $currencyData = $this->reader->getCurrencyDataByIsoCode($currencyCode, $localeCode);
 
         foreach ($expectedData as $property => $value) {
             $this->assertSame($value, $currencyData[$property]);
