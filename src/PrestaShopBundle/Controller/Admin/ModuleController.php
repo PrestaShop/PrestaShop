@@ -338,18 +338,20 @@ class ModuleController extends FrameworkBundleAdminController
             }
         } catch (UnconfirmedModuleActionException $e) {
             $modules = $modulesProvider->generateAddonsUrls(array($e->getModule()));
-            $response[$module]['status'] = false;
-            $response[$module]['confirmation_subject'] = $e->getSubject();
-            $response[$module]['module'] = $this->getPresentedProducts($modules)[0];
-            $response[$module]['msg'] = $translator->trans(
-                'Confirmation needed by module %module% on %action% (%subject%).',
-                array(
-                    '%subject%' => $e->getSubject(),
-                    '%action%' => $e->getAction(),
-                    '%module%' => $module,
-                ),
-                'Admin.Modules.Notification'
-            );
+            $response[$module] = array_replace($response[$module],
+                    array(
+                        'status' => false,
+                        'confirmation_subject' => $e->getSubject(),
+                        'module' => $this->getPresentedProducts($modules)[0],
+                        'msg' => $translator->trans(
+                            'Confirmation needed by module %module% on %action% (%subject%).',
+                            array(
+                                '%subject%' => $e->getSubject(),
+                                '%action%' => $e->getAction(),
+                                '%module%' => $module,
+                            ),
+                        'Admin.Modules.Notification'
+                    )));
         } catch (Exception $e) {
             $response[$module]['status'] = false;
             $response[$module]['msg'] = $translator->trans(
