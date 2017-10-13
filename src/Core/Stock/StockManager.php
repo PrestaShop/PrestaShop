@@ -299,7 +299,7 @@ class StockManager
         $employees = Employee::getEmployees();
         foreach ($employees as $employeeData) {
             $employee = new Employee($employeeData['id_employee']);
-            if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ',$employee->id_profile)) {
+            if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
                 $emails[] = $employee->email;
             }
         }
