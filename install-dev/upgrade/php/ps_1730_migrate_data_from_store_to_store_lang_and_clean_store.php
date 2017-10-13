@@ -24,10 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-function migrate_data_from_store_to_store_lang_and_clean_store()
+function ps_1730_migrate_data_from_store_to_store_lang_and_clean_store()
 {
     $langs = Language::getLanguages();
     foreach ($langs as $lang) {
-        Db::getInstance()->execute("INSERT INTO `" . _DB_PREFIX_ . "store_lang` SELECT `id_store`, " . $lang['id_lang'] . " as id_lang , `name`, `address1`, `address2`, `hours`, `note` FROM `" . _DB_PREFIX_ . "store` ");
+        Db::getInstance()->execute(
+            "INSERT INTO `" . _DB_PREFIX_ . "store_lang`
+            SELECT `id_store`, " . $lang['id_lang'] . " as id_lang , `name`, `address1`, `address2`, `hours`, `note`
+            FROM `" . _DB_PREFIX_ . "store`"
+        );
     }
 }
