@@ -6517,4 +6517,55 @@ class ProductCore extends ObjectModel
 
         return false;
     }
+
+    /**
+     * Return an array of customization fields IDs
+     * 
+     * @return array|false|mysqli_result|null|PDOStatement|resource
+     */
+    public function getUsedCustomizationFieldsIds()
+    {
+        return Db::getInstance()->executeS(
+            'SELECT cd.`index` FROM `' . _DB_PREFIX_ . 'customized_data` cd 
+            LEFT JOIN `' . _DB_PREFIX_ . 'customization_field` cf ON cf.`id_customization_field` = cd.`index`
+            WHERE cf.`id_product` = ' . (int)$this->id
+        );
+    }
+
+    /**
+     * Remove unused customization for the product
+     * 
+     * @param array $customizationIds - Array of customization fields IDs
+     */
+    public function deleteUnusedCustomizationFields($customizationIds)
+    {
+        if (is_array($customizationIds) && !empty($customizationIds)) {
+            $toDeleteIds = implode(",", $customizationIds);
+            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field` WHERE
+            `id_product` = ' . (int)$this->id . ' AND `id_customization_field` IN ('. $toDeleteIds .')');
+
+            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang` WHERE
+            `id_customization_field` IN (' . $toDeleteIds . ')');
+        }
+    }
+
+    /**
+     * Update the customization fields to be deleted if not used
+     *
+     * @param array $customizationIds - Array of excluded customization fields IDs
+     */
+    public function updateCustomizationFieldsToDeleted($customizationIds)
+    {
+        $updateQuery = 'UPDATE `' . _DB_PREFIX_ . 'customization_field` cf
+            SET cf.`is_deleted` = 1
+            WHERE
+            cf.`id_product` = ' . (int)$this->id . ' 
+            AND cf.`is_deleted` = 0 ';
+
+        if (is_array($customizationIds) && !empty($customizationIds)) {
+            $updateQuery .= 'AND cf.`id_customization_field` NOT IN (' . implode(',', array_map('intval', $customizationIds)) . ')';
+        }
+
+        Db::getInstance()->execute($updateQuery);
+    }
 }

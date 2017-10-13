@@ -392,4 +392,18 @@ class CustomizationCore extends ObjectModel
 
         return true;
     }
+
+    /**
+     * Delete the current context shops langs
+     * 
+     * @param $idCustomizationFiled
+     * @param $shopList
+     * @return bool
+     */
+    public static function deleteCustomuzationFieldByShop($idCustomizationFiled, $shopList)
+    {
+        return Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang` 
+                WHERE `id_customization_field` = ' . (int)$idCustomizationFiled . ' 
+                AND `id_shop` IN (' . implode(',', $shopList) . ')');
+    }
 }
