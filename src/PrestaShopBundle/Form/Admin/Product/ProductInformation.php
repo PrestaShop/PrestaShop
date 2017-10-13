@@ -160,13 +160,7 @@ class ProductInformation extends CommonAbstractType
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
                 'attr' => array(
-                    'class' => 'autoload_rte',
-                    'counter' => 6000,
-                ),
-                'constraints' => array(
-                    new TinyMceMaxLength(array(
-                        'max' => 6000
-                    ))
+                    'class' => 'autoload_rte'
                 ),
                 'required' => false
             ],
