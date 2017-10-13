@@ -43,10 +43,15 @@ interface InstalledRepositoryInterface
      * Get currency data by internal database identifier
      *
      * @param int $id
+     * ,  The requested currency's id
+     *
+     * @param $localeCode
+     *   Used to localize currency's data
      *
      * @return Currency
+     *   The requested Currency
      */
-    public function getCurrencyById($id);
+    public function getInstalledCurrencyById($id, $localeCode);
 
     /**
      * Get currency data by ISO 4217 alphabetic code
@@ -54,10 +59,13 @@ interface InstalledRepositoryInterface
      * @param string $isoCode
      *   The requested currency's ISO code
      *
+     * @param $localeCode
+     *   Used to localize currency's data
+     *
      * @return Currency
      *   The requested Currency
      */
-    public function getCurrencyByIsoCode($isoCode);
+    public function getInstalledCurrencyByIsoCode($isoCode, $localeCode);
 
     /**
      * @param Currency $currency

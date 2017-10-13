@@ -32,34 +32,63 @@ use stdClass;
 
 class ManagerTest extends TestCase
 {
-    const STUB_CURRENCY_ID   = 999;
-    const STUB_CURRENCY_CODE = 'FOO';
+    const CONTEXT_LOCALE_CODE            = 'fr-FR';
+    const STUB_INSTALLED_CURRENCY_ID     = 1;
+    const STUB_UNINSTALLED_CURRENCY_ID   = 999;
+    const STUB_INSTALLED_CURRENCY_CODE   = 'FOO';
+    const STUB_UNINSTALLED_CURRENCY_CODE = 'BAR';
 
     /**
      * @var Manager
      */
     protected $manager;
     protected $mockedCurrencyById;
-    protected $mockedCurrencyByCode;
+    protected $mockedInstalledCurrencyByCode;
+    protected $mockedUninstalledCurrencyByCode;
 
     public function setUp()
     {
-        // No behavior to be mocked. We just need to test if this very object is retrieved at the end.
-        $this->mockedCurrencyById    = (object)array('id' => self::STUB_CURRENCY_ID);
-        $this->mockedCurrencyByCode  = (object)array('isoCode' => self::STUB_CURRENCY_CODE);
+        // No behavior to be mocked for currencies. We just need to test if this very objects are retrieved at the end.
+        $this->mockedCurrencyById              = (object)array('id' => self::STUB_INSTALLED_CURRENCY_ID);
+        $this->mockedInstalledCurrencyByCode   = (object)array('isoCode' => self::STUB_INSTALLED_CURRENCY_CODE);
+        $this->mockedUninstalledCurrencyByCode = (object)array('isoCode' => self::STUB_UNINSTALLED_CURRENCY_CODE);
+
         $installedCurrencyRepository = $this->getMock(
             'PrestaShopBundle\Currency\Repository\Installed\InstalledRepositoryInterface'
         );
-        $installedCurrencyRepository->method('getCurrencyById')
-            ->with($this->equalTo(self::STUB_CURRENCY_ID))
-            ->willReturn($this->mockedCurrencyById);
-        $installedCurrencyRepository->method('getCurrencyByISoCode')
-            ->with($this->equalTo(self::STUB_CURRENCY_CODE))
-            ->willReturn($this->mockedCurrencyByCode);
+        $installedCurrencyRepository->method('getInstalledCurrencyById')
+            ->willReturnMap(array(
+                array(
+                    self::STUB_INSTALLED_CURRENCY_ID, // When asking for a valid installed id
+                    self::CONTEXT_LOCALE_CODE,
+                    $this->mockedCurrencyById,        // then the wanted currency is returned
+                ),
+                array(
+                    self::STUB_UNINSTALLED_CURRENCY_ID, // When asking for an unknown id
+                    self::CONTEXT_LOCALE_CODE,
+                    null,                               // Then null is returned
+                ),
+            ));
+        $installedCurrencyRepository->method('getInstalledCurrencyByIsoCode')
+            ->willReturnMap(array(
+                array(
+                    self::STUB_INSTALLED_CURRENCY_CODE,   // When asking for a valid installed code
+                    self::CONTEXT_LOCALE_CODE,
+                    $this->mockedInstalledCurrencyByCode, // then the wanted currency is returned
+                ),
+                array(
+                    self::STUB_UNINSTALLED_CURRENCY_CODE, // When asking for an unknown code
+                    self::CONTEXT_LOCALE_CODE,
+                    null,                                 // Then null is returned
+                ),
+            ));
 
         $referenceCurrencyRepository = $this->getMock(
             'PrestaShopBundle\Currency\Repository\Reference\ReferenceRepositoryInterface'
         );
+        $referenceCurrencyRepository->method('getReferenceCurrencyByIsoCode')
+            ->with(self::STUB_UNINSTALLED_CURRENCY_CODE)// When asking for a valid currency code
+            ->willReturn($this->mockedUninstalledCurrencyByCode); // A valid currency is returned from reference data
 
         $this->manager = new Manager($installedCurrencyRepository, $referenceCurrencyRepository);
     }
@@ -74,23 +103,59 @@ class ManagerTest extends TestCase
      */
     public function testGetCurrencyById()
     {
-        $currency = $this->manager->getCurrencyById(self::STUB_CURRENCY_ID);
+        $currency = $this->manager->getCurrencyById(
+            self::STUB_INSTALLED_CURRENCY_ID,
+            self::CONTEXT_LOCALE_CODE
+        );
         /** @var stdClass $currency */
-        $this->assertSame(self::STUB_CURRENCY_ID, $currency->id);
+        $this->assertSame(self::STUB_INSTALLED_CURRENCY_ID, $currency->id);
     }
 
     /**
-     * Given a valid currency code
-     * When asking a currency (with this iso code) to the currency manager
-     * Then it should return the expected Currency object
+     * Given an unknown currency id
+     * When asking a currency (with this id) to the currency manager
+     * Then it should return null
      *
      * This test is about the manager being able to use the good method from the good repository to retrieve the wanted
      * currency.
      */
-    public function testGetCurrencyByIsoCode()
+    public function testGetCurrencyByIdWhenNotInstalled()
     {
-        $currency = $this->manager->getCurrencyByIsoCode(self::STUB_CURRENCY_CODE);
+        $currency = $this->manager->getCurrencyById(
+            self::STUB_UNINSTALLED_CURRENCY_ID,
+            self::CONTEXT_LOCALE_CODE
+        );
         /** @var stdClass $currency */
-        $this->assertSame(self::STUB_CURRENCY_CODE, $currency->isoCode);
+        $this->assertNull($currency);
+    }
+
+    /**
+     * Given a valid currency code
+     * When asking the currency manager a currency (with this iso code)
+     * Then it should return the expected Currency object
+     *
+     * This test is about the manager being able to use the good method from the good repository to retrieve the wanted
+     * currency.
+     *
+     * @param $currencyCode
+     *
+     * @dataProvider provideCurrencyCodes
+     */
+    public function testGetCurrencyByIsoCode($currencyCode)
+    {
+        $currency = $this->manager->getCurrencyByIsoCode(
+            $currencyCode,
+            self::CONTEXT_LOCALE_CODE
+        );
+        /** @var stdClass $currency */
+        $this->assertSame($currencyCode, $currency->isoCode);
+    }
+
+    public function provideCurrencyCodes()
+    {
+        return array(
+            array(self::STUB_INSTALLED_CURRENCY_CODE),
+            array(self::STUB_UNINSTALLED_CURRENCY_CODE),
+        );
     }
 }

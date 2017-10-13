@@ -88,7 +88,7 @@ class MixedRepository implements MixedRepositoryInterface
      */
     public function getInstalledCurrencyById($id)
     {
-        return $this->installedCurrencyRepository->getCurrencyById($id);
+        return $this->installedCurrencyRepository->getInstalledCurrencyById($id);
     }
 
     public function addInstalledCurrency(Currency $currency)

@@ -68,28 +68,40 @@ class Manager
     /**
      * @param $id
      *
+     * @param $localeCode
+     *   Used to localize currency's data
+     *
      * @return null|Currency
      */
-    public function getCurrencyById($id)
+    public function getCurrencyById($id, $localeCode)
     {
         return $this->getInstalledCurrencyRepository()
-            ->getCurrencyById($id);
+            ->getInstalledCurrencyById($id, $localeCode);
     }
 
     /**
-     * @param $isoCode
+     * Get a currency by ISO code
      *
-     * @return Currency|null
+     * If not found in installed currencies, it will be retrieved from reference currencies pool.
+     *
+     * @param $isoCode
+     *   The wanted currency's ISO code
+     *
+     * @param $localeCode
+     *   Used to localize currency's data
+     *
+     * @return null|Currency
+     *   The wanted currency
      */
-    public function getCurrencyByIsoCode($isoCode)
+    public function getCurrencyByIsoCode($isoCode, $localeCode)
     {
         $installedCurrency = $this->getInstalledCurrencyRepository()
-            ->getCurrencyByIsoCode($isoCode);
+            ->getInstalledCurrencyByIsoCode($isoCode, $localeCode);
         if ($installedCurrency) {
             return $installedCurrency;
         }
 
         return $this->getReferenceRepository()
-            ->getReferenceCurrencyByIsoCode($isoCode);
+            ->getReferenceCurrencyByIsoCode($isoCode, $localeCode);
     }
 }
