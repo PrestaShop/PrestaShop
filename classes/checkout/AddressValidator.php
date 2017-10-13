@@ -25,9 +25,9 @@
  */
 
 /**
- * Class CartValidatorCore
+ * Class AddressValidatorCore
  */
-class CartValidatorCore
+class AddressValidatorCore
 {
     /** @var Context  */
     private $context;
@@ -36,7 +36,7 @@ class CartValidatorCore
 
 
     /**
-     * CartValidatorCore constructor.
+     * AddressValidatorCore constructor.
      * @param $context
      */
     public function __construct(Context $context = null)
