@@ -33,4 +33,4 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
 
 /* PHP:migrate_data_from_store_to_store_lang_and_clean_store(); */;
 
-ALTER TABLE `' . _DB_PREFIX_ . 'store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`;
+ALTER TABLE `PREFIX_store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`;
