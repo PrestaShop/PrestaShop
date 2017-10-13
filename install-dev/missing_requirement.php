@@ -105,9 +105,9 @@
           PrestaShop installation requires at least the <b>zip extension</b> to be enabled.
       </li>
     <?php endif; ?>
-    <?php if (PHP_VERSION_ID < 50509): ?>
+    <?php if (PHP_VERSION_ID < 50600): ?>
       <li>
-          PrestaShop requires at least PHP 5.4 or newer versions.
+          PrestaShop requires at least PHP 5.6 or newer versions.
           <i>You can install PrestaShop 1.6 if you can't update your version of PHP.</i>
       </li>
     <?php endif; ?>
