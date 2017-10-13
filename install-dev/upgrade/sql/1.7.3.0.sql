@@ -31,6 +31,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   PRIMARY KEY (`id_store`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-/* PHP:migrate_data_from_store_to_store_lang_and_clean_store(); */;
+/* PHP:ps_1730_migrate_data_from_store_to_store_lang_and_clean_store(); */;
 
 ALTER TABLE `PREFIX_store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`;
