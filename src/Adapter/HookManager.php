@@ -57,7 +57,7 @@ class HookManager
         $sfContainer = SymfonyContainer::getInstance();
         $request = null;
 
-        if($sfContainer instanceof ContainerInterface) {
+        if ($sfContainer instanceof ContainerInterface) {
             $request = $sfContainer->get('request_stack')->getCurrentRequest();
         }
 
