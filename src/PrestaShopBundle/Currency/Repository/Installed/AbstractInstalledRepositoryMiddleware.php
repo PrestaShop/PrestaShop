@@ -47,16 +47,19 @@ abstract class AbstractInstalledRepositoryMiddleware implements InstalledReposit
      *
      * @param int $id
      *
+     * @param $localeCode
+     *   Used to localize currency's data
+     *
      * @return Currency
      */
-    public function getCurrencyById($id)
+    public function getInstalledCurrencyById($id, $localeCode)
     {
         if ((int) $id != $id) {
             throw new InvalidArgumentException('$id must be an integer');
         }
 
         // get data from current repository
-        $currency = $this->getCurrencyByIdOnCurrentRepository($id);
+        $currency = $this->getCurrencyByIdOnCurrentRepository($id, $localeCode);
         if ($currency !== null) {
             return $currency;
         }
@@ -67,7 +70,7 @@ abstract class AbstractInstalledRepositoryMiddleware implements InstalledReposit
         }
 
         // get from next repository
-        $currency = $this->nextRepository->getCurrencyById($id);
+        $currency = $this->nextRepository->getInstalledCurrencyById($id, $localeCode);
 
         return $currency;
     }
@@ -121,9 +124,12 @@ abstract class AbstractInstalledRepositoryMiddleware implements InstalledReposit
     /**
      * @param $id
      *
+     * @param $localeCode
+     *   Used to localize currency's data
+     *
      * @return Currency|null
      */
-    abstract protected function getCurrencyByIdOnCurrentRepository($id);
+    abstract protected function getCurrencyByIdOnCurrentRepository($id, $localeCode);
 
     /**
      * @param Currency $currency
