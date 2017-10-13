@@ -31,7 +31,7 @@ use CartCore;
 use CartRule;
 use Configuration;
 use Context;
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use Product;
 use StockAvailable;
 
