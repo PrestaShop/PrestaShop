@@ -189,6 +189,13 @@ class StockManager
         $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
     }
 
+    /**
+     * @param Product $product
+     * @param int $id_product_attribute
+     * @param int $newQuantity
+     *
+     * @return bool
+     */
     protected function checkIfMustSendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
         if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
@@ -211,6 +218,12 @@ class StockManager
         return false;
     }
 
+    /**
+     * @param Product $product
+     * @param int $newQuantity
+     *
+     * @return bool
+     */
     protected function isProductQuantityUnderAlertThreshold($product, $newQuantity)
     {
         // low_stock_threshold empty to disable (can be negative, null or zero)
@@ -225,6 +238,12 @@ class StockManager
         return false;
     }
 
+    /**
+     * @param Combination $combination
+     * @param int $newQuantity
+     *
+     * @return bool
+     */
     protected function isCombinationQuantityUnderAlertThreshold(Combination $combination, $newQuantity)
     {
         // low_stock_threshold empty to disable (can be negative, null or zero)
@@ -239,6 +258,14 @@ class StockManager
         return false;
     }
 
+    /**
+     * @param Product $product
+     * @param int $id_product_attribute
+     * @param int $newQuantity
+     *
+     * @throws \Exception
+     * @throws \PrestaShopException
+     */
     protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
     {
         $context = Context::getContext();
