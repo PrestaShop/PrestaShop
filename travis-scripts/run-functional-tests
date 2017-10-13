@@ -13,5 +13,7 @@ git clone https://github.com/PrestaShop/PSFunctionalTests.git
 cd $TRAVIS_BUILD_DIR/PSFunctionalTests && npm install && cd test/itg/1.7
 
 echo "* Running functional tests ...";
-$TRAVIS_BUILD_DIR/PSFunctionalTests/node_modules/mocha/bin/mocha index.webdriverio.js -c --URL=localhost  --INSTALL=true -t 200000
+$TRAVIS_BUILD_DIR/PSFunctionalTests/node_modules/mocha/bin/mocha index.webdriverio.js \
+        -c --URL=localhost  --INSTALL=true --DB_SERVER=localhost --DB_USER=root --DB_PASSWD=prestashop -t 200000
+
 exit $?
