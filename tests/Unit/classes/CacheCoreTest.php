@@ -34,7 +34,8 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 {
     private $cacheArray = array();
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $memcachedMock = $this->getMockBuilder('CacheMemcache')
@@ -50,7 +51,8 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         Cache::setInstanceForTesting($memcachedMock);
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         $this->cacheArray = array();
     }
 
@@ -69,7 +71,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     {
         $args = func_get_args();
 
-        foreach($args[0] as $arg) {
+        foreach ($args[0] as $arg) {
             unset($this->cacheArray[$arg]);
         }
     }
@@ -91,18 +93,18 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     public function testSetQuery()
     {
         $queries = $this->selectDataProvider();
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             Cache::getInstance()->setQuery($query, array('queryResult'));
         }
 
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             $queryHash = Cache::getInstance()->getQueryHash($query);
 
             // check the query is in the cache
             $this->assertArrayHasKey($queryHash, $this->cacheArray);
 
             $tableLists = Cache::getInstance()->getTables($query);
-            foreach($tableLists as $table) {
+            foreach ($tableLists as $table) {
                 $tableCacheKey = Cache::getInstance()->getTableMapCacheKey($table);
 
                 // check the table cache key is in the cache
@@ -120,16 +122,16 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         
         $queries = $this->selectDataProvider();
         $i = 0;
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             $i++;
             Cache::getInstance()->setQuery($query, array('queryResult '.$i));
         }
 
         $this->assertCount(4, $this->cacheArray);
 
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             $tableLists = Cache::getInstance()->getTables($query);
-            foreach($tableLists as $table) {
+            foreach ($tableLists as $table) {
                 $tableCacheKey = Cache::getInstance()->getTableMapCacheKey($table);
 
                 // check the table cache key is in the cache
@@ -151,9 +153,11 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 
         $queries = $this->selectDataProvider();
         $i = 0;
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             Cache::getInstance()->setQuery($query, array('queryResult '.$i));
-            if ($i == 3) break;
+            if ($i == 3) {
+                break;
+            }
             $i++;
         }
 
@@ -197,7 +201,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     public function testCacheInvalidation()
     {
         $queries = $this->selectDataProvider();
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             Cache::getInstance()->setQuery($query, array('queryResult'));
         }
 
@@ -212,7 +216,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
 
         $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
 
-        foreach(array_keys($invalidatedKeys) as $invalidatedKey) {
+        foreach (array_keys($invalidatedKeys) as $invalidatedKey) {
             $this->assertArrayNotHasKey($invalidatedKey, $this->cacheArray);
         }
 
@@ -224,7 +228,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey($validTableMapKey, $this->cacheArray);
 
         // now check invalidation why full deletion of entry from "other table"
-        foreach($queries as $query) {
+        foreach ($queries as $query) {
             Cache::getInstance()->setQuery($query, array('queryResult'));
         }
 
@@ -245,7 +249,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     {
         $queryHash = Cache::getInstance()->getQueryHash($query);
         $tableLists = Cache::getInstance()->getTables($query);
-        foreach($tableLists as $table) {
+        foreach ($tableLists as $table) {
             $tableCacheKey = Cache::getInstance()->getTableMapCacheKey($table);
 
             // check the table cache key is in the cache
@@ -263,7 +267,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
     {
         $selectArray = array();
 
-        for($i = 0; $i <= 9; $i++) {
+        for ($i = 0; $i <= 9; $i++) {
             $selectArray[] = 'SELECT name FROM ps_configuration LEFT JOIN ps_confiture WHERE id = '.$i;
         }
 
