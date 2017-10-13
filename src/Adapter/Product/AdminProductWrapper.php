@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use Attachment;
+use PrestaShop\PrestaShop\Adapter\Entity\Customization;
 use SpecificPrice;
 use Customer;
 use Combination;
@@ -501,22 +502,11 @@ class AdminProductWrapper
         $shopList = Shop::getContextListShopID();
 
         /** Update the customization fields to be deleted in the next step if not used */
-        $updateQuery = 'UPDATE `' . _DB_PREFIX_ . 'customization_field` cf
-            SET cf.`is_deleted` = 1
-            WHERE
-            cf.`id_product` = ' . (int)$product->id . ' 
-            AND cf.`is_deleted` = 0 ';
-        if (!empty($customization_ids)) {
-            $updateQuery .= 'AND cf.`id_customization_field` NOT IN (' . implode(',', array_map('intval', $customization_ids)) . ')';
-        }
-        Db::getInstance()->execute($updateQuery);
+        $product->softDeleteCustomizationFields($customization_ids);
 
-        $usedCustomizationIds = Db::getInstance()->executeS(
-            'SELECT cd.`index` FROM `'._DB_PREFIX_.'customized_data` cd 
-            LEFT JOIN `'._DB_PREFIX_.'customization_field` cf ON cf.`id_customization_field` = cd.`index`
-            WHERE cf.`id_product` = ' . (int)$product->id
-        );
-        array_walk($usedCustomizationIds, create_function('&$v', '$v = (int)$v["index"];'));
+        $usedCustomizationIds = $product->getUsedCustomizationFieldsIds();
+        $usedCustomizationIds = array_column($usedCustomizationIds, 'index');
+        $usedCustomizationIds = array_map('intval', $usedCustomizationIds);
         $usedCustomizationIds = array_unique(array_merge($usedCustomizationIds, $customization_ids), SORT_REGULAR);
 
         //remove customization field langs for current context shops
@@ -528,21 +518,12 @@ class AdminProductWrapper
             }
             //if the customization_field is still in use, only delete the current context shops langs,
             if (in_array((int)$customizationFiled['id_customization_field'], $customization_ids)) {
-                Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang` 
-                WHERE `id_customization_field` = ' . (int)$customizationFiled['id_customization_field'] . ' 
-                AND `id_shop` IN (' . implode(',', $shopList) . ')');
+                Customization::deleteCustomizationFieldLangByShop($customizationFiled['id_customization_field'], $shopList);
             }
         }
 
         //remove unused customization for the product
-        if (!empty($toDeleteCustomizationIds)) {
-            $toDeleteIds = implode(",", $toDeleteCustomizationIds);
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field` WHERE
-            `id_product` = '.(int)$product->id.' AND `id_customization_field` IN ('. $toDeleteIds .')');
-
-            Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang` WHERE
-            `id_customization_field` IN (' . $toDeleteIds . ')');
-        }
+        $product->deleteUnusedCustomizationFields($toDeleteCustomizationIds);
 
         //create new customizations
         $countFieldText = 0;
