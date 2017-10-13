@@ -392,4 +392,25 @@ class CustomizationCore extends ObjectModel
 
         return true;
     }
+
+    /**
+     * Delete the current context shops langs
+     * 
+     * @param int $idCustomizationField
+     * @param int[] $shopList
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     */
+    public static function deleteCustomizationFieldLangByShop($idCustomizationField, $shopList)
+    {
+        $return = Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field_lang` 
+                WHERE `id_customization_field` = ' . (int)$idCustomizationField . ' 
+                AND `id_shop` IN (' . implode(',', $shopList) . ')');
+
+        if (!$return) {
+            throw new PrestaShopDatabaseException('An error occurred while deletion the customization fields lang');
+        }
+
+        return $return;
+    }
 }

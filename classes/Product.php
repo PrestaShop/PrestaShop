@@ -6577,4 +6577,73 @@ class ProductCore extends ObjectModel
 
         return false;
     }
+
+    /**
+     * Return an array of customization fields IDs
+     * 
+     * @return array|false
+     */
+    public function getUsedCustomizationFieldsIds()
+    {
+        return Db::getInstance()->executeS(
+            'SELECT cd.`index` FROM `' . _DB_PREFIX_ . 'customized_data` cd 
+            LEFT JOIN `' . _DB_PREFIX_ . 'customization_field` cf ON cf.`id_customization_field` = cd.`index`
+            WHERE cf.`id_product` = ' . (int)$this->id
+        );
+    }
+
+    /**
+     * Remove unused customization for the product
+     * 
+     * @param array $customizationIds - Array of customization fields IDs
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     */
+    public function deleteUnusedCustomizationFields($customizationIds)
+    {
+        $return = true;
+        if (is_array($customizationIds) && !empty($customizationIds)) {
+            $toDeleteIds = implode(",", $customizationIds);
+            $return &= Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'customization_field` WHERE
+            `id_product` = ' . (int)$this->id . ' AND `id_customization_field` IN ('. $toDeleteIds .')');
+
+            $return &= Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customization_field_lang` WHERE
+            `id_customization_field` IN (' . $toDeleteIds . ')');
+        }
+        
+        if (!$return) {
+            throw new PrestaShopDatabaseException('An error occurred while deletion the customization fields');
+        }
+        
+        return $return;
+    }
+
+    /**
+     * Update the customization fields to be deleted if not used
+     * 
+     * @param array $customizationIds - Array of excluded customization fields IDs
+     * @return bool
+     * @throws PrestaShopDatabaseException
+     */
+    public function softDeleteCustomizationFields($customizationIds)
+    {
+        $return = true;
+        $updateQuery = 'UPDATE `' . _DB_PREFIX_ . 'customization_field` cf
+            SET cf.`is_deleted` = 1
+            WHERE
+            cf.`id_product` = ' . (int)$this->id . ' 
+            AND cf.`is_deleted` = 0 ';
+
+        if (is_array($customizationIds) && !empty($customizationIds)) {
+            $updateQuery .= 'AND cf.`id_customization_field` NOT IN (' . implode(',', array_map('intval', $customizationIds)) . ')';
+        }
+
+        $return &= Db::getInstance()->execute($updateQuery);
+
+        if (!$return) {
+            throw new PrestaShopDatabaseException('An error occurred while soft deletion the customization fields');
+        }
+        
+        return $return;
+    }
 }
