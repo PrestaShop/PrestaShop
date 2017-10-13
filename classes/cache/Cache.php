@@ -87,6 +87,7 @@ abstract class CacheCore
         'pagenotfound',
         'page_viewed',
         'employee',
+        'log',
     );
 
     /**
@@ -136,7 +137,7 @@ abstract class CacheCore
     protected function _deleteMulti($keyArray)
     {
         foreach ($keyArray as $key) {
-            $this->_delete($key);
+            $this->delete($key);
         }
     }
 
@@ -259,6 +260,16 @@ abstract class CacheCore
     }
 
     /**
+     * Delete several keys at once from the cache
+     *
+     * @param array $keyArray
+     */
+    public function deleteMulti($keyArray)
+    {
+        $this->_deleteMulti($keyArray);
+    }
+
+    /**
      * Delete one or several data from cache (* joker can be used)
      * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
@@ -378,7 +389,7 @@ abstract class CacheCore
         // Get all table from the query and save them in cache
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
-                $this->addQueryKeyToTableMap($key, $table);
+                $this->addQueryKeyToTableMap($key, $table, $tables);
             }
         }
 
@@ -390,26 +401,23 @@ abstract class CacheCore
      *
      * @param string $key query hash
      * @param string $table table name
+     * @param array  $tables the tables associated with the query
      */
-    private function addQueryKeyToTableMap($key, $table)
+    private function addQueryKeyToTableMap($key, $table, $tables)
     {
         // the name of the cache entry which cache the table map
         $cacheKey = $this->getTableMapCacheKey($table);
 
-        if (!array_key_exists($table, $this->sql_tables_cached)) {
-            $this->sql_tables_cached[$table] = $this->get($cacheKey);
-            if (!is_array($this->sql_tables_cached[$table])) {
-                $this->sql_tables_cached[$table] = array();
-            }
-        }
-
+        $this->initializeTableCache($table);
 
         if (!isset($this->sql_tables_cached[$table][$key])) {
             if ((count($this->sql_tables_cached[$table])+1) > $this->maxCachedObjectsByTable) {
                 $this->adjustTableCacheSize($table);
             }
 
-            $this->sql_tables_cached[$table][$key] = 1;
+            $otherTables = $tables;
+            unset($otherTables[array_search($table, $tables)]);
+            $this->sql_tables_cached[$table][$key] = array('count' => 1, 'otherTables' => $otherTables);
             $this->set($cacheKey, $this->sql_tables_cached[$table]);
             // if the set fails because the object is too big, the adjustTableCacheSize flag is set
             if ($this->adjustTableCacheSize) {
@@ -432,15 +440,10 @@ abstract class CacheCore
 
             if ($tables = $this->getTables($query)) {
                 foreach ($tables as $table) {
-                    if (!array_key_exists($table, $this->sql_tables_cached)) {
-                        $this->sql_tables_cached[$table] = $this->get($this->getTableMapCacheKey($table));
-                        if (!is_array($this->sql_tables_cached[$table])) {
-                            $this->sql_tables_cached[$table] = array();
-                        }
-                    }
+                    $this->initializeTableCache($table);
 
                     if (isset($this->sql_tables_cached[$table][$key])) {
-                        $this->sql_tables_cached[$table][$key] += $count;
+                        $this->sql_tables_cached[$table][$key]['count'] += $count;
                         $changedTables[$table] = true;
                     }
                 }
@@ -470,9 +473,14 @@ abstract class CacheCore
             }
 
             // sort the array with the query with the lowest count first
-            asort($this->sql_tables_cached[$table], SORT_NUMERIC);
+            uasort($this->sql_tables_cached[$table], array($this, 'sortByCount'));
             // reduce the size of the cache : delete the first entries (those with the lowest count)
-            $tableBuffer = array_slice($this->sql_tables_cached[$table], 0, ceil($this->maxCachedObjectsByTable/3), true);
+            $tableBuffer = array_slice(
+                $this->sql_tables_cached[$table],
+                0,
+                ceil($this->maxCachedObjectsByTable/3),
+                true
+            );
             foreach (array_keys($tableBuffer) as $fs_key) {
                 $invalidKeys[] = $fs_key;
                 $invalidKeys[] = $fs_key.'_nrows';
@@ -485,6 +493,23 @@ abstract class CacheCore
             }
         }
         $this->adjustTableCacheSize = false;
+    }
+
+    /**
+     * Sort function used to sort the sql_tables_cached table using its 'count' entry
+     *
+     * @param array $a
+     * @param array $b
+     *
+     * @return bool
+     */
+    private function sortByCount($a, $b)
+    {
+        if ($a['count'] == $b['count']) {
+            return 0;
+        }
+
+        return ($a['count'] < $b['count']) ? -1 : 1;
     }
 
     /**
@@ -522,28 +547,86 @@ abstract class CacheCore
         }
 
         $invalidKeys = array();
+        $tableKeysToUpdate = array();
         if ($tables = $this->getTables($query)) {
             foreach ($tables as $table) {
-                $cacheKey = $this->getTableMapCacheKey($table);
-
-                if (!array_key_exists($table, $this->sql_tables_cached)) {
-                    $this->sql_tables_cached[$table] = $this->get($cacheKey);
-                    if (!is_array($this->sql_tables_cached[$table])) {
-                        $this->sql_tables_cached[$table] = array();
-                    }
-                }
+                $cacheKey = $this->initializeTableCache($table);
 
                 if (!empty($this->sql_tables_cached[$table])) {
-                    foreach (array_keys($this->sql_tables_cached[$table]) as $fs_key) {
+                    foreach ($this->sql_tables_cached[$table] as $fs_key => $tableMapInfos) {
                         $invalidKeys[] = $fs_key;
                         $invalidKeys[] = $fs_key.'_nrows';
+
+                        foreach ($tableMapInfos['otherTables'] as $otherTable) {
+                            if ($this->removeEntryInTableMapCache($fs_key, $otherTable)) {
+                                $tableKeysToUpdate[$otherTable] = 1;
+                            }
+                        }
                     }
                     unset($this->sql_tables_cached[$table]);
-                    $this->_deleteMulti($invalidKeys);
-                    $this->_delete($cacheKey);
+                    $this->deleteMulti($invalidKeys);
+                    $this->delete($cacheKey);
                 }
             }
+            $this->flushUpdatedTableKeyEntries($tableKeysToUpdate);
         }
+    }
+
+    /**
+     * Flush into the cache the updated entries from the sql_tables_caches
+     *
+     * @param array $tableKeysToUpdate
+     */
+    private function flushUpdatedTableKeyEntries($tableKeysToUpdate)
+    {
+        foreach (array_keys($tableKeysToUpdate) as $tableKeyToUpdate) {
+            $cacheKey = $this->getTableMapCacheKey($tableKeyToUpdate);
+            if (empty($this->sql_tables_cached[$tableKeyToUpdate])) {
+                $this->delete($cacheKey);
+            } else {
+                $this->set($cacheKey, $this->sql_tables_cached[$tableKeyToUpdate]);
+            }
+        }
+    }
+
+    /**
+     * Initialize the table cache entry associated with $table
+     *
+     * @param string $table
+     *
+     * @return string
+     */
+    private function initializeTableCache($table)
+    {
+        $cacheKey = $this->getTableMapCacheKey($table);
+
+        if (!array_key_exists($table, $this->sql_tables_cached)) {
+            $this->sql_tables_cached[$table] = $this->get($cacheKey);
+            if (!is_array($this->sql_tables_cached[$table])) {
+                $this->sql_tables_cached[$table] = array();
+            }
+        }
+
+        return $cacheKey;
+    }
+
+    /**
+     * Remove $key from the tableMap
+     *
+     * @param string $key
+     * @param string $table
+     *
+     * @return bool True is the key exists in the table
+     */
+    private function removeEntryInTableMapCache($key, $table)
+    {
+        if (isset($this->sql_tables_cached[$table][$key])) {
+            unset($this->sql_tables_cached[$table][$key]);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

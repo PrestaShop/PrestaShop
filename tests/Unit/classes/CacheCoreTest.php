@@ -194,6 +194,53 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $this->checkTableCacheMapCounter($queries[4], 1);
     }
 
+    public function testCacheInvalidation()
+    {
+        $queries = $this->selectDataProvider();
+        foreach($queries as $query) {
+            Cache::getInstance()->setQuery($query, array('queryResult'));
+        }
+
+        Cache::getInstance()->setQuery('SELECT name FROM ps_confiture WHERE id = 1', array('queryResultExtra'));
+
+        $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
+        $invalidatedKeys = $this->cacheArray[$tableMapKey];
+
+        $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
+        
+        Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
+
+        $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
+
+        foreach(array_keys($invalidatedKeys) as $invalidatedKey) {
+            $this->assertArrayNotHasKey($invalidatedKey, $this->cacheArray);
+        }
+
+        $validTableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_confiture');
+        $this->assertArrayHasKey($validTableMapKey, $this->cacheArray);
+
+        Cache::getInstance()->deleteQuery('SELECT name FROM ps_confiture WHERE id = 1');
+
+        $this->assertArrayNotHasKey($validTableMapKey, $this->cacheArray);
+
+        // now check invalidation why full deletion of entry from "other table"
+        foreach($queries as $query) {
+            Cache::getInstance()->setQuery($query, array('queryResult'));
+        }
+
+        $tableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_configuration');
+        $invalidatedKeys = $this->cacheArray[$tableMapKey];
+
+        $this->assertArrayHasKey($tableMapKey, $this->cacheArray);
+
+        // all entries from both ps_configuration AND ps_confiture will be deleted
+        Cache::getInstance()->deleteQuery('SELECT name FROM ps_configuration WHERE id = 1');
+
+        $this->assertArrayNotHasKey($tableMapKey, $this->cacheArray);
+        $otherTableMapKey = Cache::getInstance()->getTableMapCacheKey('ps_confiture');
+        $this->assertArrayNotHasKey($otherTableMapKey, $this->cacheArray);
+    }
+
     private function checkTableCacheMapCounter($query, $counter)
     {
         $queryHash = Cache::getInstance()->getQueryHash($query);
@@ -205,7 +252,7 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
             $this->assertArrayHasKey($tableCacheKey, $this->cacheArray);
 
             // check the query hash is in the table map
-            $this->assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]);
+            $this->assertEquals($counter, $this->cacheArray[$tableCacheKey][$queryHash]['count']);
         }
     }
 
