@@ -220,16 +220,6 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * Delete several keys at once from the cache
-     *
-     * @param array $keyArray
-     */
-    public function deleteMulti($keyArray)
-    {
-        $this->_deleteMulti($keyArray);
-    }
-
-    /**
      * Close connection to memcache server
      *
      * @return bool
