@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Adapter\Module\PrestaTrust;
 use Doctrine\Common\Cache\ArrayCache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess
@@ -118,7 +118,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
 
         $cache = new ArrayCache();
         $cache->save('module-verified-from-addons-api', (object)array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));
-        
+
         $this->prestatrustChecker = new PrestaTrustChecker(
             $cache,
             $this->apiClientS,
@@ -193,7 +193,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
     {
         $testedModule = clone $this->modules['module-prestatrust-checked'];
         $this->prestatrustChecker->loadDetailsIntoModule($testedModule);
-        
+
         $presentedModule = $this->modulePresenter->present($testedModule);
 
         $this->assertEquals(
