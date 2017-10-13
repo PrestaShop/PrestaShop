@@ -55,7 +55,7 @@ class HookManager
     ) {
         $sfContainer = SymfonyContainer::getInstance();
         if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
-            $hook_args = array_merge(array('request' => $sfContainer->get('request')), $hook_args);
+            $hook_args = array_merge(array('request' => $sfContainer->get('request_stack')), $hook_args);
 
             // If the Symfony kernel is instanciated, we use it for the event fonctionnality
             $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
