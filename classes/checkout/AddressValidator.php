@@ -25,9 +25,9 @@
  */
 
 /**
- * Class CartValidatorCore
+ * Class AddressValidatorCore
  */
-class CartValidatorCore
+class AddressValidatorCore
 {
     /** @var Context  */
     private $context;
@@ -36,7 +36,7 @@ class CartValidatorCore
 
 
     /**
-     * CartValidatorCore constructor.
+     * AddressValidatorCore constructor.
      * @param $context
      */
     public function __construct(Context $context = null)
@@ -48,7 +48,7 @@ class CartValidatorCore
     /**
      * Check the cart if has valid addresses
      * Return an array of invalid address ID in case invalid address
-     * 
+     *
      * @param Cart $cart
      * @return bool|array
      */
@@ -79,7 +79,7 @@ class CartValidatorCore
 
     /**
      * Return the list of invalid customer addresses
-     * 
+     *
      * @param Context $context
      * @return array|bool
      */
