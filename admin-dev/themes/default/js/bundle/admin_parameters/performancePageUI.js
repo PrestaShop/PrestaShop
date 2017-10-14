@@ -59,15 +59,18 @@ var PerformancePageUI = {
         var cacheEnabledInput = document.getElementById('form_caching_use_cache');
         var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
         var memcacheServersListBlock = document.getElementById('servers-list');
+        var newServerBtn = document.getElementById('new-server-btn');
         var isMemcache = cacheSelected === "CacheMemcache" || cacheSelected === "CacheMemcached";
 
         if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
             memcacheServersListBlock.style.display = "block";
+            newServerBtn.style.display = "block";
 
             return;
         }
 
         memcacheServersListBlock.style.display = "none";
+        newServerBtn.style.display = "none";
     }
 };
 
