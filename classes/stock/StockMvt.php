@@ -207,7 +207,7 @@ class StockMvtCore extends ObjectModel
         $query->orderBy('date_add DESC');
 
         // gets the result
-        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->query($query);
+        $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query, false);
 
         // fills the movements array
         while ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->nextRow($res)) {

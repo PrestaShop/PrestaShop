@@ -290,7 +290,7 @@ class AdminProductDataUpdater implements ProductInterface
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE cp.`id_category` = '.(int)$categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
 
-        Db::getInstance()->query($updatePositions);
+        Db::getInstance()->execute($updatePositions);
 
         // Fixes duplicates on all pages
         Db::getInstance()->query('SET @i := 0');
@@ -298,7 +298,7 @@ class AdminProductDataUpdater implements ProductInterface
             SET cp.`position` = (SELECT @i := @i + 1)
             WHERE cp.`id_category` = '.(int)$categoryId.'
             ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
-        Db::getInstance()->query($selectPositions);
+        Db::getInstance()->execute($selectPositions);
 
         return true;
     }
