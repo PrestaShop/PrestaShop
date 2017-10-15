@@ -1527,7 +1527,7 @@ CREATE TABLE `PREFIX_product` (
   `depth` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `out_of_stock` int(10) unsigned NOT NULL DEFAULT '2',
-  `additional_delivery_times` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `additional_delivery_times` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `delivery_in_stock` varchar(255) DEFAULT NULL,
   `delivery_out_stock` varchar(255) DEFAULT NULL,
   `quantity_discount` tinyint(1) DEFAULT '0',
