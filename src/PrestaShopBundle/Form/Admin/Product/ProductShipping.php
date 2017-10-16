@@ -133,7 +133,12 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('delivery_out_stock', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
             'required' => false,
-            'label' => $this->translator->trans('Delivery time of out-of-stock products with allowed orders:', [], 'Admin.Catalog.Feature'),
+            'label' =>
+                $this->translator->trans(
+                    'Delivery time of out-of-stock products with allowed orders:',
+                    [],
+                    'Admin.Catalog.Feature'
+                ),
             'attr' => array(
                 'placeholder' => $this->translator->trans('Delivered within 5-7 days', [], 'Admin.Catalog.Feature'),
             )
