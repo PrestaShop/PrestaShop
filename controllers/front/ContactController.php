@@ -53,7 +53,12 @@ class ContactControllerCore extends FrontController
                 $this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
             } elseif (!empty($file_attachment['name']) && !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension)) {
                 $this->errors[] = Tools::displayError('Bad file extension');
-            } elseif ($url === false || !empty($url) || $saveContactKey != (Tools::getValue('contactKey'))) {
+            } elseif (
+                Configuration::get('PS_SPAM_PROTECTION')
+                && ($url === false
+                    || !empty($url)
+                    || $saveContactKey != (Tools::getValue('contactKey')))
+                ) {
                 $this->errors[] = Tools::displayError('An error occurred while sending the message.');
             } else {
                 $customer = $this->context->customer;

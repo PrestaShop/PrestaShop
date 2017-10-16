@@ -124,6 +124,13 @@ class AdminPreferencesControllerCore extends AdminController
                     'default' => '0',
                     'visibility' => Shop::CONTEXT_ALL
                 ),
+                'PS_SPAM_PROTECTION' => array(
+                    'title' => $this->l('Use spam protection'),
+                    'desc' => $this->l('Allow spam protection in the contact form.'),
+                    'validation' => 'isBool',
+                    'cast' => 'intval',
+                    'type' => 'bool',
+                ),
                 'PS_ALLOW_HTML_IFRAME' => array(
                     'title' => $this->l('Allow iframes on HTML fields'),
                     'desc' => $this->l('Allow iframes on text fields like product description. We recommend that you leave this option disabled.'),
