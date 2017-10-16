@@ -7,9 +7,10 @@
       display:inline;
     }
     label {
-      display:inline;
+      display:inline-block;
     }
-    span {
+    a.btn {
+      height: 29px;
       display:inline;
     }
   }

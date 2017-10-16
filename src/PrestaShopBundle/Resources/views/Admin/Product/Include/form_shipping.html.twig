@@ -83,9 +83,7 @@
             {% if child.vars.value == 1 %}
               <div class="widget-radio-inline">
                 {{ form_widget(child) }}
-                <span class="small font-secondary">
-                  {{ "[1][2]edit[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="' ~ getAdminLink("AdminPPreferences") ~'" onclick="" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
-                </span>
+                <a href="{{ getAdminLink("AdminPPreferences") }}" class="btn sensitive px-0"><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
               </div>
             {% else %}
               {{ form_widget(child) }}
