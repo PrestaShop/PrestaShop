@@ -215,14 +215,15 @@ class OrderControllerCore extends FrontController
                     'Shop.Notifications.Error'
                 ),
             );
-            $checksum                         = null;
+
+            $checksum = null;
         } else {
             $checksum = $this->cartChecksum->generateChecksum($cart);
         }
 
         // Prepare all other addresses' warning messages (if relevant).
         // These messages are displayed when changing the selected address.
-        $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context);
+        $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context->language);
         $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
 
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
