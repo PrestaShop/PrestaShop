@@ -234,8 +234,11 @@ class DispatcherCore
         $this->use_default_controller = true;
         if ($this->default_controller === null) {
             if (defined('_PS_ADMIN_DIR_')) {
-                if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab)) {
-                    $this->default_controller = Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
+                if (isset(Context::getContext()->employee)
+                    && Validate::isLoadedObject(Context::getContext()->employee)
+                    && isset(Context::getContext()->employee->default_tab)) {
+                    $this->default_controller =
+                        Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
                 }
                 if (empty($this->default_controller)) {
                     $this->default_controller = 'AdminDashboard';
@@ -300,8 +303,10 @@ class DispatcherCore
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$module_name.'/controllers/front/');
                     if (isset($controllers[strtolower($this->controller)])) {
                         include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
-                        if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name . '/controllers/front/' . $this->controller . '.php')) {
-                            include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name . '/controllers/front/' . $this->controller . '.php');
+                        if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name .
+                            '/controllers/front/' . $this->controller . '.php')) {
+                            include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name .
+                                '/controllers/front/' . $this->controller . '.php');
                             $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
                         } else {
                             $controller_class = $module_name . $this->controller . 'ModuleFrontController';
@@ -317,13 +322,13 @@ class DispatcherCore
 
             // Dispatch back office controller + module back office controller
             case self::FC_ADMIN:
-                if (
-                    $this->use_default_controller
+                if ($this->use_default_controller
                     && !Tools::getValue('token')
                     && Validate::isLoadedObject(Context::getContext()->employee)
                     && Context::getContext()->employee->isLoggedBack()
                 ) {
-                    Tools::redirectAdmin('index.php?controller='.$this->controller.'&token='.Tools::getAdminTokenLite($this->controller));
+                    Tools::redirectAdmin('index.php?controller='.$this->controller.
+                        '&token='.Tools::getAdminTokenLite($this->controller));
                 }
 
                 $tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
@@ -339,12 +344,23 @@ class DispatcherCore
                             $controller_class = 'AdminNotFoundController';
                         } else {
                             // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
-                            include_once(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/'.$controllers[strtolower($this->controller)].'.php');
-                            if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module . '/controllers/admin/' . $controllers[strtolower($this->controller)] . '.php')) {
-                                include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module . '/controllers/admin/' . $controllers[strtolower($this->controller)] . '.php');
-                                $controller_class = $controllers[strtolower($this->controller)] . (strpos($controllers[strtolower($this->controller)], 'Controller') ? 'Override' : 'ControllerOverride');
+                            include_once(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/'.
+                                $controllers[strtolower($this->controller)].'.php');
+                            if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module .
+                                '/controllers/admin/' . $controllers[strtolower($this->controller)] . '.php')) {
+                                include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module . '/controllers/admin/' .
+                                    $controllers[strtolower($this->controller)] . '.php');
+                                $controller_class = $controllers[strtolower($this->controller)] .
+                                    (strpos(
+                                        $controllers[strtolower($this->controller)],
+                                        'Controller'
+                                    ) ? 'Override' : 'ControllerOverride');
                             } else {
-                                $controller_class = $controllers[strtolower($this->controller)] . (strpos($controllers[strtolower($this->controller)], 'Controller') ? '' : 'Controller');
+                                $controller_class = $controllers[strtolower($this->controller)] .
+                                    (strpos(
+                                        $controllers[strtolower($this->controller)],
+                                        'Controller'
+                                    ) ? '' : 'Controller');
                             }
                         }
                     }
@@ -354,11 +370,16 @@ class DispatcherCore
                         'is_module' => 1
                     );
                 } else {
-                    $controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/'));
+                    $controllers = Dispatcher::getControllers(
+                        array(
+                            _PS_ADMIN_DIR_.'/tabs/',
+                            _PS_ADMIN_CONTROLLER_DIR_,
+                            _PS_OVERRIDE_DIR_.'controllers/admin/'
+                        )
+                    );
                     if (!isset($controllers[strtolower($this->controller)])) {
                         // If this is a parent tab, load the first child
-                        if (
-                            Validate::isLoadedObject($tab)
+                        if (Validate::isLoadedObject($tab)
                             && $tab->id_parent == 0
                             && ($tabs = Tab::getTabs(Context::getContext()->language->id, $tab->id))
                             && isset($tabs[0])
@@ -430,7 +451,11 @@ class DispatcherCore
         $this->request_uri = rawurldecode($this->request_uri);
 
         if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop)) {
-            $this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
+            $this->request_uri = preg_replace(
+                '#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i',
+                '/',
+                $this->request_uri
+            );
         }
 
         // If there are several languages, get language from uri
@@ -461,8 +486,7 @@ class DispatcherCore
             foreach ($modules_routes as $module_route) {
                 if (is_array($module_route) && count($module_route)) {
                     foreach ($module_route as $route => $route_details) {
-                        if (
-                            array_key_exists('controller', $route_details)
+                        if (array_key_exists('controller', $route_details)
                             && array_key_exists('rule', $route_details)
                             && array_key_exists('keywords', $route_details)
                             && array_key_exists('params', $route_details)
@@ -622,7 +646,7 @@ class DispatcherCore
 
     /**
      *
-     * @param string $route_id Name of the route (need to be uniq, a second route with same name will override the first)
+     * @param string $route_id Name of the route (need to be uniq,a second route with same name will override the first)
      * @param string $rule Url rule
      * @param string $controller Controller to call if request uri match the rule
      * @param int $id_lang
@@ -754,8 +778,8 @@ class DispatcherCore
         array $params = array(),
         $force_routes = false,
         $anchor = '',
-        $id_shop = null)
-    {
+        $id_shop = null
+    ) {
         if ($id_lang === null) {
             $id_lang = (int)Context::getContext()->language->id;
         }
@@ -858,8 +882,10 @@ class DispatcherCore
 
         $controller = Tools::getValue('controller');
 
-        if (isset($controller) && is_string($controller)
-            && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m)) {
+        if (isset($controller)
+            && is_string($controller)
+            && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m)
+        ) {
             $controller = $m[1];
             if (isset($_GET['controller'])) {
                 $_GET[$m[2]] = $m[3];
@@ -1020,7 +1046,9 @@ class DispatcherCore
         foreach ($controller_files as $controller_filename) {
             if ($controller_filename[0] != '.') {
                 if (!strpos($controller_filename, '.php') && is_dir($dir.$controller_filename)) {
-                    $controllers += Dispatcher::getControllersInDirectory($dir.$controller_filename.DIRECTORY_SEPARATOR);
+                    $controllers += Dispatcher::getControllersInDirectory(
+                        $dir.$controller_filename.DIRECTORY_SEPARATOR
+                    );
                 } elseif ($controller_filename != 'index.php') {
                     $key = str_replace(array('controller.php', '.php'), '', strtolower($controller_filename));
                     $controllers[$key] = basename($controller_filename, '.php');
