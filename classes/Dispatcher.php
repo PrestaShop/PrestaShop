@@ -300,13 +300,15 @@ class DispatcherCore
                 $module = Module::getInstanceByName($module_name);
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
-                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$module_name.'/controllers/front/');
+                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
                     if (isset($controllers[strtolower($this->controller)])) {
-                        include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
-                        if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name .
-                            '/controllers/front/' . $this->controller . '.php')) {
-                            include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name .
-                                '/controllers/front/' . $this->controller . '.php');
+                        include_once(_PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php");
+                        if (file_exists(
+                            _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
+                        )) {
+                            include_once(
+                                _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
+                            );
                             $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
                         } else {
                             $controller_class = $module_name . $this->controller . 'ModuleFrontController';
@@ -327,40 +329,37 @@ class DispatcherCore
                     && Validate::isLoadedObject(Context::getContext()->employee)
                     && Context::getContext()->employee->isLoggedBack()
                 ) {
-                    Tools::redirectAdmin('index.php?controller='.$this->controller.
-                        '&token='.Tools::getAdminTokenLite($this->controller));
+                    Tools::redirectAdmin(
+                        "index.php?controller={$this->controller}&token=" . Tools::getAdminTokenLite($this->controller)
+                    );
                 }
 
                 $tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
                 $retrocompatibility_admin_tab = null;
 
                 if ($tab->module) {
-                    if (file_exists(_PS_MODULE_DIR_.$tab->module.'/'.$tab->class_name.'.php')) {
-                        $retrocompatibility_admin_tab = _PS_MODULE_DIR_.$tab->module.'/'.$tab->class_name.'.php';
+                    if (file_exists(_PS_MODULE_DIR_ . "{$tab->module}/{$tab->class_name}.php")) {
+                        $retrocompatibility_admin_tab = _PS_MODULE_DIR_ . "{$tab->module}/{$tab->class_name}.php";
                     } else {
                         $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/');
                         if (!isset($controllers[strtolower($this->controller)])) {
                             $this->controller = $this->controller_not_found;
                             $controller_class = 'AdminNotFoundController';
                         } else {
+                            $controller_name = $controllers[strtolower($this->controller)];
                             // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
-                            include_once(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/'.
-                                $controllers[strtolower($this->controller)].'.php');
-                            if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module .
-                                '/controllers/admin/' . $controllers[strtolower($this->controller)] . '.php')) {
-                                include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module . '/controllers/admin/' .
-                                    $controllers[strtolower($this->controller)] . '.php');
-                                $controller_class = $controllers[strtolower($this->controller)] .
-                                    (strpos(
-                                        $controllers[strtolower($this->controller)],
-                                        'Controller'
-                                    ) ? 'Override' : 'ControllerOverride');
+                            include_once(_PS_MODULE_DIR_ . "{$tab->module}/controllers/admin/$controller_name.php");
+                            if (file_exists(
+                                _PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php"
+                            )) {
+                                include_once(_PS_OVERRIDE_DIR_ . "modules/{$tab->module}/controllers/admin/$controller_name.php");
+                                $controller_class = $controller_name . (
+                                    strpos($controller_name,'Controller') ? 'Override' : 'ControllerOverride'
+                                );
                             } else {
-                                $controller_class = $controllers[strtolower($this->controller)] .
-                                    (strpos(
-                                        $controllers[strtolower($this->controller)],
-                                        'Controller'
-                                    ) ? '' : 'Controller');
+                                $controller_class = $controller_name . (
+                                    strpos($controller_name, 'Controller') ? '' : 'Controller'
+                                );
                             }
                         }
                     }
