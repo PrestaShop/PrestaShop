@@ -254,7 +254,7 @@ class ProductCore extends ObjectModel
     public $pack_stock_type = 3;
 
     /** @var integer type of delivery time */
-    public $additional_delivery_times = 0;
+    public $additional_delivery_times = 1;
 
     /** @var string delivery in-stock information */
     public $delivery_in_stock;
@@ -345,7 +345,7 @@ class ProductCore extends ObjectModel
             'date_add' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'date_upd' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'pack_stock_type' =>          array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
-            
+
             /* Lang fields */
             'meta_description' =>         array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_keywords' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
