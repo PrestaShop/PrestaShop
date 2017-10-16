@@ -99,8 +99,7 @@
         {if $product.delivery_information}
           <span class="delivery-information">{$product.delivery_information}</span>
         {/if}
-      {/if}
-      {if $product.additional_delivery_times == 2}
+      {elseif $product.additional_delivery_times == 2}
         {if $product.quantity > 0}
           <span class="delivery-information">{$product.delivery_in_stock}</span>
         {else}

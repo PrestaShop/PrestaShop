@@ -256,13 +256,34 @@ class ProductCore extends ObjectModel
      */
     public $pack_stock_type = 3;
 
-    /** @var integer type of delivery time */
-    public $additional_delivery_times = 0;
+    /**
+     * Type of delivery time
+     *
+     * Choose which parameters use for give information delivery.
+     * 0 - none
+     * 1 - use default information
+     * 2 - use product information
+     *
+     * @var integer
+     */
+    public $additional_delivery_times = 1;
 
-    /** @var string delivery in-stock information */
+    /**
+     * Delivery in-stock information
+     *
+     * Long description for delivery in-stock product information.
+     *
+     * @var string
+     */
     public $delivery_in_stock;
 
-    /** @var string delivery out-stock information */
+    /**
+     * Delivery out-stock information
+     *
+     * Long description for delivery out-stock product information.
+     *
+     * @var string
+     */
     public $delivery_out_stock;
 
     public static $_taxCalculationMethod = null;
@@ -349,7 +370,7 @@ class ProductCore extends ObjectModel
             'date_add' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'date_upd' =>                 array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
             'pack_stock_type' =>          array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
-            
+
             /* Lang fields */
             'meta_description' =>         array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
             'meta_keywords' =>            array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
