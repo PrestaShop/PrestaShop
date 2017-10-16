@@ -78,10 +78,21 @@
         data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
     </h2>
     <div class="row">
-      <div class="col-md-8">
-        {{ form_widget(form.additional_delivery_times) }}
-      </div>
-    </div>
+       <div class="col-md-12" {{ block('widget_container_attributes') }}>
+          {% for child in form.additional_delivery_times %}
+            {% if child.vars.value == 1 %}
+              <div class="widget-radio-inline">
+                {{ form_widget(child) }}
+                <span class="small font-secondary">
+                  {{ "[1][2]edit[/1]"|trans({}, 'Admin.Catalog.Help')|replace({'[1]': '<a href="' ~ getAdminLink("AdminPPreferences") ~'" onclick="" class="btn sensitive px-0">', '[/1]': '</a>', '[2]': '<i class="material-icons">open_in_new</i>'})|raw }}
+                </span>
+              </div>
+            {% else %}
+              {{ form_widget(child) }}
+            {% endif %}
+          {% endfor %}
+        </div>
+     </div>
   </div>
 </div>
 
