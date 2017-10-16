@@ -34,6 +34,10 @@ class OrderControllerCore extends FrontController
     public $checkoutWarning = false;
 
     protected $checkoutProcess;
+    /**
+     * @var CartChecksum
+     */
+    protected $cartChecksum;
 
     /**
      * Initialize order controller
@@ -148,42 +152,63 @@ class OrderControllerCore extends FrontController
         ;
     }
 
+    /**
+     * Persists cart-related data in checkout session
+     *
+     * @param CheckoutProcess $process
+     */
     protected function saveDataToPersist(CheckoutProcess $process)
     {
-        $data = $process->getDataToPersist();
+        $data             = $process->getDataToPersist();
         $addressValidator = new AddressValidator($this->context);
-        $customer = $this->context->customer;
+        $customer         = $this->context->customer;
+        $cart             = $this->context->cart;
 
-        $data['checksum'] = null;
-        if (is_array($addressValidator->hasValidAddresses())
-            && !$customer->isGuest()
-        ) {
-            $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
+        $shouldGenerateChecksum = false;
+
+        if ($customer->isGuest()) {
+            $shouldGenerateChecksum = true;
+        } else {
+            $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
+            if (empty($invalidAddressIds)) {
+                $shouldGenerateChecksum = true;
+            }
         }
 
+        $data['checksum'] = $shouldGenerateChecksum
+            ? $this->cartChecksum->generateChecksum($cart)
+            : null;
+
         Db::getInstance()->execute(
-            'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
-                WHERE id_cart = '.(int) $this->context->cart->id
+            'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
+                WHERE id_cart = ' . (int)$cart->id
         );
     }
 
+    /**
+     * Restores from checkout session some previously persisted cart-related data
+     *
+     * @param CheckoutProcess $process
+     */
     protected function restorePersistedData(CheckoutProcess $process)
     {
-        $rawData = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int)$this->context->cart->id
+        $cart     = $this->context->cart;
+        $customer = $this->context->customer;
+        $rawData  = Db::getInstance()->getValue(
+            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int)$cart->id
         );
-        $data    = json_decode($rawData, true);
+        $data     = json_decode($rawData, true);
         if (!is_array($data)) {
-            $data = [];
+            $data = array();
         }
 
-        $addressValidator = new AddressValidator($this->context);
-        $customer         = $this->context->customer;
-        $address          = $addressValidator->hasValidAddresses();
+        $addressValidator  = new AddressValidator();
+        $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
 
-        if (is_array($address) && !$customer->isGuest()) {
+        // Build the currently selected address' warning message (if relevant)
+        if (!$customer->isGuest() && !empty($invalidAddressIds)) {
             $this->checkoutWarning['address'] = array(
-                'id_address' => (int)reset($address),
+                'id_address' => (int)reset($invalidAddressIds),
                 'exception'  => $this->trans(
                     'Your address is incomplete, please update it.',
                     array(),
@@ -192,11 +217,13 @@ class OrderControllerCore extends FrontController
             );
             $checksum                         = null;
         } else {
-            $checksum = $this->cartChecksum->generateChecksum($this->context->cart);
+            $checksum = $this->cartChecksum->generateChecksum($cart);
         }
 
-        $invalidAddresses                           = $addressValidator->getInvalidAdressesIds();
-        $this->checkoutWarning['invalid_addresses'] = is_array($invalidAddresses) ? $invalidAddresses : array();
+        // Prepare all other addresses' warning messages (if relevant).
+        // These messages are displayed when changing the selected address.
+        $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context);
+        $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
 
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);

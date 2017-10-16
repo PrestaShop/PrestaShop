@@ -560,7 +560,7 @@ class CustomerCore extends ObjectModel
     public function getAddresses($idLang)
     {
         $group = Context::getContext()->shop->getGroup();
-        $shareOrder = isset($group->share_order) ? (bool) $group->share_order : false;
+        $shareOrder = isset($group->share_order) ? (bool) $group->share_order : 0;
         $cacheId = 'Customer::getAddresses'.(int) $this->id.'-'.(int) $idLang.'-'.$shareOrder;
         if (!Cache::isStored($cacheId)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
