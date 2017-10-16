@@ -23,10 +23,10 @@ Customer service</value>
 Thanks for your patience.</value>
   </configuration>
   <configuration id="PS_LABEL_IN_STOCK_PRODUCTS">
-    <value>In Stock</value>
+    <value></value>
   </configuration>
   <configuration id="PS_LABEL_OOS_PRODUCTS_BOA">
-    <value>Product available for orders</value>
+    <value></value>
   </configuration>
   <configuration id="PS_LABEL_OOS_PRODUCTS_BOD">
     <value>Out-of-Stock</value>
