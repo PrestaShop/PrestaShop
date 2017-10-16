@@ -27,8 +27,8 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title module-modal-title">{{ 'Connect to Addons marketplace'|trans({}, 'Admin.Modules.Feature') }}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         {% if level <= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
