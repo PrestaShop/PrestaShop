@@ -36,6 +36,7 @@ class CartProductTest extends AbstractCartCalculationTest
      */
     public function testCartWithoutCartRules($productDatas, $expectedTotal, $cartRuleDatas)
     {
+        $this->resetCart();
         $this->addProductsToCart($productDatas);
         $this->addCartRulesToCart($cartRuleDatas);
         $this->compareCartTotal($expectedTotal);
@@ -63,10 +64,9 @@ class CartProductTest extends AbstractCartCalculationTest
             ),
             '3 products in cart, several quantities' => array(
                 'products'      => array(
-                    2 => 2, // 64.776
-                    1 => 3, // 59.43
-                    3 => 1, // 31.188
-                    // total without rule : 155.41
+                    2 => 2,
+                    1 => 3,
+                    3 => 1,
                 ),
                 'expectedTotal' => 155.41,
                 'cartRules'     => array(),

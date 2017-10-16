@@ -30,6 +30,22 @@ use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddRuleTest extends AbstractCartTest
 {
+
+    protected $cartRulesFeatureActive;
+
+    public function setUp()
+    {
+        $this->cartRulesFeatureActive = \Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
+        \Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
+        parent::setUp();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        \Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', $this->cartRulesFeatureActive);
+    }
+
     /**
      * @dataProvider cartRuleValidityProvider
      *

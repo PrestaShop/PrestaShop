@@ -35,7 +35,7 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
 {
     protected function compareCartTotal($expectedTotal)
     {
-        $total = $this->cart->getOrderTotal();
+        $total = $this->cart->getOrderTotal(true);
         $this->assertEquals(\Tools::convertPrice($expectedTotal), $total);
     }
 }

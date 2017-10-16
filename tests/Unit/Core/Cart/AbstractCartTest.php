@@ -63,10 +63,10 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected $products = array();
 
     protected $productFixtures = [
-        1 => array('priceTaxIncl' => 19.812, 'taxRate' => 20),
-        2 => array('priceTaxIncl' => 32.388, 'taxRate' => 20),
-        3 => array('priceTaxIncl' => 31.188, 'taxRate' => 20),
-        4 => array('priceTaxIncl' => 35.567, 'taxRate' => 20, 'outOfStock' => true),
+        1 => array('price' => 19.812),
+        2 => array('price' => 32.388),
+        3 => array('price' => 31.188),
+        4 => array('price' => 35.567, 'outOfStock' => true),
     ];
 
     protected $cartRuleFixtures = [
@@ -148,15 +148,18 @@ abstract class AbstractCartTest extends IntegrationTestCase
     {
         foreach ($this->productFixtures as $k => $productFixture) {
             $product           = new \Product;
-            $product->price    = round($productFixture['priceTaxIncl'] / (1 + $productFixture['taxRate'] / 100), 3);
-            $product->tax_rate = $productFixture['taxRate'];
+            $product->price    = $productFixture['price'];
             $product->name     = 'product name';
+            $product->quantity = 1000;
             if (!empty($productFixture['outOfStock'])) {
                 $product->out_of_stock = 0;
+                $product->quantity     = 0;
             }
             $product->add();
             if (!empty($productFixture['outOfStock'])) {
                 \StockAvailable::setProductOutOfStock((int) $product->id, 0);
+            } else {
+                \StockAvailable::setQuantity((int) $product->id, 0, 1000);
             }
             $this->products[$k] = $product;
         }
