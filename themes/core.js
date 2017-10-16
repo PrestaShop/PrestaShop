@@ -2005,18 +2005,20 @@
 	};
 	
 	(0, _jquery2['default'])(window).load(function () {
+	  var $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible');
+	
 	  if (parseInt(useSameAddress) === 0) {
 	    (0, _jquery2['default'])('#invoice-addresses input[type=radio]:checked').trigger('click');
 	  }
 	  if (editAddress !== null || (0, _jquery2['default'])('.js-address-form:visible').length > 1) {
-	    (0, _jquery2['default'])('.js-address-error:visible').hide();
+	    $visibleAddressError.hide();
 	  }
 	
-	  if ((0, _jquery2['default'])('.js-address-error:visible').length > 0) {
+	  if ($visibleAddressError.length > 0) {
 	    (function () {
 	      var idFailureAddress = (0, _jquery2['default'])(".js-address-error").prop('id').split('-').pop();
 	
-	      (0, _jquery2['default'])(".js-address-error:visible").each(function () {
+	      $visibleAddressError.each(function () {
 	        switchEditAddressButtonColor(true, idFailureAddress, (0, _jquery2['default'])(this).attr('name').split('-').pop());
 	      });
 	    })();
