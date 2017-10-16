@@ -206,8 +206,12 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
         $idAddressInvoice = (int) $this->getCheckoutSession()->getIdAddressInvoice();
         $addressWarning = false;
         $errorKey = 'address_error';
-        $checkoutWarning = isset($this->context->controller->checkoutWarning['address']) ? $this->context->controller->checkoutWarning['address'] : false;
-        $invalidAddresses = isset($this->context->controller->checkoutWarning['invalid_addresses']) ? $this->context->controller->checkoutWarning['invalid_addresses'] : array();
+        $checkoutWarning = isset($this->context->controller->checkoutWarning['address'])
+            ? $this->context->controller->checkoutWarning['address']
+            : false;
+        $invalidAddresses = isset($this->context->controller->checkoutWarning['invalid_addresses'])
+            ? $this->context->controller->checkoutWarning['invalid_addresses']
+            : array();
 
         if (!empty($checkoutWarning)) {
             if ($idAddressDelivery === (int)$checkoutWarning['id_address']) {
