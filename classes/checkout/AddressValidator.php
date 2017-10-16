@@ -26,6 +26,8 @@
 
 /**
  * Class AddressValidatorCore
+ *
+ * Validates addresses held by common PrestaShop objects (cart, customer...)
  */
 class AddressValidatorCore
 {
@@ -66,16 +68,16 @@ class AddressValidatorCore
      * @param Customer $customer
      *   The customer holding the addresses to be inspected
      *
-     * @param Context  $context
+     * @param Language $language
      *   The language in which addresses should be validated
      *
      * @return array The invalid address ids. Empty if everything is ok.
      * The invalid address ids. Empty if everything is ok.
      */
-    public function validateCustomerAddresses(Customer $customer, Context $context)
+    public function validateCustomerAddresses(Customer $customer, Language $language)
     {
         $invalidAddresses = array();
-        $addresses        = $customer->getAddresses($context->language->id);
+        $addresses        = $customer->getAddresses($language->id);
 
         if (is_array($addresses)) {
             foreach ($addresses as $address) {

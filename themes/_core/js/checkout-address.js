@@ -58,7 +58,7 @@ export default function () {
       $addressError.hide();
     }
 
-    switchConfirmAddresssesButtonState();
+    switchConfirmAddressesButtonState($(".js-address-error:visible").length > 0);
   });
 }
 
@@ -79,14 +79,14 @@ $(window).load(() => {
       switchEditAddressButtonColor(true, idFailureAddress, $(this).attr('name').split('-').pop());
     });
   }
-  switchConfirmAddresssesButtonState();
+  switchConfirmAddressesButtonState($visibleAddressError.length > 0);
 });
 
 /**
  * Change the color of the edit button for the wrong address
- * @param enabled
- * @param id
- * @param type
+ * @param {Boolean} enabled
+ * @param {Number} id
+ * @param {String} type
  */
 const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabled, id, type) {
   let color = "#7a7a7a";
@@ -97,15 +97,11 @@ const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabl
   }
 
   $('#id-address-' + type + '-address-' + id + ' a.edit-address').prop('style', 'color: ' + color + ' !important');
-}
+};
 
 /**
  * Enable/disable the continue address button
  */
-const switchConfirmAddresssesButtonState = function switchConfirmAddresssesButtonState() {
-  if ($(".js-address-error:visible").length > 0) {
-    $('button[name=confirm-addresses]').prop("disabled", "disabled");
-  } else {
-    $('button[name=confirm-addresses]').prop("disabled", "");
-  }
-}
+const switchConfirmAddressesButtonState = function switchConfirmAddressesButtonState(enable) {
+  $('button[name=confirm-addresses]').prop("disabled", enable ? "" : "disabled");
+};
