@@ -705,6 +705,8 @@ class CartRuleCore extends ObjectModel
                 }
 
                 $product_rules = $this->getProductRules($id_product_rule_group);
+                $count_matching_products = 0;
+                $matching_products_list = array();
                 foreach ($product_rules as $product_rule) {
                     switch ($product_rule['type']) {
                         case 'attributes':
@@ -715,8 +717,6 @@ class CartRuleCore extends ObjectModel
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')
 							AND cp.id_product_attribute > 0');
-                            $count_matching_products = 0;
-                            $matching_products_list = array();
                             foreach ($cart_attributes as $cart_attribute) {
                                 if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
                                     $count_matching_products += $cart_attribute['quantity'];
@@ -727,10 +727,6 @@ class CartRuleCore extends ObjectModel
                                     $matching_products_list[] = $cart_attribute['id_product'].'-'.$cart_attribute['id_product_attribute'];
                                 }
                             }
-                            if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-                            }
-                            $eligible_products_list = CartRule::array_uintersect($eligible_products_list, $matching_products_list);
                             break;
                         case 'products':
                             $cart_products = Db::getInstance()->executeS('
@@ -738,8 +734,6 @@ class CartRuleCore extends ObjectModel
 							FROM `'._DB_PREFIX_.'cart_product` cp
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')');
-                            $count_matching_products = 0;
-                            $matching_products_list = array();
                             foreach ($cart_products as $cart_product) {
                                 if (in_array($cart_product['id_product'], $product_rule['values'])) {
                                     $count_matching_products += $cart_product['quantity'];
@@ -749,10 +743,6 @@ class CartRuleCore extends ObjectModel
                                     $matching_products_list[] = $cart_product['id_product'].'-0';
                                 }
                             }
-                            if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-                            }
-                            $eligible_products_list = CartRule::array_uintersect($eligible_products_list, $matching_products_list);
                             break;
                         case 'categories':
                             $cart_categories = Db::getInstance()->executeS('
@@ -762,8 +752,6 @@ class CartRuleCore extends ObjectModel
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')
 							AND cp.`id_product` <> '.(int)$this->gift_product);
-                            $count_matching_products = 0;
-                            $matching_products_list = array();
                             foreach ($cart_categories as $cart_category) {
                                 if (in_array($cart_category['id_category'], $product_rule['values'])
                                     /**
@@ -775,14 +763,10 @@ class CartRuleCore extends ObjectModel
                                     $matching_products_list[] = $cart_category['id_product'].'-'.$cart_category['id_product_attribute'];
                                 }
                             }
-                            if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-                            }
                             // Attribute id is not important for this filter in the global list, so the ids are replaced by 0
                             foreach ($matching_products_list as &$matching_product) {
                                 $matching_product = preg_replace('/^([0-9]+)-[0-9]+$/', '$1-0', $matching_product);
                             }
-                            $eligible_products_list = CartRule::array_uintersect($eligible_products_list, $matching_products_list);
                             break;
                         case 'manufacturers':
                             $cart_manufacturers = Db::getInstance()->executeS('
@@ -791,18 +775,12 @@ class CartRuleCore extends ObjectModel
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')');
-                            $count_matching_products = 0;
-                            $matching_products_list = array();
                             foreach ($cart_manufacturers as $cart_manufacturer) {
                                 if (in_array($cart_manufacturer['id_manufacturer'], $product_rule['values'])) {
                                     $count_matching_products += $cart_manufacturer['quantity'];
                                     $matching_products_list[] = $cart_manufacturer['id_product'].'-0';
                                 }
                             }
-                            if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-                            }
-                            $eligible_products_list = CartRule::array_uintersect($eligible_products_list, $matching_products_list);
                             break;
                         case 'suppliers':
                             $cart_suppliers = Db::getInstance()->executeS('
@@ -811,32 +789,30 @@ class CartRuleCore extends ObjectModel
 							LEFT JOIN `'._DB_PREFIX_.'product` p ON cp.id_product = p.id_product
 							WHERE cp.`id_cart` = '.(int)$context->cart->id.'
 							AND cp.`id_product` IN ('.implode(',', array_map('intval', $eligible_products_list)).')');
-                            $count_matching_products = 0;
-                            $matching_products_list = array();
                             foreach ($cart_suppliers as $cart_supplier) {
                                 if (in_array($cart_supplier['id_supplier'], $product_rule['values'])) {
                                     $count_matching_products += $cart_supplier['quantity'];
                                     $matching_products_list[] = $cart_supplier['id_product'].'-0';
                                 }
                             }
-                            if ($count_matching_products < $product_rule_group['quantity']) {
-                                return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
-                            }
-                            $eligible_products_list = CartRule::array_uintersect($eligible_products_list, $matching_products_list);
                             break;
                     }
-
-                    if (!count($eligible_products_list)) {
-                        return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
+                    if ($count_matching_products >= $product_rule_group['quantity']) {
+                        $eligible_products_list = CartRule::array_uintersect($eligible_products_list, $matching_products_list);
+                        continue 2;
                     }
                 }
-                $selected_products = array_merge($selected_products, $eligible_products_list);
+                if ($count_matching_products < $product_rule_group['quantity']) {
+                    return (!$display_error) ? false : Tools::displayError('You cannot use this voucher with these products');
+                }
             }
+            $selected_products = array_merge($selected_products, $eligible_products_list);
         }
 
         if ($return_products) {
             return $selected_products;
         }
+
         return (!$display_error) ? true : false;
     }
 
