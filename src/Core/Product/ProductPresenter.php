@@ -676,7 +676,7 @@ class ProductPresenter
 
         // if product has features
         if (isset($presentedProduct['features'])) {
-            $presentedProduct = $this->addFeaturesToDisplay($presentedProduct);
+            $presentedProduct['grouped_features'] = $this->buildGroupedFeatures($presentedProduct['features']);
         }
 
         return $presentedProduct;
@@ -835,24 +835,24 @@ class ProductPresenter
 
     /**
      * Assemble the same features in one array
-     * @param  array $presentedProduct
+     *
+     * @param  array $productFeatures
+     *
      * @return array
      */
-    public function addFeaturesToDisplay($presentedProduct)
+    protected function buildGroupedFeatures(array $productFeatures)
     {
-        $features = array();
-        foreach ($presentedProduct['features'] as $feature) {
+        $groupedFeatures = array();
+        foreach ($productFeatures as $feature) {
             if (isset($feature['name'])) {
-                if (array_key_exists($feature['name'], $features)) {
-                    $features[$feature['name']]['value'] .= "\n" . $feature['value'];
+                if (array_key_exists($feature['name'], $groupedFeatures)) {
+                    $groupedFeatures[$feature['name']]['value'] .= "\n" . $feature['value'];
                 } else {
-                    $features[$feature['name']] = $feature;
+                    $groupedFeatures[$feature['name']] = $feature;
                 }
             }
         }
 
-        $presentedProduct['grouped_features'] = $features;
-
-        return $presentedProduct;
+        return $groupedFeatures;
     }
 }
