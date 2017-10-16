@@ -847,5 +847,8 @@ Country</value>
     <configuration id="PS_ADVANCED_PAYMENT_API" name="PS_ADVANCED_PAYMENT_API">
       <value>0</value>
     </configuration>
+	<configuration id="PS_SPAM_PROTECTION" name="PS_SPAM_PROTECTION">
+	  <value>1</value>
+	</configuration>
   </entities>
 </entity_configuration>
