@@ -197,7 +197,7 @@ class DispatcherCore
     }
 
     /**
-     * Need to be instancied from getInstance() method
+     * Need to be instantiated from getInstance() method
      */
     protected function __construct()
     {
@@ -444,6 +444,8 @@ class DispatcherCore
 
     /**
      * Load default routes group by languages
+     *
+     * @param int $id_shop
      */
     protected function loadRoutes($id_shop = null)
     {
@@ -713,7 +715,9 @@ class DispatcherCore
      *
      * @param string $route_id
      * @param string $rule Rule to verify
-     * @param array $errors List of missing keywords
+     * @param array  $errors List of missing keywords
+     *
+     * @return bool
      */
     public function validateRoute($route_id, $rule, &$errors = array())
     {
@@ -735,13 +739,22 @@ class DispatcherCore
      * Create an url from
      *
      * @param string $route_id Name the route
-     * @param int $id_lang
-     * @param array $params
-     * @param bool $use_routes If false, don't use to create this url
+     * @param int    $id_lang
+     * @param array  $params
+     * @param bool   $force_routes
      * @param string $anchor Optional anchor to add at the end of this url
+     * @param null   $id_shop
+     *
+     * @return string
+     * @throws PrestaShopException
      */
-    public function createUrl($route_id, $id_lang = null, array $params = array(), $force_routes = false, $anchor = '',
-                              $id_shop = null)
+    public function createUrl(
+        $route_id,
+        $id_lang = null,
+        array $params = array(),
+        $force_routes = false,
+        $anchor = '',
+        $id_shop = null)
     {
         if ($id_lang === null) {
             $id_lang = (int)Context::getContext()->language->id;
@@ -825,6 +838,8 @@ class DispatcherCore
     /**
      * Retrieve the controller from url or request uri if routes are activated
      *
+     * @param int $id_shop
+     *
      * @return string
      */
     public function getController($id_shop = null)
@@ -843,7 +858,8 @@ class DispatcherCore
 
         $controller = Tools::getValue('controller');
 
-        if (isset($controller) && is_string($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m)) {
+        if (isset($controller) && is_string($controller)
+            && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m)) {
             $controller = $m[1];
             if (isset($_GET['controller'])) {
                 $_GET[$m[2]] = $m[3];
@@ -864,8 +880,12 @@ class DispatcherCore
             $controller = $this->controller_not_found;
             $test_request_uri = preg_replace('/(=http:\/\/)/', '=', $this->request_uri);
 
-            // If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher)
-            if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($test_request_uri, PHP_URL_PATH))) {
+            // If the request_uri matches a static file, then there is no need to check the routes, we keep
+            // "controller_not_found" (a static file should not go through the dispatcher)
+            if (!preg_match(
+                '/\.(gif|jpe?g|png|css|js|ico)$/i',
+                parse_url($test_request_uri, PHP_URL_PATH)
+            )) {
                 // Add empty route as last route to prevent this greedy regexp to match request uri before right time
                 if ($this->empty_route) {
                     $this->addRoute(
@@ -945,6 +965,9 @@ class DispatcherCore
 
     /**
      * Get list of all available Module Front controllers
+     *
+     * @param string $type
+     * @param string  $module
      *
      * @return array
      */
