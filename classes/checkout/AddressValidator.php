@@ -29,78 +29,61 @@
  */
 class AddressValidatorCore
 {
-    /** @var Context  */
-    private $context;
-    /** @var Cart  */
-    private $cart;
-
-
     /**
-     * AddressValidatorCore constructor.
-     * @param $context
-     */
-    public function __construct(Context $context = null)
-    {
-        $this->context = $context;
-        $this->cart = $context->cart;
-    }
-
-    /**
-     * Check the cart if has valid addresses
-     * Return an array of invalid address ID in case invalid address
+     * Validates cart addresses
+     * Returns an array of invalid address IDs.
      *
      * @param Cart $cart
-     * @return bool|array
+     *   The cart holding the addresses to be inspected
+     *
+     * @return array
+     *   The invalid address ids. Empty if everything is ok.
      */
-    public function hasValidAddresses($cart = null)
+    public function validateCartAddresses(Cart $cart)
     {
-        $cart = empty($cart) ? $this->cart : $cart;
-
-        if (!($cart instanceof Cart)) {
-            return false;
-        }
-
-        $addressesIds = array(
+        $invalidAddressIds = array();
+        $addressesIds      = array(
             $cart->id_address_delivery,
             $cart->id_address_invoice,
         );
 
         foreach ($addressesIds as $idAddress) {
-            $address = new Address($idAddress);
+            $address = new Address((int)$idAddress);
             try {
-                $address->getFields();
+                $address->validateFields();
             } catch (PrestaShopException $e) {
-                return array($idAddress);
+                $invalidAddressIds[] = (int)$idAddress;
             }
         }
 
-        return true;
+        return $invalidAddressIds;
     }
 
     /**
-     * Return the list of invalid customer addresses
+     * Validates given customer's addresses
+     * Returns an array of invalid address IDs.
      *
-     * @param Context $context
-     * @return array|bool
+     * @param Customer $customer
+     *   The customer holding the addresses to be inspected
+     *
+     * @param Context  $context
+     *   The language in which addresses should be validated
+     *
+     * @return array The invalid address ids. Empty if everything is ok.
+     * The invalid address ids. Empty if everything is ok.
      */
-    public function getInvalidAdressesIds($context = null)
+    public function validateCustomerAddresses(Customer $customer, Context $context)
     {
-        $context = empty($context) ? $this->context : $context;
-
-        if (!($context instanceof Context)) {
-            return false;
-        }
-
         $invalidAddresses = array();
-        $addresses = $context->customer->getAddresses($context->language->id);
+        $addresses        = $customer->getAddresses($context->language->id);
 
         if (is_array($addresses)) {
             foreach ($addresses as $address) {
                 try {
-                    $adressObject = new Address($address['id_address']);
-                    $adressObject->getFields();
+                    $adressObject = new Address((int)$address['id_address']);
+                    $adressObject->validateFields();
                 } catch (PrestaShopException $e) {
-                    $invalidAddresses[] = $address['id_address'];
+                    $invalidAddresses[] = (int)$address['id_address'];
                 }
             }
         }
