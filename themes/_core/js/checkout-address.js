@@ -63,17 +63,19 @@ export default function () {
 }
 
 $(window).load(() => {
+  let $visibleAddressError = $('.js-address-error:visible');
+
   if (parseInt(useSameAddress) === 0) {
     $('#invoice-addresses input[type=radio]:checked').trigger('click');
   }
   if (editAddress !== null || $('.js-address-form:visible').length > 1) {
-    $('.js-address-error:visible').hide();
+    $visibleAddressError.hide();
   }
 
-  if ($('.js-address-error:visible').length > 0) {
+  if ($visibleAddressError.length > 0) {
     let idFailureAddress = $(".js-address-error").prop('id').split('-').pop();
 
-    $(".js-address-error:visible").each(function () {
+    $visibleAddressError.each(function () {
       switchEditAddressButtonColor(true, idFailureAddress, $(this).attr('name').split('-').pop());
     });
   }
