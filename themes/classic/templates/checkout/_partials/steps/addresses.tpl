@@ -69,7 +69,7 @@
         {if isset($delivery_address_error)}
           <p class="alert alert-danger js-address-error" name="alert-delivery" id="id-failure-address-{$delivery_address_error.id_address}">{$delivery_address_error.exception}</p>
         {else}
-          <p class="alert alert-danger js-address-error hide" name="alert-delivery">{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
+          <p class="alert alert-danger js-address-error hidden" name="alert-delivery">{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
         {/if}
 
         <p class="add-address">
@@ -113,7 +113,7 @@
           {if isset($invoice_address_error)}
             <p class="alert alert-danger js-address-error" name="alert-invoice" id="id-failure-address-{$invoice_address_error.id_address}">{$invoice_address_error.exception}</p>
           {else}
-            <p class="alert alert-danger js-address-error hide" name="alert-invoice" >{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
+            <p class="alert alert-danger js-address-error hidden" name="alert-invoice" >{l s="Your address is incomplete, please update it." d="Shop.Notifications.Error"}</p>
           {/if}
 
           <p class="add-address">

@@ -44,6 +44,8 @@ export default function () {
     let notValidAddresses = $('#not-valid-addresses').val();
     let addressType = this.name.split('_').pop();
     let $addressError = $('.js-address-error[name=alert-' + addressType + ']');
+    let $visibleAddressError = $('.js-address-error:visible');
+
     switchEditAddressButtonColor(false, idFailureAddress, addressType);
 
     if (notValidAddresses !== "" && editAddress === null) {
@@ -58,7 +60,7 @@ export default function () {
       $addressError.hide();
     }
 
-    switchConfirmAddressesButtonState($(".js-address-error:visible").length > 0);
+    switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
   });
 }
 
@@ -79,7 +81,7 @@ $(window).load(() => {
       switchEditAddressButtonColor(true, idFailureAddress, $(this).attr('name').split('-').pop());
     });
   }
-  switchConfirmAddressesButtonState($visibleAddressError.length > 0);
+  switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
 });
 
 /**
