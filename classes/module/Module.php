@@ -663,7 +663,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Retrieve hooks used by the module
-        $sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
+        $sql = 'SELECT DISTINCT(`id_hook`) FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $this->unregisterHook((int)$row['id_hook']);
