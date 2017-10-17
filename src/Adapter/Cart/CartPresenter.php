@@ -81,8 +81,11 @@ class CartPresenter implements PresenterInterface
             $attributesArray = array();
 
             foreach ($rawProduct['attributes'] as $attribute) {
-                list($key, $value) = explode(':', $attribute);
-                $attributesArray[trim($key)] = ltrim($value);
+                $groupAndAttribute = explode(':', $attribute);
+                if (count($groupAndAttribute) > 1) {
+                    list($key, $value) = $groupAndAttribute;
+                    $attributesArray[trim($key)] = ltrim($value);
+                }
             }
 
             $rawProduct['attributes'] = $attributesArray;
