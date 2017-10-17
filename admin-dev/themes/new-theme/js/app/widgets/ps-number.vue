@@ -59,11 +59,11 @@
         this.$emit('blur', $event);
       },
       increment() {
-        const value = this.value + 1;
+        const value = parseInt(this.value, 10) + 1;
         this.$emit('change', value);
       },
       decrement() {
-        const value = this.value - 1;
+        const value = parseInt(this.value, 10) - 1;
         this.$emit('change', value);
       },
     },
