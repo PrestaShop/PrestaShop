@@ -2000,35 +2000,37 @@
 	      $addressError.hide();
 	    }
 
-	    switchConfirmAddresssesButtonState();
+	    switchConfirmAddressesButtonState((0, _jquery2['default'])(".js-address-error:visible").length > 0);
 	  });
 	};
 
 	(0, _jquery2['default'])(window).load(function () {
+	  var $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible');
+
 	  if (parseInt(useSameAddress) === 0) {
 	    (0, _jquery2['default'])('#invoice-addresses input[type=radio]:checked').trigger('click');
 	  }
 	  if (editAddress !== null || (0, _jquery2['default'])('.js-address-form:visible').length > 1) {
-	    (0, _jquery2['default'])('.js-address-error:visible').hide();
+	    $visibleAddressError.hide();
 	  }
 
-	  if ((0, _jquery2['default'])('.js-address-error:visible').length > 0) {
+	  if ($visibleAddressError.length > 0) {
 	    (function () {
 	      var idFailureAddress = (0, _jquery2['default'])(".js-address-error").prop('id').split('-').pop();
 
-	      (0, _jquery2['default'])(".js-address-error:visible").each(function () {
+	      $visibleAddressError.each(function () {
 	        switchEditAddressButtonColor(true, idFailureAddress, (0, _jquery2['default'])(this).attr('name').split('-').pop());
 	      });
 	    })();
 	  }
-	  switchConfirmAddresssesButtonState();
+	  switchConfirmAddressesButtonState($visibleAddressError.length > 0);
 	});
 
 	/**
 	 * Change the color of the edit button for the wrong address
-	 * @param enabled
-	 * @param id
-	 * @param type
+	 * @param {Boolean} enabled
+	 * @param {Number} id
+	 * @param {String} type
 	 */
 	var switchEditAddressButtonColor = function switchEditAddressButtonColor(enabled, id, type) {
 	  var color = "#7a7a7a";
@@ -2044,12 +2046,8 @@
 	/**
 	 * Enable/disable the continue address button
 	 */
-	var switchConfirmAddresssesButtonState = function switchConfirmAddresssesButtonState() {
-	  if ((0, _jquery2['default'])(".js-address-error:visible").length > 0) {
-	    (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", "disabled");
-	  } else {
-	    (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", "");
-	  }
+	var switchConfirmAddressesButtonState = function switchConfirmAddressesButtonState(enable) {
+	  (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", enable ? "" : "disabled");
 	};
 	module.exports = exports['default'];
 
