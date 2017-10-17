@@ -118,11 +118,11 @@ class AdminStoresControllerCore extends AdminController
 
         $this->_select = 'cl.`name` country, st.`name` state, sl.*';
         $this->_join = '
-			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl
-				ON (cl.`id_country` = a.`id_country`
-				AND cl.`id_lang` = '.(int)$this->context->language->id.')
-			LEFT JOIN `'._DB_PREFIX_.'state` st
-				ON (st.`id_state` = a.`id_state`)
+            LEFT JOIN `' . _DB_PREFIX_ . 'country_lang` cl
+                ON (cl.`id_country` = a.`id_country`
+                AND cl.`id_lang` = ' . (int)$this->context->language->id . ')
+            LEFT JOIN `' . _DB_PREFIX_ . 'state` st
+                ON (st.`id_state` = a.`id_state`)
             LEFT JOIN `' . _DB_PREFIX_ . 'store_lang` sl
                 ON (sl.`id_store` = a.`id_store`
                 AND sl.`id_lang` = ' . (int)$this->context->language->id . ') ';
@@ -302,20 +302,13 @@ class AdminStoresControllerCore extends AdminController
 
         $hours_temp = ($this->getFieldValue($obj, 'hours'));
         if (is_array($hours_temp) && !empty($hours_temp)) {
-            $numberOfLang = count(Language::getLanguages());
-            foreach ($hours_temp as $key => $hour) {
-                $hour_tmp = json_decode($hour);
-                if (empty($hour_tmp)) {
-                    continue;
-                }
-                foreach ($hour_tmp as $h) {
-                    if (1 < $numberOfLang) {
-                        $hours[$key][] = implode(' | ', $h);
-                    } else {
-                        $hours[] = implode(' | ', $h);
-                    }
-                }
-            }
+            $Langs = Language::getLanguages(true);
+            $hours_temp = array_map('json_decode', $hours_temp);
+            $hours = array_map(
+                array($this, 'adaptHoursFormat'),
+                $hours_temp
+            );
+            $hours = (count($Langs) > 1) ? $hours : $hours[reset($Langs)['id_lang']];
         }
 
         $this->fields_value = array(
@@ -582,5 +575,18 @@ class AdminStoresControllerCore extends AdminController
                 Configuration::updateValue('PS_SHOP_STATE', pSQL($state->name));
             }
         }
+    }
+
+    /**
+     * Adapt the format of hours
+     * 
+     * @param array $value
+     * @return array
+     */
+    private function adaptHoursFormat($value)
+    {
+        $separator = array_fill(0, count($value), ' | ');
+        
+        return array_map('implode', $value, $separator);
     }
 }
