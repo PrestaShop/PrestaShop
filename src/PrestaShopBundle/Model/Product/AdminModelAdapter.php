@@ -333,9 +333,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 if (empty($dataFeature['feature']) {
                     continue;
                 }
-                    
+
                 $idFeature = $dataFeature['feature'];
-                
+
                 //custom value is defined
                 if ($dataFeature['custom_value'][$this->defaultLocale]) {
                     foreach ($this->locales as $locale) {
