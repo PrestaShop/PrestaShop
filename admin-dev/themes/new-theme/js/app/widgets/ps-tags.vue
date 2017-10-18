@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="tags-input search-input" @click="focus()">
+  <div class="tags-input search-input search" :class="{ 'search-with-icon': hasIcon }" @click="focus()">
     <span v-for="(tag, index) in tags" class="input-tag">
       <span class="tag">{{ tag }}<i class="material-icons" @click="close(index)">close</i></span>
     </span>
@@ -32,7 +32,7 @@
       :placeholder="placeholderToDisplay"
       type="text"
       v-model="tag"
-      class="input"
+      class="form-control input"
       @keyup="onKeyUp"
       @keydown.enter="add(tag)"
       @keydown.delete.stop="remove()"
@@ -44,7 +44,7 @@
 <script>
 
   export default {
-    props: ['tags', 'placeholder'],
+    props: ['tags', 'placeholder', 'hasIcon'],
     computed: {
       inputSize() {
         return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
@@ -84,7 +84,7 @@
     data: () => ({ tag: null }),
   };
 </script>
-<style lang="sass">
+<style lang="sass" type="text/scss">
   @import "../../../scss/config/_settings.scss";
   .tags-input {
     .tag {
@@ -104,16 +104,10 @@
       }
     }
     input.input, input.input:focus {
-      background-color: white;
-      font-family: Open Sans, sans-serif;
-      cursor: text;
-      padding-left: 2px;
       border: none;
       outline: none;
       min-height: 33px;
-      &::placeholder {
-       font-style: italic;
-      }
+      width: auto;
     }
   }
 </style>
