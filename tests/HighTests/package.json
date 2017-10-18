@@ -1,0 +1,38 @@
+{
+  "name": "ps_functional_tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrestaShop/PSFunctionalTests.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PrestaShop/PSFunctionalTests/issues"
+  },
+  "homepage": "https://github.com/PrestaShop/PSFunctionalTests#readme",
+  "dependencies": {
+    "json": "^9.0",
+    "minimist": "^1.2",
+    "mocha": "^2.5",
+    "node-uuid": "^1.4",
+    "parsed-url": "0.0.0",
+    "q": "^1.4",
+    "req": "^0.1",
+    "should": "^9.0",
+    "webdriverio": "^4.0",
+    "window": "^1.0"
+  },
+  "devDependencies": {
+    "dateformat": "^2.0.0",
+    "mochawesome": "^2.3.0",
+    "nodemailer": "^4.0.1",
+    "chai": "^4.1.2",
+    "chai-string": "^1.4.0"
+  }
+}
