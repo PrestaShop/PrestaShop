@@ -202,18 +202,44 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function getTemplateParameters()
     {
+        $idAddressDelivery = (int) $this->getCheckoutSession()->getIdAddressDelivery();
+        $idAddressInvoice = (int) $this->getCheckoutSession()->getIdAddressInvoice();
+        $addressWarning = false;
+        $errorKey = 'address_error';
+        $checkoutWarning = isset($this->context->controller->checkoutWarning['address'])
+            ? $this->context->controller->checkoutWarning['address']
+            : false;
+        $invalidAddresses = isset($this->context->controller->checkoutWarning['invalid_addresses'])
+            ? $this->context->controller->checkoutWarning['invalid_addresses']
+            : array();
+
+        if (!empty($checkoutWarning)) {
+            if ($idAddressDelivery === (int)$checkoutWarning['id_address']) {
+                $addressWarning = $checkoutWarning;
+                $errorKey = 'delivery_address_error';
+            } elseif ($idAddressInvoice === (int)$checkoutWarning['id_address']) {
+                $addressWarning = $checkoutWarning;
+                $errorKey = 'invoice_address_error';
+                $this->use_same_address = false;
+            }
+        }
+
+        if ($this->use_same_address && ($idAddressInvoice != $idAddressDelivery || $this->show_invoice_address_form)) {
+            $this->use_same_address = false;
+        }
         return array(
             'address_form' => $this->addressForm->getProxy(),
-            'use_same_address' => $this->use_same_address,
             'use_same_address' => $this->use_same_address,
             'use_different_address_url' => $this->context->link->getPageLink('order', true, null, array('use_same_address' => 0)),
             'new_address_delivery_url' => $this->context->link->getPageLink('order', true, null, array('newAddress' => 'delivery')),
             'new_address_invoice_url' => $this->context->link->getPageLink('order', true, null, array('newAddress' => 'invoice')),
-            'id_address_delivery' => $this->getCheckoutSession()->getIdAddressDelivery(),
-            'id_address_invoice' => $this->getCheckoutSession()->getIdAddressInvoice(),
+            'id_address_delivery' => $idAddressDelivery,
+            'id_address_invoice' => $idAddressInvoice,
             'show_delivery_address_form' => $this->show_delivery_address_form,
             'show_invoice_address_form' => $this->show_invoice_address_form,
             'form_has_continue_button' => $this->form_has_continue_button,
+            $errorKey => $addressWarning,
+            'not_valid_addesses' => implode(",", $invalidAddresses),
         );
     }
 
