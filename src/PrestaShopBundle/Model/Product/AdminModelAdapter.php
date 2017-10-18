@@ -332,16 +332,18 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             foreach ($form_data['features'] as $dataFeature) {
                 $idFeature = $dataFeature['feature'];
                 
-                if (!empty($idFeature)) {
-                    //custom value is defined
-                    if ($dataFeature['custom_value'][$this->defaultLocale]) {
-                        foreach ($this->locales as $locale) {
-                            $form_data['feature_'.$idFeature.'_value'] = null;
-                            $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
-                        }
-                    } elseif ($dataFeature['value']) {
-                        $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
+                if (empty($idFeature) {
+                    continue;
+                }
+                
+                //custom value is defined
+                if ($dataFeature['custom_value'][$this->defaultLocale]) {
+                    foreach ($this->locales as $locale) {
+                        $form_data['feature_'.$idFeature.'_value'] = null;
+                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
                     }
+                } elseif ($dataFeature['value']) {
+                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
                 }
             }
         }
