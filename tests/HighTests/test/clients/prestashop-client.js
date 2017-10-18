@@ -26,6 +26,17 @@ class PrestashopClient {
     return this.client.saveScreenshot(`screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
   }
 
+  addCategorySuccessPanel(index, erreurmsg) {
+    return this.client
+      .waitForExist(selector.BO.CatalogPage.CategorySubmenu.success_panel)
+      .getText(selector.BO.CatalogPage.CategorySubmenu.success_panel).then(function (text) {
+        text = text.indexOf(index);
+        if (text === -1) {
+          done(new Error(erreurmsg));
+        }
+      })
+  }
+
   open() {
     return this.client.init().windowHandleSize({width: 1280, height: 1024});
   }
