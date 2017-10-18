@@ -27,7 +27,7 @@
     <PSTags
       v-if="!hasChildren"
       ref="tags"
-      class="form-control search search-input"
+      class="form-control search search-input mb-2"
       :tags="tags"
       :placeholder="hasPlaceholder?placeholder:''"
       :hasIcon="true"
@@ -199,5 +199,6 @@
   ul {
     list-style: none;
     padding-left: 0;
+    margin-bottom: 0;
   }
 </style>
