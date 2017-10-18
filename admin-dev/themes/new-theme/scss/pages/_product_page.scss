@@ -2,6 +2,19 @@
 
   padding-bottom: 80px;
 
+  h2 {
+    padding-top: 20px;
+  }
+
+  .widget-checkbox-inline {
+    div.checkbox {
+      display:inline;
+    }
+    label {
+      display:inline;
+    }
+  }
+
   .table-fixed {
     table-layout: fixed;
     border: 0;

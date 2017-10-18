@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8087066dd965eab78136"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e919523c5f8dfa0d7a54"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -56284,7 +56284,12 @@ class Combination {
   updateForm(values) {
     values.forEach((valueObject) => {
       var valueId = valueObject.id.substr(this.inputBulkPattern.length);
-      $('#'+this.convertInput(valueId)).val(valueObject.value);
+      var $field = $('#'+this.convertInput(valueId));
+      if ($field.is(':checkbox')) {
+          $field.prop("checked", !!valueObject.value);
+      } else {
+          $field.val(valueObject.value);
+      }
     });
     return this.form;
   }
@@ -56304,6 +56309,7 @@ class Combination {
       case "reference":
       case "minimal_quantity":
       case "low_stock_threshold":
+      case "low_stock_alert":
         convertedInput = this.inputPattern + 'attribute_' + bulkInput;
         break;
       case "cost_price":

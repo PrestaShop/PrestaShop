@@ -153,6 +153,12 @@ class ProductCombination extends CommonAbstractType
                 ),
             ),
         ))
+        ->add('attribute_low_stock_alert', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+            'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
+            'constraints' => array(
+                new Assert\Type(array('type' => 'bool')),
+            ),
+        ))
         ->add('available_date_attribute', 'PrestaShopBundle\Form\Admin\Type\DatePickerType', array(
             'required' => false,
             'label' => $this->translator->trans('Availability date', array(), 'Admin.Catalog.Feature'),

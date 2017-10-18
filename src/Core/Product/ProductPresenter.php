@@ -720,6 +720,7 @@ class ProductPresenter
             "ecotax",
             "minimal_quantity",
             "low_stock_threshold",
+            "low_stock_alert",
             "price",
             "unity",
             "unit_price_ratio",

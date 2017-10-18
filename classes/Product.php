@@ -79,6 +79,9 @@ class ProductCore extends ObjectModel
     /** @var int|null Low stock for mail alert */
     public $low_stock_threshold = null;
 
+    /** @var bool Low stock mail alert activated */
+    public $low_stock_alert = false;
+
     /** @var string available_now */
     public $available_now;
 
@@ -309,6 +312,7 @@ class ProductCore extends ObjectModel
             'ecotax' =>                   array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
             'minimal_quantity' =>         array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
             'low_stock_threshold' =>      array('type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'),
+            'low_stock_alert' =>          array('type' => self::TYPE_BOOL, 'shop' => true, 'allow_null' => true, 'validate' => 'isBool'),
             'price' =>                    array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true),
             'wholesale_price' =>          array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
             'unity' =>                    array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'),
@@ -1397,13 +1401,29 @@ class ProductCore extends ObjectModel
         $upc,
         $minimal_quantity,
         $isbn,
-        $low_stock_threshold = null
+        $low_stock_threshold = null,
+        $low_stock_alert = false
     ) {
         Tools::displayAsDeprecated();
 
         $id_product_attribute = $this->addAttribute(
-            $price, $weight, $unit_impact, $ecotax, $id_images,
-            $reference, $ean13, $default, $location, $upc, $minimal_quantity, array(), null, 0, $isbn, $low_stock_threshold
+            $price,
+            $weight,
+            $unit_impact,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location,
+            $upc,
+            $minimal_quantity,
+            array(),
+            null,
+            0,
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert
         );
 
         if (!$id_product_attribute) {
@@ -1492,11 +1512,28 @@ class ProductCore extends ObjectModel
         array $id_shop_list = array(),
         $available_date = null,
         $isbn = '',
-        $low_stock_threshold = null
+        $low_stock_threshold = null,
+        $low_stock_alert = false
     ) {
         $id_product_attribute = $this->addAttribute(
-            $price, $weight, $unit_impact, $ecotax, $id_images,
-            $reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date, 0, $isbn, $low_stock_threshold);
+            $price,
+            $weight,
+            $unit_impact,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location,
+            $upc,
+            $minimal_quantity,
+            $id_shop_list,
+            $available_date,
+            0,
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert
+        );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
         $result = ObjectModel::updateMultishopTable('Combination', array(
             'wholesale_price' => (float)$wholesale_price,
@@ -1614,13 +1651,31 @@ class ProductCore extends ObjectModel
         $minimal_quantity,
         $available_date,
         $isbn = '',
-        $low_stock_threshold = null
+        $low_stock_threshold = null,
+        $low_stock_alert = false
     ) {
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
         $return = $this->updateAttribute(
-            $id_product_attribute, $wholesale_price, $price, $weight, $unit, $ecotax,
-            $id_images, $reference, $ean13, $default, $location = null, $upc = null, $minimal_quantity, $available_date, true, array(), $isbn, $low_stock_threshold
+            $id_product_attribute,
+            $wholesale_price,
+            $price,
+            $weight,
+            $unit,
+            $ecotax,
+            $id_images,
+            $reference,
+            $ean13,
+            $default,
+            $location = null,
+            $upc = null,
+            $minimal_quantity,
+            $available_date,
+            true,
+            array(),
+            $isbn,
+            $low_stock_threshold,
+            $low_stock_alert
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
 
@@ -1679,6 +1734,7 @@ class ProductCore extends ObjectModel
     * @param string $minimal_quantity Minimal quantity
     * @param string $isbn ISBN reference
     * @param int|null $low_stock_threshold Low stock alert
+    * @param bool $low_stock_alert send email on low stock
     * @return array Update result
     */
     public function updateAttribute(
@@ -1699,7 +1755,8 @@ class ProductCore extends ObjectModel
         $update_all_fields = true,
         array $id_shop_list = array(),
         $isbn = '',
-        $low_stock_threshold = null
+        $low_stock_threshold = null,
+        $low_stock_alert = false
     ) {
         $combination = new Combination($id_product_attribute);
 
@@ -1732,6 +1789,7 @@ class ProductCore extends ObjectModel
         $combination->default_on = (int)$default;
         $combination->minimal_quantity = (int)$minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int)$low_stock_threshold;
+        $combination->low_stock_alert = !empty($low_stock_alert);
         $combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
 
         if (count($id_shop_list)) {
@@ -1798,7 +1856,8 @@ class ProductCore extends ObjectModel
         $available_date = null,
         $quantity = 0,
         $isbn = '',
-        $low_stock_threshold = null
+        $low_stock_threshold = null,
+        $low_stock_alert = false
     ) {
         if (!$this->id) {
             return;
@@ -1822,6 +1881,7 @@ class ProductCore extends ObjectModel
         $combination->default_on = (int)$default;
         $combination->minimal_quantity = (int)$minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int)$low_stock_threshold;
+        $combination->low_stock_alert = !empty($low_stock_alert);
         $combination->available_date = $available_date;
 
         if (count($id_shop_list)) {

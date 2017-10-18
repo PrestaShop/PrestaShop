@@ -98,6 +98,10 @@ class ProductCombinationBulk extends CommonAbstractType
         ->add('low_stock_threshold', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
             'label' => $this->translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+        ))
+        ->add('low_stock_alert', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
+            'required' => false,
+            'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
         ));
 
     }
