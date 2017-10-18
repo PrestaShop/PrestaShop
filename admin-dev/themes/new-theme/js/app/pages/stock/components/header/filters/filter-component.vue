@@ -30,6 +30,7 @@
       class="form-control search search-input"
       :tags="tags"
       :placeholder="hasPlaceholder?placeholder:''"
+      :hasIcon="true"
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
