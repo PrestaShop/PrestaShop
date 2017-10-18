@@ -47,11 +47,11 @@
             <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="name" @change="onChange">
               {{trans('none')}}
             </PSSelect>
-            <h2 class="mt-2">{{trans('filter_movements_employee')}}</h2>
+            <h2 class="mt-4">{{trans('filter_movements_employee')}}</h2>
             <PSSelect :items="employees" itemID="id_employee" itemName="name" @change="onChange">
              {{trans('none')}}
             </PSSelect>
-            <h2 class="mt-2">{{trans('filter_movements_period')}}</h2>
+            <h2 class="mt-4">{{trans('filter_movements_period')}}</h2>
             <form class="row">
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_from')}}</label>
