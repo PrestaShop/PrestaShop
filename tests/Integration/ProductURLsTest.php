@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Tests\Integration;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Context;
 use Dispatcher;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use ReflectionClass;
 
 class ProductURLsTest extends IntegrationTestCase
@@ -37,12 +38,25 @@ class ProductURLsTest extends IntegrationTestCase
     private $link;
     private $language;
 
-    public function setup()
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setup()
     {
         parent::setup();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
         $context = Context::getContext();
         $this->link = $context->link;
         $this->language = $context->language;
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
     }
 
     private function enableURLRewriting($yesOrNo = true)
