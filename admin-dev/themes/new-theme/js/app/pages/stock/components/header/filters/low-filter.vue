@@ -30,15 +30,15 @@
         <label slot="label" for="low-filter" class="low-filter-label">{{trans('filter_low_stock')}}</label>
       </PSCheckbox>
     </div>
-    <div class="col mr-3">
-      <a class="float-sm-right ml-2" :href="stockImportUrl" target="_blank">
-				<span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
-					<i class="material-icons">cloud_download</i>
-				</span>
-      </a>
-      <a class="float-sm-right" :href="stockExporttUrl">
+    <div class="col mr-3 d-flex align-items-center justify-content-end">
+      <a :href="stockExporttUrl">
 				<span data-toggle="pstooltip" :title="stockExportTitle" data-html="true" data-placement="top">
 					<i class="material-icons">cloud_upload</i>
+				</span>
+      </a>
+      <a class="ml-2" :href="stockImportUrl" target="_blank">
+				<span data-toggle="pstooltip" :title="stockImportTitle" data-html="true" data-placement="top">
+					<i class="material-icons">cloud_download</i>
 				</span>
       </a>
     </div>
