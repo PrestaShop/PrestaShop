@@ -51,6 +51,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
         $shopContextAdapter = $this->container->get('prestashop.adapter.shop.context');
         $shops = $shopContextAdapter->getShops();
         $countries = $this->container->get('prestashop.adapter.data_provider.country')->getCountries($locales[0]['id_lang']);
+        $zones = $this->container->get('prestashop.adapter.data_provider.zone')->getZones();
         $currencies = $this->container->get('prestashop.adapter.data_provider.currency')->getCurrencies();
         $groups = $this->container->get('prestashop.adapter.data_provider.group')->getGroups($locales[0]['id_lang']);
 
@@ -67,7 +68,8 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $shops,
             $currencies,
             $countries,
-            $groups
+            $groups,
+            $zones
         ));
 
         return $response;

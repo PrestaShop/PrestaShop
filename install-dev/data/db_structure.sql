@@ -1853,6 +1853,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`id_shop_group` INT(11) UNSIGNED NOT NULL,
 	`id_currency` INT UNSIGNED NOT NULL,
 	`id_country` INT UNSIGNED NOT NULL,
+	`id_zone` int(10) UNSIGNED NOT NULL,
 	`id_group` INT UNSIGNED NOT NULL,
 	`id_customer` INT UNSIGNED NOT NULL,
 	`id_product_attribute` INT UNSIGNED NOT NULL,
@@ -1864,7 +1865,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	`from` DATETIME NOT NULL,
 	`to` DATETIME NOT NULL,
 	PRIMARY KEY (`id_specific_price`),
-	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
+	KEY `id_product` (`id_product`,`id_shop`,`id_currency`,`id_country`,`id_zone`,`id_group`,`id_customer`,`from_quantity`,`from`,`to`),
 	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
 	KEY (`id_cart`),
@@ -1873,7 +1874,7 @@ CREATE TABLE `PREFIX_specific_price` (
   KEY `id_customer` (`id_customer`),
   KEY `from` (`from`),
   KEY `to` (`to`),
-  UNIQUE KEY `id_product_2` (`id_product`,`id_product_attribute`,`id_customer`,`id_cart`,`from`,`to`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`from_quantity`,`id_specific_price_rule`)
+  UNIQUE KEY `id_product_2` (`id_product`,`id_product_attribute`,`id_customer`,`id_cart`,`from`,`to`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_zone`,`id_group`,`from_quantity`,`id_specific_price_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 /* State localization info */

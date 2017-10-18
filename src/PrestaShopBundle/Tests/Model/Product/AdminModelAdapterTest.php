@@ -75,7 +75,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 "specificPricePriority_0" => '',
                 "specificPricePriority_1" => '',
                 "specificPricePriority_2" => '',
-                "specificPricePriority_3" => ''
+                "specificPricePriority_3" => '',
+                "specificPricePriority_4" => '',
             ],
             "step3" => [
                 "advanced_stock_management" => '',
@@ -97,7 +98,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "depth" => '',
                 "weight" => '',
                 "additional_shipping_cost" => '',
-                "selectedCarriers" => []
+                "selectedCarriers" => [],
             ],
             "step5" => [
                 "link_rewrite" => [],
@@ -119,8 +120,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 "default_supplier" => '',
                 "custom_fields" => [],
                 "attachments" => [],
-                "supplier_combination_1" => []
-            ]
+                "supplier_combination_1" => [],
+            ],
         ];
     }
     private function fakeCombination()
@@ -149,7 +150,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "is_color_group" => "0",
             "group_name" => "Taille",
             "attribute_name" => "L",
-            "id_attribute" => "3"
+            "id_attribute" => "3",
         ]);
     }
 

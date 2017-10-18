@@ -378,6 +378,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $new_form_data['specificPricePriority_1'],
             $new_form_data['specificPricePriority_2'],
             $new_form_data['specificPricePriority_3'],
+            $new_form_data['specificPricePriority_4'],
         ];
 
         $new_form_data = array_merge(parent::getHookData(), $new_form_data);
@@ -468,6 +469,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'specificPricePriority_1' => $this->productPricePriority[1],
                 'specificPricePriority_2' => $this->productPricePriority[2],
                 'specificPricePriority_3' => $this->productPricePriority[3],
+                'specificPricePriority_4' => $this->productPricePriority[4],
             ],
             'step3' => [
                 'advanced_stock_management' => (bool) $this->product->advanced_stock_management,
