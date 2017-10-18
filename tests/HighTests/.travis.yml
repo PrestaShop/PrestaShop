@@ -21,13 +21,6 @@ dist: trusty
 env:
   global:
     - DOCKER_IMG=prestashop
-    - SAUCELABS=None
-    - MODULE_TECHNICAL_NAME=None
-  matrix:
-    - PS_VERSION=1.6 TAG=1.6
-    - PS_VERSION=1.7 TAG=1.7
-    - PS_VERSION=1.6 TAG=1.6 MODULE_TECHNICAL_NAME=autoupgrade
-    - PS_VERSION=1.7 TAG=1.7 MODULE_TECHNICAL_NAME=autoupgrade
 
 matrix:
   fast_finish: true
@@ -42,14 +35,13 @@ before_script:
   - DISPLAY=:10 ./selenium-standalone start &> /dev/null &
   - cd ../../..
   - npm install
-  - cd test/itg/$PS_VERSION
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_10.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :10 -ac -screen 0 1280x1024x16"
   - docker exec prestashop rm -rf /var/www/html/modules/welcome
   - sleep 25
 
 script:
   - mkdir screenshots
-  - $TRAVIS_BUILD_DIR/node_modules/mocha/bin/mocha index.webdriverio.js -c --URL=localhost --MODULE=$MODULE_TECHNICAL_NAME --SAUCELABS=$SAUCELABS -t 300000 --reporter mochawesome
+  - $TRAVIS_BUILD_DIR/node_modules/mocha/bin/mocha test/campaigns/high/category
   - curl http://localhost/
 
 after_script:
