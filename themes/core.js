@@ -1995,7 +1995,6 @@
 	    var notValidAddresses = (0, _jquery2['default'])('#not-valid-addresses').val();
 	    var addressType = this.name.split('_').pop();
 	    var $addressError = (0, _jquery2['default'])('.js-address-error[name=alert-' + addressType + ']');
-	    var $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible');
 	
 	    switchEditAddressButtonColor(false, idFailureAddress, addressType);
 	
@@ -2011,6 +2010,7 @@
 	      $addressError.hide();
 	    }
 	
+	    var $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible');
 	    switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
 	  });
 	};
