@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e919523c5f8dfa0d7a54"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f544035a0bc3854742db"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -923,7 +923,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tags-input .tag {\n  background: #25b9d7;\n  color: white;\n  padding: 2px 4px;\n  border-radius: 0;\n  font-weight: lighter;\n  display: inline-block;\n  margin: 2px;\n  min-height: 25px;\n}\n.tags-input .tag .material-icons {\n    vertical-align: middle;\n    color: #363a41;\n    margin: 0 2px 0 5px;\n    cursor: pointer;\n}\n.tags-input input.input, .tags-input input.input:focus {\n  background-color: white;\n  font-family: Open Sans, sans-serif;\n  cursor: text;\n  padding-left: 2px;\n  border: none;\n  outline: none;\n  min-height: 33px;\n}\n.tags-input input.input::-webkit-input-placeholder, .tags-input input.input:focus::-webkit-input-placeholder {\n    font-style: italic;\n}\n.tags-input input.input:-ms-input-placeholder, .tags-input input.input:focus:-ms-input-placeholder {\n    font-style: italic;\n}\n.tags-input input.input::placeholder, .tags-input input.input:focus::placeholder {\n    font-style: italic;\n}\n", ""]);
+exports.push([module.i, "\n.tags-input .tag {\n  background: #25b9d7;\n  color: white;\n  padding: 2px 4px;\n  border-radius: 0;\n  font-weight: lighter;\n  display: inline-block;\n  margin: 2px;\n  min-height: 25px;\n}\n.tags-input .tag .material-icons {\n    vertical-align: middle;\n    color: #363a41;\n    margin: 0 2px 0 5px;\n    cursor: pointer;\n}\n.tags-input input.input, .tags-input input.input:focus {\n  border: none;\n  outline: none;\n  min-height: 33px;\n  width: auto;\n}\n", ""]);
 
 // exports
 
@@ -968,7 +968,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.custom-checkbox[data-v-ffb77b4c] {\n  width: 15px;\n  height: 15px;\n  position: relative;\n  background: white;\n}\n.custom-checkbox label[data-v-ffb77b4c] {\n    width: 15px;\n    height: 15px;\n    cursor: pointer;\n    position: absolute;\n    top: 0;\n    left: 0;\n    border: 2px #BBCDD2 solid;\n    border-radius: 2px;\n}\n.custom-checkbox label[data-v-ffb77b4c]:after {\n      content: '';\n      width: 12px;\n      height: 5px;\n      position: absolute;\n      top: 1px;\n      left: 0;\n      border: 2px solid white;\n      border-top: none;\n      border-right: none;\n      background: transparent;\n      opacity: 0;\n      -webkit-transform: rotate(-45deg);\n              transform: rotate(-45deg);\n}\n.custom-checkbox label[data-v-ffb77b4c]::before {\n      content: '';\n      width: 12px;\n      height: 12px;\n      position: absolute;\n      top: 0;\n      left: 0;\n}\n.custom-checkbox input[type=checkbox][data-v-ffb77b4c] {\n    visibility: hidden;\n}\n.custom-checkbox input[type=checkbox]:checked + label[data-v-ffb77b4c] {\n      border: 2px #25b9d7 solid;\n}\n.custom-checkbox input[type=checkbox]:checked + label[data-v-ffb77b4c]:before {\n      background: #25b9d7;\n}\n.custom-checkbox input[type=checkbox]:checked + label[data-v-ffb77b4c]:after {\n      opacity: 1;\n}\n.custom-checkbox input[type=checkbox].indeterminate + label[data-v-ffb77b4c]:after {\n      -webkit-transform: rotate(0);\n              transform: rotate(0);\n      height: 0;\n      width: 11px;\n      top: 4px;\n}\n", ""]);
+exports.push([module.i, "\n.custom-checkbox > .checkbox[data-v-ffb77b4c] {\n  width: 15px;\n  height: 15px;\n  position: relative;\n  background: white;\n  display: inline-block;\n  vertical-align: baseline;\n  margin-bottom: -2px;\n}\n.custom-checkbox > .checkbox span[data-v-ffb77b4c] {\n    width: 15px;\n    height: 15px;\n    cursor: pointer;\n    position: absolute;\n    top: 0;\n    left: 0;\n    border: 2px #BBCDD2 solid;\n    border-radius: 2px;\n}\n.custom-checkbox > .checkbox span[data-v-ffb77b4c]:after {\n      content: '';\n      width: 12px;\n      height: 5px;\n      position: absolute;\n      top: 1px;\n      left: 0;\n      border: 2px solid white;\n      border-top: none;\n      border-right: none;\n      background: transparent;\n      opacity: 0;\n      -webkit-transform: rotate(-45deg);\n              transform: rotate(-45deg);\n}\n.custom-checkbox > .checkbox span[data-v-ffb77b4c]::before {\n      content: '';\n      width: 12px;\n      height: 12px;\n      position: absolute;\n      top: 0;\n      left: 0;\n}\n.custom-checkbox > .checkbox input[type=checkbox][data-v-ffb77b4c] {\n    display: none;\n}\n.custom-checkbox > .checkbox input[type=checkbox]:checked + span[data-v-ffb77b4c] {\n      border: 2px #25b9d7 solid;\n}\n.custom-checkbox > .checkbox input[type=checkbox]:checked + span[data-v-ffb77b4c]:before {\n      background: #25b9d7;\n}\n.custom-checkbox > .checkbox input[type=checkbox]:checked + span[data-v-ffb77b4c]:after {\n      opacity: 1;\n}\n.custom-checkbox > .checkbox input[type=checkbox].indeterminate + span[data-v-ffb77b4c]:after {\n      -webkit-transform: rotate(0);\n              transform: rotate(0);\n      height: 0;\n      width: 11px;\n      top: 4px;\n}\n", ""]);
 
 // exports
 
@@ -28177,7 +28177,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-button.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-button.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-button.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -28245,7 +28245,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/app.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/app.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] app.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -28435,7 +28435,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-checkbox.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-checkbox.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-checkbox.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -29135,7 +29135,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-alert.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-alert.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-alert.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -29983,7 +29983,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tags.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tags.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tags.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30022,7 +30022,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree-item.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree-item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tree-item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30278,6 +30278,9 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
 
 exports.default = {
   props: ['id', 'model', 'isIndeterminate'],
@@ -30287,6 +30290,11 @@ exports.default = {
         checked: val,
         item: this.model
       });
+    }
+  },
+  methods: {
+    onClick: function onClick() {
+      this.checked = !this.checked;
     }
   },
   data: function data() {
@@ -30311,7 +30319,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/header/breadcrumb.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/header/breadcrumb.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] breadcrumb.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30346,7 +30354,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/header/search.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/header/search.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] search.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30385,7 +30393,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/header/translations-header.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/header/translations-header.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] translations-header.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30562,7 +30570,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/principal/index.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/principal/index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30601,7 +30609,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/principal/translation-input.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/principal/translation-input.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] translation-input.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30640,7 +30648,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/translations/components/sidebar/index.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/translations/components/sidebar/index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30679,7 +30687,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-modal.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-modal.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-modal.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30718,7 +30726,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-spinner.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-spinner.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-spinner.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30929,7 +30937,7 @@ Object.defineProperty(exports, "__esModule", {
 
 
 exports.default = {
-  props: ['tags', 'placeholder'],
+  props: ['tags', 'placeholder', 'hasIcon'],
   computed: {
     inputSize: function inputSize() {
       return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
@@ -34225,7 +34233,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-pagination.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-pagination.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-pagination.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -34264,7 +34272,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tree.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -34558,7 +34566,10 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "tags-input search-input",
+    staticClass: "tags-input search-input search",
+    class: {
+      'search-with-icon': _vm.hasIcon
+    },
     on: {
       "click": function($event) {
         _vm.focus()
@@ -34585,7 +34596,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "tag"
     }],
     ref: "tags",
-    staticClass: "input",
+    staticClass: "form-control input",
     attrs: {
       "placeholder": _vm.placeholderToDisplay,
       "type": "text",
@@ -34626,7 +34637,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.displayPagination) ? _c('nav', {
-    staticClass: "float-sm-right mt-1"
+    staticClass: "float-sm-right mt-1 mr-2"
   }, [_c('ul', {
     staticClass: "pagination",
     class: {
@@ -34848,6 +34859,8 @@ if (true) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "custom-checkbox"
+  }, [_c('div', {
+    staticClass: "checkbox"
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -34883,11 +34896,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }
-  }), _vm._v(" "), _c('label', {
-    attrs: {
-      "for": _vm.id
+  }), _vm._v(" "), _c('span', {
+    on: {
+      "click": _vm.onClick
     }
-  })])
+  })]), _vm._v(" "), _vm._t("label")], 2)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
