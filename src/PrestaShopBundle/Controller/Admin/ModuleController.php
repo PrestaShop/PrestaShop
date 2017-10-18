@@ -294,7 +294,9 @@ class ModuleController extends FrameworkBundleAdminController
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->get('translator');
 
-        $response = array();
+        $response = array(
+            $module => array(),
+        );
         if (!method_exists($moduleManager, $action)) {
             $response[$module]['status'] = false;
             $response[$module]['msg'] = $translator->trans(
