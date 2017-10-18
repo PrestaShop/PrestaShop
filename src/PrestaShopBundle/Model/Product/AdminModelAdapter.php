@@ -330,7 +330,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         //map features
         if (!empty($form_data['features'])) {
             foreach ($form_data['features'] as $dataFeature) {                
-                if (empty($dataFeature['feature']) {
+                if (empty($dataFeature['feature'])) {
                     continue;
                 }
 
