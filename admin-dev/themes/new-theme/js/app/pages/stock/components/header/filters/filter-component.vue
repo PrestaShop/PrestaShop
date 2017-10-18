@@ -35,24 +35,24 @@
       @typing="onTyping"
     />
     <div v-if="hasChildren">
-        <PSTree
-          v-if="isOverview"
-          v-once
-          ref="tree"
-          :hasCheckbox="true"
-          :model="list"
-          @checked="onCheck"
-          :translations="PSTreeTranslations"
-        >
-        </PSTree>
-         <PSTree
-            v-else
-            ref="tree"
-            :hasCheckbox="true"
-            :model="list"
-            @checked="onCheck"
-            :translations="PSTreeTranslations"
-          >
+      <PSTree
+        v-if="isOverview"
+        v-once
+        ref="tree"
+        :hasCheckbox="true"
+        :model="list"
+        @checked="onCheck"
+        :translations="PSTreeTranslations"
+      >
+      </PSTree>
+      <PSTree
+        v-else
+        ref="tree"
+        :hasCheckbox="true"
+        :model="list"
+        @checked="onCheck"
+        :translations="PSTreeTranslations"
+      >
       </PSTree>
     </div>
     <ul
