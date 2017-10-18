@@ -1,7 +1,7 @@
 node_modules/*
 .DS_Store
 .idea/*
-**/screenshots
+test/screenshots
 **.log
 **/mochawesome-report
 email_sender/test_report_*.html

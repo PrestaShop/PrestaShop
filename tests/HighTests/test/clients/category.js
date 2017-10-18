@@ -1,17 +1,12 @@
-const { getClient } = require('.././common.webdriverio');
-const { selector } = require('.././globals.webdriverio.js');
-const  prestashop_client  = require('.././clients/prestashop-client');
+const {getClient} = require('../common.webdriverio.js');
+const {selector} = require('../globals.webdriverio.js');
+const PrestashopClient = require('./prestashop-client');
 
-global.categoryName='category' + new Date().getTime();
+global.categoryName = 'category' + new Date().getTime();
 
-class Category extends prestashop_client {
+class Category extends PrestashopClient {
 
-  constructor() {
-    super();
-    this.client = getClient();
-  }
-
-  goToCategoryList(){
+  goToCategoryList() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.menu_button, 90000)
       .moveToObject(selector.BO.CatalogPage.menu_button)
@@ -19,19 +14,19 @@ class Category extends prestashop_client {
       .click(selector.BO.CatalogPage.CategorySubmenu.submenu)
   }
 
-  createCategory(){
+  createCategory() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.new_category_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.new_category_button)
   }
 
-  addCategoryName(){
+  addCategoryName() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input,global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input, global.categoryName)
   }
 
-  addCategoryImage(){
+  addCategoryImage() {
     return this.client
       .execute(function () {
         document.getElementById("image").style = "";
@@ -39,7 +34,7 @@ class Category extends prestashop_client {
       .chooseFile(selector.BO.CatalogPage.CategorySubmenu.picture, global.categoryImage)
   }
 
-  addCategoryThumb(){
+  addCategoryThumb() {
     return this.client
       .execute(function () {
         document.getElementById("image").style = "";
@@ -47,37 +42,37 @@ class Category extends prestashop_client {
       .chooseFile(selector.BO.CatalogPage.CategorySubmenu.thumb_picture, global.categoryThumb)
   }
 
-  addCategoryTitle(){
+  addCategoryTitle() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.title, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.title,'test category')
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.title, 'test category')
   }
 
-  addCategoryMetaDescription(){
+  addCategoryMetaDescription() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.meta_description, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.meta_description,'this is the meta description')
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.meta_description, 'this is the meta description')
   }
 
-  addCategoryMetakeyswords(){
+  addCategoryMetakeyswords() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.keyswords, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.keyswords,'keyswords')
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.keyswords, 'keyswords')
   }
 
-  addCategorySimplifyUrl(){
+  addCategorySimplifyUrl() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input,global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, global.categoryName)
   }
 
-  addCategorySave(){
+  addCategorySave() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.save_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.save_button)
   }
 
-  addCategorySuccessPanel(index,erreurmsg){
+  addCategorySuccessPanel(index, erreurmsg) {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.success_panel)
       .getText(selector.BO.CatalogPage.CategorySubmenu.success_panel).then(function (text) {
@@ -88,7 +83,7 @@ class Category extends prestashop_client {
       })
   }
 
-  goToCategoryBO(){
+  goToCategoryBO() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.menu_button, 90000)
       .moveToObject(selector.BO.CatalogPage.menu_button)
@@ -96,10 +91,10 @@ class Category extends prestashop_client {
       .click(selector.BO.CatalogPage.CategorySubmenu.submenu)
   }
 
-  searchCategoryBO(){
+  searchCategoryBO() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_search_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_search_input,global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_search_input, global.categoryName)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.search_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.search_button)
       .getText(selector.BO.CatalogPage.CategorySubmenu.search_result).then(function (text) {
@@ -110,76 +105,70 @@ class Category extends prestashop_client {
       })
   }
 
-  checkCategoryImage(){
+  checkCategoryImage() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.update_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.update_button)
-      .isExisting(selector.BO.CatalogPage.CategorySubmenu.image_link).then(function(text) {
-        if (text === false) {
+      .isExisting(selector.BO.CatalogPage.CategorySubmenu.image_link).then(function (text) {
+        if (!text) {
           done(new Error('we could not find the image'));
         }
       })
   }
 
-  checkCategoryImageThumb(){
+  checkCategoryImageThumb() {
     return this.client
-      .isExisting(selector.BO.CatalogPage.CategorySubmenu.thumb_link).then(function(text) {
-        if (text === false){
+      .isExisting(selector.BO.CatalogPage.CategorySubmenu.thumb_link).then(function (text) {
+        if (!text) {
           done(new Error('we could not find the thumb image'));
         }
       })
   }
 
-  checkCategoryTitle(){
+  checkCategoryTitle() {
     return this.client
-        .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.title, "value"))
-        .then((text) => expect(text).to.be.equal("test category"));
+      .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.title, "value"))
+      .then((text) => expect(text).to.be.equal("test category"));
   }
 
-  checkCategoryMetaDescription(){
+  checkCategoryMetaDescription() {
     return this.client
-        .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.meta_description,"value"))
-        .then((text) => expect(text).to.be.equal("this is the meta description"));
+      .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.meta_description, "value"))
+      .then((text) => expect(text).to.be.equal("this is the meta description"));
   }
 
-  /*    checkCategorykeyswordsText(){
-   return this.client
-   .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.keyswords,"value"))
-   .then(text => expect(text).to.contains("keyswords"));
-   }*/
-
-  checkCategorySimplifyURL(){
+  checkCategorySimplifyURL() {
     return this.client
-        .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input,"value"))
-        .then((text) => expect(text).to.be.equal(global.categoryName));
+      .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, "value"))
+      .then((text) => expect(text).to.be.equal(global.categoryName));
   }
 
-  openProductList(){
+  openProductList() {
     return this.client
       .waitForExist(selector.FO.AccessPage.product_list_button, 90000)
       .click(selector.FO.AccessPage.product_list_button)
   }
 
-  checkcategoryexistenceFO(){
+  checkCategoryExistenceFO() {
     return this.client
-        .then(() => this.client.getText('//*[@id="left-column"]/div[1]/ul/li[2]/ul/li['+2+']/a'))
-        .then((text) => expect(text).to.be.equal(global.categoryName));
+      .then(() => this.client.getText('//*[@id="left-column"]/div[1]/ul/li[2]/ul/li[' + 2 + ']/a'))
+      .then((text) => expect(text).to.be.equal(global.categoryName));
   }
 
-  updateCategory(){
-    global.categoryName=global.categoryName + 'update';
+  updateCategory() {
+    global.categoryName = global.categoryName + 'update';
     return this.client
       .moveToObject(selector.BO.CatalogPage.CategorySubmenu.update_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.update_button)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input,global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input, global.categoryName)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input,global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, global.categoryName)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.save_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.save_button)
   }
 
-  deleteCategory(){
+  deleteCategory() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.action_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.action_button)
@@ -189,7 +178,7 @@ class Category extends prestashop_client {
       .click(selector.BO.CatalogPage.CategorySubmenu.second_delete_button)
   }
 
-  deleteCategoryWithActiongroup(){
+  deleteCategoryWithActiongroup() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.select_category, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.select_category)

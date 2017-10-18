@@ -1,90 +1,72 @@
-# Run test with docker
+# Ready Espresso
 
 ## Prerequisites
-- Install docker
-- Install docker-compose
+- Download [Selenium Standalone](http://www.seleniumhq.org/download/)
+- Download [chromedriver (current v2.32)](https://chromedriver.storage.googleapis.com/index.html?path=2.32/)
 
-## Run the tests
-docker-compose up
+## How to run the tests
 
-This will
-- start a mysql container
-- start a selenium-chrome container
-- start a prestashop container and launch prestashop installation
-- start the tests container and launch the test in /tmp/test/itg/1.7/index.webdriverio.js
+### Package install
 
-Environnement variable can be used to override
-PS_VERSION=1.6|1.7 (Default:1.7)
-URL=domain name where prestashop is running (default:prestashop)
-MODULE= to install a module (default:)
-SCRIPT= to change the script to launch (default:)
-
-Exemple:
-Modify docker-compose.yml to add the environment variables in the tests service section
-
-After docker-compose up when db, selenium-chrome and prestashop are running you can launch the tests with:
-docker-compose run tests -e MODULE=data-tech-name
-
-
-# Run test without docker
-To use the following test suites, you need to install PrestaShop in **English** with setting country to **France**.
-(or you may change some assertions like the separator “,” or “.”, “€” or “$” or “£” or …)
-You need to create a user in Back Office with **SuperAdmin** rights and the following information’s:
-- **Login**: demo@prestashop.com
-- **Password**: prestashop_demo
-
-## Prerequisites
-
-To use nodeJS tests, you need to install:
--	NodeJS
--	Npm
--	Webdrivers pour Chrome et firefox
-
-Required modules to install using npm are:
--	json
--	minimist
--	mocha
--	node-uuid
--	parsed-url
--	q
--	req
--	should
--	webdriverio
--	window
--	selenium-standalone (make sure you'll install a compatible version with your browser version)
-
-## Run the tests
-
--	First, you need to start selenium-standalone
+In a terminal
 ```
-selenium-standalone start
+➜  npm install
 ```
-> **Note:**
-> If you are using it for the first time you need to install it before starting it :
-> selenium-standalone install
 
-- Go to the folder of the version you want to test (in \test\itg, go into folder 1.6 or 1.7) and execute one of the following lines:
+### Launch chromedriver
 
-	- Launch tests without module installation :
-    ```
-    mocha index.webdriverio.js --URL=localhost/1.7.0.0 –SAUCELABS=true
-    ```
+In a terminal
+```
+➜  ./chromedriver
+```
 
-	- Launch tests with module installation:
-    ```
-    mocha index.webdriverio.js --URL=localhost/1.7.0.0 --MODULE=statsbestmanufacturers –SAUCELABS=true
-    ```
-Where :
+Expected
+>Starting ChromeDriver 2.32.498537 (cb2f855cbc7b82e20387eaf9a43f6b99b6105061) on port 9515
+>Only local connections are allowed.
 
--**URL**: Front office URL of your prestashop website (without the “http://”)
+### Launch selenium-standalone
 
--**MODULE** (optional) : « data-tech-name »  of the module
+In a terminal
+```
+➜  java -jar selenium-server-standalone-3.5.3.jar
+```
 
--**SAUCELABS** (optional): Turn it to « true » to use SauceLabs (you need to provide yours SauceLabs ID in your Travis folder)
+Expected
+
+```
+11:26:16.687 INFO - Selenium build info: version: '3.5.3', revision: 'a88d25fe6b'
+11:26:16.688 INFO - Launching a standalone Selenium Server
+2017-09-27 11:26:16.714:INFO::main: Logging initialized @263ms to org.seleniumhq.jetty9.util.log.StdErrLog
+11:26:16.781 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+11:26:16.808 INFO - Driver provider class org.openqa.selenium.ie.InternetExplorerDriver registration is skipped:
+ registration capabilities Capabilities [{ensureCleanSession=true, browserName=internet explorer, version=, platform=WINDOWS}] does not match the current platform MAC
+11:26:16.808 INFO - Driver provider class org.openqa.selenium.edge.EdgeDriver registration is skipped:
+ registration capabilities Capabilities [{browserName=MicrosoftEdge, version=, platform=WINDOWS}] does not match the current platform MAC
+11:26:16.833 INFO - Using the passthrough mode handler
+2017-09-27 11:26:16.858:INFO:osjs.Server:main: jetty-9.4.5.v20170502
+2017-09-27 11:26:16.886:WARN:osjs.SecurityHandler:main: ServletContext@o.s.j.s.ServletContextHandler@3e9b1010{/,null,STARTING} has uncovered http methods for path: /
+2017-09-27 11:26:16.891:INFO:osjsh.ContextHandler:main: Started o.s.j.s.ServletContextHandler@3e9b1010{/,null,AVAILABLE}
+2017-09-27 11:26:16.923:INFO:osjs.AbstractConnector:main: Started ServerConnector@648ba6de{HTTP/1.1,[http/1.1]}{0.0.0.0:4444}
+2017-09-27 11:26:16.924:INFO:osjs.Server:main: Started @474ms
+11:26:16.924 INFO - Selenium Server is up and running
+```
+
+### Launch test suite
 
 
-> **Note:** To select the module to test, we decided to use the « data-tech-name » because this variable give us only one result in the search module part, in this case we are sure to select the right module
+```
+➜  mocha test/campaigns/high/category --URL=URL_SITE
+```
 
-# Sending generated report via mail
-In case you want to send the generated report via mail, you should active the option "less secure apps" in the mailbox of the sender:
-https://support.google.com/accounts/answer/6010255?hl=fr
+## Files and Repo
+
+### Files
+
+* common.webdriverio > common functions
+* globals.webdriverio > classic UI map (PS core) 
+
+
+### Repo
+
+* [datas] > pictures and files to use for tests
+* [campaigns] > High test suite
