@@ -44,7 +44,6 @@ export default function () {
     let notValidAddresses = $('#not-valid-addresses').val();
     let addressType = this.name.split('_').pop();
     let $addressError = $('.js-address-error[name=alert-' + addressType + ']');
-    let $visibleAddressError = $('.js-address-error:visible');
 
     switchEditAddressButtonColor(false, idFailureAddress, addressType);
 
@@ -60,6 +59,7 @@ export default function () {
       $addressError.hide();
     }
 
+    let $visibleAddressError = $('.js-address-error:visible');
     switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
   });
 }
