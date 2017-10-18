@@ -26,8 +26,9 @@
 <template>
   <div class="row py-2">
     <div class="col row ml-1">
-      <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck"/>
-      <p class="ml-2 low-filter-label" @click="onLabelClick">{{trans('filter_low_stock')}}</p>
+      <PSCheckbox ref="low-filter" id="low-filter" class="mt-1" @checked="onCheck">
+        <label slot="label" for="low-filter" class="low-filter-label">{{trans('filter_low_stock')}}</label>
+      </PSCheckbox>
     </div>
     <div class="col mr-3">
       <a class="float-sm-right ml-2" :href="stockImportUrl" target="_blank">
@@ -66,9 +67,6 @@ export default {
     },
   },
   methods: {
-    onLabelClick() {
-      this.$refs['low-filter'].checked = !this.$refs['low-filter'].checked;
-    },
     onCheck(checkbox) {
       const isChecked = checkbox.checked ? 1 : 0;
       this.$emit('lowStockChecked', isChecked);
