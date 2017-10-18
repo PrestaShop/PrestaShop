@@ -72,17 +72,6 @@ class Category extends PrestashopClient {
       .click(selector.BO.CatalogPage.CategorySubmenu.save_button)
   }
 
-  addCategorySuccessPanel(index, erreurmsg) {
-    return this.client
-      .waitForExist(selector.BO.CatalogPage.CategorySubmenu.success_panel)
-      .getText(selector.BO.CatalogPage.CategorySubmenu.success_panel).then(function (text) {
-        text = text.indexOf(index);
-        if (text === -1) {
-          done(new Error(erreurmsg));
-        }
-      })
-  }
-
   goToCategoryBO() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.menu_button, 90000)
