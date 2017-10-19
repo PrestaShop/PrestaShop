@@ -90,6 +90,11 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $this->cacheArray[$args[0]] = $args[1];
     }
 
+    /**
+     * When we set a query into cache
+     * Then the cache should contain an entry with the cache key and its result
+     * AND entries which link each table from the query to the cache key
+     */
     public function testSetQuery()
     {
         $queries = $this->selectDataProvider();
@@ -116,6 +121,11 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * When we set a query into cache AND the cache is full
+     * Then we should make room into the cache by removing some entries
+     * No LRU strategy used here
+     */
     public function testSetQueryWithCacheFull()
     {
         Cache::getInstance()->setMaxCachedObjectsByTable(2);
@@ -147,6 +157,11 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $this->assertCount(4, $this->cacheArray);
     }
 
+    /**
+     * When we set a query into cache AND the cache is full
+     * Then we should make room into the cache by removing some entries using a LRU strategy.
+     * We verify the LRU strategy is working properly
+     */
     public function testCacheLRUWithCacheFull()
     {
         Cache::getInstance()->setMaxCachedObjectsByTable(4);
@@ -198,6 +213,12 @@ class CacheCoreTest extends PHPUnit_Framework_TestCase
         $this->checkTableCacheMapCounter($queries[4], 1);
     }
 
+    /**
+     * When the cache is invalidated for a given table
+     * Then all the associated queries should be invalidated,
+     * AND if those queries are present into other table <=> query map (in case of a join for example)
+     * Then the entries from those maps should be removed as well
+     */
     public function testCacheInvalidation()
     {
         $queries = $this->selectDataProvider();
