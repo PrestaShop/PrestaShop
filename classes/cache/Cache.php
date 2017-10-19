@@ -50,6 +50,8 @@ abstract class CacheCore
 
     /**
      * Max number of queries cached in memcached, for each SQL table
+     *
+     * @var int
      */
     protected $maxCachedObjectsByTable = 10000;
 
@@ -134,7 +136,7 @@ abstract class CacheCore
      *
      * @param array $keyArray
      */
-    protected function _deleteMulti($keyArray)
+    protected function _deleteMulti(array $keyArray)
     {
         foreach ($keyArray as $key) {
             $this->delete($key);
@@ -154,7 +156,7 @@ abstract class CacheCore
     abstract public function flush();
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getMaxCachedObjectsByTable()
     {
@@ -162,7 +164,7 @@ abstract class CacheCore
     }
 
     /**
-     * @param mixed $maxCachedObjectsByTable
+     * @param int $maxCachedObjectsByTable
      */
     public function setMaxCachedObjectsByTable($maxCachedObjectsByTable)
     {
@@ -191,6 +193,9 @@ abstract class CacheCore
     }
 
     /**
+     * If a cache set this variable to true, we need to adjust the size of the table cache object
+     * Useful when the cache is reported to be full (e.g. memcached::RES_E2BIG error message)
+     *
      * @param bool $value
      */
     protected function setAdjustTableCacheSize($value)
@@ -264,14 +269,14 @@ abstract class CacheCore
      *
      * @param array $keyArray
      */
-    public function deleteMulti($keyArray)
+    public function deleteMulti(array $keyArray)
     {
         $this->_deleteMulti($keyArray);
     }
 
     /**
      * Delete one or several data from cache (* joker can be used)
-     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     *  E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return array List of deleted keys
@@ -328,7 +333,6 @@ abstract class CacheCore
      * @param string $query
      * @param array  $result
      *
-     * @return void
      */
     public function setQuery($query, $result)
     {
@@ -411,13 +415,16 @@ abstract class CacheCore
         $this->initializeTableCache($table);
 
         if (!isset($this->sql_tables_cached[$table][$key])) {
-            if ((count($this->sql_tables_cached[$table])+1) > $this->maxCachedObjectsByTable) {
+            if ((count($this->sql_tables_cached[$table]) + 1) > $this->maxCachedObjectsByTable) {
                 $this->adjustTableCacheSize($table);
             }
 
             $otherTables = $tables;
             unset($otherTables[array_search($table, $tables)]);
-            $this->sql_tables_cached[$table][$key] = array('count' => 1, 'otherTables' => $otherTables);
+            $this->sql_tables_cached[$table][$key] = array(
+                'count' => 1,
+                'otherTables' => $otherTables
+            );
             $this->set($cacheKey, $this->sql_tables_cached[$table]);
             // if the set fails because the object is too big, the adjustTableCacheSize flag is set
             if ($this->adjustTableCacheSize) {
@@ -473,17 +480,23 @@ abstract class CacheCore
             }
 
             // sort the array with the query with the lowest count first
-            uasort($this->sql_tables_cached[$table], array($this, 'sortByCount'));
+            uasort($this->sql_tables_cached[$table], function ($a, $b) {
+                if ($a['count'] == $b['count']) {
+                    return 0;
+                }
+
+                return ($a['count'] < $b['count']) ? -1 : 1;
+            });
             // reduce the size of the cache : delete the first entries (those with the lowest count)
             $tableBuffer = array_slice(
                 $this->sql_tables_cached[$table],
                 0,
-                ceil($this->maxCachedObjectsByTable/3),
+                ceil($this->maxCachedObjectsByTable / 3),
                 true
             );
             foreach (array_keys($tableBuffer) as $fs_key) {
                 $invalidKeys[] = $fs_key;
-                $invalidKeys[] = $fs_key.'_nrows';
+                $invalidKeys[] = $fs_key . '_nrows';
                 unset($this->sql_tables_cached[$table][$fs_key]);
             }
             $this->_deleteMulti($invalidKeys);
@@ -493,23 +506,6 @@ abstract class CacheCore
             }
         }
         $this->adjustTableCacheSize = false;
-    }
-
-    /**
-     * Sort function used to sort the sql_tables_cached table using its 'count' entry
-     *
-     * @param array $a
-     * @param array $b
-     *
-     * @return bool
-     */
-    private function sortByCount($a, $b)
-    {
-        if ($a['count'] == $b['count']) {
-            return 0;
-        }
-
-        return ($a['count'] < $b['count']) ? -1 : 1;
     }
 
     /**
