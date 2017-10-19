@@ -868,25 +868,22 @@ class AdminProductsControllerCore extends AdminController
 
             // add new objects
             $languages = Language::getLanguages(false);
-            if ($form = Tools::getValue('form', false)) {
+            $form = Tools::getValue('form', false);
+            if (false !== $form) {
                 $features = isset($form['step1']['features']) ? $form['step1']['features'] : array();
                 if (is_array($features)) {
                     foreach ($features as $feature) {
-                        if (empty($feature['value'])) {
-                            if ($defaultValue = $this->checkFeatures($languages, $feature)) {
-                                $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
-                                foreach ($languages as $language) {
-                                    if (isset($feature['custom_value'][$language['id_lang']])
-                                        && $custom = $feature['custom_value'][$language['id_lang']]
-                                    ) {
-                                        $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $custom);
-                                    } else {
-                                        $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $defaultValue);
-                                    }
-                                }
-                            }
-                        } else {
+                        if (!empty($feature['value'])) {
                             $product->addFeaturesToDB($feature['feature'], $feature['value']);
+                        } elseif ($defaultValue = $this->checkFeatures($languages, $feature)) {
+                            $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
+                            foreach ($languages as $language) {
+                                $valueToAdd = (isset($feature['custom_value'][$language['id_lang']]))
+                                    ? $feature['custom_value'][$language['id_lang']]
+                                    : $defaultValue;
+
+                                $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $valueToAdd);
+                            }
                         }
                     }
                 }
