@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Adding\CartRule;
 
+use Cart;
+use Configuration;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddRuleTest extends AbstractCartTest
@@ -36,14 +38,14 @@ class AddRuleTest extends AbstractCartTest
     public function setUp()
     {
         parent::setUp();
-        $this->cartRulesFeatureActive = \Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
-        \Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
+        $this->cartRulesFeatureActive = Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
+        Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        \Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', $this->cartRulesFeatureActive);
+        Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', $this->cartRulesFeatureActive);
     }
 
     /**
@@ -65,7 +67,7 @@ class AddRuleTest extends AbstractCartTest
         $expectedProductCountAfterRules
     ) {
         $this->addProductsToCart($productData);
-        $this->assertEquals($expectedProductCount, \Cart::getNbProducts($this->cart->id));
+        $this->assertEquals($expectedProductCount, Cart::getNbProducts($this->cart->id));
         $result = true;
         foreach ($cartRuleData as $cartRuleId) {
             $cartRule                = $this->getCartRuleFromFixtureId($cartRuleId);
@@ -74,7 +76,7 @@ class AddRuleTest extends AbstractCartTest
             $this->cart->addCartRule($cartRule->id);
         }
         $this->assertEquals($shouldRulesBeApplied, $result);
-        $this->assertEquals($expectedProductCountAfterRules, \Cart::getNbProducts($this->cart->id));
+        $this->assertEquals($expectedProductCountAfterRules, Cart::getNbProducts($this->cart->id));
     }
 
     public function cartRuleValidityProvider()

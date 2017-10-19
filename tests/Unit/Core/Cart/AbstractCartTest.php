@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart;
 
+use CartRule;
+use Configuration;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use StockAvailable;
 
 /**
  * these tests aim to check cart using mocks
@@ -149,9 +152,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
             }
             $product->add();
             if (!empty($productFixture['outOfStock'])) {
-                \StockAvailable::setProductOutOfStock((int) $product->id, 0);
+                StockAvailable::setProductOutOfStock((int) $product->id, 0);
             } else {
-                \StockAvailable::setQuantity((int) $product->id, 0, 1000);
+                StockAvailable::setQuantity((int) $product->id, 0, 1000);
             }
             $this->products[$k] = $product;
         }
@@ -198,10 +201,10 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function insertCartRules()
     {
         foreach ($this->cartRuleFixtures as $k => $cartRuleData) {
-            $cartRule                    = new \CartRule;
+            $cartRule                    = new CartRule;
             $cartRule->reduction_percent = $cartRuleData['percent'];
             $cartRule->reduction_amount  = $cartRuleData['amount'];
-            $cartRule->name              = array(\Configuration::get('PS_LANG_DEFAULT') => 'foo');
+            $cartRule->name              = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
             $cartRule->code              = 'bar';
             $cartRule->priority          = $cartRuleData['priority'];
             $cartRule->quantity          = 1000;

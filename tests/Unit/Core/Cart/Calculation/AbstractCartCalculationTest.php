@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Calculation;
 
 use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
+use Tools;
 
 /**
  * these tests aim to check the correct calculation of cart total
@@ -36,6 +37,6 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
     protected function compareCartTotal($expectedTotal)
     {
         $total = $this->cart->getOrderTotal(true);
-        $this->assertEquals(\Tools::convertPrice($expectedTotal), $total);
+        $this->assertEquals(Tools::convertPrice($expectedTotal), $total);
     }
 }
