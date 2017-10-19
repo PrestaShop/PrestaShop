@@ -964,6 +964,14 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * Reset current context of shop
+     */
+    public static function resetContext()
+    {
+        self::$context = null;
+    }
+
+    /**
      * @return int
      */
     public function getContextType()

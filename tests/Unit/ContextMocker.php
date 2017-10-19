@@ -75,7 +75,8 @@ class ContextMocker
         $this->contextBackup = \Context::getContext();
         $context             = clone($this->contextBackup);
         \Context::setInstanceForTesting($context);
-        $context->shop     = new \Shop((int) \Configuration::get('PS_SHOP_DEFAULT'));
+        $context->shop = new \Shop((int) \Configuration::get('PS_SHOP_DEFAULT'));
+        \Shop::setContext(\Shop::CONTEXT_SHOP, (int) \Context::getContext()->shop->id);
         $context->customer = Phake::mock('Customer');
         $context->cookie   = Phake::mock('Cookie');
         $context->country  = Phake::mock('Country');

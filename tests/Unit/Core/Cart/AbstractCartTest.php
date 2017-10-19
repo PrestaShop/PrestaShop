@@ -86,6 +86,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         $this->cart              = new \Cart();
         $this->cart->id_lang     = (int) \Context::getContext()->language->id;
         $this->cart->id_currency = (int) \Context::getContext()->currency->id;
+        $this->cart->id_shop     = (int) \Context::getContext()->shop->id;
         $this->cart->add(); // required, else we cannot get the content when calculation total
         \Context::getContext()->cart = $this->cart;
         $this->resetCart();
@@ -95,8 +96,6 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     public function tearDown()
     {
-        parent::tearDown();
-
         $this->resetCart();
 
         // delete cart rules from cart
@@ -121,6 +120,8 @@ abstract class AbstractCartTest extends IntegrationTestCase
         foreach ($this->cartRules as $cartRule) {
             $cartRule->delete();
         }
+
+        parent::tearDown();
     }
 
     protected function resetCart()
