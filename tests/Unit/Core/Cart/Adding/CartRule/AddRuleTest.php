@@ -47,25 +47,27 @@ class AddRuleTest extends AbstractCartTest
     }
 
     /**
+     * this test only check if cart rule can be applied on cart, depending on cart content and cart rule parameters
+     *
      * @dataProvider cartRuleValidityProvider
      *
-     * @param $productDatas
-     * @param $cartRuleDatas
+     * @param $productData
+     * @param $cartRuleData
      * @param $shouldRulesBeApplied
      * @param $expectedProductCount
      * @param $expectedProductCountAfterRules
      */
     public function testCartRuleValidity(
-        $productDatas,
-        $cartRuleDatas,
+        $productData,
+        $cartRuleData,
         $shouldRulesBeApplied,
         $expectedProductCount,
         $expectedProductCountAfterRules
     ) {
-        $this->addProductsToCart($productDatas);
+        $this->addProductsToCart($productData);
         $this->assertEquals($expectedProductCount, \Cart::getNbProducts($this->cart->id));
         $result = true;
-        foreach ($cartRuleDatas as $cartRuleId) {
+        foreach ($cartRuleData as $cartRuleId) {
             $cartRule                = $this->getCartRuleFromFixtureId($cartRuleId);
             $result                  = $result && $cartRule->checkValidity(\Context::getContext(), false, false);
             $this->cartRulesInCart[] = $cartRule;

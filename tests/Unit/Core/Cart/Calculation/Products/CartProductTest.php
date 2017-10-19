@@ -34,11 +34,11 @@ class CartProductTest extends AbstractCartCalculationTest
     /**
      * @dataProvider cartWithoutCartRulesProvider
      */
-    public function testCartWithoutCartRules($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithoutCartRules($productData, $expectedTotal, $cartRuleData)
     {
         $this->resetCart();
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 

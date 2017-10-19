@@ -126,13 +126,13 @@ abstract class AbstractCartTest extends IntegrationTestCase
 
     protected function resetCart()
     {
-        $productDatas = $this->cart->getProducts(true);
-        foreach ($productDatas as $productData) {
-            $this->cart->updateQty(0, $productData['id_product']);
+        $productData = $this->cart->getProducts(true);
+        foreach ($productData as $data) {
+            $this->cart->updateQty(0, $data['id_product']);
         }
-        $carRuleDatas = $this->cart->getCartRules();
-        foreach ($carRuleDatas as $carRuleData) {
-            $this->cart->removeCartRule($carRuleData['id_cart_rule']);
+        $carRuleData = $this->cart->getCartRules();
+        foreach ($carRuleData as $data) {
+            $this->cart->removeCartRule($data['id_cart_rule']);
         }
     }
 
@@ -157,9 +157,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
         }
     }
 
-    protected function addProductsToCart($productDatas)
+    protected function addProductsToCart($productData)
     {
-        foreach ($productDatas as $id => $quantity) {
+        foreach ($productData as $id => $quantity) {
             $product = $this->getProductFromFixtureId($id);
             if ($product !== null) {
                 $this->cart->updateQty($quantity, $product->id);
