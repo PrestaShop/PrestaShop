@@ -54,12 +54,12 @@ class CartProductTest extends AbstractCartCalculationTest
             ),
             'one product in cart, quantity 1'        => array(
                 'products'      => array(1 => 1,),
-                'expectedTotal' => 19.81,
+                'expectedTotal' => 26.81, // default carrier has $7 shipping fees
                 'cartRules'     => array(),
             ),
             'one product in cart, quantity 3'        => array(
                 'products'      => array(1 => 3,),
-                'expectedTotal' => 59.44,
+                'expectedTotal' => 66.44, // default carrier has $7 shipping fees
                 'cartRules'     => array(),
             ),
             '3 products in cart, several quantities' => array(
@@ -68,7 +68,7 @@ class CartProductTest extends AbstractCartCalculationTest
                     1 => 3,
                     3 => 1,
                 ),
-                'expectedTotal' => 155.41,
+                'expectedTotal' => 162.41, // default carrier has $7 shipping fees
                 'cartRules'     => array(),
             ),
         );

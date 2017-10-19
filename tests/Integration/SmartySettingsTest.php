@@ -35,6 +35,7 @@ class SmartySettingsTest extends IntegrationTestCase
 
     public function setup()
     {
+        parent::setup();
         global $smarty;
         $this->smarty = $smarty;
         $this->smarty->force_compile = true;

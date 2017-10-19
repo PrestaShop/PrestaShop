@@ -29,16 +29,10 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Configuration;
 use Media;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 
 class MediaCoreTest extends IntegrationTestCase
 {
     protected $domain;
-
-    /**
-     * @var ContextMocker
-     */
-    protected $contextMocker;
 
     public function testCorrectJQueryNoConflictURL()
     {
@@ -49,15 +43,8 @@ class MediaCoreTest extends IntegrationTestCase
 
     protected function setUp()
     {
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
+        parent::setUp();
         $this->domain = Configuration::get('PS_SHOP_DOMAIN');
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->contextMocker->resetContext();
     }
 
     public function isCssInputsProvider()

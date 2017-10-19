@@ -38,11 +38,6 @@ abstract class AbstractCartTest extends IntegrationTestCase
 {
 
     /**
-     * @var ContextMocker
-     */
-    protected $contextMocker;
-
-    /**
      * @var \CartCore
      */
     protected $cart;
@@ -88,8 +83,6 @@ abstract class AbstractCartTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
         $this->cart              = new \Cart();
         $this->cart->id_lang     = (int) \Context::getContext()->language->id;
         $this->cart->id_currency = (int) \Context::getContext()->currency->id;
@@ -128,8 +121,6 @@ abstract class AbstractCartTest extends IntegrationTestCase
         foreach ($this->cartRules as $cartRule) {
             $cartRule->delete();
         }
-
-        $this->contextMocker->resetContext();
     }
 
     protected function resetCart()

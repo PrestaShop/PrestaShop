@@ -26,10 +26,30 @@
 
 namespace PrestaShop\PrestaShop\Tests\TestCase;
 use PHPUnit_Framework_TestCase;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use PrestaShopBundle\Tests\Utils\Database;
 
 class IntegrationTestCase extends PHPUnit_Framework_TestCase
 {
+
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setup()
+    {
+        parent::setup();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
     public static function setUpBeforeClass()
     {
         Database::restoreTestDB();

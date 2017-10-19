@@ -62,6 +62,16 @@ class ContextMocker
      */
     public function mockContext()
     {
+        // need to reset loooot of things
+        \Product::flushPriceCache();
+        \Configuration::clearConfigurationCacheForTesting();
+        \Configuration::loadConfiguration();
+        \Cache::clear();
+        \Cart::resetStaticCache();
+        \Carrier::resetStaticCache();
+        \CartRule::resetStaticCache();
+        \Shop::resetContext();
+
         $this->contextBackup = \Context::getContext();
         $context             = clone($this->contextBackup);
         \Context::setInstanceForTesting($context);

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Tests\Integration;
 
 
 use Module;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use PrestaShopAutoload;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
@@ -41,11 +40,6 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
     public $moduleNames;
 
-    /**
-     * @var ContextMocker
-     */
-    protected $contextMocker;
-
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -56,9 +50,6 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
 
     protected function setUp()
     {
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
-
         parent::setUp();
 
         \ContextCore::getContext()->employee = new \Employee(1);
@@ -69,12 +60,6 @@ class ModuleOverrideInstallUninstallTest extends IntegrationTestCase
            'pscsx3241',
            'pscsx32412',
        ];
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->contextMocker->resetContext();
     }
 
     public static function tearDownAfterClass()

@@ -33,6 +33,7 @@ class AdapterDatabaseTest extends IntegrationTestCase
 {
     public function setup()
     {
+        parent::setup();
         $this->db = new Database;
     }
 
