@@ -29,14 +29,29 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Configuration;
 use Context;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 
 class ShopCoreTest extends IntegrationTestCase
 {
     protected $context;
 
-    protected function setUp()
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setup()
     {
+        parent::setup();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
         $this->context = Context::getContext();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
     }
 
     public function testGetBaseURL()
