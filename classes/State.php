@@ -203,7 +203,7 @@ class StateCore extends ObjectModel
      * @param bool $active true if the state must be active
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
-    public static function getStatesByIdCountry($idCountry, $active=false)
+    public static function getStatesByIdCountry($idCountry, $active = false)
     {
         if (empty($idCountry)) {
             die(Tools::displayError());
@@ -212,7 +212,7 @@ class StateCore extends ObjectModel
         return Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'state` s
-			WHERE s.`id_country` = '.(int) $idCountry . ($active ?  ' AND s.active =1' : "")
+			WHERE s.`id_country` = '.(int) $idCountry . ($active ?  ' AND s.active = 1' : "")
         );
     }
 
