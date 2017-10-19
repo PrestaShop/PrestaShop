@@ -842,14 +842,22 @@ class ProductPresenter
      */
     protected function buildGroupedFeatures(array $productFeatures)
     {
+        $valuesByFeatureName = array();
         $groupedFeatures = array();
+
         foreach ($productFeatures as $feature) {
-            if (isset($feature['name'])) {
-                if (array_key_exists($feature['name'], $groupedFeatures)) {
-                    $groupedFeatures[$feature['name']]['value'] .= "\n" . $feature['value'];
-                } else {
-                    $groupedFeatures[$feature['name']] = $feature;
-                }
+            $featureName = $feature['name'];
+            // build an array of unique features
+            $groupedFeatures[$featureName] = $feature;
+            // aggregate feature values separately
+            $valuesByFeatureName[$featureName][] = $feature['value'];
+        }
+
+        // replace value from features that have multiple values with the ones we aggregated earlier
+        foreach ($valuesByFeatureName as $featureName => $values) {
+            if (count($values) > 1) {
+                sort($values, SORT_NATURAL);
+                $groupedFeatures[$featureName]['value'] = implode("\n", $values);
             }
         }
 
