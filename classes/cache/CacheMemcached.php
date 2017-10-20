@@ -139,7 +139,7 @@ class CacheMemcachedCore extends Cache
     /**
      * @inheritdoc
      */
-    protected function _deleteMulti($keyArray)
+    protected function _deleteMulti(array $keyArray)
     {
         if (!$this->isConnected()) {
             return false;
