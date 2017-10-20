@@ -91,7 +91,9 @@ class TabCore extends ObjectModel
         self::$_cache_tabs = array();
 
         // Set good position for new tab
-        $this->position = Tab::getNewLastPosition($this->id_parent);
+        if (!is_int($this->position)) {
+            $this->position = Tab::getNewLastPosition($this->id_parent);
+        }
         $this->module = Tools::strtolower($this->module);
 
         // Add tab
