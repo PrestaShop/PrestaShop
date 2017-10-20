@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e919523c5f8dfa0d7a54"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f544035a0bc3854742db"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -12923,7 +12923,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.tags-input .tag {\n  background: #25b9d7;\n  color: white;\n  padding: 2px 4px;\n  border-radius: 0;\n  font-weight: lighter;\n  display: inline-block;\n  margin: 2px;\n  min-height: 25px;\n}\n.tags-input .tag .material-icons {\n    vertical-align: middle;\n    color: #363a41;\n    margin: 0 2px 0 5px;\n    cursor: pointer;\n}\n.tags-input input.input, .tags-input input.input:focus {\n  background-color: white;\n  font-family: Open Sans, sans-serif;\n  cursor: text;\n  padding-left: 2px;\n  border: none;\n  outline: none;\n  min-height: 33px;\n}\n.tags-input input.input::-webkit-input-placeholder, .tags-input input.input:focus::-webkit-input-placeholder {\n    font-style: italic;\n}\n.tags-input input.input:-ms-input-placeholder, .tags-input input.input:focus:-ms-input-placeholder {\n    font-style: italic;\n}\n.tags-input input.input::placeholder, .tags-input input.input:focus::placeholder {\n    font-style: italic;\n}\n", ""]);
+exports.push([module.i, "\n.tags-input .tag {\n  background: #25b9d7;\n  color: white;\n  padding: 2px 4px;\n  border-radius: 0;\n  font-weight: lighter;\n  display: inline-block;\n  margin: 2px;\n  min-height: 25px;\n}\n.tags-input .tag .material-icons {\n    vertical-align: middle;\n    color: #363a41;\n    margin: 0 2px 0 5px;\n    cursor: pointer;\n}\n.tags-input input.input, .tags-input input.input:focus {\n  border: none;\n  outline: none;\n  min-height: 33px;\n  width: auto;\n}\n", ""]);
 
 // exports
 
@@ -12965,7 +12965,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.custom-checkbox[data-v-ffb77b4c] {\n  width: 15px;\n  height: 15px;\n  position: relative;\n  background: white;\n}\n.custom-checkbox label[data-v-ffb77b4c] {\n    width: 15px;\n    height: 15px;\n    cursor: pointer;\n    position: absolute;\n    top: 0;\n    left: 0;\n    border: 2px #BBCDD2 solid;\n    border-radius: 2px;\n}\n.custom-checkbox label[data-v-ffb77b4c]:after {\n      content: '';\n      width: 12px;\n      height: 5px;\n      position: absolute;\n      top: 1px;\n      left: 0;\n      border: 2px solid white;\n      border-top: none;\n      border-right: none;\n      background: transparent;\n      opacity: 0;\n      -webkit-transform: rotate(-45deg);\n              transform: rotate(-45deg);\n}\n.custom-checkbox label[data-v-ffb77b4c]::before {\n      content: '';\n      width: 12px;\n      height: 12px;\n      position: absolute;\n      top: 0;\n      left: 0;\n}\n.custom-checkbox input[type=checkbox][data-v-ffb77b4c] {\n    visibility: hidden;\n}\n.custom-checkbox input[type=checkbox]:checked + label[data-v-ffb77b4c] {\n      border: 2px #25b9d7 solid;\n}\n.custom-checkbox input[type=checkbox]:checked + label[data-v-ffb77b4c]:before {\n      background: #25b9d7;\n}\n.custom-checkbox input[type=checkbox]:checked + label[data-v-ffb77b4c]:after {\n      opacity: 1;\n}\n.custom-checkbox input[type=checkbox].indeterminate + label[data-v-ffb77b4c]:after {\n      -webkit-transform: rotate(0);\n              transform: rotate(0);\n      height: 0;\n      width: 11px;\n      top: 4px;\n}\n", ""]);
+exports.push([module.i, "\n.custom-checkbox > .checkbox[data-v-ffb77b4c] {\n  width: 15px;\n  height: 15px;\n  position: relative;\n  background: white;\n  display: inline-block;\n  vertical-align: baseline;\n  margin-bottom: -2px;\n}\n.custom-checkbox > .checkbox span[data-v-ffb77b4c] {\n    width: 15px;\n    height: 15px;\n    cursor: pointer;\n    position: absolute;\n    top: 0;\n    left: 0;\n    border: 2px #BBCDD2 solid;\n    border-radius: 2px;\n}\n.custom-checkbox > .checkbox span[data-v-ffb77b4c]:after {\n      content: '';\n      width: 12px;\n      height: 5px;\n      position: absolute;\n      top: 1px;\n      left: 0;\n      border: 2px solid white;\n      border-top: none;\n      border-right: none;\n      background: transparent;\n      opacity: 0;\n      -webkit-transform: rotate(-45deg);\n              transform: rotate(-45deg);\n}\n.custom-checkbox > .checkbox span[data-v-ffb77b4c]::before {\n      content: '';\n      width: 12px;\n      height: 12px;\n      position: absolute;\n      top: 0;\n      left: 0;\n}\n.custom-checkbox > .checkbox input[type=checkbox][data-v-ffb77b4c] {\n    display: none;\n}\n.custom-checkbox > .checkbox input[type=checkbox]:checked + span[data-v-ffb77b4c] {\n      border: 2px #25b9d7 solid;\n}\n.custom-checkbox > .checkbox input[type=checkbox]:checked + span[data-v-ffb77b4c]:before {\n      background: #25b9d7;\n}\n.custom-checkbox > .checkbox input[type=checkbox]:checked + span[data-v-ffb77b4c]:after {\n      opacity: 1;\n}\n.custom-checkbox > .checkbox input[type=checkbox].indeterminate + span[data-v-ffb77b4c]:after {\n      -webkit-transform: rotate(0);\n              transform: rotate(0);\n      height: 0;\n      width: 11px;\n      top: 4px;\n}\n", ""]);
 
 // exports
 
@@ -30076,7 +30076,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-button.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-button.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-button.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30236,7 +30236,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-checkbox.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-checkbox.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-checkbox.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30527,7 +30527,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-alert.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-alert.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-alert.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30665,7 +30665,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tags.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tags.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tags.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30703,7 +30703,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree-item.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree-item.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tree-item.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -30955,6 +30955,9 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
 
 exports.default = {
   props: ['id', 'model', 'isIndeterminate'],
@@ -30964,6 +30967,11 @@ exports.default = {
         checked: val,
         item: this.model
       });
+    }
+  },
+  methods: {
+    onClick: function onClick() {
+      this.checked = !this.checked;
     }
   },
   data: function data() {
@@ -31166,7 +31174,7 @@ Object.defineProperty(exports, "__esModule", {
 
 
 exports.default = {
-  props: ['tags', 'placeholder'],
+  props: ['tags', 'placeholder', 'hasIcon'],
   computed: {
     inputSize: function inputSize() {
       return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
@@ -33429,7 +33437,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.table {\n  font-size: .9em;\n  table-layout: fixed;\n  width: 100%;\n  white-space: nowrap;\n}\n.table thead {\n    border: none;\n}\n.table thead th {\n      border: none;\n      border-bottom: 2px solid #25b9d7;\n      color: #363a41;\n      padding: 10px 0;\n}\n.table thead th .material-icons {\n        margin-left: 5px;\n        vertical-align: middle;\n}\n.table thead th.thead-title {\n        padding-left: 98px;\n}\n.table thead th:last-child .material-icons {\n        color: #6c868e;\n        margin-right: 5px;\n}\n.table tbody {\n    border: none;\n}\n.table tbody tr {\n      border-bottom: #BBCDD2 1px solid;\n}\n", ""]);
+exports.push([module.i, "\n.table {\n  font-size: .9em;\n  table-layout: fixed;\n  width: 100%;\n  white-space: nowrap;\n}\n.table thead {\n    border: none;\n}\n.table thead th {\n      border: none;\n      border-bottom: 2px solid #25b9d7;\n      color: #363a41;\n      padding: 10px 0;\n}\n.table thead th.thead-title {\n        padding-left: 88px;\n}\n.table thead th:last-child {\n        overflow: hidden;\n        text-overflow: ellipsis;\n}\n.table thead th:last-child .material-icons {\n          margin-right: 5px;\n}\n.table tbody {\n    border: none;\n}\n.table tbody tr {\n      border-bottom: #BBCDD2 1px solid;\n}\n", ""]);
 
 // exports
 
@@ -33471,7 +33479,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.stock-header[data-v-1b577394] {\n  position: fixed;\n  top: 40px;\n  background: white;\n  width: 100%;\n  z-index: 3;\n}\n", ""]);
+exports.push([module.i, "\n.stock-header[data-v-1b577394] {\n  position: fixed;\n  top: 39px;\n  background: white;\n  width: 100%;\n  z-index: 3;\n  margin-left: -15px;\n}\n", ""]);
 
 // exports
 
@@ -33500,7 +33508,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.filter-container[data-v-382cbaec] {\n  border: #BBCDD2 1px solid;\n  padding: 10px;\n}\n.item[data-v-382cbaec] {\n  margin-bottom: 5px;\n}\nul[data-v-382cbaec] {\n  list-style: none;\n  padding-left: 0;\n}\n", ""]);
+exports.push([module.i, "\n.filter-container[data-v-382cbaec] {\n  border: #BBCDD2 1px solid;\n  padding: 10px;\n}\n.item[data-v-382cbaec] {\n  margin-bottom: 5px;\n}\nul[data-v-382cbaec] {\n  list-style: none;\n  padding-left: 0;\n  margin-bottom: 0;\n}\n", ""]);
 
 // exports
 
@@ -33528,7 +33536,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n#filters[data-v-442d0f8a] {\n  background: white;\n  border-radius: 2px;\n  box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, .3);\n  border: solid 1px #b9cdd2;\n  width: 150%;\n}\n.collapse-button[data-v-442d0f8a] {\n  width: 100%;\n  text-align: left;\n}\n.collapse-button .material-icons[data-v-442d0f8a] {\n    vertical-align: bottom;\n    font-size: 20px;\n    color: #6c868e;\n}\n", ""]);
+exports.push([module.i, "\n#filters[data-v-442d0f8a] {\n  background: white;\n  border-radius: 2px;\n  box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, .3);\n  border: solid 1px #b9cdd2;\n  width: 150%;\n}\n#filters .row[data-v-442d0f8a] {\n    padding: 10px;\n    padding: 0.625rem;\n}\n.collapse-button[data-v-442d0f8a] {\n  width: 100%;\n  text-align: left;\n}\n.collapse-button .material-icons[data-v-442d0f8a] {\n    vertical-align: bottom;\n    font-size: 20px;\n    color: #6c868e;\n}\n", ""]);
 
 // exports
 
@@ -33557,7 +33565,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header-toolbar {\n  z-index: 0;\n  height: 120px;\n}\n.stock-app {\n  padding-top: 3em;\n}\n.table tr td {\n  border: none;\n  padding: 5px 5px 5px;\n  vertical-align: top;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table tr td:not(.qty-spinner) {\n    padding-top: 14px;\n}\n", ""]);
+exports.push([module.i, "\n.header-toolbar {\n  height: 0;\n  border: none;\n}\n.header-toolbar .title {\n    display: none;\n}\n.stock-app {\n  padding: 3em 0 0 0;\n}\n.table td {\n  border: none;\n  padding: 5px 5px 5px;\n  word-wrap: break-word;\n  white-space: normal;\n}\n.table thead th {\n  padding: 5px inherit;\n  vertical-align: middle;\n}\n.table thead th .material-icons {\n    color: #6c868e;\n    vertical-align: middle;\n}\n.table td:first-child p {\n  margin-bottom: 0;\n}\n", ""]);
 
 // exports
 
@@ -33585,7 +33593,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 exports.i(__webpack_require__(313), "");
 
 // module
-exports.push([module.i, "\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 1px;\n    right: 1px;\n    border: none;\n    height: 31px;\n    width: 31px;\n    background: #25b9d7;\n    z-index: 2;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n  cursor: pointer;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n.ui-widget.ui-widget-content[data-v-599c0dc5] {\n  border: none;\n  border-radius: 0;\n}\n", ""]);
+exports.push([module.i, "\n*[data-v-599c0dc5] {\n  outline: none;\n}\n.qty[data-v-599c0dc5] {\n  position: relative;\n  width: 120px;\n}\n.qty .check-button[data-v-599c0dc5] {\n    outline: none;\n    opacity: 0;\n    position: absolute;\n    top: 1px;\n    right: 26px;\n    border: none;\n    height: 32px;\n    width: 32px;\n    background: #25b9d7;\n    z-index: 2;\n}\n.qty .check-button .material-icons[data-v-599c0dc5] {\n      color: white;\n      vertical-align: middle;\n}\n.qty .check-button[data-v-599c0dc5]:hover {\n      background: #3ED2F0;\n}\n.qty.active .check-button[data-v-599c0dc5] {\n  opacity: 1;\n  cursor: pointer;\n}\n.qty.disabled .check-button[data-v-599c0dc5] {\n  background: #BBCDD2;\n  cursor: default;\n}\n.fade-enter-active[data-v-599c0dc5], .fade-leave-active[data-v-599c0dc5] {\n  transition: opacity 0.2s ease;\n}\n.fade-enter[data-v-599c0dc5], .fade-leave-to[data-v-599c0dc5] {\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -33599,7 +33607,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\ninput[type=number][data-v-5cc3bac0]::-webkit-inner-spin-button,\ninput[type=number][data-v-5cc3bac0]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\n.danger[data-v-5cc3bac0] {\n  border: 1px solid #c05c67;\n  background-color: #fff;\n  color: #363a41;\n}\n.danger[data-v-5cc3bac0]:focus {\n    outline: none;\n}\n.ps-number[data-v-5cc3bac0] {\n  position: relative;\n}\n.ps-number .ps-number-button[data-v-5cc3bac0] {\n    position: absolute;\n    top: 1px;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    right: 30px;\n    cursor: pointer;\n    line-height: 17px;\n    transition: all 0.2s ease;\n}\n.product-actions .ps-number .ps-number-button[data-v-5cc3bac0] {\n      right: 7px;\n}\n.ps-number .ps-number-up[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C7\";\n    font-size: 20px;\n    color: #363a41;\n    position: relative;\n}\n.ps-number .ps-number-down[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C5\";\n    font-size: 20px;\n    color: #363a41;\n    bottom: 6px;\n    position: relative;\n}\n", ""]);
+exports.push([module.i, "\ninput[type=number][data-v-5cc3bac0]::-webkit-inner-spin-button,\ninput[type=number][data-v-5cc3bac0]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n}\ninput[type=number][data-v-5cc3bac0] {\n  -moz-appearance: textfield;\n}\n.danger[data-v-5cc3bac0] {\n  border: 1px solid #c05c67;\n  background-color: #fff;\n  color: #363a41;\n}\n.danger[data-v-5cc3bac0]:focus {\n    outline: none;\n}\n.ps-number[data-v-5cc3bac0] {\n  position: relative;\n  width: 95px;\n}\n.ps-number .ps-number-button[data-v-5cc3bac0] {\n    position: absolute;\n    top: 1px;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n        -ms-flex-direction: column;\n            flex-direction: column;\n    right: 30px;\n    cursor: pointer;\n    line-height: 17px;\n    transition: all 0.2s ease;\n}\n.product-actions .ps-number .ps-number-button[data-v-5cc3bac0] {\n      right: 7px;\n}\n.ps-number .ps-number-up[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C7\";\n    font-size: 20px;\n    color: #363a41;\n    position: relative;\n}\n.ps-number .ps-number-down[data-v-5cc3bac0]::before {\n    font-family: 'Material Icons';\n    content: \"\\E5C5\";\n    font-size: 20px;\n    color: #363a41;\n    bottom: 6px;\n    position: relative;\n}\n", ""]);
 
 // exports
 
@@ -33660,7 +33668,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n#search .search-input {\n  box-shadow: none;\n  border: #BBCDD2 1px solid;\n  background-color: white;\n  min-height: 35px;\n  outline: none;\n  border-radius: 0;\n}\n#search .alert-box {\n  padding-top: 28px;\n  z-index: -1;\n}\n#search .search-form {\n  width: calc(100% - 130px);\n}\n#search .search-form .search-button {\n    float: right;\n    position: absolute;\n    right: 22px;\n    top: 1px;\n    margin-top: 28px;\n    height: 35px;\n}\n#search .fade-enter-active, #search .fade-leave-active {\n  transition: opacity .5s;\n}\n#search .fade-enter, #search .fade-leave-to {\n  opacity: 0;\n}\n", ""]);
+exports.push([module.i, "\n#search .search-input {\n  box-shadow: none;\n  border: #BBCDD2 1px solid;\n  background-color: white;\n  min-height: 35px;\n  outline: none;\n  border-radius: 0;\n}\n#search .alert-box {\n  padding-top: 28px;\n  z-index: 3;\n  position: fixed;\n  right: 5px;\n  top: 40px;\n}\n#search .search-form {\n  width: calc(100% - 130px);\n}\n#search .search-form .search-button {\n    float: right;\n    position: absolute;\n    right: 22px;\n    top: 1px;\n    margin-top: 28px;\n    height: 35px;\n}\n#search .fade-enter-active, #search .fade-leave-active {\n  transition: opacity .5s;\n}\n#search .fade-enter, #search .fade-leave-to {\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
@@ -34006,7 +34014,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-pagination.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-pagination.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-pagination.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -34044,7 +34052,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-tree/ps-tree.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-tree.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -34144,7 +34152,10 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "tags-input search-input",
+    staticClass: "tags-input search-input search",
+    class: {
+      'search-with-icon': _vm.hasIcon
+    },
     on: {
       "click": function($event) {
         _vm.focus()
@@ -34171,7 +34182,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "tag"
     }],
     ref: "tags",
-    staticClass: "input",
+    staticClass: "form-control input",
     attrs: {
       "placeholder": _vm.placeholderToDisplay,
       "type": "text",
@@ -34211,7 +34222,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.displayPagination) ? _c('nav', {
-    staticClass: "float-sm-right mt-1"
+    staticClass: "float-sm-right mt-1 mr-2"
   }, [_c('ul', {
     staticClass: "pagination",
     class: {
@@ -34430,6 +34441,8 @@ if (true) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "custom-checkbox"
+  }, [_c('div', {
+    staticClass: "checkbox"
   }, [_c('input', {
     directives: [{
       name: "model",
@@ -34465,11 +34478,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }
-  }), _vm._v(" "), _c('label', {
-    attrs: {
-      "for": _vm.id
+  }), _vm._v(" "), _c('span', {
+    on: {
+      "click": _vm.onClick
     }
-  })])
+  })]), _vm._v(" "), _vm._t("label")], 2)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
@@ -41200,7 +41213,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-loader.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-loader.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-loader.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41238,7 +41251,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-media.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-media.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-media.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41276,7 +41289,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-number.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-number.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-number.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41314,7 +41327,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-sort.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-sort.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-sort.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -41348,7 +41361,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-table.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-table/ps-table.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-table.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -42128,7 +42141,7 @@ const state = {
   order: '',
   pageIndex: 1,
   totalPages: 0,
-  productsPerPage: 100,
+  productsPerPage: 30,
   products: [],
   hasQty: false,
   keywords: [],
@@ -43251,6 +43264,7 @@ exports.default = {
 //
 //
 //
+//
 
 /***/ }),
 /* 287 */
@@ -43289,9 +43303,6 @@ exports.default = {
     }
   },
   methods: {
-    onLabelClick: function onLabelClick() {
-      this.$refs['low-filter'].checked = !this.$refs['low-filter'].checked;
-    },
     onCheck: function onCheck(checkbox) {
       var isChecked = checkbox.checked ? 1 : 0;
       this.$emit('lowStockChecked', isChecked);
@@ -43305,6 +43316,9 @@ exports.default = {
     PSCheckbox: _psCheckbox2.default
   }
 }; //
+//
+//
+//
 //
 //
 //
@@ -43842,6 +43856,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
 
 exports.default = {
   props: ['product'],
@@ -44284,8 +44299,8 @@ exports.default = {
         _eventBus.EventBus.$emit('displayBulkAlert', 'error');
       }
     },
-    focusOut: function focusOut() {
-      this.isFocused = false;
+    focusOut: function focusOut(event) {
+      this.isFocused = $(event.target).hasClass('ps-number');
       this.danger = false;
     },
     bulkChecked: function bulkChecked(checkbox) {
@@ -44529,7 +44544,7 @@ exports.default = {
       this.isActive = true;
     },
     focusOut: function focusOut(event) {
-      if (!$(event.relatedTarget).hasClass('check-button') && !this.value) {
+      if (!$(event.target).hasClass('ps-number') && !this.value) {
         this.isActive = false;
       }
       this.isEnabled = !!this.value;
@@ -44678,8 +44693,7 @@ exports.default = {
 
     $(this.$el).datetimepicker({
       format: 'MM/DD/YYYY',
-      showClear: true,
-      locale: this.locale
+      showClear: true
     }).on('dp.change', function (infos) {
       if (infos.date) {
         _this.$emit('dpChange', infos);
@@ -44864,11 +44878,11 @@ exports.default = {
       this.$emit('blur', $event);
     },
     increment: function increment() {
-      var value = this.value + 1;
+      var value = parseInt(this.value, 10) + 1;
       this.$emit('change', value);
     },
     decrement: function decrement() {
-      var value = this.value - 1;
+      var value = parseInt(this.value, 10) - 1;
       this.$emit('change', value);
     }
   }
@@ -50311,7 +50325,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/app.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/app.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] app.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50345,7 +50359,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/breadcrumb.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/breadcrumb.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] breadcrumb.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50383,7 +50397,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] filters.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50421,7 +50435,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/filter-component.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] filter-component.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50459,7 +50473,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/low-filter.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/filters/low-filter.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] low-filter.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50497,7 +50511,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/search.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/search.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] search.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50535,7 +50549,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/stock-header.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/stock-header.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] stock-header.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50573,7 +50587,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/tabs.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/header/tabs.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] tabs.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50607,7 +50621,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/index.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50645,7 +50659,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/movement-line.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/movements/movement-line.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] movement-line.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50679,7 +50693,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/index.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/index.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] index.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50717,7 +50731,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/product-line.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/product-line.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] product-line.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50755,7 +50769,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-actions.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-actions.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] products-actions.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50793,7 +50807,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-table.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/products-table.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] products-table.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50831,7 +50845,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/spinner.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/pages/stock/components/overview/spinner.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] spinner.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50875,7 +50889,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-datepicker.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-datepicker.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-datepicker.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50914,7 +50928,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-radio.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-radio.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-radio.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -50952,7 +50966,7 @@ var Component = __webpack_require__(3)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/thomasleviandier/Documents/projects/prestashop/PrestaShop/admin-dev/themes/new-theme/js/app/widgets/ps-select.vue"
+Component.options.__file = "/Users/pBorowicz/repos/prestashop/admin-dev/themes/new-theme/js/app/widgets/ps-select.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] ps-select.vue: functional components are not supported with templates, they should use render functions.")}
 
@@ -51009,7 +51023,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('thead', [_c('tr', [_c('th', {
     staticClass: "thead-title",
     attrs: {
-      "width": "30%"
+      "width": "27%"
     }
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_product')) + "\n        "), _c('PSSort', {
     attrs: {
@@ -51033,7 +51047,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center align-middle"
+    staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_status')) + "\n      ")]), _vm._v(" "), _c('th', {
     staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_physical')) + "\n        "), _c('PSSort', {
@@ -51044,9 +51058,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center align-middle"
+    staticClass: "text-sm-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_reserved')) + "\n      ")]), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center pr-4"
+    staticClass: "text-sm-left text-md-center"
   }, [_vm._v("\n        " + _vm._s(_vm.trans('title_available')) + "\n        "), _c('PSSort', {
     attrs: {
       "order": "available_quantity"
@@ -51055,7 +51069,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "sort": _vm.toggleSort
     }
   })], 1), _vm._v(" "), _c('th', {
-    staticClass: "text-sm-center align-middle"
+    staticClass: "text-md-left",
+    attrs: {
+      "title": _vm.trans('title_edit_quantity')
+    }
   }, [_c('i', {
     staticClass: "material-icons"
   }, [_vm._v("edit")]), _vm._v("\n        " + _vm._s(_vm.trans('title_edit_quantity')) + "\n      ")])])]), _vm._v(" "), _c('tbody', [(this.isLoading) ? _c('tr', [_c('td', {
@@ -51147,7 +51164,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "checked": _vm.bulkChecked
     }
   }), _vm._v(" "), _c('div', {
-    staticClass: "ml-1"
+    staticClass: "ml-2"
   }, [_c('small', [_vm._v(_vm._s(_vm.trans('title_bulk')))]), _vm._v(" "), _c('PSNumber', {
     staticClass: "bulk-qty",
     attrs: {
@@ -51157,7 +51174,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     },
     on: {
       "focus": _vm.focusIn,
-      "blur": _vm.focusOut,
+      "blur": function($event) {
+        _vm.focusOut($event)
+      },
       "change": _vm.onChange,
       "keyup": _vm.onKeyUp
     }
@@ -51194,7 +51213,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "stock-header"
+    staticClass: "stock-header px-3"
   }, [_c('Breadcrumb'), _vm._v(" "), _c('h1', [_vm._v(_vm._s(_vm.trans('head_title')))]), _vm._v(" "), _c('Tabs')], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -51220,7 +51239,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }) : _c('div', {
     staticClass: "no-img"
   }), _vm._v(" "), _c('div', {
-    staticClass: "ml-1 desc media-body"
+    staticClass: "ml-2 desc media-body"
   }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
@@ -51241,10 +51260,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "filter-container"
   }, [(!_vm.hasChildren) ? _c('PSTags', {
     ref: "tags",
-    staticClass: "form-control search search-input",
+    staticClass: "form-control search search-input mb-2",
     attrs: {
       "tags": _vm.tags,
-      "placeholder": _vm.hasPlaceholder ? _vm.placeholder : ''
+      "placeholder": _vm.hasPlaceholder ? _vm.placeholder : '',
+      "hasIcon": true
     },
     on: {
       "tagChange": _vm.onTagChanged,
@@ -51365,16 +51385,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("filter_list")]), _vm._v(" "), _c('i', {
     staticClass: "material-icons float-right "
   }, [_vm._v("keyboard_arrow_down")]), _vm._v("\n    " + _vm._s(_vm.trans('button_advanced_filter')) + "\n  ")]), _vm._v(" "), _c('div', {
-    staticClass: "collapse",
+    staticClass: "container-fluid collapse",
     attrs: {
       "id": "filters"
     }
   }, [_c('div', {
     staticClass: "row"
   }, [_c('div', {
-    staticClass: "col-md-4"
+    staticClass: "col-lg-4"
   }, [(_vm.isOverview) ? _c('div', {
-    staticClass: "py-2 px-2"
+    staticClass: "py-3"
   }, [_c('h2', [_vm._v(_vm._s(_vm.trans('filter_suppliers')))]), _vm._v(" "), _c('FilterComponent', {
     attrs: {
       "placeholder": _vm.trans('filter_search_suppliers'),
@@ -51386,7 +51406,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "active": _vm.onFilterActive
     }
   })], 1) : _c('div', {
-    staticClass: "py-2 px-2"
+    staticClass: "py-3"
   }, [_c('h2', [_vm._v(_vm._s(_vm.trans('filter_movements_type')))]), _vm._v(" "), _c('PSSelect', {
     attrs: {
       "items": _vm.movementsTypes,
@@ -51397,7 +51417,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "change": _vm.onChange
     }
   }, [_vm._v("\n            " + _vm._s(_vm.trans('none')) + "\n          ")]), _vm._v(" "), _c('h2', {
-    staticClass: "mt-2"
+    staticClass: "mt-4"
   }, [_vm._v(_vm._s(_vm.trans('filter_movements_employee')))]), _vm._v(" "), _c('PSSelect', {
     attrs: {
       "items": _vm.employees,
@@ -51408,7 +51428,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "change": _vm.onChange
     }
   }, [_vm._v("\n           " + _vm._s(_vm.trans('none')) + "\n          ")]), _vm._v(" "), _c('h2', {
-    staticClass: "mt-2"
+    staticClass: "mt-4"
   }, [_vm._v(_vm._s(_vm.trans('filter_movements_period')))]), _vm._v(" "), _c('form', {
     staticClass: "row"
   }, [_c('div', {
@@ -51434,9 +51454,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "reset": _vm.onClear
     }
   })], 1)])], 1)]), _vm._v(" "), _c('div', {
-    staticClass: "col-md-4"
+    staticClass: "col-lg-4"
   }, [_c('div', {
-    staticClass: "py-2 px-2"
+    staticClass: "py-3"
   }, [_c('h2', [_vm._v(_vm._s(_vm.trans('filter_categories')))]), _vm._v(" "), _c('FilterComponent', {
     attrs: {
       "placeholder": _vm.trans('filter_search_category'),
@@ -51448,9 +51468,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "active": _vm.onFilterActive
     }
   })], 1)]), _vm._v(" "), _c('div', {
-    staticClass: "col-md-4"
+    staticClass: "col-lg-4"
   }, [_c('div', {
-    staticClass: "py-2 px-2"
+    staticClass: "py-3"
   }, [_c('h2', [_vm._v(_vm._s(_vm.trans('filter_status')))]), _vm._v(" "), _c('PSRadio', {
     attrs: {
       "id": "enable",
@@ -51498,6 +51518,8 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
+    staticClass: "container-fluid"
+  }, [_c('div', {
     staticClass: "row py-2"
   }, [_c('div', {
     staticClass: "col row ml-1"
@@ -51510,15 +51532,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "checked": _vm.onCheck
     }
-  }), _vm._v(" "), _c('p', {
-    staticClass: "ml-2 low-filter-label",
-    on: {
-      "click": _vm.onLabelClick
-    }
-  }, [_vm._v(_vm._s(_vm.trans('filter_low_stock')))])], 1), _vm._v(" "), _c('div', {
-    staticClass: "col"
+  }, [_c('label', {
+    staticClass: "low-filter-label ml-1",
+    attrs: {
+      "for": "low-filter"
+    },
+    slot: "label"
+  }, [_vm._v(_vm._s(_vm.trans('filter_low_stock')))])])], 1), _vm._v(" "), _c('div', {
+    staticClass: "col mr-3 d-flex align-items-center justify-content-end"
   }, [_c('a', {
-    staticClass: "float-sm-right ml-2",
+    attrs: {
+      "href": _vm.stockExporttUrl
+    }
+  }, [_c('span', {
+    attrs: {
+      "data-toggle": "pstooltip",
+      "title": _vm.stockExportTitle,
+      "data-html": "true",
+      "data-placement": "top"
+    }
+  }, [_c('i', {
+    staticClass: "material-icons"
+  }, [_vm._v("cloud_upload")])])]), _vm._v(" "), _c('a', {
+    staticClass: "ml-2",
     attrs: {
       "href": _vm.stockImportUrl,
       "target": "_blank"
@@ -51532,21 +51568,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('i', {
     staticClass: "material-icons"
-  }, [_vm._v("cloud_download")])])]), _vm._v(" "), _c('a', {
-    staticClass: "float-sm-right",
-    attrs: {
-      "href": _vm.stockExporttUrl
-    }
-  }, [_c('span', {
-    attrs: {
-      "data-toggle": "pstooltip",
-      "title": _vm.stockExportTitle,
-      "data-html": "true",
-      "data-placement": "top"
-    }
-  }, [_c('i', {
-    staticClass: "material-icons"
-  }, [_vm._v("cloud_upload")])])])])])
+  }, [_vm._v("cloud_download")])])])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
@@ -51587,7 +51609,7 @@ if (true) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return (_vm.isReady) ? _c('div', {
-    staticClass: "stock-app",
+    staticClass: "stock-app container-fluid",
     attrs: {
       "id": "app"
     }
@@ -51604,14 +51626,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "lowStockChecked": _vm.onLowStockChecked
     }
   }) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "card pa-2"
+    staticClass: "card container-fluid pa-2 clearfix"
   }, [_c('router-view', {
     staticClass: "view",
     on: {
       "resetFilters": _vm.resetFilters,
       "fetch": _vm.fetch
     }
-  })], 1), _vm._v(" "), _c('PSPagination', {
+  }), _vm._v(" "), _c('PSPagination', {
     attrs: {
       "currentIndex": _vm.currentPagination,
       "pagesCount": _vm.pagesCount
@@ -51619,7 +51641,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "pageChanged": _vm.onPageChanged
     }
-  })], 1) : _vm._e()
+  })], 1)], 1) : _vm._e()
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (true) {
@@ -51634,7 +51656,10 @@ if (true) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('tr', [_c('td', [_c('PSMedia', {
+  return _c('tr', [_c('td', {
+    staticClass: "d-flex align-items-center"
+  }, [_c('PSMedia', {
+    staticClass: "d-flex align-items-center",
     attrs: {
       "thumbnail": _vm.thumbnail
     }
@@ -51933,7 +51958,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'low-stock': _vm.lowStock
     }
   }, [_c('td', {
-    staticClass: "d-flex align-items-center pr-1"
+    staticClass: "d-flex align-items-center"
   }, [_c('PSCheckbox', {
     ref: _vm.id,
     attrs: {
@@ -51944,7 +51969,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "checked": _vm.productChecked
     }
   }), _vm._v(" "), _c('PSMedia', {
-    staticClass: "ml-1",
+    staticClass: "d-flex align-items-center ml-2",
     attrs: {
       "thumbnail": _vm.thumbnail
     }
@@ -51974,7 +51999,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'stock-warning': _vm.lowStock
     }
   }, [_vm._v("\n    " + _vm._s(_vm.product.product_reserved_quantity) + "\n  ")]), _vm._v(" "), _c('td', {
-    staticClass: "text-sm-left pl-4",
+    staticClass: "text-sm-center",
     class: {
       'stock-warning': _vm.lowStock
     }
@@ -51986,7 +52011,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('i', {
     staticClass: "material-icons"
   }, [_vm._v("trending_flat")]), _vm._v("\n      " + _vm._s(_vm.availableQtyUpdated) + "\n    ")]) : _vm._e(), _vm._v(" "), (_vm.lowStock) ? _c('span', {
-    staticClass: "stock-warning ico ml-4",
+    staticClass: "stock-warning ico ml-2",
     attrs: {
       "data-toggle": "pstooltip",
       "data-placement": "top",
@@ -51994,9 +52019,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "title": _vm.lowStockLevel
     }
   }, [_vm._v("!")]) : _vm._e()]), _vm._v(" "), _c('td', {
-    staticClass: "qty-spinner"
+    staticClass: "qty-spinner text-sm-right"
   }, [_c('Spinner', {
-    staticClass: "pull-xs-right",
     attrs: {
       "product": _vm.product
     },

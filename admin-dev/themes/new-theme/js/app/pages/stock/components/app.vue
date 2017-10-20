@@ -23,18 +23,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="stock-app">
+  <div v-if="isReady" id="app" class="stock-app container-fluid">
     <StockHeader />
     <Search @search="onSearch" @applyFilter="applyFilter" />
     <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
-    <div class="card pa-2">
+    <div class="card container-fluid pa-2 clearfix">
       <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
+      <PSPagination
+        :currentIndex="currentPagination"
+        :pagesCount="pagesCount"
+        @pageChanged="onPageChanged"
+      />
     </div>
-    <PSPagination
-      :currentIndex="currentPagination"
-      :pagesCount="pagesCount"
-      @pageChanged="onPageChanged"
-    />
   </div>
 </template>
 
@@ -113,23 +113,38 @@
   };
 </script>
 
-<style lang="sass">
+<style lang="sass" type="text/scss">
   @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
-    z-index: 0;
-    height: 120px;
+    height: 0;
+    border: none;
+    .title {
+      display: none;
+    }
   }
   .stock-app {
-    padding-top: 3em;
+    padding: 3em 0 0 0;
   }
-  .table tr td {
-    border: none;
-    padding: 5px 5px 5px;
-    vertical-align: top;
-    &:not(.qty-spinner) {
-      padding-top:14px;
+  .table {
+    td {
+      border: none;
+      padding: 5px 5px 5px;
+      word-wrap: break-word;
+      white-space: normal;
     }
-    word-wrap: break-word;
-    white-space: normal;
+    thead th {
+      padding: 5px inherit;
+      vertical-align: middle;
+      .material-icons {
+        color: $gray-medium;
+        vertical-align: middle;
+      }
+    }
+    td:first-child {
+      // product description inside the product column
+      p {
+        margin-bottom: 0;
+      }
+    }
   }
 </style>
