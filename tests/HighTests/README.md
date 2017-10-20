@@ -55,7 +55,7 @@ Expected
 
 
 ```
-➜  mocha test/campaigns/high/category --URL=URL_SITE
+➜  mocha test/campaigns/high/* --URL=URL_SITE
 ```
 
 ## Files and Repo
