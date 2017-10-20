@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use Shop;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\StringInput;
@@ -53,13 +54,13 @@ class MultishopCommandListenerTest extends UnitTestCase
      */
     protected $contextMocker;
 
-    public function setup()
+    public function setUp()
     {
 
         $this->contextMocker = new ContextMocker();
         $this->contextMocker->mockContext();
 
-        parent::setup();
+        parent::setUp();
 
         $this->setupSfKernel();
 
@@ -75,7 +76,7 @@ class MultishopCommandListenerTest extends UnitTestCase
 
     public function testDefaultMultishopContext()
     {
-        \Shop::resetContext();
+        Shop::resetContext();
         $this->assertFalse($this->multishopContext->isShopContext(), 'isShopContext');
         $this->assertFalse($this->multishopContext->isShopGroupContext(), 'isShopGroupContext');
         $this->assertFalse($this->multishopContext->isAllContext(), 'isAllContext');

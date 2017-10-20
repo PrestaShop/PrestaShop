@@ -36,14 +36,14 @@ class HookConfiguratorTest extends UnitTestCase
     private $hookConfigurator;
     private $hookRepository;
 
-    public function setup()
+    public function setUp()
     {
         $this->hookRepository = Phake::mock(
             'PrestaShop\PrestaShop\Core\Module\HookRepository'
         );
 
         $this->hookConfigurator = new HookConfigurator($this->hookRepository);
-        parent::setup();
+        parent::setUp();
     }
 
     private function setCurrentDisplayHooksConfiguration(array $hookConfiguration)

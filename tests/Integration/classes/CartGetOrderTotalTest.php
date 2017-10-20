@@ -368,7 +368,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     public function setUp()
     {
-        parent::setup();
+        parent::setUp();
 
         // Context needs a currency but doesn't set it by itself, use default one.
         Context::getContext()->currency = new Currency(self::getCurrencyId());

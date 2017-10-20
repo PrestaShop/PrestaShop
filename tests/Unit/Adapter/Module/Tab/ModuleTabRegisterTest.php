@@ -125,7 +125,7 @@ class ModuleTabRegisterTest extends UnitTestCase
 
     public function setUp()
     {
-        parent::setup();
+        parent::setUp();
 
         $this->setupSfKernel();
 

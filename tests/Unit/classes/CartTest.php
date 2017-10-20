@@ -80,9 +80,9 @@ class FakeProductPriceCalculator
 
 class CartTest extends UnitTestCase
 {
-    public function setup()
+    public function setUp()
     {
-        parent::setup();
+        parent::setUp();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator', $this->productPriceCalculator);

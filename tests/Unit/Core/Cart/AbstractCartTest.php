@@ -26,10 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart;
 
+use Cart;
+use CartCore;
 use CartRule;
 use Configuration;
+use Context;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Product;
 use StockAvailable;
 
 /**
@@ -41,22 +44,22 @@ abstract class AbstractCartTest extends IntegrationTestCase
 {
 
     /**
-     * @var \CartCore
+     * @var CartCore
      */
     protected $cart;
 
     /**
-     * @var \CartRule[]
+     * @var CartRule[]
      */
     protected $cartRulesInCart = array();
 
     /**
-     * @var \CartRule[]
+     * @var CartRule[]
      */
     protected $cartRules = array();
 
     /**
-     * @var \Product[]
+     * @var Product[]
      */
     protected $products = array();
 
@@ -86,12 +89,12 @@ abstract class AbstractCartTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->cart              = new \Cart();
-        $this->cart->id_lang     = (int) \Context::getContext()->language->id;
-        $this->cart->id_currency = (int) \Context::getContext()->currency->id;
-        $this->cart->id_shop     = (int) \Context::getContext()->shop->id;
+        $this->cart              = new Cart();
+        $this->cart->id_lang     = (int) Context::getContext()->language->id;
+        $this->cart->id_currency = (int) Context::getContext()->currency->id;
+        $this->cart->id_shop     = (int) Context::getContext()->shop->id;
         $this->cart->add(); // required, else we cannot get the content when calculation total
-        \Context::getContext()->cart = $this->cart;
+        Context::getContext()->cart = $this->cart;
         $this->resetCart();
         $this->insertProducts();
         $this->insertCartRules();
@@ -142,7 +145,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     protected function insertProducts()
     {
         foreach ($this->productFixtures as $k => $productFixture) {
-            $product           = new \Product;
+            $product           = new Product;
             $product->price    = $productFixture['price'];
             $product->name     = 'product name';
             $product->quantity = 1000;
@@ -173,7 +176,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @param int $id fixture product id
      *
-     * @return \Product|null
+     * @return Product|null
      */
     protected function getProductFromFixtureId($id)
     {
@@ -187,7 +190,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     /**
      * @param int $id fixture cart rule id
      *
-     * @return \CartRule|null
+     * @return CartRule|null
      */
     protected function getCartRuleFromFixtureId($id)
     {

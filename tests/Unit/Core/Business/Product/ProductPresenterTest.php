@@ -56,9 +56,9 @@ class ProductPresenterTest extends UnitTestCase
     private $product;
     private $language;
 
-    public function setup()
+    public function setUp()
     {
-        parent::setup();
+        parent::setUp();
         $this->settings = new ProductPresentationSettings;
 
         $this->settings->catalog_mode = false;

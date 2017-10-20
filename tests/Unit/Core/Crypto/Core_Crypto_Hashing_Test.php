@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Crypto\Hashing;
  */
 class Core_Crypto_Hashing_Test extends PHPUnit_Framework_TestCase
 {
-    public function setup()
+    public function setUp()
     {
         if (!defined('_COOKIE_KEY_')) {
             define('_COOKIE_KEY_', '2349123849231-4123');

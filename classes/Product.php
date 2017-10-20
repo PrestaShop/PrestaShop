@@ -3635,11 +3635,11 @@ class ProductCore extends ObjectModel
 
         if (!$ps_stock_management) {
             return true;
-        } else {
-            $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
-
-            return (int)$out_of_stock == 2 ? (int)$ps_order_out_of_stock : (int)$out_of_stock;
         }
+
+        $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
+
+        return (int)$out_of_stock == 2 ? (int)$ps_order_out_of_stock : (int)$out_of_stock;
     }
 
     /**

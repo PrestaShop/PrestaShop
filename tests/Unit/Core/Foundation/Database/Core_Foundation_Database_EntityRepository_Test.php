@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Foundation\Database\EntityMetaData;
 
 class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 {
-    public function setup()
+    public function setUp()
     {
         $mockEntityManager = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager');
 
