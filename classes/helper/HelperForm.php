@@ -101,44 +101,41 @@ class HelperFormCore extends Helper
                             break;
 
                         case 'categories':
-                            if ($categories) {
-                                if (!isset($params['tree']['id'])) {
-                                    throw new PrestaShopException('Id must be filled for categories tree');
-                                }
-
-                                $tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
-
-                                if (isset($params['name'])) {
-                                    $tree->setInputName($params['name']);
-                                }
-
-                                if (isset($params['tree']['selected_categories'])) {
-                                    $tree->setSelectedCategories($params['tree']['selected_categories']);
-                                }
-
-                                if (isset($params['tree']['disabled_categories'])) {
-                                    $tree->setDisabledCategories($params['tree']['disabled_categories']);
-                                }
-
-                                if (isset($params['tree']['root_category'])) {
-                                    $tree->setRootCategory($params['tree']['root_category']);
-                                }
-
-                                if (isset($params['tree']['use_search'])) {
-                                    $tree->setUseSearch($params['tree']['use_search']);
-                                }
-
-                                if (isset($params['tree']['use_checkbox'])) {
-                                    $tree->setUseCheckBox($params['tree']['use_checkbox']);
-                                }
-
-                                if (isset($params['tree']['set_data'])) {
-                                    $tree->setData($params['tree']['set_data']);
-                                }
-
-                                $this->context->smarty->assign('categories_tree', $tree->render());
-                                $categories = false;
+                            if (!isset($params['tree']['id'])) {
+                                throw new PrestaShopException('Id must be filled for categories tree');
                             }
+
+                            $tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
+
+                            if (isset($params['name'])) {
+                                $tree->setInputName($params['name']);
+                            }
+
+                            if (isset($params['tree']['selected_categories'])) {
+                                $tree->setSelectedCategories($params['tree']['selected_categories']);
+                            }
+
+                            if (isset($params['tree']['disabled_categories'])) {
+                                $tree->setDisabledCategories($params['tree']['disabled_categories']);
+                            }
+
+                            if (isset($params['tree']['root_category'])) {
+                                $tree->setRootCategory($params['tree']['root_category']);
+                            }
+
+                            if (isset($params['tree']['use_search'])) {
+                                $tree->setUseSearch($params['tree']['use_search']);
+                            }
+
+                            if (isset($params['tree']['use_checkbox'])) {
+                                $tree->setUseCheckBox($params['tree']['use_checkbox']);
+                            }
+
+                            if (isset($params['tree']['set_data'])) {
+                                $tree->setData($params['tree']['set_data']);
+                            }
+
+                            $this->context->smarty->assign('categories_tree_'.$params['name'], $tree->render());
                             break;
 
                         case 'file':
