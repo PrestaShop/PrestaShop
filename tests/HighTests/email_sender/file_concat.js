@@ -1,14 +1,14 @@
 var fs = require('fs');
 var i = 0;
 var version = new Array();
-version = [1.6, 1.7];
+version = [1.7];
 
 var workSpace = process.env.TRAVIS_BUILD_DIR
 
-while (i < 2) {
+while (i < 1) {
 
 // Verify the existence of Mocha Reporter
-    if (fs.existsSync(workSpace + '/test/itg/' + version[i] + '/mochawesome-report')) {
+    if (fs.existsSync(workSpace + '/test/mochawesome-report')) {
         var cssFile = '';
         var jsFile = '';
         var htmlFile = '';
@@ -32,13 +32,13 @@ while (i < 2) {
         }
 
         // read content of Js file
-        jsFile = fs.readFileSync(workSpace + '/test/itg/' + version[i] + '/mochawesome-report/assets/app.js').toString();
+        jsFile = fs.readFileSync(workSpace + '/test/mochawesome-report/assets/app.js').toString();
 
         // read content of CSS file
-        cssFile = fs.readFileSync(workSpace + '/test/itg/' + version[i] + '/mochawesome-report/assets/app.css').toString();
+        cssFile = fs.readFileSync(workSpace + '/test/mochawesome-report/assets/app.css').toString();
 
         // read content of Html file
-        htmlFile = fs.readFileSync(workSpace + '/test/itg/' + version[i] + '/mochawesome-report/mochawesome.html').toString();
+        htmlFile = fs.readFileSync(workSpace + '/test/mochawesome-report/mochawesome.html').toString();
 
         processFile();
 

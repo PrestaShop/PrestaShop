@@ -2,7 +2,7 @@
 
 FIXED_BRANCH=$(echo $TRAVIS_BRANCH | sed 's/\//-/g')
 ARCHIVE=$FIXED_BRANCH-$(date +%Y-%m-%d_%H_%M_%S)-$TRAVIS_COMMIT.tar.bz2
-DIR="test/itg/$PS_VERSION/screenshots"
+DIR="test/screenshots"
 
 # look for empty dir
 if [ "$(ls -A $DIR)" ]; then
