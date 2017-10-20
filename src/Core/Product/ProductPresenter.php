@@ -845,6 +845,13 @@ class ProductPresenter
         $valuesByFeatureName = array();
         $groupedFeatures = array();
 
+        // features can either be "raw" (id_feature, id_product_id_feature_value)
+        // or "full" (id_feature, name, value)
+        // grouping can only be performed if they are "full"
+        if (empty($productFeatures) || !array_key_exists('name', $productFeatures[0])) {
+            return array();
+        }
+
         foreach ($productFeatures as $feature) {
             $featureName = $feature['name'];
             // build an array of unique features
