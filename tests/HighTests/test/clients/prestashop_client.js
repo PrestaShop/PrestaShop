@@ -23,19 +23,16 @@ class PrestashopClient {
   }
 
   takeScreenshot() {
-    return this.client.saveScreenshot(`screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
+    return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
   }
 
-  addCategorySuccessPanel(index, erreurmsg) {
+  SuccessPanel(index, erreurmsg) {
     return this.client
-      .waitForExist(selector.BO.CatalogPage.CategorySubmenu.success_panel)
-      .getText(selector.BO.CatalogPage.CategorySubmenu.success_panel).then(function (text) {
-        text = text.indexOf(index);
-        if (text === -1) {
-          done(new Error(erreurmsg));
-        }
-      })
+      .waitForExist(selector.BO.CatalogPage.success_panel)
+      .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
+      .then((text) => expect(text.substring(2)).to.be.equal(index));
   }
+
 
   open() {
     return this.client.init().windowHandleSize({width: 1280, height: 1024});

@@ -1,6 +1,6 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
-const PrestashopClient = require('./prestashop-client');
+const PrestashopClient = require('./prestashop_client');
 
 global.categoryName = 'category' + new Date().getTime();
 
