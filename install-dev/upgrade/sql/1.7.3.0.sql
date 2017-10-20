@@ -19,3 +19,18 @@ ALTER TABLE `PREFIX_product_shop` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFA
 
 ALTER TABLE `PREFIX_product_attribute` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0 AFTER `low_stock_threshold`;
 ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0 AFTER `low_stock_threshold`;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
+  `id_store` int(11) unsigned NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `address1` varchar(255) NOT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `hours` text,
+  `note` text,
+  PRIMARY KEY (`id_store`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+/* PHP:ps_1730_migrate_data_from_store_to_store_lang_and_clean_store(); */;
+
+ALTER TABLE `PREFIX_store` DROP `name`, DROP `address1`, DROP `address2`, DROP `hours`, DROP `note`;

@@ -179,7 +179,7 @@ class StoresControllerCore extends FrontController
 
     public function getTemplateVarStores()
     {
-        $stores = Store::getStores();
+        $stores = Store::getStores($this->context->language->id);
 
         $imageRetriever = new \PrestaShop\PrestaShop\Adapter\Image\ImageRetriever($this->context->link);
 
@@ -225,6 +225,9 @@ class StoresControllerCore extends FrontController
                 ],
             ];
             $store['image'] = $imageRetriever->getImage(new Store($store['id_store']), $store['id_store']);
+            if (is_array($store['image'])) {
+                $store['image']['legend'] = $store['image']['legend'][$this->context->language->id];
+            }
         }
 
         return $stores;
