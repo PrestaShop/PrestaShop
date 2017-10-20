@@ -891,8 +891,6 @@ class AdminImportControllerCore extends AdminController
      * Sets up back-office theme
      *
      * @param bool $isNewTheme
-     *
-     * @return void
      */
     public function setMedia($isNewTheme = false)
     {
@@ -1178,8 +1176,6 @@ class AdminImportControllerCore extends AdminController
 
     /**
      * Initializes import toolbar (for import display only)
-     *
-     * @return void
      */
     public function initToolbar()
     {
@@ -1509,8 +1505,6 @@ class AdminImportControllerCore extends AdminController
      * $info is passed by reference : it's directly modified by this method.
      *
      * @param array $info Array to be filled
-     *
-     * @return void
      */
     protected static function setDefaultValues(&$info)
     {
@@ -1526,8 +1520,6 @@ class AdminImportControllerCore extends AdminController
      * $entity is passed by reference : it's directly modified by this method.
      *
      * @param $entity
-     *
-     * @return void
      */
     protected static function setEntityDefaultValues(&$entity)
     {
