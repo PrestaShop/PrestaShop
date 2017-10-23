@@ -498,10 +498,8 @@ class FrontControllerCore extends Controller
     {
         /* Begin patch to purge sensible data from cart to avoid expose them in html page */
         $cleancart = $this->cart_presenter->present($this->context->cart);
-        if(count($cleancart['products'])>0)
-        {
-            foreach($cleancart['products'] as $idx_cart_line => $cart_product)
-            {
+        if (count($cleancart['products']) > 0) {
+            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
                 unset($cleancart['products'][$idx_cart_line]['id_supplier']);
                 unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
                 unset($cleancart['products'][$idx_cart_line]['wholesale_price']);

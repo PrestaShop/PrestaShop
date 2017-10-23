@@ -485,7 +485,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
 
         foreach ($search as $key => $value) {
-            if ($key == 'products') {
+            if ($key === 'products') {
                 $value = $this->prepareProductArrayForAjaxReturn($value);
             }
             $data[$key] = $value;
