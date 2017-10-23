@@ -36,6 +36,5 @@ scenario('The Check of the Product attribute in Front Office', client => {
   test('should open the browser', () => client.open());
   test('should sign in BO', () => client.signinFO());
   test('should search for the product', () => client.searchForProduct());
-  test('should Check the Product attribute in Front Office', () => client.checkForProductAttributFO('create'));
-
+  test('should Check attribute in Front Office', () => client.checkForProductAttributFO('create'));
 }, 'attribut', true);
