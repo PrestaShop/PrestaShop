@@ -2245,6 +2245,13 @@ ul.category-tree {
 .product-page {
   padding-bottom: 80px;
   /* Last tab modules selection */ }
+  .product-page .widget-radio-inline div.radio {
+    display: inline; }
+  .product-page .widget-radio-inline label {
+    display: inline-block; }
+  .product-page .widget-radio-inline a.btn {
+    height: 29px;
+    display: inline; }
   .product-page h2 {
     padding-top: 20px; }
   .product-page .widget-checkbox-inline div.checkbox {
