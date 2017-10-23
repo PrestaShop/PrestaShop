@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
-use SplFileInfo;
+use ZipArchive;
 use Doctrine\Common\Cache\Cache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
@@ -79,66 +79,75 @@ class PrestaTrustChecker
     }
 
     /**
-     * Add the PrestaTrust data for a module, if it exists in cache.
+     * If the module is compliant, this class generates and adds all PrestaTrust related details.
      * If not, the module remains untouched. We do not execute checks to avoid slow performances.
      * 
      * @param Module $module
      */
     public function loadDetailsIntoModule(Module $module)
     {
-        if (!$this->cache->contains($module->get('name'))) {
-            return;
-        }
-        
-        $module->set('prestatrust', $this->cache->fetch($module->get('name')));
-    }
-
-    /**
-     * If the module is compliant, this class generates and adds all PrestaTrust related details.
-     * Called by the "download" event from the module manager.
-     * Any module copy paster in the module folder won't go through this function.
-     *
-     * @param Module $module
-     */
-    public function checkModule(Module $module)
-    {
         if (!$this->isCompliant($module)) {
             return;
         }
 
-        $details = $module->attributes->get('prestatrust', new \stdClass);
-        $details->hash = $this->calculateHash($module->disk->get('path'));
+        if (!$this->cache->contains($module->get('name'))) {
+            return;
+        }
+
+        $details = $this->cache->fetch($module->get('name'));
         $details->check_list = $this->requestCheck($details->hash, $this->domain, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
         $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
-
-        $this->cache->save($module->get('name'), $details);
-
+        
         $module->set('prestatrust', $details);
+    }
+
+    /**
+     * This function, called by the "module download" event, will look at the uploaded zip before its deletion.
+     * Looking at the original content (before unzipping) allows us to make sure we do not have altered content
+     * or remaining one from another zip.
+     * Any module copy pasted in the module folder won't go through this function.
+     *
+     * @param string $name Module technical name
+     * @param string $zipFile Module Zip location
+     */
+    public function checkModuleZip($name, $zipFile)
+    {
+        // Do we need to check something in order to validate only PrestaTrust related modules?
+
+        $details = new \stdClass;
+        $details->hash = $this->calculateHash($zipFile);
+
+        $this->cache->save($name, $details);
     }
 
     /**
      * Find all files with defined extensions, and calculate md5 from their content.
      *
-     * @param string $path Path to the module root
+     * @param string $zipFile Path to the module Zip file
      * @return string Hash of the module
      */
-    protected function calculateHash($path)
+    protected function calculateHash($zipFile)
     {
         $preparehash = '';
-        $sort = function (SplFileInfo $a, SplFileInfo $b) {
-            return strcmp($a->getPathname(), $b->getPathname());
-        };
-
-        $finder = Finder::create();
-        $finder->files()->in($path)->sort($sort);
-        foreach ($this->checked_extensions as $ext) {
-            $finder->name('*.'.$ext);
+        $zip = new ZipArchive();
+        if (true !== $zip->open($zipFile)) {
+            return $preparehash;
         }
+        
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $stat = $zip->statIndex($i);
+            $file_info = pathinfo($stat['name']);
 
-        foreach ($finder as $file) {
-            $preparehash .= $file->getContents();
+            if (empty($file_info['filename']) || empty($file_info['extension'])) {
+                continue;
+            }
+
+            if (in_array(trim($file_info['extension']), $this->checked_extensions)) {
+                $preparehash .= $zip->getFromName($file_info['dirname'].'/'.$file_info['basename']);
+            }
         }
+        $zip->close();
         return hash('sha256', $preparehash);
     }
 

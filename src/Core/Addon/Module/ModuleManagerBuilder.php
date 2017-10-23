@@ -169,7 +169,7 @@ class ModuleManagerBuilder
             }
         }
 
-        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator);
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = dirname(__FILE__) . '/../../../../app';
