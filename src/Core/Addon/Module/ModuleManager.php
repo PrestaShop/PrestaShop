@@ -38,7 +38,6 @@ use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -253,7 +252,6 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
-        $this->dispatch(ModuleManagementEvent::DOWNLOAD, $module);
         $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
@@ -329,7 +327,6 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
-        $this->dispatch(ModuleManagementEvent::DOWNLOAD, $module);
 
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name);

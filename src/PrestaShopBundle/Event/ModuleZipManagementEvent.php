@@ -26,27 +26,29 @@
 
 namespace PrestaShopBundle\Event;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use Symfony\Component\EventDispatcher\Event;
 
-class ModuleManagementEvent extends Event
+class ModuleZipManagementEvent extends Event
 {
-    const INSTALL = 'module.install';
-    const UNINSTALL = 'module.uninstall';
-    const DISABLE = 'module.disable';
-    const ENABLE = 'module.enable';
-    const UPGRADE = 'module.upgrade';
-    const RESET = 'module.reset';
+    const DOWNLOAD = 'module.download'; // Module download from addons or employee disk
 
-    private $module;
+    private $name;
+    private $source;
 
-    public function __construct(Module $module)
+    // ToDo: To be replaced with a specific Module Zip class rather than an array
+    public function __construct(array $source)
     {
-        $this->module = $module;
+        $this->name = $source['name'];
+        $this->source = $source['source'];
     }
 
-    public function getModule()
+    public function getModuleName()
     {
-        return $this->module;
+        return $this->name;
+    }
+
+    public function getSource()
+    {
+        return $this->source;
     }
 }

@@ -472,6 +472,7 @@ services:
         arguments:
             - "@filesystem"
             - "@translator"
+            - "@event_dispatcher"
 
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension

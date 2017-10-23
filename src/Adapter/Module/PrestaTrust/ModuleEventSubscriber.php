@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
-use PrestaShopBundle\Event\ModuleManagementEvent;
+use PrestaShopBundle\Event\ModuleZipManagementEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -57,7 +57,7 @@ class ModuleEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            ModuleManagementEvent::DOWNLOAD => 'onNewModule',
+            ModuleZipManagementEvent::DOWNLOAD => 'onNewModule',
         );
     }
 
@@ -66,15 +66,15 @@ class ModuleEventSubscriber implements EventSubscriberInterface
      * If the feature is enabled in the project configuration, we will trigger our class PrestaTrustChecker to verify
      * if the module is compliant.
      *
-     * @param ModuleManagementEvent $event
+     * @param ModuleZipManagementEvent $event
      * @return void
      */
-    public function onNewModule(ModuleManagementEvent $event)
+    public function onNewModule(ModuleZipManagementEvent $event)
     {
         if (!$this->enabled) {
             return;
         }
         
-        $this->checker->checkModule($event->getModule());
+        $this->checker->checkModuleZip($event->getModuleName(), $event->getSource());
     }
 }
