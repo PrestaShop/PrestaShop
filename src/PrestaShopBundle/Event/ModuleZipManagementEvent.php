@@ -26,29 +26,25 @@
 
 namespace PrestaShopBundle\Event;
 
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use Symfony\Component\EventDispatcher\Event;
 
 class ModuleZipManagementEvent extends Event
 {
     const DOWNLOAD = 'module.download'; // Module download from addons or employee disk
 
-    private $name;
-    private $source;
+    /**
+     * @var ModuleZip Module Zip related to the triggered event
+     */
+    private $moduleZip;
 
-    // ToDo: To be replaced with a specific Module Zip class rather than an array
-    public function __construct(array $source)
+    public function __construct(ModuleZip $zip)
     {
-        $this->name = $source['name'];
-        $this->source = $source['source'];
+        $this->moduleZip = $zip;
     }
 
-    public function getModuleName()
+    public function getModuleZip()
     {
-        return $this->name;
-    }
-
-    public function getSource()
-    {
-        return $this->source;
+        return $this->moduleZip;
     }
 }

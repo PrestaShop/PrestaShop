@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 use ZipArchive;
 use Doctrine\Common\Cache\Cache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -111,14 +112,14 @@ class PrestaTrustChecker
      * @param string $name Module technical name
      * @param string $zipFile Module Zip location
      */
-    public function checkModuleZip($name, $zipFile)
+    public function checkModuleZip(ModuleZip $zipFile)
     {
         // Do we need to check something in order to validate only PrestaTrust related modules?
 
         $details = new \stdClass;
-        $details->hash = $this->calculateHash($zipFile);
+        $details->hash = $this->calculateHash($zipFile->getSource());
 
-        $this->cache->save($name, $details);
+        $this->cache->save($zipFile->getName(), $details);
     }
 
     /**
