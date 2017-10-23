@@ -14,6 +14,8 @@ global.product_id = new Date().getTime();
 global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
+global.tabAttributValue=["10","20","30","40"];
+global.tabValue=[];
 
 module.exports = {
   selector: {
