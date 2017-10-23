@@ -1238,7 +1238,8 @@ class CartRuleCore extends ObjectModel
 			WHERE 1
 			'.($active_only ? 'AND t.active = 1' : '').'
 			'.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').'
-			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').
+			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').'
+			'.($type == 'cart_rule' && !empty($search_cart_rule_name) ? 'AND tl.name LIKE \'%'.pSQL($search_cart_rule_name).'%\'' : '').
             $shop_list.
             (in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '').
             (in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '').
