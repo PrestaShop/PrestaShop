@@ -30,3 +30,12 @@ scenario('Create product', client => {
   test('should close the green validation', () => client.closeGreenValidation());
   test('should sign out BO', () => client.signoutBO());
 }, 'create_product', true);
+
+
+scenario('The Check of the Product attribute in Front Office', client => {
+  test('should open the browser', () => client.open());
+  test('should sign in BO', () => client.signinFO());
+  test('should search for the product', () => client.searchForProduct());
+  test('should Check the Product attribute in Front Office', () => client.checkForProductAttributFO('create'));
+
+}, 'attribut', true);
