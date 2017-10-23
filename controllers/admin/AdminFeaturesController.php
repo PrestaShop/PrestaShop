@@ -430,7 +430,8 @@ class AdminFeaturesControllerCore extends AdminController
                 $this->content .= $this->renderList();
             }
         } else {
-            $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
+            $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
+            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
             $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array(), 'Admin.Catalog.Notification'), $url));
         }
 
