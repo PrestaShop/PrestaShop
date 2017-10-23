@@ -75,6 +75,6 @@ class ModuleEventSubscriber implements EventSubscriberInterface
             return;
         }
         
-        $this->checker->checkModuleZip($event->getModuleName(), $event->getSource());
+        $this->checker->checkModuleZip($event->getModuleZip());
     }
 }
