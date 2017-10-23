@@ -95,7 +95,9 @@ class PrestaTrustChecker
             return;
         }
 
-        $details = $this->cache->fetch($module->get('name'));
+        // Merge 2 existing sources of data
+        $details = (object) array_merge((array) $module->get('prestatrust', new \stdClass), (array) $this->cache->fetch($module->get('name')));
+
         $details->check_list = $this->requestCheck($details->hash, $this->domain, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
         $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
