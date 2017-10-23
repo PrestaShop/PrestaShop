@@ -108,12 +108,23 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->apiClientS
             ->method('getPrestaTrustCheck')
             ->will($this->returnValue($this->prestatrustApiResults));
+
+        $this->translatorS = $this->getMockBuilder('Symfony\Component\Translation\Translator')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->translatorS
+            ->method('trans')
+            ->will($this->returnArgument(0));
+
+        $cache = new ArrayCache();
+        $cache->save('module-verified-from-addons-api', (object)array('hash' => '366d25acf8172ef93c7086c3ee78f9a2f3e7870356df498d34bda30fb294ae3b'));
         
         $this->prestatrustChecker = new PrestaTrustChecker(
-            new ArrayCache(),
+            $cache,
             $this->apiClientS,
             $this->domain,
-            $this->sfKernel->getContainer()->get('translator')
+            $this->translatorS
         );
 
         $this->modulePresenter = $this->sfKernel->getContainer()->get('prestashop.adapter.presenter.module');
@@ -131,8 +142,8 @@ class PrestaTrustCheckerTest extends UnitTestCase
      */
     public function testNotConcernedModuleIsNotModified()
     {
-        $testedModule = $this->modules['module-under-dev'];
-        $this->prestatrustChecker->checkModule($testedModule);
+        $testedModule = clone $this->modules['module-under-dev'];
+        $this->prestatrustChecker->loadDetailsIntoModule($testedModule);
 
         $this->assertFalse($testedModule->attributes->has('prestatrust'));
     }
@@ -182,8 +193,8 @@ class PrestaTrustCheckerTest extends UnitTestCase
      */
     public function testModuleHasCompletePrestaTrustData()
     {
-        $testedModule = $this->modules['module-prestatrust-checked'];
-        $this->prestatrustChecker->checkModule($testedModule);
+        $testedModule = clone $this->modules['module-prestatrust-checked'];
+        $this->prestatrustChecker->loadDetailsIntoModule($testedModule);
         
         $presentedModule = $this->modulePresenter->present($testedModule);
 
