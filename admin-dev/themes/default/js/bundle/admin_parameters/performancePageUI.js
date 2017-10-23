@@ -50,12 +50,14 @@ var PerformancePageUI = {
             }
             return;
         }
+
         for (var i = 0; i < cachingElements.length; i++) {
             cachingElements[i].style.display = "none";
         }
     },
     displayMemcacheServers: function() {
         var CACHE_ENABLED = '1';
+
         var cacheEnabledInput = document.getElementById('form_caching_use_cache');
         var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
         var memcacheServersListBlock = document.getElementById('servers-list');
