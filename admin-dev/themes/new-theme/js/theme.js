@@ -28,7 +28,6 @@
 import 'dropzone/dist/min/dropzone.min.css';
 
 import 'magnific-popup/dist/magnific-popup.css';
-import 'prestakit/dist/css/bootstrap-prestashop-ui-kit.css';
 
 // Theme SCSS
 
