@@ -105,7 +105,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminCustomerThreadsController'),
             array('AdminManufacturersController'),
             array('AdminReferrersController'),
-            array('AdminAdminPreferencesController'),
             array('AdminMetaController'),
             array('AdminAttachmentsController'),
             array('AdminReturnController'),
