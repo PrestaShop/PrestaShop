@@ -1038,7 +1038,7 @@ var form = (function() {
       });
 
       /** on save with duplicate|new|preview */
-      $('.btn-submit', elem).click(function(event) {
+      $('.btn-submit, .preview', elem).click(function(event) {
         event.preventDefault();
         send($(this).attr('data-redirect'), $(this).attr('target'));
       });
@@ -1055,10 +1055,11 @@ var form = (function() {
         $('.for-switch.online-title').toggle(active);
         $('.for-switch.offline-title').toggle(!active);
         // update link preview
-        var urlActive = $('#product_form_preview_btn').attr('data-redirect');
-        var urlDeactive = $('#product_form_preview_btn').attr('data-url_deactive');
-        $('#product_form_preview_btn').attr('data-redirect', urlDeactive);
-        $('#product_form_preview_btn').attr('data-url_deactive', urlActive);
+        var previewButton = $('#product_form_preview_btn');
+        var urlActive = previewButton.attr('data-redirect');
+        var urlDeactive = previewButton.attr('data-url-deactive');
+        previewButton.attr('data-redirect', urlDeactive);
+        previewButton.attr('data-url-deactive', urlActive);
         // update product
         send();
       });
