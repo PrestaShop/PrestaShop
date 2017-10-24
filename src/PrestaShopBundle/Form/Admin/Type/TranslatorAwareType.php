@@ -23,13 +23,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShopBundle\Form\Admin\Type;
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Translation\TranslatorInterface;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * PrestaShop forms needs custom domain name for field constraints
+ * This feature is not available in Symfony so we need to inject the translator
+ * for constraints messages only.
+ */
+abstract class TranslatorAwareType extends AbstractType
+{
+    private $translator;
 
-header('Location: ../../../../../../../../');
-exit;
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
+    /**
+     * Get the translated chain from key
+     *
+     * @param $key the key to be translated
+     * @param $domain the domain to be selected
+     * @param $parameters Optional, pass parameters if needed (uncommon)
+     *
+     * @returns string
+     */
+    protected function trans($key, $domain, $parameters = array())
+    {
+        return $this->translator->trans($key, $parameters, $domain);
+    }
+}

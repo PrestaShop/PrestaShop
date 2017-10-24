@@ -108,5 +108,5 @@
       {/foreach}
     </div>
   {/if}
-
+  {hook h='displayDashboardTop'}
 </div>

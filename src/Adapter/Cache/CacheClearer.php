@@ -24,12 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Adapter\Cache;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use Tools;
+use Media;
 
-header('Location: ../../../../../../');
-exit;
+/**
+ * Class able to clear application caches
+ */
+class CacheClearer
+{
+    /**
+     * Clear all application caches
+     */
+    public function clearAllCaches()
+    {
+        Tools::clearSf2Cache();
+        Tools::clearSmartyCache();
+        Tools::clearXMLCache();
+        Media::clearCache();
+        Tools::generateIndex();
+    }
+
+    /**
+     * Clear Symfony cache
+     */
+    public function clearSymfonyCache()
+    {
+        Tools::clearSf2Cache();
+    }
+}

@@ -59,7 +59,7 @@ class FrameworkBundleAdminController extends Controller
     {
         return array(
             'is_shop_context' => (new Context())->isShopContext(),
-            'layoutTitle' => empty($this->layoutTitle) ? '' : $this->container->get('translator')->trans($this->layoutTitle, array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
         );
     }
 
@@ -93,7 +93,7 @@ class FrameworkBundleAdminController extends Controller
             return $errors;
         }
 
-        $translator = $this->container->get('translator');
+        $translator = $this->get('translator');
 
         foreach ($form->getErrors(true) as $error) {
             if (!$error->getCause()) {
@@ -134,7 +134,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function dispatchHook($hookName, array $parameters)
     {
-        $this->container->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
+        $this->get('prestashop.hook.dispatcher')->dispatchForParameters($hookName, $parameters);
     }
 
     /**
@@ -148,7 +148,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function renderHook($hookName, array $parameters)
     {
-        return $this->container->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
+        return $this->get('prestashop.hook.dispatcher')->renderForParameters($hookName, $parameters)->getContent();
     }
 
     /**
@@ -156,11 +156,10 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function generateSidebarLink($section, $title = false)
     {
-        $translator = $this->get('translator');
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         if (empty($title)) {
-            $title = $translator->trans('Help', array(), 'Admin.Global');
+            $title = $this->trans('Help', 'Admin.Global');
         }
 
         $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
@@ -203,7 +202,7 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function getDemoModeErrorMessage()
     {
-        return $this->get('translator')->trans('This functionality has been disabled.', array(), 'Admin.Notifications.Error');
+        return $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error');
     }
 
     /**
@@ -226,6 +225,32 @@ class FrameworkBundleAdminController extends Controller
             return PageVoter::LEVEL_READ;
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * Get the translated chain from key
+     *
+     * @param $key the key to be translated
+     * @param $domain the domain to be selected
+     * @param $parameters Optional, pass parameters if needed (uncommon)
+     *
+     * @returns string
+     */
+    protected function trans($key, $domain, $parameters = array())
+    {
+        return $this->get('translator')->trans($key, $parameters, $domain);
+    }
+
+    /**
+     * Return errors as flash error messages
+     *
+     * @param array $errorMessages
+     */
+    protected function flashErrors(array $errorMessages)
+    {
+        foreach ($errorMessages as $error) {
+            $this->addFlash('error', $this->trans($error['key'], $error['domain'], $error['parameters']));
         }
     }
 }

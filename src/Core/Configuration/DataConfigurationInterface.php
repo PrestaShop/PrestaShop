@@ -23,13 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Core\Configuration;
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+/**
+ * Retrieve and Manage configuration (used to manage forms in "Configure" section of back office)
+ */
+interface DataConfigurationInterface
+{
+    /**
+     * @return array
+     */
+    public function getConfiguration();
 
-header('Location: ../../../../../../../');
-exit;
+    /**
+     * @param array $configuration
+     * @return array if not empty, populated by validation errors
+     * @throws UndefinedOptionsException
+     */
+    public function updateConfiguration(array $configuration);
+
+    /**
+     * Ensure the parameters passed are valid.
+     *
+     * @param array $configuration
+     * @return bool Returns true if no exception are thrown
+     * @throws UndefinedOptionsException
+     */
+    public function validateConfiguration(array $configuration);
+}

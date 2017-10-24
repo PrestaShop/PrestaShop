@@ -1,4 +1,6 @@
 parameters:
+    ps_root_dir:              "%kernel.root_dir%/../"
+    ps_config_dir:            "%kernel.root_dir%/config"
     translations_dir:         "%kernel.root_dir%/Resources/translations"
     themes_translations_dir:  "%kernel.cache_dir%/themes"
     themes_dir:               "%kernel.root_dir%/../themes"
@@ -264,3 +266,11 @@ services:
             cacheDir: "%kernel.cache_dir%"
         calls:
             - [ setExportDir, ["%kernel.cache_dir%/export"]]
+
+    # EVENT MANAGEMENT
+    prestashop.dispatcher.legacy_hooks.subscriber:
+        class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
+        arguments: ['@prestashop.hook.dispatcher']
+        tags:
+            - { name: kernel.event_subscriber }
+

@@ -35,3 +35,29 @@
     <i class="material-icons">{{ icon }}</i>
   </span>
 {% endmacro %}
+
+{% macro infotip(text)%}
+<div class="alert alert-info">
+  <ul>
+    <li>{{ text }} </li>
+  </ul>
+</div>
+{% endmacro %}
+
+{% macro warningtip(text)%}
+<div class="alert alert-warning">
+  <ul>
+    <li>{{ text }} </li>
+  </ul>
+</div>
+{% endmacro %}
+
+{% macro label_with_help(label, help) %}
+<label class="form-control-label">
+  {{ label }}
+  <span class="help-box" data-toggle="popover"
+    data-title="{{ label }}"
+    data-content="{{ help }}">
+  </span>
+</label>
+{% endmacro %}
