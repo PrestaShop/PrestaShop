@@ -373,8 +373,8 @@ class CartControllerCore extends FrontController
             array_push(
                 $this->{$ErrorKey},
                 $this->trans(
-                    'There are not enough products in stock',
-                    array(),
+                    'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                    array('%product%' => $product->name),
                     'Shop.Notifications.Error'
                 )
             );
@@ -506,7 +506,7 @@ class CartControllerCore extends FrontController
 
         return ($product !== true)
             ? $this->trans(
-                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted',
+                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
                 array('%product%' => is_array($product) ? $product['name'] : ''),
                 'Shop.Notifications.Error')
             : true;
