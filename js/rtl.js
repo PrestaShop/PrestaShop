@@ -10,17 +10,20 @@ $(document).ready(function () {
     $('[style]').each(function (index) {
         var styles_old = $(this).attr('style');
         styles_old = styles_old.split(';');
-        var styles = {};
         var s = '';
         var i = '';
         var v = '';
+        var style = '';
+
         for (var x = 0, l = styles_old.length; x < l; x++) {
             s = styles_old[x].split(':');
             i = $.trim(s[0]);
-            styles[makeGeneralRTL(i)] = makeValueRTL(i, $.trim(s[1]));
+            if (i !== '') {
+                style = style + makeGeneralRTL(i) + ':' + makeValueRTL(i, $.trim(s[1])) + ';';
+            }
         }
         $(this).removeAttr("style");
-        $(this).css(styles);
+        $(this).attr('style', style);
     });
 });
 
