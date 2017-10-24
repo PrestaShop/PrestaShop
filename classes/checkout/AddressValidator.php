@@ -50,7 +50,7 @@ class AddressValidatorCore
         );
 
         foreach ($addressesIds as $idAddress) {
-            $address = new Address((int)$idAddress);
+            $address = new CustomerAddress((int)$idAddress);
             try {
                 $address->validateFields();
             } catch (PrestaShopException $e) {
@@ -82,7 +82,7 @@ class AddressValidatorCore
         if (is_array($addresses)) {
             foreach ($addresses as $address) {
                 try {
-                    $adressObject = new Address((int)$address['id_address']);
+                    $adressObject = new CustomerAddress((int)$address['id_address']);
                     $adressObject->validateFields();
                 } catch (PrestaShopException $e) {
                     $invalidAddresses[] = (int)$address['id_address'];

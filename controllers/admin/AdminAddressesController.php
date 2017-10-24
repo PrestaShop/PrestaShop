@@ -38,7 +38,7 @@ class AdminAddressesControllerCore extends AdminController
         $this->required_database = true;
         $this->required_fields = array('company','address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
         $this->table = 'address';
-        $this->className = 'Address';
+        $this->className = 'CustomerAddress';
         $this->lang = false;
         $this->addressType = 'customer';
         $this->explicitSelect = true;
@@ -440,7 +440,7 @@ class AdminAddressesControllerCore extends AdminController
      */
     protected function processAddressFormat()
     {
-        $tmp_addr = new Address((int)Tools::getValue('id_address'));
+        $tmp_addr = new CustomerAddress((int)Tools::getValue('id_address'));
 
         $selected_country = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT');
         $adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);

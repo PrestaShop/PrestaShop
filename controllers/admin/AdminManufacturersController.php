@@ -438,11 +438,11 @@ class AdminManufacturersControllerCore extends AdminController
     {
         // Change table and className for addresses
         $this->table = 'address';
-        $this->className = 'Address';
+        $this->className = 'ManufacturerAddress';
         $id_address = Tools::getValue('id_address');
 
         // Create Object Address
-        $address = new Address($id_address);
+        $address = new ManufacturerAddress($id_address);
 
         $res = $address->getFieldsRequiredDatabase();
         $required_fields = array();
@@ -791,7 +791,7 @@ class AdminManufacturersControllerCore extends AdminController
     {
         if (Tools::isSubmit('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress')) {
             $this->table = 'address';
-            $this->className = 'Address';
+            $this->className = 'ManufacturerAddress';
             $this->identifier = 'id_address';
             $this->deleted = true;
             $this->fields_list = $this->getAddressFieldsList();
