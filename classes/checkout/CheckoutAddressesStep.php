@@ -272,9 +272,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             'not_valid_addresses'        => implode(",", $invalidAddresses),
         );
 
-        foreach ($errors as $errorKey => $errorMessage) {
-            $params[$errorKey] = $errorMessage;
-        }
+        // Add error messages
+        $params = array_replace($params, $errors);
 
         return $params;
     }
