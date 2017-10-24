@@ -120,6 +120,11 @@
     width: 97%;
     font-size: 0.75rem;
     font-weight: 600;
+
+    #bulk-combinations-container-fields > div {
+      @extend .px-3;
+      @extend .py-2;
+    }
   }
 
   .product-footer {

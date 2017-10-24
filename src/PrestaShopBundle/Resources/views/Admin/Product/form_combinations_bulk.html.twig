@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="row">
+<div class="row" id="bulk-combinations-container-fields">
   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
     <div class="col-lg-4 col-md-3 col-sm-6">
       <label class="form-control-label">{{ form.quantity.vars.label }}</label>
@@ -82,7 +82,6 @@
   </div>
 
   <div class="col-lg-4 col-md-3 col-sm-6 widget-checkbox-inline">
-    <label class="form-control-label">&nbsp;</label>
     <div class="widget-checkbox-inline">
       {{ form_errors(form.low_stock_alert) }}
       {{ form_widget(form.low_stock_alert) }}
