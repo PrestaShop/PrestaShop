@@ -42,12 +42,12 @@
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Automatically check for module updates'|trans }}</label>
                                 {{ form_errors(generalForm.check_modules_update) }}
-                                {{ form_widget(generalForm.check_modules_update) }}
+                                {{ form_widget(generalForm.check_modules_update, { 'attr': {'class': 'custom-select'} }) }}
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">{{ "Check the cookie's IP address"|trans }}</label>
                                 {{ form_errors(generalForm.check_ip_address) }}
-                                {{ form_widget(generalForm.check_ip_address) }}
+                                {{ form_widget(generalForm.check_ip_address, { 'attr': {'class': 'custom-select'} }) }}
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Lifetime of front office cookies'|trans }}</label>
@@ -114,17 +114,17 @@
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Show notifications for new orders'|trans }}</label>
                                 {{ form_errors(notificationsForm.show_notifs_new_orders) }}
-                                {{ form_widget(notificationsForm.show_notifs_new_orders) }}
+                                {{ form_widget(notificationsForm.show_notifs_new_orders, { 'attr': {'class': 'custom-select'} }) }}
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Show notifications for new customers'|trans }}</label>
                                 {{ form_errors(notificationsForm.show_notifs_new_customers) }}
-                                {{ form_widget(notificationsForm.show_notifs_new_customers) }}
+                                {{ form_widget(notificationsForm.show_notifs_new_customers, { 'attr': {'class': 'custom-select'} }) }}
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">{{ 'Show notifications for new messages'|trans }}</label>
                                 {{ form_errors(notificationsForm.show_notifs_new_messages) }}
-                                {{ form_widget(notificationsForm.show_notifs_new_messages) }}
+                                {{ form_widget(notificationsForm.show_notifs_new_messages, { 'attr': {'class': 'custom-select'} }) }}
                             </div>
                         </div>
                     </div>
