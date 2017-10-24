@@ -1,6 +1,5 @@
-const {getClient} = require('../common.webdriverio.js');
-const {selector} = require('../globals.webdriverio.js');
-const PrestashopClient = require('./prestashop_client');
+var PrestashopClient = require('./prestashop_client');
+var {selector} = require('../globals.webdriverio.js');
 
 global.categoryName = 'category' + new Date().getTime();
 
@@ -116,18 +115,21 @@ class Category extends PrestashopClient {
 
   checkCategoryTitle() {
     return this.client
+      .waitForExist(selector.BO.CatalogPage.CategorySubmenu.title, 90000)
       .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.title, "value"))
       .then((text) => expect(text).to.be.equal("test category"));
   }
 
   checkCategoryMetaDescription() {
     return this.client
+      .waitForExist(selector.BO.CatalogPage.CategorySubmenu.meta_description, 90000)
       .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.meta_description, "value"))
       .then((text) => expect(text).to.be.equal("this is the meta description"));
   }
 
   checkCategorySimplifyURL() {
     return this.client
+      .waitForExist(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, 90000)
       .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, "value"))
       .then((text) => expect(text).to.be.equal(global.categoryName));
   }
@@ -140,7 +142,8 @@ class Category extends PrestashopClient {
 
   checkCategoryExistenceFO() {
     return this.client
-      .then(() => this.client.getText('//*[@id="left-column"]/div[1]/ul/li[2]/ul/li[' + 2 + ']/a'))
+      .waitForExist(selector.FO.SearchProductPage.second_category_name, 90000)
+      .then(() => this.client.getText(selector.FO.SearchProductPage.second_category_name))
       .then((text) => expect(text).to.be.equal(global.categoryName));
   }
 

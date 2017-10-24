@@ -1,6 +1,5 @@
-const {getClient} = require('../common.webdriverio.js');
-const {selector} = require('../globals.webdriverio.js');
-const PrestashopClient = require('./prestashop_client');
+var PrestashopClient = require('./prestashop_client');
+var {selector} = require('../globals.webdriverio.js');
 
 class createProduct extends PrestashopClient {
 
@@ -21,7 +20,7 @@ class createProduct extends PrestashopClient {
   addProductName() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-      .setValue(selector.BO.AddProductPage.product_name_input, 'test_nodejs_' + global.product_id)
+      .setValue(selector.BO.AddProductPage.product_name_input, 'test nodejs ' + global.product_id)
   }
 
   addProductQuantity() {
@@ -40,8 +39,7 @@ class createProduct extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.price_te_shortcut_input, "5")
   }
 
-  addProductType(type) {
-    if (type === "attribut") {
+  addProductTypeAttribute() {
       return this.client
         .waitForExist(selector.BO.AddProductPage.variations_type_button, 90000)
         .click(selector.BO.AddProductPage.variations_type_button)
@@ -61,7 +59,6 @@ class createProduct extends PrestashopClient {
         .setValue(selector.BO.AddProductPage.var_selected_quantitie, "10")
         .moveToObject('//*[@id="combinations_thead"]/tr/th[7]', 90000)
         .click(selector.BO.AddProductPage.save_quantitie_button)
-    }
   }
 
   productEnligne() {

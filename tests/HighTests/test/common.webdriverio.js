@@ -82,22 +82,25 @@ function initCommands(client) {
   });
 }
 
-const getClient = () => {
-  let client;
-  if (typeof saucelabs !== 'undefined' && saucelabs != 'None') {
-    client = webdriverio
-      .remote(options2)
-      .init()
-      .windowHandleSize({width: 1280, height: 1024});
-  } else {
-    client = webdriverio.remote(options)
-  }
-  initCommands(client);
-  return client;
-};
-
 module.exports = {
-  getClient,
+  getClient: function () {
+    if (client) {
+      return client;
+    } else {
+      if (typeof saucelabs !== 'undefined' && saucelabs != "None") {
+        client = webdriverio
+          .remote(options2)
+          .init()
+          .windowHandleMaximize()
+      } else {
+        client = webdriverio
+          .remote(options)
+          .windowHandleMaximize()
+      }
+      initCommands(client);
+      return client;
+    }
+  },
   browser: function () {
     return options.desiredCapabilities.browserName
   }
