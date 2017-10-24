@@ -77,11 +77,12 @@ class CartControllerCore extends FrontController
 
         /** Check if the products in the cart are available */
         if ("show" === Tools::getValue('action')) {
-            $isAvailable = $this->shouldProductsAvailable();
-            if ($isAvailable !== true) {
+            $isAvailable = $this->areProductsAvailable();
+            if (Tools::getIsset('checkout')) {
+                return Tools::redirect($this->context->link->getPageLink('order'));
+            }
+            if (true !== $isAvailable ) {
                 $this->errors[] = $isAvailable;
-            } else if (Tools::getIsset('checkout')) {
-                Tools::redirect($this->context->link->getPageLink('order'));
             }
         }
     }
@@ -285,8 +286,8 @@ class CartControllerCore extends FrontController
                 $this->context->cart->update();
             }
 
-            $isAvailable = $this->shouldProductsAvailable();
-            if ($isAvailable !== true) {
+            $isAvailable = $this->areProductsAvailable();
+            if (true !== $isAvailable) {
                 $this->updateOperationError[] = $isAvailable;
             }
         }
@@ -373,8 +374,8 @@ class CartControllerCore extends FrontController
             array_push(
                 $this->{$ErrorKey},
                 $this->trans(
-                    'There are not enough products in stock',
-                    array(),
+                    'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                    array('%product%' => $product->name),
                     'Shop.Notifications.Error'
                 )
             );
@@ -481,16 +482,16 @@ class CartControllerCore extends FrontController
      * Check product quantity availability
      *
      * @param Product $product
-     * @param int $qty_to_check
+     * @param int $qtyToCheck
      * @return bool
      */
-    private function shouldAvailabilityErrorBeRaised($product, $qty_to_check)
+    private function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
     {
         if (($this->id_product_attribute)) {
             return (!Product::isAvailableWhenOutOfStock($product->out_of_stock)
-                && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check));
+                && !Attribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck));
         } else {
-            return (!$product->checkQty($qty_to_check));
+            return (!$product->checkQty($qtyToCheck));
         }
 
         return false;
@@ -501,15 +502,22 @@ class CartControllerCore extends FrontController
      *
      * @return bool|string
      */
-    private function shouldProductsAvailable()
+    private function areProductsAvailable()
     {
         $product = $this->context->cart->checkQuantities(true);
 
-        return ($product !== true)
-            ? $this->trans(
-                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted',
-                array('%product%' => is_array($product) ? $product['name'] : ''),
-                'Shop.Notifications.Error')
-            : true;
+        if (true === $product || !is_array($product)) {
+            return true;
+        }
+        if ($product['active']) {
+            return $this->trans(
+                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                array('%product%' => $product['name']),
+                'Shop.Notifications.Error');
+        }
+        return $this->trans(
+            'This product (%product%) is no longer available.',
+            array('%product%' => $product['name']),
+           'Shop.Notifications.Error');
     }
 }
