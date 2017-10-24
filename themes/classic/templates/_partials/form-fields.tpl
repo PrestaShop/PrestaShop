@@ -89,7 +89,7 @@
         {block name='form_field_item_checkbox'}
           <span class="custom-checkbox">
             <input name="{$field.name}" type="checkbox" value="1" {if $field.value}checked="checked"{/if} {if $field.required}required{/if}>
-            <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+            <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
             <label>{$field.label nofilter}</label >
           </span>
         {/block}

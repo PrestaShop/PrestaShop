@@ -1,0 +1,12 @@
+.rtl-flip:not(.rtl-no-flip), .material-icons:not(.rtl-no-flip) {
+	-moz-transform: scaleX(-1);
+	-o-transform: scaleX(-1);
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+	filter: FlipH;
+	-ms-filter: "FlipH";
+}
+.magnitude:before {
+	content: "?";
+	opacity: 0;
+}

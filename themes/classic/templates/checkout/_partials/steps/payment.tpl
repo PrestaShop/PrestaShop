@@ -98,7 +98,7 @@
                         value = "1"
                         class = "ps-shown-by-js"
                 >
-                <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
               </span>
             </div>
             <div class="condition-label">
