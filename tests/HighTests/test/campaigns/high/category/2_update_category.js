@@ -4,7 +4,7 @@ scenario('Update category', client => {
   test('should go to category', () => client.goToCategoryList());
   test('should search for the category', () => client.searchCategoryBO());
   test('should update category', () => client.updateCategory());
-  test('should check category success panel', () => client.SuccessPanel('Mise à jour réussie.'));
+  test('should check category success panel', () => client.SuccessPanel('Successful update.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'category', true);
 
@@ -27,5 +27,5 @@ scenario('Check category in FO', client => {
   test('should sign in FO', () => client.signinFO());
   test('should open product list', () => client.openProductList());
   test('should check category existence', () => client.checkCategoryExistenceFO());
-  test('should sign in FO', () => client.signoutFO());
+  test('should sign out FO', () => client.signoutFO());
 }, 'category', true);
