@@ -11,7 +11,7 @@ scenario('Create category', client => {
   test('should add category meta keys words', () => client.addCategoryMetakeyswords());
   test('should add category simplify url', () => client.addCategorySimplifyUrl());
   test('should add category save', () => client.addCategorySave());
-  test('should check category success panel', () => client.SuccessPanel('Création réussie.', 'the category is not created !'));
+  test('should check category success panel', () => client.SuccessPanel('Successful creation.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'category', true);
 
