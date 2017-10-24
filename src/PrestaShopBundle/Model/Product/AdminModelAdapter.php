@@ -331,7 +331,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 
         //map features
         if (!empty($form_data['features'])) {
-            foreach ($form_data['features'] as $dataFeature) {
+            foreach ($form_data['features'] as $dataFeature) {                
+                if (empty($dataFeature['feature']) || (empty($dataFeature['custom_value'][$this->defaultLocale]) && empty($dataFeature['value']))) {
+                    continue;
+                }
+
                 $idFeature = $dataFeature['feature'];
 
                 //custom value is defined
