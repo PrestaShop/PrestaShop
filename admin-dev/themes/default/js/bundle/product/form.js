@@ -75,6 +75,10 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip('hide');
     $('[data-toggle="popover"]').popover('hide');
   });
+
+  /** Save buttons should be active only when everything is loaded  */
+  $('#submit').removeAttr('disabled');
+  $('#create-combinations').removeAttr('disabled');
 });
 
 /**
