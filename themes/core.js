@@ -2034,6 +2034,7 @@
 	      });
 	    })();
 	  }
+	  $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible'); // Refresh after possible hide
 	  switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
 	});
 	
@@ -2058,7 +2059,7 @@
 	 * Enable/disable the continue address button
 	 */
 	var switchConfirmAddressesButtonState = function switchConfirmAddressesButtonState(enable) {
-	  (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", enable ? "" : "disabled");
+	  (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", !enable);
 	};
 	module.exports = exports['default'];
 
