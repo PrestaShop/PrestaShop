@@ -40,14 +40,14 @@
     width: 30px;
     height: 30px;
   }
+  #header-search-container {
+    margin-right: auto;
+  }
   > .component {
     display: inline-block;
     margin: {
       left: 0.5rem;
       right: 0.5rem;
-    }
-    &:nth-child(5) {
-      margin-left: auto;
     }
     > .quick-accesses {
       .dropdown-item {
