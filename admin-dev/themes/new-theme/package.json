@@ -60,7 +60,7 @@
     "magnific-popup": "^1.1.0",
     "mobile-detect": "^1.3.5",
     "mocha": "^3.4.1",
-    "moment": "^2.18.1",
+    "moment": "^2.19.1",
     "node-sass": "^4.5.0",
     "path": "^0.12.7",
     "postcss-cssnext": "^2.10.0",
