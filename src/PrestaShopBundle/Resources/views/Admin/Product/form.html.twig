@@ -217,7 +217,7 @@
 
                     {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
 
-                    <div id="features" class="my-4">
+                    <div id="features" class="mb-3">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                         {{ form_errors(form.step1.features) }}
