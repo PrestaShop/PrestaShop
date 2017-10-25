@@ -81,6 +81,7 @@ $(window).load(() => {
       switchEditAddressButtonColor(true, idFailureAddress, $(this).attr('name').split('-').pop());
     });
   }
+  $visibleAddressError = $('.js-address-error:visible'); // Refresh after possible hide
   switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
 });
 
@@ -105,5 +106,5 @@ const switchEditAddressButtonColor = function switchEditAddressButtonColor(enabl
  * Enable/disable the continue address button
  */
 const switchConfirmAddressesButtonState = function switchConfirmAddressesButtonState(enable) {
-  $('button[name=confirm-addresses]').prop("disabled", enable ? "" : "disabled");
+  $('button[name=confirm-addresses]').prop("disabled", !enable);
 };
