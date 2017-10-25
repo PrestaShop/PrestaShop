@@ -214,35 +214,8 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
     public function getTemplateParameters()
     {
-        /** @var OrderControllerCore $controller */
-        $controller = $this->context->controller;
-        $warnings   = $controller->checkoutWarning;
-
         $idAddressDelivery = (int)$this->getCheckoutSession()->getIdAddressDelivery();
         $idAddressInvoice  = (int)$this->getCheckoutSession()->getIdAddressInvoice();
-        $addressWarning    = isset($warnings['address'])
-            ? $warnings['address']
-            : false;
-        $invalidAddresses  = isset($warnings['invalid_addresses'])
-            ? $warnings['invalid_addresses']
-            : array();
-
-        $errors = array();
-        if (in_array($idAddressDelivery, $invalidAddresses)) {
-            $errors['delivery_address_error'] = $addressWarning;
-        }
-
-        if (in_array($idAddressInvoice, $invalidAddresses)) {
-            $errors['invoice_address_error'] = $addressWarning;
-        }
-
-        if ($this->show_invoice_address_form
-            || $idAddressInvoice != $idAddressDelivery
-            || !empty($errors['invoice_address_error'])
-        ) {
-            $this->use_same_address = false;
-        }
-
         $params = array(
             'address_form'               => $this->addressForm->getProxy(),
             'use_same_address'           => $this->use_same_address,
@@ -269,11 +242,45 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             'show_delivery_address_form' => $this->show_delivery_address_form,
             'show_invoice_address_form'  => $this->show_invoice_address_form,
             'form_has_continue_button'   => $this->form_has_continue_button,
-            'not_valid_addresses'        => implode(",", $invalidAddresses),
         );
 
-        // Add error messages
-        $params = array_replace($params, $errors);
+        /** @var OrderControllerCore $controller */
+        $controller = $this->context->controller;
+        if (isset($controller)) {
+            $warnings         = $controller->checkoutWarning;
+            $addressWarning   = isset($warnings['address'])
+                ? $warnings['address']
+                : false;
+            $invalidAddresses = isset($warnings['invalid_addresses'])
+                ? $warnings['invalid_addresses']
+                : array();
+
+            $errors = array();
+            if (in_array($idAddressDelivery, $invalidAddresses)) {
+                $errors['delivery_address_error'] = $addressWarning;
+            }
+
+            if (in_array($idAddressInvoice, $invalidAddresses)) {
+                $errors['invoice_address_error'] = $addressWarning;
+            }
+
+            if ($this->show_invoice_address_form
+                || $idAddressInvoice != $idAddressDelivery
+                || !empty($errors['invoice_address_error'])
+            ) {
+                $this->use_same_address = false;
+            }
+
+            // Add specific parameters
+            $params = array_replace(
+                $params,
+                array(
+                    'not_valid_addresses' => implode(",", $invalidAddresses),
+                    'use_same_address'    => $this->use_same_address,
+                ),
+                $errors
+            );
+        }
 
         return $params;
     }
