@@ -31,7 +31,6 @@ let config = {
     main: [
       'prestakit/dist/js/prestashop-ui-kit.js',
       'jquery-ui-dist/jquery-ui.js',
-      'moment/moment.js',
       'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
       'jwerty/jwerty.js',
@@ -86,8 +85,8 @@ let config = {
         test: /dropzone\/dist\/dropzone\.js/,
         loader: 'imports-loader?this=>window&module=>null'
       }, {
-        test: /moment.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+        test: require.resolve('moment'),
+        loader: 'imports-loader?define=>false&this=>window',
       }, {
         test: /typeahead\.jquery\.js/,
         loader: 'imports-loader?define=>false&exports=>false&this=>window'
@@ -140,6 +139,9 @@ let config = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
+    new webpack.ProvidePlugin({
+      moment: 'moment', // needed for bootstrap datetime picker
+    })
   ]
 };
 
