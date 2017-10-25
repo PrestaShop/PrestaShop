@@ -209,8 +209,9 @@
   }
 
   .summary-description-container {
+    overflow: hidden; // fixes horizontal scrolling on the product page
     .nav-tabs {
-      overflow: hidden;
+      overflow: hidden; // fixes tab borders bleeding into the tab content
 
       &.bordered {
         .nav-link {
