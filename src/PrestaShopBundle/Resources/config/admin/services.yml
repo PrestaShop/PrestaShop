@@ -1,6 +1,6 @@
 parameters:
     ps_root_dir:              "%kernel.root_dir%/../"
-    ps_config_dir:            "%kernel.root_dir%/config"
+    ps_config_dir:            "%ps_root_dir%config"
     translations_dir:         "%kernel.root_dir%/Resources/translations"
     themes_translations_dir:  "%kernel.cache_dir%/themes"
     themes_dir:               "%kernel.root_dir%/../themes"
