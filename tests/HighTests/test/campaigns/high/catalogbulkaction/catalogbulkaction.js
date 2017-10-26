@@ -12,4 +12,10 @@ scenario('Catalog bulk action', () => {
     test('should check deactivated product ', () => client.checkProductListMsg('Produit(s) désactivé(s) avec succès.','clear'));
   }, 'catalogbulkaction');
 
+  scenario('Activate the product list', client => {
+    test('should select all product', () => client.selectAllProduct());
+    test('should enable the product list', () => client.enableProductlist());
+    test('should check activated product ', () => client.checkProductListMsg('Produit(s) activé(s) avec succès.', 'check'));
+  }, 'catalogbulkaction');
+
 }, 'catalogbulkaction', true);
