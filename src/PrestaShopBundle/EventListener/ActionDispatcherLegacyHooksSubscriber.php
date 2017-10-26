@@ -74,6 +74,10 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 
     public function callActionDispatcherBeforeHook(FilterControllerEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $requestAttributes = $event->getRequest()->attributes;
         $controllerType = self::NA_CONTROLLER;
         $controller = $event->getController()[0];
@@ -92,6 +96,10 @@ class ActionDispatcherLegacyHooksSubscriber implements EventSubscriberInterface
 
     public function callActionDispatcherAfterHook(FilterResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $requestAttributes = $event->getRequest()->attributes;
 
         if ($requestAttributes->has('controller_type') && $requestAttributes->has('controller_name')) {
