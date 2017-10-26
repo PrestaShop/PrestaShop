@@ -18,6 +18,15 @@ class Catalog extends PrestashopClient {
       .click(selector.BO.CatalogPage.select_all_product_button)
   }
 
+  enableProductlist() {
+    return this.client
+      .waitForExist(selector.BO.CatalogPage.action_group_button, 90000)
+      .click(selector.BO.CatalogPage.action_group_button)
+      .waitForExist(selector.BO.CatalogPage.enable_all_selected, 90000)
+      .click(selector.BO.CatalogPage.enable_all_selected)
+      .waitForVisible(selector.BO.CatalogPage.succes_panel_all_item_message, 90000);
+  }
+
   disableProductlist() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.action_group_button, 90000)
@@ -27,12 +36,12 @@ class Catalog extends PrestashopClient {
       .waitForVisible(selector.BO.CatalogPage.succes_panel_all_item_message, 90000);
   }
 
-  enableProductlist() {
+  duplicateProductlist() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.action_group_button, 90000)
       .click(selector.BO.CatalogPage.action_group_button)
-      .waitForExist(selector.BO.CatalogPage.enable_all_selected, 90000)
-      .click(selector.BO.CatalogPage.enable_all_selected)
+      .waitForExist(selector.BO.CatalogPage.duplicate_button, 90000)
+      .click(selector.BO.CatalogPage.duplicate_button)
       .waitForVisible(selector.BO.CatalogPage.succes_panel_all_item_message, 90000);
   }
 
@@ -45,15 +54,6 @@ class Catalog extends PrestashopClient {
       .then((text) => expect(text).to.be.equal(etat))
       .then(() => this.client.getText(selector.BO.CatalogPage.etat_last_product))
       .then((text) => expect(text).to.be.equal(etat));
-  }
-
-  duplicateProductlist() {
-    return this.client
-      .waitForExist(selector.BO.CatalogPage.action_group_button, 90000)
-      .click(selector.BO.CatalogPage.action_group_button)
-      .waitForExist(selector.BO.CatalogPage.duplicate_button, 90000)
-      .click(selector.BO.CatalogPage.duplicate_button)
-      .waitForVisible(selector.BO.CatalogPage.succes_panel_all_item_message, 90000);
   }
 }
 
