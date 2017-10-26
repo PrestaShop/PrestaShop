@@ -3,7 +3,6 @@ var {selector} = require('../globals.webdriverio.js');
 
 class createProduct extends PrestashopClient {
 
-
   goToProductMenu() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.menu, 90000)
@@ -40,26 +39,42 @@ class createProduct extends PrestashopClient {
   }
 
   addProductTypeAttribute() {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.variations_type_button, 90000)
-        .click(selector.BO.AddProductPage.variations_type_button)
-        .waitForExist(selector.BO.AddProductPage.variations_tab, 90000)
-        .click(selector.BO.AddProductPage.variations_tab)
-        .waitForExist(selector.BO.AddProductPage.variations_input, 90000)
-        .setValue(selector.BO.AddProductPage.variations_input, global.attributeName + " : Toutes")
-        .waitForExist(selector.BO.AddProductPage.variations_select, 90000)
-        .click(selector.BO.AddProductPage.variations_select)
-        .waitForExist(selector.BO.AddProductPage.variations_generate, 90000)
-        .click(selector.BO.AddProductPage.variations_generate)
-        .pause(5000)
-        .waitForExist(selector.BO.AddProductPage.var_selected, 90000)
-        .click(selector.BO.AddProductPage.var_selected)
-        .pause(3000)
-        .waitForExist(selector.BO.AddProductPage.var_selected_quantitie, 90000)
-        .setValue(selector.BO.AddProductPage.var_selected_quantitie, "10")
-        .moveToObject('//*[@id="combinations_thead"]/tr/th[7]', 90000)
-        .click(selector.BO.AddProductPage.save_quantitie_button)
+    return this.client
+      .waitForExist(selector.BO.AddProductPage.variations_type_button, 90000)
+      .click(selector.BO.AddProductPage.variations_type_button)
+      .waitForExist(selector.BO.AddProductPage.variations_tab, 90000)
+      .click(selector.BO.AddProductPage.variations_tab)
+      .waitForExist(selector.BO.AddProductPage.variations_input, 90000)
+      .setValue(selector.BO.AddProductPage.variations_input, global.attributeName + " : Toutes")
+      .waitForExist(selector.BO.AddProductPage.variations_select, 90000)
+      .click(selector.BO.AddProductPage.variations_select)
+      .waitForExist(selector.BO.AddProductPage.variations_generate, 90000)
+      .click(selector.BO.AddProductPage.variations_generate)
+      .pause(3000)
+      .waitForExist(selector.BO.AddProductPage.var_selected, 90000)
+      .click(selector.BO.AddProductPage.var_selected)
+      .pause(3000)
+      .waitForExist(selector.BO.AddProductPage.var_selected_quantitie, 90000)
+      .setValue(selector.BO.AddProductPage.var_selected_quantitie, "10")
+      .moveToObject('//*[@id="combinations_thead"]/tr/th[7]', 90000)
+      .click(selector.BO.AddProductPage.save_quantitie_button)
   }
+
+  addProductTypeFeature() {
+    return this.client
+      .moveToObject('//*[@id="add-categories"]/h2')
+      .click(selector.BO.AddProductPage.add_feature_to_product_button)
+      .waitForExist(selector.BO.AddProductPage.add_feature_to_product_button, 90000)
+      .moveToObject(selector.BO.AddProductPage.feature_select)
+      .click(selector.BO.AddProductPage.feature_select)
+      .waitForExist(selector.BO.AddProductPage.select_feature_created, 90000)
+      .setValue(selector.BO.AddProductPage.select_feature_created, global.featureName)
+      .click(selector.BO.AddProductPage.feature_choice)
+      .waitForExist(selector.BO.AddProductPage.feature_value_select, 90000)
+      .click(selector.BO.AddProductPage.feature_value_select)
+      .click(selector.BO.AddProductPage.feature_value_choice)
+  }
+
 
   productEnligne() {
     return this.client
