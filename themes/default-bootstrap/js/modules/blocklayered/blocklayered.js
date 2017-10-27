@@ -483,7 +483,7 @@ function reloadContent(params_plus)
 	{
 		type: 'GET',
 		url: baseDir + 'modules/blocklayered/blocklayered-ajax.php',
-		data: data+params_plus+n,
+		data: data + '&' + params_plus + n,
 		dataType: 'json',
 		cache: false, // @todo see a way to use cache and to add a timestamps parameter to refresh cache each 10 minutes for example
 		success: function(result)
