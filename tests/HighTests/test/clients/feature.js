@@ -90,7 +90,7 @@ class Feature extends PrestashopClient {
       .then((value) => expect(value).to.be.false);
   }
 
-  updateFeaturename() {
+  updateFeatureName() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.FeatureSubmenu.select_option, 90000)
       .click(selector.BO.CatalogPage.FeatureSubmenu.select_option)
@@ -102,7 +102,7 @@ class Feature extends PrestashopClient {
       .click(selector.BO.CatalogPage.FeatureSubmenu.save_button);
   }
 
-  updateFeatureValuename() {
+  updateFeatureValueName() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.FeatureSubmenu.selected_feature, 90000)
       .click(selector.BO.CatalogPage.FeatureSubmenu.selected_feature)
