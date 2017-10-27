@@ -1,7 +1,7 @@
 var PrestashopClient = require('./prestashop_client');
 var {selector} = require('../globals.webdriverio.js');
 
-class createProduct extends PrestashopClient {
+class CreateProduct extends PrestashopClient {
 
   goToProductMenu() {
     return this.client
@@ -96,4 +96,4 @@ class createProduct extends PrestashopClient {
 
 }
 
-module.exports = createProduct;
+module.exports = CreateProduct;
