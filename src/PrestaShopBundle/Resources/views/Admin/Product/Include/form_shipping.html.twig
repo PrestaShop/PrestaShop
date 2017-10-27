@@ -98,9 +98,7 @@
   <div class="form-group">
     <label class="form-control-label">{{ form.delivery_in_stock.vars.label }}</label>
     {{ form_errors(form.delivery_in_stock) }}
-    <div class="input-group">
-      {{ form_widget(form.delivery_in_stock) }}
-    </div>
+    {{ form_widget(form.delivery_in_stock) }}
     <p class="subtitle italic">{{ 'Leave empty to disable.'|trans({}, 'Admin.Catalog.Feature') }}</p>
   </div>
 </div>
@@ -108,9 +106,7 @@
   <div class="form-group">
     <label class="form-control-label">{{ form.delivery_out_stock.vars.label }}</label>
     {{ form_errors(form.delivery_out_stock) }}
-    <div class="input-group">
-      {{ form_widget(form.delivery_out_stock) }}
-    </div>
+    {{ form_widget(form.delivery_out_stock) }}
     <p class="subtitle italic">{{ 'Leave empty to disable.'|trans({}, 'Admin.Catalog.Feature') }}</p>
   </div>
 </div>

@@ -98,7 +98,10 @@ class AdminModelAdapterTest extends KernelTestCase
                 "depth" => '',
                 "weight" => '',
                 "additional_shipping_cost" => '',
-                "selectedCarriers" => []
+                "selectedCarriers" => [],
+                "additional_delivery_times" => '',
+                "delivery_in_stock" => [],
+                "delivery_out_stock" => [],
             ],
             "step5" => [
                 "link_rewrite" => [],

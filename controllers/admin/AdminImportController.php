@@ -73,6 +73,8 @@ class AdminImportControllerCore extends AdminController
         'online_only' => array('AdminImportController', 'getBoolean'),
         'accessories' => array('AdminImportController', 'split'),
         'image_alt' => array('AdminImportController', 'split'),
+        'delivery_in_stock' => array('AdminImportController', 'createMultiLangField'),
+        'delivery_out_stock' => array('AdminImportController', 'createMultiLangField'),
     );
 
     public $separator;
@@ -246,6 +248,20 @@ class AdminImportControllerCore extends AdminController
                     'height' => array('label' => $this->trans('Height', array(), 'Admin.Global')),
                     'depth' => array('label' => $this->trans('Depth', array(), 'Admin.Global')),
                     'weight' => array('label' => $this->trans('Weight', array(), 'Admin.Global')),
+                    'delivery_in_stock' => array(
+                        'label' => $this->trans(
+                            'Delivery time of in-stock products:',
+                            array(),
+                            'Admin.Catalog.Feature'
+                        )
+                    ),
+                    'delivery_out_stock' => array(
+                        'label' => $this->trans(
+                            'Delivery time of out-of-stock products with allowed orders:',
+                            array(),
+                            'Admin.Advparameters.Feature'
+                        )
+                    ),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
                     'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
                     'low_stock_threshold' => array('label' => $this->trans('Low stock level', array(), 'Admin.Catalog.Feature')),

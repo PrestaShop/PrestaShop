@@ -131,24 +131,36 @@ class ProductShipping extends CommonAbstractType
             'preferred_choices' => array('default'),
             'label' => $this->translator->trans('Delivery Time', array(), 'Admin.Catalog.Feature')
         ))
-        ->add('delivery_out_stock', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+        ->add('delivery_out_stock', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+            'options' => array(
+                'attr' => array(
+                    'placeholder' => $this->translator->trans('Delivered within 5-7 days', array(), 'Admin.Catalog.Feature'),
+                )
+            ),
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'required' => false,
             'label' => $this->translator->trans(
                 'Delivery time of out-of-stock products with allowed orders:',
                 array(),
                 'Admin.Catalog.Feature'
             ),
-            'attr' => array(
-                'placeholder' => $this->translator->trans('Delivered within 5-7 days', array(), 'Admin.Catalog.Feature'),
-            )
         ))
-        ->add('delivery_in_stock', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+        ->add('delivery_in_stock', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+            'options' => array(
+                'attr' => array(
+                    'placeholder' => $this->translator->trans('Delivered within 3-4 days', array(), 'Admin.Catalog.Feature'),
+                 )
+            ),
+            'locales' => $this->locales,
+            'hideTabs' => true,
             'required' => false,
             'label' => $this->translator->trans('Delivery time of in-stock products:', array(), 'Admin.Catalog.Feature'),
-            'attr' => array(
-                'placeholder' => $this->translator->trans('Delivered within 3-4 days', array(), 'Admin.Catalog.Feature'),
-            )
         ));
+
+
         foreach ($this->warehouses as $warehouse) {
             $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(
                 'entry_type' =>'PrestaShopBundle\Form\Admin\Product\ProductWarehouseCombination',

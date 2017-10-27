@@ -334,9 +334,18 @@ class ProductCore extends ObjectModel
             'is_virtual' =>                 array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'state' =>                      array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'additional_delivery_times' =>  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'delivery_in_stock' =>          array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-            'delivery_out_stock' =>         array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-
+            'delivery_in_stock' =>          array(
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isGenericName',
+                'size' => 255
+            ),
+            'delivery_out_stock' =>         array(
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isGenericName',
+                'size' => 255
+            ),
 
             /* Shop fields */
             'id_category_default' =>      array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),

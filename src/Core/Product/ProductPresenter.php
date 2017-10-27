@@ -813,6 +813,8 @@ class ProductPresenter
             "availability_message",
             "availability",
             "reference_to_display",
+            "delivery_in_stock",
+            "delivery_out_stock",
         );
     }
 

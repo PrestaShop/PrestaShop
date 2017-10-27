@@ -126,6 +126,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'available_now',
             'available_later',
             'tags',
+            'delivery_in_stock',
+            'delivery_out_stock',
         );
 
         //define unused key for manual binding
