@@ -502,7 +502,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function prepareProductArrayForAjaxReturn(array $products)
     {
         $allowed_properties = array('id_product', 'price', 'reference', 'active', 'description_short', 'link',
-            'link_rewrite', 'name', 'manufacturer_name', 'position', 'url', 'canonical_url', 'add_to_cart_url',
+            'link_rewrite', 'name', 'manufacturer_name', 'position', 'cover', 'url', 'canonical_url', 'add_to_cart_url',
             'has_discount', 'discount_type', 'discount_percentage', 'discount_percentage_absolute', 'discount_amount',
             'price_amount', 'regular_price_amount', 'regular_price', 'discount_to_display', 'labels', 'main_variants',
             'unit_price', 'tax_name', 'rate'
