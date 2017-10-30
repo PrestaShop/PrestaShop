@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\PrestaTrust;
 
+use Exception;
 use ZipArchive;
 use Doctrine\Common\Cache\Cache;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -249,10 +250,14 @@ class PrestaTrustChecker
      */
     protected function requestCheck($hash, $shop_url, $contract)
     {
-        $result = $this->apiClient->setShopUrl($shop_url)->getPrestaTrustCheck($hash, $contract);
-        return array(
-            'integrity' => (bool)($result->hash_trusted),
-            'property' => (bool)($result->property_trusted),
-        );
+        try {
+            $result = $this->apiClient->setShopUrl($shop_url)->getPrestaTrustCheck($hash, $contract);
+            return array(
+                'integrity' => (bool)($result->hash_trusted),
+                'property' => (bool)($result->property_trusted),
+            );
+        } catch (Exception $e) {
+            return array('integrity' => false, 'property' => false, );
+        }
     }
 }
