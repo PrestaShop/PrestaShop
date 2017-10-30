@@ -24,35 +24,19 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
-use PHPUnit_Framework_TestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
-use PrestaShopBundle\Tests\Utils\Database;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Calculation;
 
-class IntegrationTestCase extends PHPUnit_Framework_TestCase
+use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
+use Tools;
+
+/**
+ * these tests aim to check the correct calculation of cart total
+ */
+abstract class AbstractCartCalculationTest extends AbstractCartTest
 {
-
-    /**
-     * @var ContextMocker
-     */
-    protected $contextMocker;
-
-    protected function setUp()
+    protected function compareCartTotal($expectedTotal)
     {
-        parent::setUp();
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->contextMocker->resetContext();
-    }
-
-    public static function setUpBeforeClass()
-    {
-        Database::restoreTestDB();
-        require_once(__DIR__ . '/../../config/config.inc.php');
+        $total = $this->cart->getOrderTotal(true);
+        $this->assertEquals(Tools::convertPrice($expectedTotal), $total);
     }
 }

@@ -40,9 +40,9 @@ class CheckoutAddressesStepTest extends UnitTestCase
     private $step;
     private $session;
 
-    public function setup()
+    public function setUp()
     {
-        parent::setup();
+        parent::setUp();
         $context = new Context;
         $context->language = new Language;
         $context->customer = new Customer;

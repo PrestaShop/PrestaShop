@@ -81,6 +81,8 @@ class CartRuleCore extends ObjectModel
     public $date_add;
     public $date_upd;
 
+    protected static $cartAmountCache = array();
+
     /**
      * @see ObjectModel::$definition
      */
@@ -130,6 +132,11 @@ class CartRuleCore extends ObjectModel
             ),
         ),
     );
+
+    public static function resetStaticCache()
+    {
+        static::$cartAmountCache = array();
+    }
 
     /**
      * Adds current CartRule as a new Object to the database
@@ -968,8 +975,6 @@ class CartRuleCore extends ObjectModel
             return 0;
         }
 
-        static $cartAmountCache = array();
-
         if (!$context) {
             $context = Context::getContext();
         }
@@ -982,18 +987,18 @@ class CartRuleCore extends ObjectModel
 
         $all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
 
-        if (!array_key_exists($context->cart->id, $cartAmountCache)) {
+        if (!array_key_exists($context->cart->id, static::$cartAmountCache)) {
             if (Tax::excludeTaxeOption()) {
-                $cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-                $cartAmountCache[$context->cart->id]['ti'] = $cartAmountCache[$context->cart->id]['te'];
+                static::$cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                static::$cartAmountCache[$context->cart->id]['ti'] = static::$cartAmountCache[$context->cart->id]['te'];
             } else {
-                $cartAmountCache[$context->cart->id]['ti'] = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-                $cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+                static::$cartAmountCache[$context->cart->id]['ti'] = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+                static::$cartAmountCache[$context->cart->id]['te'] = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
             }
         }
 
-        $cart_amount_te = $cartAmountCache[$context->cart->id]['te'];
-        $cart_amount_ti = $cartAmountCache[$context->cart->id]['ti'];
+        $cart_amount_te = static::$cartAmountCache[$context->cart->id]['te'];
+        $cart_amount_ti = static::$cartAmountCache[$context->cart->id]['ti'];
 
         $reduction_value = 0;
 
@@ -1514,10 +1519,8 @@ class CartRuleCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        static $is_feature_active = null;
-        if ($is_feature_active === null) {
-            $is_feature_active = (bool) Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
-        }
+        $is_feature_active = (bool) Configuration::get('PS_CART_RULE_FEATURE_ACTIVE');
+
         return $is_feature_active;
     }
 

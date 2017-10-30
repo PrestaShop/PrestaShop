@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\DepBuiltByClos
 
 class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
 {
-    public function setup()
+    public function setUp()
     {
         $this->container = new Container();
     }

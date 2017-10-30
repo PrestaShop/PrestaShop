@@ -51,6 +51,15 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 {
     private static $dump;
     private static $id_address;
+    protected $previousConfig = array(
+        'PS_CART_RULE_FEATURE_ACTIVE' => null,
+        'PS_GROUP_FEATURE_ACTIVE'     => null,
+        'PS_ATCP_SHIPWRAP'            => null,
+        'PS_PRICE_ROUND_MODE'         => null,
+        'PS_ROUND_TYPE'               => null,
+        'PS_PRICE_DISPLAY_PRECISION'  => null,
+        'PS_TAX'                      => null,
+    );
 
     public static function setUpBeforeClass()
     {
@@ -60,9 +69,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();
-
-        // Context needs a currency but doesn't set it by itself, use default one.
-        Context::getContext()->currency = new Currency(self::getCurrencyId());
 
         // We'll base all our computations on the invoice address
         Configuration::updateValue('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
@@ -362,6 +368,14 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     public function setUp()
     {
+        parent::setUp();
+
+        // Context needs a currency but doesn't set it by itself, use default one.
+        Context::getContext()->currency = new Currency(self::getCurrencyId());
+
+        foreach (array_keys($this->previousConfig) as $key) {
+            $this->previousConfig[$key] = Configuration::get($key);
+        }
         Group::clearCachedValues();
         self::setRoundingType('line');
         self::setRoundingMode('half_up');
@@ -372,6 +386,13 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
         Configuration::set('PS_GROUP_FEATURE_ACTIVE', true);
         Configuration::set('PS_ATCP_SHIPWRAP', false);
+    }
+
+    protected function tearDown()
+    {
+        foreach ($this->previousConfig as $key => $value) {
+            Configuration::set($key, $value);
+        }
     }
 
     public function testBasicOnlyProducts()

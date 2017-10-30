@@ -98,7 +98,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         return $this->database;
     }
 
-    public function setup()
+    protected function setUp()
     {
         $this->container = new Container();
         ServiceLocator::setServiceContainerInstance($this->container);

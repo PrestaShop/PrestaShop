@@ -374,6 +374,11 @@ abstract class CacheCore
         Cache::$local[$key] = $value;
     }
 
+    public static function clear()
+    {
+        Cache::$local = array();
+    }
+
     public static function retrieve($key)
     {
         return isset(Cache::$local[$key]) ? Cache::$local[$key] : null;

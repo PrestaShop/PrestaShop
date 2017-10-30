@@ -44,7 +44,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     public $defaultDir;
 
-    public function setup()
+    public function setUp()
     {
         $this->configuration = new ConfigurationMock();
         $this->connection = new ConnectionMock(array(), new Driver);
@@ -52,7 +52,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository, $this->configuration, $this->connection);
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
-        parent::setup();
+        parent::setUp();
     }
 
     public function testSuccessfulConfiguration()

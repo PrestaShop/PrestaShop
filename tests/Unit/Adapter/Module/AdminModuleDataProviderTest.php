@@ -42,7 +42,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function setUp()
     {
-        parent::setup();
+        parent::setUp();
 
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');

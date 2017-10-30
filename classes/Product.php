@@ -3631,21 +3631,15 @@ class ProductCore extends ObjectModel
     public static function isAvailableWhenOutOfStock($out_of_stock)
     {
         // @TODO 1.5.0 Update of STOCK_MANAGEMENT & ORDER_OUT_OF_STOCK
-        static $ps_stock_management = null;
-        if ($ps_stock_management === null) {
-            $ps_stock_management = Configuration::get('PS_STOCK_MANAGEMENT');
-        }
+        $ps_stock_management = Configuration::get('PS_STOCK_MANAGEMENT');
 
         if (!$ps_stock_management) {
             return true;
-        } else {
-            static $ps_order_out_of_stock = null;
-            if ($ps_order_out_of_stock === null) {
-                $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
-            }
-
-            return (int)$out_of_stock == 2 ? (int)$ps_order_out_of_stock : (int)$out_of_stock;
         }
+
+        $ps_order_out_of_stock = Configuration::get('PS_ORDER_OUT_OF_STOCK');
+
+        return (int)$out_of_stock == 2 ? (int)$ps_order_out_of_stock : (int)$out_of_stock;
     }
 
     /**

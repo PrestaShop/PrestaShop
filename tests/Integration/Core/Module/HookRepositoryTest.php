@@ -32,19 +32,34 @@ use Db;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 
 class HookRepositoryTest extends IntegrationTestCase
 {
     private $hookRepository;
 
-    public function setup()
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setUp()
     {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
         $this->hookRepository = new HookRepository(
             new HookInformationProvider,
             Context::getContext()->shop,
             Db::getInstance(),
             _DB_PREFIX_
         );
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
     }
 
     public function test_persist_and_retrieve()
