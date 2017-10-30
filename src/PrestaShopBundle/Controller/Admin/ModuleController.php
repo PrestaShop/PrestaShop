@@ -644,6 +644,22 @@ class ModuleController extends FrameworkBundleAdminController
                 200,
                 array('Content-Type' => 'application/json')
             );
+        } catch (UnconfirmedModuleActionException $e) {
+            $modules = $this->get('prestashop.core.admin.data_provider.module_interface')->generateAddonsUrls(array($e->getModule()));
+            return new JsonResponse(
+                    array(
+                        'status' => false,
+                        'confirmation_subject' => $e->getSubject(),
+                        'module' => $this->getPresentedProducts($modules)[0],
+                        'msg' => $translator->trans(
+                            'Confirmation needed by module %module% on %action% (%subject%).',
+                            array(
+                                '%subject%' => $e->getSubject(),
+                                '%action%' => $e->getAction(),
+                                '%module%' => $module_name,
+                            ),
+                        'Admin.Modules.Notification'
+                    )));
         } catch (Exception $e) {
             if (isset($module_name)) {
                 $moduleManager->disable($module_name);

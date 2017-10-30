@@ -64,14 +64,30 @@ var AdminModuleCard = function () {
      * @return {void}
      */
     this.confirmPrestaTrust = function confirmPrestaTrust(result) {
+        var that = this;
+        var modal = this.replacePrestaTrustPlaceholders(result);
+        modal.find(".pstrust-install").off('click').on('click', function() {
+            // Find related form, update it and submit it
+            var install_button = $(that.moduleActionMenuInstallLinkSelector, '.module-item[data-tech-name="' + result.module.attributes.name + '"]');
+            var form = install_button.parent("form");
+            $('<input>').attr({
+                type: 'hidden',
+                value: '1',
+                name: 'actionParams[confirmPrestaTrust]'
+            }).appendTo(form);
+            install_button.click();
+            modal.modal('hide');
+        });
+        modal.modal();
+    };
+    
+    this.replacePrestaTrustPlaceholders = function replacePrestaTrustPlaceholders(result) {
         var modal = $("#modal-prestatrust");
         var module = result.module.attributes;
-        var that = this;
-
         if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
             return;
         }
-
+        
         var alertClass = module.prestatrust.status ? 'success' : 'warning';
         
         if (module.prestatrust.check_list.property) {
@@ -89,20 +105,9 @@ var AdminModuleCard = function () {
         modal.find("#pstrust-label").attr("class", "text-" + alertClass).text(module.prestatrust.status ? 'OK' : 'KO');
         modal.find("#pstrust-message").attr("class", "alert alert-"+alertClass);
         modal.find("#pstrust-message > p").text(module.prestatrust.message);
-        modal.find(".pstrust-install").off('click').on('click', function() {
-            // Find related form, update it and submit it
-            var install_button = $(that.moduleActionMenuInstallLinkSelector, '.module-item[data-tech-name="' + module.name + '"]');
-            var form = install_button.parent("form");
-            $('<input>').attr({
-                type: 'hidden',
-                value: '1',
-                name: 'actionParams[confirmPrestaTrust]'
-            }).appendTo(form);
-            install_button.click();
-            modal.modal('hide');
-        });
-        modal.modal();
-    };
+        
+        return modal;
+    }
 
     this.dispatchPreEvent = function (action, element) {
         var event = jQuery.Event('module_card_action_event');
