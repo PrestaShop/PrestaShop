@@ -73,7 +73,7 @@
   // Resets
   ul.nostyle {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
   }
   .tab-content {
     padding: 0;
@@ -482,7 +482,7 @@
     .tt-suggestion {
       cursor: pointer;
       padding: 0.3125rem 0.625rem;
-      color: $gray-light;
+      color: $gray-medium;
       &:hover {
         background-color: $primary-hover;
         color: #ffffff;
@@ -907,6 +907,40 @@
 
 #product_reference_field {
   margin-top: 7px;
+}
+
+#related-product {
+  // list of added related products
+  .typeahead-list {
+    li {
+      @extend .p-1;
+      @extend .mt-1;
+      @extend .d-flex;
+      @extend .align-items-center;
+      border: 1px solid $gray-light;
+
+      // thumbnail
+      > .media-left {
+        img {
+          max-width: 50px;
+          max-height: 50px;
+        }
+      }
+
+      // text
+      > .media-body {
+        .label {
+          @extend .mx-1;
+        }
+
+        // delete button
+        i.delete {
+          cursor: pointer;
+          float: right;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {

@@ -34,7 +34,9 @@
     >
         {{ form_errors(form) }}
 
-        <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+        <div class="search search-with-icon">
+            <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+        </div>
         <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-sm-12 product-list">
             {% if collection is defined and collection|length > 0 %}
                 {% for item in collection %}
