@@ -14,6 +14,7 @@ global.product_id = new Date().getTime();
 global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
+global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
 
 module.exports = {
   selector: {
@@ -152,6 +153,48 @@ module.exports = {
           update_feature_button:'//*[@id="table-feature"]/tbody/tr/td[6]/div/div/ul/li[1]/a',
           update_feature_value_button:'//*[@id="table-feature_value"]/tbody/tr/td[3]/div/div/a',
           delete_feature:'//*[@id="table-feature"]/tbody/tr/td[6]/div/div/ul/li[3]/a'
+          public_name_input:'//*[@id="public_name_1"]',
+          type_select:'//*[@id="group_type"]',
+          selected_attribute:'//*[@id="table-attribute_group"]/tbody/tr/td[3]',
+       save_and_add:'//*[@id="fieldset_0"]/div[3]/button[2]',
+          save:'//*[@id="attribute_form_submit_btn"]',
+          value_action_group_button:'//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/button',
+          delete_value_button:'//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/ul/li/a',
+          group_action_button:'//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/button',
+          delete_attribut_button:'//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[3]/a',
+          update_button:'//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[1]/a',
+          update_value_button:'//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/a'
+        },
+        Manufacturers: {
+          submenu: '//*[@id="subtab-AdminParentManufacturers"]/a',
+          Brands: {
+            new_brand_button: '//*[@id="page-header-desc-address-new_manufacturer"]',
+            name_input: '//*[@id="name"]',
+            short_desc_textarea: '//*[@id="manufacturer_form"]/div/div[2]/div[2]/div/div/div/div[1]/div/div/div/div/div/div[1]/button',
+            short_desc_source_code_modal: '/html/body/div[5]/div[2]/div[2]/div/textarea',
+            short_desc_source_code_modal_confirmation: '/html/body/div[5]/div[3]/div/div[2]/button',
+            desc_textarea: '//*[@id="manufacturer_form"]/div/div[2]/div[3]/div/div/div/div[1]/div/div/div/div/div/div[1]/button',
+            image_input: '//*[@id="logo"]',
+            meta_title_input: '//*[@id="meta_title_1"]',
+            meta_description_input: '//*[@id="meta_description_1"]',
+            meta_keywords_input: '//*[@id="manufacturer_form"]/div/div[2]/div[7]/div/div/input',
+            active_button: '//*[@id="manufacturer_form"]/div/div[2]/div[8]/div/span/label[1]',
+            save_button: '//*[@id="manufacturer_form_submit_btn"]',
+          },
+          BrandsAddress: {
+            new_brand_address_button: '//*[@id="page-header-desc-address-new_manufacturer_address"]',
+            branch_select: '//*[@id="id_manufacturer"]',
+            last_name_input: '//*[@id="lastname"]',
+            first_name_input: '//*[@id="firstname"]',
+            address_input: '//*[@id="address1"]',
+            secondary_address: '//*[@id="address2"]',
+            postal_code_input: '//*[@id="postcode"]',
+            city_input: '//*[@id="city"]',
+            country: '//*[@id="id_country"]',
+            phone_input: '//*[@id="phone"]',
+            other_input: '//*[@id="other"]',
+            save_button: '//*[@id="address_form_submit_btn"]'
+          }
         }
       },
 
