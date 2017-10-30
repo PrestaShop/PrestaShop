@@ -648,16 +648,19 @@
     tbody {
       max-height: 450px;
       overflow-y: auto;
-      display: block;
-
-      tr {
-        display: block;
-        overflow: hidden;
-      }
     }
 
     .checkbox {
       margin: 0;
+      > label {
+        margin: 0;
+      }
+    }
+
+    td.file-name {
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
     }
   }
 
