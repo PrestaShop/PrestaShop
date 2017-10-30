@@ -58,6 +58,7 @@ let config = {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/'
   },
+  //devtool: 'source-map', // uncomment me to build source maps (really slow)
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
@@ -117,17 +118,26 @@ let config = {
       }, {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
           use: [
             {
               loader: 'css-loader',
               options: {
                 minimize: true,
-                sourceMap: true,
+                //sourceMap: true, // uncomment me to generate source maps
               }
             },
-            'postcss-loader',
-            'sass-loader'
+            {
+              loader: 'postcss-loader',
+              options: {
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            }
           ]
         })
       }, {
