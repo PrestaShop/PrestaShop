@@ -83,9 +83,11 @@ class OrderPresenter implements PresenterInterface
             throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
-        return array(
-            'products' => $this->getProducts($order),
-            'products_count' => count($this->getProducts($order)),
+        $products = $this->getProducts($order);
+
+        return [
+            'products' => $products,
+            'products_count' => count($products),
             'totals' => $this->getAmounts($order)['totals'],
             'subtotals' => $this->getAmounts($order)['subtotals'],
             'details' => $this->getDetails($order),
@@ -98,7 +100,7 @@ class OrderPresenter implements PresenterInterface
             'id_address_delivery' => $order->id_address_delivery,
             'id_address_invoice' => $order->id_address_invoice,
             'labels' => $this->getLabels(),
-        );
+        ];
     }
 
     /**
