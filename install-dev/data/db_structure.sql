@@ -1527,6 +1527,7 @@ CREATE TABLE `PREFIX_product` (
   `depth` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `out_of_stock` int(10) unsigned NOT NULL DEFAULT '2',
+  `additional_delivery_times` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `quantity_discount` tinyint(1) DEFAULT '0',
   `customizable` tinyint(2) NOT NULL DEFAULT '0',
   `uploadable_files` tinyint(4) NOT NULL DEFAULT '0',
@@ -1695,6 +1696,8 @@ CREATE TABLE `PREFIX_product_lang` (
   `name` varchar(128) NOT NULL,
   `available_now` varchar(255) DEFAULT NULL,
   `available_later` varchar(255) DEFAULT NULL,
+  `delivery_in_stock` varchar(255) DEFAULT NULL,
+  `delivery_out_stock` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_product`, `id_shop` , `id_lang`),
   KEY `id_lang` (`id_lang`),
   KEY `name` (`name`)

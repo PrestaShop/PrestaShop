@@ -56,7 +56,7 @@ class ProductShipping extends CommonAbstractType
         $this->warehouses = $warehouseDataProvider->getWarehouses();
 
         $carriers = $carrierDataProvider->getCarriers($this->locales[0]['id_lang'], false, false, false, null, $carrierDataProvider->getAllCarriersConstant());
-        $this->carriersChoices = [];
+        $this->carriersChoices = array();
         foreach ($carriers as $carrier) {
             $this->carriersChoices[$carrier['name'].' ('.$carrier['delay'].')'] = $carrier['id_reference'];
         }
@@ -71,7 +71,7 @@ class ProductShipping extends CommonAbstractType
     {
         $builder->add('width', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Width', [], 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Width', array(), 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -79,7 +79,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('height', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Height', [], 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Height', array(), 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -87,7 +87,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('depth', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Depth', [], 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Depth', array(), 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -95,7 +95,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('weight', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
             'required' => false,
-            'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Weight', array(), 'Admin.Catalog.Feature'),
             'constraints' => array(
                 new Assert\NotBlank(),
                 new Assert\Type(array('type' => 'numeric'))
@@ -103,7 +103,7 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('additional_shipping_cost', 'Symfony\Component\Form\Extension\Core\Type\MoneyType', array(
             'required' => false,
-            'label' => $this->translator->trans('Shipping fees', [], 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Shipping fees', array(), 'Admin.Catalog.Feature'),
             'currency' => $this->currency->iso_code,
             'constraints' => array(
                 new Assert\NotBlank(),
@@ -116,8 +116,50 @@ class ProductShipping extends CommonAbstractType
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
-            'label' => $this->translator->trans('Available carriers', [], 'Admin.Catalog.Feature')
+            'label' => $this->translator->trans('Available carriers', array(), 'Admin.Catalog.Feature')
+        ))
+        ->add('additional_delivery_times', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            'choices' =>  array(
+                '0' => $this->translator->trans('None', array(), 'Admin.Catalog.Feature'),
+                '1'   => $this->translator->trans('Default delivery time', array(), 'Admin.Catalog.Feature'),
+                '2'   => $this->translator->trans('Specific delivery time to this product', array(), 'Admin.Catalog.Feature'),
+            ),
+            'expanded' =>  true,
+            'multiple' =>  false,
+            'required' =>  false,
+            'empty_value' => false,
+            'preferred_choices' => array('default'),
+            'label' => $this->translator->trans('Delivery Time', array(), 'Admin.Catalog.Feature')
+        ))
+        ->add('delivery_out_stock', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+            'options' => array(
+                'attr' => array(
+                    'placeholder' => $this->translator->trans('Delivered within 5-7 days', array(), 'Admin.Catalog.Feature'),
+                )
+            ),
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'required' => false,
+            'label' => $this->translator->trans(
+                'Delivery time of out-of-stock products with allowed orders:',
+                array(),
+                'Admin.Catalog.Feature'
+            ),
+        ))
+        ->add('delivery_in_stock', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
+            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
+            'options' => array(
+                'attr' => array(
+                    'placeholder' => $this->translator->trans('Delivered within 3-4 days', array(), 'Admin.Catalog.Feature'),
+                 )
+            ),
+            'locales' => $this->locales,
+            'hideTabs' => true,
+            'required' => false,
+            'label' => $this->translator->trans('Delivery time of in-stock products:', array(), 'Admin.Catalog.Feature'),
         ));
+
 
         foreach ($this->warehouses as $warehouse) {
             $builder->add('warehouse_combination_'.$warehouse['id_warehouse'], 'Symfony\Component\Form\Extension\Core\Type\CollectionType', array(

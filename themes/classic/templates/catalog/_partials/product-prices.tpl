@@ -95,8 +95,16 @@
       {/if}
       {hook h='displayProductPriceBlock' product=$product type="price"}
       {hook h='displayProductPriceBlock' product=$product type="after_price"}
-      {if $product.delivery_information}
-        <span class="delivery-information">{$product.delivery_information}</span>
+      {if $product.additional_delivery_times == 1}
+        {if $product.delivery_information}
+          <span class="delivery-information">{$product.delivery_information}</span>
+        {/if}
+      {elseif $product.additional_delivery_times == 2}
+        {if $product.quantity > 0}
+          <span class="delivery-information">{$product.delivery_in_stock}</span>
+        {else}
+          <span class="delivery-information">{$product.delivery_out_stock}</span>
+        {/if}
       {/if}
     </div>
   </div>

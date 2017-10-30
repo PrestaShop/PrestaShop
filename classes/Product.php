@@ -256,6 +256,36 @@ class ProductCore extends ObjectModel
      */
     public $pack_stock_type = 3;
 
+    /**
+     * Type of delivery time
+     *
+     * Choose which parameters use for give information delivery.
+     * 0 - none
+     * 1 - use default information
+     * 2 - use product information
+     *
+     * @var integer
+     */
+    public $additional_delivery_times = 1;
+
+    /**
+     * Delivery in-stock information
+     *
+     * Long description for delivery in-stock product information.
+     *
+     * @var string
+     */
+    public $delivery_in_stock;
+
+    /**
+     * Delivery out-stock information
+     *
+     * Long description for delivery out-stock product information.
+     *
+     * @var string
+     */
+    public $delivery_out_stock;
+
     public static $_taxCalculationMethod = null;
     protected static $_prices = array();
     protected static $_pricesLevel2 = array();
@@ -285,24 +315,37 @@ class ProductCore extends ObjectModel
         'multilang_shop' => true,
         'fields' => array(
             /* Classic fields */
-            'id_shop_default' =>       array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_manufacturer' =>       array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supplier' =>           array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'reference' =>             array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
-            'supplier_reference' =>    array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
-            'location' =>              array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
-            'width' =>                 array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'height' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'depth' =>                 array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'weight' =>                array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
-            'quantity_discount' =>     array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'ean13' =>                 array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
-            'isbn' =>                  array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
-            'upc' =>                   array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
-            'cache_is_pack' =>         array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'cache_has_attachments' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'is_virtual' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'state' =>                 array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_shop_default' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_manufacturer' =>            array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_supplier' =>                array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'reference' =>                  array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+            'supplier_reference' =>         array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 32),
+            'location' =>                   array('type' => self::TYPE_STRING, 'validate' => 'isReference', 'size' => 64),
+            'width' =>                      array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'height' =>                     array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'depth' =>                      array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'weight' =>                     array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
+            'quantity_discount' =>          array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'ean13' =>                      array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
+            'isbn' =>                       array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
+            'upc' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
+            'cache_is_pack' =>              array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'cache_has_attachments' =>      array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'is_virtual' =>                 array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'state' =>                      array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'additional_delivery_times' =>  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'delivery_in_stock' =>          array(
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isGenericName',
+                'size' => 255
+            ),
+            'delivery_out_stock' =>         array(
+                'type' => self::TYPE_STRING,
+                'lang' => true,
+                'validate' => 'isGenericName',
+                'size' => 255
+            ),
 
             /* Shop fields */
             'id_category_default' =>      array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),

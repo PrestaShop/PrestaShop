@@ -70,7 +70,48 @@
   </div>
 </div>
 
-<div class="col-md-12 my-4">
+<div class="col-md-12">
+  <div class="form-group">
+    <h2>
+      {{ form.additional_delivery_times.vars.label }}
+      <span class="help-box" data-toggle="popover"
+        data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+    </h2>
+    <div class="row">
+       <div class="col-md-12" {{ block('widget_container_attributes') }}>
+          {% for child in form.additional_delivery_times %}
+            {% if child.vars.value == 1 %}
+              <div class="widget-radio-inline">
+                {{ form_widget(child) }}
+                <a href="{{ getAdminLink("AdminPPreferences") }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
+              </div>
+            {% else %}
+              {{ form_widget(child) }}
+            {% endif %}
+          {% endfor %}
+        </div>
+     </div>
+  </div>
+</div>
+
+<div class="col-xl-6 col-lg-6">
+  <div class="form-group">
+    <label class="form-control-label">{{ form.delivery_in_stock.vars.label }}</label>
+    {{ form_errors(form.delivery_in_stock) }}
+    {{ form_widget(form.delivery_in_stock) }}
+    <p class="subtitle italic">{{ 'Leave empty to disable.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+  </div>
+</div>
+<div class="col-xl-6 col-lg-6">
+  <div class="form-group">
+    <label class="form-control-label">{{ form.delivery_out_stock.vars.label }}</label>
+    {{ form_errors(form.delivery_out_stock) }}
+    {{ form_widget(form.delivery_out_stock) }}
+    <p class="subtitle italic">{{ 'Leave empty to disable.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+  </div>
+</div>
+
+<div class="col-md-12">
   <div class="form-group">
     <h2>
       {{ form.additional_shipping_cost.vars.label }}

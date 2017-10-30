@@ -9,6 +9,11 @@ UPDATE `PREFIX_tab` SET `position` = 1 WHERE `class_name` = 'AdminCountries' AND
 /* PHP:ps_1730_move_some_aeuc_configuration_to_core(); */;
 
 ALTER TABLE `PREFIX_product` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
+
+ALTER TABLE `PREFIX_product` ADD `additional_delivery_times` tinyint(1) unsigned NOT NULL DEFAULT '1' AFTER `out_of_stock`;
+ALTER TABLE `PREFIX_product_lang` ADD `delivery_in_stock` varchar(255) DEFAULT NULL;
+ALTER TABLE `PREFIX_product_lang` ADD `delivery_out_stock` varchar(255) DEFAULT NULL;
+
 ALTER TABLE `PREFIX_product_shop` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
 
 ALTER TABLE `PREFIX_product_attribute` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
@@ -19,6 +24,7 @@ ALTER TABLE `PREFIX_product_shop` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFA
 
 ALTER TABLE `PREFIX_product_attribute` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0 AFTER `low_stock_threshold`;
 ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0 AFTER `low_stock_threshold`;
+ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   `id_store` int(11) unsigned NOT NULL,
