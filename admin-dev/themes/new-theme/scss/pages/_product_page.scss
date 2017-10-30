@@ -178,9 +178,12 @@
     line-height: 1;
     color: #fff;
     text-align: center;
-    white-space: nowrap;
     vertical-align: baseline;
     background-color: $brand-primary;
+
+    > .token-label {
+      white-space: nowrap;
+    }
 
     .close {
       margin: 0 .4rem;
