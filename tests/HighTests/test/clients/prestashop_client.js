@@ -26,7 +26,7 @@ class PrestashopClient {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
   }
 
-  SuccessPanel(index) {
+  successPanel(index) {
     return this.client
       .waitForExist(selector.BO.CatalogPage.success_panel)
       .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
