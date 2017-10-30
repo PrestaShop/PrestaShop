@@ -54,7 +54,7 @@ class DiscountControllerCore extends FrontController
                 new Currency((int)$this->context->cart->id_currency)
             );
             
-            if ($discount['gift_product'] !== 0) {
+            if ((int)$discount['gift_product'] !== 0) {
                 $product = new Product((int) $discount['gift_product'], false, (int)$this->context->language->id);
                 if (!Validate::isLoadedObject($product) || !$product->isAssociatedToShop() || !$product->active) {
                     unset($cart_rules[$key]);
