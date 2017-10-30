@@ -614,6 +614,9 @@
 				$("button[name=\"submitAddOrder\"]").attr("disabled", "disabled");
 			}
 		}
+		else if (delivery_option_list.length > 0) {
+			$("button[name=\"submitAddOrder\"]").removeAttr("disabled");
+		}
 	}
 
 	function searchProducts()
