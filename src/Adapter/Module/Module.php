@@ -308,9 +308,11 @@ class Module implements ModuleInterface
     protected function instanciateLegacyModule()
     {
         // Temporary: This test prevents an error when switching branches with the cache. Can be removed at the next release (when we will be sure that it is defined)
-        if (!$this->disk->has('path')) {
+        $path = $this->disk->get('path', ''); // Variable needed for empty() test
+        if (empty($path)) {
             $this->disk->set('path', _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name'));
         }
+        // End of temporary content
         require_once $this->disk->get('path').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
         $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
