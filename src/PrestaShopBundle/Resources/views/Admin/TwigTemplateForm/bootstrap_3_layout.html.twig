@@ -257,7 +257,7 @@
 {% endblock date_picker_widget %}
 
 {% block _form_step6_attachments_widget %}
-    <div class="js-options-no-attachments {{ form|length >1 ? 'hide' : '' }}">
+    <div class="js-options-no-attachments {{ form|length > 0 ? 'hide' : '' }}">
         <small>{{ 'There is no attachment yet.'|trans({}, 'Admin.Catalog.Notification') }}</small>
     </div>
     <div id="product-attachments" class="panel panel-default">
