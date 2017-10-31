@@ -58,10 +58,10 @@ var PerformancePageUI = {
     displayMemcacheServers: function() {
         var CACHE_ENABLED = '1';
         var cacheEnabledInput = document.getElementById('form_caching_use_cache');
-        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
+        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
         var memcacheServersListBlock = document.getElementById('servers-list');
         var newServerBtn = document.getElementById('new-server-btn');
-        var isMemcache = cacheSelected === "CacheMemcache" || cacheSelected === "CacheMemcached";
+        var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
 
         if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
             memcacheServersListBlock.style.display = "block";
