@@ -25,9 +25,9 @@
 var PerformancePageUI = {
     displaySmartyCache: function() {
         var CACHE_ENABLED = '1';
-        var smartyCacheSelected = document.getElementById('form_smarty_cache').value;
+        var smartyCacheSelected = document.getElementById('form_smarty_cache');
         var smartyCacheOptions = document.querySelectorAll('.smarty-cache-option');
-        if (smartyCacheSelected === CACHE_ENABLED) {
+        if (smartyCacheSelected && smartyCacheSelected.value === CACHE_ENABLED) {
           for(var i = 0; i < smartyCacheOptions.length; i++) {
             smartyCacheOptions[i].style.display = 'block';
           }
@@ -58,10 +58,10 @@ var PerformancePageUI = {
     displayMemcacheServers: function() {
         var CACHE_ENABLED = '1';
         var cacheEnabledInput = document.getElementById('form_caching_use_cache');
-        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked').value;
+        var cacheSelected = document.querySelector('input[name="form[caching][caching_system]"]:checked');
         var memcacheServersListBlock = document.getElementById('servers-list');
         var newServerBtn = document.getElementById('new-server-btn');
-        var isMemcache = cacheSelected === "CacheMemcache" || cacheSelected === "CacheMemcached";
+        var isMemcache = cacheSelected && (cacheSelected.value === "CacheMemcache" || cacheSelected.value === "CacheMemcached");
 
         if (isMemcache && cacheEnabledInput.value === CACHE_ENABLED) {
             memcacheServersListBlock.style.display = "block";
