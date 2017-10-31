@@ -47,7 +47,7 @@ class CacheApcCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key Cache key
      * @return bool Whether the key was deleted
@@ -81,7 +81,12 @@ class CacheApcCore extends Cache
      */
     protected function _set($key, $value, $ttl = 0)
     {
-        return (($this->apcu) ? apcu_store($key, $value, $ttl) : apc_store($key, $value, $ttl));
+        $result = (($this->apcu) ? apcu_store($key, $value, $ttl) : apc_store($key, $value, $ttl));
+        if ($result === false) {
+            $this->setAdjustTableCacheSize(true);
+        }
+
+        return $result;
     }
 
     /**

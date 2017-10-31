@@ -80,7 +80,14 @@ class CacheMemcacheCore extends Cache
         if (!$this->is_connected) {
             return false;
         }
-        return $this->memcache->set($key, $value, 0, $ttl);
+
+        $result = $this->memcache->set($key, $value, 0, $ttl);
+
+        if ($result === false) {
+            $this->setAdjustTableCacheSize(true);
+        }
+
+        return $result;
     }
 
     /**
@@ -175,7 +182,7 @@ class CacheMemcacheCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return bool

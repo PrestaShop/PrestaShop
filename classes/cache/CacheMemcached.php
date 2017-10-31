@@ -42,12 +42,16 @@ class CacheMemcachedCore extends Cache
     public function __construct()
     {
         $this->connect();
-        if ($this->is_connected) {
+        if ($this->isConnected()) {
             $this->memcached->setOption(Memcached::OPT_PREFIX_KEY, _DB_PREFIX_);
             if ($this->memcached->getOption(Memcached::HAVE_IGBINARY)) {
                 $this->memcached->setOption(Memcached::OPT_SERIALIZER, Memcached::SERIALIZER_IGBINARY);
             }
         }
+    }
+
+    public function isConnected() {
+        return $this->is_connected;
     }
 
     public function __destruct()
@@ -67,6 +71,7 @@ class CacheMemcachedCore extends Cache
         }
 
         $servers = self::getMemcachedServers();
+
         if (!$servers) {
             return;
         }
@@ -78,22 +83,31 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_set()
+     * @inheritdoc
      */
     protected function _set($key, $value, $ttl = 0)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
-        return $this->memcached->set($key, $value, $ttl);
+
+        $result = $this->memcached->set($key, $value, $ttl);
+
+        if ($result === false) {
+            if ($this->memcached->getResultCode() === memcached::RES_E2BIG) {
+                $this->setAdjustTableCacheSize(true);
+            }
+        }
+
+        return $result;
     }
 
     /**
-     * @see Cache::_get()
+     * @inheritdoc
      */
     protected function _get($key)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
 
@@ -101,25 +115,36 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * @see Cache::_exists()
+     * @inheritdoc
      */
     protected function _exists($key)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return ($this->memcached->get($key) !== false);
     }
 
     /**
-     * @see Cache::_delete()
+     * @inheritdoc
      */
     protected function _delete($key)
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->delete($key);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function _deleteMulti(array $keyArray)
+    {
+        if (!$this->isConnected()) {
+            return false;
+        }
+        return $this->memcached->deleteMulti($keyArray);
     }
 
     /**
@@ -127,30 +152,25 @@ class CacheMemcachedCore extends Cache
      */
     protected function _writeKeys()
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return true;
     }
 
     /**
-     * @see Cache::flush()
+     * @inheritdoc
      */
     public function flush()
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->flush();
     }
 
     /**
-     * Store a data in cache
-     *
-     * @param string $key
-     * @param mixed $value
-     * @param int $ttl
-     * @return bool
+     * @inheritdoc
      */
     public function set($key, $value, $ttl = 0)
     {
@@ -158,21 +178,16 @@ class CacheMemcachedCore extends Cache
     }
 
     /**
-     * Retrieve a data from cache
-     *
-     * @param string $key
-     * @return mixed
+     * @inheritdoc
      */
     public function get($key)
     {
         return $this->_get($key);
     }
 
+
     /**
-     * Check if a data is cached
-     *
-     * @param string $key
-     * @return bool
+     * @inheritdoc
      */
     public function exists($key)
     {
@@ -181,7 +196,7 @@ class CacheMemcachedCore extends Cache
 
     /**
      * Delete one or several data from cache (* joker can be used, but avoid it !)
-     * E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+     * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
      *
      * @param string $key
      * @return bool
@@ -211,7 +226,7 @@ class CacheMemcachedCore extends Cache
      */
     protected function close()
     {
-        if (!$this->is_connected) {
+        if (!$this->isConnected()) {
             return false;
         }
         return $this->memcached->quit();
@@ -221,8 +236,10 @@ class CacheMemcachedCore extends Cache
      * Add a memcached server
      *
      * @param string $ip
-     * @param int $port
-     * @param int $weight
+     * @param int    $port
+     * @param int    $weight
+     *
+     * @return bool
      */
     public static function addServer($ip, $port, $weight)
     {
@@ -243,6 +260,8 @@ class CacheMemcachedCore extends Cache
      * Delete a memcached server
      *
      * @param int $id_server
+     *
+     * @return bool
      */
     public static function deleteServer($id_server)
     {
