@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\classes\checkout;
+namespace PrestaShop\PrestaShop\Tests\Unit\classes\checkout;
 
 use CheckoutAddressesStep;
 use CheckoutProcess;
@@ -40,9 +40,9 @@ class CheckoutAddressesStepTest extends UnitTestCase
     private $step;
     private $session;
 
-    public function setup()
+    public function setUp()
     {
-        parent::setup();
+        parent::setUp();
         $context = new Context;
         $context->language = new Language;
         $context->customer = new Customer;

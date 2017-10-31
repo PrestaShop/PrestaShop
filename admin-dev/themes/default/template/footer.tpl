@@ -31,7 +31,7 @@
 	<div class="col-sm-2 hidden-xs">
 		<a href="http://www.prestashop.com/" class="_blank">PrestaShop&trade;</a>
 		-
-		<span id="footer-load-time"><i class="icon-time" title="{l s='Load time: '}"></i> {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
+		<span id="footer-load-time"><i class="icon-time" title="{l s='Load time: ' d='Admin.Navigation.Footer'}"></i> {number_format(microtime(true) - $timer_start, 3, '.', '')}s</span>
 	</div>
 
 	<div class="col-sm-2 hidden-xs">

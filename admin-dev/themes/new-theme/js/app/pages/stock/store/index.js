@@ -36,8 +36,7 @@ const state = {
   order: '',
   pageIndex: 1,
   totalPages: 0,
-  productsPerPage: 100,
-  productsToUpdate: [],
+  productsPerPage: 30,
   products: [],
   hasQty: false,
   keywords: [],
@@ -53,6 +52,9 @@ const state = {
   isLoading: false,
   isReady: false,
   editBulkUrl: '',
+  bulkEditQty: null,
+  productsToUpdate: [],
+  selectedProducts: [],
 };
 
 // getters are functions
@@ -77,6 +79,9 @@ const getters = {
       return categories;
     }
     return convert(rootState.categories);
+  },
+  selectedProductsLng(rootState) {
+    return rootState.selectedProducts.length;
   },
 };
 

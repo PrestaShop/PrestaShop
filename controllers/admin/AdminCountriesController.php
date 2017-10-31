@@ -425,7 +425,7 @@ class AdminCountriesControllerCore extends AdminController
 
         if (!$tmp_addr_format->checkFormatFields()) {
             $error_list = $tmp_addr_format->getErrorList();
-            foreach ($error_list as $num_error => $error) {
+            foreach ($error_list as $error) {
                 $this->errors[] = $error;
             }
         }
@@ -516,7 +516,7 @@ class AdminCountriesControllerCore extends AdminController
         }
         $html_tabnav .= '</ul>';
         $html_tabcontent .= '</div>';
-        return $html = $html_tabnav.$html_tabcontent;
+        return $html_tabnav.$html_tabcontent;
     }
 
     public static function displayCallPrefix($prefix)

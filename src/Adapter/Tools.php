@@ -39,14 +39,29 @@ class Tools
     /**
      * Return the friendly url from the provided string.
      *
+     * @deprecated use linkRewrite.
+     *
      * @param string $str
-     * @param bool   $utf8_decode (deprecated)
+     * @param bool   $utf8Decode (deprecated)
      *
      * @return string
      */
-    public function link_rewrite($str, $utf8_decode = null)
+    public function link_rewrite($str, $utf8Decode = null)
     {
-        if ($utf8_decode !== null) {
+        return $this->linkRewrite($str, $utf8Decode);
+    }
+
+    /**
+     * Return the friendly url from the provided string.
+     *
+     * @param string $str
+     * @param bool   $utf8Decode (deprecated)
+     *
+     * @return string
+     */
+    public function linkRewrite($str, $utf8Decode = null)
+    {
+        if ($utf8Decode !== null) {
             LegacyTools::displayParameterAsDeprecated('utf8_decode');
         }
 
@@ -78,5 +93,10 @@ class Tools
     public function refreshCaCertFile()
     {
         LegacyTools::refreshCaCertFile();
+    }
+
+    public function generateHtaccess()
+    {
+        return LegacyTools::generateHtaccess();
     }
 }

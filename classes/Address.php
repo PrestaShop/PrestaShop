@@ -199,6 +199,11 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
+        /* Skip the required fields */
+        if ($this->isUsed()) {
+            self::$fieldsRequiredDatabase['Address'] = array();
+        }
+
         return parent::update($null_values);
     }
 
@@ -519,11 +524,6 @@ class AddressCore extends ObjectModel
      */
     public function getFieldsRequiredDB()
     {
-        $this->cacheFieldsRequiredDatabase(false);
-        if (isset(self::$fieldsRequiredDatabase['Address'])) {
-            return self::$fieldsRequiredDatabase['Address'];
-        }
-
-        return array();
+        return parent::getCachedFieldsRequiredDatabase();
     }
 }

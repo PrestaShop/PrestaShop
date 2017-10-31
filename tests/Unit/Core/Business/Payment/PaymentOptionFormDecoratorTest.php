@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Payment;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Payment;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Payment\PaymentOptionFormDecorator;
@@ -50,7 +50,7 @@ class PaymentOptionFormDecoratorTest extends UnitTestCase
 <p>Yolo</p>
 <form>
     <input type='text' name='card_number'>
-    <button style='display:none' id='pay-with-OPTION_ID' type='submit'></button>
+<button style='display:none' id='pay-with-OPTION_ID' type='submit'></button>
 </form>
 </div>";
 

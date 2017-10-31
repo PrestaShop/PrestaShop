@@ -24,12 +24,6 @@
  *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('themes/default/js/bundle/plugins/jquery.pstagger.js') }}"></script>
@@ -46,8 +40,8 @@
     {# Module notification KPI's #}
     {% include 'PrestaShopBundle:Admin/Module/Includes:notification_kpis.html.twig' %}
     {# Actual Page Content #}
-    <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
             <div id="module-short-list-configure" class="module-short-list">
                 <span class="module-search-result-wording">{{ '%nbModules% modules to configure'|trans({'%nbModules%' : modules.to_configure|length}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
@@ -65,7 +59,7 @@
                       data-content="{{ "Update these modules to enjoy their latest versions."|trans({}, 'Admin.Modules.Help') }}">
                 </span>
                 {% if (modules.to_update|length > 1) and (level >= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE')) %}
-                <a class="btn btn-primary-reverse pull-right btn-primary-outline light-button module_action_menu_upgrade_all" href="#" data-confirm_modal="module-modal-confirm-upgrade-all">{{ "Upgrade All"|trans({}, 'Admin.Modules.Feature') }}</a>
+                <a class="btn btn-primary-reverse float-right btn-outline-primary light-button module_action_menu_upgrade_all" href="#" data-confirm_modal="module-modal-confirm-upgrade-all">{{ "Upgrade All"|trans({}, 'Admin.Modules.Feature') }}</a>
                 {% endif %}
             </div>
             {% include 'PrestaShopBundle:Admin/Module/Includes:grid_notification_update.html.twig' with { 'modules': modules.to_update, 'display_type': 'list', id: 'update', 'level' : level } %}

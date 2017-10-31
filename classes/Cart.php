@@ -206,6 +206,17 @@ class CartCore extends ObjectModel
         $this->addressFactory = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\AddressFactory');
     }
 
+    public static function resetStaticCache()
+    {
+        static::$_nbProducts      = array();
+        static::$_isVirtualCart   = array();
+        static::$_totalWeight     = array();
+        static::$_carriers        = null;
+        static::$_taxes_rate      = null;
+        static::$_attributesLists = array();
+        static::$_customer        = null;
+    }
+
     /**
      * Set Tax calculation method
      */
@@ -734,8 +745,8 @@ class CartCore extends ObjectModel
                     }
 
                     if (
-                        $row['id_product'] == $gift['gift_product'] &&
-                        $row['id_product_attribute'] == $gift['gift_product_attribute']
+                        $row['id_product'] == $gift['gift_product']
+                        && $row['id_product_attribute'] == $gift['gift_product_attribute']
                     ) {
                         $row['is_gift'] = true;
                         $result[$rowIndex] = $row;
@@ -1534,24 +1545,6 @@ class CartCore extends ObjectModel
         }
 
         if ((int)$id_customization) {
-            $product_total_quantity = (int)Db::getInstance()->getValue(
-                'SELECT `quantity`
-                FROM `'._DB_PREFIX_.'cart_product`
-                WHERE `id_product` = '.(int)$id_product.'
-                AND `id_customization` = '.(int)$id_customization.'
-                AND `id_cart` = '.(int)$this->id.'
-                AND `id_product_attribute` = '.(int)$id_product_attribute
-            );
-
-            $customization_quantity = (int)Db::getInstance()->getValue('
-            SELECT `quantity`
-            FROM `'._DB_PREFIX_.'customization`
-            WHERE `id_cart` = '.(int)$this->id.'
-            AND `id_product` = '.(int)$id_product.'
-            AND `id_customization` = '.(int)$id_customization.'
-            AND `id_product_attribute` = '.(int)$id_product_attribute.'
-            '.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
-
             if (!$this->_deleteCustomization((int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery)) {
                 return false;
             }
@@ -1632,8 +1625,8 @@ class CartCore extends ObjectModel
 
         foreach ($gifts as $gift) {
             if (
-                (int) $gift['id_product_attribute'] === $id_product_attribute &&
-                (int) $gift['id_product'] === $id_product
+                (int) $gift['id_product_attribute'] === $id_product_attribute
+                && (int) $gift['id_product'] === $id_product
             ) {
                 $preservedGifts[$id_product.'-'.$id_product_attribute]++;
             }
@@ -1755,6 +1748,7 @@ class CartCore extends ObjectModel
         $use_cache = true
     ) {
         // Dependencies
+        /** @var \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator $price_calculator */
         $price_calculator = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
 
         $ps_use_ecotax = $this->configuration->get('PS_USE_ECOTAX');
@@ -3137,29 +3131,25 @@ class CartCore extends ObjectModel
      */
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
-        static $_total_shipping;
+        if (isset(Context::getContext()->cookie->id_country)) {
+            $default_country = new Country(Context::getContext()->cookie->id_country);
+        }
+        if (is_null($delivery_option)) {
+            $delivery_option = $this->getDeliveryOption($default_country, false, false);
+        }
 
-        if (null === $_total_shipping) {
-            if (isset(Context::getContext()->cookie->id_country)) {
-                $default_country = new Country(Context::getContext()->cookie->id_country);
-            }
-            if (is_null($delivery_option)) {
-                $delivery_option = $this->getDeliveryOption($default_country, false, false);
+        $_total_shipping = array(
+            'with_tax' => 0,
+            'without_tax' => 0,
+        );
+        $delivery_option_list = $this->getDeliveryOptionList($default_country);
+        foreach ($delivery_option as $id_address => $key) {
+            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
+                continue;
             }
 
-            $_total_shipping = array(
-                'with_tax' => 0,
-                'without_tax' => 0,
-            );
-            $delivery_option_list = $this->getDeliveryOptionList($default_country);
-            foreach ($delivery_option as $id_address => $key) {
-                if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
-                    continue;
-                }
-
-                $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
-                $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
-            }
+            $_total_shipping['with_tax'] += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
+            $_total_shipping['without_tax'] += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
         }
 
         return ($use_tax) ? $_total_shipping['with_tax'] : $_total_shipping['without_tax'];
@@ -3178,31 +3168,28 @@ class CartCore extends ObjectModel
      */
     public function getCarrierCost($id_carrier, $useTax = true, Country $default_country = null, $delivery_option = null)
     {
-        if (empty(self::$_total_shipping)) {
-            if (is_null($delivery_option)) {
-                $delivery_option = $this->getDeliveryOption($default_country);
-            }
-
-            $total_shipping = 0;
-            $delivery_option_list = $this->getDeliveryOptionList();
-
-
-            foreach ($delivery_option as $id_address => $key) {
-                if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
-                    continue;
-                }
-                if (isset($delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier])) {
-                    if ($useTax) {
-                        $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_with_tax'];
-                    } else {
-                        $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_without_tax'];
-                    }
-                }
-            }
-
-            self::$_total_shipping = $total_shipping;
+        if (is_null($delivery_option)) {
+            $delivery_option = $this->getDeliveryOption($default_country);
         }
-        return self::$_total_shipping;
+
+        $total_shipping = 0;
+        $delivery_option_list = $this->getDeliveryOptionList();
+
+
+        foreach ($delivery_option as $id_address => $key) {
+            if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key])) {
+                continue;
+            }
+            if (isset($delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier])) {
+                if ($useTax) {
+                    $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_with_tax'];
+                } else {
+                    $total_shipping += $delivery_option_list[$id_address][$key]['carrier_list'][$id_carrier]['price_without_tax'];
+                }
+            }
+        }
+
+        return $total_shipping;
     }
 
     /**

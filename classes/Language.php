@@ -105,7 +105,8 @@ class LanguageCore extends ObjectModel
         parent::__construct($id);
     }
 
-    static public function resetCache() {
+    public static function resetCache()
+    {
         self::$_checkedLangs = null;
         self::$_LANGUAGES = null;
         self::$countActiveLanguages = null;
@@ -697,23 +698,47 @@ class LanguageCore extends ObjectModel
     }
 
     /**
+     * Returns locale with iso parameter
+     *
      * @param string $isoCode
      *
-     * @return string|false|null
+     * @return string|false
      *
      * @throws Exception
      */
     public static function getLocaleByIso($isoCode)
     {
         if (!Validate::isLanguageIsoCode($isoCode)) {
-            throw new Exception(sprintf('The ISO code %s is invalid'));
+            throw new Exception('The ISO code ' . $isoCode . ' is invalid');
         }
 
         if ($details = self::getLangDetails($isoCode)) {
             return $details['locale'];
-        } else {
-            return false;
         }
+
+        return false;
+    }
+
+    /**
+     * Returns iso with locale parameter
+     *
+     * @param string $locale
+     *
+     * @return string|false
+     *
+     * @throws Exception
+     */
+    public static function getIsoByLocale($locale)
+    {
+        if (!Validate::isLanguageCode($locale)) {
+            throw new Exception('The locale ' . $locale . ' is invalid');
+        }
+
+        if ($details = self::getJsonLanguageDetails($locale)) {
+            return $details['iso_code'];
+        }
+
+        return false;
     }
 
     public static function getLanguageCodeByIso($iso_code)

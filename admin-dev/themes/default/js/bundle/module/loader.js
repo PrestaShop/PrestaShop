@@ -40,12 +40,14 @@ $(function() {
     }, 1250 );
   }
 
-  $('body').on('show.bs.modal', '.ps-modal-card', function (event) {
-    var urlCallModule = event.relatedTarget.href;
-    var modulePoppin = $(event.relatedTarget).data('target');
+  $('body').on('click', 'a.module-read-more-grid-btn, a.module-read-more-list-btn', function (event) {
+    event.preventDefault();
+    var urlCallModule = event.target.href;
+    var modulePoppin = $(event.target).data('target');
 
     $.get(urlCallModule, function (data) {
       $(modulePoppin).html(data);
+      $(modulePoppin).modal();
     });
   });
 });

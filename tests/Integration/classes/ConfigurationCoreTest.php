@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\classes;
+namespace PrestaShop\PrestaShop\Tests\Integration\classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\ReflexionHelper;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
@@ -36,6 +36,7 @@ class ConfigurationCoreTest extends IntegrationTestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $id_shops = array(1, 2);
         $id_shop_groups = array(1, 2);
 

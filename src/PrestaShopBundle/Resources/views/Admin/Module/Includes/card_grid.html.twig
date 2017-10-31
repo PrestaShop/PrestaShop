@@ -47,7 +47,7 @@
       </div>
       <h3
         class="text-ellipsis module-name-grid"
-        data-toggle="tooltip"
+        data-toggle="pstooltip"
         data-placement="top"
         title="{{ module.attributes.displayName|raw }}"
       >
@@ -58,7 +58,7 @@
           {{ module.attributes.name }}
         {% endif %}
       </h3>
-      <div class="text-ellipsis xsmall module-version-author-grid">
+      <div class="text-ellipsis small-text module-version-author-grid">
         {% block addon_version %}
           {% if module.attributes.productType == "service" %}
             {{ 'Service by %author%'|trans({'%author%' : '<b>' ~ module.attributes.author ~ '</b>'}, 'Admin.Modules.Feature')|raw }}
@@ -68,7 +68,7 @@
         {% endblock %}
       </div>
     </div>
-    <div class="module-quick-description-grid small no-padding m-b-0">
+    <div class="module-quick-description-grid small no-padding mb-0">
       {% block addon_description %}
         <div class="module-quick-description-text">
           {{ module.attributes.description|raw }}
@@ -78,7 +78,7 @@
         </div>
         <div class="module-read-more-grid">
           {% if module.attributes.id != "0" %}
-            <a class="module-read-more-grid-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-toggle="modal" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
+            <a class="module-read-more-grid-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
           {% endif %}
         </div>
       {% endblock %}
@@ -99,15 +99,15 @@
           ({{ module.attributes.nbRates }})
         </div>
       {% endif %}
-      <div class="pull-right module-price">
+      <div class="float-right module-price">
       {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
         {{ module.attributes.price.displayPrice }}
       {% elseif module.attributes.url_active != 'buy' %}
-        {{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
+        <span class="pt-2">{{ 'Free'|trans({}, 'Admin.Modules.Feature') }}</span>
       {% endif %}
       </div>
       {% if requireBulkActions is defined and requireBulkActions == true %}
-        <div class="pull-right module-checkbox-bulk-grid">
+        <div class="float-right module-checkbox-bulk-grid">
           <input type="checkbox" data-name="{{ module.attributes.displayName }}" data-tech-name="{{module.attributes.name}}" />
         </div>
       {% endif %}

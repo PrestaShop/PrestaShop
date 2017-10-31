@@ -24,8 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Product $object
@@ -72,13 +71,13 @@ class AdminProductsControllerCore extends AdminController
 
     public function init()
     {
-        global $kernel;
-
         if (Tools::getIsset('id_product')) {
             if (Tools::getIsset('addproduct') || Tools::getIsset('updateproduct')) {
-                if ($kernel instanceof HttpKernelInterface) {
-                    $sfRouter = $kernel->getContainer()->get('router');
-                    Tools::redirectAdmin($sfRouter->generate('admin_product_form',
+                $sfContainer = SymfonyContainer::getInstance();
+                if (!is_null($sfContainer)) {
+                    $sfRouter = $sfContainer->get('router');
+                    Tools::redirectAdmin($sfRouter->generate(
+                        'admin_product_form',
                         array('id' => Tools::getValue('id_product'))
                     ));
                 }
@@ -218,9 +217,24 @@ class AdminProductsControllerCore extends AdminController
 
                 // convert price with the currency from context
                 $this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-                $this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null,
-                    (int)Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1, true, null, null, null, $nothing, true, true,
-                    $context);
+                $this->_list[$i]['price_tmp'] = Product::getPriceStatic(
+                    $this->_list[$i]['id_product'],
+                    true,
+                    null,
+                    (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'),
+                    null,
+                    false,
+                    true,
+                    1,
+                    true,
+                    null,
+                    null,
+                    null,
+                    $nothing,
+                    true,
+                    true,
+                    $context
+                );
             }
         }
 
@@ -293,10 +307,11 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
-            'option_list' => $res,
-            'key_id' => 'id_country',
-            'key_value' => 'name'
+        $tpl->assign(
+            array(
+                'option_list' => $res,
+                'key_id'      => 'id_country',
+                'key_value'   => 'name',
             )
         );
 
@@ -310,10 +325,11 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
-            'option_list' => $res,
-            'key_id' => 'id_currency',
-            'key_value' => 'name'
+        $tpl->assign(
+            array(
+                'option_list' => $res,
+                'key_id'      => 'id_currency',
+                'key_value'   => 'name',
             )
         );
 
@@ -327,10 +343,11 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $tpl = $this->createTemplate('specific_prices_shop_update.tpl');
-        $tpl->assign(array(
-            'option_list' => $res,
-            'key_id' => 'id_group',
-            'key_value' => 'name'
+        $tpl->assign(
+            array(
+                'option_list' => $res,
+                'key_id'      => 'id_group',
+                'key_value'   => 'name',
             )
         );
 
@@ -748,7 +765,8 @@ class AdminProductsControllerCore extends AdminController
                         if ($this->isProductFieldUpdated('available_date_attribute') && (Tools::getValue('available_date_attribute') != '' &&!Validate::isDateFormat(Tools::getValue('available_date_attribute')))) {
                             $this->errors[] = $this->trans('Invalid date format.', array(), 'Admin.Notifications.Error');
                         } else {
-                            $product->updateAttribute((int)$id_product_attribute,
+                            $product->updateAttribute(
+                                (int)$id_product_attribute,
                                 $this->isProductFieldUpdated('attribute_wholesale_price') ? Tools::getValue('attribute_wholesale_price') : null,
                                 $this->isProductFieldUpdated('attribute_price_impact') ? Tools::getValue('attribute_price') * Tools::getValue('attribute_price_impact') : null,
                                 $this->isProductFieldUpdated('attribute_weight_impact') ? Tools::getValue('attribute_weight') * Tools::getValue('attribute_weight_impact') : null,
@@ -764,16 +782,18 @@ class AdminProductsControllerCore extends AdminController
                                 $this->isProductFieldUpdated('available_date_attribute') ? Tools::getValue('available_date_attribute') : null,
                                 false,
                                 array(),
-                                Tools::getValue('attribute_isbn'));
+                                Tools::getValue('attribute_isbn'),
+                                Tools::getValue('attribute_low_stock_threshold'),
+                                Tools::getValue('attribute_low_stock_alert')
+                            );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
                         }
                     } else {
                         $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
                     }
-                }
-                // Add new
-                else {
+                } else {
+                    // Add new
                     if ($this->access('add')) {
                         if ($product->productAttributeExists(Tools::getValue('attribute_combination_list'))) {
                             $this->errors[] = $this->trans('This combination already exists.', array(), 'Admin.Catalog.Notification');
@@ -795,7 +815,9 @@ class AdminProductsControllerCore extends AdminController
                                 Tools::getValue('attribute_minimal_quantity'),
                                 array(),
                                 Tools::getValue('available_date_attribute'),
-                                Tools::getValue('attribute_isbn')
+                                Tools::getValue('attribute_isbn'),
+                                Tools::getValue('attribute_low_stock_threshold'),
+                                Tools::getValue('attribute_low_stock_alert')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
@@ -846,19 +868,21 @@ class AdminProductsControllerCore extends AdminController
 
             // add new objects
             $languages = Language::getLanguages(false);
-            foreach ($_POST as $key => $val) {
-                if (preg_match('/^feature_([0-9]+)_value/i', $key, $match)) {
-                    if ($val) {
-                        $product->addFeaturesToDB($match[1], $val);
-                    } else {
-                        if ($default_value = $this->checkFeatures($languages, $match[1])) {
-                            $id_value = $product->addFeaturesToDB($match[1], 0, 1);
+            $form = Tools::getValue('form', false);
+            if (false !== $form) {
+                $features = isset($form['step1']['features']) ? $form['step1']['features'] : array();
+                if (is_array($features)) {
+                    foreach ($features as $feature) {
+                        if (!empty($feature['value'])) {
+                            $product->addFeaturesToDB($feature['feature'], $feature['value']);
+                        } elseif ($defaultValue = $this->checkFeatures($languages, $feature)) {
+                            $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
                             foreach ($languages as $language) {
-                                if ($cust = Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang'])) {
-                                    $product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $cust);
-                                } else {
-                                    $product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $default_value);
-                                }
+                                $valueToAdd = (isset($feature['custom_value'][$language['id_lang']]))
+                                    ? $feature['custom_value'][$language['id_lang']]
+                                    : $defaultValue;
+
+                                $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $valueToAdd);
                             }
                         }
                     }
@@ -1112,9 +1136,8 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Product preview
-        elseif (Tools::isSubmit('submitAddProductAndPreview')) {
+        } elseif (Tools::isSubmit('submitAddProductAndPreview')) {
+            // Product preview
             $this->display = 'edit';
             $this->action = 'save';
             if (Tools::getValue('id_product')) {
@@ -1128,41 +1151,36 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Product duplication
-        elseif (Tools::getIsset('duplicate'.$this->table)) {
+        } elseif (Tools::getIsset('duplicate'.$this->table)) {
+            // Product duplication
             if ($this->access('add')) {
                 $this->action = 'duplicate';
             } else {
                 $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Product images management
-        elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
+        } elseif (Tools::getValue('id_image') && Tools::getValue('ajax')) {
+            // Product images management
             if ($this->access('edit')) {
                 $this->action = 'image';
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Product attributes management
-        elseif (Tools::isSubmit('submitProductAttribute')) {
+        } elseif (Tools::isSubmit('submitProductAttribute')) {
+            // Product attributes management
             if ($this->access('edit')) {
                 $this->action = 'productAttribute';
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Product features management
-        elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
+        } elseif (Tools::isSubmit('submitFeatures') || Tools::isSubmit('submitFeaturesAndStay')) {
+            // Product features management
             if ($this->access('edit')) {
                 $this->action = 'features';
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Product specific prices management NEVER USED
-        elseif (Tools::isSubmit('submitPricesModification')) {
+        } elseif (Tools::isSubmit('submitPricesModification')) {
+            // Product specific prices management NEVER USED
             if ($this->access('add')) {
                 $this->action = 'pricesModification';
             } else {
@@ -1181,9 +1199,8 @@ class AdminProductsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        // Customization management
-        elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
+        } elseif (Tools::isSubmit('submitCustomizationConfiguration')) {
+            // Customization management
             if ($this->access('edit')) {
                 $this->action = 'customizationConfiguration';
                 $this->tab_display = 'customization';
@@ -1551,26 +1568,33 @@ class AdminProductsControllerCore extends AdminController
         return false;
     }
 
-    /* Checking customs feature */
-    protected function checkFeatures($languages, $feature_id)
+    /**
+     * Checking customs feature
+     * @param array $languages
+     * @param array $featureInfo
+     * @return int|string
+     */
+    protected function checkFeatures($languages, $featureInfo)
     {
         $rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
-        $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $feature_id);
+        $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $featureInfo['feature']);
 
         foreach ($languages as $language) {
-            if ($val = Tools::getValue('custom_'.$feature_id.'_'.$language['id_lang'])) {
+            if (isset($featureInfo['custom_value'][$language['id_lang']])) {
+                $val = $featureInfo['custom_value'][$language['id_lang']];
                 $current_language = new Language($language['id_lang']);
                 if (Tools::strlen($val) > $rules['sizeLang']['value']) {
                     $this->errors[] = $this->trans(
                         'The name for feature %1$s is too long in %2$s.',
                         array(
-                            ' <b>'.$feature['name'].'</b>',
+                            ' <b>' . $feature['name'] . '</b>',
                             $current_language->name
                         ),
                         'Admin.Catalog.Notification'
                     );
                 } elseif (!call_user_func(array('Validate', $rules['validateLang']['value']), $val)) {
-                    $this->errors[] = $this->trans('A valid name required for feature. %1$s in %2$s.',
+                    $this->errors[] = $this->trans(
+                        'A valid name required for feature. %1$s in %2$s.',
                         array(
                             ' <b>'.$feature['name'].'</b>',
                             $current_language->name
@@ -1907,11 +1931,11 @@ class AdminProductsControllerCore extends AdminController
                         if ($this->isProductFieldUpdated('category_box') && !$object->updateCategories(Tools::getValue('categoryBox'))) {
                             $this->errors[] = $this->trans(
                                 'An error occurred while linking the object %table_name% to categories.',
-                                    array(
-                                        '%table_name%' => ' <b>'.$this->table.'</b> ',
-                                    ),
-                                    'Admin.Notifications.Error'
-                                );
+                                array(
+                                    '%table_name%' => ' <b>'.$this->table.'</b> ',
+                                ),
+                                'Admin.Notifications.Error'
+                            );
                         }
                     }
 
@@ -1939,9 +1963,8 @@ class AdminProductsControllerCore extends AdminController
                                 $this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4'.($page > 1 ? '&submitFilterproduct='.(int)$page : '').'&token='.$this->token;
                             }
                         }
-                    }
-                    // if errors : stay on edit page
-                    else {
+                    } else {
+                        // if errors: stay on edit page
                         $this->display = 'edit';
                     }
                 } else {
@@ -2771,7 +2794,7 @@ class AdminProductsControllerCore extends AdminController
      *
      * @return array
      */
-    public function ajaxProcessaddProductImage($idProduct = null, $inputFileName='file', $die = true)
+    public function ajaxProcessaddProductImage($idProduct = null, $inputFileName = 'file', $die = true)
     {
         $idProduct = $idProduct ? $idProduct : Tools::getValue('id_product');
 
@@ -2829,15 +2852,15 @@ class AdminProductsControllerCore extends AdminController
 
                 if (!ImageManager::resize($file['save_path'], $new_path.'.'.$image->image_format, null, null, 'jpg', false, $error)) {
                     switch ($error) {
-                        case ImageManager::ERROR_FILE_NOT_EXIST :
+                        case ImageManager::ERROR_FILE_NOT_EXIST:
                             $file['error'] = $this->trans('An error occurred while copying image, the file does not exist anymore.', array(), 'Admin.Catalog.Notification');
                             break;
 
-                        case ImageManager::ERROR_FILE_WIDTH :
+                        case ImageManager::ERROR_FILE_WIDTH:
                             $file['error'] = $this->trans('An error occurred while copying image, the file width is 0px.', array(), 'Admin.Catalog.Notification');
                             break;
 
-                        case ImageManager::ERROR_MEMORY_LIMIT :
+                        case ImageManager::ERROR_MEMORY_LIMIT:
                             $file['error'] = $this->trans('An error occurred while copying image, check your memory limit.', array(), 'Admin.Catalog.Notification');
                             break;
 
@@ -2985,7 +3008,7 @@ class AdminProductsControllerCore extends AdminController
                     die(json_encode(array('error' => $error)));
                 }
                 break;
-            case 'advanced_stock_management' :
+            case 'advanced_stock_management':
                 if (Tools::getValue('value') === false) {
                     die(json_encode(array('error' =>  'Undefined value')));
                 }
@@ -3001,7 +3024,6 @@ class AdminProductsControllerCore extends AdminController
                     StockAvailable::setProductDependsOnStock($product->id, 0);
                 }
                 break;
-
         }
         die(json_encode(array('error' => false)));
     }

@@ -60,7 +60,12 @@ class UpdateSchemaCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $config = include(__DIR__.'/../../../app/config/parameters.php');
-        $this->dbName = $config['parameters']['database_name'];
+        if ($input->getOption('env') === 'test') {
+            $this->dbName = 'test_'.$config['parameters']['database_name'];
+        } else {
+            $this->dbName = $config['parameters']['database_name'];
+        }
+
         $this->dbPrefix = $config['parameters']['database_prefix'];
 
         $this->em = $this->getContainer()->get('doctrine')->getManager();

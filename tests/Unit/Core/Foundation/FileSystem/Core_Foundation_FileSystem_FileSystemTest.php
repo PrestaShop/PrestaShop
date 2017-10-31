@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Foundation\FileSystem;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\FileSystem;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -34,7 +34,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     private $fs;
     private $fixturesPath;
 
-    public function setup()
+    public function setUp()
     {
         $this->fs = new FileSystem();
         $this->fixturesPath = __DIR__ . DIRECTORY_SEPARATOR . 'fixtures';

@@ -111,9 +111,8 @@ class OrderCarrierCore extends ObjectModel
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
             if ($combination_img != null) {
                 $img_url = $link->getImageLink($prod_obj->link_rewrite, $combination_img, 'large_default');
-            }
-            //if there is no combination image, then get the product cover instead
-            else {
+            } else {
+                //if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
                 $img_url = $link->getImageLink($prod_obj->link_rewrite, $img['id_image']);
             }
@@ -182,13 +181,11 @@ class OrderCarrierCore extends ObjectModel
                 throw new PrestaShopException('Can\'t load Order object');
             }
 
-            if (!$this->sendInTransitEmail($order))
-            {
+            if (!$this->sendInTransitEmail($order)) {
                 return false;
             }
         }
 
         return true;
     }
-
 }

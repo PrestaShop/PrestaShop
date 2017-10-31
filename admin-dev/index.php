@@ -87,6 +87,7 @@ try {
     $response->send();
     $kernel->terminate($request, $response);
 } catch (NotFoundHttpException $rnfe) {
+    define('ADMIN_LEGACY_CONTEXT', true);
     // correct Apache charset (except if it's too late)
     if (!headers_sent()) {
         header('Content-Type: text/html; charset=utf-8');

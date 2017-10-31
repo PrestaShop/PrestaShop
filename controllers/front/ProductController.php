@@ -153,7 +153,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
                             $this->setTemplate('errors/404');
-                        break;
+                            break;
                     }
                 }
             } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {
@@ -331,12 +331,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $filteredProduct = Hook::exec(
                 'filterProductContent',
                 array('object' => $product_for_template),
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
             if (!empty($filteredProduct['object'])) {
                 $product_for_template = $filteredProduct['object'];
@@ -628,15 +628,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $count++;
                 if ($count > 1) {
                     //find attributes of current group, having a possible combination with current selected
-                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2 
-                        WHERE `id_product_attribute` IN (
-                            SELECT pac.`id_product_attribute`
-                                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-                                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                                WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
-                                GROUP BY id_product_attribute
-                                HAVING COUNT(id_product) = '.count($current_selected_attributes).'
-                        ) AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
+                    $id_product_attributes = array(0);
+                    $query = 'SELECT pac.`id_product_attribute`
+                        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                        WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
+                        GROUP BY id_product_attribute
+                        HAVING COUNT(id_product) = '.count($current_selected_attributes);
+                    if ($results = Db::getInstance()->executeS($query)) {
+                        foreach ($results as $row) {
+                            $id_product_attributes[] = $row['id_product_attribute'];
+                        }
+                    }
+                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2
+                        WHERE `id_product_attribute` IN ('.implode(',', array_map('intval', $id_product_attributes)).')
+                        AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
                     foreach ($id_attributes as $k => $row) {
                         $id_attributes[$k] = (int)$row['id_attribute'];
                     }
@@ -1071,7 +1077,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $breadcrumb['links'][] = array(
             'title' => $this->context->controller->product->name,
-            'url' => $this->context->link->getProductLink($this->context->controller->product),
+            'url' => $this->context->link->getProductLink($this->context->controller->product, null, null, null, null, null, (int) $this->getIdProductAttribute()),
         );
 
         return $breadcrumb;

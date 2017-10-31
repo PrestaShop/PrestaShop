@@ -143,7 +143,7 @@ class PDFGeneratorCore extends TCPDF
     {
         if (array_key_exists($iso_lang, $this->font_by_lang)) {
             $this->font = $this->font_by_lang[$iso_lang];
-        }else {
+        } else {
             $this->font = self::DEFAULT_FONT;
         }
 

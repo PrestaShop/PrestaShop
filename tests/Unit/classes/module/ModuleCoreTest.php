@@ -50,7 +50,7 @@ class ModuleCoreTest extends PHPUnit_Framework_TestCase
 									</div>
 								</div>';
 
-    public function setup()
+    public function setUp()
     {
         if (!defined('_PS_VERSION_')) {
             define('_PS_VERSION_', '1.6.1.0');

@@ -36,6 +36,7 @@ class ShopCoreTest extends IntegrationTestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->context = Context::getContext();
     }
 

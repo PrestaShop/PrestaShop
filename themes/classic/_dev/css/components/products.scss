@@ -143,6 +143,15 @@
   .tax-shipping-delivery-label {
     font-size: 0.8125rem;
     color: $gray;
+
+    .delivery-information {
+      padding: 0 0 0 2px;
+
+      &::before {
+        content: "-";
+        padding: 0 2px 0 0;
+      }
+    }
   }
 }
 .product-discount {
@@ -433,7 +442,7 @@
   > dl.data-sheet {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: stretch;
     dd.value,
     dt.name {
       flex: 1 0 40%;
@@ -445,10 +454,9 @@
       word-break: normal;
       &:nth-of-type(even) {
         background: $gray-lighter;
-      }
     }
-    dt.name {
-      text-transform: capitalize;
+    text-transform: capitalize;
+    margin-bottom: .5rem;
     }
   }
 }

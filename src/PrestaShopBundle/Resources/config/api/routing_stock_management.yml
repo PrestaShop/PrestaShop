@@ -4,6 +4,12 @@ api_stock_list_products:
     defaults:
         _controller: prestashop.core.api.stock.controller:listProductsAction
 
+api_stock_list_products_export:
+    path: /stock/export
+    methods: [GET]
+    defaults:
+        _controller: prestashop.core.api.stock.controller:listProductsExportAction
+
 api_stock_list_product_combinations:
     path: /stock/{productId}
     methods: [GET]

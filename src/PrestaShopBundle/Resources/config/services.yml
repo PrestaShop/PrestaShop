@@ -1,6 +1,7 @@
 imports:
     - { resource: admin/services.yml }
     - { resource: admin/services-form.yml }
+    - { resource: adapter/services.yml }
 
 parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
@@ -35,9 +36,6 @@ services:
     prestashop.database.naming_strategy:
         class: PrestaShopBundle\Service\Database\DoctrineNamingStrategy
         arguments: ["%database_prefix%"]
-
-    prestashop.csv:
-        class: PrestaShopBundle\Service\Csv
 
     prestashop.data_provider.modules.recommended:
         class: PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules
@@ -199,7 +197,7 @@ services:
 
     prestashop.categories_provider:
         class: PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider
-        arguments: ['@prestashop.addons.client_api']
+        arguments: ['@prestashop.addons.client_api', '@logger']
 
     # Presenters
     prestashop.adapter.presenter.module:
@@ -481,7 +479,7 @@ services:
         tags:
             - { name: twig.extension }
 
-# Addons API Client
+    # Addons API Client
     prestashop.addons.client_api:
         class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
         arguments:
@@ -491,3 +489,14 @@ services:
             - "@prestashop.adapter.tools"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
+
+    # Data Collectors
+    prestashop.hooks_registry:
+        class: 'PrestaShopBundle\DataCollector\HookRegistry'
+
+    prestashop.hooks_collector:
+        class: 'PrestaShopBundle\DataCollector\HookDataCollector'
+        arguments: ['@prestashop.hooks_registry']
+        public: false
+        tags:
+          - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}

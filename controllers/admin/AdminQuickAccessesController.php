@@ -187,9 +187,8 @@ class AdminQuickAccessesControllerCore extends AdminController
             if (method_exists($this->object, 'add') && !$this->object->add()) {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', array(), 'Admin.Notifications.Error').
                     ' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-            }
-            /* voluntary do affectation here */
-            elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
+            } elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
+                // voluntary do affectation here
                 PrestaShopLogger::addLog(sprintf($this->trans('%s addition', array(), 'Admin.Advparameters.Feature'), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
                 $this->afterAdd($this->object);
             }

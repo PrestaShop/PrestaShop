@@ -43,7 +43,6 @@
       $(this.$el).datetimepicker({
         format: 'MM/DD/YYYY',
         showClear: true,
-        locale: this.locale,
       }).on('dp.change', (infos) => {
         if (infos.date) {
           this.$emit('dpChange', infos);
@@ -56,7 +55,7 @@
 </script>
 
 <style lang="sass">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../scss/config/_settings.scss";
 
   .date {
     a[data-action='clear']::before {
@@ -74,5 +73,5 @@
       background-color: white;
     }
   }
-  
+
 </style>

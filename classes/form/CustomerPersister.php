@@ -53,7 +53,7 @@ class CustomerPersisterCore
         return $this->errors;
     }
 
-    public function save(Customer $customer, $clearTextPassword, $newPassword='')
+    public function save(Customer $customer, $clearTextPassword, $newPassword = '')
     {
         if ($customer->id) {
             return $this->update($customer, $clearTextPassword, $newPassword);

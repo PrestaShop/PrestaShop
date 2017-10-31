@@ -25,8 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Theme $object
@@ -230,8 +230,6 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        global $kernel;
-
         if (isset($_GET['error'])) {
             $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
         }
@@ -246,7 +244,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 return false;
             }
-            $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
+            $exporter = SymfonyContainer::getInstance()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
             $this->confirmations[] = $this->trans(
                 'Your theme has been correctly exported: %path%',
@@ -259,9 +257,10 @@ class AdminThemesControllerCore extends AdminController
                     !$this->isEditGranted()
                     || _PS_MODE_DEMO_
                 ) {
-                    Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
-                }
-                else {
+                    throw new Exception (
+                        $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error')
+                    );
+                } else {
                     if ($filename = Tools::getValue('theme_archive_server')) {
                         $path = _PS_ALL_THEMES_DIR_.$filename;
                         $this->theme_manager->install($path);
@@ -758,8 +757,7 @@ class AdminThemesControllerCore extends AdminController
             || _PS_MODE_DEMO_
         ) {
             Tools::clearCache();
-        }
-        else {
+        } else {
             $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
             $this->theme_manager->saveTheme($this->context->shop->theme);
             Tools::clearCache();

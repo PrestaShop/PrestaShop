@@ -22,8 +22,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *-->
+
 <template>
-  <div class="stock-header">
+  <div class="stock-header px-3">
     <Breadcrumb />
     <h1>{{trans('head_title')}}</h1>
     <Tabs />
@@ -45,9 +46,10 @@
 <style lang="sass" scoped>
   .stock-header {
     position: fixed;
-    top: 40px;
+    top: 39px;
     background: white;
     width: 100%;
     z-index: 3;
+    margin-left: -15px;
   }
 </style>

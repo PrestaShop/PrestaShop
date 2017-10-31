@@ -28,8 +28,9 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
-abstract class ModuleCore
+abstract class ModuleCore implements ModuleInterface
 {
     /** @var int Module ID */
     public $id = null;
@@ -662,7 +663,7 @@ abstract class ModuleCore
         }
 
         // Retrieve hooks used by the module
-        $sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
+        $sql = 'SELECT DISTINCT(`id_hook`) FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $this->unregisterHook((int)$row['id_hook']);
@@ -1877,19 +1878,20 @@ abstract class ModuleCore
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
+     * @param string|null $locale Give a context for the translation
      * @return string Translation
      */
-    public function l($string, $specific = false)
+    public function l($string, $specific = false, $locale = null)
     {
         if (self::$_generate_config_xml_mode) {
             return $string;
         }
 
-        if (($translation = Context::getContext()->getTranslator()->trans($string)) !== $string) {
+        if (($translation = Context::getContext()->getTranslator()->trans($string, array(), null, $locale)) !== $string) {
             return $translation;
         }
 
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
+        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, false, $locale);
     }
 
     /*
@@ -3162,6 +3164,28 @@ abstract class ModuleCore
         }
 
         return false;
+    }
+
+    /**
+     * Check if the module is executed in Admin Legacy context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isAdminLegacyContext()
+    {
+        return defined('ADMIN_LEGACY_CONTEXT');
+    }
+
+    /**
+     * Check if the module is executed in Symfony context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isSymfonyContext()
+    {
+        return !defined('ADMIN_LEGACY_CONTEXT');
     }
 }
 

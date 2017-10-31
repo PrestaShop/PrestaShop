@@ -187,8 +187,6 @@ class FrontControllerCore extends Controller
             $this->ssl = true;
         }
 
-        $this->guestAllowed = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
-
         if (isset($useSSL)) {
             $this->ssl = $useSSL;
         } else {
@@ -313,7 +311,7 @@ class FrontControllerCore extends Controller
             $this->context->cookie->id_cart = (int) $id_cart;
         }
 
-        if ($this->auth && !$this->context->customer->isLogged()) {
+        if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
             Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
         }
 
@@ -671,7 +669,7 @@ class FrontControllerCore extends Controller
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
         }
 
-        Hook::exec('actionOutputHTMLBefore',  array('html' => &$html));
+        Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
         echo trim($html);
     }
 
@@ -1324,6 +1322,8 @@ class FrontControllerCore extends Controller
         }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
+        
+        $content_only = (int) Tools::getValue('content_only');
 
         if ($overridden_layout = Hook::exec(
             'overrideLayoutTemplate',
@@ -1332,12 +1332,13 @@ class FrontControllerCore extends Controller
                 'entity' => $entity,
                 'locale' => $this->context->language->locale,
                 'controller' => $this,
+                'content_only' => $content_only,
             )
         )) {
             return $overridden_layout;
         }
 
-        if ((int) Tools::getValue('content_only')) {
+        if ($content_only) {
             $layout = 'layouts/layout-content-only.tpl';
         }
 
@@ -1846,6 +1847,7 @@ class FrontControllerCore extends Controller
 
     protected function makeCustomerForm()
     {
+        $guestAllowedCheckout = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
         $form = new CustomerForm(
             $this->context->smarty,
             $this->context,
@@ -1855,12 +1857,12 @@ class FrontControllerCore extends Controller
                 $this->context,
                 $this->get('hashing'),
                 $this->getTranslator(),
-                $this->guestAllowed
+                $guestAllowedCheckout
             ),
             $this->getTemplateVarUrls()
         );
 
-        $form->setGuestAllowed($this->guestAllowed);
+        $form->setGuestAllowed($guestAllowedCheckout);
 
         $form->setAction($this->getCurrentURL());
 

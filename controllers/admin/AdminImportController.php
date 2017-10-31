@@ -73,6 +73,8 @@ class AdminImportControllerCore extends AdminController
         'online_only' => array('AdminImportController', 'getBoolean'),
         'accessories' => array('AdminImportController', 'split'),
         'image_alt' => array('AdminImportController', 'split'),
+        'delivery_in_stock' => array('AdminImportController', 'createMultiLangField'),
+        'delivery_out_stock' => array('AdminImportController', 'createMultiLangField'),
     );
 
     public $separator;
@@ -136,6 +138,8 @@ class AdminImportControllerCore extends AdminController
                     'ecotax' => array('label' => $this->trans('Ecotax', array(), 'Admin.Catalog.Feature')),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
                     'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
+                    'low_stock_threshold' => array('label' => $this->trans('Low stock level', array(), 'Admin.Catalog.Feature')),
+                    'low_stock_alert' => array('label' => $this->trans('Send me an email when the quantity is under this level', array(), 'Admin.Catalog.Feature')),
                     'weight' => array('label' => $this->trans('Impact on weight', array(), 'Admin.Catalog.Feature')),
                     'default_on' => array('label' => $this->trans('Default (0 = No, 1 = Yes)', array(), 'Admin.Advparameters.Feature')),
                     'available_date' => array('label' => $this->trans('Combination availability date', array(), 'Admin.Advparameters.Feature')),
@@ -172,6 +176,8 @@ class AdminImportControllerCore extends AdminController
                     'ecotax' => 0,
                     'quantity' => 0,
                     'minimal_quantity' => 1,
+                    'low_stock_threshold' => null,
+                    'low_stock_alert' => false,
                     'weight' => 0,
                     'default_on' => null,
                     'advanced_stock_management' => 0,
@@ -242,8 +248,24 @@ class AdminImportControllerCore extends AdminController
                     'height' => array('label' => $this->trans('Height', array(), 'Admin.Global')),
                     'depth' => array('label' => $this->trans('Depth', array(), 'Admin.Global')),
                     'weight' => array('label' => $this->trans('Weight', array(), 'Admin.Global')),
+                    'delivery_in_stock' => array(
+                        'label' => $this->trans(
+                            'Delivery time of in-stock products:',
+                            array(),
+                            'Admin.Catalog.Feature'
+                        )
+                    ),
+                    'delivery_out_stock' => array(
+                        'label' => $this->trans(
+                            'Delivery time of out-of-stock products with allowed orders:',
+                            array(),
+                            'Admin.Advparameters.Feature'
+                        )
+                    ),
                     'quantity' => array('label' => $this->trans('Quantity', array(), 'Admin.Global')),
                     'minimal_quantity' => array('label' => $this->trans('Minimal quantity', array(), 'Admin.Advparameters.Feature')),
+                    'low_stock_threshold' => array('label' => $this->trans('Low stock level', array(), 'Admin.Catalog.Feature')),
+                    'low_stock_alert' => array('label' => $this->trans('Send me an email when the quantity is under this level', array(), 'Admin.Catalog.Feature')),
                     'visibility' => array('label' => $this->trans('Visibility', array(), 'Admin.Catalog.Feature')),
                     'additional_shipping_cost' => array('label' => $this->trans('Additional shipping cost', array(), 'Admin.Advparameters.Feature')),
                     'unity' => array('label' => $this->trans('Unit for the price per unit', array(), 'Admin.Advparameters.Feature')),
@@ -316,6 +338,8 @@ class AdminImportControllerCore extends AdminController
                     'unit_price' => 0,
                     'quantity' => 0,
                     'minimal_quantity' => 1,
+                    'low_stock_threshold' => null,
+                    'low_stock_alert' => false,
                     'price' => 0,
                     'id_tax_rules_group' => 0,
                     'description_short' => array((int)Configuration::get('PS_LANG_DEFAULT') => ''),
@@ -1596,25 +1620,27 @@ class AdminImportControllerCore extends AdminController
 
     protected function productImportOne($info, $default_language_id, $id_lang, $force_ids, $regenerate, $shop_is_feature_active, $shop_ids, $match_ref, &$accessories, $validateOnly = false)
     {
-        if ($force_ids && isset($info['id']) && (int)$info['id']) {
-            $product = new Product((int)$info['id']);
-        } elseif ($match_ref && array_key_exists('reference', $info)) {
-            $datas = Db::getInstance()->getRow('
-					SELECT p.`id_product`
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE p.`reference` = "'.pSQL($info['reference']).'"
-				', false);
-            if (isset($datas['id_product']) && $datas['id_product']) {
-                $product = new Product((int)$datas['id_product']);
-            } else {
-                $product = new Product();
-            }
-        } elseif (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product')) {
-            $product = new Product((int)$info['id']);
-        } else {
-            $product = new Product();
+        if (!$force_ids) {
+            unset($info['id']);
         }
+
+        $id_product = null;
+        // Use product reference as key
+        if (!empty($info['id'])) {
+            $id_product = (int) $info['id'];
+        } else if ($match_ref && isset($info['reference'])) {
+            $idProductByRef = (int) Db::getInstance()->getValue('
+                                    SELECT p.`id_product`
+                                    FROM `' . _DB_PREFIX_ . 'product` p
+                                    ' . Shop::addSqlAssociation('product', 'p') . '
+                                    WHERE p.`reference` = "' . pSQL($info['reference']) . '"
+                                ', false);
+            if ($idProductByRef) {
+                $id_product = $idProductByRef;
+            }
+        }
+
+        $product = new Product($id_product);
 
         $update_advanced_stock_management_value = false;
         if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product')) {
@@ -1788,9 +1814,9 @@ class AdminImportControllerCore extends AdminController
                         $product->id_category[] = (int)$category['id_category'];
                     } else {
                         $this->errors[] = $this->trans(
-                            '%s cannot be saved',
+                            '%data% cannot be saved',
                             array(
-                                trim($value),
+                                '%data%' => trim($value),
                             ),
                             'Admin.Advparameters.Notification'
                         );
@@ -2435,7 +2461,8 @@ class AdminImportControllerCore extends AdminController
                                 array(
                                     '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : ''),
                                 ),
-                                'Admin.Advparameters.Notification');
+                                'Admin.Advparameters.Notification'
+                            );
                         }
                         if ($field_error !== true || $lang_field_error !== true) {
                             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
@@ -2571,6 +2598,8 @@ class AdminImportControllerCore extends AdminController
                     }
 
                     $info['minimal_quantity'] = isset($info['minimal_quantity']) && $info['minimal_quantity'] ? (int)$info['minimal_quantity'] : 1;
+                    $info['low_stock_threshold'] = empty($info['low_stock_threshold']) && '0' != $info['low_stock_threshold'] ? null : (int)$info['low_stock_threshold'];
+                    $info['low_stock_alert'] = !empty($info['low_stock_alert']);
 
                     $info['wholesale_price'] = str_replace(',', '.', $info['wholesale_price']);
                     $info['price'] = str_replace(',', '.', $info['price']);
@@ -2614,7 +2643,10 @@ class AdminImportControllerCore extends AdminController
                                         (int)$info['minimal_quantity'],
                                         $info['available_date'],
                                         null,
-                                        $id_shop_list
+                                        $id_shop_list,
+                                        '',
+                                        $info['low_stock_threshold'],
+                                        $info['low_stock_alert']
                                     );
                                     $id_product_attribute_update = true;
                                     if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {
@@ -2644,7 +2676,10 @@ class AdminImportControllerCore extends AdminController
                             (string)$info['upc'],
                             (int)$info['minimal_quantity'],
                             $id_shop_list,
-                            $info['available_date']
+                            $info['available_date'],
+                            '',
+                            $info['low_stock_threshold'],
+                            $info['low_stock_alert']
                         );
 
                         if (isset($info['supplier_reference']) && !empty($info['supplier_reference'])) {
@@ -3149,7 +3184,7 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     if (!$validateOnly) {
                         $this->errors[] = $this->trans(
-                            '%s cannot be saved',
+                            '%data% cannot be saved',
                             array(
                                 '%data%' => $state->name,
                             ),
@@ -3739,7 +3774,13 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     if (!$validateOnly) {
                         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
-                        $this->errors[] = sprintf($this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'), $country->name[$default_language_id]);
+                        $this->errors[] = $this->trans(
+                            '%data% cannot be saved',
+                            array(
+                                '%data%' => $country->name[$default_language_id]
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
@@ -3771,7 +3812,12 @@ class AdminImportControllerCore extends AdminController
                     $store->id_state = (int)$state->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = sprintf($this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'), $state->name);
+                        $this->errors[] = $this->trans(
+                            '%data% cannot be saved',
+                            array(
+                                '%data%' => $state->name),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').

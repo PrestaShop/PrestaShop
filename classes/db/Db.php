@@ -524,7 +524,7 @@ abstract class DbCore
      */
     public function delete($table, $where = '', $limit = 0, $use_cache = true, $add_prefix = true)
     {
-        if (_DB_PREFIX_ && !preg_match('#^'._DB_PREFIX_.'#i', $table) && $add_prefix) {
+        if ($add_prefix) {
             $table = _DB_PREFIX_.$table;
         }
 

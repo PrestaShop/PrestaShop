@@ -28,7 +28,7 @@
 {else}
   <div id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
 {/if}
-  <div class="kpi-content -{$color|escape}" data-original-title="{$tooltip|escape}" data-toggle="tooltip">
+  <div class="kpi-content -{$color|escape}" data-original-title="{$tooltip|escape}" data-toggle="pstooltip">
     {if isset($icon) && $icon}
       <i class="material-icons">{$icon|escape}</i>
     {/if}

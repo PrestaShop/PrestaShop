@@ -66,6 +66,7 @@ class ConfigurationTestCore
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
+            'translations_sf2' => 'app/Resources/translations',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -145,7 +146,8 @@ class ConfigurationTestCore
 
     public static function test_apache_mod_rewrite()
     {
-        if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
+        if (isset($_SERVER['SERVER_SOFTWARE'])
+            && strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
             return true;
         }
 
@@ -420,5 +422,10 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+
+    public static function test_translations_sf2($dir)
+    {
+        return ConfigurationTest::test_dir($dir);
     }
 }

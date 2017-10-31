@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle;
 
-use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use Shop;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\StringInput;
@@ -47,44 +49,61 @@ class MultishopCommandListenerTest extends UnitTestCase
      */
     public $multishopContext;
 
-    public function setup()
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    public function setUp()
     {
-        parent::setup();
+
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+
+        parent::setUp();
+
         $this->setupSfKernel();
 
         $this->commandListener = $this->sfKernel->getContainer()->get('prestashop.multishop_command_listener');
         $this->multishopContext = $this->sfKernel->getContainer()->get('prestashop.adapter.shop.context');
     }
-    
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
     public function testDefaultMultishopContext()
     {
-        $this->assertFalse($this->multishopContext->isShopContext());
-        $this->assertFalse($this->multishopContext->isShopGroupContext());
-        $this->assertFalse($this->multishopContext->isAllContext());
+        Shop::resetContext();
+        $this->assertFalse($this->multishopContext->isShopContext(), 'isShopContext');
+        $this->assertFalse($this->multishopContext->isShopGroupContext(), 'isShopGroupContext');
+        $this->assertFalse($this->multishopContext->isAllContext(), 'isAllContext');
     }
 
     public function testSetShopID()
     {
         // Prepare ...
         $command = new Command('Fake');
-        $input = new StringInput('--id_shop=1');
-        $output = new NullOutput();
-        $event = new ConsoleCommandEvent($command, $input, $output);
+        $input   = new StringInput('--id_shop=1');
+        $output  = new NullOutput();
+        $event   = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
         $this->commandListener->onConsoleCommand($event);
 
         // Check!
-        $this->assertTrue($this->multishopContext->isShopContext());
+        $this->assertTrue($this->multishopContext->isShopContext(), 'isShopContext');
     }
 
     public function testSetShopGroupID()
     {
         // Prepare ...
         $command = new Command('Fake');
-        $input = new StringInput('--id_shop_group=1');
-        $output = new NullOutput();
-        $event = new ConsoleCommandEvent($command, $input, $output);
+        $input   = new StringInput('--id_shop_group=1');
+        $output  = new NullOutput();
+        $event   = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
         $this->commandListener->onConsoleCommand($event);
@@ -97,12 +116,15 @@ class MultishopCommandListenerTest extends UnitTestCase
     {
         // Prepare ...
         $command = new Command('Fake');
-        $input = new StringInput('--id_shop=2 --id_shop_group=1');
-        $output = new NullOutput();
-        $event = new ConsoleCommandEvent($command, $input, $output);
+        $input   = new StringInput('--id_shop=2 --id_shop_group=1');
+        $output  = new NullOutput();
+        $event   = new ConsoleCommandEvent($command, $input, $output);
 
         // Call ...
-        $this->setExpectedException('LogicException', 'Do not specify an ID shop and an ID group shop at the same time.');
+        $this->setExpectedException(
+            'LogicException',
+            'Do not specify an ID shop and an ID group shop at the same time.'
+        );
         $this->commandListener->onConsoleCommand($event);
     }
 }

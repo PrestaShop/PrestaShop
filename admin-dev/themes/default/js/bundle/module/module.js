@@ -439,7 +439,7 @@ var AdminModuleController = function() {
     var self = this;
     var body = $('body');
     var dropzone = $('.dropzone');
-
+    
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, function() {
       $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
@@ -504,7 +504,7 @@ var AdminModuleController = function() {
     });
 
     // @see: dropzone.js
-    Dropzone.options.importDropzone = {
+    var dropzoneOptions = {
       url: 'import' + window.location.search,
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
@@ -554,6 +554,7 @@ var AdminModuleController = function() {
         self.isUploadStarted = false;
       }
     };
+    dropzone.dropzone($.extend(dropzoneOptions));
   };
 
   this.getBulkCheckboxesSelector = function () {
@@ -636,10 +637,6 @@ var AdminModuleController = function() {
     } else {
       this.currentDisplay = 'grid';
     }
-    $('.sort-component').select2({
-      minimumResultsForSearch: Infinity,
-      placeholder: false
-    });
   }
 
   this.initSortingDropdown = function () {
@@ -821,12 +818,6 @@ var AdminModuleController = function() {
       inputPlaceholder: translate_javascripts['Search - placeholder'],
       closingCross: true,
       context: self,
-      clearAllBtn: true,
-      clearAllIconClassAdditional: 'material-icons',
-      clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-      tagInputClassAdditional: 'module-tags-input',
-      tagClassAdditional: 'module-tag ',
-      tagsWrapperClassAdditional: 'module-tags-labels'
     });
 
     $('body').on('click', '.module-addons-search-link', function(event) {

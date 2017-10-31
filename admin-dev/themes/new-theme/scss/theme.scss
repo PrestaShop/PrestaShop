@@ -1,11 +1,14 @@
 // Tools
+@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
 @import "mixins/breakpoints";
+@import "mixins/cards";
+@import "mixins/hover";
+@import "mixins/stars";
 // Settings
 @import "config/settings";
 
@@ -16,10 +19,14 @@
 @import "components/layout/main_header";
 @import "components/layout/nav_bar";
 @import "components/layout/non_responsive";
+@import "components/cards";
 @import "components/category_tree";
 @import "components/dropzone";
+@import "components/modulescards";
 @import "components/notifications";
 @import "components/datepicker";
+@import "components/help_box";
+@import "components/ps_dropdown";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -31,6 +38,9 @@
 
 // Other
 @import "components/tinymce";
+
+@import "../css/right-sidebar.css";
+@import "../css/module/drop.css";
 
 // Main Layout
 body {
@@ -96,5 +106,13 @@ span.twitter-typeahead {
   width: 100% !important;
   input.tt-input {
     width: 100% !important;
+  }
+}
+
+.translation-field {
+  display: none;
+
+  &.visible {
+    display: block;
   }
 }

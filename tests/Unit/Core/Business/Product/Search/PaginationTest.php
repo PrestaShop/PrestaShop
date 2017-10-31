@@ -25,14 +25,14 @@
  */
 
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Product\Search;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product\Search;
 
 use PHPUnit_Framework_Testcase;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
 
 class PaginationTest extends PHPUnit_Framework_Testcase
 {
-    public function setup()
+    public function setUp()
     {
         $this->pagination = new Pagination;
     }

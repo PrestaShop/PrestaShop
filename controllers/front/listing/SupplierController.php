@@ -76,7 +76,11 @@ class SupplierControllerCore extends ProductListingFrontController
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
                 $this->label = $this->trans(
-                    'List of products by supplier %s', array($this->supplier->name), 'Shop.Theme.Catalog'
+                    'List of products by supplier %supplier_name%',
+                    array(
+                        '%supplier_name%' => $this->supplier->name
+                    ),
+                    'Shop.Theme.Catalog'
                 );
                 $this->doProductSearch(
                     'catalog/listing/supplier',

@@ -109,7 +109,7 @@ class ModuleRepositoryTest extends UnitTestCase
 
         $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
             array('getCatalogModulesNames'),
-            array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS)
+            array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub)
         );
 
         $this->adminModuleDataProviderStub
@@ -128,7 +128,8 @@ class ModuleRepositoryTest extends UnitTestCase
                         $this->translatorStub,
                         $this->logger,
                         $this->addonsDataProviderS,
-                        $this->categoriesProviderS
+                        $this->categoriesProviderS,
+                        $this->moduleDataProviderStub
                     )
                 ),
                 new FakeLogger(),

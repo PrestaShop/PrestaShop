@@ -74,6 +74,28 @@ abstract class QueryParamsCollection
     }
 
     /**
+     * @param $pageSize int
+     * @return $this
+     */
+    public function setPageSize($pageSize)
+    {
+        $this->queryParams['page_size'] = (int) $pageSize;
+
+        return $this;
+    }
+
+    /**
+     * @param $pageIndex int
+     * @return $this
+     */
+    public function setPageIndex($pageIndex)
+    {
+        $this->queryParams['page_index'] = (int) $pageIndex;
+
+        return $this;
+    }
+
+    /**
      * @param Request $request
      * @return $this
      */
@@ -209,10 +231,20 @@ abstract class QueryParamsCollection
             $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
-        $queryParams['order'] = strtolower($queryParams['order']);
+        if (!is_array($queryParams['order'])) {
+            $queryParams['order'] = (array) $queryParams['order'];
+        }
 
-        $filterColumn = $this->removeDirection($queryParams['order']);
-        if (!in_array($filterColumn, $this->getValidOrderParams())) {
+        foreach ($queryParams['order'] as $key => &$order) {
+            $order = strtolower($order);
+            $filterColumn = $this->removeDirection($order);
+
+            if (!in_array($filterColumn, $this->getValidOrderParams())) {
+                unset($queryParams['order'][$key]);
+            }
+        }
+
+        if (empty($queryParams['order'])) {
             $queryParams = $this->setDefaultOrderParam($queryParams);
         }
 
@@ -245,16 +277,22 @@ abstract class QueryParamsCollection
      */
     public function getSqlOrder()
     {
-        $descendingOrder = false !== strpos($this->queryParams['order'], 'desc');
-        $filterColumn = $this->removeDirection($this->queryParams['order']);
+        $implodableOrder = array();
 
-        $orderByClause = 'ORDER BY {' . $filterColumn . '}';
+        foreach ($this->queryParams['order'] as $order) {
+            $descendingOrder = false !== strpos($order, 'desc');
+            $filterColumn = $this->removeDirection($order);
 
-        if ($descendingOrder) {
-            $orderByClause = $orderByClause . ' DESC';
+            $orderFiltered = '{' . $filterColumn . '}';
+
+            if ($descendingOrder) {
+                $orderFiltered = $orderFiltered . ' DESC';
+            }
+
+            $implodableOrder[] = $orderFiltered;
         }
 
-        return $orderByClause . ' ';
+        return 'ORDER BY ' . implode(', ', $implodableOrder) . ' ';
     }
 
     /**
@@ -295,24 +333,28 @@ abstract class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
-        if ($column === 'attributes') {
+        if ('attributes' === $column) {
             return $this->appendSqlAttributesFilter($filters, $value);
         }
 
-        if ($column === 'features') {
+        if ('features' === $column) {
             return $this->appendSqlFeaturesFilter($filters, $value);
         }
 
-        if ($column === 'keywords') {
+        if ('keywords' === $column) {
             return $filters;
         }
 
-        if ($column === 'category_id') {
+        if ('category_id' === $column) {
             return $this->appendSqlCategoryFilter($filters);
         }
 
-        if ($column === 'date_add') {
+        if ('date_add' === $column) {
             return $this->appendSqlDateAddFilter($filters, $value);
+        }
+
+        if ('active' === $column) {
+            return $this->appendSqlActiveFilter($filters, $value);
         }
 
         if (!is_array($value)) {
@@ -384,24 +426,28 @@ abstract class QueryParamsCollection
     {
         $column = Inflector::tableize($column);
 
-        if ($column === 'attributes') {
+        if ('attributes' === $column) {
             return $this->appendSqlAttributesFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'features') {
+        if ('features' === $column) {
             return $this->appendSqlFeaturesFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'keywords') {
+        if ('keywords' === $column) {
             return $this->appendSqlSearchFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'category_id') {
+        if ('category_id' === $column) {
             return $this->appendSqlCategoryFilterParam($value, $sqlParams);
         }
 
-        if ($column === 'date_add') {
+        if ('date_add' === $column) {
             return $this->appendSqlDateAddFilterParam($value, $sqlParams);
+        }
+
+        if ('active' === $column) {
+            return $this->appendSqlActiveFilterParam($value, $sqlParams);
         }
 
         if (!is_array($value)) {
@@ -485,6 +531,34 @@ abstract class QueryParamsCollection
         }
         if (array_key_exists('inf', $value)) {
             $sqlParams[':date_add_inf'] = $value['inf'];
+        }
+
+        return $sqlParams;
+    }
+
+    /**
+     * @param array $filters
+     * @param active
+     * @return array
+     */
+    protected function appendSqlActiveFilter(array $filters, $active)
+    {
+        if (in_array($active, array('0', '1'))) {
+            $filters[] = sprintf('AND %s = %s', '{active}', ':active');
+        }
+
+        return $filters;
+    }
+
+    /**
+     * @param $value
+     * @param $sqlParams
+     * @return mixed
+     */
+    protected function appendSqlActiveFilterParam($value, $sqlParams)
+    {
+        if (in_array($value, array('0', '1'))) {
+            $sqlParams[':active'] = $value;
         }
 
         return $sqlParams;

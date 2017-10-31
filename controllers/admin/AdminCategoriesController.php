@@ -761,7 +761,7 @@ class AdminCategoriesControllerCore extends AdminController
 
             $images_types = ImageType::getImagesTypes('categories');
             $formatted_small = ImageType::getFormattedName('small');
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 if ($formatted_small == $image_type['name'] &&
                     file_exists(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType) &&
                     !unlink(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType)
@@ -835,7 +835,7 @@ class AdminCategoriesControllerCore extends AdminController
 
             if (parent::processBulkDelete()) {
                 $this->setDeleteMode();
-                foreach ($cats_ids as $id => $id_parent) {
+                foreach ($cats_ids as $id_parent) {
                     $this->processFatherlessProducts((int)$id_parent);
                 }
                 return true;
@@ -1049,7 +1049,7 @@ class AdminCategoriesControllerCore extends AdminController
                 die(Tools::jsonEncode(array('thumbnail' => array($total_errors))));
             }
 
-            foreach ($files as $key => &$file) {
+            foreach ($files as &$file) {
                 $id = array_shift($available_keys);
                 $errors = array();
                 // Evaluate the memory required to resize the image: if it's too much, you can't resize it.

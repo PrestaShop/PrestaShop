@@ -228,8 +228,11 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
     public function initContent()
     {
+
         if (!Combination::isFeatureActive()) {
-            $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
+            $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
+
+            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.
                     $this->trans('Performance', array(), 'Admin.Global').'</a>';
             $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array('%s' => $url), 'Admin.Catalog.Notification')));
             return;

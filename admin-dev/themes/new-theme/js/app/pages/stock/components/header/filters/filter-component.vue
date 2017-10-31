@@ -27,35 +27,36 @@
     <PSTags
       v-if="!hasChildren"
       ref="tags"
-      class="form-control search search-input"
+      class="form-control search search-input mb-2"
       :tags="tags"
       :placeholder="hasPlaceholder?placeholder:''"
+      :hasIcon="true"
       @tagChange="onTagChanged"
       @typing="onTyping"
     />
     <div v-if="hasChildren">
-        <PSTree
-          v-if="isOverview"
-          v-once
-          ref="tree"
-          :hasCheckbox="true"
-          :model="list"
-          @checked="onCheck"
-          :translations="PSTreeTranslations"
-        >
-        </PSTree>
-         <PSTree
-            v-else
-            ref="tree"
-            :hasCheckbox="true"
-            :model="list"
-            @checked="onCheck"
-            :translations="PSTreeTranslations"
-          >
+      <PSTree
+        v-if="isOverview"
+        v-once
+        ref="tree"
+        :hasCheckbox="true"
+        :model="list"
+        @checked="onCheck"
+        :translations="PSTreeTranslations"
+      >
+      </PSTree>
+      <PSTree
+        v-else
+        ref="tree"
+        :hasCheckbox="true"
+        :model="list"
+        @checked="onCheck"
+        :translations="PSTreeTranslations"
+      >
       </PSTree>
     </div>
     <ul
-      class="m-t-1"
+      class="mt-1"
       v-else
     >
       <li
@@ -187,7 +188,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../../../scss/config/_settings.scss";
   .filter-container {
     border: $gray-light 1px solid;
     padding: 10px;
@@ -198,5 +199,6 @@
   ul {
     list-style: none;
     padding-left: 0;
+    margin-bottom: 0;
   }
 </style>

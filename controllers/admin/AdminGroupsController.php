@@ -588,7 +588,7 @@ class AdminGroupsControllerCore extends AdminController
         return parent::renderList();
     }
 
-    public function displayEditLink($token = null, $id)
+    public function displayEditLink($token, $id)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
         if (!array_key_exists('Edit', self::$cache_lang)) {

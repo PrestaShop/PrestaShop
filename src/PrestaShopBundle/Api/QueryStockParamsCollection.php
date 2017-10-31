@@ -29,6 +29,21 @@ namespace PrestaShopBundle\Api;
 class QueryStockParamsCollection extends QueryParamsCollection
 {
     /**
+     * @param array $queryParams
+     * @return array|mixed
+     */
+    protected function parseOrderParams(array $queryParams)
+    {
+        $queryParams = parent::parseOrderParams($queryParams);
+
+        if (array_key_exists('low_stock', $queryParams) && 1 == $queryParams['low_stock']) {
+            array_unshift($queryParams['order'], 'product_low_stock_alert desc');
+        }
+
+        return $queryParams;
+    }
+
+    /**
      * @return array
      */
     protected function getValidFilterParams()
@@ -40,6 +55,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'keywords',
             'attributes',
             'features',
+            'active',
         );
     }
 
@@ -54,6 +70,8 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'supplier',
             'available_quantity',
             'physical_quantity',
+            'active',
+            'low_stock'
         );
     }
 
@@ -63,7 +81,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = 'product';
+        $queryParams['order'] = array('product DESC');
 
         return $queryParams;
     }

@@ -49,10 +49,13 @@ class DatabaseTranslationLoader implements LoaderInterface
      */
     public function load($resource, $locale, $domain = 'messages', $theme = null)
     {
-        $lang = $this->entityManager
-            ->getRepository('PrestaShopBundle:Lang')
-            ->findOneByLocale($locale)
-        ;
+        static $langs = array();
+        if (!array_key_exists($locale, $langs)) {
+            $langs[$locale] = $this->entityManager
+                ->getRepository('PrestaShopBundle:Lang')
+                ->findOneByLocale($locale)
+            ;
+        }
 
         $translationRepository = $this->entityManager
             ->getRepository('PrestaShopBundle:Translation')
@@ -61,7 +64,7 @@ class DatabaseTranslationLoader implements LoaderInterface
         $queryBuilder = $translationRepository
             ->createQueryBuilder('t')
             ->where('t.lang =:lang')
-            ->setParameter('lang', $lang)
+            ->setParameter('lang', $langs[$locale])
         ;
 
         if (!is_null($theme)) {
