@@ -29,7 +29,9 @@
 <div class="categories-tree js-categories-tree">
   <fieldset class="form-group">
     <div class="ui-widget">
-      <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}">
+      <div class="search search-with-icon">
+        <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}">
+      </div>
       <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
       {{ include('PrestaShopBundle:Admin:Category/categories.html.twig', {'categories': categories }) }}
       {{ form_errors(form.id_category_default) }}

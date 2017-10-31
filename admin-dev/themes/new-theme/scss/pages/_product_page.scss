@@ -73,7 +73,7 @@
   // Resets
   ul.nostyle {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
   }
   .tab-content {
     padding: 0;
@@ -120,6 +120,11 @@
     width: 97%;
     font-size: 0.75rem;
     font-weight: 600;
+
+    #bulk-combinations-container-fields > div {
+      @extend .px-3;
+      @extend .py-2;
+    }
   }
 
   .product-footer {
@@ -173,9 +178,12 @@
     line-height: 1;
     color: #fff;
     text-align: center;
-    white-space: nowrap;
     vertical-align: baseline;
     background-color: $brand-primary;
+
+    > .token-label {
+      white-space: nowrap;
+    }
 
     .close {
       margin: 0 .4rem;
@@ -204,8 +212,9 @@
   }
 
   .summary-description-container {
+    overflow: hidden; // fixes horizontal scrolling on the product page
     .nav-tabs {
-      overflow: hidden;
+      overflow: hidden; // fixes tab borders bleeding into the tab content
 
       &.bordered {
         .nav-link {
@@ -476,7 +485,7 @@
     .tt-suggestion {
       cursor: pointer;
       padding: 0.3125rem 0.625rem;
-      color: $gray-light;
+      color: $gray-medium;
       &:hover {
         background-color: $primary-hover;
         color: #ffffff;
@@ -522,6 +531,26 @@
       border: none;
       .material-icons {
         color: $gray-light;
+      }
+    }
+  }
+
+  #categories {
+    // probably needs to be updated in PrestaKit
+    .pstaggerTag {
+      font-size: .75rem;
+      padding: .3rem 0.15rem .3rem .4rem;
+
+      .pstaggerClosingCross {
+        font-size: 0;
+        margin: 0 .3rem;
+        &::after {
+          @extend .material-icons;
+          content: "\E5CD";
+          font-size: 1rem;
+          vertical-align: bottom;
+          line-height: .85rem;
+        }
       }
     }
   }
@@ -622,16 +651,19 @@
     tbody {
       max-height: 450px;
       overflow-y: auto;
-      display: block;
-
-      tr {
-        display: block;
-        overflow: hidden;
-      }
     }
 
     .checkbox {
       margin: 0;
+      > label {
+        margin: 0;
+      }
+    }
+
+    td.file-name {
+      white-space: nowrap;
+      overflow-x: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -878,6 +910,40 @@
 
 #product_reference_field {
   margin-top: 7px;
+}
+
+#related-product {
+  // list of added related products
+  .typeahead-list {
+    li {
+      @extend .p-1;
+      @extend .mt-1;
+      @extend .d-flex;
+      @extend .align-items-center;
+      border: 1px solid $gray-light;
+
+      // thumbnail
+      > .media-left {
+        img {
+          max-width: 50px;
+          max-height: 50px;
+        }
+      }
+
+      // text
+      > .media-body {
+        .label {
+          @extend .mx-1;
+        }
+
+        // delete button
+        i.delete {
+          cursor: pointer;
+          float: right;
+        }
+      }
+    }
+  }
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1450px) {

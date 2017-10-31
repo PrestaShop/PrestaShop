@@ -31,7 +31,6 @@ let config = {
     main: [
       'prestakit/dist/js/prestashop-ui-kit.js',
       'jquery-ui-dist/jquery-ui.js',
-      'moment/moment.js',
       'bootstrap-tokenfield/dist/bootstrap-tokenfield.js',
       'eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
       'jwerty/jwerty.js',
@@ -59,6 +58,7 @@ let config = {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/'
   },
+  //devtool: 'source-map', // uncomment me to build source maps (really slow)
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
@@ -86,8 +86,8 @@ let config = {
         test: /dropzone\/dist\/dropzone\.js/,
         loader: 'imports-loader?this=>window&module=>null'
       }, {
-        test: /moment.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window'
+        test: require.resolve('moment'),
+        loader: 'imports-loader?define=>false&this=>window',
       }, {
         test: /typeahead\.jquery\.js/,
         loader: 'imports-loader?define=>false&exports=>false&this=>window'
@@ -118,8 +118,27 @@ let config = {
       }, {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: ['css-loader', 'postcss-loader', 'sass-loader']
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                //sourceMap: true, // uncomment me to generate source maps
+              }
+            }
+          ]
         })
       }, {
         test: /.(jpg|png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
@@ -130,6 +149,9 @@ let config = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new ExtractTextPlugin('theme.css'),
+    new webpack.ProvidePlugin({
+      moment: 'moment', // needed for bootstrap datetime picker
+    })
   ]
 };
 
