@@ -710,6 +710,7 @@ class FrontControllerCore extends Controller
 
                 $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
                 $this->context->smarty->assign(array(
+                    'urls' => $this->getTemplateVarUrls(),
                     'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
@@ -731,6 +732,7 @@ class FrontControllerCore extends Controller
 
         $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
         $this->context->smarty->assign(array(
+            'urls' => $this->getTemplateVarUrls(),
             'shop' => $this->getTemplateVarShop(),
             'stylesheets' => $this->getStylesheets(),
         ));
