@@ -206,6 +206,8 @@ class SearchCore
                 $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
+                $start_pos = (int)$word[0] == '-';
+                $sql_param_search = $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
 
                 $intersect_array[] = 'SELECT DISTINCT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
@@ -213,14 +215,9 @@ class SearchCore
 					WHERE sw.id_lang = '.(int)$id_lang.'
 						AND sw.id_shop = '.$context->shop->id.'
 						AND sw.word LIKE
-					'.($word[0] == '-'
-                        ? ' \''.$start_search.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\''
-                        : ' \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\''
-                    );
+					\''.$sql_param_search.'\'';
 
-                if ($word[0] != '-') {
-                    $score_array[] = 'sw.word LIKE \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\'';
-                }
+                $score_array[] = 'sw.word LIKE \''.$sql_param_search.'\'';
             } else {
                 unset($words[$key]);
             }
