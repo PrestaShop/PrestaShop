@@ -78,15 +78,17 @@ class AppKernel extends Kernel
 
         $activeModules = array();
 
-        if ($this->isParametersFile()) {
+        if ($this->parametersFileExists()) {
             try {
                 $this->getConnection()->connect();
                 $activeModules = $this->getActiveModules();
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
 
 
-        return array_merge($kernelParameters,
+        return array_merge(
+            $kernelParameters,
             array('kernel.active_modules' => $activeModules)
         );
     }
@@ -121,9 +123,8 @@ class AppKernel extends Kernel
      */
     private function getParameters()
     {
-        $parametersFile = $this->getRootDir().'/config/parameters.php';
-        if (file_exists($parametersFile)) {
-            $config = require($parametersFile);
+        if ($this->parametersFileExists()) {
+            $config = require($this->getParametersFile());
 
             return $config['parameters'];
         }
@@ -134,11 +135,17 @@ class AppKernel extends Kernel
     /**
      * @var bool
      */
-    private function isParametersFile()
+    private function parametersFileExists()
     {
-        $parametersFile = $this->getRootDir().'/config/parameters.php';
+        return file_exists($this->getParametersFile());
+    }
 
-        return file_exists($parametersFile);
+    /**
+     * @return string filepath to PrestaShop configuration parameters
+     */
+    private function getParametersFile()
+    {
+        return $this->getRootDir().'/config/parameters.php';
     }
 
     /**
@@ -158,5 +165,4 @@ class AppKernel extends Kernel
             'driver' => 'pdo_mysql',
         ));
     }
-
 }
