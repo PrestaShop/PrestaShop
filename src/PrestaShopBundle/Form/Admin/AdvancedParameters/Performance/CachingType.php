@@ -53,7 +53,6 @@ class CachingType extends TranslatorAwareType
                     true => 'Yes',
                 ),
                 'choice_translation_domain' => 'Admin.Global',
-                'required' => true,
             ))
             ->add('caching_system', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
@@ -86,7 +85,7 @@ class CachingType extends TranslatorAwareType
                 },
                 'expanded' => true,
                 'choices_as_values' => true,
-                'required' => true,
+                'required' => false,
             ))
         ;
     }
