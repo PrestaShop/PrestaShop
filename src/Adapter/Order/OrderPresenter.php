@@ -84,12 +84,13 @@ class OrderPresenter implements PresenterInterface
         }
 
         $products = $this->getProducts($order);
+        $amounts = $this->getAmounts($order);
 
-        return [
+        return array(
             'products' => $products,
             'products_count' => count($products),
-            'totals' => $this->getAmounts($order)['totals'],
-            'subtotals' => $this->getAmounts($order)['subtotals'],
+            'totals' => $amounts['totals'],
+            'subtotals' => $amounts['subtotals'],
             'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
             'messages' => $this->getMessages($order),
@@ -100,7 +101,7 @@ class OrderPresenter implements PresenterInterface
             'id_address_delivery' => $order->id_address_delivery,
             'id_address_invoice' => $order->id_address_invoice,
             'labels' => $this->getLabels(),
-        ];
+        );
     }
 
     /**
