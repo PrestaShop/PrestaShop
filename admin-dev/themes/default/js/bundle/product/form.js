@@ -390,7 +390,7 @@ var featuresCollection = (function() {
 
         modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
           onContinue: function() {
-            _this.parent().parent().parent().remove();
+            _this.closest('.product-feature').remove();
           }
         }).show();
       });
