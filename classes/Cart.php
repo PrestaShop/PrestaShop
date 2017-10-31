@@ -584,7 +584,12 @@ class CartCore extends ObjectModel
     /**
      * Return cart products
      *
-     * @result array Products
+     * @param bool $refresh
+     * @param bool $id_product
+     * @param int  $id_country
+     * @param bool $fullInfos
+     *
+     * @return array Products
      */
     public function getProducts($refresh = false, $id_product = false, $id_country = null, $fullInfos = true)
     {
@@ -1618,8 +1623,8 @@ class CartCore extends ObjectModel
 
         foreach ($gifts as $gift) {
             if (
-                (int) $gift['id_product_attribute'] === $id_product_attribute &&
-                (int) $gift['id_product'] === $id_product
+                (int) $gift['id_product_attribute'] === $id_product_attribute
+                && (int) $gift['id_product'] === $id_product
             ) {
                 $preservedGifts[$id_product.'-'.$id_product_attribute]++;
             }
