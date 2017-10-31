@@ -456,9 +456,9 @@ class AdminCategoriesControllerCore extends AdminController
         $guest = new Group(Configuration::get('PS_GUEST_GROUP'));
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-        $unidentified_group_information = sprintf($this->trans('%s - All people without a valid customer account.', array(), 'Admin.Catalog.Feature'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
-        $guest_group_information = sprintf($this->trans('%s - Customer who placed an order with the guest checkout.', array(), 'Admin.Catalog.Feature'), '<b>'.$guest->name[$this->context->language->id].'</b>');
-        $default_group_information = sprintf($this->trans('%s - All people who have created an account on this site.', array(), 'Admin.Catalog.Feature'), '<b>'.$default->name[$this->context->language->id].'</b>');
+        $unidentified_group_information = $this->trans('%group_name% - All people without a valid customer account.', array('%group_name%' => '<b>'.$unidentified->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
+        $guest_group_information = $this->trans('%group_name% - Customer who placed an order with the guest checkout.', array('%group_name%' => '<b>'.$guest->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
+        $default_group_information = $this->trans('%group_name% - All people who have created an account on this site.', array('%group_name%' => '<b>'.$default->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
 
         if (!($obj = $this->loadObject(true))) {
             return;

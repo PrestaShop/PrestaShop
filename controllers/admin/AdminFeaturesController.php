@@ -432,7 +432,7 @@ class AdminFeaturesControllerCore extends AdminController
         } else {
             $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
             $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
-            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array(), 'Admin.Catalog.Notification'), $url));
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %url%.', array('%url%' => $url), 'Admin.Catalog.Notification'));
         }
 
         $this->context->smarty->assign(array(

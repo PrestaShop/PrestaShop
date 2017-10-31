@@ -234,7 +234,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
             $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.
                     $this->trans('Performance', array(), 'Admin.Global').'</a>';
-            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array('%s' => $url), 'Admin.Catalog.Notification')));
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
             return;
         }
 
