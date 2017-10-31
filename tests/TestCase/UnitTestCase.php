@@ -125,6 +125,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
         $this->setupContextualTemplateEngineMock();
         $this->setupContextualLanguageMock();
+        $this->setupContextualLinkMock();
         $this->setupContextualEmployeeMock();
         $this->setupContextualCookieMock();
         $this->setupContextualCurrencyMock();
@@ -160,6 +161,13 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->context->language = Phake::mock('Language');
 
         return $this->context->language;
+    }
+
+    protected function setupContextualLinkMock()
+    {
+        $this->context->link = Phake::mock('Link');
+
+        return $this->context->link;
     }
 
     protected function setupContextualCookieMock() {
@@ -209,5 +217,24 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $container_builder = new ContainerBuilder();
         $container = $container_builder->build();
         ServiceLocator::setServiceContainerInstance($container);
+    }
+
+    /**
+    * Call protected/private method of a class.
+    *
+    * @param object &$object    Instantiated object that we will run method on.
+    * @param string $methodName Method name to call
+    * @param array  $parameters Array of parameters to pass into method.
+    *
+    * @return mixed Method return.
+    * @link https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
+    */
+    protected function invokeMethod(&$object, $methodName, array $parameters = array())
+    {
+        $reflection = new \ReflectionClass(get_class($object));
+        $method = $reflection->getMethod($methodName);
+        $method->setAccessible(true);
+
+        return $method->invokeArgs($object, $parameters);
     }
 }

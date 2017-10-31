@@ -76,16 +76,7 @@ class CartPresenter implements PresenterInterface
         $settings->showPrices = Configuration::showPrices();
 
         if (isset($rawProduct['attributes']) && is_string($rawProduct['attributes'])) {
-            // return an array of attributes
-            $rawProduct['attributes'] = explode(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), $rawProduct['attributes']);
-            $attributesArray = array();
-
-            foreach ($rawProduct['attributes'] as $attribute) {
-                list($key, $value) = explode(':', $attribute);
-                $attributesArray[trim($key)] = ltrim($value);
-            }
-
-            $rawProduct['attributes'] = $attributesArray;
+            $rawProduct['attributes'] = $this->getAttributesArrayFromString($rawProduct['attributes']);
         }
         $rawProduct['remove_from_cart_url'] = $this->link->getRemoveFromCartURL(
             $rawProduct['id_product'],
@@ -494,5 +485,29 @@ class CartPresenter implements PresenterInterface
             'allowed' => (int) CartRule::isFeatureActive(),
             'added' => $vouchers,
         );
+    }
+
+    /**
+     * Receives a string containing a list of attributes affected to the product and returns them as an array
+     *
+     * @param string $attributes
+     * @return array Converted attributes in an array
+     */
+    protected function getAttributesArrayFromString($attributes)
+    {
+        $separator = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
+        $pattern = '/(?>(?P<attribute>[^:]+:[^:]+)'.$separator.'+(?!'.$separator.'([^:'.$separator.'])+:))/';
+        $attributesArray = array();
+        $matches = array();
+        if (!preg_match_all($pattern, $attributes.$separator, $matches)) {
+            return $attributesArray;
+        }
+
+        foreach ($matches['attribute'] as $attribute) {
+            list($key, $value) = explode(':', $attribute);
+            $attributesArray[trim($key)] = ltrim($value);
+        }
+
+        return $attributesArray;
     }
 }
