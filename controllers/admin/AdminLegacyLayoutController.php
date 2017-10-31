@@ -49,6 +49,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->headerTabContent = $headerTabContent;
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
+        $this->php_self = $controllerName;
     }
 
     public function setMedia()
