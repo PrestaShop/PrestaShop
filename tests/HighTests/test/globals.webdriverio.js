@@ -214,26 +214,33 @@ module.exports = {
             save_button: '//*[@id="address_form_submit_btn"]'
           },
         },
-        StockSubmenu:{
-          submenu: '//*[@id="collapse-9"]/li[8]/a',
-          first_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[7]/form/span/input',
-          first_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[6]',
-          first_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[6]/span',
-          second_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[2]/td[7]/form/span/input',
-          second_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[2]/td[6]',
-          second_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[2]/td[6]/span',
-          third_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/span/input',
-          third_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[6]',
-          third_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[6]/span',
-          save_third_product_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/button',
-          fourth_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[7]/form/span/input',
-          fourth_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[6]',
-          fourth_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[6]/span',
-          save_fourth_product_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[7]/form/button',
-          group_apply_button: '//*[@id="app"]/div[3]/section/div/div[2]/div/button',
-          add_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/span/a[1]',
-          success_panel: '//*[@id="growls"]',
-          save_button:'//*[@id="app"]/div[3]/section/div/div[2]/div/button'
+        StockSubmenu: {
+          Stock: {
+            submenu: '//*[@id="collapse-9"]/li[8]/a',
+            tabs:'//*[@id="tab"]/li[1]/a',
+            first_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[7]/form/span/input',
+            first_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[6]',
+            first_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[6]/span',
+            second_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[2]/td[7]/form/span/input',
+            second_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[2]/td[6]',
+            second_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[2]/td[6]/span',
+            third_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/span/input',
+            third_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[6]',
+            third_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[6]/span',
+            save_third_product_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/button',
+            fourth_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[7]/form/span/input',
+            fourth_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[6]',
+            fourth_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[6]/span',
+            save_fourth_product_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[7]/form/button',
+            group_apply_button: '//*[@id="app"]/div[3]/section/div/div[2]/div/button',
+            add_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/span/a[1]',
+            success_panel: '//*[@id="growls"]'
+          },
+          Movements: {
+            tabs:'//*[@id="tab"]/li[2]/a',
+            variation:'//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[4]/span/span',
+            quantity:'//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[4]/span'
+          }
         }
       },
 
@@ -334,7 +341,7 @@ module.exports = {
         attribut_value_1: '//*[@id="add-to-cart-or-refresh"]/div[1]/div/ul/li[1]/label/span',
         attribut_value_2: '//*[@id="add-to-cart-or-refresh"]/div[1]/div/ul/li[2]/label/span',
         attribut_value_3: '//*[@id="add-to-cart-or-refresh"]/div[1]/div/ul/li[3]/label/span'
-      },
+     },
       //product page
       ProductPage: {
         title: '//*[@id="main"]/div[1]/div[2]/h1'
