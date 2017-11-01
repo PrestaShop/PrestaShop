@@ -4079,4 +4079,33 @@ class CartCore extends ObjectModel
             return $addresses_instance_without_carriers;
         }
     }
+
+    /**
+     * Check if the pack items in the cart are available
+     *
+     * @return bool|Product
+     */
+    public function checkPackitemQuantities()
+    {
+        if (Configuration::get('PS_PACK_STOCK_TYPE') > 0) {
+            $products = $this->getProducts();
+            $productsIds = array_column($products, 'id_product');
+            foreach ($products as $cartProduct) {
+                $product = new Product((int)$cartProduct['id_product']);
+                if ($product->getType() === Product::PTYPE_PACK) {
+                    foreach (Pack::getItems($product->id, $this->id_lang) as $item) {
+                        $key = array_search($item->id, $productsIds);
+                        if ($key !== false) {
+                            $totalQuantity = ($cartProduct['cart_quantity'] * $item->pack_quantity) + $products[$key]['cart_quantity'];
+                            if ($item->quantity < $totalQuantity) {
+                                return $products[$key];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
 }
