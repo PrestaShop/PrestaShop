@@ -54,6 +54,16 @@ class OrderControllerCore extends ParentOrderController
             $this->errors[] = sprintf(Tools::displayError('An item in your cart is no longer available (%1s). You cannot proceed with your order.'), Product::getProductName((int)$id_product));
         }
 
+        // Check if the pack items in the cart are available
+        $packProduct = $this->context->cart->checkPackitemQuantities();
+        if (true !== $packProduct) {
+            $this->step = 0;
+            $this->errors[] = sprintf(
+                Tools::displayError('An item (%1s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'),
+                $packProduct->name
+            );
+        }
+
         // If some products have disappear
         if (is_array($product)) {
             $this->step = 0;

@@ -4079,4 +4079,81 @@ class CartCore extends ObjectModel
             return $addresses_instance_without_carriers;
         }
     }
+
+    /**
+     * Check if the pack items in the cart are available
+     *
+     * @return bool|Product
+     */
+    public function checkPackitemQuantities()
+    {
+        if (Configuration::get('PS_PACK_STOCK_TYPE') <= 0) {
+            return true;
+        } else {
+            $products = $this->getProducts();
+            $tmpProducts = $products;
+            foreach ($products as $cartProduct) {
+                if (Pack::isPack((int)$cartProduct['id_product'])) {
+                    $result = $this->validateProductPackQuantities($cartProduct, $tmpProducts);
+
+                    if (true !== $result) {
+                        return $result;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate product pack quantities
+     *
+     * @param array $cartProduct - Array of cart product
+     * @param array $products - Array of cart products
+     * @return bool|Product
+     */
+    private function validateProductPackQuantities($cartProduct, &$products)
+    {
+        foreach (Pack::getItems((int)$cartProduct['id_product'], $this->id_lang) as $item) {
+            $result = $this->validatePackItemQuantity($item, $cartProduct, $products);
+
+            if (true !== $result) {
+                return $result;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate product pack item quantity
+     *
+     * @param Product $item
+     * @param array $cartProduct - Array of cart product
+     * @param array $products - Array of cart products
+     * @return bool|Product
+     */
+    private function validatePackItemQuantity(Product $item, $cartProduct, &$products)
+    {
+        $productsIds = array_column($products, 'id_product');
+        $key = array_search($item->id, $productsIds);
+        $totalQuantity = ($cartProduct['cart_quantity'] * $item->pack_quantity);
+
+        if (false === $key) {
+            $products[] = array(
+                'id_product' => $item->id,
+                'cart_quantity' => $totalQuantity,
+            );
+            $products[$key]['cart_quantity'] += $totalQuantity;
+        } else {
+            $totalQuantity += $products[$key]['cart_quantity'];
+        }
+
+        if ($item->quantity < $totalQuantity) {
+            return $item;
+        }
+
+        return true;
+    }
 }

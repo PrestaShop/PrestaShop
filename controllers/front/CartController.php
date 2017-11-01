@@ -346,6 +346,15 @@ class CartControllerCore extends FrontController
         if (count($removed) && (int)Tools::getValue('allow_refresh')) {
             $this->ajax_refresh = true;
         }
+
+        // Check if the pack items in the cart are available
+        $packProduct = $this->context->cart->checkPackitemQuantities();
+        if (true !== $packProduct) {
+            $this->errors[] = sprintf(
+                Tools::displayError('An item (%1s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'),
+                $packProduct->name
+            );
+        }
     }
 
     /**
