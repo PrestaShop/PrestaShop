@@ -4079,4 +4079,102 @@ class CartCore extends ObjectModel
             return $addresses_instance_without_carriers;
         }
     }
+
+    /**
+     * Check if the pack items in the cart are available
+     *
+     * @return bool|Product - Return the product in case it's quantity is unavailable
+     */
+    public function checkPacksitemsQuantities()
+    {
+        if (Configuration::get('PS_PACK_STOCK_TYPE') <= 0) {
+            return true;
+        }
+
+        $products = $this->getProducts();
+        /** Temporary array of Cart Products */
+        $allCartProducts = $products;
+
+        /** Extract packs products */
+        foreach ($products as $cartProduct) {
+            if (Pack::isPack((int)$cartProduct['id_product'])) {
+                $allCartProducts = $this->extractPackItems($cartProduct['id_product'], $cartProduct['cart_quantity'], $allCartProducts);
+            }
+        }
+
+        return $this->validateProductsQuantities($allCartProducts);
+    }
+
+    /**
+     * Extract the packs items and merge them with the cart products
+     *
+     * @param int $idProduct
+     * @param int $packQuantity
+     * @param array $allCartProducts - Array of cart products
+     * @return array - Array of cart products
+     */
+    private function extractPackItems($productId, $packQuantity, $allCartProducts)
+    {
+        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+        $items = Pack::getItems((int)$productId, $this->id_lang);
+
+        foreach ($items as $item) {
+            /** @var StockAvailable $stockAvailable - the available quantity in stock of the item */
+            $stockAvailable = $stockManager->getStockAvailableByProduct($item, (int)$item->id_pack_product_attribute);
+            $totalQuantity = ($packQuantity * $item->pack_quantity);
+            $productIndex = $this->getItemIndexInCart($allCartProducts, $item);
+
+            /**
+             * if the pack item does not exist in the temporary cart, add it
+             * else increase in the cart quantity
+             */
+            if (false === $productIndex) {
+                $product = get_object_vars($item);
+                $product['cart_quantity'] = $totalQuantity;
+                $product['stock_quantity'] = $stockAvailable->quantity;
+                $allCartProducts[] = $product;
+            } else {
+                $allCartProducts[$productIndex]['cart_quantity'] += $totalQuantity;
+            }
+        }
+
+        return $allCartProducts;
+    }
+
+    /**
+     * Returns the index of the cart item if it exists
+     *
+     * @param array $cartProducts - Array of cart products
+     * @param Product $item
+     * @return bool|int - if the item exists in the Cart, returns the index of the item, else it will return false
+     */
+    private function getItemIndexInCart($cartProducts, Product $item)
+    {
+        if ((bool)$item->id_pack_product_attribute) {
+            $cartProductsIds = array_column($cartProducts, 'id_product_attribute');
+            $itemField = $item->id_pack_product_attribute;
+        } else {
+            $cartProductsIds = array_column($cartProducts, 'id_product');
+            $itemField = $item->id;
+        }
+
+        return array_search($itemField, $cartProductsIds);
+    }
+
+    /**
+     * Check if the quantity of the cart products is available
+     *
+     * @param array $cartProducts - Array of cart products
+     * @return bool|Product - Return the product in case it's quantity is unavailable
+     */
+    private function validateProductsQuantities($cartProducts)
+    {
+        foreach ($cartProducts as $product) {
+            if ($product['cart_quantity'] > $product['stock_quantity']) {
+                return $product;
+            }
+        }
+
+        return true;
+    }
 }

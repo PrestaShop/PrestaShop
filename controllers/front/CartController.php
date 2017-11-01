@@ -36,6 +36,7 @@ class CartControllerCore extends FrontController
     public $ssl = true;
 
     protected $ajax_refresh = false;
+    private $ajaxError = array();
 
     /**
      * This is not a public page, so the canonical redirection is disabled
@@ -346,6 +347,15 @@ class CartControllerCore extends FrontController
         if (count($removed) && (int)Tools::getValue('allow_refresh')) {
             $this->ajax_refresh = true;
         }
+
+        // Check if the pack items in the cart are available
+        $packProduct = $this->context->cart->checkPacksitemsQuantities();
+        if (true !== $packProduct) {
+            $this->ajaxError[] = sprintf(
+                Tools::displayError('An item (%1s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'),
+                $packProduct['name']
+            );
+        }
     }
 
     /**
@@ -400,6 +410,7 @@ class CartControllerCore extends FrontController
             $result['customizedDatas'] = Product::getAllCustomizedDatas($this->context->cart->id, null, true);
             $result['HOOK_SHOPPING_CART'] = Hook::exec('displayShoppingCartFooter', $result['summary']);
             $result['HOOK_SHOPPING_CART_EXTRA'] = Hook::exec('displayShoppingCart', $result['summary']);
+            $result['ajaxError'] = $this->ajaxError;
 
             foreach ($result['summary']['products'] as $key => &$product) {
                 $product['quantity_without_customization'] = $product['quantity'];
