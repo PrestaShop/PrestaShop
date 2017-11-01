@@ -4079,4 +4079,129 @@ class CartCore extends ObjectModel
             return $addresses_instance_without_carriers;
         }
     }
+
+    /**
+     * Check if the pack items in the cart are available
+     *
+     * @return bool|Product - Return the product in case it's quantity is unavailable
+     */
+    public function checkPacksItemsQuantities()
+    {
+        if (Configuration::get('PS_PACK_STOCK_TYPE') <= 0) {
+            return true;
+        }
+
+        /** Temporary array of Cart Products */
+        $allCartProducts = $this->getCartProductsFlatList($this->getProducts());
+
+        return $this->validateProductsQuantities($allCartProducts);
+    }
+
+    /**
+     * Extract the packs items
+     *
+     * @param int $idProduct
+     * @param int $packQuantity
+     * @return array - Array of cart products
+     */
+    private function extractPackItems($productId, $packQuantity)
+    {
+        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+        $items = Pack::getItems((int)$productId, $this->id_lang);
+        $products = array();
+
+        foreach ($items as $item) {
+            /** @var StockAvailable $stockAvailable - the available quantity in stock of the item */
+            $stockAvailable = $stockManager->getStockAvailableByProduct($item, (int)$item->id_pack_product_attribute);
+            $totalQuantity = ($packQuantity * $item->pack_quantity);
+            $product = get_object_vars($item);
+            $product['cart_quantity'] = $totalQuantity;
+            $product['stock_quantity'] = $stockAvailable->quantity;
+            $products[] = $product;
+        }
+
+        return $products;
+    }
+
+    /**
+     * Return all the cart products after the extraction of packs items
+     *
+     * @param array $cartProducts - Array of cart products
+     * @return array - Array of cart products
+     */
+    private function getCartProductsFlatList($cartProducts)
+    {
+        $cartProductsTmp = $cartProducts;
+        foreach ($cartProducts as $product) {
+            if (Pack::isPack((int)$product['id_product'])) {
+                $packItems = $this->extractPackItems($product['id_product'], $product['cart_quantity']);
+                $cartProductsTmp = $this->mergePackItemsInCart($cartProductsTmp, $packItems);
+            }
+        }
+
+        return $cartProductsTmp;
+    }
+
+    /**
+     * Merge the pack items with the cart products
+     *
+     * @param array $cartProducts - Array of cart products
+     * @param array $packItems - Array of pack items
+     * @return array - Array of cart products
+     */
+    private function mergePackItemsInCart($cartProducts, $packItems)
+    {
+        foreach ($packItems as $item) {
+            $productIndex = $this->getItemIndexInCart($cartProducts, $item);
+
+            /**
+             * if the pack item does not exist in the temporary cart, add it
+             * else increase in the cart quantity
+             */
+            if (false === $productIndex) {
+                $cartProducts[] = $item;
+            } else {
+                $cartProducts[$productIndex]['cart_quantity'] += $item['cart_quantity'];
+            }
+        }
+
+        return $cartProducts;
+    }
+
+    /**
+     * Returns the index of the cart item if it exists
+     *
+     * @param array $cartProducts - Array of cart products
+     * @param array $item - Single cart product
+     * @return bool|int - if the item exists in the Cart, returns the index of the item, else it will return false
+     */
+    private function getItemIndexInCart($cartProducts, $item)
+    {
+        if ((bool)$item['id_pack_product_attribute']) {
+            $cartProductsIds = array_column($cartProducts, 'id_product_attribute');
+            $itemField = $item['id_pack_product_attribute'];
+        } else {
+            $cartProductsIds = array_column($cartProducts, 'id_product');
+            $itemField = $item['id'];
+        }
+
+        return array_search($itemField, $cartProductsIds);
+    }
+
+    /**
+     * Check if the quantity of the cart products is available
+     *
+     * @param array $cartProducts - Array of cart products
+     * @return bool|Product - Return the product in case it's quantity is unavailable
+     */
+    private function validateProductsQuantities($cartProducts)
+    {
+        foreach ($cartProducts as $product) {
+            if ($product['cart_quantity'] > $product['stock_quantity']) {
+                return $product;
+            }
+        }
+
+        return true;
+    }
 }
