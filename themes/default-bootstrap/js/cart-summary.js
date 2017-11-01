@@ -436,24 +436,7 @@ function deleteProductFromSummary(id)
 		{
 			if (jsonData.hasError)
 			{
-				var errors = '';
-				for(var error in jsonData.errors)
-					//IE6 bug fix
-					if(error !== 'indexOf')
-						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-									if (!!$.prototype.fancybox)
-											$.fancybox.open([
-													{
-															type: 'inline',
-															autoScale: true,
-															minHeight: 30,
-															content: '<p class="fancybox-error">' + errors + '</p>'
-													}],
-													{
-															padding: 0
-													});
-									else
-											alert(errors);
+				displayError(jsonData.errors);
 			}
 			else
 			{
@@ -528,6 +511,7 @@ function deleteProductFromSummary(id)
 					getCarrierListAndUpdate();
 				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
 					updatePaymentMethodsDisplay();
+				displayError(jsonData.ajaxError);
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -616,24 +600,7 @@ function upQuantity(id, qty)
 		{
 			if (jsonData.hasError)
 			{
-				var errors = '';
-				for(var error in jsonData.errors)
-					//IE6 bug fix
-					if(error !== 'indexOf')
-						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-				if (!!$.prototype.fancybox)
-				    $.fancybox.open([
-			        {
-			            type: 'inline',
-			            autoScale: true,
-			            minHeight: 30,
-			            content: '<p class="fancybox-error">' + errors + '</p>'
-			        }],
-					{
-				        padding: 0
-				    });
-				else
-				    alert(errors);
+				displayError(jsonData.errors);
 				$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
 			}
 			else
@@ -651,6 +618,7 @@ function upQuantity(id, qty)
 					getCarrierListAndUpdate();
 				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
 					updatePaymentMethodsDisplay();
+				displayError(jsonData.ajaxError);
 			}
 		},
 		error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -728,24 +696,7 @@ function downQuantity(id, qty)
 			{
 				if (jsonData.hasError)
 				{
-					var errors = '';
-					for(var error in jsonData.errors)
-						//IE6 bug fix
-						if(error !== 'indexOf')
-							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
-                    if (!!$.prototype.fancybox)
-                        $.fancybox.open([
-                            {
-                                type: 'inline',
-                                autoScale: true,
-                                minHeight: 30,
-                                content: '<p class="fancybox-error">' + errors + '</p>'
-                            }],
-                            {
-                                padding: 0
-                            });
-                    else
-                        alert(errors);
+					displayError(jsonData.errors);
 					$('input[name=quantity_' + id + ']').val($('input[name=quantity_' + id + '_hidden]').val());
 				}
 				else
@@ -768,6 +719,7 @@ function downQuantity(id, qty)
 						getCarrierListAndUpdate();
 					if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
 						updatePaymentMethodsDisplay();
+					displayError(jsonData.ajaxError);
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -1072,3 +1024,33 @@ function updateExtraCarrier(id_delivery_option, id_address)
 		}
 	});
 }
+
+/**
+ * Display the alert of errors
+ * @param {string[]} errors - Array of errors
+ */
+var displayError = function displayError(errors) {
+	if (errors.length > 0) {
+		var errorsMsg = '';
+		for (var error in errors) {
+			//IE6 bug fix
+			if (error !== 'indexOf') {
+				errorsMsg += $('<div />').html(errors[error]).text() + "\n";
+			}
+		}
+		if (!!$.prototype.fancybox) {
+			$.fancybox.open([
+					{
+						type: 'inline',
+						autoScale: true,
+						minHeight: 30,
+						content: '<p class="fancybox-error">' + errorsMsg + '</p>'
+					}],
+				{
+					padding: 0
+				});
+		} else {
+			alert(errorsMsg);
+		}
+	}
+};
