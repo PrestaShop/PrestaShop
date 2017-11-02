@@ -31,6 +31,10 @@ abstract class AbstractCheckoutStepCore implements CheckoutStepInterface
 {
     private $smarty;
     private $translator;
+
+    /**
+     * @var CheckoutProcess
+     */
     private $checkoutProcess;
 
     private $title;

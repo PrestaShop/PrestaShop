@@ -33,7 +33,11 @@ class OrderControllerCore extends FrontController
     public $page_name = 'checkout';
     public $checkoutWarning = false;
 
+    /**
+     * @var CheckoutProcess
+     */
     protected $checkoutProcess;
+
     /**
      * @var CartChecksum
      */
@@ -300,6 +304,7 @@ class OrderControllerCore extends FrontController
             $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
         }
 
+        $stepTemplateParameters = array();
         foreach ($this->checkoutProcess->getSteps() as $step) {
             if ($step instanceof CheckoutAddressesStep) {
                 $stepTemplateParameters = $step->getTemplateParameters();
@@ -309,9 +314,8 @@ class OrderControllerCore extends FrontController
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
             $stepTemplateParameters,
-            array(
-                'type' => 'delivery',
-        ));
+            array('type' => 'delivery')
+        );
 
         ob_end_clean();
         header('Content-Type: application/json');

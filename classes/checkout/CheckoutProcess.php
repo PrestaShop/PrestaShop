@@ -31,6 +31,10 @@ use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 class CheckoutProcessCore implements RenderableInterface
 {
     private $smarty;
+
+    /**
+     * @var CheckoutSession
+     */
     private $checkoutSession;
     private $steps = array();
     private $has_errors;
