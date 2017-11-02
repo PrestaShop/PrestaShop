@@ -91,6 +91,11 @@ function add_new_status_stock()
     );
 
     foreach ($data as $d) {
+        // We don't want duplicated data
+        if (configuration_exists($d['name'])) {
+            continue;
+        }
+
         // ps_stock_mvt_reason
         Db::getInstance()->execute(
             'INSERT INTO `' . _DB_PREFIX_ . 'stock_mvt_reason` (`sign`, `date_add`, `date_upd`, `deleted`)
@@ -130,4 +135,15 @@ function add_new_status_stock()
             (int)Configuration::get('PS_OS_CANCELED')
         );
     }
+}
+
+function configuration_exists($confName)
+{
+    $count = (int)Db::getInstance()->getValue(
+        'SELECT count(id_configuration)
+        FROM `' . _DB_PREFIX_ . 'configuration` 
+        WHERE `name` = \'' . $confName . '\''
+    );
+
+    return ($count > 0);
 }
