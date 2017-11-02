@@ -104,7 +104,6 @@ services:
         arguments:
             - "@doctrine.cache.provider"
             - "@prestashop.addons.client_api"
-            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
             - "@translator"
         
     prestashop.adapter.module.prestatrust.eventsubscriber:

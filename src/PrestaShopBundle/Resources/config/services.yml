@@ -491,6 +491,7 @@ services:
             - "@=service('translator').getLocale()"
             - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
             - "@prestashop.adapter.tools"
+            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
 

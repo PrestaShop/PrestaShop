@@ -44,7 +44,6 @@ class PrestaTrustCheckerTest extends UnitTestCase
      * @var PrestaTrustChecker
      */
     protected $prestatrustChecker;
-    protected $domain = 'http://www.prestadoge.co.uk';
     protected $modules;
     protected $prestatrustApiResults;
 
@@ -64,7 +63,7 @@ class PrestaTrustCheckerTest extends UnitTestCase
     {
         parent::setup();
         if (!defined('__PS_BASE_URI__')) {
-            define('__PS_BASE_URI__', $this->domain);
+            define('__PS_BASE_URI__', 'http://prestadoge.co.uk');
         }
 
         $this->setupSfKernel();
@@ -123,7 +122,6 @@ class PrestaTrustCheckerTest extends UnitTestCase
         $this->prestatrustChecker = new PrestaTrustChecker(
             $cache,
             $this->apiClientS,
-            $this->domain,
             $this->translatorS
         );
 

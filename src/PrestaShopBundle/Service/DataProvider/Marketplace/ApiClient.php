@@ -45,7 +45,8 @@ class ApiClient
         Client $addonsApiClient,
         $locale,
         $isoCode,
-        $toolsAdapter
+        $toolsAdapter,
+        $domain
     ) {
         $this->addonsApiClient = $addonsApiClient;
         $this->toolsAdapter = $toolsAdapter;
@@ -55,6 +56,7 @@ class ApiClient
         $this->setIsoLang($isoLang)
             ->setIsoCode($isoCode)
             ->setVersion(_PS_VERSION_)
+            ->setShopUrl($domain)
         ;
         $this->defaultQueryParameters = $this->queryParameters;
     }

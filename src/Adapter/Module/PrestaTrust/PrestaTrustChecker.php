@@ -57,11 +57,6 @@ class PrestaTrustChecker
     protected $apiClient;
 
     /**
-     * @var string Shop domain
-     */
-    protected $domain;
-
-    /**
      * @var TranslatorInterface
      */
     protected $translator;
@@ -69,14 +64,12 @@ class PrestaTrustChecker
     /**
      * @param Cache $cache Cache provider to keep data between two requests
      * @param ApiClient $apiClient Addons Marketplace API client (Guzzle)
-     * @param string $shop_info Shop domain (ex.: http://localhost)
      * @param TranslatorInterface $translator Translator for explanation messages
      */
-    public function __construct(Cache $cache, ApiClient $apiClient, $shop_info, TranslatorInterface $translator)
+    public function __construct(Cache $cache, ApiClient $apiClient, TranslatorInterface $translator)
     {
         $this->cache = $cache;
         $this->apiClient = $apiClient;
-        $this->domain = $shop_info;
         $this->translator = $translator;
     }
 
@@ -99,7 +92,7 @@ class PrestaTrustChecker
         // Merge 2 existing sources of data
         $details = (object) array_merge((array) $module->get('prestatrust', new \stdClass), (array) $this->cache->fetch($module->get('name')));
 
-        $details->check_list = $this->requestCheck($details->hash, $this->domain, $this->findSmartContrat($module->disk->get('path')));
+        $details->check_list = $this->requestCheck($details->hash, $this->findSmartContrat($module->disk->get('path')));
         $details->status = array_sum($details->check_list) == count($details->check_list); // True if all content is True
         $details->message = $this->translator->trans($this->getMessage($details->check_list), array(), 'Admin.Modules.Notification');
         
@@ -244,14 +237,13 @@ class PrestaTrustChecker
      * about its integrity and property
      *
      * @param string $hash Calculted hash from the modules files
-     * @param string $shop_url Shop domain
      * @param string $contract Smart contract address from module
      * @return array of check list results.
      */
-    protected function requestCheck($hash, $shop_url, $contract)
+    protected function requestCheck($hash, $contract)
     {
         try {
-            $result = $this->apiClient->setShopUrl($shop_url)->getPrestaTrustCheck($hash, $contract);
+            $result = $this->apiClient->getPrestaTrustCheck($hash, $contract);
             return array(
                 'integrity' => (bool)($result->hash_trusted),
                 'property' => (bool)($result->property_trusted),
