@@ -245,6 +245,9 @@ class LegacyHookSubscriber implements EventSubscriberInterface
 
                 if (is_array($modules)) {
                     foreach ($modules as $order => $module) {
+                        if (!isset($module['id_module'])) {
+                            continue;   
+                        }
                         $moduleId = $module['id_module'];
                         $functionName = 'call_' . $id . '_' . $moduleId;
                         $moduleListeners[] = array($functionName, 2000 - $order);
