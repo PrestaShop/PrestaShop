@@ -23,6 +23,7 @@ class ModifyQuantity extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Movements.tabs, 90000)
       .click(selector.BO.CatalogPage.StockSubmenu.Movements.tabs)
+      .waitForExist(selector.BO.CatalogPage.StockSubmenu.Movements.variation, 90000)
   }
 
   modifyFirstProductQuantity() {
@@ -50,10 +51,6 @@ class ModifyQuantity extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Stock.group_apply_button, 90000)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.group_apply_button)
-      .pause(1000)
-      .then(() => this.client.getText(selector.BO.CatalogPage.StockSubmenu.Stock.success_panel))
-      .then((text) => expect(text.substring(2)).to.be.equal('Stock successfully updated'))
-      .pause(3000)
   }
 
   getThirdProductQuantity() {
@@ -109,15 +106,16 @@ class ModifyQuantity extends PrestashopClient {
       .then((text) => expect(text.substring(2)).to.be.equal('Stock successfully updated'))
   }
 
-  checkMovements(quantity, variation) {
+  checkMovement(order, quantity, variation, type) {
     return this.client
-      .waitForExist(selector.BO.CatalogPage.StockSubmenu.Movements.variation, 90000)
-      .then(() => this.client.getText(selector.BO.CatalogPage.StockSubmenu.Movements.variation))
+      .waitForExist('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span/span', 90000)
+      .then(() => this.client.getText('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span/span'))
       .then((text) => expect(text).to.be.equal(variation))
-      .then(() => this.client.getText(selector.BO.CatalogPage.StockSubmenu.Movements.quantity))
+      .then(() => this.client.getText('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span'))
       .then((text) => expect(text.substring(2)).to.be.equal(quantity))
+      .then(() => this.client.getText('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[3]'))
+      .then((text) => expect(text.indexOf(type)).to.not.equal(-1))
   }
-
 }
 
 module.exports = ModifyQuantity;
