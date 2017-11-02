@@ -217,7 +217,7 @@ module.exports = {
         StockSubmenu: {
           Stock: {
             submenu: '//*[@id="collapse-9"]/li[8]/a',
-            tabs:'//*[@id="tab"]/li[1]/a',
+            tabs: '//*[@id="tab"]/li[1]/a',
             first_product_quantity_input: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[7]/form/span/input',
             first_product_quantity: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[6]',
             first_product_quantity_modified: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[6]/span',
@@ -234,24 +234,27 @@ module.exports = {
             save_fourth_product_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[4]/td[7]/form/button',
             group_apply_button: '//*[@id="app"]/div[3]/section/div/div[2]/div/button',
             add_quantity_button: '//*[@id="app"]/div[3]/section/table/tbody/tr[3]/td[7]/form/span/a[1]',
-            success_panel: '//*[@id="growls"]'
+            success_panel: '//*[@id="growls"]',
           },
           Movements: {
-            tabs:'//*[@id="tab"]/li[2]/a',
-            variation:'//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[4]/span/span',
-            quantity:'//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[4]/span'
+            tabs: '//*[@id="tab"]/li[2]/a',
+            variation: '//*[@id="app"]/div[3]/section/table/tbody/tr[1]/td[4]/span/span'
           }
         }
       },
 
       //Order selector
       OrderPage: {
-        orders_subtab: '#subtab-AdminParentOrders',
+        orders_subtab: '//*[@id="subtab-AdminParentOrders"]/a',
         form: '#form-order',
         order_product_name_span: '.productName',
         order_product_quantity_span: '.product_quantity_show',
         order_product_total: '#total_order > td.amount.text-right.nowrap',
-        order_reference_span: '((//div[@class="panel-heading"])[1]/span)[1]'
+        order_reference_span: '((//div[@class="panel-heading"])[1]/span)[1]',
+        first_order: '//*[@id="form-order"]/div/div[2]/table/tbody/tr[1]/td[12]/div/a',
+        order_state_select: '//*[@id="id_order_state"]',
+        update_status_button: '//*[@id="status"]/form/div/div[2]/button',
+        order_quantity: '//*[@id="orderProducts"]/tbody/tr[1]/td[4]/span[1]'
       },
       //Module selector
       ModulePage: {
