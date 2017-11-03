@@ -1058,22 +1058,6 @@ class CustomerCore extends ObjectModel
     }
 
     /**
-     * Toggle Customer status.
-     *
-     * @return bool Indicates whether the status has been successfully toggled
-     */
-    public function toggleStatus()
-    {
-        parent::toggleStatus();
-
-        /* Change status to active/inactive */
-        return Db::getInstance()->execute('
-        UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
-        SET `date_upd` = NOW()
-        WHERE `'.bqSQL($this->def['primary']).'` = '.(int) $this->id);
-    }
-
-    /**
      * Is the current Customer a Guest?
      *
      * @return bool Indicates whether the Customer is a Guest
