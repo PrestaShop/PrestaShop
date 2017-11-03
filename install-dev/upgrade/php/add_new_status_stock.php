@@ -92,7 +92,7 @@ function add_new_status_stock()
 
     foreach ($data as $d) {
         // We don't want duplicated data
-        if (configuration_exists($d['name'])) {
+        if (configuration_exists($d['conf'])) {
             continue;
         }
 
