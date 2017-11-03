@@ -131,7 +131,7 @@ class MailCore extends ObjectModel
             null,
             true
         ), function ($carry, $item) {
-            return $carry && $item;
+            return ($item === false) ? false : $carry;
         }, true);
 
         if (!$skip) {
