@@ -63,7 +63,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     protected $id_shop = null;
 
     /** @var array|null List of shop IDs */
-    public $id_shop_list = null;
+    public $id_shop_list = array();
 
     /** @var bool */
     protected $get_shop_from_context = true;
@@ -517,7 +517,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         if (Shop::isTableAssociated($this->def['table'])) {
             $id_shop_list = Shop::getContextListShopID();
-            if (is_array($this->id_shop_list) && count($this->id_shop_list) > 0) {
+            if (count($this->id_shop_list)) {
                 $id_shop_list = $this->id_shop_list;
             }
         }
@@ -683,7 +683,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         $id_shop_list = Shop::getContextListShopID();
-        if (is_array($this->id_shop_list) && count($this->id_shop_list) > 0) {
+        if (count($this->id_shop_list)) {
             $id_shop_list = $this->id_shop_list;
         }
 
@@ -739,7 +739,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                     // If this table is linked to multishop system, update / insert for all shops from context
                     if ($this->isLangMultishop()) {
                         $id_shop_list = Shop::getContextListShopID();
-                        if (count($this->id_shop_list) > 0) {
+                        if (count($this->id_shop_list)) {
                             $id_shop_list = $this->id_shop_list;
                         }
                         foreach ($id_shop_list as $id_shop) {
