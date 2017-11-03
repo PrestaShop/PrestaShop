@@ -1064,13 +1064,14 @@ class CustomerCore extends ObjectModel
      */
     public function toggleStatus()
     {
-        parent::toggleStatus();
+        $statusUpdated = parent::toggleStatus();
+        if ($statusUpdated) {
+            Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
+                SET `date_upd` = NOW()
+                WHERE `'.bqSQL($this->def['primary']).'` = '.(int) $this->id);
+        }
 
-        /* Change status to active/inactive */
-        return Db::getInstance()->execute('
-        UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
-        SET `date_upd` = NOW()
-        WHERE `'.bqSQL($this->def['primary']).'` = '.(int) $this->id);
+        return $statusUpdated;
     }
 
     /**
