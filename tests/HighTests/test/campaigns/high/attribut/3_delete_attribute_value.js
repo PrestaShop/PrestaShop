@@ -5,7 +5,7 @@ scenario('Delete attribute value', client => {
   test('should search for the updated attribute', () => client.searchAttribute());
   test('should select the attribute', () => client.selectAttribute());
   test('should delete the attribute value', () => client.deleteAttributeValue());
-  test('should check attribute success panel', () => client.SuccessPanel('Successful deletion.'));
+  test('should check attribute success panel', () => client.successPanel('Successful deletion.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'attribute', true);
 

@@ -5,7 +5,7 @@ scenario('Update attribute', client => {
   test('should search for the created attribute', () => client.searchAttribute());
   test('should update attribute name', () => client.updateAttributeName());
   test('should update attribute value', () => client.updateAttributeValue());
-  test('should check attribute success panel', () => client.SuccessPanel('Successful update.'));
+  test('should check attribute success panel', () => client.successPanel('Successful update.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'attribute', true);
 

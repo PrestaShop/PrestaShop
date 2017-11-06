@@ -30,15 +30,9 @@ class PrestashopClient {
     return this.client
       .waitForExist(selector.BO.CatalogPage.success_panel)
       .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
-      .then((text) => expect(text.substring(2)).to.be.equal(index));
+      .then((text) => expect(text.substr(2)).to.be.equal(index));
   }
 
-  successPanel(index) {
-    return this.client
-      .waitForExist(selector.BO.CatalogPage.success_panel)
-      .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
-      .then((text) => expect(text.substring(2)).to.be.equal(index));
-  }
 
   open() {
     return this.client.init().windowHandleSize({width: 1280, height: 1024});

@@ -51,12 +51,6 @@ class Attribut extends PrestashopClient {
       .click(selector.BO.CatalogPage.AttributeSubmenu.search_button)
   }
 
-  selectAttribute() {
-    return this.client
-      .waitForExist(selector.BO.CatalogPage.AttributeSubmenu.selected_attribute, 90000)
-      .click(selector.BO.CatalogPage.AttributeSubmenu.selected_attribute)
-  }
-
   addValueToAttribute() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.AttributeSubmenu.add_value_button, 90000)
@@ -135,6 +129,8 @@ class Attribut extends PrestashopClient {
       .click(selector.BO.CatalogPage.AttributeSubmenu.group_action_button)
       .waitForExist(selector.BO.CatalogPage.AttributeSubmenu.update_button, 90000)
       .click(selector.BO.CatalogPage.AttributeSubmenu.update_button)
+      .waitForExist(selector.BO.CatalogPage.AttributeSubmenu.name_input, 90000)
+      .setValue(selector.BO.CatalogPage.AttributeSubmenu.name_input, global.attributeName + 'update')
       .waitForExist(selector.BO.CatalogPage.AttributeSubmenu.public_name_input, 90000)
       .setValue(selector.BO.CatalogPage.AttributeSubmenu.public_name_input, global.attributeName + 'update')
       .waitForExist(selector.BO.CatalogPage.AttributeSubmenu.save_button, 90000)

@@ -85,12 +85,6 @@ class Category extends PrestashopClient {
       .setValue(selector.BO.CatalogPage.CategorySubmenu.name_search_input, global.categoryName)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.search_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.search_button)
-      .getText(selector.BO.CatalogPage.CategorySubmenu.search_result).then(function (text) {
-        text = text.indexOf(global.categoryName);
-        if (text === -1) {
-          done(new Error('we could not find the category in the list of category'));
-        }
-      })
   }
 
   checkCategoryImage() {
