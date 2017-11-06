@@ -22,6 +22,10 @@ class PrestashopClient {
     return this.client.signoutFO();
   }
 
+  onBoarding(){
+    return this.client.onboarding();
+  }
+
   takeScreenshot() {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
   }
