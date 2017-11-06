@@ -93,6 +93,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             // download and install language pack
             Language::downloadAndInstallLanguagePack($this->session->lang);
         } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
+            Language::installRtlStylesheets(false, true, 'classic', $this->session->lang, true);
             $this->processConfigureShop();
         } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
             $this->processInstallFixtures();

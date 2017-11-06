@@ -3,7 +3,7 @@
 <head>
   {$header}
 </head>
-<body class="{$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
+<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
 
 {* TODO: REPLACE THIS CLASSS SOMEWHERE
 {if $collapse_menu} page-sidebar-closed{/if}

@@ -1910,6 +1910,7 @@ class AdminControllerCore extends Controller
             'iso' => $this->context->language->iso_code,
             'class_name' => $this->className,
             'iso_user' => $this->context->language->iso_code,
+            'lang_is_rtl' => $this->context->language->is_rtl,
             'country_iso_code' => $this->context->country->iso_code,
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,

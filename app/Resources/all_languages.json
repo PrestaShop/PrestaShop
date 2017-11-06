@@ -184,7 +184,7 @@
     "iso_code": "fa",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
-    "is_rtl": "0",
+    "is_rtl": "1",
     "language_code": "fa-ir",
     "locale": "fa-IR"
   },
