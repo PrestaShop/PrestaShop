@@ -37,6 +37,7 @@
         "phpoffice/phpexcel": "~1.8",
         "guzzlehttp/guzzle": "~5.0",
         "csa/guzzle-bundle": "~1.3",
+        "ipresta/localize-fixture": "~v1.0",
         "paragonie/random_compat": "^1.4|^2.0",
         "prestashop/smarty": "dev-master",
         "prestashop/blockreassurance": "dev-master",
