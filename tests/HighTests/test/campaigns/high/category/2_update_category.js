@@ -4,7 +4,7 @@ scenario('Update category', client => {
   test('should go to category', () => client.goToCategoryList());
   test('should search for the category', () => client.searchCategoryBO());
   test('should update category', () => client.updateCategory());
-  test('should check category success panel', () => client.SuccessPanel('Successful update.'));
+  test('should check category success panel', () => client.successPanel('Successful update.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'category', true);
 
