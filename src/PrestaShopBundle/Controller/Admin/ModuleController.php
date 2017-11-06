@@ -27,10 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Entity\ModuleHistory;
 use Symfony\Component\HttpFoundation\Request;
@@ -128,10 +130,9 @@ class ModuleController extends FrameworkBundleAdminController
             $responseArray['status'] = true;
         } catch (Exception $e) {
             $responseArray['msg'] = $translator->trans(
-                'Cannot get catalog data, please try again later. Reason: '.
-                print_r($e->getMessage(), true),
-                array(),
-                'AdminModules'
+                'Cannot get catalog data, please try again later. Reason: %error_details%',
+                array('%error_details%' => print_r($e->getMessage(), true)),
+                'Admin.Modules.Notification'
             );
             $responseArray['status'] = false;
         }
@@ -280,105 +281,104 @@ class ModuleController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
+        if ($this->isDemoModeEnabled()) {
+            return $this->getDisabledFunctionalityResponse($request);
+        }
+
         $action = $request->get('action');
         $module = $request->get('module_name');
-        $forceDeletion = $request->query->has('deletion');
 
         $moduleManager = $this->get('prestashop.module.manager');
+        $moduleManager->setActionParams($request->request->get('actionParams', array()));
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         $translator = $this->get('translator');
 
-        $response = array();
-        if (method_exists($moduleManager, $action)) {
-            if ($this->isDemoModeEnabled()) {
-                return $this->getDisabledFunctionalityResponse($request);
-            }
-
-            // ToDo : Check if allowed to call this action
-            try {
-                if ($action == 'uninstall') {
-                    $response[$module]['status'] = $moduleManager->{$action}($module, $forceDeletion);
-                } else {
-                    $response[$module]['status'] = $moduleManager->{$action}($module);
-                }
-
-                if ($response[$module]['status'] === null) {
-                    $response[$module]['status'] = false;
-                    $response[$module]['msg'] = $translator->trans(
-                        '%module% did not return a valid response on %action% action.',
-                        array(
-                            '%module%' => $module,
-                            '%action%' => $action, ),
-                        'Admin.Modules.Notification'
-                    );
-                } elseif ($response[$module]['status'] === false) {
-                    $error = $moduleManager->getError($module);
-                    $response[$module]['msg'] = $translator->trans(
-                        'Cannot %action% module %module%. %error_details%',
-                        array(
-                            '%action%' => str_replace('_', ' ', $action),
-                            '%module%' => $module,
-                            '%error_details%' => $error, ),
-                        'Admin.Modules.Notification'
-                    );
-                } else {
-                    $response[$module]['msg'] = $translator->trans(
-                        '%action% action on module %module% succeeded.',
-                        array(
-                            '%action%' => ucfirst(str_replace('_', ' ', $action)),
-                            '%module%' => $module, ),
-                        'Admin.Modules.Notification'
-                    );
-                }
-            } catch (Exception $e) {
-                $response[$module]['status'] = false;
-                $response[$module]['msg'] = $translator->trans(
-                    'Exception thrown by module %module% on %action%. %error_details%',
-                    array(
-                        '%action%' => str_replace('_', ' ', $action),
-                        '%module%' => $module,
-                        '%error_details%' => $e->getMessage(), ),
-                    'Admin.Modules.Notification'
-                );
-
-                $logger = $this->get('logger');
-                $logger->error($response[$module]['msg']);
-            }
-        } else {
+        $response = array(
+            $module => array(),
+        );
+        if (!method_exists($moduleManager, $action)) {
             $response[$module]['status'] = false;
             $response[$module]['msg'] = $translator->trans(
                 'Invalid action',
                 array(),
                 'Admin.Notifications.Error'
             );
+            return new JsonResponse($response);
         }
 
-        if ($request->isXmlHttpRequest()) {
-            if ($response[$module]['status'] === true && $action != 'uninstall') {
-                $moduleInstance = $moduleRepository->getModule($module);
-                $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
-                $response[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
-                    'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
-                    'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
-                    ))->getContent();
+        try {
+            $response[$module]['status'] = $moduleManager->{$action}($module);
+
+            if ($response[$module]['status'] === null) {
+                $response[$module]['status'] = false;
+                $response[$module]['msg'] = $translator->trans(
+                    '%module% did not return a valid response on %action% action.',
+                    array(
+                        '%module%' => $module,
+                        '%action%' => $action, ),
+                    'Admin.Modules.Notification'
+                );
+            } elseif ($response[$module]['status'] === false) {
+                $error = $moduleManager->getError($module);
+                $response[$module]['msg'] = $translator->trans(
+                    'Cannot %action% module %module%. %error_details%',
+                    array(
+                        '%action%' => str_replace('_', ' ', $action),
+                        '%module%' => $module,
+                        '%error_details%' => $error, ),
+                    'Admin.Modules.Notification'
+                );
+            } else {
+                $response[$module]['msg'] = $translator->trans(
+                    '%action% action on module %module% succeeded.',
+                    array(
+                        '%action%' => ucfirst(str_replace('_', ' ', $action)),
+                        '%module%' => $module, ),
+                    'Admin.Modules.Notification'
+                );
             }
+        } catch (UnconfirmedModuleActionException $e) {
+            $modules = $modulesProvider->generateAddonsUrls(array($e->getModule()));
+            $response[$module] = array_replace($response[$module],
+                    array(
+                        'status' => false,
+                        'confirmation_subject' => $e->getSubject(),
+                        'module' => $this->getPresentedProducts($modules)[0],
+                        'msg' => $translator->trans(
+                            'Confirmation needed by module %module% on %action% (%subject%).',
+                            array(
+                                '%subject%' => $e->getSubject(),
+                                '%action%' => $e->getAction(),
+                                '%module%' => $module,
+                            ),
+                        'Admin.Modules.Notification'
+                    )));
+        } catch (Exception $e) {
+            $response[$module]['status'] = false;
+            $response[$module]['msg'] = $translator->trans(
+                'Exception thrown by module %module% on %action%. %error_details%',
+                array(
+                    '%action%' => str_replace('_', ' ', $action),
+                    '%module%' => $module,
+                    '%error_details%' => $e->getMessage(), ),
+                'Admin.Modules.Notification'
+            );
 
-            return new JsonResponse($response, 200);
+            $logger = $this->get('logger');
+            $logger->error($response[$module]['msg']);
         }
 
-        // We need a better error handler here. Meanwhile, I throw an exception
-        if (!$response[$module]['status']) {
-            $this->addFlash('error', $response[$module]['msg']);
-        } else {
-            $this->addFlash('success', $response[$module]['msg']);
+        if ($response[$module]['status'] === true && $action != 'uninstall') {
+            $moduleInstance = $moduleRepository->getModule($module);
+            $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
+            $response[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
+                'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
+                'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
+                ))->getContent();
         }
 
-        if ($request->server->get('HTTP_REFERER')) {
-            return $this->redirect($request->server->get('HTTP_REFERER'));
-        } else {
-            return $this->redirect($this->generateUrl('admin_module_catalog'));
-        }
+        return new JsonResponse($response, 200);
     }
 
     /**
@@ -644,6 +644,22 @@ class ModuleController extends FrameworkBundleAdminController
                 200,
                 array('Content-Type' => 'application/json')
             );
+        } catch (UnconfirmedModuleActionException $e) {
+            $modules = $this->get('prestashop.core.admin.data_provider.module_interface')->generateAddonsUrls(array($e->getModule()));
+            return new JsonResponse(
+                    array(
+                        'status' => false,
+                        'confirmation_subject' => $e->getSubject(),
+                        'module' => $this->getPresentedProducts($modules)[0],
+                        'msg' => $translator->trans(
+                            'Confirmation needed by module %module% on %action% (%subject%).',
+                            array(
+                                '%subject%' => $e->getSubject(),
+                                '%action%' => $e->getAction(),
+                                '%module%' => $module_name,
+                            ),
+                        'Admin.Modules.Notification'
+                    )));
         } catch (Exception $e) {
             if (isset($module_name)) {
                 $moduleManager->disable($module_name);

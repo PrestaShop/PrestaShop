@@ -130,8 +130,13 @@ class WebTestCase extends TestCase
             ->disableAutoload()
             ->getMock();
 
-        $configurationMock->method('get')->with('_PS_MODE_DEMO_')
-            ->will($this->returnValue(true));
+        $values = array(
+            array('_PS_MODE_DEMO_', true),
+            array('_PS_MODULE_DIR_', __DIR__.'/../../../resources/modules/'),
+        );
+
+        $configurationMock->method('get')
+            ->will($this->returnValueMap($values));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }

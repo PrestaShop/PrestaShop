@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% set isModuleActive = module.database.active|default('0') %}
+{% set isModuleActive = module.database.active %}
 
 <div
   class="module-item module-item-grid col-md-12 col-lg-6 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
@@ -51,12 +51,14 @@
         data-placement="top"
         title="{{ module.attributes.displayName|raw }}"
       >
-      {% set ats = module.attributes %}
         {% if module.attributes.displayName %}
           {{ module.attributes.displayName|raw }}
         {% else %}
           {{ module.attributes.name }}
         {% endif %}
+        {% for pico in module.attributes.picos %}
+            <img src="{{pico.img}}" alt="{{pico.label}}" />
+        {% endfor %}
       </h3>
       <div class="text-ellipsis small-text module-version-author-grid">
         {% block addon_version %}

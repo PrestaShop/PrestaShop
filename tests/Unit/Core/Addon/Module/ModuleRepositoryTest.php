@@ -133,7 +133,8 @@ class ModuleRepositoryTest extends UnitTestCase
                     )
                 ),
                 new FakeLogger(),
-                $this->translatorStub
+                $this->translatorStub,
+                __DIR__.'/../../../../resources/modules/'
             )
         );
 

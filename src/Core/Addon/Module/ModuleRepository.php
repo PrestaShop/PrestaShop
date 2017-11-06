@@ -25,13 +25,16 @@
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Psr\Log\LoggerInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
@@ -68,7 +71,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $moduleProvider;
 
     /**
-     * Module Data Provider.
+     * Module Data Updater.
      *
      * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
      */
@@ -82,9 +85,23 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $translator;
 
     /**
-     * Module Data Provider.
+     * Path to the module directory, coming from Confiuration class
+     * 
+     * @var string
+     */
+    private $modulePath;
+
+    /**
+     * @var PrestaTrustChecker
+     */
+    private $prestaTrustChecker = null;
+
+    #### CACHE PROPERTIES ####
+
+    /**
+     * Key of the cache content
      *
-     * @var \PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
+     * @var string
      */
     private $cacheFilePath;
 
@@ -102,12 +119,22 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     private $cacheProvider;
 
+    /**
+     * Keep loaded modules in cache
+     * 
+     * @var ArrayCache
+     */
+    private $loadedModules;
+
+    #### END OF CACHE PROPERTIES ####
+
     public function __construct(
         AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
         TranslatorInterface $translator,
+        $modulePath,
         CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
@@ -116,16 +143,29 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
+        $this->modulePath = $modulePath;
 
         list($isoLang) = explode('-', $translator->getLocale());
 
         // Cache related variables
         $this->cacheFilePath = $isoLang.'_local_modules';
         $this->cacheProvider = $cacheProvider;
+        $this->loadedModules = new ArrayCache();
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
             $this->cache = $this->cacheProvider->fetch($this->cacheFilePath);
         }
+    }
+
+    /**
+     * Setter for the optional PrestaTrust checker
+     * @param PrestaTrustChecker $checker
+     * @return $this
+     */
+    public function setPrestaTrustChecker(PrestaTrustChecker $checker)
+    {
+        $this->prestaTrustChecker = $checker;
+        return $this;
     }
 
     public function __destruct()
@@ -368,12 +408,15 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule($name, $skip_main_class_attributes = false)
     {
-        $php_file_path = _PS_MODULE_DIR_.$name.'/'.$name.'.php';
+        if ($this->loadedModules->contains($name)) {
+            return $this->loadedModules->fetch($name);
+        }
+
+        $path = $this->modulePath.$name;
+        $php_file_path = $path.'/'.$name.'.php';
 
         /* Data which design the module class */
         $attributes = array('name' => $name);
-        $disk = array();
-        $database = array();
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
         $current_filemtime = (int) @filemtime($php_file_path);
@@ -408,6 +451,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 'is_present' => (int) $this->moduleProvider->isOnDisk($name),
                 'is_valid' => 0,
                 'version' => null,
+                'path' => $path,
             );
             $main_class_attributes = array();
 
@@ -416,7 +460,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
                 // We load the main class of the module, and get its properties
                 $tmp_module = ServiceLocator::get($name);
-                foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
+                foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
                     'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
@@ -440,18 +484,15 @@ class ModuleRepository implements ModuleRepositoryInterface
             $this->cache[$name]['disk'] = $disk;
         }
 
-        foreach (array('logo.png', 'logo.gif') as $logo) {
-            $logo_path = _PS_MODULE_DIR_.$name.DIRECTORY_SEPARATOR.$logo;
-            if (file_exists($logo_path)) {
-                $attributes['img'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_).'/'.$name.'/'.$logo;
-                break;
-            }
-        }
-
         // Get data from database
         $database = $this->moduleProvider->findByName($name);
 
-        return new Module($attributes, $disk, $database);
+        $module = new Module($attributes, $disk, $database);
+        $this->loadedModules->save($name, $module);
+        if ($this->prestaTrustChecker) {
+            $this->prestaTrustChecker->loadDetailsIntoModule($module);
+        }
+        return $module;
     }
 
     public function getModuleAttributes($name)
@@ -491,14 +532,14 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $modules = array();
         $modulesDirsList = $this->finder->directories()
-            ->in(_PS_MODULE_DIR_)
+            ->in($this->modulePath)
             ->depth('== 0')
             ->exclude(array('__MACOSX'))
             ->ignoreVCS(true);
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists(_PS_MODULE_DIR_.$moduleName.'/'.$moduleName.'.php')) {
+            if (!file_exists($this->modulePath.$moduleName.'/'.$moduleName.'.php')) {
                 continue;
             }
             try {
