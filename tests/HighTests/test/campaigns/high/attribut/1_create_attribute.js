@@ -7,11 +7,11 @@ scenario('Create attribute', client => {
   test('should add attribute public name', () => client.addAttributePublicName());
   test('should add attribute type', () => client.addAttributeType());
   test('should save added attribute', () => client.saveNewAttribute());
-  test('should check attribute success panel', () => client.SuccessPanel('Successful creation.'));
+  test('should check attribute success panel', () => client.successPanel('Successful creation.'));
   test('should search for the created attribute', () => client.searchAttribute());
   test('should select the created attribute', () => client.selectAttribute());
   test('should add value to the created attribute', () => client.addValueToAttribute());
-  test('should check attribute success panel', () => client.SuccessPanel('Successful creation.'));
+  test('should check attribute success panel', () => client.successPanel('Successful creation.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'attribute', true);
 
