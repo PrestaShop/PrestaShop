@@ -284,10 +284,22 @@ services:
         calls:
             - [ setExportDir, ["%kernel.cache_dir%/export"]]
 
+
     # EVENT MANAGEMENT
     prestashop.dispatcher.legacy_hooks.subscriber:
         class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
         arguments: ['@prestashop.hook.dispatcher']
         tags:
             - { name: kernel.event_subscriber }
+
+    # Custom Twig loader
+    prestashop.module_kernel.repository:
+        class: 'PrestaShopBundle\Kernel\ModuleRepository'
+        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']
+
+    prestashop.twig.modules.loader:
+        class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
+        arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
+        tags:
+          - { name: twig.loader, priority: 1}
 

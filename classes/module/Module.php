@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 abstract class ModuleCore implements ModuleInterface
 {
@@ -178,6 +179,9 @@ abstract class ModuleCore implements ModuleInterface
     public static $_log_modules_perfs = null;
     /** @var bool Random session for modules perfs logs*/
     public static $_log_modules_perfs_session = null;
+
+    /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+    private $container;
 
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -3186,6 +3190,26 @@ abstract class ModuleCore implements ModuleInterface
     public function isSymfonyContext()
     {
         return !defined('ADMIN_LEGACY_CONTEXT');
+    }
+
+    /**
+     * Access the Symfony Container if we are in Symfony Context.
+     * Note: in this case, we must get a container from SymfonyContainer class.
+     * @param string $serviceName
+     *
+     * @return Object|false if Symfony is not booted, it returns false.
+     */
+    public function get($serviceName)
+    {
+        if ($this->isSymfonyContext()) {
+            if (is_null($this->container)) {
+                $this->container = SymfonyContainer::getInstance();
+            }
+
+            return $this->container->get($serviceName);
+        }
+
+        return false;
     }
 }
 

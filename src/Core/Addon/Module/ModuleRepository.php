@@ -581,4 +581,23 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         return $this->getFilteredList($filters);
     }
+
+    /**
+     * Returns installed module filepaths
+     * @return array
+     */
+    public function getInstalledModulesPaths()
+    {
+        $paths = array();
+        $modulesFiles = Finder::create()->directories()->in(__DIR__.'/../../../../modules')->depth(0);
+        $installedModules = array_keys($this->getInstalledModules());
+
+        foreach ($modulesFiles as $moduleFile) {
+            if (in_array($moduleFile->getFilename(), $installedModules)) {
+                $paths[] = $moduleFile->getPathname();
+            }
+        }
+
+        return $paths;
+    }
 }
