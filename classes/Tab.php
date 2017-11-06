@@ -91,16 +91,17 @@ class TabCore extends ObjectModel
         self::$_cache_tabs = array();
 
         // Set good position for new tab
-        if (!is_int($this->position)) {
-            $this->position = Tab::getNewLastPosition($this->id_parent);
-        }
+        (is_int($this->position) && $this->position > 0) ? $requestedPosition = $this->position : $requestedPosition = null;
+        $this->position = Tab::getNewLastPosition($this->id_parent);
         $this->module = Tools::strtolower($this->module);
 
         // Add tab
         if (parent::add($autoDate, $nullValues)) {
             //forces cache to be reloaded
             self::$_getIdFromClassName = null;
-
+            if (is_int($requestedPosition) && $requestedPosition < $this->position) {
+                $this->updatePosition(false, $requestedPosition);
+            }
             return Tab::initAccess($this->id);
         }
 
@@ -603,14 +604,27 @@ class TabCore extends ObjectModel
      */
     public function update($nullValues = false)
     {
+        $requestedPosition = null;
         $current_tab = new Tab($this->id);
+        if ($current_tab->position != $this->position) {
+            $requestedPosition = $this->position;
+            $this->position = $current_tab->position;
+        }
+
         if ($current_tab->id_parent != $this->id_parent) {
             $this->position = Tab::getNewLastPosition($this->id_parent);
         }
 
         self::$_cache_tabs = array();
 
-        return parent::update($nullValues);
+        $res = parent::update($nullValues);
+
+        if ($res && is_int($requestedPosition) && $requestedPosition > 0 && $requestedPosition < Tab::getNewLastPosition($this->id_parent)) {
+            ($requestedPosition < $this->position) ? $way = false : $way = true;
+            $this->updatePosition($way, $requestedPosition);
+        }
+
+        return $res;
     }
 
     /**
@@ -685,5 +699,51 @@ class TabCore extends ObjectModel
         }
 
         return $modulesList;
+    }
+
+    /**
+     * Get tab position by it's class name
+     *
+     * @param $className
+     * @return false|null|string
+     */
+    public static function getPositionByClassName($className)
+    {
+        return Db::getInstance()->getValue('SELECT position FROM '._DB_PREFIX_.'tab WHERE class_name = "'. pSQL($className) .'"');
+    }
+
+    /**
+     * Get position before a tab by class name
+     * @param $className
+     * @return bool|int
+     */
+    public static function getPositionBeforeClassName($className)
+    {
+        $position = Tab::getPositionByClassName($className);
+        if (is_numeric($position)) {
+            $newPosition = (int)$position - 1;
+            if ($newPosition <= 0) {
+                $newPosition = 1;
+            }
+            return $newPosition;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get position after a tab by class name
+     * @param $className
+     * @return bool|int
+     */
+    public static function getPositionAfterClassName($className)
+    {
+        $position = Tab::getPositionByClassName($className);
+        if (is_numeric($position)) {
+            return (int)$position + 1;
+        }
+
+        return false;
+
     }
 }
