@@ -54,6 +54,7 @@ class CustomizationFieldCore extends ObjectModel
             'type' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'required' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'is_module' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false),
+            'is_deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => false),
 
             /* Lang fields */
             'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 255),

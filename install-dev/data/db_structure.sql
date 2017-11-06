@@ -684,6 +684,7 @@ CREATE TABLE `PREFIX_customization_field` (
   `type` tinyint(1) NOT NULL,
   `required` tinyint(1) NOT NULL,
   `is_module` TINYINT(1) NOT NULL DEFAULT '0',
+  `is_deleted` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_customization_field`),
   KEY `id_product` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
