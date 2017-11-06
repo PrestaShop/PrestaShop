@@ -27,12 +27,18 @@
 
 class TaxConfigurationCore
 {
+    private $taxCalculationMethod = array();
+
     public function includeTaxes()
     {
         if (!Configuration::get('PS_TAX')) {
             return false;
         }
 
-        return !Product::getTaxCalculationMethod(Context::getContext()->cookie->id_customer);
+        $idCustomer = Context::getContext()->cookie->id_customer;
+        if (!array_key_exists($idCustomer, $this->taxCalculationMethod)) {
+            $this->taxCalculationMethod[$idCustomer] = !Product::getTaxCalculationMethod($idCustomer);
+        }
+        return $this->taxCalculationMethod[$idCustomer];
     }
 }

@@ -44,7 +44,9 @@ class HistoryControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        $this->order_presenter = new OrderPresenter();
+        if ($this->order_presenter === null) {
+            $this->order_presenter = new OrderPresenter();
+        }
 
         if (Tools::isSubmit('slowvalidation')) {
             $this->warning[] = $this->trans('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.', array(), 'Shop.Notifications.Warning');
