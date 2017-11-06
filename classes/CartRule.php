@@ -302,6 +302,34 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
+     * Check if some cart rules exists today for the given customer
+     *
+     * @param int $idCustomer
+     *
+     * @return bool
+     */
+    public static function haveCartRuleToday($idCustomer)
+    {
+        static $haveCartRuleToday = array();
+
+        if (!isset($haveCartRuleToday[$idCustomer])) {
+            $sql = '(SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
+                'WHERE date_to >= "' . date('Y-m-d 00:00:00') .
+                '" AND date_to <= "' . date('Y-m-d 23:59:59') .
+                '" AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1)';
+
+            $sql .= 'UNION ALL (SELECT 1 FROM `' . _DB_PREFIX_ . 'cart_rule` ' .
+                'WHERE date_from >= "' . date('Y-m-d 00:00:00') .
+                '" AND date_from <= "' . date('Y-m-d 23:59:59') .
+                '" AND `id_customer` IN (0,' . (int)$idCustomer . ') LIMIT 1) LIMIT 1';
+
+            $haveCartRuleToday[$idCustomer] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+        }
+
+        return !empty($haveCartRuleToday[$idCustomer]);
+    }
+
+    /**
      * Get CartRules for the given Customer
      *
      * @param int       $id_lang            Language ID
@@ -326,15 +354,17 @@ class CartRuleCore extends ObjectModel
         $highlight_only = false
     ) {
 
-        if (!CartRule::isFeatureActive()) {
+        if (!CartRule::isFeatureActive()
+            || !CartRule::haveCartRuleToday($id_customer)
+        ) {
             return array();
         }
 
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
 				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
-        $sql_part2 = ' AND cr.date_from < "' . date('Y-m-d H:i:s') . '"
-				AND cr.date_to > "' . date('Y-m-d H:i:s') . '"
+        $sql_part2 = ' AND cr.date_from < "' . date('Y-m-d H:i:59') . '"
+				AND cr.date_to > "' . date('Y-m-d H:i:59') . '"
 				' . ($active ? 'AND cr.`active` = 1' : '') . '
 				' . ($inStock ? 'AND cr.`quantity` > 0' : '');
 
