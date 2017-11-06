@@ -73,6 +73,6 @@ class Router extends BaseRouter
 
         $queryParams['_token'] = $token;
 
-        return $baseUrl.'?'.http_build_query($queryParams);
+        return $baseUrl.'?'.http_build_query($queryParams, '', '&');
     }
 }
