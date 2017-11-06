@@ -578,7 +578,7 @@ class CartCore extends ObjectModel
 
         $result = Db::getInstance()->getRow($sql);
         if ($result && isset($result['id_product']) && $result['id_product']) {
-            foreach ($this->getProducts() as $product) {
+            foreach ($this->getProducts(false, false, null, false) as $product) {
                 if ($result['id_product'] == $product['id_product']
                     && (
                         !$result['id_product_attribute']
@@ -3865,21 +3865,33 @@ class CartCore extends ObjectModel
         }
 
         if (!isset(self::$_isVirtualCart[$this->id])) {
-            $products = $this->getProducts();
-            if (!count($products)) {
-                return false;
+            $isVirtual = true;
+            if ($this->hasRealProducts()) {
+                $isVirtual = false;
             }
 
-            $is_virtual = 1;
-            foreach ($products as $product) {
-                if (empty($product['is_virtual'])) {
-                    $is_virtual = 0;
-                }
-            }
-            self::$_isVirtualCart[$this->id] = (int)$is_virtual;
+            self::$_isVirtualCart[$this->id] = $isVirtual;
         }
 
         return self::$_isVirtualCart[$this->id];
+    }
+
+    /**
+     * Return true if the current cart contains a real product
+     *
+     * @return bool
+     */
+    public function hasRealProducts()
+    {
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT 1 FROM '._DB_PREFIX_.'cart_product cp WHERE '.
+            'EXISTS(
+                SELECT 1 FROM '._DB_PREFIX_.'product p '.
+            'JOIN '._DB_PREFIX_.'product_shop '.
+            'ON (product_shop.id_shop = cp.id_shop AND product_shop.id_product = p.id_product)
+                WHERE p.is_virtual = 0 AND p.id_product = cp.id_product) '.
+            'AND cp.id_cart='.(int)$this->id
+        );
     }
 
     /**
@@ -4638,7 +4650,7 @@ class CartCore extends ObjectModel
     {
         $product_out_of_stock = 0;
         $product_in_stock = 0;
-        foreach ($this->getProducts() as $product) {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
             if (!$exclusive) {
                 if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) < 0
                     && (!$ignore_virtual || !$product['is_virtual'])) {
@@ -4700,7 +4712,7 @@ class CartCore extends ObjectModel
     public function getDeliveryAddressesWithoutCarriers($return_collection = false, &$error = array())
     {
         $addresses_without_carriers = array();
-        foreach ($this->getProducts() as $product) {
+        foreach ($this->getProducts(false, false, null, false) as $product) {
             if (!in_array($product['id_address_delivery'], $addresses_without_carriers)
                 && !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'], null, null, $error))) {
                 $addresses_without_carriers[] = $product['id_address_delivery'];
