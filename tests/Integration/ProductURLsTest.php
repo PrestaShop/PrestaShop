@@ -37,9 +37,9 @@ class ProductURLsTest extends IntegrationTestCase
     private $link;
     private $language;
 
-    public function setup()
+    protected function setUp()
     {
-        parent::setup();
+        parent::setUp();
         $context = Context::getContext();
         $this->link = $context->link;
         $this->language = $context->language;

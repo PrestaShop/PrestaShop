@@ -85,6 +85,7 @@ class AdminModelAdapterTest extends KernelTestCase
                 "out_of_stock" => '',
                 "minimal_quantity" => '',
                 "low_stock_threshold" => '',
+                "low_stock_alert" => '',
                 "available_now" => [],
                 "available_later" => [],
                 "available_date" => '',
@@ -97,7 +98,10 @@ class AdminModelAdapterTest extends KernelTestCase
                 "depth" => '',
                 "weight" => '',
                 "additional_shipping_cost" => '',
-                "selectedCarriers" => []
+                "selectedCarriers" => [],
+                "additional_delivery_times" => '',
+                "delivery_in_stock" => [],
+                "delivery_out_stock" => [],
             ],
             "step5" => [
                 "link_rewrite" => [],
@@ -143,6 +147,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "default_on" => null,
             "minimal_quantity" => "1",
             "low_stock_threshold" => "2",
+            "low_stock_alert" => "1",
             "available_date" => "0000-00-00",
             "id_shop" => "1",
             "id_attribute_group" => "1",
@@ -167,8 +172,10 @@ class AdminModelAdapterTest extends KernelTestCase
         self::$kernel->boot();
         $this->container = self::$kernel->getContainer();
 
+        \Context::getContext()->shop = new \Shop(1);
+        \Context::getContext()->language = new \Language(1);
+        \Context::getContext()->currency = new \Currency(1);
         $this->product = $this->fakeProduct();
-
         $this->adminModelAdapter = new AdminModelAdapter(
             $this->product,
             $this->container->get('prestashop.adapter.legacy.context'),
@@ -236,6 +243,7 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_unity" => "0.000000",
             "attribute_minimal_quantity" => "1",
             "attribute_low_stock_threshold" => "2",
+            "attribute_low_stock_alert" => "1",
             "available_date_attribute" => "0000-00-00",
             "attribute_default" => false,
             "attribute_quantity" => 300,

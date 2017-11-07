@@ -162,6 +162,7 @@ class StockController extends ApiController
             'product_reserved_quantity' => $translator->trans('Reserved quantity', array(), 'Admin.Catalog.Feature'),
             'product_available_quantity' => $translator->trans('Available quantity', array(), 'Admin.Catalog.Feature'),
             'product_low_stock_threshold' => $translator->trans('Low stock level', array(), 'Admin.Catalog.Feature'),
+            'product_low_stock_alert' => $translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
         );
 
         return (new CsvResponse())

@@ -783,7 +783,8 @@ class AdminProductsControllerCore extends AdminController
                                 false,
                                 array(),
                                 Tools::getValue('attribute_isbn'),
-                                Tools::getValue('attribute_low_stock_threshold')
+                                Tools::getValue('attribute_low_stock_threshold'),
+                                Tools::getValue('attribute_low_stock_alert')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
@@ -815,7 +816,8 @@ class AdminProductsControllerCore extends AdminController
                                 array(),
                                 Tools::getValue('available_date_attribute'),
                                 Tools::getValue('attribute_isbn'),
-                                Tools::getValue('attribute_low_stock_threshold')
+                                Tools::getValue('attribute_low_stock_threshold'),
+                                Tools::getValue('attribute_low_stock_alert')
                             );
                             StockAvailable::setProductDependsOnStock((int)$product->id, $product->depends_on_stock, null, (int)$id_product_attribute);
                             StockAvailable::setProductOutOfStock((int)$product->id, $product->out_of_stock, null, (int)$id_product_attribute);
@@ -866,19 +868,21 @@ class AdminProductsControllerCore extends AdminController
 
             // add new objects
             $languages = Language::getLanguages(false);
-            foreach ($_POST as $key => $val) {
-                if (preg_match('/^feature_([0-9]+)_value/i', $key, $match)) {
-                    if ($val) {
-                        $product->addFeaturesToDB($match[1], $val);
-                    } else {
-                        if ($default_value = $this->checkFeatures($languages, $match[1])) {
-                            $id_value = $product->addFeaturesToDB($match[1], 0, 1);
+            $form = Tools::getValue('form', false);
+            if (false !== $form) {
+                $features = isset($form['step1']['features']) ? $form['step1']['features'] : array();
+                if (is_array($features)) {
+                    foreach ($features as $feature) {
+                        if (!empty($feature['value'])) {
+                            $product->addFeaturesToDB($feature['feature'], $feature['value']);
+                        } elseif ($defaultValue = $this->checkFeatures($languages, $feature)) {
+                            $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
                             foreach ($languages as $language) {
-                                if ($cust = Tools::getValue('custom_'.$match[1].'_'.(int)$language['id_lang'])) {
-                                    $product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $cust);
-                                } else {
-                                    $product->addFeaturesCustomToDB($id_value, (int)$language['id_lang'], $default_value);
-                                }
+                                $valueToAdd = (isset($feature['custom_value'][$language['id_lang']]))
+                                    ? $feature['custom_value'][$language['id_lang']]
+                                    : $defaultValue;
+
+                                $product->addFeaturesCustomToDB($idValue, (int)$language['id_lang'], $valueToAdd);
                             }
                         }
                     }
@@ -1564,20 +1568,26 @@ class AdminProductsControllerCore extends AdminController
         return false;
     }
 
-    /* Checking customs feature */
-    protected function checkFeatures($languages, $feature_id)
+    /**
+     * Checking customs feature
+     * @param array $languages
+     * @param array $featureInfo
+     * @return int|string
+     */
+    protected function checkFeatures($languages, $featureInfo)
     {
         $rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
-        $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $feature_id);
+        $feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $featureInfo['feature']);
 
         foreach ($languages as $language) {
-            if ($val = Tools::getValue('custom_'.$feature_id.'_'.$language['id_lang'])) {
+            if (isset($featureInfo['custom_value'][$language['id_lang']])) {
+                $val = $featureInfo['custom_value'][$language['id_lang']];
                 $current_language = new Language($language['id_lang']);
                 if (Tools::strlen($val) > $rules['sizeLang']['value']) {
                     $this->errors[] = $this->trans(
                         'The name for feature %1$s is too long in %2$s.',
                         array(
-                            ' <b>'.$feature['name'].'</b>',
+                            ' <b>' . $feature['name'] . '</b>',
                             $current_language->name
                         ),
                         'Admin.Catalog.Notification'
@@ -1993,10 +2003,7 @@ class AdminProductsControllerCore extends AdminController
                 if (Tools::getValue('id_'.$this->table) && $field == 'passwd') {
                     continue;
                 }
-                $this->errors[] = sprintf(
-                    $this->trans('The %s field is required.', array(), 'Admin.Notifications.Error'),
-                    call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)
-                );
+                $this->errors[] = $this->trans('The %name% field is required.', array('%name%' => call_user_func(array($this->className, 'displayFieldName'), $field, $this->className)), 'Admin.Notifications.Error');
             }
         }
 

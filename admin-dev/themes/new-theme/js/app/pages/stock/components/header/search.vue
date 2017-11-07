@@ -123,7 +123,10 @@
     }
     .alert-box {
       padding-top: 28px;
-      z-index: -1;
+      z-index: 3;
+      position: fixed;
+      right: 5px;
+      top: 40px;
     }
     .search-form {
       width: calc(100% - 130px);

@@ -173,6 +173,16 @@ class ProductQuantity extends CommonAbstractType
                 )
             )
             ->add(
+                'low_stock_alert',
+                'Symfony\Component\Form\Extension\Core\Type\CheckboxType',
+                array(
+                    'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', array(), 'Admin.Catalog.Feature'),
+                    'constraints' => array(
+                        new Assert\Type(array('type' => 'bool')),
+                    ),
+                )
+            )
+            ->add(
                 'available_now',
                 'PrestaShopBundle\Form\Admin\Type\TranslateType',
                 array(

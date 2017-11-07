@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% form_theme categories _self %}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
@@ -70,7 +70,6 @@
 {%- endblock choice_tree_item_widget %}
 
 {% block content %}
-
   <div class="products-catalog">
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}

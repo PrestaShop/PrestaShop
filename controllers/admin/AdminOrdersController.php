@@ -377,7 +377,7 @@ class AdminOrdersControllerCore extends AdminController
                 $order_state = new OrderState($id_order_state);
 
                 if (!Validate::isLoadedObject($order_state)) {
-                    $this->errors[] = sprintf($this->trans('Order status #%d cannot be loaded', array(), 'Admin.Orderscustomers.Notification'), $id_order_state);
+                    $this->errors[] = $this->trans('Order status #%id% cannot be loaded', array('%id%' => $id_order_state), 'Admin.Orderscustomers.Notification');
                 } else {
                     foreach (Tools::getValue('orderBox') as $id_order) {
                         $order = new Order((int)$id_order);
@@ -1718,7 +1718,7 @@ class AdminOrdersControllerCore extends AdminController
         );
         if (Shop::isFeatureActive()) {
             $shop = new Shop((int)$order->id_shop);
-            $this->toolbar_title .= ' - '.sprintf($this->trans('Shop: %s', array(), 'Admin.Orderscustomers.Feature'), $shop->name);
+            $this->toolbar_title .= ' - '.$this->trans('Shop: %shop_name%', array('%shop_name%' => $shop->name), 'Admin.Orderscustomers.Feature');
         }
 
         // gets warehouses to ship products, if and only if advanced stock management is activated

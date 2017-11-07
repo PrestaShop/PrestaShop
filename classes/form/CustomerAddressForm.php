@@ -106,30 +106,25 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function validate()
     {
-        $is_valid = parent::validate();
+        $is_valid = true;
 
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
-                    // FIXME: the translator adapter is crap at the moment,
-                    // but once it is not, the sprintf needs to go away.
-                    $postcode->addError(sprintf(
-                        $this->translator->trans(
-                            'Invalid postcode - should look like "%1$s"', [], 'Shop.Forms.Errors'
-                        ),
-                        $country->zip_code_format
-                    ));
+                    $postcode->addError($this->translator->trans('Invalid postcode - should look like "%zipcode%"',
+                        array('%zipcode%' => $country->zip_code_format),
+                        'Shop.Forms.Errors'));
                     $is_valid = false;
                 }
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) != '') {
+        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) !== '') {
             $is_valid &= (bool) $hookReturn;
         }
 
-        return $is_valid;
+        return $is_valid && parent::validate();
     }
 
     public function submit()

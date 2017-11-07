@@ -42,6 +42,7 @@
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
+		var lang_is_rtl = '{$lang_is_rtl|intval}';
 		var full_language_code = '{$full_language_code|@addcslashes:'\''}';
 		var full_cldr_language_code = '{$full_cldr_language_code|@addcslashes:'\''}';
 		var country_iso_code = '{$country_iso_code|@addcslashes:'\''}';
@@ -49,37 +50,37 @@
 		var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
 	{if $shop_context == Shop::CONTEXT_ALL}
-		var youEditFieldFor = '{l s='This field will be modified for all your shops.' js=1}';
+		var youEditFieldFor = '{l s='This field will be modified for all your shops.' js=1 d='Admin.Notifications.Info'}';
 	{elseif $shop_context == Shop::CONTEXT_GROUP}
-		var youEditFieldFor = '{l s='This field will be modified for all shops in this shop group:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+		var youEditFieldFor = '{l s='This field will be modified for all shops in this shop group:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
 	{else}
-		var youEditFieldFor = '{l s='This field will be modified for this shop:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+		var youEditFieldFor = '{l s='This field will be modified for this shop:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
 	{/if}
 {else}
 		var youEditFieldFor = '';
 {/if}
-		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1}';
-		var order_number_msg = '{l s='Order number:' js=1} ';
-		var total_msg = '{l s='Total:' js=1} ';
-		var from_msg = '{l s='From:' js=1} ';
-		var see_order_msg = '{l s='View this order' js=1}';
-		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
-		var customer_name_msg = '{l s='register' js=1} ';
-		var new_msg = '{l s='A new message was posted on your shop.' js=1}';
-		var see_msg = '{l s='Read this message' js=1}';
+		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var order_number_msg = '{l s='Order number:' js=1 d='Admin.Navigation.Header'} ';
+		var total_msg = '{l s='Total' js=1 d='Admin.Global'} ';
+		var from_msg = '{l s='From:' js=1 d='Admin.Global'} ';
+		var see_order_msg = '{l s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
+		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var customer_name_msg = '{l s='registered' js=1 d='Admin.Navigation.Notification'} ';
+		var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
 		var token = '{$token|addslashes}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
 		var token_admin_customers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex|@addcslashes:'\''}';
 		var employee_token = '{getAdminToken tab='AdminEmployees'}';
-		var choose_language_translate = '{l s='Choose language' js=1}';
+		var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
 		var default_language = '{$default_language|intval}';
 		var admin_modules_link = '{$link->getAdminLink("AdminModulesSf", true, ['route' => "admin_module_catalog_post"])|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
-		var update_success_msg = '{l s='Update successful' js=1}';
-		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1}';
-		var search_product_msg = '{l s='Search for a product' js=1}';
+		var update_success_msg = '{l s='Successful update.' js=1 d='Admin.Notifications.Success'}';
+		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';
+		var search_product_msg = '{l s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
 	</script>
 {/if}
 {if isset($css_files)}
@@ -105,7 +106,7 @@
 </head>
 
 {if $display_header}
-	<body class="ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+	<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
 	{* begin  HEADER *}
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
@@ -141,21 +142,21 @@
 									<li>
 										<a href="javascript:void(0);" class="ajax-quick-link" data-method="remove" data-quicklink-id="{$matchQuickLink}">
 											<i class="icon-minus-circle"></i>
-											{l s='Remove from QuickAccess'}
+											{l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
 										</a>
 									</li>
 								{else}
                   <li>
                     <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
                       <i class="icon-plus-circle"></i>
-                      {l s='Add current page to QuickAccess'}
+                      {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
                     </a>
                   </li>
                 {/if}
                 <li>
                   <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
                     <i class="icon-cog"></i>
-                    {l s='Manage quick accesses'}
+                    {l s='Manage quick accesses' d='Admin.Navigation.Header'}
                   </a>
                 </li>
 							</ul>
@@ -170,7 +171,7 @@
 								var method = $(this).data('method');
 
 								if(method == 'add')
-									var name = prompt('{l s='Please name this shortcut:' js=1}', '{$quick_access_current_link_name.0|truncate:32}');
+									var name = prompt('{l s='Please name this shortcut:' js=1 d='Admin.Navigation.Header'}', '{$quick_access_current_link_name.0|truncate:32}');
 
 								if(method == 'add' && name || method == 'remove')
 								{
@@ -256,19 +257,19 @@
                     {$active = "active"}
                     {if $show_new_orders}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Latest orders'}<span id="orders_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Latest orders' d='Admin.Navigation.Header'}<span id="orders_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
                     {if $show_new_customers}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='New customers'}<span id="customers_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='New customers' d='Admin.Navigation.Header'}<span id="customers_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
                     {if $show_new_messages}
                       <li class="nav-item {$active}">
-                        <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages'}<span id="customer_messages_notif_value"></span></a>
+                        <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages' d='Admin.Global'}<span id="customer_messages_notif_value"></span></a>
                       </li>
                       {$active = ""}
                     {/if}
@@ -322,14 +323,14 @@
                 <span class="shop-state hidden-xs" id="debug-mode">
                   <i class="material-icons">bug_report</i>
                   <span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>']}</p>">{l s='Debug mode'}</span>
+                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>">{l s='Debug mode' d='Admin.Navigation.Header'}</span>
                 </span>
               {/if}
               {if isset($maintenance_mode) && $maintenance_mode == true}
                 <span class="shop-state" id="maintenance-mode">
                   <i class="material-icons">build</i>
                     <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
-                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">{l s='Maintenance mode'}
+                    title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">{l s='Maintenance mode' d='Admin.Navigation.Header'}
                     </a>
                 </span>
               {/if}
@@ -370,7 +371,7 @@
 
 {if $install_dir_exists}
 			<div class="alert alert-warning">
-				{l s='For security reasons, you must also delete the /install folder.'}
+				{l s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
 			</div>
 {/if}
 

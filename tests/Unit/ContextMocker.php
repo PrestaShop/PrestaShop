@@ -26,6 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit;
 
+use Cache;
+use Carrier;
+use Cart;
+use CartRule;
+use Configuration;
+use Context;
+use Currency;
+use Language;
+use Link;
+use Phake;
+use Product;
+use Shop;
+use Smarty;
+use Tools;
+
 /**
  * This helper class provides methods to initialize context for front controller tests
  *
@@ -60,19 +75,33 @@ class ContextMocker
      */
     public function mockContext()
     {
-        $this->contextBackup = \Context::getContext();
+        // need to reset loooot of things
+        Product::flushPriceCache();
+        Configuration::clearConfigurationCacheForTesting();
+        Configuration::loadConfiguration();
+        Cache::clear();
+        Cart::resetStaticCache();
+        Carrier::resetStaticCache();
+        CartRule::resetStaticCache();
+        Shop::resetContext();
+
+        $this->contextBackup = Context::getContext();
         $context             = clone($this->contextBackup);
-        \Context::setInstanceForTesting($context);
-        $context->shop     = new \Shop((int) \Configuration::get('PS_SHOP_DEFAULT'));
-        $context->language = new \Language((int) \Configuration::get('PS_LANG_DEFAULT'));
-        $context->currency = new \Currency((int) \Configuration::get('PS_CURRENCY_DEFAULT'));
-        $protocol_link     = (\Tools::usingSecureMode() && \Configuration::get('PS_SSL_ENABLED'))
+        Context::setInstanceForTesting($context);
+        $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+        Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
+        $context->customer = Phake::mock('Customer');
+        $context->cookie   = Phake::mock('Cookie');
+        $context->country  = Phake::mock('Country');
+        $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $protocol_link     = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
-        $protocol_content  = (\Tools::usingSecureMode() && \Configuration::get('PS_SSL_ENABLED'))
+        $protocol_content  = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
-        $context->link     = new \Link($protocol_link, $protocol_content);
-        $context->currency = new \Currency(1, 1, 1);
-        $context->smarty   = new \Smarty();
+        $context->link     = new Link($protocol_link, $protocol_content);
+        $context->currency = new Currency(1, 1, 1);
+        $context->smarty   = new Smarty();
 
         return $this;
     }
@@ -82,6 +111,6 @@ class ContextMocker
      */
     public function resetContext()
     {
-        \Context::setInstanceForTesting($this->contextBackup);
+        Context::setInstanceForTesting($this->contextBackup);
     }
 }

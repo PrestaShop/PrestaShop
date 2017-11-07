@@ -29,10 +29,10 @@
       <i class="material-icons float-right ">keyboard_arrow_down</i>
       {{trans('button_advanced_filter')}}
     </button>
-    <div class="collapse" id="filters">
+    <div id="filters" class="container-fluid collapse">
       <div class="row">
-        <div class="col-md-4">
-          <div v-if="isOverview" class="py-2 px-2">
+        <div class="col-lg-4">
+          <div v-if="isOverview" class="py-3">
             <h2>{{trans('filter_suppliers')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_suppliers')"
@@ -42,16 +42,16 @@
               @active="onFilterActive"
             />
           </div>
-          <div v-else class="py-2 px-2">
+          <div v-else class="py-3">
             <h2>{{trans('filter_movements_type')}}</h2>
             <PSSelect :items="movementsTypes" itemID="id_stock_mvt_reason" itemName="name" @change="onChange">
               {{trans('none')}}
             </PSSelect>
-            <h2 class="mt-2">{{trans('filter_movements_employee')}}</h2>
+            <h2 class="mt-4">{{trans('filter_movements_employee')}}</h2>
             <PSSelect :items="employees" itemID="id_employee" itemName="name" @change="onChange">
              {{trans('none')}}
             </PSSelect>
-            <h2 class="mt-2">{{trans('filter_movements_period')}}</h2>
+            <h2 class="mt-4">{{trans('filter_movements_period')}}</h2>
             <form class="row">
               <div class="col-md-6">
                 <label>{{trans('filter_datepicker_from')}}</label>
@@ -64,8 +64,8 @@
             </form>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="py-2 px-2">
+        <div class="col-lg-4">
+          <div class="py-3">
             <h2>{{trans('filter_categories')}}</h2>
             <FilterComponent
               :placeholder="trans('filter_search_category')"
@@ -76,8 +76,8 @@
             />
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="py-2 px-2">
+        <div class="col-lg-4">
+          <div class="py-3">
             <h2>{{trans('filter_status')}}</h2>
             <PSRadio
               id="enable"
@@ -214,6 +214,10 @@
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
     border: solid 1px #b9cdd2;
     width: 150%;
+
+    .row {
+      padding: 0.625rem; // 10px
+    }
   }
   .collapse-button {
     width: 100%;

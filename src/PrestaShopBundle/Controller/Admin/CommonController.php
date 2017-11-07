@@ -53,7 +53,7 @@ class CommonController extends FrameworkBundleAdminController
      * {% render controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
      *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
      * @param Request $request
      * @param integer $limit
      * @param integer $offset
@@ -149,7 +149,7 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
      * @param string $domain
      * @param integer $limit
      * @param integer $randomize
@@ -200,7 +200,7 @@ class CommonController extends FrameworkBundleAdminController
     {
         $tools = $this->container->get('prestashop.adapter.tools');
 
-        return $this->render('PrestaShopBundle:Admin:Common/_partials/_sidebar.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', [
             'footer' => $tools->purifyHTML($footer),
             'title' => $title,
             'url' => urldecode($url),

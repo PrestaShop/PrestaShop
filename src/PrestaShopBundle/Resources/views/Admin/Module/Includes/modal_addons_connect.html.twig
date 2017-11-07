@@ -27,8 +27,8 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title module-modal-title">{{ 'Connect to Addons marketplace'|trans({}, 'Admin.Modules.Feature') }}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
         {% if level <= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
@@ -63,7 +63,7 @@
                     </label>
                   </div>
                   <button type="submit" class="btn btn-primary">{{ "Let's go!"|trans({}, 'Admin.Actions') }}</button>
-                  <button id="addons_login_btn" class="btn btn-primary-reverse btn-lg onclick" style="display:none;"></button>
+                  <div id="addons_login_btn" class="spinner" style="display:none;"></div>
                 </form>
                 <p>
                     <a href="http://addons.prestashop.com/password.php" target="_blank">{{ 'Forgot your password?'|trans({}, 'Admin.Global') }}</a>

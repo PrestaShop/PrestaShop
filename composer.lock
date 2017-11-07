@@ -280,6 +280,41 @@
             "time": "2015-11-17T00:02:55+00:00"
         },
         {
+            "name": "cssjanus/cssjanus",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cssjanus/php-cssjanus.git",
+                "reference": "0fd44d8a3f1f0f10bfb500b6b595240bf6415ffa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cssjanus/php-cssjanus/zipball/0fd44d8a3f1f0f10bfb500b6b595240bf6415ffa",
+                "reference": "0fd44d8a3f1f0f10bfb500b6b595240bf6415ffa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "0.8.*",
+                "phpunit/phpunit": "4.8.*",
+                "squizlabs/php_codesniffer": "2.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Convert CSS stylesheets between left-to-right and right-to-left.",
+            "time": "2017-03-14T20:57:08+00:00"
+        },
+        {
             "name": "curl/curl",
             "version": "1.2.1",
             "source": {
@@ -1611,6 +1646,37 @@
                 "parameters management"
             ],
             "time": "2015-11-10T17:04:01+00:00"
+        },
+        {
+            "name": "ipresta/localize-fixture",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/iPresta/localize-fixture.git",
+                "reference": "ce22432bd74c1461682ab82046949c3c020ac3ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/iPresta/localize-fixture/zipball/ce22432bd74c1461682ab82046949c3c020ac3ca",
+                "reference": "ce22432bd74c1461682ab82046949c3c020ac3ca",
+                "shasum": ""
+            },
+            "require": {
+                "cssjanus/cssjanus": "~v1.2",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT License"
+            ],
+            "description": "Generate RTL CSS for PrestaShop",
+            "time": "2017-08-06T11:31:53+00:00"
         },
         {
             "name": "ircmaxell/password-compat",

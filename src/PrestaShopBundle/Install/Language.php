@@ -31,6 +31,7 @@ class Language
     public $id;
     public $name;
     public $locale;
+    public $iso_code;
     public $language_code;
     public $is_rtl;
     public $date_format_lite;
@@ -39,6 +40,7 @@ class Language
 
     public function __construct($iso)
     {
+        $this->iso_code = strtolower($iso);
         $xmlPath = _PS_INSTALL_LANGS_PATH_.$iso.'/';
         $this->setPropertiesFromXml($xmlPath);
         $this->is_rtl = ($this->is_rtl === 'true') ? true : false;

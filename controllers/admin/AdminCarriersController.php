@@ -144,7 +144,7 @@ class AdminCarriersControllerCore extends AdminController
 
         // test if need to show header alert.
         $sql = 'SELECT COUNT(1) FROM `'._DB_PREFIX_.'carrier` WHERE deleted = 0 AND id_reference > 2';
-        $showHeaderAlert = (Db::getInstance()->query($sql)->fetchColumn(0) == 0);
+        $showHeaderAlert = (Db::getInstance()->executeS($sql, false)->fetchColumn(0) == 0);
 
         // Assign them in two steps! Because renderModulesList needs it before to be called.
         $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', array(), 'Admin.Shipping.Feature'));
@@ -172,7 +172,7 @@ class AdminCarriersControllerCore extends AdminController
                     'name' => 'name',
                     'required' => true,
                     'hint' => array(
-                        sprintf($this->trans('Allowed characters: letters, spaces and %s', array(), 'Admin.Shipping.Help'), '().-'),
+                        $this->trans('Allowed characters: letters, spaces and "%special_chars%".', array('%special_chars%' => '().-'), 'Admin.Shipping.Help'),
                         $this->trans('Carrier name displayed during checkout', array(), 'Admin.Shipping.Help'),
                         $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', array(), 'Admin.Shipping.Help')
                     )

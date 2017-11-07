@@ -259,14 +259,14 @@ class AdminEmployeesControllerCore extends AdminController
                     'type' => 'html',
                     'name' => 'employee_avatar',
                     'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
-					<div id="employee-avatar-thumbnail" class="alert alert-info">'.sprintf($this->trans(
+					<div id="employee-avatar-thumbnail" class="alert alert-info">'.$this->trans(
                         'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.',
                         array(
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',
                             '%email%' => $obj->email,
                         ),
                         'Admin.Advparameters.Help'
-                        )).'
+                        ).'
                     </div>',
                 ),
                 array(
@@ -595,8 +595,7 @@ class AdminEmployeesControllerCore extends AdminController
         $employee = new Employee((int)Tools::getValue('id_employee'));
 
         if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
-            return !($this->errors[] = sprintf($this->trans('The password must be at least %s characters long.', array(), 'Admin.Advparameters.Notification'),
-                Validate::ADMIN_PASSWORD_LENGTH));
+            return !($this->errors[] = $this->trans('The password must be at least %length% characters long.', array('%length%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Notification'));
         }
 
         return parent::validateRules($class_name);

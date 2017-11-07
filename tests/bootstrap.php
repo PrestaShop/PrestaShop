@@ -1,4 +1,6 @@
 <?php
+use PrestaShopBundle\Install\Install;
+
 /**
  * 2007-2017 PrestaShop
  *
@@ -23,8 +25,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+define('_PS_IN_TEST_', true);
 define('_PS_ROOT_DIR_', __DIR__ . '/..');
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
 require_once(dirname(__FILE__).'/../config/defines.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 require_once(dirname(__FILE__).'/../config/bootstrap.php');
+
+/**
+ * Following code makes tests run under phpstorm
+ * Else we get error : Class 'PHPUnit_Util_Configuration' not found
+ * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess
+ */
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
+}

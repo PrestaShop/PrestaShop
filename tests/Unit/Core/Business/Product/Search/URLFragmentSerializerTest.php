@@ -34,7 +34,7 @@ class URLFragmentSerializerTest extends PHPUnit_Framework_Testcase
 {
     private $serializer;
 
-    public function setup()
+    public function setUp()
     {
         $this->serializer = new URLFragmentSerializer;
     }

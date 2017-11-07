@@ -65,11 +65,11 @@
 	
 	__webpack_require__(5);
 	
-	__webpack_require__(9);
-	
 	__webpack_require__(10);
 	
 	__webpack_require__(11);
+	
+	__webpack_require__(12);
 	
 	__webpack_require__(13);
 	
@@ -81,7 +81,7 @@
 	
 	var _events2 = _interopRequireDefault(_events);
 	
-	var _common = __webpack_require__(12);
+	var _common = __webpack_require__(7);
 	
 	// "inherit" EventEmitter
 	window.$ = _jquery2['default'];
@@ -1886,11 +1886,11 @@
 	
 	var _checkoutAddress2 = _interopRequireDefault(_checkoutAddress);
 	
-	var _checkoutDelivery = __webpack_require__(7);
+	var _checkoutDelivery = __webpack_require__(8);
 	
 	var _checkoutDelivery2 = _interopRequireDefault(_checkoutDelivery);
 	
-	var _checkoutPayment = __webpack_require__(8);
+	var _checkoutPayment = __webpack_require__(9);
 	
 	var _checkoutPayment2 = _interopRequireDefault(_checkoutPayment);
 	
@@ -1975,6 +1975,11 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
+	var _common = __webpack_require__(7);
+	
+	var editAddress = (0, _common.psGetRequestParameter)('editAddress');
+	var useSameAddress = (0, _common.psGetRequestParameter)('use_same_address');
+	
 	exports['default'] = function () {
 	  (0, _jquery2['default'])('.js-edit-addresses').on('click', function (event) {
 	    event.stopPropagation();
@@ -1982,16 +1987,149 @@
 	    _prestashop2['default'].emit('editAddress');
 	  });
 	
-	  (0, _jquery2['default'])('#delivery-addresses, #invoice-addresses input[type=radio]').on('click', function () {
+	  (0, _jquery2['default'])('#delivery-addresses input[type=radio], #invoice-addresses input[type=radio]').on('click', function () {
 	    (0, _jquery2['default'])('.address-item').removeClass('selected');
 	    (0, _jquery2['default'])('.address-item:has(input[type=radio]:checked)').addClass('selected');
+	
+	    var idFailureAddress = (0, _jquery2['default'])(".js-address-error").prop('id').split('-').pop();
+	    var notValidAddresses = (0, _jquery2['default'])('#not-valid-addresses').val();
+	    var addressType = this.name.split('_').pop();
+	    var $addressError = (0, _jquery2['default'])('.js-address-error[name=alert-' + addressType + ']');
+	
+	    switchEditAddressButtonColor(false, idFailureAddress, addressType);
+	
+	    if (notValidAddresses !== "" && editAddress === null) {
+	      if (notValidAddresses.split(',').indexOf(this.value) >= 0) {
+	        $addressError.show();
+	        switchEditAddressButtonColor(true, this.value, addressType);
+	        (0, _jquery2['default'])(".js-address-error").prop('id', "id-failure-address-" + this.value);
+	      } else {
+	        $addressError.hide();
+	      }
+	    } else {
+	      $addressError.hide();
+	    }
+	
+	    var $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible');
+	    switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
 	  });
 	};
 	
+	(0, _jquery2['default'])(window).load(function () {
+	  var $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible');
+	
+	  if (parseInt(useSameAddress) === 0) {
+	    (0, _jquery2['default'])('#invoice-addresses input[type=radio]:checked').trigger('click');
+	  }
+	  if (editAddress !== null || (0, _jquery2['default'])('.js-address-form:visible').length > 1) {
+	    $visibleAddressError.hide();
+	  }
+	
+	  if ($visibleAddressError.length > 0) {
+	    (function () {
+	      var idFailureAddress = (0, _jquery2['default'])(".js-address-error").prop('id').split('-').pop();
+	
+	      $visibleAddressError.each(function () {
+	        switchEditAddressButtonColor(true, idFailureAddress, (0, _jquery2['default'])(this).attr('name').split('-').pop());
+	      });
+	    })();
+	  }
+	  $visibleAddressError = (0, _jquery2['default'])('.js-address-error:visible'); // Refresh after possible hide
+	  switchConfirmAddressesButtonState($visibleAddressError.length <= 0);
+	});
+	
+	/**
+	 * Change the color of the edit button for the wrong address
+	 * @param {Boolean} enabled
+	 * @param {Number} id
+	 * @param {String} type
+	 */
+	var switchEditAddressButtonColor = function switchEditAddressButtonColor(enabled, id, type) {
+	  var color = "#7a7a7a";
+	
+	  if (enabled) {
+	    (0, _jquery2['default'])('#' + type + '-addresses a.edit-address').prop('style', 'color: #7a7a7a !important');
+	    color = "#2fb5d2";
+	  }
+	
+	  (0, _jquery2['default'])('#id-address-' + type + '-address-' + id + ' a.edit-address').prop('style', 'color: ' + color + ' !important');
+	};
+	
+	/**
+	 * Enable/disable the continue address button
+	 */
+	var switchConfirmAddressesButtonState = function switchConfirmAddressesButtonState(enable) {
+	  (0, _jquery2['default'])('button[name=confirm-addresses]').prop("disabled", !enable);
+	};
 	module.exports = exports['default'];
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * 2007-2017 PrestaShop
+	 *
+	 * NOTICE OF LICENSE
+	 *
+	 * This source file is subject to the Open Software License (OSL 3.0)
+	 * that is bundled with this package in the file LICENSE.txt.
+	 * It is also available through the world-wide-web at this URL:
+	 * https://opensource.org/licenses/OSL-3.0
+	 * If you did not receive a copy of the license and are unable to
+	 * obtain it through the world-wide-web, please send an email
+	 * to license@prestashop.com so we can send you a copy immediately.
+	 *
+	 * DISCLAIMER
+	 *
+	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+	 * versions in the future. If you wish to customize PrestaShop for your
+	 * needs please refer to http://www.prestashop.com for more information.
+	 *
+	 * @author    PrestaShop SA <contact@prestashop.com>
+	 * @copyright 2007-2017 PrestaShop SA
+	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+	 * International Registered Trademark & Property of PrestaShop SA
+	 */
+	'use strict';
+	
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports.psShowHide = psShowHide;
+	exports.psGetRequestParameter = psGetRequestParameter;
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	
+	var _jquery = __webpack_require__(2);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function psShowHide() {
+	  (0, _jquery2['default'])('.ps-shown-by-js').show();
+	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
+	}
+	
+	/**
+	 * This function returns the value of the requested parameter from the URL
+	 * @param {string} paramName - the name of the requested parameter
+	 * @returns {string|null|object}
+	 */
+	
+	function psGetRequestParameter(paramName) {
+	  var vars = {};
+	  window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) {
+	    vars[key] = value !== undefined ? value : '';
+	  });
+	  if (paramName !== undefined) {
+	    return vars[paramName] ? vars[paramName] : null;
+	  }
+	
+	  return vars;
+	}
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -2071,7 +2209,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -2231,7 +2369,7 @@
 	module.exports = exports['default'];
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -2305,7 +2443,7 @@
 	});
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -2354,7 +2492,7 @@
 	});
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -2393,7 +2531,7 @@
 	
 	var _prestashop2 = _interopRequireDefault(_prestashop);
 	
-	var _common = __webpack_require__(12);
+	var _common = __webpack_require__(7);
 	
 	(0, _jquery2['default'])(document).ready(function () {
 	  (0, _jquery2['default'])('body').on('change', '.product-variants [data-product-attribute]', function () {
@@ -2513,71 +2651,6 @@
 	    });
 	  });
 	});
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/**
-	 * 2007-2017 PrestaShop
-	 *
-	 * NOTICE OF LICENSE
-	 *
-	 * This source file is subject to the Open Software License (OSL 3.0)
-	 * that is bundled with this package in the file LICENSE.txt.
-	 * It is also available through the world-wide-web at this URL:
-	 * https://opensource.org/licenses/OSL-3.0
-	 * If you did not receive a copy of the license and are unable to
-	 * obtain it through the world-wide-web, please send an email
-	 * to license@prestashop.com so we can send you a copy immediately.
-	 *
-	 * DISCLAIMER
-	 *
-	 * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-	 * versions in the future. If you wish to customize PrestaShop for your
-	 * needs please refer to http://www.prestashop.com for more information.
-	 *
-	 * @author    PrestaShop SA <contact@prestashop.com>
-	 * @copyright 2007-2017 PrestaShop SA
-	 * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
-	 * International Registered Trademark & Property of PrestaShop SA
-	 */
-	'use strict';
-	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports.psShowHide = psShowHide;
-	exports.psGetRequestParameter = psGetRequestParameter;
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-	
-	var _jquery = __webpack_require__(2);
-	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	function psShowHide() {
-	  (0, _jquery2['default'])('.ps-shown-by-js').show();
-	  (0, _jquery2['default'])('.ps-hidden-by-js').hide();
-	}
-	
-	/**
-	 * This function returns the value of the requested parameter from the URL
-	 * @param {string} paramName - the name of the requested parameter
-	 * @returns {string|null}
-	 */
-	
-	function psGetRequestParameter(paramName) {
-	  var vars = {};
-	  window.location.href.replace(location.hash, '').replace(/[?&]+([^=&]+)=?([^&]*)?/gi, function (m, key, value) {
-	    vars[key] = value !== undefined ? value : '';
-	  });
-	  if (paramName) {
-	    return vars[paramName] ? vars[paramName] : null;
-	  }
-	
-	  return vars;
-	}
 
 /***/ }),
 /* 13 */

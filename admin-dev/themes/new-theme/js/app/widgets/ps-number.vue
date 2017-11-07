@@ -59,11 +59,11 @@
         this.$emit('blur', $event);
       },
       increment() {
-        const value = this.value + 1;
+        const value = parseInt(this.value, 10) + 1;
         this.$emit('change', value);
       },
       decrement() {
-        const value = this.value - 1;
+        const value = parseInt(this.value, 10) - 1;
         this.$emit('change', value);
       },
     },
@@ -78,6 +78,9 @@
     -moz-appearance: none;
     appearance: none;
   }
+  input[type=number] {
+    -moz-appearance:textfield;
+  }
   .danger {
     border: 1px solid $danger;
     background-color: #fff;
@@ -88,6 +91,7 @@
   }
   .ps-number {
     position: relative;
+    width: 95px;
     .ps-number-button {
       position: absolute;
       top: 1px;

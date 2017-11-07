@@ -26,7 +26,7 @@
   <PSTable class="mt-1">
     <thead>
       <tr>
-        <th width="30%" class="thead-title">
+        <th width="27%" class="thead-title">
           {{trans('title_product')}}
           <PSSort order="product" @sort="toggleSort" />
         </th>
@@ -38,21 +38,21 @@
           {{trans('title_supplier')}}
           <PSSort order="supplier" @sort="toggleSort" />
         </th>
-        <th class="text-sm-center align-middle">
+        <th class="text-sm-center">
           {{trans('title_status')}}
         </th>
         <th class="text-sm-center">
           {{trans('title_physical')}}
           <PSSort order="physical_quantity" @sort="toggleSort" />
         </th>
-        <th class="text-sm-center align-middle">
+        <th class="text-sm-center">
           {{trans('title_reserved')}}
         </th>
-        <th class="text-sm-center pr-4">
+        <th class="text-sm-left text-md-center">
           {{trans('title_available')}}
           <PSSort order="available_quantity" @sort="toggleSort" />
         </th>
-        <th class="text-sm-center align-middle">
+        <th class="text-md-left" :title="trans('title_edit_quantity')">
           <i class="material-icons">edit</i>
           {{trans('title_edit_quantity')}}
         </th>
@@ -121,7 +121,7 @@
   };
 </script>
 
-<style lang="sass">
+<style lang="sass" type="text/scss">
   @import "../../../../../../scss/config/_settings.scss";
   .table {
     font-size: .9em;
@@ -135,16 +135,13 @@
         border-bottom: 2px solid $brand-primary;
         color: $gray-dark;
         padding: 10px 0;
-        .material-icons {
-          margin-left: 5px;
-          vertical-align: middle;
-        }
         &.thead-title {
-          padding-left: 98px;
+          padding-left: 88px;
         }
         &:last-child {
+          overflow: hidden;
+          text-overflow: ellipsis;
           .material-icons {
-            color: $gray-medium;
             margin-right: 5px;
           }
         }

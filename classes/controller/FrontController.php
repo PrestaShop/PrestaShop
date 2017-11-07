@@ -494,6 +494,17 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
+        /* Begin patch to purge sensible data from cart to avoid expose them in html page */
+        $cleancart = $this->cart_presenter->present($this->context->cart);
+        if (count($cleancart['products']) > 0) {
+            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
+                unset($cleancart['products'][$idx_cart_line]['id_supplier']);
+                unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
+                unset($cleancart['products'][$idx_cart_line]['wholesale_price']);
+                unset($cleancart['products'][$idx_cart_line]['embedded_attributes']);
+            }
+        }
+        /* /patch */
         $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
@@ -699,6 +710,7 @@ class FrontControllerCore extends Controller
 
                 $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
                 $this->context->smarty->assign(array(
+                    'urls' => $this->getTemplateVarUrls(),
                     'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
@@ -720,6 +732,7 @@ class FrontControllerCore extends Controller
 
         $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
         $this->context->smarty->assign(array(
+            'urls' => $this->getTemplateVarUrls(),
             'shop' => $this->getTemplateVarShop(),
             'stylesheets' => $this->getStylesheets(),
         ));

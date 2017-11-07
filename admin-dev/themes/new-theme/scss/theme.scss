@@ -1,4 +1,5 @@
 // Tools
+@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
 @import "~bourbon/app/assets/stylesheets/bourbon";
 @import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "mixins/single_line_block";
@@ -43,6 +44,7 @@
 
 // Main Layout
 body {
+  direction: ltr;
   background: $background-grey;
 }
 

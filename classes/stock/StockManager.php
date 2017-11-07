@@ -349,7 +349,7 @@ class StockManagerCore implements StockManagerInterface
                             continue;
                         }
 
-                        $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
+                        $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
 								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
 							FROM `'._DB_PREFIX_.'stock_mvt` sm
@@ -357,7 +357,7 @@ class StockManagerCore implements StockManagerInterface
 							WHERE sm.`sign` = 1
 							AND sm.`id_stock` = '.(int)$stock->id.'
 							GROUP BY sm.`id_stock_mvt`
-							ORDER BY sm.`date_add` DESC'
+							ORDER BY sm.`date_add` DESC', false
                         );
 
                         while ($row = Db::getInstance()->nextRow($resource)) {

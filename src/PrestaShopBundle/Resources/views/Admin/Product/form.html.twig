@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
 
@@ -217,7 +217,7 @@
 
                     {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
 
-                    <div id="features" class="my-4">
+                    <div id="features" class="mb-3">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
                         {{ form_errors(form.step1.features) }}
@@ -358,7 +358,7 @@
                             </div>
                           </div>
 
-                          <div class="form-group mb-4">
+                          <div class="form-group mb-4" id="categories">
                             {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
                           </div>
 
@@ -410,6 +410,14 @@
                             <label class="form-control-label">{{ form.step3.low_stock_threshold.vars.label }}</label>
                             {{ form_errors(form.step3.low_stock_threshold) }}
                             {{ form_widget(form.step3.low_stock_threshold) }}
+                          </div>
+                          <div class="col-md-8">
+                            <label class="form-control-label">&nbsp;</label>
+                            <div class="widget-checkbox-inline">
+                              {{ form_errors(form.step3.low_stock_alert) }}
+                              {{ form_widget(form.step3.low_stock_alert) }}
+                              <span class="help-box" data-toggle="popover" data-html="true" data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" ></span>
+                            </div>
                           </div>
                         </div>
                       </fieldset>
@@ -888,7 +896,7 @@
                               </li>
                             {% endfor %}
                           </ul>
-                          <a href="#" class="btn btn-outline-secondary">
+                          <a href="#" class="btn btn-outline-secondary add">
                             <i class="material-icons">add_circle</i>
                             {{ 'Add a customization field'|trans({}, 'Admin.Catalog.Feature') }}
                           </a>
@@ -1069,7 +1077,7 @@
         <a
           href=""
           data-redirect="{{ preview_link }}"
-          data-url_deactive="{{ preview_link_deactivate }}"
+          data-url-deactive="{{ preview_link_deactivate }}"
           target="_blank"
           class="btn btn-secondary preview"
           data-toggle="pstooltip"

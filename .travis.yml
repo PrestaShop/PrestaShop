@@ -21,11 +21,11 @@ php:
   - 5.4
   - 5.6
   - 7.0
-  
+
 env:
     global:
         - SYMFONY_DEPRECATIONS_HELPER=disabled
-  
+
 matrix:
   include:
     - php: 7.1
@@ -39,6 +39,7 @@ before_install:
   # PrestaShop configuration
   - cp tests/parameters.yml.travis app/config/parameters.yml
 
+
 notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
@@ -46,8 +47,10 @@ script:
   - composer install --prefer-dist --no-interaction --no-progress
   - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
-  - php bin/phpunit -c tests/
-  - php bin/phpunit -c tests/phpunit-admin.xml
+  - php app/console lint:twig src
+  - php app/console lint:twig app
+  - composer test
+  - composer test-admin
   - composer phpunit-sf
   - composer phpunit-controllers
   - bash ./travis-scripts/run-selenium-tests

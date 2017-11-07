@@ -349,7 +349,7 @@ class CartControllerCore extends FrontController
             }
 
             // Check customizable fields
-            if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
+            if ($product->hasActivatedRequiredCustomizableFields() && !$this->customization_id) {
                 $this->errors[] = $this->trans('Please fill in all of the required fields, and then save your customizations.', array(), 'Shop.Notifications.Error');
             }
 

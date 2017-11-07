@@ -52,8 +52,6 @@ if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS
     Tools::redirectToInstall();
 }
 
-/* include settings file only if we are not in multi-tenancy mode */
-require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /* Improve PHP configuration on Windows */

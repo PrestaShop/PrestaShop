@@ -490,8 +490,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $this->content = $this->renderView();
             }
         } else {
-            $url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
-            $this->displayWarning(sprintf($this->trans('This feature has been disabled. You can activate it here: %s.', array('%s' => $url), 'Admin.Catalog.Notification')));
+            $adminPerformanceUrl = $this->context->link->getAdminLink('AdminPerformance');
+            $url = '<a href="'.$adminPerformanceUrl.'#featuresDetachables">'.$this->trans('Performance', array(), 'Admin.Global').'</a>';
+            $this->displayWarning($this->trans('This feature has been disabled. You can activate it here: %link%.', array('%link%' => $url), 'Admin.Catalog.Notification'));
         }
 
         $this->context->smarty->assign(array(
@@ -615,7 +616,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             $bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminAttributesGroups').'&id_attribute_group='.$id.'&viewattribute_group">'.$obj->name[$this->context->employee->id_lang].'</a>';
                         }
                         if (Validate::isLoadedObject($obj = new Attribute((int)$this->id_attribute))) {
-                            $bread_extended[] =  sprintf($this->trans('Edit: %s', array('%s' => $obj->name[$this->context->employee->id_lang]), 'Admin.Catalog.Feature'));
+                            $bread_extended[] =  $this->trans(
+                                'Edit: %value%',
+                                array(
+                                    '%value%' => $obj->name[$this->context->employee->id_lang]
+                                    ),
+                                'Admin.Catalog.Feature'
+                            );
                         }
                     } else {
                         $bread_extended[] = $this->trans('Edit Value', array(), 'Admin.Catalog.Feature');
@@ -730,10 +737,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute')) {
             if (true !== $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                return;
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
                 $this->errors[] = $this->trans('An error occurred while updating the status for an object.', array(), 'Admin.Notifications.Error').
                     ' <b>'.$this->table.'</b> '.
                     $this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
+                return;
             }
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {

@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Context;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Doctrine\Common\Cache\FilesystemCache;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -121,6 +122,7 @@ class ModuleManagerBuilder
                     self::$moduleDataUpdater,
                     self::$legacyLogger,
                     self::$translator,
+                    _PS_MODULE_DIR_,
                     self::$cacheProvider
                 );
             }
@@ -157,7 +159,8 @@ class ModuleManagerBuilder
             new Client($clientConfig),
             self::$translator->getLocale(),
             $this->getCountryIso(),
-            new Tools()
+            new Tools(),
+            (new Configuration())->get('_PS_BASE_URL_')
         );
 
         $marketPlaceClient->setSslVerification(_PS_CACHE_CA_CERT_FILE_);
@@ -168,7 +171,7 @@ class ModuleManagerBuilder
             }
         }
 
-        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator);
+        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
         self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = dirname(__FILE__) . '/../../../../app';
@@ -184,12 +187,15 @@ class ModuleManagerBuilder
         self::$lecacyContext = new LegacyContext();
 
         if (is_null(self::$adminModuleDataProvider)) {
+            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
                 self::$translator,
                 self::$legacyLogger,
                 self::$addonsDataProvider,
                 self::$categoriesProvider,
-                self::$cacheProvider
+                self::$moduleDataProvider,
+                self::$cacheProvider,
+                Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
 
@@ -201,7 +207,6 @@ class ModuleManagerBuilder
                 self::$lecacyContext,
                 self::$legacyLogger,
                 self::$translator);
-            self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
         }
     }
 

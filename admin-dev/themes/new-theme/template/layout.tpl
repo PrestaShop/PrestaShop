@@ -3,7 +3,7 @@
 <head>
   {$header}
 </head>
-<body class="{$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
+<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}">
 
 {* TODO: REPLACE THIS CLASSS SOMEWHERE
 {if $collapse_menu} page-sidebar-closed{/if}
@@ -26,7 +26,7 @@
     <a class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
     <div class="component d-none d-md-inline-block">{include file="components/layout/quick_access.tpl"}</div>
-    <div class="component d-none d-md-inline-block col-md-4">{include file="components/layout/search_form.tpl"}</div>
+    <div class="component d-none d-md-inline-block col-md-4" id="header-search-container">{include file="components/layout/search_form.tpl"}</div>
 
     {if isset($debug_mode) && $debug_mode == true}
       <div class="component d-none d-md-inline-block">
@@ -58,11 +58,8 @@
       <i class="icon-refresh icon-spin icon-fw"></i>
     </span>
     *}
-
-    {* TODO: ??? *}
-    {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
-
   </nav>
+  {hook h='displayBackOfficeTop'}
 </header>
 
 {include file='components/layout/nav_bar.tpl'}

@@ -94,4 +94,9 @@ class Tools
     {
         LegacyTools::refreshCaCertFile();
     }
+
+    public function generateHtaccess()
+    {
+        return LegacyTools::generateHtaccess();
+    }
 }

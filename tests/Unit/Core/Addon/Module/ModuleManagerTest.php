@@ -143,8 +143,8 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
 
     private function initMocks()
     {
-        $this->mockAdminModuleProvider();
         $this->mockModuleProvider();
+        $this->mockAdminModuleProvider();
         $this->mockModuleUpdater();
         $this->mockModuleRepository();
         $this->mockModuleZipManager();
@@ -158,6 +158,8 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->adminModuleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->adminModuleProviderS;
 
         $installedModule = [
             self::INSTALLED_MODULE, [
@@ -180,6 +182,9 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->adminModuleProviderS
             ->method('findByName')
             ->will($this->returnValueMap($findByNameReturnValues));
+        $this->adminModuleProviderS
+            ->method('isAllowedAccess')
+            ->willReturn(true);
     }
 
     private function mockModuleProvider()
@@ -253,7 +258,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->disableOriginalConstructor()
+            ->setConstructorArgs(array(array(), array(), array()))
             ->getMock();
         $moduleS
             ->method('onInstall')

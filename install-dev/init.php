@@ -25,6 +25,33 @@
  */
 ob_start();
 
+// Set execution time and time_limit to infinite if available
+@set_time_limit(0);
+@ini_set('max_execution_time', '0');
+
+// setting the memory limit to 128M only if current is lower
+$memory_limit = ini_get('memory_limit');
+if (substr($memory_limit, -1) != 'G'
+    && ((substr($memory_limit, -1) == 'M' && substr($memory_limit, 0, -1) < 128)
+        || is_numeric($memory_limit) && (intval($memory_limit) < 131072) && $memory_limit > 0)
+) {
+    @ini_set('memory_limit', '128M');
+}
+
+// redefine REQUEST_URI if empty (on some webservers...)
+if (!isset($_SERVER['REQUEST_URI']) || $_SERVER['REQUEST_URI'] == '') {
+    if (!isset($_SERVER['SCRIPT_NAME']) && isset($_SERVER['SCRIPT_FILENAME'])) {
+        $_SERVER['SCRIPT_NAME'] = $_SERVER['SCRIPT_FILENAME'];
+    } else {
+        $_SERVER['REQUEST_URI'] = $_SERVER['SCRIPT_NAME'];
+    }
+}
+
+if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
+    $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $tmp);
+}
+$_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
+
 // Check PHP version
 if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.4', '<')) {
     die('You need at least PHP 5.4 to run PrestaShop. Your current PHP version is '.PHP_VERSION);

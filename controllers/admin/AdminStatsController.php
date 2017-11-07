@@ -713,8 +713,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
             case 'percent_product_out_of_stock':
                 $value = AdminStatsController::getPercentProductOutOfStock();
                 $tooltip = $this->trans(
-                    '%s of your products for sale are out of stock.',
-                    array($value),
+                    '%value% of your products for sale are out of stock.',
+                    array('%value%' => $value),
                     'Admin.Stats.Help'
                 );
                 ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
@@ -724,8 +724,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
             case 'product_avg_gross_margin':
                 $value = AdminStatsController::getProductAverageGrossMargin();
                 $tooltip = $this->trans(
-                    'Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $%s to cover profit and expenses.',
-                    array(str_replace('%', '', $value)),
+                    'Gross margin expressed in percentage assesses how cost-effectively you sell your goods. Out of $100, you will retain $%value% to cover profit and expenses.',
+                    array('%value%' => $value),
                     'Admin.Stats.Help'
                 );
                 ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
@@ -743,13 +743,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
                         100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(),
                         2
                     ).'%';
-                $tooltip = sprintf(
-                    $this->trans(
-                        '%s of your products are disabled and not visible to your customers',
-                        array(),
-                        'Admin.Stats.Help'
-                    ),
-                    $value
+                $tooltip = $this->trans(
+                    '%value% of your products are disabled and not visible to your customers',
+                    array('%value%' => $value),
+                    'Admin.Stats.Help'
                 );
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
                 ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
@@ -757,15 +754,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
             case '8020_sales_catalog':
                 $value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
-                $tooltip = sprintf(
-                    $this->trans(
-                        'Within your catalog, %s of your products have had sales in the last 30 days',
-                        array(),
-                        'Admin.Stats.Help'
-                    ),
-                    $value
+                $tooltip = $this->trans(
+                    'Within your catalog, %value% of your products have had sales in the last 30 days',
+                    array('%value%' => $value),
+                    'Admin.Stats.Help'
                 );
-                $value = sprintf($this->trans('%d%% of your Catalog', array(), 'Admin.Stats.Feature'), $value);
+                $value = $this->trans('%value%% of your Catalog', array('%value%' => $value), 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
                 ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
                 break;
@@ -782,20 +776,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 if ($value === false) {
                     $value = $this->trans('No customers', array(), 'Admin.Stats.Feature');
                 } elseif ($value['type'] == 'female') {
-                    $value = sprintf(
-                        $this->trans('%d%% Female Customers', array(), 'Admin.Stats.Feature'),
-                        $value['value']
-                    );
+                    $value = $this->trans('%percentage%% Female Customers', array('%percentage%' => $value['value']), 'Admin.Stats.Feature');
                 } elseif ($value['type'] == 'male') {
-                    $value = sprintf(
-                        $this->trans('%d%% Male Customers', array(), 'Admin.Stats.Feature'),
-                        $value['value']
-                    );
+                    $value = $this->trans('%percentage%% Male Customers', array('%percentage%' => $value['value']), 'Admin.Stats.Feature');
                 } else {
-                    $value = sprintf(
-                        $this->trans('%d%% Neutral Customers', array(), 'Admin.Stats.Feature'),
-                        $value['value']
-                    );
+                    $value = $this->trans('%percentage%% Neutral Customers', array('%percentage%' => $value['value']), 'Admin.Stats.Feature');
                 }
 
                 ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', array($this->context->language->id => $value));
@@ -806,11 +791,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'avg_customer_age':
-                $value = sprintf(
-                    $this->trans('%d years', array(), 'Admin.Stats.Feature'),
-                    AdminStatsController::getAverageCustomerAge(),
-                    1
-                );
+                $value = $this->trans('%value% years', array('%value%' => AdminStatsController::getAverageCustomerAge()), 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', array($this->context->language->id => $value));
                 ConfigurationKPI::updateValue(
                     'AVG_CUSTOMER_AGE_EXPIRE',
@@ -825,13 +806,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'avg_msg_response_time':
-                $value = sprintf(
-                    $this->trans('%.1f hours', array(), 'Admin.Stats.Feature'),
-                    AdminStatsController::getAverageMessageResponseTime(
-                        date('Y-m-d', strtotime('-31 day')),
-                        date('Y-m-d', strtotime('-1 day'))
-                    )
-                );
+                $value = $this->trans('%average% hours', array('%average%' => AdminStatsController::getAverageMessageResponseTime(
+                    date('Y-m-d', strtotime('-31 day')),
+                    date('Y-m-d', strtotime('-1 day'))
+                )), 'Admin.Stats.Feature');
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME', $value);
                 ConfigurationKPI::updateValue('AVG_MSG_RESPONSE_TIME_EXPIRE', strtotime('+4 hour'));
                 break;

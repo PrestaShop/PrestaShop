@@ -43,6 +43,7 @@ class MediaCoreTest extends IntegrationTestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->domain = Configuration::get('PS_SHOP_DOMAIN');
     }
 

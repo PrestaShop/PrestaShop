@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="row">
+<div class="row" id="bulk-combinations-container-fields">
   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
     <div class="col-lg-4 col-md-3 col-sm-6">
       <label class="form-control-label">{{ form.quantity.vars.label }}</label>
@@ -79,6 +79,14 @@
     </label>
     {{ form_errors(form.low_stock_threshold) }}
     {{ form_widget(form.low_stock_threshold) }}
+  </div>
+
+  <div class="col-lg-4 col-md-3 col-sm-6 widget-checkbox-inline">
+    <div class="widget-checkbox-inline">
+      {{ form_errors(form.low_stock_alert) }}
+      {{ form_widget(form.low_stock_alert) }}
+      <span class="help-box" data-toggle="popover" data-content="{{ 'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to Advanced Parameters > Team'|trans({}, 'Admin.Catalog.Feature') }}" ></span>
+    </div>
   </div>
 </div>
 <div class="row justify-content-end mt-3">

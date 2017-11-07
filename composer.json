@@ -37,6 +37,7 @@
         "phpoffice/phpexcel": "~1.8",
         "guzzlehttp/guzzle": "~5.0",
         "csa/guzzle-bundle": "~1.3",
+        "ipresta/localize-fixture": "~v1.0",
         "paragonie/random_compat": "^1.4|^2.0",
         "prestashop/smarty": "dev-master",
         "prestashop/blockreassurance": "dev-master",
@@ -132,11 +133,34 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
+        "create-test-db": [
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB"
+        ],
+        "test-all": [
+            "composer test",
+            "composer test-admin",
+            "composer phpunit-sf",
+            "composer phpunit-controllers"
+        ],
+        "test": [
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit.xml"
+        ],
+        "test-admin": [
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c tests/phpunit-admin.xml"
+        ],
         "git-hook-install": "php .github/contrib/install.php",
         "git-hook-uninstall": "php .github/contrib/uninstall.php",
         "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init",
-        "phpunit-sf": "php bin/phpunit -c admin-dev/",
-        "phpunit-controllers": "php bin/phpunit -c app/"
+        "phpunit-sf": [
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c admin-dev/"
+        ],
+        "phpunit-controllers": [
+            "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
+            "php -d date.timezone=UTC bin/phpunit -c app/"
+        ]
     },
     "config": {
         "bin-dir": "bin",

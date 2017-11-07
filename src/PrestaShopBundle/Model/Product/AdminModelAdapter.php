@@ -126,6 +126,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'available_now',
             'available_later',
             'tags',
+            'delivery_in_stock',
+            'delivery_out_stock',
         );
 
         //define unused key for manual binding
@@ -153,6 +155,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_ecotax',
             'attribute_minimal_quantity',
             'attribute_low_stock_threshold',
+            'attribute_low_stock_alert',
             'available_date_attribute',
             'attribute_default',
             'uploadable_files',
@@ -174,6 +177,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'on_sale',
             'minimal_quantity',
             'low_stock_threshold',
+            'low_stock_alert',
             'available_date',
             'ecotax',
         );
@@ -327,23 +331,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['inputAccessories'] = $inputAccessories;
         }
 
-        //map features
-        if (!empty($form_data['features'])) {
-            foreach ($form_data['features'] as $dataFeature) {
-                $idFeature = $dataFeature['feature'];
-
-                //custom value is defined
-                if ($dataFeature['custom_value'][$this->defaultLocale]) {
-                    foreach ($this->locales as $locale) {
-                        $form_data['feature_'.$idFeature.'_value'] = null;
-                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
-                    }
-                } elseif ($dataFeature['value']) {
-                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
-                }
-            }
-        }
-
         //map warehouseProductLocations
         $form_data['warehouse_loaded'] = 1;
         $warehouses = $this->warehouseAdapter->getWarehouses();
@@ -477,6 +464,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'out_of_stock' => $this->product->out_of_stock,
                 'minimal_quantity' => $this->product->minimal_quantity,
                 'low_stock_threshold' => $this->product->low_stock_threshold,
+                'low_stock_alert' => (bool) $this->product->low_stock_alert,
                 'available_now' => $this->product->available_now,
                 'available_later' => $this->product->available_later,
                 'available_date' => $this->product->available_date,
@@ -490,6 +478,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'weight' => $this->product->weight,
                 'additional_shipping_cost' => $this->product->additional_shipping_cost,
                 'selectedCarriers' => $this->getFormProductCarriers(),
+                'additional_delivery_times' => $this->product->additional_delivery_times,
+                'delivery_in_stock' => $this->product->delivery_in_stock,
+                'delivery_out_stock' => $this->product->delivery_out_stock,
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,

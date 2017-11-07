@@ -31,11 +31,14 @@ use Tools;
 
 class ToolsCoreTest extends PHPUnit_Framework_TestCase
 {
+    protected function setUp() {
+        $_POST = array();
+        $_GET = array();
+        Tools::resetRequest();
+    }
+
     private function setPostAndGet(array $post = array(), array $get = array())
     {
-        global $_POST;
-        global $_GET;
-
         $_POST = $post;
         $_GET = $get;
 
@@ -201,5 +204,10 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
     {
         Tools::spreadAmount($amount, $precision, $rows, $column);
         $this->assertEquals(array_values($expectedRows), array_values($rows));
+    }
+
+    public static function tearDownAfterClass() {
+        $_POST = array();
+        $_GET = array();
     }
 }

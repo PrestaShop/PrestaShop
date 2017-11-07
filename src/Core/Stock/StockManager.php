@@ -25,12 +25,20 @@
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
 
+use Access;
+use Combination;
+use Configuration;
+use Context;
 use DateTime;
+use Employee;
+use Mail;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShopBundle\Entity\StockMvt;
+use Product;
+use StockAvailable;
 
 /**
  * Class StockManager Refactored features about product stocks.
@@ -42,8 +50,8 @@ class StockManager
     /**
      * This will update a Pack quantity and will decrease the quantity of containing Products if needed.
      *
-     * @param \Product $product A product pack object to update its quantity
-     * @param \StockAvailable $stock_available the stock of the product to fix with correct quantity
+     * @param Product $product A product pack object to update its quantity
+     * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
      * @param integer $delta_quantity The movement of the stock (negative for a decrease)
      * @param integer|null $id_shop Optional shop ID
      */
@@ -81,9 +89,9 @@ class StockManager
      * This will decrease (if needed) Packs containing this product
      * (with the right declination) if there is not enough product in stocks.
      *
-     * @param \Product $product A product object to update its quantity
+     * @param Product $product A product object to update its quantity
      * @param integer $id_product_attribute The product attribute to update
-     * @param \StockAvailable $stock_available the stock of the product to fix with correct quantity
+     * @param StockAvailable $stock_available the stock of the product to fix with correct quantity
      * @param integer|null $id_shop Optional shop ID
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
@@ -125,7 +133,7 @@ class StockManager
      * Will update Product available stock int he given declinaison. If product is a Pack, could decrease the sub products.
      * If Product is contained in a Pack, Pack could be decreased or not (only if sub product stocks become not sufficient).
      *
-     * @param \Product $product The product to update its stockAvailable
+     * @param Product $product The product to update its stockAvailable
      * @param integer $id_product_attribute The declinaison to update (null if not)
      * @param integer $delta_quantity The quantity change (positive or negative)
      * @param integer|null $id_shop Optional
@@ -174,7 +182,145 @@ class StockManager
             )
         );
 
+        if ($this->checkIfMustSendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity)) {
+            $this->sendLowStockAlert($product, $id_product_attribute, $stockAvailable->quantity);
+        }
+
         $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
+    }
+
+    /**
+     * @param Product $product
+     * @param int $id_product_attribute
+     * @param int $newQuantity
+     *
+     * @return bool
+     */
+    protected function checkIfMustSendLowStockAlert($product, $id_product_attribute, $newQuantity)
+    {
+        if (!Configuration::get('PS_STOCK_MANAGEMENT')) {
+            return false;
+        }
+
+        // Do not send mail if multiples product are created / imported.
+        if (defined('PS_MASS_PRODUCT_CREATION')) {
+            return false;
+        }
+
+        $productHasAttributes = $product->hasAttributes();
+        if ($productHasAttributes && $id_product_attribute) {
+            $combination = new Combination($id_product_attribute);
+            return $this->isCombinationQuantityUnderAlertThreshold($combination, $newQuantity);
+        } elseif (!$productHasAttributes && !$id_product_attribute) {
+            return $this->isProductQuantityUnderAlertThreshold($product, $newQuantity);
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Product $product
+     * @param int $newQuantity
+     *
+     * @return bool
+     */
+    protected function isProductQuantityUnderAlertThreshold($product, $newQuantity)
+    {
+        // low_stock_threshold empty to disable (can be negative, null or zero)
+        if ($product->low_stock_alert
+            && $product->low_stock_threshold !== ''
+            && $product->low_stock_threshold !== null
+            && $newQuantity <= (int) $product->low_stock_threshold
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Combination $combination
+     * @param int $newQuantity
+     *
+     * @return bool
+     */
+    protected function isCombinationQuantityUnderAlertThreshold(Combination $combination, $newQuantity)
+    {
+        // low_stock_threshold empty to disable (can be negative, null or zero)
+        if ($combination->low_stock_alert
+            && $combination->low_stock_threshold !== ''
+            && $combination->low_stock_threshold !== null
+            && $newQuantity <= (int) $combination->low_stock_threshold
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Product $product
+     * @param int $id_product_attribute
+     * @param int $newQuantity
+     *
+     * @throws \Exception
+     * @throws \PrestaShopException
+     */
+    protected function sendLowStockAlert($product, $id_product_attribute, $newQuantity)
+    {
+        $context = Context::getContext();
+        $idShop = (int) $context->shop->id;
+        $idLang = (int) $context->language->id;
+        $configuration = Configuration::getMultiple(
+            array(
+                'MA_LAST_QTIES',
+                'PS_STOCK_MANAGEMENT',
+                'PS_SHOP_EMAIL',
+                'PS_SHOP_NAME',
+            ),
+            null,
+            null,
+            $idShop
+        );
+        $productName = Product::getProductName($product->id, $id_product_attribute, $idLang);
+        if ($id_product_attribute) {
+            $combination = new Combination($id_product_attribute);
+            $lowStockThreshold = $combination->low_stock_threshold;
+        } else {
+            $lowStockThreshold = $product->low_stock_threshold;
+        }
+        $templateVars = array(
+            '{qty}' => $newQuantity,
+            '{last_qty}' => $lowStockThreshold,
+            '{product}' => $productName,
+        );
+        // get emails on employees who have right to run stock page
+        $emails = array();
+        $employees = Employee::getEmployees();
+        foreach ($employees as $employeeData) {
+            $employee = new Employee($employeeData['id_employee']);
+            if (Access::isGranted('ROLE_MOD_TAB_ADMINSTOCKMANAGEMENT_READ', $employee->id_profile)) {
+                $emails[] = $employee->email;
+            }
+        }
+        // Send 1 email by merchant mail, because Mail::Send doesn't work with an array of recipients
+        foreach ($emails as $email) {
+            Mail::Send(
+                $idLang,
+                'productoutofstock',
+                Mail::l('Product out of stock', $idLang),
+                $templateVars,
+                $email,
+                null,
+                (string) $configuration['PS_SHOP_EMAIL'],
+                (string) $configuration['PS_SHOP_NAME'],
+                null,
+                null,
+                dirname(__FILE__) . '/mails/',
+                false,
+                $idShop
+            );
+        }
     }
 
     /**

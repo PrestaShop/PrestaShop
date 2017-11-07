@@ -23,81 +23,81 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% extends(template_from_string(
-  getLegacyLayout(
-    app.request.attributes.get('_legacy_controller'),
-    layoutTitle is defined ? layoutTitle : '',
-    layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
-    layoutDisplayType is defined ? layoutDisplayType : '',
-    showContentHeader is defined ? showContentHeader : true,
-    headerTabContent is defined ? headerTabContent : '',
-    enableSidebar is defined ? enableSidebar : false,
-    help_link is defined ? help_link : ''
-  )
+getLegacyLayout(
+app.request.attributes.get('_legacy_controller'),
+layoutTitle is defined ? layoutTitle : '',
+layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
+layoutDisplayType is defined ? layoutDisplayType : '',
+showContentHeader is defined ? showContentHeader : true,
+headerTabContent is defined ? headerTabContent : '',
+enableSidebar is defined ? enableSidebar : false,
+help_link is defined ? help_link : '',
+app.request.attributes.get('_route')
+)
 )) %}
 
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
 
 {% block javascripts %}
-  <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/right-sidebar.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/right-sidebar.js') }}"></script>
 {% endblock %}
 
 {% block translate_javascripts %}
-  <script>
-    var translate_javascripts = {{ js_translatable|json_encode()|raw }};
-    var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
-  </script>
+    <script>
+        var translate_javascripts = {{ js_translatable|json_encode()|raw }};
+        var PS_ALLOW_ACCENTED_CHARS_URL = {{ 'PS_ALLOW_ACCENTED_CHARS_URL'|configuration|intCast }};
+    </script>
 {% endblock %}
 
 {% block content_header %}
-  {% if app.session.flashbag.peek('error')|length() > 0 %}
-    <div class="alert alert-danger" role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="material-icons">close</i></span>
-      </button>
-      <ul class="alert-text">
-        {% for flashMessage in app.session.flashbag.get('error') %}
-          <li>{{ flashMessage }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-  {% if app.session.flashbag.peek('failure')|length() > 0 %}
-    <div class="alert alert-danger">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="material-icons">close</i></span>
-      </button>
-      <ul class="alert-text">
-        {% for flashMessage in app.session.flashbag.get('failure') %}
-          <li>{{ flashMessage }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-  {% if app.session.flashbag.peek('success')|length() > 0 %}
-    <div class="alert alert-success">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true"><i class="material-icons">close</i></span>
-      </button>
-      <ul>
-        {% for flashMessage in app.session.flashbag.get('success') %}
-          <li>{{ flashMessage }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+    {% if app.session.flashbag.peek('error')|length() > 0 %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
+            <ul class="alert-text">
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <li>{{ flashMessage|raw }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if app.session.flashbag.peek('failure')|length() > 0 %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
+            <ul class="alert-text">
+                {% for flashMessage in app.session.flashbag.get('failure') %}
+                    <li>{{ flashMessage|raw }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if app.session.flashbag.peek('success')|length() > 0 %}
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
+            <ul>
+                {% for flashMessage in app.session.flashbag.get('success') %}
+                    <li>{{ flashMessage|raw }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block sidebar_right %}
-  <nav
-    id="right-sidebar"
-    role="navigation"
-    class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
-  >
-    <img
-      src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
-      style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
-    />
-  </nav>
+    <nav
+            id="right-sidebar"
+            role="navigation"
+            class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
+    >
+        <img
+                src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
+                style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
+        />
+    </nav>
 {% endblock %}
-

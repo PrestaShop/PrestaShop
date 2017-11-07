@@ -559,8 +559,12 @@ class CustomerCore extends ObjectModel
      */
     public function getAddresses($idLang)
     {
-        $shareOrder = (bool) Context::getContext()->shop->getGroup()->share_order;
-        $cacheId = 'Customer::getAddresses'.(int) $this->id.'-'.(int) $idLang.'-'.$shareOrder;
+        $group      = Context::getContext()->shop->getGroup();
+        $shareOrder = isset($group->share_order) ? (bool)$group->share_order : false;
+        $cacheId    = 'Customer::getAddresses'
+            . '-' . (int)$this->id
+            . '-' . (int)$idLang
+            . '-' . ($shareOrder ? 1 : 0);
         if (!Cache::isStored($cacheId)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
                     FROM `'._DB_PREFIX_.'address` a
@@ -1051,22 +1055,6 @@ class CustomerCore extends ObjectModel
         $ids = Address::getCountryAndState($idAddress);
 
         return (int) ($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-    }
-
-    /**
-     * Toggle Customer status.
-     *
-     * @return bool Indicates whether the status has been successfully toggled
-     */
-    public function toggleStatus()
-    {
-        parent::toggleStatus();
-
-        /* Change status to active/inactive */
-        return Db::getInstance()->execute('
-        UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
-        SET `date_upd` = NOW()
-        WHERE `'.bqSQL($this->def['primary']).'` = '.(int) $this->id);
     }
 
     /**

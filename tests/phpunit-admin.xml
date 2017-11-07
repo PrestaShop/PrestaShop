@@ -3,7 +3,8 @@
   processIsolation="true"
 >
     <php>
-      <env name="kernel.environment" value="test" />
+        <env name="SYMFONY_ENV" value="test"/>
+        <env name="kernel.environment" value="test" />
       <server name="KERNEL_DIR" value="../app/" />
     </php>
     <groups>

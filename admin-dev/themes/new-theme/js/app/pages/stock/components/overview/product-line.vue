@@ -24,7 +24,7 @@
  *-->
 <template>
   <tr :class="{'low-stock':lowStock}">
-    <td class="d-flex align-items-center pr-1">
+    <td class="d-flex align-items-center">
       <PSCheckbox
         :id="id"
         :ref="id"
@@ -32,7 +32,7 @@
         @checked="productChecked"
       />
       <PSMedia
-        class="ml-1"
+        class="d-flex align-items-center ml-2"
         :thumbnail="thumbnail"
       >
         <p>
@@ -65,16 +65,16 @@
     <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_reserved_quantity }}
     </td>
-    <td class="text-sm-left pl-4" :class="{'stock-warning':lowStock}">
+    <td class="text-sm-center" :class="{'stock-warning':lowStock}">
       {{ product.product_available_quantity }}
       <span v-if="updatedQty" class="qty-update" :class="{'stock-warning':lowStock}">
         <i class="material-icons">trending_flat</i>
         {{availableQtyUpdated}}
       </span>
-      <span v-if="lowStock" class="stock-warning ico ml-4" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
+      <span v-if="lowStock" class="stock-warning ico ml-2" data-toggle="pstooltip" data-placement="top" data-html="true" :title="lowStockLevel">!</span>
     </td>
-    <td class="qty-spinner">
-      <Spinner :product="product" class="pull-xs-right" @updateProductQty="updateProductQty" />
+    <td class="qty-spinner text-sm-right">
+      <Spinner :product="product" @updateProductQty="updateProductQty" />
     </td>
   </tr>
 </template>
@@ -118,6 +118,11 @@
         return `<div class="text-sm-left">
                   <p>${this.trans('product_low_stock')}</p>
                   <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
+                </div>`;
+      },
+      lowStockAlert() {
+        return `<div class="text-sm-left">
+                  <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
                 </div>`;
       },
       id() {
@@ -166,7 +171,7 @@
   };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass" type="text/scss" scoped>
   @import "../../../../../../scss/config/_settings.scss";
   .qty-update {
     color: $brand-primary;

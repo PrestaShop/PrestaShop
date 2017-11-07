@@ -674,6 +674,11 @@ class ProductPresenter
 
         $presentedProduct['embedded_attributes'] = $this->getProductEmbeddedAttributes($product);
 
+        // if product has features
+        if (isset($presentedProduct['features'])) {
+            $presentedProduct['grouped_features'] = $this->buildGroupedFeatures($presentedProduct['features']);
+        }
+
         return $presentedProduct;
     }
 
@@ -720,6 +725,7 @@ class ProductPresenter
             "ecotax",
             "minimal_quantity",
             "low_stock_threshold",
+            "low_stock_alert",
             "price",
             "unity",
             "unit_price_ratio",
@@ -807,6 +813,8 @@ class ProductPresenter
             "availability_message",
             "availability",
             "reference_to_display",
+            "delivery_in_stock",
+            "delivery_out_stock",
         );
     }
 
@@ -825,5 +833,43 @@ class ProductPresenter
         }
 
         return $embeddedProductAttributes;
+    }
+
+    /**
+     * Assemble the same features in one array
+     *
+     * @param  array $productFeatures
+     *
+     * @return array
+     */
+    protected function buildGroupedFeatures(array $productFeatures)
+    {
+        $valuesByFeatureName = array();
+        $groupedFeatures = array();
+
+        // features can either be "raw" (id_feature, id_product_id_feature_value)
+        // or "full" (id_feature, name, value)
+        // grouping can only be performed if they are "full"
+        if (empty($productFeatures) || !array_key_exists('name', $productFeatures[0])) {
+            return array();
+        }
+
+        foreach ($productFeatures as $feature) {
+            $featureName = $feature['name'];
+            // build an array of unique features
+            $groupedFeatures[$featureName] = $feature;
+            // aggregate feature values separately
+            $valuesByFeatureName[$featureName][] = $feature['value'];
+        }
+
+        // replace value from features that have multiple values with the ones we aggregated earlier
+        foreach ($valuesByFeatureName as $featureName => $values) {
+            if (count($values) > 1) {
+                sort($values, SORT_NATURAL);
+                $groupedFeatures[$featureName]['value'] = implode("\n", $values);
+            }
+        }
+
+        return $groupedFeatures;
     }
 }

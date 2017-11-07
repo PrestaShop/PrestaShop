@@ -14,6 +14,8 @@ docs/phpdoc-sf/
 composer.lock
 tests/Selenium/errorShots/
 tests/Selenium/errorDumps/
+*.hot-update.js
+*.hot-update.json
 
 admin-dev/autoupgrade/*
 admin-dev/backups/*

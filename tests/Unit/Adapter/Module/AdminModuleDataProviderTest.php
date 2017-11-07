@@ -38,10 +38,11 @@ class AdminModuleDataProviderTest extends UnitTestCase
     private $addonsDataProviderS;
     private $categoriesProviderS;
     private $adminModuleDataProvider;
+    private $moduleDataProviderS;
 
     public function setUp()
     {
-        parent::setup();
+        parent::setUp();
 
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
@@ -63,6 +64,10 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
             ->disableOriginalConstructor()
             ->getmock();
+
+        $this->moduleDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         /* The module catalog will contains only 5 modules for theses tests */
         $fakeModules = array(
@@ -107,6 +112,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
             $this->logger,
             $this->addonsDataProviderS,
             $this->categoriesProviderS,
+            $this->moduleDataProviderS,
             $this->cacheProviderS
         );
     }
@@ -161,6 +167,7 @@ class AdminModuleDataProviderTest extends UnitTestCase
                 'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
+                'moduleDataProvider' => $this->moduleDataProviderS,
                 'cacheProvider' => $this->cacheProviderS,
             )
         );

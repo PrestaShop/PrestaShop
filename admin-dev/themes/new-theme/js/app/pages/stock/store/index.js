@@ -36,7 +36,7 @@ const state = {
   order: '',
   pageIndex: 1,
   totalPages: 0,
-  productsPerPage: 100,
+  productsPerPage: 30,
   products: [],
   hasQty: false,
   keywords: [],

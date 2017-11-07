@@ -1,4 +1,6 @@
 parameters:
+    ps_root_dir:              "%kernel.root_dir%/../"
+    ps_config_dir:            "%ps_root_dir%config"
     translations_dir:         "%kernel.root_dir%/Resources/translations"
     themes_translations_dir:  "%kernel.cache_dir%/themes"
     themes_dir:               "%kernel.root_dir%/../themes"
@@ -78,7 +80,9 @@ services:
              - "@logger"
              - "@prestashop.core.admin.data_provider.addons_interface"
              - "@prestashop.categories_provider"
+             - "@prestashop.adapter.data_provider.module"
              - "@doctrine.cache.provider"
+             - "@=service('prestashop.adapter.legacy.context').getContext().employee"
         calls:
             - [ setRouter, ['@router']]
         decorates: prestashop.core.admin.data_provider.module_interface
@@ -93,6 +97,23 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.adapter.legacy.configuration"
             - "@doctrine.dbal.default_connection"
+            
+    # PRESTATRUST
+    prestashop.adapter.module.prestatrust.checker:
+        class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker
+        arguments:
+            - "@doctrine.cache.provider"
+            - "@prestashop.addons.client_api"
+            - "@translator"
+        
+    prestashop.adapter.module.prestatrust.eventsubscriber:
+        class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\ModuleEventSubscriber
+        arguments:
+            - "@prestashop.adapter.module.prestatrust.checker"
+        properties:
+             enabled: '%prestashop.addons.prestatrust.enabled%'
+        tags:
+            - { name: kernel.event_subscriber }
 
     # MODULE TAB MANAGEMENT
     prestashop.adapter.module.tab.register:
@@ -262,3 +283,23 @@ services:
             cacheDir: "%kernel.cache_dir%"
         calls:
             - [ setExportDir, ["%kernel.cache_dir%/export"]]
+
+
+    # EVENT MANAGEMENT
+    prestashop.dispatcher.legacy_hooks.subscriber:
+        class: 'PrestaShopBundle\EventListener\ActionDispatcherLegacyHooksSubscriber'
+        arguments: ['@prestashop.hook.dispatcher']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    # Custom Twig loader
+    prestashop.module_kernel.repository:
+        class: 'PrestaShopBundle\Kernel\ModuleRepository'
+        arguments: ['@doctrine.dbal.default_connection', '%database_prefix%']
+
+    prestashop.twig.modules.loader:
+        class: 'PrestaShopBundle\Twig\Locator\ModuleTemplateLoader'
+        arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
+        tags:
+          - { name: twig.loader, priority: 1}
+

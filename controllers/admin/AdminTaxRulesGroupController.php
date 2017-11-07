@@ -331,7 +331,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                             'label' => $this->trans('No Tax', array(), 'Admin.International.Help')
                         )
                     ),
-                    'hint' => sprintf($this->trans('(Total tax: %s)', array(), 'Admin.International.Help'), '9%')
+                    'hint' => $this->trans('(Total tax: 9%)', array(), 'Admin.International.Help'),
                 ),
                 array(
                     'type' => 'text',

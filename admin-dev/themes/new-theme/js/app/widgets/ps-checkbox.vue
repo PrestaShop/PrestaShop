@@ -24,8 +24,11 @@
  *-->
 <template>
   <div class="custom-checkbox">
-    <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
-    <label :for="id"></label>
+    <div class="checkbox">
+      <input type="checkbox" :id="id" v-model="checked" :class="{'indeterminate' : isIndeterminate }">
+      <span @click="onClick"></span>
+    </div>
+    <slot name="label"></slot>
   </div>
 </template>
 
@@ -40,66 +43,76 @@
         });
       },
     },
+    methods: {
+      onClick() {
+        this.checked = !this.checked;
+      },
+    },
     data: () => ({
       checked: false,
     }),
   };
 </script>
-<style lang="sass" scoped>
+<style lang="sass" type="text/scss" scoped>
   @import "../../../scss/config/_settings.scss";
   .custom-checkbox {
-    width: 15px;
-    height: 15px;
-    position: relative;
-    background: white;
-    label {
+    & > .checkbox {
       width: 15px;
       height: 15px;
-      cursor: pointer;
-      position: absolute;
-      top: 0;
-      left: 0;
-      border: 2px $gray-light solid;
-      border-radius: 2px;
-      &:after {
-        content: '';
-        width: 12px;
-        height: 5px;
-        position: absolute;
-        top: 1px;
-        left: 0;
-        border: 2px solid white;
-        border-top: none;
-        border-right: none;
-        background: transparent;
-        opacity: 0;
-        transform: rotate(-45deg);
-      }
-      &::before {
-        content: '';
-        width: 12px;
-        height: 12px;
+      position: relative;
+      background: white;
+      display: inline-block;
+      vertical-align: baseline;
+      margin-bottom: -2px; // same as border
+      span {
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
         position: absolute;
         top: 0;
         left: 0;
+        border: 2px $gray-light solid;
+        border-radius: 2px;
+        &:after {
+          content: '';
+          width: 12px;
+          height: 5px;
+          position: absolute;
+          top: 1px;
+          left: 0;
+          border: 2px solid white;
+          border-top: none;
+          border-right: none;
+          background: transparent;
+          opacity: 0;
+          transform: rotate(-45deg);
+        }
+        &::before {
+          content: '';
+          width: 12px;
+          height: 12px;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
       }
-    }
-    input[type=checkbox] {
-      visibility: hidden;
-      &:checked + label {
-        border: 2px $brand-primary solid;
-      }
-      &:checked + label:before {
-        background: $brand-primary;
-      }
-      &:checked + label:after {
-        opacity: 1;
-      }
-      &.indeterminate + label:after {
-         transform: rotate(0);
-         height: 0;
-         width: 11px;
-         top: 4px;
+      input[type=checkbox] {
+        display: none;
+        &:checked + span {
+          border: 2px $brand-primary solid;
+        }
+        &:checked + span:before {
+          background: $brand-primary;
+        }
+        &:checked + span:after {
+          opacity: 1;
+        }
+        &.indeterminate + span:after {
+          transform: rotate(0);
+          height: 0;
+          width: 11px;
+          top: 4px;
+        }
       }
     }
   }

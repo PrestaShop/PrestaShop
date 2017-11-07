@@ -520,8 +520,6 @@ class AdminControllerCore extends Controller
 
         $this->initShopContext();
 
-        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
         if (defined('_PS_ADMIN_DIR_')) {
             $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
             $this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
@@ -1912,6 +1910,7 @@ class AdminControllerCore extends Controller
             'iso' => $this->context->language->iso_code,
             'class_name' => $this->className,
             'iso_user' => $this->context->language->iso_code,
+            'lang_is_rtl' => $this->context->language->is_rtl,
             'country_iso_code' => $this->context->country->iso_code,
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,
@@ -2934,6 +2933,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
     }
 
     /**
@@ -3678,11 +3678,9 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field.'_'.$default_language->id);
                     // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
                     if (!isset($value) || "" == $value) {
-                        $this->errors[$field.'_'.$default_language->id] = sprintf(
-                            $this->trans('The field %1$s is required at least in %2$s.', array(), 'Admin.Notifications.Error'),
-                            $object->displayFieldName($field, $class_name),
-                            $default_language->name
-                        );
+                        $this->errors[$field.'_'.$default_language->id] = $this->trans('The field %field_name% is required at least in %lang%.',
+                            array('%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name),
+                            'Admin.Notifications.Error');
                     }
                 }
 
@@ -3713,11 +3711,9 @@ class AdminControllerCore extends Controller
                             $res = Validate::$function($value);
                         }
                         if (!$res) {
-                            $this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
-                                $this->trans('The %1$s field (%2$s) is invalid.', array(), 'Admin.Notifications.Error'),
-                                call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-                                $language['name']
-                            );
+                            $this->errors[$field_lang.'_'.$language['id_lang']] = $this->trans('The %field_name% field (%lang%) is invalid.',
+                                array('%field_name%' => call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name), '%lang%' => $language['name']),
+                                'Admin.Notifications.Error');
                         }
                     }
                 }
@@ -4041,7 +4037,7 @@ class AdminControllerCore extends Controller
                     if ($delete_ok) {
                         PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
                     } else {
-                        $this->errors[] = sprintf($this->trans('Can\'t delete #%d', array(), 'Admin.Notifications.Error'), $id);
+                        $this->errors[] = $this->trans('Can\'t delete #%id%', array('%id%' => $id), 'Admin.Notifications.Error');
                     }
                 }
                 if ($result) {

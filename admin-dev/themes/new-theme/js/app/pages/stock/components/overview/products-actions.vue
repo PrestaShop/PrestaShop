@@ -35,7 +35,7 @@
         :isIndeterminate="isIndeterminate"
         @checked="bulkChecked"
       />
-      <div class="ml-1">
+      <div class="ml-2">
         <small>{{trans('title_bulk')}}</small>
         <PSNumber
           class="bulk-qty"
@@ -43,7 +43,7 @@
           :value="bulkEditQty"
           :buttons="this.isFocused"
           @focus="focusIn"
-          @blur="focusOut"
+          @blur="focusOut($event)"
           @change="onChange"
           @keyup="onKeyUp"
         />
@@ -111,8 +111,8 @@
           EventBus.$emit('displayBulkAlert', 'error');
         }
       },
-      focusOut() {
-        this.isFocused = false;
+      focusOut(event) {
+        this.isFocused = $(event.target).hasClass('ps-number');
         this.danger = false;
       },
       bulkChecked(checkbox) {

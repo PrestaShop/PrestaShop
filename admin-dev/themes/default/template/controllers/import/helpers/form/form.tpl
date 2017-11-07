@@ -42,7 +42,7 @@
 						<a href="{l s='http://doc.prestashop.com/display/PS17/Import' d='Admin.Advparameters.Help'}" class="_blank">{l s='http://doc.prestashop.com/display/PS17/Import' d='Admin.Advparameters.Help'}</a>
 					</li>
 					<li>{l s='Read more about the CSV format at:'}
-						<a href="{l s='http://en.wikipedia.org/wiki/Comma-separated_values' d='Admin.Advparameters.Help'}" class="_blank">{l s='http://en.wikipedia.org/wiki/Comma-separated_values' d='Admin.Advparameters.Help'}</a>
+						<a href="{l s='https://en.wikipedia.org/wiki/Comma-separated_values' d='Admin.Advparameters.Help'}" class="_blank">{l s='https://en.wikipedia.org/wiki/Comma-separated_values' d='Admin.Advparameters.Help'}</a>
 					</li>
 				</ul>
 			</div>

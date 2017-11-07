@@ -55,8 +55,9 @@ class CccReducerCore
                 unset($cssFileList['external'][$key]);
             }
         }
-
-        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).'.css';
+        
+        $version = Configuration::get('PS_CCCCSS_VERSION');
+        $cccFilename = 'theme-'.$this->getFileNameIdentifierFromList($files).$version.'.css';
         $destinationPath = $this->cacheDir.$cccFilename;
 
         if (!$this->filesystem->exists($destinationPath)) {
@@ -91,8 +92,9 @@ class CccReducerCore
                 // No file to CCC
                 continue;
             }
-
-            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).'.js';
+            
+            $version = Configuration::get('PS_CCCJS_VERSION');
+            $cccFilename = $position.'-'.$this->getFileNameIdentifierFromList($files).$version.'.js';
             $destinationPath = $this->cacheDir.$cccFilename;
 
             if (!$this->filesystem->exists($destinationPath)) {

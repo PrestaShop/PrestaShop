@@ -161,11 +161,11 @@ class ProductInformation extends CommonAbstractType
             'options' => [
                 'attr' => array(
                     'class' => 'autoload_rte',
-                    'counter' => 6000,
+                    'counter' => 21844
                 ),
                 'constraints' => array(
                     new TinyMceMaxLength(array(
-                        'max' => 6000
+                        'max' => 21844
                     ))
                 ),
                 'required' => false

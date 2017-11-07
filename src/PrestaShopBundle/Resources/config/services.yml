@@ -263,7 +263,10 @@ services:
             - "@prestashop.core.module.updater"
             - "@prestashop.adapter.legacy.logger"
             - "@translator"
+            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
             - "@doctrine.cache.provider"
+        calls:
+            - [setPrestaTrustChecker, ['@prestashop.adapter.module.prestatrust.checker']]
 
     prestashop.core.addon.theme.repository:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository
@@ -469,6 +472,7 @@ services:
         arguments:
             - "@filesystem"
             - "@translator"
+            - "@event_dispatcher"
 
     prestashop.twig.extension.hook:
         class: PrestaShopBundle\Twig\HookExtension
@@ -487,6 +491,7 @@ services:
             - "@=service('translator').getLocale()"
             - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
             - "@prestashop.adapter.tools"
+            - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
         calls:
             - [ "setSslVerification", ["%prestashop.addons.api_client.verify_ssl%"]]
 
@@ -500,3 +505,13 @@ services:
         public: false
         tags:
           - {name: data_collector, template: '@PrestaShop/Admin/WebProfiler/hooks_collector.html.twig', id: 'ps.hooks_collector'}
+
+    # Web Profiler Bundle
+    data_collector.config:
+        class: "Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector"
+        arguments: ["PrestaShop", "@=service('prestashop.adapter.legacy.configuration').get('_PS_VERSION_')"]
+        public: false
+        tags:
+          - { name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
+        calls:
+          - ["setKernel", ["@kernel"]]

@@ -34,7 +34,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 {
     private $queryBuilder;
 
-    public function setup()
+    public function setUp()
     {
         $mockDb = Phake::mock('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\DatabaseInterface');
 
