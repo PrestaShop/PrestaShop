@@ -27,6 +27,7 @@
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
+    private $routeName = '';
     private $headerToolbarBtn = array();
     private $title;
     private $showContentHeader = true;
@@ -34,7 +35,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
     private $enableSidebar = false;
     private $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '', $routeName = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
@@ -50,6 +51,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
         $this->php_self = $controllerName;
+        $this->routeName = $routeName;
     }
 
     public function setMedia()
@@ -110,6 +112,16 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
+    }
+
+    /**
+     * Returns the route name (this allow to identify the page)
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return $this->routeName;
     }
 
     public function display()
