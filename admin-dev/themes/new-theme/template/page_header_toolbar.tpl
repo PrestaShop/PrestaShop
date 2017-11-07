@@ -28,6 +28,7 @@
 
   {block name=toolbarBox}
     <div class="toolbar-icons">
+      {hook h='displayDashboardToolbarTopMenu'}
       {foreach from=$toolbar_btn item=btn key=k}
         {if $k != 'back' && $k != 'modules-list'}
           {* TODO: REFACTOR ALL THIS THINGS *}

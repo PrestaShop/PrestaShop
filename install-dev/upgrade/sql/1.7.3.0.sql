@@ -44,3 +44,7 @@ ALTER TABLE `PREFIX_store` DROP `name`, DROP `address1`, DROP `address2`, DROP `
 ALTER TABLE `PREFIX_feature_product` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_feature`, `id_product`, `id_feature_value`);
 
 ALTER TABLE `PREFIX_customization_field` ADD `is_deleted` TINYINT(1) NOT NULL DEFAULT '0';
+
+INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES
+   (NULL, 'displayDashboardToolbarTopMenu', 'Display new elements in back office products listing page, on top Menu', 'This hook launches modules when the back office product listing page is displayed', '1');
+   (NULL, 'displayDashboardToolbarIcons', 'Display new elements in back office products listing page, on icons list', 'This hook launches modules when the back office product page listing is displayed', '1');
