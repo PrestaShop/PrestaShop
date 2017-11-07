@@ -206,7 +206,7 @@ class SearchCore
                 $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
-                $start_pos = (int)$word[0] == '-';
+                $start_pos = (int)($word[0] == '-');
                 $sql_param_search = $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
 
                 $intersect_array[] = 'SELECT DISTINCT si.id_product
