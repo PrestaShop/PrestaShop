@@ -67,6 +67,14 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider isDateOrNullProvider
+     */
+    public function testIsDateOrNull($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isDateOrNull($input));
+    }
+
+    /**
      * @dataProvider isMd5DataProvider
      */
     public function testIsMd5($expected, $input)
@@ -166,6 +174,24 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, '2020-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
+        );
+    }
+
+    public function isDateOrNullProvider()
+    {
+        return array(
+            array(true, '1991-04-19'),
+            array(true, '2015-03-22'),
+            array(true, '1945-07-25'),
+            array(true, '2020-03-19'),
+            array(true, '2020-03-19 10:23:00'),
+            array(true, '2020-03-19 45:99:99'), // Only the date is actually checked
+            array(false, '1991-03-33'),
+            array(false, '1991-03-33 00:50:00'),
+            array(false, '1991-15-19'),
+            array(true, null),
+            array(true, '0000-00-00 00:00:00'),
+            array(true, '0000-00-00'),
         );
     }
 
