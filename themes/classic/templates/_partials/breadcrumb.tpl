@@ -34,5 +34,6 @@
         </li>
       {/block}
     {/foreach}
+    {block name='breadcrumb_additional_item'}{/block}
   </ol>
 </nav>
