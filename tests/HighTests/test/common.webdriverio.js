@@ -94,6 +94,17 @@ function initCommands(client) {
       .deleteCookie()
       .call(cb);
   });
+
+  client.addCommand('onboarding', function (cb) {
+    this.selector = globals.selector;
+    return client
+      .waitForExist(this.selector.FO.AccessPage.sign_out_button, 90000)
+      .click(this.selector.FO.AccessPage.sign_out_button)
+      .waitForExist(this.selector.FO.AccessPage.sign_in_button, 90000)
+      .deleteCookie()
+      .call(cb);
+  });
+
 }
 
 module.exports = {
@@ -114,6 +125,24 @@ module.exports = {
       initCommands(client);
       return client;
     }
+  },
+  getCustomDate: function (numberOfDay) {
+    var today = new Date();
+    today.setDate(today.getDate() + numberOfDay);
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+
+    today = yyyy + '-' + mm + '-' + dd;
+    return today;
   },
   browser: function () {
     return options.desiredCapabilities.browserName

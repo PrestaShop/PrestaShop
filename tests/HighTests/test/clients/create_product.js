@@ -87,6 +87,7 @@ class CreateProduct extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.save_product_button, 90000)
       .click(selector.BO.AddProductPage.save_product_button)
+      .pause(3000)
   }
 
   closeGreenValidation() {
