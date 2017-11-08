@@ -264,6 +264,7 @@ class OrderPresenter implements PresenterInterface
             'is_returnable' => (int) $order->isReturnable(),
             'is_virtual' => $cart->isVirtualCart(),
             'payment' => $order->payment,
+            'module' => $order->module,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
             'is_valid' => $order->valid,
