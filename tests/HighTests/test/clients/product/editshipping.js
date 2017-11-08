@@ -5,8 +5,6 @@ var data = require('./../../datas/product-data');
 
 class EditShipping extends PrestashopClient {
 
-  // for standar / pack / combination
-
   goToProductShipping(){
     return this.client
       .scroll(500, 0)
@@ -46,7 +44,7 @@ class EditShipping extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.shipping_weight, data.common.cweight)
   }
 
-  shippingcosts(){
+  shippingCosts(){
     return this.client
       .waitForExist(selector.BO.AddProductPage.shipping_fees, 90000)
       .click(selector.BO.AddProductPage.shipping_fees)

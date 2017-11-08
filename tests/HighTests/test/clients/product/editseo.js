@@ -35,8 +35,6 @@ class EditSEO extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.SEO_friendly_url, data.common.shortlink)
   }
 
-
-
 }
 
 module.exports = EditSEO;

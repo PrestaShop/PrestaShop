@@ -95,16 +95,6 @@ function initCommands(client) {
       .call(cb);
   });
 
-  client.addCommand('onboarding', function (cb) {
-    this.selector = globals.selector;
-    return client
-      .waitForExist(this.selector.FO.AccessPage.sign_out_button, 90000)
-      .click(this.selector.FO.AccessPage.sign_out_button)
-      .waitForExist(this.selector.FO.AccessPage.sign_in_button, 90000)
-      .deleteCookie()
-      .call(cb);
-  });
-
 }
 
 module.exports = {

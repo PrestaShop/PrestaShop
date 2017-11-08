@@ -22,7 +22,7 @@ scenario('Create Standard Product', client => {
     test('should add feature height', () => client.addFeatureHeight('standard'));
     test('should enter the product price tax excluded', () => client.addProductPriceTaxExcluded());
     test('should enter the product reference', () => client.addProductReference());
-    test('should make the product en ligne', () => client.productEnligne());
+    test('should make the product on line', () => client.productOnline());
   }, 'product/editbasicsettings');
 
   scenario('Edit product quantities', client => {
@@ -41,7 +41,7 @@ scenario('Create Standard Product', client => {
     test('should enter the shipping height', () => client.shippingHeight());
     test('should enter the shipping depth', () => client.shippingDepth());
     test('should enter the shipping weight', () => client.shippingWeight());
-    test('should enter the additional shipping costs', () => client.shippingcosts());
+    test('should enter the additional shipping costs', () => client.shippingCosts());
     test('should select the available carrier', () => client.selectAvailableCarrier());
   }, 'product/editshipping');
 
@@ -68,18 +68,18 @@ scenario('Create Standard Product', client => {
     test('should enter the EAN-13', () => client.EAN13Entry());
     test('should enter the UPC', () => client.UPCEntry());
     test('should click on customization button', () => client.customizationButton());
-    test('should create new custom field', () => client.createCustumField());
+    test('should create new custom field', () => client.createCustomField());
     test('should click on add a customization field button', () => client.AddCustomFieldButton());
-    test('should create new custom field', () => client.newCustumField());
+    test('should create new custom field', () => client.newCustomField());
     test('should click on attach a new file button', () => client.attachNewFile());
     test('should add a file', () => client.addFile('image_test.jpg'));
     test('should select the previous added file', () => client.selectPreviousAddFile());
   }, 'product/editoptions');
 
-  scenario('Create Standard Product', client => {
-  test('should save and stay in the product page', () => client.saveProduct());
-  test('should close green validation', () => client.closeGreenValidation());
-  test('should sign out BO', () => client.signoutBO());
+  scenario('Save Product', client => {
+    test('should save and stay in the product page', () => client.saveProduct());
+    test('should close green validation', () => client.closeGreenValidation());
+    test('should sign out BO', () => client.signoutBO());
   }, 'product/product');
 
 }, 'product/product', true);
