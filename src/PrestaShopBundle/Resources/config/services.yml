@@ -497,10 +497,10 @@ services:
 
     # Data Collectors
     prestashop.hooks_registry:
-        class: 'PrestaShopBundle\DataCollector\HookRegistry'
+        class: PrestaShopBundle\DataCollector\HookRegistry
 
     prestashop.hooks_collector:
-        class: 'PrestaShopBundle\DataCollector\HookDataCollector'
+        class: PrestaShopBundle\DataCollector\HookDataCollector
         arguments: ['@prestashop.hooks_registry']
         public: false
         tags:
@@ -508,10 +508,10 @@ services:
 
     # Web Profiler Bundle
     data_collector.config:
-        class: "Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector"
+        class: Symfony\Component\HttpKernel\DataCollector\ConfigDataCollector
         arguments: ["PrestaShop", "@=service('prestashop.adapter.legacy.configuration').get('_PS_VERSION_')"]
         public: false
-        tags:
-          - { name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
         calls:
           - ["setKernel", ["@kernel"]]
+        tags:
+          - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
