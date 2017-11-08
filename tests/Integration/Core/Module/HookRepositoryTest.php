@@ -32,7 +32,7 @@ use Db;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Tests\Unit\ContextMocker;
 
 class HookRepositoryTest extends IntegrationTestCase
 {

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
 use CMSRoleRepository;
 use Db;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Tests\Unit\ContextMocker;
 use Product;
 
 class EntityManagerTest extends IntegrationTestCase
