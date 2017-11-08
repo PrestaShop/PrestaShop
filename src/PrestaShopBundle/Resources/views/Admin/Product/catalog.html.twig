@@ -57,6 +57,7 @@
       <div class="row">
         <div class="col-md-12">
           <div class="float-right">
+            {{ renderhook('displayDashboardToolbarIcons', {}) }}
             <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
               {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
             </a>
