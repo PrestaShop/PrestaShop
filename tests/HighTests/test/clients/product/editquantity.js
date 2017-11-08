@@ -1,7 +1,7 @@
 var PrestashopClient = require('./../prestashop_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
-
+var path = require('path');
 
 class EditQuantity extends PrestashopClient {
 

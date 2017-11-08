@@ -2,7 +2,6 @@ var PrestashopClient = require('./../prestashop_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 
-
 class CreateCombinations extends PrestashopClient {
 
   goToProductCombinationsForm() {
@@ -94,8 +93,8 @@ class CreateCombinations extends PrestashopClient {
 
   backToProduct() {
     return this.client
-      .waitForExist(this.selector.BO.AddProductPage.combination_first_details_back_to_product_btn, 60000)
-      .click(this.selector.BO.AddProductPage.combination_first_details_back_to_product_btn)
+      .waitForExist(selector.BO.AddProductPage.combination_first_details_back_to_product_btn, 60000)
+      .click(selector.BO.AddProductPage.combination_first_details_back_to_product_btn)
       .pause(3000)
   }
 
@@ -169,7 +168,7 @@ class CreateCombinations extends PrestashopClient {
       .pause(2000)
   }
 
-  availabilityLabel() {
+  availabilityLabelInStock() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.combination_label_in_stock, 90000)
       .click(selector.BO.AddProductPage.combination_label_in_stock)
@@ -178,6 +177,14 @@ class CreateCombinations extends PrestashopClient {
       .pause(2000)
   }
 
+  availabilityLabelOutStock() {
+    return this.client
+      .waitForExist(selector.BO.AddProductPage.combination_label_out_stock, 90000)
+      .click(selector.BO.AddProductPage.combination_label_out_stock)
+      .pause(2000)
+      .setValue(selector.BO.AddProductPage.combination_label_out_stock, data.common.qty_msg_unstock)
+      .pause(2000)
+  }
 }
 
 module.exports = CreateCombinations;

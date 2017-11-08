@@ -68,7 +68,7 @@ class EditOptions extends PrestashopClient {
       .click(selector.BO.AddProductPage.options_add_customization_field_button)
   }
 
-  createCustumField() {
+  createCustomField() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.options_first_custom_field_label, 90000)
       .click(selector.BO.AddProductPage.options_first_custom_field_label)
@@ -90,7 +90,7 @@ class EditOptions extends PrestashopClient {
       .pause(2000)
   }
 
-  newCustumField() {
+  newCustomField() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.options_second_custom_field_label, 90000)
       .click(selector.BO.AddProductPage.options_second_custom_field_label)
