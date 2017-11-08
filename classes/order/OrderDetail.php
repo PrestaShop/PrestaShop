@@ -473,6 +473,8 @@ class OrderDetailCore extends ObjectModel
                 $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int)$product['cart_quantity']);
             }
 
+            $update_quantity &= StockAvailable::adjustAvailablePacksQuantity($product['id_product'], $product['id_product_attribute']);
+
             if ($update_quantity) {
                 $product['stock_quantity'] -= $product['cart_quantity'];
             }

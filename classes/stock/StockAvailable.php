@@ -802,4 +802,53 @@ class StockAvailableCore extends ObjectModel
 
         return Db::getInstance()->execute($query);
     }
+
+    /**
+     * Adjusted the available quantity of packs
+     *
+     * @param int $productId - Cart product ID
+     * @param int $productAttributeId - Product attribute ID
+     * @return bool - Return true if the quantity of packs is adjusted
+     */
+    public static function adjustAvailablePacksQuantity($productId, $productAttributeId)
+    {
+        if (!Validate::isUnsignedId($productId)) {
+            return false;
+        }
+
+        $idLang = (int)Configuration::get('PS_LANG_DEFAULT');
+        if (Pack::isPack($productId)) {
+            $items = Pack::getItems($productId, $idLang);
+            foreach ($items as $item) {
+                if (StockAvailable::outOfStock($item->id) !== 1) {
+                    StockAvailable::adjustPackQuantity($item, $item->id_pack_product_attribute);
+                }
+            }
+        } else if (Pack::isPacked($productId, $productAttributeId) && (StockAvailable::outOfStock($productId) !== 1)) {
+            $product = new Product((int)$productId);
+            if (!Validate::isLoadedObject($product)) {
+                return false;
+            }
+
+            $product->loadStockData();
+            StockAvailable::adjustPackQuantity($product, $productAttributeId);
+        }
+
+        return true;
+    }
+
+    /**
+     * Adjust the quantity of pack according to the availability of the quantity of its items
+     *
+     * @param Product $product
+     * @param $productAttributeId
+     */
+    public static function adjustPackQuantity(Product $product, $productAttributeId)
+    {
+        $businessStockManager = Adapter_ServiceLocator::get('Core_Business_Stock_StockManager');
+        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+
+        $stockAvailable = $stockManager->getStockAvailableByProduct($product, (int)$productAttributeId);
+        $businessStockManager->updatePacksQuantityContainingProduct($product, (int)$productAttributeId, $stockAvailable);
+    }
 }
