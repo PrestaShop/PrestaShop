@@ -143,7 +143,8 @@ class LayoutExtension extends \Twig_Extension implements \Twig_Extension_Globals
         $showContentHeader = true,
         $headerTabContent = '',
         $enableSidebar = false,
-        $helpLink = ''
+        $helpLink = '',
+        $routeName = ''
     ) {
         if ($this->environment == 'test') {
             return <<<EOF
@@ -172,7 +173,8 @@ EOF;
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $routeName
         );
 
         //test if legacy template from "content.tpl" has '{$content}'
