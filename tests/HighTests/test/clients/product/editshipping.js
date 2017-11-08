@@ -2,7 +2,6 @@ var PrestashopClient = require('./../prestashop_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 
-
 class EditShipping extends PrestashopClient {
 
   goToProductShipping(){
