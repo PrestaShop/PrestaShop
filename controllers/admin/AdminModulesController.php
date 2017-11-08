@@ -92,7 +92,6 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
         $this->list_modules_categories['customer_reviews']['name'] = $this->l('Customer Reviews');
         $this->list_modules_categories['export']['name'] = $this->trans('Export', array(), 'Admin.Actions');
-        $this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
         $this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
         $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
         $this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandising');
