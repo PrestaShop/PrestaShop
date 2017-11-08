@@ -802,4 +802,37 @@ class StockAvailableCore extends ObjectModel
 
         return Db::getInstance()->execute($query);
     }
+
+    /**
+     * Check the quantity of packets if it is adjusted
+     *
+     * @param int $idProduct
+     * @param int $idProductAttribute
+     * @return bool
+     */
+    public static function checkPacksQuantity($idProduct, $idProductAttribute)
+    {
+        if (!Validate::isUnsignedId($idProduct)) {
+            return false;
+        }
+
+        $idLang = (int)Configuration::get('PS_LANG_DEFAULT');
+        $businessStockManager = Adapter_ServiceLocator::get('Core_Business_Stock_StockManager');
+        $stockManager = Adapter_ServiceLocator::get('Adapter_StockManager');
+
+        if (Pack::isPack($idProduct)) {
+            $items = Pack::getItems($idProduct, $idLang);
+            foreach ($items as $item) {
+                $stockAvailable = $stockManager->getStockAvailableByProduct($item, (int)$item->id_pack_product_attribute);
+                $businessStockManager->updatePacksQuantityContainingProduct($item, (int)$item->id_pack_product_attribute, $stockAvailable);
+            }
+        } else if (Pack::isPacked($idProduct, $idProductAttribute)) {
+            $product = new Product((int)$idProduct);
+            $product->loadStockData();
+            $stockAvailable = $stockManager->getStockAvailableByProduct($product, (int)$idProductAttribute);
+            $businessStockManager->updatePacksQuantityContainingProduct($product, (int)$idProductAttribute, $stockAvailable);
+        }
+
+        return true;
+    }
 }
