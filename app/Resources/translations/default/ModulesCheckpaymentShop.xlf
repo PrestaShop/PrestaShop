@@ -38,6 +38,22 @@ File: modules/ps_checkpayment/views/templates/front/payment_infos.tpl:33</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_checkpayment/views/templates/hook/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4b80fae2153218ed763bdadc418e8589">
+        <source>Pay by check</source>
+        <target>Pay by check</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="4e1fb9f4b46556d64db55d50629ee301">
+        <source>(order processing will be longer)</source>
+        <target>(order processing will be longer)</target>
+        <note>Context:
+File: modules/ps_checkpayment/views/templates/hook/payment.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_checkpayment/views/templates/hook/payment_return.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="88526efe38fd18179a127024aba8c1d7">
@@ -111,22 +127,6 @@ File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:45</note>
         <target>We have noticed that there is a problem with your order. If you think this is an error, you can contact our</target>
         <note>Context:
 File: modules/ps_checkpayment/views/templates/hook/payment_return.tpl:44</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_checkpayment/views/templates/hook/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4b80fae2153218ed763bdadc418e8589">
-        <source>Pay by check</source>
-        <target>Pay by check</target>
-        <note>Context:
-File: modules/ps_checkpayment/views/templates/hook/payment.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="4e1fb9f4b46556d64db55d50629ee301">
-        <source>(order processing will be longer)</source>
-        <target>(order processing will be longer)</target>
-        <note>Context:
-File: modules/ps_checkpayment/views/templates/hook/payment.tpl:29</note>
       </trans-unit>
     </body>
   </file>

@@ -1,12 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="15ba451caecdf6917bcd4d150f33fb7c">
-        <source>Search a word or expression, e.g.: "Order confirmation"</source>
-        <target>Search a word or expression, e.g.: "Order confirmation"</target>
+      <trans-unit id="c4b8d8d900acf4712d4511f6c39e6578">
+        <source>The default language used in your shop.</source>
+        <target>The default language used in your shop.</target>
         <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:59</note>
+File: controllers/admin/AdminLocalizationController.php:40</note>
+      </trans-unit>
+      <trans-unit id="e932e3b39aa40f0efe327c599cbd406f">
+        <source>Set browser language as default language</source>
+        <target>Set browser language as default language</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:48</note>
+      </trans-unit>
+      <trans-unit id="59a0d89a785e4e00f80b5d6154a446d0">
+        <source>The default country used in your shop.</source>
+        <target>The default country used in your shop.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:56</note>
+      </trans-unit>
+      <trans-unit id="2d84287b4a1226bb820aac87116f401a">
+        <source>Set country corresponding to browser language</source>
+        <target>Set country corresponding to browser language</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:65</note>
+      </trans-unit>
+      <trans-unit id="eb99748a0429320ff7a0120625ace088">
+        <source>The default currency used in your shop.</source>
+        <target>The default currency used in your shop.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:74</note>
+      </trans-unit>
+      <trans-unit id="0a00aa8a4fde06c5e498e7272ccde745">
+        <source>If you change the default currency, you will have to manually edit every product price.</source>
+        <target>If you change the default currency, you will have to manually edit every product price.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:74</note>
+      </trans-unit>
+      <trans-unit id="9da30b4a4eab6c20f3ba7ddc89c18d6d">
+        <source>The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).</source>
+        <target>The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:89</note>
+      </trans-unit>
+      <trans-unit id="f7f469cfef2bd3d4d0a12cc7875df046">
+        <source>The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).</source>
+        <target>The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:97</note>
+      </trans-unit>
+      <trans-unit id="dd82d34d95398e0fe58f9b2edfc933fa">
+        <source>The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).</source>
+        <target>The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:105</note>
+      </trans-unit>
+      <trans-unit id="2bec6d5b97c142617d81b6abfd8611a1">
+        <source>The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).</source>
+        <target>The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:113</note>
+      </trans-unit>
+      <trans-unit id="5aa30e77b6c3af8d4affb7b5162d60fb">
+        <source>The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).</source>
+        <target>The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:127</note>
+      </trans-unit>
+      <trans-unit id="31de2e2af2f6b180fe4f3969affff0de">
+        <source>The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).</source>
+        <target>The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:135</note>
+      </trans-unit>
+      <trans-unit id="bb0fa2ec7b2d1fcfc14bf6587cc51a66">
+        <source>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</source>
+        <target>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</target>
+        <note>Context:
+File: controllers/admin/AdminLocalizationController.php:342</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminZonesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f3211eeee6d9a3f9208dbf61903eaafa">
+        <source>Zone name (e.g. Africa, West Coast, Neighboring Countries).</source>
+        <target>Zone name (e.g. Africa, West Coast, Neighboring Countries).</target>
+        <note>Context:
+File: controllers/admin/AdminZonesController.php:104</note>
+      </trans-unit>
+      <trans-unit id="976bb0e0c56156bd36831e1bf244e7ed">
+        <source>Allow or disallow shipping to this zone.</source>
+        <target>Allow or disallow shipping to this zone.</target>
+        <note>Context:
+File: controllers/admin/AdminZonesController.php:124</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8bd279ebcd912dc792663bc65a1fb499">
+        <source>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</source>
+        <target>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:288</note>
+      </trans-unit>
+      <trans-unit id="ce9c5fc1032ac5aa03a3d248022773df">
+        <source>You must define the behavior if an address matches multiple rules:</source>
+        <target>You must define the behavior if an address matches multiple rules:</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:314</note>
+      </trans-unit>
+      <trans-unit id="439fa6ce423495b01ffd31ea56b33335">
+        <source>- This tax only: Will apply only this tax</source>
+        <target>- This tax only: Will apply only this tax</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:315</note>
+      </trans-unit>
+      <trans-unit id="4019ba4535164cd55c61ac20379a8aa9">
+        <source>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</source>
+        <target>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:316</note>
+      </trans-unit>
+      <trans-unit id="dabf677c95d59c749ea5d6d6d22012c4">
+        <source><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></source>
+        <target><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:317</note>
+      </trans-unit>
+      <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
+        <source>No Tax</source>
+        <target>No Tax</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:331</note>
+      </trans-unit>
+      <trans-unit id="7a3ded393734410a3d3514e10b672c92">
+        <source>(Total tax: 9%)</source>
+        <target>(Total tax: 9%)</target>
+        <note>Context:
+File: controllers/admin/AdminTaxRulesGroupController.php:334</note>
       </trans-unit>
     </body>
   </file>
@@ -24,15 +158,15 @@ File: controllers/admin/AdminLanguagesController.php:156</note>
         <note>Context:
 File: controllers/admin/AdminLanguagesController.php:164</note>
       </trans-unit>
-      <trans-unit id="62b71349e79eaf23547ac4c031f838d9">
-        <source>Short date format (e.g., %s).</source>
-        <target>Short date format (e.g., %s).</target>
+      <trans-unit id="cb832fdb1310ad1cb4b36705e3e043d2">
+        <source>Short date format (e.g., Y-m-d).</source>
+        <target>Short date format (e.g., Y-m-d).</target>
         <note>Context:
 File: controllers/admin/AdminLanguagesController.php:173</note>
       </trans-unit>
-      <trans-unit id="37623dffd82211a16d775e362892fa0e">
-        <source>Full date format (e.g., %s).</source>
-        <target>Full date format (e.g., %s).</target>
+      <trans-unit id="11fb95583b7d678407bb64582a2ca3c6">
+        <source>Full date format (e.g., Y-m-d H:i:s).</source>
+        <target>Full date format (e.g., Y-m-d H:i:s).</target>
         <note>Context:
 File: controllers/admin/AdminLanguagesController.php:182</note>
       </trans-unit>
@@ -59,22 +193,6 @@ File: controllers/admin/AdminLanguagesController.php:218</note>
         <target>(Experimental: your theme must be compliant with RTL languages).</target>
         <note>Context:
 File: controllers/admin/AdminLanguagesController.php:219</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c12f8445861a605b788eb90e2c47f02a">
-        <source>This option allows you, among other things, to restrict access to your shop for certain countries. See below.</source>
-        <target>This option allows you, among other things, to restrict access to your shop for certain countries. See below.</target>
-        <note>Context:
-File: controllers/admin/AdminGeolocationController.php:41</note>
-      </trans-unit>
-      <trans-unit id="632a9a67e93d72324b63a0d0626cd2a2">
-        <source>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</source>
-        <target>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</target>
-        <note>Context:
-File: controllers/admin/AdminGeolocationController.php:75</note>
       </trans-unit>
     </body>
   </file>
@@ -164,19 +282,19 @@ File: controllers/admin/AdminTaxesController.php:211</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminZonesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGeolocationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f3211eeee6d9a3f9208dbf61903eaafa">
-        <source>Zone name (e.g. Africa, West Coast, Neighboring Countries).</source>
-        <target>Zone name (e.g. Africa, West Coast, Neighboring Countries).</target>
+      <trans-unit id="c12f8445861a605b788eb90e2c47f02a">
+        <source>This option allows you, among other things, to restrict access to your shop for certain countries. See below.</source>
+        <target>This option allows you, among other things, to restrict access to your shop for certain countries. See below.</target>
         <note>Context:
-File: controllers/admin/AdminZonesController.php:104</note>
+File: controllers/admin/AdminGeolocationController.php:41</note>
       </trans-unit>
-      <trans-unit id="976bb0e0c56156bd36831e1bf244e7ed">
-        <source>Allow or disallow shipping to this zone.</source>
-        <target>Allow or disallow shipping to this zone.</target>
+      <trans-unit id="632a9a67e93d72324b63a0d0626cd2a2">
+        <source>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</source>
+        <target>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</target>
         <note>Context:
-File: controllers/admin/AdminZonesController.php:124</note>
+File: controllers/admin/AdminGeolocationController.php:75</note>
       </trans-unit>
     </body>
   </file>
@@ -193,134 +311,6 @@ File: controllers/admin/AdminCurrenciesController.php:104</note>
         <target><![CDATA[Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).]]></target>
         <note>Context:
 File: controllers/admin/AdminCurrenciesController.php:119</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8bd279ebcd912dc792663bc65a1fb499">
-        <source>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</source>
-        <target>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:288</note>
-      </trans-unit>
-      <trans-unit id="ce9c5fc1032ac5aa03a3d248022773df">
-        <source>You must define the behavior if an address matches multiple rules:</source>
-        <target>You must define the behavior if an address matches multiple rules:</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:314</note>
-      </trans-unit>
-      <trans-unit id="439fa6ce423495b01ffd31ea56b33335">
-        <source>- This tax only: Will apply only this tax</source>
-        <target>- This tax only: Will apply only this tax</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:315</note>
-      </trans-unit>
-      <trans-unit id="4019ba4535164cd55c61ac20379a8aa9">
-        <source>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</source>
-        <target>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:316</note>
-      </trans-unit>
-      <trans-unit id="dabf677c95d59c749ea5d6d6d22012c4">
-        <source><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></source>
-        <target><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:317</note>
-      </trans-unit>
-      <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
-        <source>No Tax</source>
-        <target>No Tax</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:331</note>
-      </trans-unit>
-      <trans-unit id="4a4e778bc0c5e12f5e0bc4d9e99143a5">
-        <source>(Total tax: %s)</source>
-        <target>(Total tax: %s)</target>
-        <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:334</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminLocalizationController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c4b8d8d900acf4712d4511f6c39e6578">
-        <source>The default language used in your shop.</source>
-        <target>The default language used in your shop.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:40</note>
-      </trans-unit>
-      <trans-unit id="e932e3b39aa40f0efe327c599cbd406f">
-        <source>Set browser language as default language</source>
-        <target>Set browser language as default language</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:48</note>
-      </trans-unit>
-      <trans-unit id="59a0d89a785e4e00f80b5d6154a446d0">
-        <source>The default country used in your shop.</source>
-        <target>The default country used in your shop.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:56</note>
-      </trans-unit>
-      <trans-unit id="2d84287b4a1226bb820aac87116f401a">
-        <source>Set country corresponding to browser language</source>
-        <target>Set country corresponding to browser language</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:65</note>
-      </trans-unit>
-      <trans-unit id="eb99748a0429320ff7a0120625ace088">
-        <source>The default currency used in your shop.</source>
-        <target>The default currency used in your shop.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:74</note>
-      </trans-unit>
-      <trans-unit id="0a00aa8a4fde06c5e498e7272ccde745">
-        <source>If you change the default currency, you will have to manually edit every product price.</source>
-        <target>If you change the default currency, you will have to manually edit every product price.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:74</note>
-      </trans-unit>
-      <trans-unit id="9da30b4a4eab6c20f3ba7ddc89c18d6d">
-        <source>The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).</source>
-        <target>The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:89</note>
-      </trans-unit>
-      <trans-unit id="f7f469cfef2bd3d4d0a12cc7875df046">
-        <source>The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).</source>
-        <target>The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:97</note>
-      </trans-unit>
-      <trans-unit id="dd82d34d95398e0fe58f9b2edfc933fa">
-        <source>The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).</source>
-        <target>The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:105</note>
-      </trans-unit>
-      <trans-unit id="2bec6d5b97c142617d81b6abfd8611a1">
-        <source>The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).</source>
-        <target>The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:113</note>
-      </trans-unit>
-      <trans-unit id="5aa30e77b6c3af8d4affb7b5162d60fb">
-        <source>The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).</source>
-        <target>The ISO 639-1 identifier for the language of the country where your web server is located (en, fr, sp, ru, pl, nl, etc.).</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:127</note>
-      </trans-unit>
-      <trans-unit id="31de2e2af2f6b180fe4f3969affff0de">
-        <source>The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).</source>
-        <target>The ISO 3166-1 alpha-2 identifier for the country/region where your web server is located, in lowercase (us, gb, fr, sp, ru, pl, nl, etc.).</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:135</note>
-      </trans-unit>
-      <trans-unit id="bb0fa2ec7b2d1fcfc14bf6587cc51a66">
-        <source>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</source>
-        <target>If set to yes then the localization pack will be downloaded from prestashop.com. Otherwise the local xml file found in the localization folder of your PrestaShop installation will be used.</target>
-        <note>Context:
-File: controllers/admin/AdminLocalizationController.php:340</note>
       </trans-unit>
     </body>
   </file>
@@ -364,6 +354,26 @@ File: controllers/admin/AdminCountriesController.php:300</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="15ba451caecdf6917bcd4d150f33fb7c">
+        <source>Search a word or expression, e.g.: "Order confirmation"</source>
+        <target>Search a word or expression, e.g.: "Order confirmation"</target>
+        <note>Context:
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c8177e39573538431ca4c24841ee3fbe">
+        <source>Missing files are marked in red</source>
+        <target>Missing files are marked in red</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:86</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/countries/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ac42ae31827e4ce47e084ecfb68018aa">
@@ -394,54 +404,6 @@ File: admin-dev/themes/default/template/controllers/countries/helpers/form/form.
   </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f75f58622599fa286aa5bdd94fb4404d">
-        <source>Some of these expressions use this special syntax: %s.</source>
-        <target>Some of these expressions use this special syntax: %s.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:69</note>
-      </trans-unit>
-      <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
-        <source>There are [1]%replace%[/1] products</source>
-        <target>There are [1]%replace%[/1] products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:74</note>
-      </trans-unit>
-      <trans-unit id="df80af80ac597d540a4d0d6f18c9d5ab">
-        <source>%s" will be replaced by a number.</source>
-        <target>%s" will be replaced by a number.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:74</note>
-      </trans-unit>
-      <trans-unit id="cfe3ecf9fcc29ce36de15ee87cebd12b">
-        <source>List of pages in [1]%replace%[/1]</source>
-        <target>List of pages in [1]%replace%[/1]</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:75</note>
-      </trans-unit>
-      <trans-unit id="eb683b8fbef42b06921f7c3643dcb8d5">
-        <source>%s" will be replaced by a string.</source>
-        <target>%s" will be replaced by a string.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:75</note>
-      </trans-unit>
-      <trans-unit id="9b4ca9541e2c3e7215a5fac1f4cecd2f">
-        <source>Feature: [1]%1%[/1] ([1]%2%[/1] values)</source>
-        <target>Feature: [1]%1%[/1] ([1]%2%[/1] values)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:76</note>
-      </trans-unit>
-      <trans-unit id="031775df42ef41141d4b4c7d4db89d65">
-        <source>The numbers enable you to reorder the variables when necessary.</source>
-        <target>The numbers enable you to reorder the variables when necessary.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:76</note>
-      </trans-unit>
-      <trans-unit id="f324bbd9de83d61ccb5f7d5593aec5b3">
-        <source>You MUST use this syntax in your translations. Here are several examples:</source>
-        <target>You MUST use this syntax in your translations. Here are several examples:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:71</note>
-      </trans-unit>
       <trans-unit id="013afdec32d184dc61040022a45409ca">
         <source>Click on the title of a section to open its fieldsets.</source>
         <target>Click on the title of a section to open its fieldsets.</target>
@@ -459,6 +421,58 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/tr
         <target>Select your module</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_modules.tpl:176</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f75f58622599fa286aa5bdd94fb4404d">
+        <source>Some of these expressions use this special syntax: %s.</source>
+        <target>Some of these expressions use this special syntax: %s.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
+        <source>There are [1]%replace%[/1] products</source>
+        <target>There are [1]%replace%[/1] products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="df80af80ac597d540a4d0d6f18c9d5ab">
+        <source>%s" will be replaced by a number.</source>
+        <target>%s" will be replaced by a number.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="cfe3ecf9fcc29ce36de15ee87cebd12b">
+        <source>List of pages in [1]%replace%[/1]</source>
+        <target>List of pages in [1]%replace%[/1]</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:74</note>
+      </trans-unit>
+      <trans-unit id="eb683b8fbef42b06921f7c3643dcb8d5">
+        <source>%s" will be replaced by a string.</source>
+        <target>%s" will be replaced by a string.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:74</note>
+      </trans-unit>
+      <trans-unit id="9b4ca9541e2c3e7215a5fac1f4cecd2f">
+        <source>Feature: [1]%1%[/1] ([1]%2%[/1] values)</source>
+        <target>Feature: [1]%1%[/1] ([1]%2%[/1] values)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:75</note>
+      </trans-unit>
+      <trans-unit id="031775df42ef41141d4b4c7d4db89d65">
+        <source>The numbers enable you to reorder the variables when necessary.</source>
+        <target>The numbers enable you to reorder the variables when necessary.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:75</note>
+      </trans-unit>
+      <trans-unit id="f324bbd9de83d61ccb5f7d5593aec5b3">
+        <source>You MUST use this syntax in your translations. Here are several examples:</source>
+        <target>You MUST use this syntax in your translations. Here are several examples:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:70</note>
       </trans-unit>
     </body>
   </file>
@@ -533,16 +547,6 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/ma
         <target>If necessary [1][2] you must first create a new language[/1].</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/main.tpl:366</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c8177e39573538431ca4c24841ee3fbe">
-        <source>Missing files are marked in red</source>
-        <target>Missing files are marked in red</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:86</note>
       </trans-unit>
     </body>
   </file>
