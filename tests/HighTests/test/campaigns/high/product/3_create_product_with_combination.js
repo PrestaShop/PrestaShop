@@ -1,41 +1,27 @@
-scenario('Create a pack of products', client => {
+scenario('Create product with combination', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signinBO());
   test('should go to product menu', () => client.goToProductMenu());
   test('should click on the add new product button', () => client.addNewProduct());
 
   scenario('Edit Basic settings', client => {
-    test('should set the name of product', () => client.setProductName('pack'));
-    test('should select pack product type', () => client.setProductType('pack'));
-    test('should add first product item for pack', () => client.addPackProduct1());
-    test('should add second search product item for pack', () => client.addPackProduct2());
-    test('should enter the quantity of product', () => client.setQuantity());
+    test('should set the name of product', () => client.setProductName('combination'));
+    test('should select pack product type', () => client.setProductType('combination'));
     test('should enter the price of product', () => client.setPrice());
     test('should upload the picture of product', () => client.uploadPicture('image_test.jpg'));
     test('should click on create category button', () => client.addCategory());
-    test('should enter the category name', () => client.setCategoryName('pack'));
+    test('should enter the category name', () => client.setCategoryName('combination'));
     test('should click on category create button', () => client.createCategory());
     test('should remove home category', () => client.removeHomeCategory());
-    test('should click on add brand button', () => client.addBrand('pack'));
+    test('should click on add brand button', () => client.addBrand('combination'));
     test('should select a brand', () => client.selectBrand());
-    test('should click on add a related product button', () => client.addRelatedProduct('pack'));
+    test('should click on add a related product button', () => client.addRelatedProduct('combination'));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should add feature height', () => client.addFeatureHeight('pack'));
+    test('should add feature height', () => client.addFeatureHeight('combination'));
     test('should enter the product price tax excluded', () => client.addProductPriceTaxExcluded());
     test('should enter the product reference', () => client.addProductReference());
     test('should make the product on line', () => client.productOnline());
   }, 'product/editbasicsettings');
-
-  scenario('Edit product quantities', client => {
-    test('should go to the product quantities form', () => client.goToProductQuantity());
-    test('should enter the product quantity', () => client.productQuantity());
-    test('should enter the minimum quantity for sale', () => client.minQuantitySale());
-    test('should select the pack quantities', () => client.packQuantity());
-    test('should select the availability preferences', () => client.selectAvailabilityPreferences('pack'));
-    test('should enter the available label in stock', () => client.avaibleStock());
-    test('should enter the available label out of stock', () => client.availableOutOfStock());
-    test('should enter the availability date', () => client.availabilityDate());
-  }, 'product/editquantity');
 
   scenario('Edit product shipping', client => {
     test('should go to the product shipping form', () => client.goToProductShipping());
@@ -46,6 +32,21 @@ scenario('Create a pack of products', client => {
     test('should enter the additional shipping costs', () => client.shippingCosts());
     test('should select the available carrier', () => client.selectAvailableCarrier());
   }, 'product/editshipping');
+
+  scenario('Create product combinations', client => {
+    test('should go to the product combinations form', () => client.goToProductCombinationsForm());
+    test('should create first combination', () => client.createFirstCombination());
+    test('should create second combination', () => client.createSecondCombination());
+    test('should click on edit the first combination', () => client.goToEditFirstCombination());
+    test('should edit the first combination', () => client.editFirstCombination());
+    test('should click on back to product button', () => client.backToProduct());
+    test('should click on edit the second combination', () => client.goToEditSecondCombination());
+    test('should edit the second combination', () => client.editSecondCombination());
+    test('should click on back to product button', () => client.backToProductButton());
+    test('should select the availability preferences', () => client.availabilityPreferences());
+    test('should enter the available label in stock', () => client.availabilityLabelInStock());
+    test('should enter the available label out of stock', () => client.availabilityLabelOutStock());
+  }, 'product/createcombinations');
 
   scenario('Edit product pricing', client => {
     test('should go to the product pricing tab', () => client.goToPricingTab());
@@ -83,5 +84,6 @@ scenario('Create a pack of products', client => {
     test('should close green validation', () => client.closeGreenValidation());
     test('should sign out BO', () => client.signoutBO());
   }, 'product/product');
+
 
 }, 'product/product', true);

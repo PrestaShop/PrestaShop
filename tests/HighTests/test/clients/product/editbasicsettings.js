@@ -6,7 +6,7 @@ var path = require('path');
 class EditBasicSettings extends PrestashopClient {
 
   setProductName(type) {
-    if (type === 'VirtualProduct') {
+    if (type === 'virtual') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
         .setValue(selector.BO.AddProductPage.product_name_input, data.virtual.name + product_id);
@@ -133,7 +133,7 @@ class EditBasicSettings extends PrestashopClient {
   }
 
   setCategoryName(type) {
-    if (type === 'VirtualProduct') {
+    if (type === 'virtual') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
         .setValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.name + product_id);
@@ -141,7 +141,7 @@ class EditBasicSettings extends PrestashopClient {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
         .setValue(selector.BO.AddProductPage.product_category_name_input, data.pack.name + product_id);
-    } else if (type === 'ProductCombination') {
+    } else if (type === 'combination') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
         .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.name + 'Combination' + product_id);
@@ -195,13 +195,11 @@ class EditBasicSettings extends PrestashopClient {
       .pause(2000)
   }
 
-  productEnligne() {
+  productOnline() {
     return this.client
       .pause(1000)
       .click(selector.BO.AddProductPage.product_online_toggle)
   }
-
-
 
   addRelatedProduct(type) {
     if (type === 'pack') {
@@ -216,7 +214,6 @@ class EditBasicSettings extends PrestashopClient {
         .click(selector.BO.AddProductPage.add_related_product_btn)
         .pause(2000)
     }
-
   }
 
   searchAndAddRelatedProduct() {
@@ -277,10 +274,6 @@ class EditBasicSettings extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.product_reference, data.common.product_reference)
   }
 
-  pauseCustum(){
-    return this.client
-      .pause(5000)
-  }
 }
 
 module.exports = EditBasicSettings;
