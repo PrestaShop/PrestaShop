@@ -84,6 +84,18 @@ scenario('Create product with combination', client => {
     test('should close green validation', () => client.closeGreenValidation());
     test('should sign out BO', () => client.signoutBO());
   }, 'product/product');
-
-
 }, 'product/product', true);
+
+scenario('Check the product in the catalog', client => {
+  test('should open browser', () => client.open());
+  test('should log in successfully in BO', () => client.signinBO());
+  test('should go to the catalog', () => client.goToCatalog('combination'));
+  test('should search the product by name', () => client.searchProductByName());
+  test('should check the product name', () => client.checkProductName());
+  test('should check the product reference', () => client.checkProductReference());
+  test('should check the product category', () => client.checkProductCategory());
+  test('should check the product price TE', () => client.checkProductPriceTE());
+  test('should check the product quantity', () => client.checkProductQuantityCombination());
+  test('should check the product status', () => client.checkProductStatus());
+  test('should reset filter', () => client.resetFilter());
+}, 'product/checkproduct', true);

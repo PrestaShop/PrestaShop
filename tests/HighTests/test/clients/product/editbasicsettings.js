@@ -80,7 +80,6 @@ class EditBasicSettings extends PrestashopClient {
       .pause(2000)
   }
 
-
   setQuantity() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.quantity_shortcut_input, 90000)
@@ -136,19 +135,19 @@ class EditBasicSettings extends PrestashopClient {
     if (type === 'virtual') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.name + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.new_category_name + product_id);
     } else if (type === 'pack') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.pack.name + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.pack.new_category_name + product_id);
     } else if (type === 'combination') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.name + 'Combination' + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + 'Combination' + product_id);
     } else {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.name + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + product_id);
     }
   }
 
@@ -159,8 +158,6 @@ class EditBasicSettings extends PrestashopClient {
       .waitForExist(selector.BO.AddProductPage.category_create_btn, 90000)
       .click(selector.BO.AddProductPage.category_create_btn)
       .pause(2000)
-      .waitForExist(selector.BO.AddProductPage.category_home, 90000)
-      .click(selector.BO.AddProductPage.category_home)
   }
 
   removeHomeCategory() {

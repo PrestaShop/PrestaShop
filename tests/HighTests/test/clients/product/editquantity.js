@@ -26,8 +26,6 @@ class EditQuantity extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.minimum_quantity_sale, data.common.qty_min)
   }
 
-  // for pack
-
   packQuantity() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_stock_type, 60000)
@@ -38,8 +36,6 @@ class EditQuantity extends PrestashopClient {
       .pause(2000)
   }
 
-
-  //for virtual
   associatedFile() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.virtual_associated_file, 60000)
@@ -90,7 +86,7 @@ class EditQuantity extends PrestashopClient {
     }
   }
 
-  avaibleStock(){
+  availableStock(){
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_label_in_stock, 90000)
       .click(selector.BO.AddProductPage.pack_label_in_stock)

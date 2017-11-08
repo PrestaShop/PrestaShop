@@ -1,7 +1,6 @@
 var PrestashopClient = require('./../prestashop_client');
 var {selector} = require('../../globals.webdriverio.js');
 
-
 class Product extends PrestashopClient {
 
   goToProductMenu() {

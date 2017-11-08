@@ -31,7 +31,7 @@ scenario('Create virtual Product', client => {
     test('should indicate that the product have an associated file', () => client.associatedFile());
     test('should add a file', () => client.addFile());
     test('should select the availability preferences', () => client.selectAvailabilityPreferences('virtual'));
-    test('should enter the available label in stock', () => client.avaibleStock());
+    test('should enter the available label in stock', () => client.availableStock());
     test('should enter the available label out of stock', () => client.availableOutOfStock());
     test('should enter the availability date', () => client.availabilityDate());
   }, 'product/editquantity');
@@ -72,5 +72,18 @@ scenario('Create virtual Product', client => {
     test('should close green validation', () => client.closeGreenValidation());
     test('should sign out BO', () => client.signoutBO());
   }, 'product/product');
-
 }, 'product/product', true);
+
+scenario('Check the product in the catalog', client => {
+  test('should open browser', () => client.open());
+  test('should log in successfully in BO', () => client.signinBO());
+  test('should go to the catalog', () => client.goToCatalog('virtual'));
+  test('should search the product by name', () => client.searchProductByName());
+  test('should check the product name', () => client.checkProductName());
+  test('should check the product reference', () => client.checkProductReference());
+  test('should check the product category', () => client.checkProductCategory());
+  test('should check the product price TE', () => client.checkProductPriceTE());
+  test('should check the product quantity', () => client.checkProductQuantity());
+  test('should check the product status', () => client.checkProductStatus());
+  test('should reset filter', () => client.resetFilter());
+}, 'product/checkproduct', true);
