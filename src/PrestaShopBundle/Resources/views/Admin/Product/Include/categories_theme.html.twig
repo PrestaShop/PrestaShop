@@ -1,0 +1,35 @@
+{% block choice_tree_widget -%}
+  <div {{ block('widget_container_attributes') }}>
+    <ul class="category-tree">
+      {%- for child in choices %}
+        {{ block('choice_tree_item_widget') }}
+      {% endfor -%}
+    </ul>
+  </div>
+{%- endblock choice_tree_widget %}
+
+{% block choice_tree_item_widget -%}
+  <li>
+    {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
+
+    <div class="radio">
+      <label class="category-label" for="form[{{ form.vars.id }}][tree]">{{ child.name }}
+        <input
+          type="radio"
+          name="form[{{ form.vars.id }}][tree]"
+          value="{{ child.id_category }}" {{ checked }}
+          class="category float-right"
+        >
+      </label>
+    </div>
+
+    {% if child.children is defined %}
+      <ul>
+        {% for item in child.children %}
+          {% set child = item %}
+          {{ block('choice_tree_item_widget') }}
+        {% endfor -%}
+      </ul>
+    {% endif %}
+  </li>
+{%- endblock choice_tree_item_widget %}
