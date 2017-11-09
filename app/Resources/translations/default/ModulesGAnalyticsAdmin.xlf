@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d86cf69a8b82547a94ca3f6a307cf9a6">
+        <source>Google Analytics</source>
+        <target>Google Analytics</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:51</note>
+      </trans-unit>
+      <trans-unit id="135d2522825fa02688ab25a2e1c88c73">
+        <source>Gain clear insights into important metrics about your customers, using Google Analytics</source>
+        <target>Gain clear insights into important metrics about your customers, using Google Analytics</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:52</note>
+      </trans-unit>
+      <trans-unit id="7ed5c154078e30b30b2f214299c5e9f5">
+        <source>Are you sure you want to uninstall Google Analytics? You will lose all the data related to this module.</source>
+        <target>Are you sure you want to uninstall Google Analytics? You will lose all the data related to this module.</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:54</note>
+      </trans-unit>
+      <trans-unit id="612e1a524ec979815b12182c34e2daa0">
+        <source>Account ID updated successfully</source>
+        <target>Account ID updated successfully</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:211</note>
+      </trans-unit>
+      <trans-unit id="8e7b67b44506b7ac6685da041a603044">
+        <source>Settings for User ID updated successfully</source>
+        <target>Settings for User ID updated successfully</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:216</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_googleanalytics/views/templates/admin/configuration.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="deb905422d07a5bb74cb3178df580e81">
+        <source>Your customers go everywhere; shouldn't your analytics.</source>
+        <target>Your customers go everywhere; shouldn't your analytics.</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="7063e771c3bb338ba74ac4e4716dbae1">
+        <source>Google Analytics shows you the full customer picture across ads and videos, websites and social tools, tables and smartphones. That makes it easier to serve your current customers and win new ones.</source>
+        <target>Google Analytics shows you the full customer picture across ads and videos, websites and social tools, tables and smartphones. That makes it easier to serve your current customers and win new ones.</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="df15c5cf264eb769b087f9d81aff029f">
+        <source>With ecommerce functionality in Google Analytics you can gain clear insight into important metrics about shopper behavior and conversion, including:</source>
+        <target>With ecommerce functionality in Google Analytics you can gain clear insight into important metrics about shopper behavior and conversion, including:</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="613c191b4a1f82a454b72a840d96eefd">
+        <source>Product detail views</source>
+        <target>Product detail views</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="d88b192dfe623e2a628a919b99fc1a4b">
+        <source>Internal merchandising Success</source>
+        <target>Internal merchandising Success</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:48</note>
+      </trans-unit>
+      <trans-unit id="c2083746978ad21222cccce025233610">
+        <source>Add to cart" actions</source>
+        <target>Add to cart" actions</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="c975b6b93d71b19da73114c4adcedbda">
+        <source>The checkout process</source>
+        <target>The checkout process</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="33f50b54625790316b86485ff3e794c4">
+        <source>Internal campaign clicks</source>
+        <target>Internal campaign clicks</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="89c48ff165eedcc3cd1bd0007115669d">
+        <source>And purchase</source>
+        <target>And purchase</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="4632d86a96205013262bcfdd0279b39f">
+        <source>Merchants are able to understand how far along users get in the buying process and where they are dropping off.</source>
+        <target>Merchants are able to understand how far along users get in the buying process and where they are dropping off.</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:58</note>
+      </trans-unit>
+      <trans-unit id="16fafb5cce24f766bf2c8fcebecf76fc">
+        <source>Create your account to get started.</source>
+        <target>Create your account to get started.</target>
+        <note>Context:
+File: modules/ps_googleanalytics/views/templates/admin/configuration.tpl:61</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

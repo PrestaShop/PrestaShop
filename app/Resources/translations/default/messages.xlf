@@ -98,12 +98,6 @@ File: classes/controller/AdminController.php:1243</note>
         <note>Context:
 File: classes/controller/AdminController.php:1544</note>
       </trans-unit>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Context:
-File: classes/controller/AdminController.php:1591</note>
-      </trans-unit>
       <trans-unit id="0095a9fa74d1713e43e370a7d7846224">
         <source>Export</source>
         <target>Export</target>
@@ -314,55 +308,73 @@ File: controllers/admin/AdminTabsController.php:197</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/live_edit.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
         <source>Save</source>
         <target>Save</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:189</note>
+File: themes/live_edit.tpl:52</note>
       </trans-unit>
-      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
-        <source>Settings</source>
-        <target>Settings</target>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:158</note>
+File: themes/live_edit.tpl:31</note>
       </trans-unit>
-      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
-        <source>Google Analytics Tracking ID</source>
-        <target>Google Analytics Tracking ID</target>
+      <trans-unit id="282f96c7d1ed98d24606d209dcad9842">
+        <source>Module position saved</source>
+        <target>Module position saved</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:163</note>
+File: themes/live_edit.tpl:28</note>
       </trans-unit>
-      <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
-        <source>This information is available in your Google Analytics account</source>
-        <target>This information is available in your Google Analytics account</target>
+      <trans-unit id="49d4a9317844948aa594330102d79026">
+        <source>Are you sure? If you close this window, its position will not be saved</source>
+        <target>Are you sure? If you close this window, its position will not be saved</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:167</note>
+File: themes/live_edit.tpl:29</note>
       </trans-unit>
-      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
-        <source>Enable User ID tracking</source>
-        <target>Enable User ID tracking</target>
+      <trans-unit id="70d9be9b139893aa6c69b5e77e614311">
+        <source>Confirm</source>
+        <target>Confirm</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:171</note>
+File: themes/live_edit.tpl:32</note>
       </trans-unit>
-      <trans-unit id="9bda6a2c3edca377eb901d7ea57c8b06">
-        <source>The User ID is set at the property level. To find a property, click Admin, then select an account and a property. From the Property column, click Tracking Info then User ID</source>
-        <target>The User ID is set at the property level. To find a property, click Admin, then select an account and a property. From the Property column, click Tracking Info then User ID</target>
+      <trans-unit id="1b7c6a7f9b72974ede874b8fba9547a0">
+        <source>Add this module</source>
+        <target>Add this module</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:173</note>
+File: themes/live_edit.tpl:33</note>
       </trans-unit>
-      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
-        <source>Enabled</source>
-        <target>Enabled</target>
+      <trans-unit id="da87eac3848a0d55560bdd129a0e134b">
+        <source>Unable to unregister hook</source>
+        <target>Unable to unregister hook</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:178</note>
+File: themes/live_edit.tpl:34</note>
       </trans-unit>
-      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
-        <source>Disabled</source>
-        <target>Disabled</target>
+      <trans-unit id="79030d996976f29a5e986a42d8f026e5">
+        <source>Unable to save module position</source>
+        <target>Unable to save module position</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:183</note>
+File: themes/live_edit.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="3c5b87f318f203adbfcc5d6a68959359">
+        <source>Failed to load module list</source>
+        <target>Failed to load module list</target>
+        <note>Context:
+File: themes/live_edit.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="d8dcfab18b3a6eba56d617dd1dcb1ba7">
+        <source>Close Live edit</source>
+        <target>Close Live edit</target>
+        <note>Context:
+File: themes/live_edit.tpl:53</note>
+      </trans-unit>
+      <trans-unit id="8f879aae5da916603067dcac4147e92b">
+        <source>Reset Live edit</source>
+        <target>Reset Live edit</target>
+        <note>Context:
+File: themes/live_edit.tpl:54</note>
       </trans-unit>
     </body>
   </file>
@@ -1340,6 +1352,52 @@ File: controllers/admin/AdminModulesController.php:1450</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_googleanalytics/ps_googleanalytics.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
+        <source>Settings</source>
+        <target>Settings</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:158</note>
+      </trans-unit>
+      <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
+        <source>Google Analytics Tracking ID</source>
+        <target>Google Analytics Tracking ID</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:163</note>
+      </trans-unit>
+      <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
+        <source>This information is available in your Google Analytics account</source>
+        <target>This information is available in your Google Analytics account</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:167</note>
+      </trans-unit>
+      <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
+        <source>Enable User ID tracking</source>
+        <target>Enable User ID tracking</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:171</note>
+      </trans-unit>
+      <trans-unit id="9bda6a2c3edca377eb901d7ea57c8b06">
+        <source>The User ID is set at the property level. To find a property, click Admin, then select an account and a property. From the Property column, click Tracking Info then User ID</source>
+        <target>The User ID is set at the property level. To find a property, click Admin, then select an account and a property. From the Property column, click Tracking Info then User ID</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:173</note>
+      </trans-unit>
+      <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
+        <source>Enabled</source>
+        <target>Enabled</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:178</note>
+      </trans-unit>
+      <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
+        <source>Disabled</source>
+        <target>Disabled</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:183</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/modules/filters.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3182ea023795eb83ed0ce3beea5beb73">
@@ -1697,6 +1755,16 @@ File: admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl
         <target>IP address</target>
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/new-theme/template/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3d2e617335f08df83599665eef8a418">
+        <source>Close</source>
+        <target>Close</target>
+        <note>Context:
+File: admin-dev/themes/new-theme/template/modal.tpl:39</note>
       </trans-unit>
     </body>
   </file>
@@ -3765,16 +3833,6 @@ File: admin-dev/themes/default/template/controllers/customer_threads/helpers/vie
         <target>You can add a comment here.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/view.tpl:155</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/new-theme/template/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d3d2e617335f08df83599665eef8a418">
-        <source>Close</source>
-        <target>Close</target>
-        <note>Context:
-File: admin-dev/themes/new-theme/template/modal.tpl:39</note>
       </trans-unit>
     </body>
   </file>

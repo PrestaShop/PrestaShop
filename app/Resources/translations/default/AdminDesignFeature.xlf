@@ -440,25 +440,25 @@ File: admin-dev/themes/default/template/controllers/modules_positions/form.tpl:6
         <source>___________ CUSTOM ___________</source>
         <target>___________ CUSTOM ___________</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:435</note>
+File: controllers/admin/AdminModulesPositionsController.php:478</note>
       </trans-unit>
       <trans-unit id="6957667301f05bce7e2c0b5cd8567df5">
         <source>____________ CORE ____________</source>
         <target>____________ CORE ____________</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:448</note>
+File: controllers/admin/AdminModulesPositionsController.php:491</note>
       </trans-unit>
       <trans-unit id="1cc06efffbc5252916c871f45098a50f">
         <source>Admin modules controller</source>
         <target>Admin modules controller</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:454</note>
+File: controllers/admin/AdminModulesPositionsController.php:497</note>
       </trans-unit>
       <trans-unit id="2f75fd5bb638eb1353d6941aac58700e">
         <source>Front modules controller</source>
         <target>Front modules controller</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:454</note>
+File: controllers/admin/AdminModulesPositionsController.php:497</note>
       </trans-unit>
     </body>
   </file>
@@ -492,19 +492,31 @@ File: admin-dev/themes/default/template/controllers/modules_positions/list_modul
         <source>Unhook the selection</source>
         <target>Unhook the selection</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:181</note>
+File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:193</note>
+      </trans-unit>
+      <trans-unit id="82fb0558ff2af9bdae555235bc4eb364">
+        <source>Live Edit</source>
+        <target>Live Edit</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:173</note>
+      </trans-unit>
+      <trans-unit id="2d9caf7a1d7b5d6a7d9ad2209d81a939">
+        <source>Run Live Edit</source>
+        <target>Run Live Edit</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:180</note>
       </trans-unit>
       <trans-unit id="fdf4e26a28a557ccfae6ddea1881687e">
         <source>1 module selected</source>
         <target>1 module selected</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:175</note>
+File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:187</note>
       </trans-unit>
       <trans-unit id="2451f8c34b91d6d3b6e7ee63c23d13fc">
         <source>modules selected</source>
         <target>modules selected</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:177</note>
+File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:189</note>
       </trans-unit>
     </body>
   </file>
