@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Command;
 
-require dirname(__FILE__) . '/../../../vendor/prestashop/smarty/Autoloader.php';
 \Smarty_Autoloader::register();
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
