@@ -16,10 +16,10 @@ class CreateProduct extends PrestashopClient {
       .click(selector.BO.AddProductPage.new_product_button)
   }
 
-  addProductName() {
+  addProductName(name) {
     return this.client
       .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-      .setValue(selector.BO.AddProductPage.product_name_input, 'test nodejs ' + global.product_id)
+      .setValue(selector.BO.AddProductPage.product_name_input, name +' '+ global.product_id)
   }
 
   addProductQuantity() {
@@ -45,11 +45,12 @@ class CreateProduct extends PrestashopClient {
       .waitForExist(selector.BO.AddProductPage.variations_tab, 90000)
       .click(selector.BO.AddProductPage.variations_tab)
       .waitForExist(selector.BO.AddProductPage.variations_input, 90000)
-      .setValue(selector.BO.AddProductPage.variations_input, global.attributeName + " : Toutes")
+      .setValue(selector.BO.AddProductPage.variations_input, global.attributeName + " : All")
       .waitForExist(selector.BO.AddProductPage.variations_select, 90000)
       .click(selector.BO.AddProductPage.variations_select)
       .waitForExist(selector.BO.AddProductPage.variations_generate, 90000)
       .click(selector.BO.AddProductPage.variations_generate)
+      .waitForExist(selector.BO.AddProductPage.close_validation_button, 90000)
       .pause(3000)
       .waitForExist(selector.BO.AddProductPage.var_selected, 90000)
       .click(selector.BO.AddProductPage.var_selected)
@@ -69,10 +70,10 @@ class CreateProduct extends PrestashopClient {
       .click(selector.BO.AddProductPage.feature_select)
       .waitForExist(selector.BO.AddProductPage.select_feature_created, 90000)
       .setValue(selector.BO.AddProductPage.select_feature_created, global.featureName)
-      .click(selector.BO.AddProductPage.feature_choice)
-      .waitForExist(selector.BO.AddProductPage.feature_value_select, 90000)
-      .click(selector.BO.AddProductPage.feature_value_select)
-      .click(selector.BO.AddProductPage.feature_value_choice)
+      .click('//*[@id="select2-form_step1_features_0_feature-results"]/li')
+      .pause(2000)
+      .selectByVisibleText(selector.BO.AddProductPage.feature_value_select,'feature value')
+      .pause(1000)
   }
 
 

@@ -10,7 +10,6 @@ global.module_tech_name = argv.MODULE;
 global.saucelabs = argv.SAUCELABS;
 global.selenium_url = argv.SELENIUM;
 global._projectdir = path.join(__dirname, '..', '..');
-global.product_id = new Date().getTime();
 global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
@@ -91,16 +90,15 @@ module.exports = {
         save_quantitie_button: '//*[@id="apply-on-combinations"]',
         add_feature_to_product_button: '//*[@id="add_feature_button"]',
         feature_select: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
-        select_feature_created: '/html/body/span[3]/span/span[1]/input',
+        select_feature_created:'/html/body/span[4]/span/span[1]/input' , //'/html/body/span[3]/span/span[1]/input
         feature_choice: '/html/body/span[3]/span/span[2]/ul/li',
-        feature_value_select: '//*[@id="features-content"]/div/div/div[2]/fieldset/span/span[1]/span/span[1]',
-        feature_value_choice: '//*[@id="select2-form_step1_features_0_value-results"]/li[2]'
+        feature_value_select: '//*[@id="form_step1_features_0_value"]', /// /*[@id="features-content"]/div/div/div[2]/fieldset/select
       },
 
       //catalog selector
       CatalogPage: {
         menu_button: '//*[@id="subtab-AdminCatalog"]/a',
-        success_panel: '//*[@id="content"]/div[4]/div',
+        success_panel: '//*[@id="content"]/div[3]/div',
         select_all_product_button: '//*[@id="bulk_action_select_all"]',
         action_group_button: '//*[@id="product_bulk_menu"]',
         disable_all_selected: '//*[@id="main-div"]/div[3]/div/div/div[2]/div/div[2]/div[2]/div/div/a[2]',
@@ -119,7 +117,7 @@ module.exports = {
           thumb_picture: '//*[@id="thumb"]',
           title: '//*[@id="meta_title_1"]',
           meta_description: '//*[@id="meta_description_1"]',
-          keyswords: '//*[@id="fieldset_0"]/div[2]/div[10]/div/div/input',
+          keyswords: '//*[@id="fieldset_0"]/div[2]/div[10]/div/div/div[1]/div[1]/div/input',  //'//*[@id="fieldset_0"]/div[2]/div[10]/div/div/input',
           simplify_URL_input: '//*[@id="link_rewrite_1"]',
           save_button: '//*[@id="category_form_submit_btn"]',
           name_search_input: '//*[@id="table-category"]/thead/tr[2]/th[3]/input',
@@ -195,7 +193,7 @@ module.exports = {
             image_input: '//*[@id="logo"]',
             meta_title_input: '//*[@id="meta_title_1"]',
             meta_description_input: '//*[@id="meta_description_1"]',
-            meta_keywords_input: '//*[@id="manufacturer_form"]/div/div[2]/div[7]/div/div/input',
+            meta_keywords_input:'//*[@id="fieldset_0"]/div[2]/div[7]/div/div/div[1]/div[1]/div/input',   // '//*[@id="manufacturer_form"]/div/div[2]/div[7]/div/div/input',
             active_button: '//*[@id="manufacturer_form"]/div/div[2]/div[8]/div/span/label[1]',
             save_button: '//*[@id="manufacturer_form_submit_btn"]',
           },
@@ -279,7 +277,7 @@ module.exports = {
       },
       //Order selector
       OrderPage: {
-        orders_subtab: '//*[@id="subtab-AdminParentOrders"]/a',
+        orders_subtab: '#subtab-AdminParentOrders',
         form: '#form-order',
         order_product_name_span: '.productName',
         order_product_quantity_span: '.product_quantity_show',
