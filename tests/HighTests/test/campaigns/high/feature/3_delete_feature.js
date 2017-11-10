@@ -11,7 +11,7 @@ scenario('Delete feature', client => {
 scenario('Check that the feature does not exist in the Front Office', client => {
   test('should open the browser', () => client.open());
   test('should sign in FO', () => client.signinFO());
-  test('should search for the product', () => client.searchForProduct());
+  test('should search for the product', () => client.searchForProduct('Feature'));
   test('should check that the feature has been deleted in the Front Office', () => client.checkDeletedFeature());
   test('should sign in FO', () => client.signoutFO());
 }, 'feature', true);

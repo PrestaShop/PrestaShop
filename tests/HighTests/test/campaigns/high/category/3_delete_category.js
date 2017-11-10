@@ -30,7 +30,7 @@ scenario('Delete category with action group', client => {
   test('should sign in BO', () => client.signinBO());
   test('should go to category', () => client.goToCategoryList());
   test('should search for the category', () => client.searchCategoryBO());
-  test('should update category', () => client.deleteCategoryWithActiongroup());
+  test('should delete category with action group', () => client.deleteCategoryWithActionGroup());
   test('should check delete category success panel', () => client.successPanel('The selection has been successfully deleted.'));
   test('should sign out BO', () => client.signoutBO());
 }, 'category', true);

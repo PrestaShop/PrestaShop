@@ -13,7 +13,7 @@ scenario('Update feature', client => {
 scenario('Check the updated feature in Front Office', client => {
   test('should open the browser', () => client.open());
   test('should sign in FO', () => client.signinFO());
-  test('should search for the product', () => client.searchForProduct());
+  test('should search for the product', () => client.searchForProduct('Feature'));
   test('should check that the feature has been updated in the Front Office', () => client.checkUpdatedFeature());
   test('should sign in FO', () => client.signoutFO());
 }, 'feature', true);
