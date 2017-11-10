@@ -32,6 +32,7 @@ class PrestashopClient {
 
   successPanel(index) {
     return this.client
+      .pause(3000)
       .waitForExist(selector.BO.CatalogPage.success_panel)
       .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
       .then((text) => expect(text.substr(2)).to.be.equal(index));

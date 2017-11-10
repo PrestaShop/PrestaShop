@@ -3,6 +3,7 @@ var {selector} = require('../globals.webdriverio.js');
 
 global.featureName = 'Feature' + new Date().getTime();
 
+
 class Feature extends PrestashopClient {
 
   goToFeatureList() {
@@ -57,10 +58,10 @@ class Feature extends PrestashopClient {
       .click(selector.BO.CatalogPage.FeatureSubmenu.save_value_button);
   }
 
-  searchForProduct() {
+  searchForProduct(name) {
     return this.client
       .waitForExist(selector.FO.SearchProductPage.product_search_input, 90000)
-      .setValue(selector.FO.SearchProductPage.product_search_input, product_id)
+      .setValue(selector.FO.SearchProductPage.product_search_input,name +' '+ product_id)
       .click(selector.FO.SearchProductPage.product_search_button)
       .click(selector.FO.SearchProductPage.product_result_name);
   }
@@ -71,7 +72,7 @@ class Feature extends PrestashopClient {
       .then(() => this.client.getText(selector.FO.SearchProductPage.feature_name))
       .then((text) => expect(text).to.be.equal(global.featureName))
       .then(() => this.client.getText(selector.FO.SearchProductPage.feature_value))
-      .then((text) => expect(text).to.be.equal('feature value'));
+      .then((text) => expect(text).to.be.equal('Feature Value'));
   }
 
   checkUpdatedFeature() {
@@ -80,7 +81,7 @@ class Feature extends PrestashopClient {
       .then(() => this.client.getText(selector.FO.SearchProductPage.feature_name))
       .then((text) => expect(text).to.be.equal(global.featureName + 'update'))
       .then(() => this.client.getText(selector.FO.SearchProductPage.feature_value))
-      .then((text) => expect(text).to.be.equal('feature value update'))
+      .then((text) => expect(text).to.be.equal('Feature Value Update'))
   }
 
   checkDeletedFeature() {
@@ -109,7 +110,7 @@ class Feature extends PrestashopClient {
       .waitForExist(selector.BO.CatalogPage.FeatureSubmenu.update_feature_value_button, 90000)
       .click(selector.BO.CatalogPage.FeatureSubmenu.update_feature_value_button)
       .waitForExist(selector.BO.CatalogPage.FeatureSubmenu.value_input, 90000)
-      .setValue(selector.BO.CatalogPage.FeatureSubmenu.value_input, 'feature value' + ' update')
+      .setValue(selector.BO.CatalogPage.FeatureSubmenu.value_input, 'Feature value update')
       .waitForExist(selector.BO.CatalogPage.FeatureSubmenu.save_value_button, 90000)
       .click(selector.BO.CatalogPage.FeatureSubmenu.save_value_button)
   }

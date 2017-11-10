@@ -21,7 +21,7 @@ scenario('Catalog bulk action', () => {
   scenario('Duplicate the product list', client => {
     test('should select all product', () => client.selectAllProduct());
     test('should duplicate the product list', () => client.duplicateProductlist());
-    test('should check that all products have been duplicated ', () => client.checkProductListMsg('Product(s) successfully duplicated.', 'clear'));
+    test('should check that all products have been duplicated ', () => client.checkProductListMsg('Product(s) successfully duplicated.', 'check'));
   }, 'catalogbulkaction');
 
   scenario('Enable the product list', client => {
