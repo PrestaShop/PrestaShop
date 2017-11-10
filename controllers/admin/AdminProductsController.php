@@ -2177,12 +2177,14 @@ class AdminProductsControllerCore extends AdminController
 
         // Check description short size without html
         $limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
-        if ($limit <= 0) {
+        if (0 === $limit) {
+            $limit = false;
+        } else if ($limit < 0) {
             $limit = 400;
         }
         foreach ($languages as $language) {
             if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_'.$language['id_lang']))) {
-                if (Tools::strlen(strip_tags($value)) > $limit) {
+                if (false !== $limit && (Tools::strlen(strip_tags($value)) > $limit)) {
                     $this->errors[] = sprintf(
                         Tools::displayError('This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).'),
                         call_user_func(array($className, 'displayFieldName'), 'description_short'),
@@ -4011,6 +4013,12 @@ class AdminProductsControllerCore extends AdminController
         // TinyMCE
         $iso_tiny_mce = $this->context->language->iso_code;
         $iso_tiny_mce = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
+        $shortDescriptionLimit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
+        if (0 === $shortDescriptionLimit) {
+            $shortDescriptionLimit = 800;
+        } else if ($shortDescriptionLimit < 0) {
+            $shortDescriptionLimit = 400;
+        }
         $data->assign(array(
             'ad' => dirname($_SERVER['PHP_SELF']),
             'iso_tiny_mce' => $iso_tiny_mce,
@@ -4020,7 +4028,7 @@ class AdminProductsControllerCore extends AdminController
             'token' => $this->token,
             'currency' => $currency,
             'link' => $this->context->link,
-            'PS_PRODUCT_SHORT_DESC_LIMIT' => Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400
+            'PS_PRODUCT_SHORT_DESC_LIMIT' => $shortDescriptionLimit,
         ));
         $data->assign($this->tpl_form_vars);
 
