@@ -536,12 +536,12 @@ abstract class ControllerCore
         $js_tag = 'js_def';
         $this->context->smarty->assign($js_tag, $js_tag);
 
-        if (is_array($content)) {
-            foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
-            }
-        } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+        if (!is_array($content)) {
+            $content = [$content];
+        }
+
+        foreach ($content as $tpl) {
+            $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
         }
 
         echo trim($html);
