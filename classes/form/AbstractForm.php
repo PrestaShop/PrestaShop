@@ -177,19 +177,18 @@ abstract class AbstractFormCore implements FormInterface
     {
         if (array_key_exists($field_name, $this->formFields)) {
             return $this->formFields[$field_name];
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function getValue($field_name)
     {
-        $field = $this->getField($field_name);
-        if ($field) {
+        if ($field = $this->getField($field_name)) {
             return $field->getValue();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     public function setValue($field_name, $value)
