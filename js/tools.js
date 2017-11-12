@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,9 +19,54 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+var Tools = {
+
+  /**
+   * Constructs a float value from an arbitrarily-formatted string.
+   * In order to prevent unexpected behavior, make sure that your value has a decimal part.
+   * @param {String} value Value to convert to float
+   * @param {Boolean} [coerce=false] If true, this function will return 0 instad of NaN if the value cannot be parsed to float
+   *
+   * @return {Number}
+   */
+  parseFloatFromString: function(value, coerce) {
+    value = String(value).trim();
+
+    if ('' === value) {
+      return 0;
+    }
+
+    // check if the string can be converted to float as-is
+    var parsed = parseFloat(value);
+    if (String(parsed) === value) {
+      return parsed;
+    }
+
+    // remove all non-digit characters
+    var split = value.split(/[^\dE-]+/);
+
+    if (1 === split.length) {
+      // there's no decimal part
+      return parseFloat(value);
+    }
+
+    for (var i = 0; i < split.length; i++) {
+      if ('' === split[i]) {
+        return coerce ? 0 : NaN;
+      }
+    }
+
+    // use the last part as decimal
+    var decimal = split.pop();
+
+    // reconstruct the number using dot as decimal separator
+    return parseFloat(split.join('') +  '.' + decimal);
+  }
+};
 
 /**
  * @returns float parsed from a string containing a formatted price

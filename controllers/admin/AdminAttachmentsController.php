@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -241,14 +241,9 @@ class AdminAttachmentsControllerCore extends AdminController
                     $max_upload = (int)ini_get('upload_max_filesize');
                     $max_post = (int)ini_get('post_max_size');
                     $upload_mb = min($max_upload, $max_post);
-                    $this->errors[] = sprintf(
-                        $this->trans(
-                            'The file %1$s exceeds the size allowed by the server. The limit is set to %2$d MB.',
-                            array(),
-                            'Admin.Catalog.Notification'),
-                        '<b>'.$_FILES['file']['name'].'</b> ',
-                        '<b>'.$upload_mb.'</b>'
-                    );
+                    $this->errors[] = $this->trans('The file %file% exceeds the size allowed by the server. The limit is set to %size% MB.',
+                        array('%file%' => '<b>'.$_FILES['file']['name'].'</b> ', '%size%' => '<b>'.$upload_mb.'</b>'),
+                        'Admin.Catalog.Notification');
                 } elseif (!isset($a) || (isset($a) && !file_exists(_PS_DOWNLOAD_DIR_.$a->file))) {
                     $this->errors[] = $this->trans('Upload error. Please check your server configurations for the maximum upload size allowed.', array(), 'Admin.Catalog.Notification');
                 }

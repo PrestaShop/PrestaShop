@@ -6,7 +6,7 @@
         <source>Invalid postcode - should look like "%1$s"</source>
         <target>Invalid postcode - should look like "%1$s"</target>
         <note>Context:
-File: classes/form/CustomerAddressForm.php:105</note>
+File: classes/form/CustomerAddressForm.php:119</note>
       </trans-unit>
     </body>
   </file>

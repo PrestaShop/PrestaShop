@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * Admin controller for product images
@@ -77,7 +76,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 ));
             } else {
                 $error_msg = array();
-                foreach ($form->getErrors() as $key => $error) {
+                foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
                 $return_data = array('message' => implode(" ", $error_msg));
@@ -93,7 +92,7 @@ class ProductImageController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Reponse
+     * @return JsonResponse
      */
     public function updateImagePositionAction(Request $request)
     {
@@ -111,11 +110,10 @@ class ProductImageController extends FrameworkBundleAdminController
     /**
      * Manage form image
      *
-     * @Template
-     * @param int $idImage
+     * @Template("@PrestaShop/Admin/ProductImage/form.html.twig")
+     * @param $idImage
      * @param Request $request
-     *
-     * @return array
+     * @return array|JsonResponse|Response
      */
     public function formAction($idImage, Request $request)
     {
@@ -154,7 +152,7 @@ class ProductImageController extends FrameworkBundleAdminController
                 $jsonResponse->setData($adminProductWrapper->ajaxProcessUpdateImage($idImage, $form->getData()));
             } else {
                 $error_msg = array();
-                foreach ($form->getErrors() as $key => $error) {
+                foreach ($form->getErrors() as $error) {
                     $error_msg[] = $error->getMessage();
                 }
 
@@ -177,7 +175,7 @@ class ProductImageController extends FrameworkBundleAdminController
      * @param int $idImage
      * @param Request $request
      *
-     * @return Reponse
+     * @return JsonResponse
      */
     public function deleteAction($idImage, Request $request)
     {

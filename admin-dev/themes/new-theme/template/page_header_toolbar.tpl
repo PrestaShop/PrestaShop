@@ -3,25 +3,21 @@
 <div class="header-toolbar">
 
   {block name=pageBreadcrumb}
-    <ol class="breadcrumb">
+    <nav class="breadcrumb">
 
       {if $breadcrumbs2.container.name != ''}
-        <li>
-          {if $breadcrumbs2.container.href != ''}
-            <a href="{$breadcrumbs2.container.href|escape}">{$breadcrumbs2.container.name|escape}</a>
-          {/if}
-        </li>
+        {if $breadcrumbs2.container.href != ''}
+          <a class="breadcrumb-item" href="{$breadcrumbs2.container.href|escape}">{$breadcrumbs2.container.name|escape}</a>
+        {/if}
       {/if}
 
       {if $breadcrumbs2.tab.name != '' && $breadcrumbs2.container.name != $breadcrumbs2.tab.name}
-        <li>
-          {if $breadcrumbs2.tab.href != ''}
-            <a href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
-          {/if}
-        </li>
+        {if $breadcrumbs2.tab.href != ''}
+          <a class="breadcrumb-item active" href="{$breadcrumbs2.tab.href|escape}">{$breadcrumbs2.tab.name|escape}</a>
+        {/if}
       {/if}
 
-    </ol>
+    </nav>
   {/block}
 
   {block name=pageTitle}
@@ -36,14 +32,14 @@
         {if $k != 'back' && $k != 'modules-list'}
           {* TODO: REFACTOR ALL THIS THINGS *}
           <a
-            class="m-b-2 m-r-1 btn btn-primary {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
+            class="mx-1 btn btn-primary {if isset($btn.target) && $btn.target} _blank{/if} pointer"{if isset($btn.href)}
             id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}"
             href="{$btn.href|escape}"{/if}
             title="{if isset($btn.help)}{$btn.help}{else}{$btn.desc|escape}{/if}"{if isset($btn.js) && $btn.js}
             onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target}
             data-target="{$btn.modal_target}"
             data-toggle="modal"{/if}{if isset($btn.help)}
-            data-toggle="tooltip"
+            data-toggle="pstooltip"
             data-placement="bottom"{/if}
           >
             <i class="material-icons">{$btn.icon}</i>
@@ -112,5 +108,5 @@
       {/foreach}
     </div>
   {/if}
-
+  {hook h='displayDashboardTop'}
 </div>

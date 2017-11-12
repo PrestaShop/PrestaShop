@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <script>
@@ -40,22 +40,22 @@
 				<form action="{$action|escape}" method="post" id="calendar_form" name="calendar_form" class="form-inline">
 					<div class="btn-group">
 						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay{if isset($preselect_date_range) && $preselect_date_range == 'day'} active{/if}">
-							{l s='Day'}
+							{l s='Day' d='Admin.Global'}
 						</button>
 						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if (!isset($preselect_date_range) || !$preselect_date_range) || (isset($preselect_date_range) && $preselect_date_range == 'month')} active{/if}">
-							{l s='Month'}
+							{l s='Month' d='Admin.Global'}
 						</button>
 						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear{if isset($preselect_date_range) && $preselect_date_range == 'year'} active{/if}">
-							{l s='Year'}
+							{l s='Year' d='Admin.Global'}
 						</button>
 						<button type="button" name="submitDateDayPrev" class="btn btn-default submitDateDayPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-day'} active{/if}">
-							{l s='Day'}-1
+							{l s='Day' d='Admin.Global'}-1
 						</button>
 						<button type="button" name="submitDateMonthPrev" class="btn btn-default submitDateMonthPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-month'} active{/if}">
-							{l s='Month'}-1
+							{l s='Month' d='Admin.Global'}-1
 						</button>
 						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-year'} active{/if}">
-							{l s='Year'}-1
+							{l s='Year' d='Admin.Global'}-1
 						</button>
 						<!--
 						<button type="submit" name="submitDateRealTime" class="hide btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
@@ -69,9 +69,9 @@
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
 							<span class="hidden-xs">
-								{l s='From'}
+								{l s='From' d='Admin.Global'}
 								<strong class="text-info" id="datepicker-from-info">{$date_from|escape}</strong>
-								{l s='To'}
+								{l s='To' d='Admin.Global'}
 								<strong class="text-info" id="datepicker-to-info">{$date_to|escape}</strong>
 								<strong class="text-info" id="datepicker-diff-info"></strong>
 							</span>
@@ -91,39 +91,39 @@
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
 				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
-					<i class="icon-plus"></i> {l s='Add more dashboard modules'}
+					<i class="icon-plus"></i> {l s='Add more dashboard modules' d='Admin.Dashboard.Feature'}
 				</a>
 			</div>
 		</div>
 		<div class="col-md-12 col-lg-2">
 			<section class="dash_news panel">
-				<h3><i class="icon-rss"></i> {l s='PrestaShop News'}</h3>
+				<h3><i class="icon-rss"></i> {l s='PrestaShop News' d='Admin.Dashboard.Feature'}</h3>
 				<div class="dash_news_content"></div>
-				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4></div>
+				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news' d='Admin.Dashboard.Feature'}</a></h4></div>
 			</section>
 			<section id="dash_version" class="visible-lg">
 				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 			</section>
 			<section class="dash_links panel">
-				<h3><i class="icon-link"></i> {l s="Useful links"}</h3>
+				<h3><i class="icon-link"></i> {l s="Useful links" d='Admin.Dashboard.Feature'}</h3>
 					<dl>
-						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Official Documentation"}</a></dt>
-						<dd>{l s="User, Developer and Designer Guides"}</dd>
+						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Official Documentation" d='Admin.Dashboard.Feature'}</a></dt>
+						<dd>{l s="User, Developer and Designer Guides" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://www.prestashop.com/forums?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Forum"}</a></dt>
-						<dd>{l s="Connect with the PrestaShop community"}</dd>
+						<dt><a href="http://www.prestashop.com/forums?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Forum" d='Admin.Dashboard.Feature'}</a></dt>
+						<dd>{l s="Connect with the PrestaShop community" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Addons"}</a></dt>
-						<dd>{l s="Enhance your store with templates & modules"}</dd>
+						<dt><a href="http://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Addons" d='Admin.Dashboard.Feature'}</a></dt>
+						<dd>{l s="Enhance your store with templates & modules" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://forge.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="The Forge"}</a></dt>
-						<dd>{l s="Report issues in the Bug Tracker"}</dd>
+						<dt><a href="http://forge.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="The Forge" d='Admin.Dashboard.Feature'}</a></dt>
+						<dd>{l s="Report issues in the Bug Tracker" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Contact Us!"}</a></dt>
+						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Contact Us!" d='Admin.Dashboard.Feature'}</a></dt>
 						<dd></dd>
 					</dl>
 			</section>

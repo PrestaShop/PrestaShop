@@ -28,8 +28,12 @@ ul.category-tree {
   }
   .category-label {
     display: block;
+    padding-left: 0;
     .category {
       cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: -9px;
     }
   }
   ul {

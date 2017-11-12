@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% if warehouses|length > 0 %}
@@ -49,9 +49,9 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">{{ warehouse_combination.vars.value.label }}</label>
                             <div class="col-sm-10">
-                                <div class="pull-left col-lg-1">{{ form_widget(warehouse_combination.activated) }}</div>
+                                <div class="float-left col-lg-1">{{ form_widget(warehouse_combination.activated) }}</div>
                                 {{ form_label(warehouse_combination.location) }}
-                                <div class="pull-left col-lg-3">{{ form_widget(warehouse_combination.location) }}</div>
+                                <div class="float-left col-lg-3">{{ form_widget(warehouse_combination.location) }}</div>
                                 {{ form_widget(warehouse_combination.id_product_attribute) }}
                                 {{ form_widget(warehouse_combination.warehouse_id) }}
                                 {{ form_widget(warehouse_combination.product_id) }}

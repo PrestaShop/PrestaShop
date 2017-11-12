@@ -184,7 +184,7 @@
     "iso_code": "fa",
     "date_format_lite": "Y-m-d",
     "date_format_full": "Y-m-d H:i:s",
-    "is_rtl": "0",
+    "is_rtl": "1",
     "language_code": "fa-ir",
     "locale": "fa-IR"
   },
@@ -286,6 +286,15 @@
     "is_rtl": "0",
     "language_code": "it-it",
     "locale": "it-IT"
+  },
+  "is": {
+    "name": "Íslenska (Icelandic)",
+    "iso_code": "is",
+    "date_format_lite": "d/m/Y",
+    "date_format_full": "d/m/Y H:i:s",
+    "is_rtl": "0",
+    "language_code": "is-is",
+    "locale": "is-IS"
   },
   "ja": {
     "name": "日本語 (Japanese)",

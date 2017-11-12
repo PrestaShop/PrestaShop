@@ -19,6 +19,11 @@
   .manufacturer-logo {
     height: 35px;
   }
+
+  .product-description img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 .input-color {
   position: absolute;
@@ -70,15 +75,14 @@
   }
 }
 .product-quantity {
-  .qty {
+  display: flex;
+  .qty, .add {
     float: left;
-    width: 80px;
+    display: inline-flex;
     margin-bottom: 0.5rem;
   }
-  .add {
-    float: left;
-    margin-left: 1rem;
-    margin-bottom: 0.5rem;
+  .qty {
+    margin-right: 0.4rem;
   }
   #quantity_wanted {
     color: $gray-darker;
@@ -88,9 +92,7 @@
     width: 3rem;
   }
   .input-group-btn-vertical {
-    float: left;
-  }
-  .input-group-btn-vertical {
+    width: auto;
     .btn {
       padding: 0.5rem 0.6875rem;
       i {
@@ -141,6 +143,15 @@
   .tax-shipping-delivery-label {
     font-size: 0.8125rem;
     color: $gray;
+
+    .delivery-information {
+      padding: 0 0 0 2px;
+
+      &::before {
+        content: "-";
+        padding: 0 2px 0 0;
+      }
+    }
   }
 }
 .product-discount {
@@ -402,9 +413,9 @@
   }
 }
 #product-availability {
+  margin-top: 0.625rem;
   display: inline-block;
   font-weight: 700;
-  margin-left: $small-space;
   .material-icons {
     line-height: inherit;
   }
@@ -431,7 +442,7 @@
   > dl.data-sheet {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: stretch;
     dd.value,
     dt.name {
       flex: 1 0 40%;
@@ -440,13 +451,12 @@
       padding: $small-space;
       margin-right: $small-space;
       min-height: 2.5rem;
-      word-break: break-all;
+      word-break: normal;
       &:nth-of-type(even) {
         background: $gray-lighter;
-      }
     }
-    dt.name {
-      text-transform: capitalize;
+    text-transform: capitalize;
+    margin-bottom: .5rem;
     }
   }
 }
@@ -455,7 +465,8 @@
     margin: $medium-space 0;
     select {
       background-color: white;
-      width: 3.75rem;
+      width: auto;
+      padding-right: 1.875rem;
       @include box-shadow-light;
     }
     ul li {
@@ -481,7 +492,6 @@ li.product-flag {
     text-transform: uppercase;
     color: white;
     margin-top: $small-space;
-    margin-left: -0.3125rem;
     z-index: 2;
     @include box-shadow-light;
     &.online-only{
@@ -505,6 +515,9 @@ li.product-flag {
       margin: 0;
       left:0;
       top:0;
+    }
+    &:not(.discount):not(.on-sale)~li.product-flag {
+        margin-top: 3.75rem;
     }
 }
 

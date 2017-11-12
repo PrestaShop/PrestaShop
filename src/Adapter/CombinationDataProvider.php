@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,14 +20,18 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
+use PrestaShop\Decimal\Number;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use Tools as ToolsLegacy;
+use Product;
+use Combination;
 
 /**
  * This class will provide data from DB / ORM about product combination
@@ -42,8 +46,7 @@ class CombinationDataProvider
     {
         $this->context = new LegacyContext();
         $this->productAdapter = new ProductDataProvider();
-        $this->cldrRepository = \Tools::getCldr($this->context->getContext());
-        $this->tools = new Tools();
+        $this->cldrRepository = ToolsLegacy::getCldr($this->context->getContext());
     }
 
     /**
@@ -55,7 +58,7 @@ class CombinationDataProvider
      */
     public function getFormCombination($combinationId)
     {
-        $product = new \Product((new \Combination($combinationId))->id_product);
+        $product = new Product((new Combination($combinationId))->id_product);
 
         return $this->completeCombination(
             $product->getAttributeCombinationsById(
@@ -91,6 +94,10 @@ class CombinationDataProvider
             $attribute_unity_price_impact = -1;
         }
 
+        $finalPrice = (new Number((string) $product->price))
+            ->plus(new Number((string) $combination['price']))
+            ->toPrecision(CommonAbstractType::PRESTASHOP_DECIMALS);
+
         return array(
             'id_product_attribute' => $combination['id_product_attribute'],
             'attribute_reference' => $combination['reference'],
@@ -101,7 +108,7 @@ class CombinationDataProvider
             'attribute_price_impact' => $attribute_price_impact,
             'attribute_price' => $combination['price'],
             'attribute_price_display' => $this->cldrRepository->getPrice($combination['price'], $this->context->getContext()->currency->iso_code),
-            'final_price' => $this->tools->bcadd($product->price, $combination['price'], CommonAbstractType::PRESTASHOP_DECIMALS),
+            'final_price' => (string) $finalPrice,
             'attribute_priceTI' => '',
             'attribute_ecotax' => $combination['ecotax'],
             'attribute_weight_impact' => $attribute_weight_impact,
@@ -109,6 +116,8 @@ class CombinationDataProvider
             'attribute_unit_impact' => $attribute_unity_price_impact,
             'attribute_unity' => $combination['unit_price_impact'],
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
+            'attribute_low_stock_threshold' => $combination['low_stock_threshold'],
+            'attribute_low_stock_alert' => (bool) $combination['low_stock_alert'],
             'available_date_attribute' =>  $combination['available_date'],
             'attribute_default' => (bool)$combination['default_on'],
             'attribute_quantity' => $this->productAdapter->getQuantity($product->id, $combination['id_product_attribute']),

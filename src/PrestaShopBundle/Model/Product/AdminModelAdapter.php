@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Model\Product;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Product\AdminProductWrapper;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use PrestaShop\PrestaShop\Adapter\Supplier\SupplierDataProvider;
@@ -36,6 +37,12 @@ use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShopBundle\Utils\FloatParser;
+use ProductDownload;
+use Attachment;
+use Configuration as ConfigurationLegacy;
+use Tools as ToolsLegacy;
+use Product;
 
 /**
  * This form class is responsible to map the form data to the product object
@@ -43,6 +50,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
 {
     private $context;
+    private $contextShop;
     private $adminProductWrapper;
     private $cldrRepository;
     private $locales;
@@ -57,12 +65,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $unmapKeys;
     private $configuration;
     private $shopContext;
+    private $taxRuleDataProvider;
 
     /**
      * Constructor
      * Set all adapters needed and get product
      *
-     * @param \ProductCore $product The product object
+     * @param Product $product The product object
      * @param LegacyContext $legacyContext
      * @param AdminProductWrapper $adminProductWrapper
      * @param Tools $toolsAdapter
@@ -72,9 +81,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * @param FeatureDataProvider $featureDataProvider
      * @param PackDataProvider $packDataProvider
      * @param ShopContext $shopContext
+     * @param TaxRuleDataProvider $taxRuleDataProvider
      */
     public function __construct(
-        \ProductCore $product,
+        Product $product,
         LegacyContext $legacyContext,
         AdminProductWrapper $adminProductWrapper,
         Tools $toolsAdapter,
@@ -83,12 +93,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         WarehouseDataProvider $warehouseDataProvider,
         FeatureDataProvider $featureDataProvider,
         PackDataProvider $packDataProvider,
-        ShopContext $shopContext
+        ShopContext $shopContext,
+        TaxRuleDataProvider $taxRuleDataProvider
     ) {
         $this->context = $legacyContext;
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
-        $this->cldrRepository = \Tools::getCldr($this->contextShop);
+        $this->cldrRepository = ToolsLegacy::getCldr($this->contextShop);
         $this->locales = $this->context->getLanguages();
         $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $toolsAdapter;
@@ -102,6 +113,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->configuration = new Configuration();
         $this->product->loadStockData();
         $this->shopContext = $shopContext;
+        $this->taxRuleDataProvider = $taxRuleDataProvider;
 
         //define translatable key
         $this->translatableKeys = array(
@@ -114,6 +126,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'available_now',
             'available_later',
             'tags',
+            'delivery_in_stock',
+            'delivery_out_stock',
         );
 
         //define unused key for manual binding
@@ -140,6 +154,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'attribute_unit_impact',
             'attribute_ecotax',
             'attribute_minimal_quantity',
+            'attribute_low_stock_threshold',
+            'attribute_low_stock_alert',
             'available_date_attribute',
             'attribute_default',
             'uploadable_files',
@@ -160,6 +176,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'unit_price',
             'on_sale',
             'minimal_quantity',
+            'low_stock_threshold',
+            'low_stock_alert',
             'available_date',
             'ecotax',
         );
@@ -262,9 +280,17 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
 
-            $form_data['combinations'][$k]['attribute_price'] = abs($combination['attribute_price']);
-            $form_data['combinations'][$k]['attribute_weight'] = abs($combination['attribute_weight']);
-            $form_data['combinations'][$k]['attribute_unity'] = abs($combination['attribute_unity']);
+            $floatParser = new FloatParser();
+
+            $form_data['combinations'][$k]['attribute_price'] = abs(
+                $floatParser->fromString($combination['attribute_price'])
+            );
+            $form_data['combinations'][$k]['attribute_weight'] = abs(
+                $floatParser->fromString($combination['attribute_weight'])
+            );
+            $form_data['combinations'][$k]['attribute_unity'] = abs(
+                $floatParser->fromString($combination['attribute_unity'])
+            );
         }
 
         //map suppliers
@@ -303,23 +329,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 $inputAccessories .= $accessoryIds[0].'-';
             }
             $form_data['inputAccessories'] = $inputAccessories;
-        }
-
-        //map features
-        if (!empty($form_data['features'])) {
-            foreach ($form_data['features'] as $dataFeature) {
-                $idFeature = $dataFeature['feature'];
-
-                //custom value is defined
-                if ($dataFeature['custom_value'][$this->defaultLocale]) {
-                    foreach ($this->locales as $locale) {
-                        $form_data['feature_'.$idFeature.'_value'] = null;
-                        $form_data['custom_'.$idFeature.'_'.$locale['id_lang']] = $dataFeature['custom_value'][$locale['id_lang']];
-                    }
-                } elseif ($dataFeature['value']) {
-                    $form_data['feature_'.$idFeature.'_value'] = $dataFeature['value'];
-                }
-            }
         }
 
         //map warehouseProductLocations
@@ -430,7 +439,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'step2' => [
                 'price' => $this->product->price,
                 'ecotax' => $this->product->ecotax,
-                'id_tax_rules_group' => $this->product->id_tax_rules_group,
+                'id_tax_rules_group' => !empty($this->product->id_tax_rules_group) ? $this->product->id_tax_rules_group : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
                 'on_sale' => (bool) $this->product->on_sale,
                 'wholesale_price' => $this->product->wholesale_price,
                 'unit_price' => $this->product->unit_price_ratio != 0  ? $this->product->price / $this->product->unit_price_ratio : 0,
@@ -454,6 +463,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_product_attributes' => $this->getProductAttributes(),
                 'out_of_stock' => $this->product->out_of_stock,
                 'minimal_quantity' => $this->product->minimal_quantity,
+                'low_stock_threshold' => $this->product->low_stock_threshold,
+                'low_stock_alert' => (bool) $this->product->low_stock_alert,
                 'available_now' => $this->product->available_now,
                 'available_later' => $this->product->available_later,
                 'available_date' => $this->product->available_date,
@@ -467,6 +478,9 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'weight' => $this->product->weight,
                 'additional_shipping_cost' => $this->product->additional_shipping_cost,
                 'selectedCarriers' => $this->getFormProductCarriers(),
+                'additional_delivery_times' => $this->product->additional_delivery_times,
+                'delivery_in_stock' => $this->product->delivery_in_stock,
+                'delivery_out_stock' => $this->product->delivery_out_stock,
             ],
             'step5' => [
                 'link_rewrite' => $this->product->link_rewrite,
@@ -528,7 +542,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             function ($a) {
                 return($a['id_attachment']);
             },
-            \AttachmentCore::getAttachments($this->locales[0]['id_lang'], $this->product->id, true)
+            Attachment::getAttachments($this->locales[0]['id_lang'], $this->product->id, true)
         );
     }
 
@@ -540,11 +554,11 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getVirtualProductData()
     {
         //force virtual product feature
-        \ConfigurationCore::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
+        ConfigurationLegacy::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
-        $id_product_download = \ProductDownloadCore::getIdFromIdProduct((int)$this->product->id, false);
+        $id_product_download = ProductDownload::getIdFromIdProduct((int)$this->product->id, false);
         if ($id_product_download) {
-            $download = new \ProductDownloadCore($id_product_download);
+            $download = new ProductDownload($id_product_download);
             $dateValue = $download->date_expiration == '0000-00-00 00:00:00' ? '' : date('Y-m-d', strtotime($download->date_expiration));
 
             $res = [

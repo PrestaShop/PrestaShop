@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
@@ -75,49 +75,49 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
     public function testUninstallSuccessful()
     {
         $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to uninstall this module.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->uninstall(self::UNINSTALLED_MODULE));
     }
 
     public function testUpgradeSuccessful()
     {
         $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to upgrade this module.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->moduleManager->upgrade(self::UNINSTALLED_MODULE);
     }
 
     public function testDisableSuccessful()
     {
         $this->assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to disable this module.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->disable(self::UNINSTALLED_MODULE));
     }
 
     public function testEnableSuccessful()
     {
         $this->assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to enable this module.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->enable(self::UNINSTALLED_MODULE));
     }
 
     public function testDisableOnMobileSuccessful()
     {
         $this->assertTrue($this->moduleManager->disable_mobile(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to disable this module on mobile.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->disable_mobile(self::UNINSTALLED_MODULE));
     }
 
     public function testEnableOnMobileSuccessful()
     {
         $this->assertTrue($this->moduleManager->enable_mobile(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to enable this module on mobile.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->enable_mobile(self::UNINSTALLED_MODULE));
     }
 
     public function testResetSuccessful()
     {
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'You are not allowed to reset this module.');
+        $this->setExpectedException('Exception', 'The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->reset(self::UNINSTALLED_MODULE));
     }
 
@@ -143,8 +143,8 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
 
     private function initMocks()
     {
-        $this->mockAdminModuleProvider();
         $this->mockModuleProvider();
+        $this->mockAdminModuleProvider();
         $this->mockModuleUpdater();
         $this->mockModuleRepository();
         $this->mockModuleZipManager();
@@ -158,6 +158,8 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->adminModuleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->adminModuleProviderS;
 
         $installedModule = [
             self::INSTALLED_MODULE, [
@@ -180,6 +182,9 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->adminModuleProviderS
             ->method('findByName')
             ->will($this->returnValueMap($findByNameReturnValues));
+        $this->adminModuleProviderS
+            ->method('isAllowedAccess')
+            ->willReturn(true);
     }
 
     private function mockModuleProvider()
@@ -253,7 +258,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->disableOriginalConstructor()
+            ->setConstructorArgs(array(array(), array(), array()))
             ->getMock();
         $moduleS
             ->method('onInstall')

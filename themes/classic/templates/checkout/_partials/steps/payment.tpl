@@ -4,7 +4,10 @@
 
   {hook h='displayPaymentTop'}
 
-  <div class="payment-options">
+  {if $is_free}
+    <p>{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
+  {/if}
+  <div class="payment-options {if $is_free}hidden-xs-up{/if}">
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
@@ -18,7 +21,7 @@
                 name="payment-option"
                 type="radio"
                 required
-                {if $selected_payment_option == $option.id} checked {/if}
+                {if $selected_payment_option == $option.id || $is_free} checked {/if}
               >
               <span></span>
             </span>
@@ -95,7 +98,7 @@
                         value = "1"
                         class = "ps-shown-by-js"
                 >
-                <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
               </span>
             </div>
             <div class="condition-label">
@@ -145,7 +148,7 @@
   <div class="modal fade" id="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
-        <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme'}">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
           <span aria-hidden="true">&times;</span>
         </button>
         <div class="js-modal-content"></div>

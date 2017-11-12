@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -28,6 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Category;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Category;
+use Context;
+use Shop;
 
 /**
  * This class will provide data from DB / ORM about Category
@@ -50,7 +53,7 @@ class CategoryDataProvider
      *
      * @throws \LogicException If the category id is not set
      *
-     * @return \CategoryCore
+     * @return Category
      */
     public function getCategory($idCategory = null, $idLang = null, $idShop = null)
     {
@@ -58,10 +61,10 @@ class CategoryDataProvider
             throw new \LogicException('You need to provide a category id', 5002);
         }
 
-        $category = new \CategoryCore($idCategory, $idLang, $idShop);
+        $category = new Category($idCategory, $idLang, $idShop);
 
         if ($category) {
-            $category->image = \ContextCore::getContext()->link->getCatImageLink($category->name, $category->id);
+            $category->image = Context::getContext()->link->getCatImageLink($category->name, $category->id);
         }
 
         return $category;
@@ -87,7 +90,7 @@ class CategoryDataProvider
             $id_lang = $this->languageId;
         }
 
-        return \CategoryCore::getNestedCategories($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
+        return Category::getNestedCategories($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
     }
 
     /**
@@ -109,7 +112,7 @@ class CategoryDataProvider
             $id_lang = $this->languageId;
         }
 
-        $categories = \CategoryCore::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
+        $categories = Category::getAllCategoriesName($root_category, $id_lang, $active, $groups, $use_shop_restriction, $sql_filter, $sql_sort, $sql_limit);
         array_shift($categories);
         return $categories;
     }
@@ -127,7 +130,7 @@ class CategoryDataProvider
 
         $results = [];
         foreach ($allCategories as $category) {
-            foreach($productCategories as $productCategory) {
+            foreach ($productCategories as $productCategory) {
                 if ($productCategory == $category['id_category']) {
                     $results[] = [
                         'id' => $category['id_category'],
@@ -137,7 +140,6 @@ class CategoryDataProvider
                 }
                 $productCategories[$category['name']] = $category['id_category'];
             }
-
         }
 
         return $results;
@@ -172,12 +174,12 @@ class CategoryDataProvider
      */
     public function getBreadCrumb($categoryId, $delimiter = " > ")
     {
-        $currentCategory = new \Category($categoryId);
+        $currentCategory = new Category($categoryId);
         $categories = $currentCategory->getParentsCategories();
         $categories = array_reverse($categories, true);
         $breadCrumb = '';
 
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $breadCrumb .= ' > '.$category['name'];
         }
 
@@ -185,7 +187,7 @@ class CategoryDataProvider
     }
 
     /**
-     * Get Categories formatted like ajax_product_file.php using CategoryCore::getNestedCategories
+     * Get Categories formatted like ajax_product_file.php using Category::getNestedCategories
      *
      * @param $query
      * @param $limit
@@ -206,14 +208,14 @@ class CategoryDataProvider
             $limit = '';
         }
 
-        $searchCategories = \CategoryCore::getAllCategoriesName(
-            $root_category = null,
-            $id_lang = \ContextCore::getContext()->language->id,
-            $active = true,
-            $groups = null,
-            $use_shop_restriction = true,
-            $sql_filter = $query,
-            $sql_sort = '',
+        $searchCategories = Category::getAllCategoriesName(
+            null,
+            Context::getContext()->language->id,
+            true,
+            null,
+            true,
+            $query,
+            '',
             $limit
         );
 
@@ -224,10 +226,15 @@ class CategoryDataProvider
                 'id' => $category['id_category'],
                 'name' => ($nameAsBreadCrumb ? $breadCrumb : $category['name']),
                 'breadcrumb' => $breadCrumb,
-                'image' => \ContextCore::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
+                'image' => Context::getContext()->link->getCatImageLink($category['name'], $category['id_category']),
             ];
         }
 
         return $results;
+    }
+
+    public function getRootCategory($idLang = null, Shop $shop = null)
+    {
+        return Category::getRootCategory($idLang, $shop);
     }
 }

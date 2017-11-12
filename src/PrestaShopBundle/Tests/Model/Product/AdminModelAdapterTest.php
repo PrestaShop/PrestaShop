@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Tests\Model\Product;
@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Tests\Model\Product;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
+use Product;
 
 class AdminModelAdapterTest extends KernelTestCase
 {
@@ -37,7 +38,7 @@ class AdminModelAdapterTest extends KernelTestCase
     private $container;
     protected static $kernel;
 
-    /* @var $product \ProductCore */
+    /* @var $product Product */
     private $product;
 
     private function fakeFormData()
@@ -83,6 +84,8 @@ class AdminModelAdapterTest extends KernelTestCase
                 "combinations" => [],
                 "out_of_stock" => '',
                 "minimal_quantity" => '',
+                "low_stock_threshold" => '',
+                "low_stock_alert" => '',
                 "available_now" => [],
                 "available_later" => [],
                 "available_date" => '',
@@ -95,7 +98,10 @@ class AdminModelAdapterTest extends KernelTestCase
                 "depth" => '',
                 "weight" => '',
                 "additional_shipping_cost" => '',
-                "selectedCarriers" => []
+                "selectedCarriers" => [],
+                "additional_delivery_times" => '',
+                "delivery_in_stock" => [],
+                "delivery_out_stock" => [],
             ],
             "step5" => [
                 "link_rewrite" => [],
@@ -140,6 +146,8 @@ class AdminModelAdapterTest extends KernelTestCase
             "unit_price_impact" => "0.000000",
             "default_on" => null,
             "minimal_quantity" => "1",
+            "low_stock_threshold" => "2",
+            "low_stock_alert" => "1",
             "available_date" => "0000-00-00",
             "id_shop" => "1",
             "id_attribute_group" => "1",
@@ -152,7 +160,7 @@ class AdminModelAdapterTest extends KernelTestCase
 
     private function fakeProduct()
     {
-        $product = new \ProductCore();
+        $product = new Product();
         $product->name = 'Product name';
 
         return $product;
@@ -164,8 +172,10 @@ class AdminModelAdapterTest extends KernelTestCase
         self::$kernel->boot();
         $this->container = self::$kernel->getContainer();
 
+        \Context::getContext()->shop = new \Shop(1);
+        \Context::getContext()->language = new \Language(1);
+        \Context::getContext()->currency = new \Currency(1);
         $this->product = $this->fakeProduct();
-
         $this->adminModelAdapter = new AdminModelAdapter(
             $this->product,
             $this->container->get('prestashop.adapter.legacy.context'),
@@ -176,7 +186,8 @@ class AdminModelAdapterTest extends KernelTestCase
             $this->container->get('prestashop.adapter.data_provider.warehouse'),
             $this->container->get('prestashop.adapter.data_provider.feature'),
             $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context')
+            $this->container->get('prestashop.adapter.shop.context'),
+            $this->container->get('prestashop.adapter.data_provider.tax')
         );
     }
 
@@ -231,6 +242,8 @@ class AdminModelAdapterTest extends KernelTestCase
             "attribute_unit_impact" => 0,
             "attribute_unity" => "0.000000",
             "attribute_minimal_quantity" => "1",
+            "attribute_low_stock_threshold" => "2",
+            "attribute_low_stock_alert" => "1",
             "available_date_attribute" => "0000-00-00",
             "attribute_default" => false,
             "attribute_quantity" => 300,

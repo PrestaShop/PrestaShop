@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -62,14 +62,14 @@ class DiscountControllerCore extends FrontController
         $vouchers = CartRule::getCustomerCartRules(
             $this->context->language->id,
             $this->context->customer->id,
-            $active = true,
-            $includeGeneric = false
+            true,
+            false
         );
 
         foreach ($vouchers as $key => $voucher) {
             $cart_rules[$key] = $voucher;
             $cart_rules[$key]['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
-            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme');
+            $cart_rules[$key]['voucher_minimal'] = ($voucher['minimum_amount'] > 0) ? Tools::displayPrice($voucher['minimum_amount'], (int)$voucher['minimum_amount_currency']) : $this->trans('None', array(), 'Shop.Theme.Global');
             $cart_rules[$key]['voucher_cumulable'] = $this->getCombinableVoucherTranslation($voucher);
             ;
 
@@ -101,9 +101,9 @@ class DiscountControllerCore extends FrontController
     protected function getCombinableVoucherTranslation($voucher)
     {
         if ($voucher['cart_rule_restriction']) {
-            $combinableVoucherTranslation = $this->trans('No', array(), 'Shop.Theme');
+            $combinableVoucherTranslation = $this->trans('No', array(), 'Shop.Theme.Global');
         } else {
-            $combinableVoucherTranslation = $this->trans('Yes', array(), 'Shop.Theme');
+            $combinableVoucherTranslation = $this->trans('Yes', array(), 'Shop.Theme.Global');
         }
 
         return $combinableVoucherTranslation;

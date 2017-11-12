@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,16 +19,10 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
-{% endblock %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -36,13 +30,22 @@
     <script src="{{ asset('themes/default/js/bundle/module/loader.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
     <script src="{{ asset('themes/default/js/bundle/module/module.js') }}"></script>
+    {% if app.request.get('filterCategoryTab') %}
+      <script>
+        $('body').on('moduleCatalogLoaded', function() {
+          $('.module-category-menu[data-category-tab="{{ app.request.get('filterCategoryTab') }}"]').click();
+      });
+      </script>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-10 col-lg-offset-1 module-catalog-page">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 module-catalog-page">
             {# Addons connect modal #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
+            {# PrestaTrust modal #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
             {# Contains toolbar-nav for module page #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
             {# Contains menu with Selection/Categories/Popular and Tag Search #}

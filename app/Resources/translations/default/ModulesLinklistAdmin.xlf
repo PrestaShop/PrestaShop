@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_linklist/ps_linklist.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
+        <source>Link List</source>
+        <target>Link List</target>
+        <note>Context:
+File: modules/ps_linklist/ps_linklist.php:57</note>
+      </trans-unit>
+      <trans-unit id="34a65b805d7e94c02bad18890a97f134">
+        <source>Adds a block with several links.</source>
+        <target>Adds a block with several links.</target>
+        <note>Context:
+File: modules/ps_linklist/ps_linklist.php:58</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e2a999acc8db5fd702e2f91b25b45222">
@@ -85,22 +101,6 @@ File: modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php:173</n
         <target>Themes</target>
         <note>Context:
 File: modules/ps_linklist/controllers/admin/AdminLinkWidgetController.php:231</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_linklist/ps_linklist.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
-        <source>Link List</source>
-        <target>Link List</target>
-        <note>Context:
-File: modules/ps_linklist/ps_linklist.php:57</note>
-      </trans-unit>
-      <trans-unit id="34a65b805d7e94c02bad18890a97f134">
-        <source>Adds a block with several links.</source>
-        <target>Adds a block with several links.</target>
-        <note>Context:
-File: modules/ps_linklist/ps_linklist.php:58</note>
       </trans-unit>
     </body>
   </file>

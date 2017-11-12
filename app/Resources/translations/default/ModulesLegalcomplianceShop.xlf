@@ -76,13 +76,13 @@ File: modules/ps_legalcompliance/ps_legalcompliance.php:936</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
-        <source>(Under conditions)</source>
-        <target>(Under conditions)</target>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
         <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:27</note>
       </trans-unit>
     </body>
   </file>
@@ -122,13 +122,13 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
-        <source>Information</source>
-        <target>Information</target>
+      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
+        <source>(Under conditions)</source>
+        <target>(Under conditions)</target>
         <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:27</note>
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
       </trans-unit>
     </body>
   </file>

@@ -12,5 +12,9 @@
     <stock_mvt_reason id="Transfer_to_another_warehouse" sign="-1"/>
     <stock_mvt_reason id="Transfer_from_another_warehouse" sign="1"/>
     <stock_mvt_reason id="Supply_Order" sign="1"/>
+    <stock_mvt_reason id="Customer_Order_1" sign="1"/>
+    <stock_mvt_reason id="Product_Return" sign="1"/>
+    <stock_mvt_reason id="Employee_Edition" sign="1"/>
+    <stock_mvt_reason id="Employee_Edition_1" sign="-1"/>
   </entities>
 </entity_stock_mvt_reason>

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -94,7 +94,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                 'fields' => array(
                     'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
                         'title' => $this->trans('Maximum size for attached files', array(), 'Admin.Advparameters.Feature'),
-                        'hint' =>  sprintf($this->trans('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array(), 'Admin.Advparameters.Help'), $upload_mb),
+                        'hint' =>  $this->trans('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).', array('%size%' => $upload_mb), 'Admin.Advparameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
@@ -103,7 +103,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                     ),
                     'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
                         'title' => $this->trans('Maximum size for a downloadable product', array(), 'Admin.Advparameters.Feature'),
-                        'hint' => sprintf($this->trans('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array(), 'Admin.Advparameters.Help'), $upload_mb),
+                        'hint' => $this->trans('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).', array('%size%' => $upload_mb), 'Admin.Advparameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',
@@ -112,7 +112,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
                     ),
                     'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
                         'title' => $this->trans('Maximum size for a product\'s image', array(), 'Admin.Advparameters.Feature'),
-                        'hint' => sprintf($this->trans('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).', array('%s' => $upload_mb), 'Admin.Advparameters.Help')),
+                        'hint' => $this->trans('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %size% MB).', array('%size%' => $upload_mb), 'Admin.Advparameters.Help'),
                         'validation' => 'isInt',
                         'cast' => 'intval',
                         'type' => 'text',

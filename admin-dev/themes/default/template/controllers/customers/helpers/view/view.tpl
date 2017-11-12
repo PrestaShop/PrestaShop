@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -49,38 +49,38 @@
 				</div>
 				<div class="form-horizontal">
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Social Title'}</label>
+						<label class="control-label col-lg-3">{l s='Social Title' d='Admin.Global'}</label>
 						<div class="col-lg-9">
-							<p class="form-control-static">{if $gender->name}{$gender->name}{else}{l s='Unknown'}{/if}</p>
+							<p class="form-control-static">{if $gender->name}{$gender->name}{else}{l s='Unknown' d='Admin.Orderscustomers.Feature'}{/if}</p>
 						</div>
 					</div>
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Age'}</label>
+						<label class="control-label col-lg-3">{l s='Age' d='Admin.Orderscustomers.Feature'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">
 								{if isset($customer->birthday) && $customer->birthday != '0000-00-00'}
-									{l s='%1$d years old (birth date: %2$s)' sprintf=[$customer_stats['age'], $customer_birthday]}
+									{l s='%1$d years old (birth date: %2$s)' sprintf=[$customer_stats['age'], $customer_birthday] d='Admin.Orderscustomers.Feature'}
 								{else}
-									{l s='Unknown'}
+									{l s='Unknown' d='Admin.Orderscustomers.Feature'}
 								{/if}
 							</p>
 						</div>
 					</div>
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Registration Date'}</label>
+						<label class="control-label col-lg-3">{l s='Registration Date' d='Admin.Orderscustomers.Feature'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">{$registration_date}</p>
 						</div>
 					</div>
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Last Visit'}</label>
+						<label class="control-label col-lg-3">{l s='Last Visit' d='Admin.Orderscustomers.Feature'}</label>
 						<div class="col-lg-9">
-							<p class="form-control-static">{if $customer_stats['last_visit']}{$last_visit}{else}{l s='Never'}{/if}</p>
+							<p class="form-control-static">{if $customer_stats['last_visit']}{$last_visit}{else}{l s='Never' d='Admin.Global'}{/if}</p>
 						</div>
 					</div>
 					{if $count_better_customers != '-'}
 						<div class="row">
-							<label class="control-label col-lg-3">{l s='Best Customer Rank'}</label>
+							<label class="control-label col-lg-3">{l s='Best Customer Rank' d='Admin.Orderscustomers.Feature'}</label>
 							<div class="col-lg-9">
 								<p class="form-control-static">{$count_better_customers}</p>
 							</div>
@@ -95,30 +95,30 @@
 						</div>
 					{/if}
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Language'}</label>
+						<label class="control-label col-lg-3">{l s='Language' d='Admin.Global'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">
 								{if isset($customerLanguage)}
 									{$customerLanguage->name}
 								{else}
-									{l s='Unknown'}
+									{l s='Unknown' d='Admin.Orderscustomers.Feature'}
 								{/if}
 							</p>
 						</div>
 					</div>
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Registrations'}</label>
+						<label class="control-label col-lg-3">{l s='Registrations' d='Admin.Orderscustomers.Feature'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">
 								{if $customer->newsletter}
 									<span class="label label-success">
 										<i class="icon-check"></i>
-										{l s='Newsletter'}
+										{l s='Newsletter' d='Admin.Global'}
 									</span>
 								{else}
 									<span class="label label-danger">
 										<i class="icon-remove"></i>
-										{l s='Newsletter'}
+										{l s='Newsletter' d='Admin.Global'}
 									</span>
 								{/if}
 								&nbsp;
@@ -137,24 +137,24 @@
 						</div>
 					</div>
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Latest Update'}</label>
+						<label class="control-label col-lg-3">{l s='Latest Update' d='Admin.Orderscustomers.Feature'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">{$last_update}</p>
 						</div>
 					</div>
 					<div class="row">
-						<label class="control-label col-lg-3">{l s='Status'}</label>
+						<label class="control-label col-lg-3">{l s='Status' d='Admin.Global'}</label>
 						<div class="col-lg-9">
 							<p class="form-control-static">
 								{if $customer->active}
 									<span class="label label-success">
 										<i class="icon-check"></i>
-										{l s='Active'}
+										{l s='Active' d='Admin.Global'}
 									</span>
 								{else}
 									<span class="label label-danger">
 										<i class="icon-remove"></i>
-										{l s='Inactive'}
+										{l s='Inactive' d='Admin.Global'}
 									</span>
 								{/if}
 							</p>
@@ -162,25 +162,25 @@
 					</div>
 				</div>
 				{if $customer->isGuest()}
-					{l s='This customer is registered as a Guest.'}
+					{l s='This customer is registered as a Guest.' d='Admin.Orderscustomers.Feature'}
 					{if !$customer_exists}
 					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
 						<p class="text-center">
-							<input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to a customer account'}" />
+							<input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to a customer account' d='Admin.Orderscustomers.Feature'}" />
 						</p>
-						{l s='This feature generates a random password before sending an email to your customer.'}
+						{l s='This feature generates a random password before sending an email to your customer.' d='Admin.Orderscustomers.Help'}
 					</form>
 					{else}
 					<p class="text-muted text-center">
-						{l s='A registered customer account using the defined email address already exists. '}
+						{l s='A registered customer account using the defined email address already exists. ' d='Admin.Orderscustomers.Notification'}
 					</p>
 					{/if}
 				{/if}
 			</div>
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-file"></i> {l s='Orders'} <span class="badge">{count($orders)}</span>
+					<i class="icon-file"></i> {l s='Orders' d='Admin.Global'} <span class="badge">{count($orders)}</span>
 				</div>
 				{if $orders AND count($orders)}
 					{assign var=count_ok value=count($orders_ok)}
@@ -191,11 +191,11 @@
 								<i class="icon-ok-circle icon-big"></i>
 								{l s='Valid orders:'}
 								<span class="label label-success">{$count_ok}</span>
-								{l s='for a total amount of %s' sprintf=[$total_ok]}
+								{l s='for a total amount of %s' sprintf=[$total_ok] d='Admin.Orderscustomers.Feature'}
 							</div>
 							<div class="col-lg-6">
 								<i class="icon-exclamation-sign icon-big"></i>
-								{l s='Invalid orders:'}
+								{l s='Invalid orders:' d='Admin.Orderscustomers.Feature'}
 								<span class="label label-danger">{$count_ko}</span>
 							</div>
 						</div>
@@ -206,11 +206,11 @@
 							<thead>
 								<tr>
 									<th class="center"><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
-									<th><span class="title_box">{l s='Date'}</span></th>
-									<th><span class="title_box">{l s='Payment'}</span></th>
-									<th><span class="title_box">{l s='Status'}</span></th>
-									<th><span class="title_box">{l s='Products'}</span></th>
-									<th><span class="title_box ">{l s='Total spent'}</span></th>
+									<th><span class="title_box">{l s='Date' d='Admin.Global'}</span></th>
+									<th><span class="title_box">{l s='Payment' d='Admin.Global'}</span></th>
+									<th><span class="title_box">{l s='Status' d='Admin.Global'}</span></th>
+									<th><span class="title_box">{l s='Products' d='Admin.Global'}</span></th>
+									<th><span class="title_box ">{l s='Total spent' d='Admin.Orderscustomers.Feature'}</span></th>
 									<th></th>
 								</tr>
 							</thead>
@@ -239,11 +239,11 @@
 							<thead>
 								<tr>
 									<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
-									<th><span class="title_box ">{l s='Date'}</span></th>
-									<th><span class="title_box ">{l s='Payment'}</span></th>
-									<th><span class="title_box ">{l s='Status'}</span></th>
-									<th><span class="title_box ">{l s='Products'}</span></th>
-									<th><span class="title_box ">{l s='Total spent'}</span></th>
+									<th><span class="title_box ">{l s='Date' d='Admin.Global'}</span></th>
+									<th><span class="title_box ">{l s='Payment' d='Admin.Global'}</span></th>
+									<th><span class="title_box ">{l s='Status' d='Admin.Global'}</span></th>
+									<th><span class="title_box ">{l s='Products' d='Admin.Global'}</span></th>
+									<th><span class="title_box ">{l s='Total spent' d='Admin.Orderscustomers.Feature'}</span></th>
 								</tr>
 							</thead>
 							<tbody>
@@ -262,23 +262,23 @@
 					{/if}
 				{else}
 				<p class="text-muted text-center">
-					{l s='%1$s %2$s has not placed any orders yet' sprintf=[$customer->firstname, $customer->lastname]}
+					{l s='%firstname% %lastname% has not placed any orders yet' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname] d='Admin.Orderscustomers.Feature'}
 				</p>
 				{/if}
 			</div>
 
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-shopping-cart"></i> {l s='Carts'} <span class="badge">{count($carts)}</span>
+					<i class="icon-shopping-cart"></i> {l s='Carts' d='Admin.Global'} <span class="badge">{count($carts)}</span>
 				</div>
 				{if $carts AND count($carts)}
 					<table class="table">
 						<thead>
 							<tr>
 								<th><span class="title_box ">{l s='ID' d='Admin.Global'}</span></th>
-								<th><span class="title_box ">{l s='Date'}</span></th>
-								<th><span class="title_box ">{l s='Carrier'}</span></th>
-								<th><span class="title_box ">{l s='Total'}</span></th>
+								<th><span class="title_box ">{l s='Date' d='Admin.Global'}</span></th>
+								<th><span class="title_box ">{l s='Carrier' d='Admin.Global'}</span></th>
+								<th><span class="title_box ">{l s='Total' d='Admin.Global'}</span></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -298,21 +298,21 @@
 					</table>
 				{else}
 				<p class="text-muted text-center">
-					{l s='No cart is available'}
+					{l s='No cart is available' d='Admin.Orderscustomers.Notification'}
 				</p>
 				{/if}
 			</div>
 			{if $products AND count($products)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-archive"></i> {l s='Purchased products'} <span class="badge">{count($products)}</span>
+					<i class="icon-archive"></i> {l s='Purchased products' d='Admin.Orderscustomers.Feature'} <span class="badge">{count($products)}</span>
 				</div>
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box">{l s='Date'}</span></th>
+							<th><span class="title_box">{l s='Date' d='Admin.Global'}</span></th>
 							<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
-							<th><span class="title_box">{l s='Quantity'}</span></th>
+							<th><span class="title_box">{l s='Quantity' d='Admin.Global'}</span></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -334,7 +334,7 @@
 			{if count($interested)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-eye"></i> {l s='Viewed products'} <span class="badge">{count($interested)}</span>
+					<i class="icon-eye"></i> {l s='Viewed products' d='Admin.Orderscustomers.Feature'} <span class="badge">{count($interested)}</span>
 				</div>
 				<table class="table">
 					<thead>
@@ -359,9 +359,9 @@
 		<div class="col-lg-6">
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-eye-close"></i> {l s='Add a private note'}
+					<i class="icon-eye-close"></i> {l s='Add a private note' d='Admin.Orderscustomers.Feature'}
 				</div>
-				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.'}</div>
+				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.' d='Admin.Orderscustomers.Help'}</div>
 				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id|intval});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
@@ -381,14 +381,14 @@
 			</div>
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{count($messages)}</span>
+					<i class="icon-envelope"></i> {l s='Messages' d='Admin.Global'} <span class="badge">{count($messages)}</span>
 				</div>
 				{if count($messages)}
 					<table class="table">
 						<thead>
-							<th><span class="title_box">{l s='Status'}</span></th>
-							<th><span class="title_box">{l s='Message'}</span></th>
-							<th><span class="title_box">{l s='Sent on'}</span></th>
+							<th><span class="title_box">{l s='Status' d='Admin.Global'}</span></th>
+							<th><span class="title_box">{l s='Message' d='Admin.Global'}</span></th>
+							<th><span class="title_box">{l s='Sent on' d='Admin.Orderscustomers.Feature'}</span></th>
 						</thead>
 						{foreach $messages AS $message}
 							<tr>
@@ -404,24 +404,24 @@
 					</table>
 				{else}
 				<p class="text-muted text-center">
-					{l s='%1$s %2$s has never contacted you' sprintf=[$customer->firstname, $customer->lastname]}
+					{l s='%firstname% %lastname% has never contacted you' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname] d='Admin.Orderscustomers.Feature'}
 				</p>
 				{/if}
 			</div>
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-ticket"></i> {l s='Vouchers'} <span class="badge">{count($discounts)}</span>
+					<i class="icon-ticket"></i> {l s='Vouchers' d='Admin.Orderscustomers.Feature'} <span class="badge">{count($discounts)}</span>
 				</div>
 				{if count($discounts)}
 					<table class="table">
 						<thead>
 							<tr>
 								<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
-								<th><span class="title_box">{l s='Code'}</span></th>
+								<th><span class="title_box">{l s='Code' d='Admin.Global'}</span></th>
 								<th><span class="title_box">{l s='Name' d='Admin.Global'}</span></th>
-								<th><span class="title_box">{l s='Status'}</span></th>
-								<th><span class="title_box">{l s='Qty available'}</span></th>
-								<th><span class="title_box">{l s='Actions'}</span></th>
+								<th><span class="title_box">{l s='Status' d='Admin.Global'}</span></th>
+								<th><span class="title_box">{l s='Qty available' d='Admin.Orderscustomers.Feature'}</span></th>
+								<th><span class="title_box">{l s='Actions' d='Admin.Global'}</span></th>
 							<tr/>
 						</thead>
 						<tbody>
@@ -452,7 +452,7 @@
 					</table>
 				{else}
 				<p class="text-muted text-center">
-					{l s='%1$s %2$s has no discount vouchers' sprintf=[$customer->firstname, $customer->lastname]}
+					{l s='%firstname% %lastname% has no discount vouchers' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname] d='Admin.Orderscustomers.Feature'}
 				</p>
 				{/if}
 			</div>
@@ -460,15 +460,15 @@
 			{if count($emails)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-envelope"></i> {l s='Last emails'}
+					<i class="icon-envelope"></i> {l s='Last emails' d='Admin.Orderscustomers.Feature'}
 				</div>
 				<table class="table">
 					<thead>
 					<tr>
-						<th><span class="title_box">{l s='Date'}</span></th>
-						<th><span class="title_box">{l s='Language'}</span></th>
-						<th><span class="title_box">{l s='Subject'}</span></th>
-						<th><span class="title_box">{l s='Template'}</span></th>
+						<th><span class="title_box">{l s='Date' d='Admin.Global'}</span></th>
+						<th><span class="title_box">{l s='Language' d='Admin.Global'}</span></th>
+						<th><span class="title_box">{l s='Subject' d='Admin.Global'}</span></th>
+						<th><span class="title_box">{l s='Template' d='Admin.Global'}</span></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -488,17 +488,17 @@
 			{if count($connections)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-time"></i> {l s='Last connections'}
+					<i class="icon-time"></i> {l s='Last connections' d='Admin.Orderscustomers.Feature'}
 				</div>
 				<table class="table">
 					<thead>
 					<tr>
 						<th><span class="title_box">{l s='ID' d='Admin.Global'}</span></th>
-						<th><span class="title_box">{l s='Date'}</span></th>
-						<th><span class="title_box">{l s='Pages viewed'}</span></th>
-						<th><span class="title_box">{l s='Total time'}</span></th>
-						<th><span class="title_box">{l s='Origin'}</span></th>
-						<th><span class="title_box">{l s='IP Address'}</span></th>
+						<th><span class="title_box">{l s='Date' d='Admin.Global'}</span></th>
+						<th><span class="title_box">{l s='Pages viewed' d='Admin.Orderscustomers.Feature'}</span></th>
+						<th><span class="title_box">{l s='Total time' d='Admin.Orderscustomers.Feature'}</span></th>
+						<th><span class="title_box">{l s='Origin' d='Admin.Orderscustomers.Feature'}</span></th>
+						<th><span class="title_box">{l s='IP Address' d='Admin.Orderscustomers.Feature'}</span></th>
 					</tr>
 					</thead>
 					<tbody>
@@ -520,7 +520,7 @@
 			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-group"></i>
-					{l s='Groups'}
+					{l s='Groups' d='Admin.Global'}
 					<span class="badge">{count($groups)}</span>
 					<a class="btn btn-default pull-right" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i> {l s='Edit' d='Admin.Actions'}
@@ -560,12 +560,12 @@
 			{if count($referrers)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-share-alt"></i> {l s='Referrers'}
+					<i class="icon-share-alt"></i> {l s='Referrers' d='Admin.Orderscustomers.Feature'}
 				</div>
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box ">{l s='Date'}</span></th>
+							<th><span class="title_box ">{l s='Date' d='Admin.Global'}</span></th>
 							<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
 							{if $shop_is_feature_active}<th>{l s='Shop' d='Admin.Global'}</th>{/if}
 						</tr>
@@ -591,11 +591,11 @@
 		<div class="col-lg-12">
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-map-marker"></i> {l s='Addresses'} <span class="badge">{count($addresses)}</span>
+					<i class="icon-map-marker"></i> {l s='Addresses' d='Admin.Global'} <span class="badge">{count($addresses)}</span>
 					<div class="panel-heading-action">
 						<a class="btn btn-default" href="?controller=AdminAddresses&amp;addaddress&amp;id_customer={$customer->id|intval}&amp;token={getAdminToken tab='AdminAddresses'}">
 							<i class="icon-plus-sign"></i>
-							{l s='Add'}
+							{l s='Add' d='Admin.Actions'}
 						</a>
 					</div>
 				</div>
@@ -605,9 +605,9 @@
 							<tr>
 								<th><span class="title_box ">{l s='Company' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Name' d='Admin.Global'}</span></th>
-								<th><span class="title_box ">{l s='Address'}</span></th>
+								<th><span class="title_box ">{l s='Address' d='Admin.Global'}</span></th>
 								<th><span class="title_box ">{l s='Country' d='Admin.Global'}</span></th>
-								<th><span class="title_box ">{l s='Phone number(s)'}</span></th>
+								<th><span class="title_box ">{l s='Phone number(s)' d='Admin.Orderscustomers.Feature'}</span></th>
 								<th></th>
 							</tr>
 						</thead>
@@ -650,7 +650,7 @@
 					</table>
 				{else}
 					<p class="text-muted text-center">
-						{l s='%1$s %2$s has not registered any addresses yet' sprintf=[$customer->firstname, $customer->lastname]}
+						{l s='%firstname% %lastname% has not registered any addresses yet' sprintf=['%firstname%' => $customer->firstname, '%lastname%' => $customer->lastname]}
 					</p>
 				{/if}
 			</div>

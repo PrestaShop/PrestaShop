@@ -41,6 +41,26 @@
       <title>Right column blocks</title>
       <description>This hook displays new elements in the right-hand column</description>
     </hook>
+    <hook id="displayWrapperTop">
+      <name>displayWrapperTop</name>
+      <title>Main wrapper section (top)</title>
+      <description>This hook displays new elements in the top of the main wrapper</description>
+    </hook>
+    <hook id="displayWrapperBottom">
+      <name>displayWrapperBottom</name>
+      <title>Main wrapper section (bottom)</title>
+      <description>This hook displays new elements in the bottom of the main wrapper</description>
+    </hook>
+    <hook id="displayContentWrapperTop">
+      <name>displayContentWrapperTop</name>
+      <title>Content wrapper section (top)</title>
+      <description>This hook displays new elements in the top of the content wrapper</description>
+    </hook>
+    <hook id="displayContentWrapperBottom">
+      <name>displayContentWrapperBottom</name>
+      <title>Content wrapper section (bottom)</title>
+      <description>This hook displays new elements in the bottom of the content wrapper</description>
+    </hook>
     <hook id="displayLeftColumn">
       <name>displayLeftColumn</name>
       <title>Left column blocks</title>
@@ -670,6 +690,56 @@
       <name>actionEmailSendBefore</name>
       <title>Before sending an email</title>
       <description>This hook is used to filter the content or the metadata of an email before sending it or even prevent its sending</description>
+    </hook>
+    <hook id="displayAdminProductsMainStepLeftColumnMiddle">
+      <name>displayAdminProductsMainStepLeftColumnMiddle</name>
+      <title>Display new elements in back office product page, left column of the Basic settings tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsMainStepLeftColumnBottom">
+      <name>displayAdminProductsMainStepLeftColumnBottom</name>
+      <title>Display new elements in back office product page, left column of the Basic settings tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsMainStepRightColumnBottom">
+      <name>displayAdminProductsMainStepRightColumnBottom</name>
+      <title>Display new elements in back office product page, right column of the Basic settings tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsQuantitiesStepBottom">
+      <name>displayAdminProductsQuantitiesStepBottom</name>
+      <title>Display new elements in back office product page, Quantities/Combinations tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsPriceStepBottom">
+      <name>displayAdminProductsPriceStepBottom</name>
+      <title>Display new elements in back office product page, Price tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsOptionsStepTop">
+      <name>displayAdminProductsOptionsStepTop</name>
+      <title>Display new elements in back office product page, Options tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsOptionsStepBottom">
+      <name>displayAdminProductsOptionsStepBottom</name>
+      <title>Display new elements in back office product page, Options tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsSeoStepBottom">
+      <name>displayAdminProductsSeoStepBottom</name>
+      <title>Display new elements in back office product page, SEO tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsShippingStepBottom">
+      <name>displayAdminProductsShippingStepBottom</name>
+      <title>Display new elements in back office product page, Shipping tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayAdminProductsCombinationBottom">
+      <name>displayAdminProductsCombinationBottom</name>
+      <title>Display new elements in back office product page, Combination tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
     </hook>
   </entities>
 </entity_hook>

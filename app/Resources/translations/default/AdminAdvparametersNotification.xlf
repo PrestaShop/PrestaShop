@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/backup.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/PrestaShopBackup.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b42cd3af71fc00ef268910709255320a">
-        <source>You do not have permission to view this.</source>
-        <target>You do not have permission to view this.</target>
+      <trans-unit id="47218fe85410a7029c216ef926cef044">
+        <source>"Backup" directory does not exist.</source>
+        <target>"Backup" directory does not exist.</target>
         <note>Context:
-File: admin-dev/backup.php:43</note>
+File: classes/PrestaShopBackup.php:143</note>
       </trans-unit>
-      <trans-unit id="e38d3ed240ea149315399f76813ad836">
-        <source>There is no "/backup" directory.</source>
-        <target>There is no "/backup" directory.</target>
+      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
+        <source>Error deleting</source>
+        <target>Error deleting</target>
         <note>Context:
-File: admin-dev/backup.php:53</note>
+File: classes/PrestaShopBackup.php:166</note>
       </trans-unit>
-      <trans-unit id="8a5a71bcb5b4e12673c79e3d8b1deb56">
-        <source>No file has been specified.</source>
-        <target>No file has been specified.</target>
+      <trans-unit id="c1c8a564c10a0efe07bb4e4b20d88cc9">
+        <source>Invalid ID</source>
+        <target>Invalid ID</target>
         <note>Context:
-File: admin-dev/backup.php:61</note>
+File: classes/PrestaShopBackup.php:167</note>
       </trans-unit>
-      <trans-unit id="db5aa3efeee3f75954f4a6de541f7fd2">
-        <source>Unable to open backup file(s).</source>
-        <target>Unable to open backup file(s).</target>
+      <trans-unit id="4eb9ec8ac71ad17fdc99b5371ace9f6e">
+        <source>Unable to create backup file</source>
+        <target>Unable to create backup file</target>
         <note>Context:
-File: admin-dev/backup.php:85</note>
+File: classes/PrestaShopBackup.php:225</note>
       </trans-unit>
-      <trans-unit id="089426c3b86f7f52cc14c3ebf5ca5b8f">
-        <source>Unable to display backup file(s).</source>
-        <target>Unable to display backup file(s).</target>
+      <trans-unit id="52033453d4d673bae012b9c8ccb1e79c">
+        <source>An error occurred while backing up. Unable to obtain the schema of %s</source>
+        <target>An error occurred while backing up. Unable to obtain the schema of %s</target>
         <note>Context:
-File: admin-dev/backup.php:105</note>
+File: classes/PrestaShopBackup.php:254</note>
+      </trans-unit>
+      <trans-unit id="a12b8823ac5b71b9d09f9c7b09e54c48">
+        <source>No valid tables were found to backup.</source>
+        <target>No valid tables were found to backup.</target>
+        <note>Context:
+File: classes/PrestaShopBackup.php:317</note>
       </trans-unit>
     </body>
   </file>
@@ -80,43 +86,13 @@ File: classes/Mail.php:331</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/PrestaShopBackup.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminTabsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="47218fe85410a7029c216ef926cef044">
-        <source>"Backup" directory does not exist.</source>
-        <target>"Backup" directory does not exist.</target>
+      <trans-unit id="5bb701014490e33a37ecdc43ce578404">
+        <source>You can't put this menu inside itself. </source>
+        <target>You can't put this menu inside itself.</target>
         <note>Context:
-File: classes/PrestaShopBackup.php:143</note>
-      </trans-unit>
-      <trans-unit id="4e0ac45de6bd848503ffa98ff6247f2f">
-        <source>Error deleting</source>
-        <target>Error deleting</target>
-        <note>Context:
-File: classes/PrestaShopBackup.php:166</note>
-      </trans-unit>
-      <trans-unit id="c1c8a564c10a0efe07bb4e4b20d88cc9">
-        <source>Invalid ID</source>
-        <target>Invalid ID</target>
-        <note>Context:
-File: classes/PrestaShopBackup.php:167</note>
-      </trans-unit>
-      <trans-unit id="4eb9ec8ac71ad17fdc99b5371ace9f6e">
-        <source>Unable to create backup file</source>
-        <target>Unable to create backup file</target>
-        <note>Context:
-File: classes/PrestaShopBackup.php:225</note>
-      </trans-unit>
-      <trans-unit id="52033453d4d673bae012b9c8ccb1e79c">
-        <source>An error occurred while backing up. Unable to obtain the schema of %s</source>
-        <target>An error occurred while backing up. Unable to obtain the schema of %s</target>
-        <note>Context:
-File: classes/PrestaShopBackup.php:254</note>
-      </trans-unit>
-      <trans-unit id="a12b8823ac5b71b9d09f9c7b09e54c48">
-        <source>No valid tables were found to backup.</source>
-        <target>No valid tables were found to backup.</target>
-        <note>Context:
-File: classes/PrestaShopBackup.php:317</note>
+File: controllers/admin/AdminTabsController.php:293</note>
       </trans-unit>
     </body>
   </file>
@@ -158,16 +134,6 @@ File: controllers/admin/AdminBackupController.php:249</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="67df6a66c109fbe53bfa02dc398bc258">
-        <source>Can't add the voucher.</source>
-        <target>Can't add the voucher.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:628</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5b8df4265c79cd43831e740281850c84">
@@ -175,6 +141,180 @@ File: controllers/admin/AdminCartsController.php:628</note>
         <target>SSL does not seem to be available on your server.</target>
         <note>Context:
 File: controllers/admin/AdminEmailsController.php:166</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6e61f7cd17315db8599a202172a096d5">
+        <source>You've selected a state for a country that does not contain states.</source>
+        <target>You've selected a state for a country that does not contain states.</target>
+        <note>Context:
+File: controllers/admin/AdminStoresController.php:333</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminPerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="fff137fc306769c3d7db8aacd682cf02">
+        <source>(the directory %s must be writable)</source>
+        <target>(the directory %s must be writable)</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:134</note>
+      </trans-unit>
+      <trans-unit id="023d53a99c8074e823e5b2db4c19dfa4">
+        <source>(you must install the [a]Memcache PECL extension[/a])</source>
+        <target>(you must install the [a]Memcache PECL extension[/a])</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:466</note>
+      </trans-unit>
+      <trans-unit id="82742001d67f4446f50d68908f0f8b96">
+        <source>(you must install the [a]Memcached PECL extension[/a])</source>
+        <target>(you must install the [a]Memcached PECL extension[/a])</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:474</note>
+      </trans-unit>
+      <trans-unit id="78ae94b19fc38f9a35d20bc67cde2d61">
+        <source>(you must install the [a]APC PECL extension[/a])</source>
+        <target>(you must install the [a]APC PECL extension[/a])</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:482</note>
+      </trans-unit>
+      <trans-unit id="8b763a82c2aa7875f3da39399ba350d7">
+        <source>(you must install the [a]Xcache extension[/a])</source>
+        <target>(you must install the [a]Xcache extension[/a])</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:490</note>
+      </trans-unit>
+      <trans-unit id="0c34331bf9aad4193a8ba2cc52502dff">
+        <source>The Memcached IP is missing.</source>
+        <target>The Memcached IP is missing.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:621</note>
+      </trans-unit>
+      <trans-unit id="a862d237b9d1b0ee4e704ce981eea63a">
+        <source>The Memcached port is missing.</source>
+        <target>The Memcached port is missing.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:624</note>
+      </trans-unit>
+      <trans-unit id="b31cf7fa72a130f2727c6add7cb6dd4c">
+        <source>The Memcached weight is missing.</source>
+        <target>The Memcached weight is missing.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:627</note>
+      </trans-unit>
+      <trans-unit id="9ad28fef1c6184adfe7397838891ba76">
+        <source>The Memcached server cannot be added.</source>
+        <target>The Memcached server cannot be added.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:635</note>
+      </trans-unit>
+      <trans-unit id="bf4ddd37d9f82a3ad1f405891dfaa235">
+        <source>There was an error when attempting to delete the Memcached server.</source>
+        <target>There was an error when attempting to delete the Memcached server.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:648</note>
+      </trans-unit>
+      <trans-unit id="525bb5c93bbb92dd0a3e8378a43ee1e7">
+        <source>To use Smarty Cache, the directory %directorypath% must be writable.</source>
+        <target>To use Smarty Cache, the directory %directorypath% must be writable.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:704</note>
+      </trans-unit>
+      <trans-unit id="91e3dffab90db947ea156087dadaa9c0">
+        <source>Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]</source>
+        <target>Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:737</note>
+      </trans-unit>
+      <trans-unit id="ea030df6cb392bef66cde22c94578ae4">
+        <source>Media server #1 is invalid</source>
+        <target>Media server #1 is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:757</note>
+      </trans-unit>
+      <trans-unit id="32d841e578ff7560bbaeda96f5328e9e">
+        <source>Media server #2 is invalid</source>
+        <target>Media server #2 is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:760</note>
+      </trans-unit>
+      <trans-unit id="63ae8982fa76c668cbfc774ccf083d26">
+        <source>Media server #3 is invalid</source>
+        <target>Media server #3 is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:763</note>
+      </trans-unit>
+      <trans-unit id="79b2a5e09f30660e30830ffc336ffb7c">
+        <source><![CDATA[Before being able to use this tool, you need to:
+                            <br />- Create a blank .htaccess in your root directory.
+                            <br />- Give it write permissions (CHMOD 666 on Unix system).]]></source>
+        <target><![CDATA[Before being able to use this tool, you need to:
+                            <br />- Create a blank .htaccess in your root directory.
+                            <br />- Give it write permissions (CHMOD 666 on Unix system).]]></target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:795</note>
+      </trans-unit>
+      <trans-unit id="026324b2ba696031a2bbc518bd6e3a35">
+        <source>The caching system is missing.</source>
+        <target>The caching system is missing.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:830</note>
+      </trans-unit>
+      <trans-unit id="32a2e7694628335252aceb0552a6f6ba">
+        <source>To use Memcached, you must install the Memcache PECL extension on your server.</source>
+        <target>To use Memcached, you must install the Memcache PECL extension on your server.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:834</note>
+      </trans-unit>
+      <trans-unit id="4f727dc405dd5666f581c535acd93a5a">
+        <source>To use Memcached, you must install the Memcached PECL extension on your server.</source>
+        <target>To use Memcached, you must install the Memcached PECL extension on your server.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:837</note>
+      </trans-unit>
+      <trans-unit id="edf1f94126dbe21f81874c2f63a64d62">
+        <source>To use APC cache, you must install the APC PECL extension on your server.</source>
+        <target>To use APC cache, you must install the APC PECL extension on your server.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:840</note>
+      </trans-unit>
+      <trans-unit id="aadb27e7677e4c4c85e4aa747ef7626e">
+        <source>To use Xcache, you must install the Xcache extension on your server.</source>
+        <target>To use Xcache, you must install the Xcache extension on your server.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:843</note>
+      </trans-unit>
+      <trans-unit id="fd88b530d2e1c9cc6ecaf5f20aaafc6c">
+        <source>To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).</source>
+        <target>To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:846</note>
+      </trans-unit>
+      <trans-unit id="6f6a61bc2bf0a0f7a104f8c526d86206">
+        <source>The settings file cannot be overwritten.</source>
+        <target>The settings file cannot be overwritten.</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:866</note>
+      </trans-unit>
+      <trans-unit id="d4fb191ef219af010cc664bf47393e97">
+        <source>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:900</note>
+      </trans-unit>
+      <trans-unit id="667685497be44ab0fc2d4334a512405b">
+        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:906</note>
+      </trans-unit>
+      <trans-unit id="a22bb81de6e3b8e82ac5a09f2bb7e0b4">
+        <source>Error: Could not read file. Make sure that the correct permissions are set on the file %s</source>
+        <target>Error: Could not read file. Make sure that the correct permissions are set on the file %s</target>
+        <note>Context:
+File: controllers/admin/AdminPerformanceController.php:909</note>
       </trans-unit>
     </body>
   </file>
@@ -248,451 +388,55 @@ File: controllers/admin/AdminEmployeesController.php:598</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="af395851b27882221a6df82c727bca3e">
-        <source>The import directory doesn't exist. Please check your file path.</source>
-        <target>The import directory doesn't exist. Please check your file path.</target>
+      <trans-unit id="155657899b93f70358eed115631fdb04">
+        <source>Key length must be 32 character long.</source>
+        <target>Key length must be 32 character long.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:591</note>
+File: controllers/admin/AdminWebserviceController.php:249</note>
       </trans-unit>
-      <trans-unit id="c775530fad852632f78395a11820ba23">
-        <source>The import directory must be writable (CHMOD 755 / 777).</source>
-        <target>The import directory must be writable (CHMOD 755 / 777).</target>
+      <trans-unit id="441006dbdaef41a163047624fe1241ab">
+        <source>This key already exists.</source>
+        <target>This key already exists.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:595</note>
+File: controllers/admin/AdminWebserviceController.php:252</note>
       </trans-unit>
-      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
-        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
-        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
+      <trans-unit id="3a1d42e50ada009f2ef187fbf6dc8a3f">
+        <source>To avoid operating problems, please use an Apache server.</source>
+        <target>To avoid operating problems, please use an Apache server.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:696</note>
+File: controllers/admin/AdminWebserviceController.php:272</note>
       </trans-unit>
-      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
-        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
-        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
+      <trans-unit id="d6305f2f8c5c0f95a367e618a64bb458">
+        <source>Please activate the 'mod_auth_basic' Apache module to allow authentication of PrestaShop's webservice.</source>
+        <target>Please activate the 'mod_auth_basic' Apache module to allow authentication of PrestaShop's webservice.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:699</note>
+File: controllers/admin/AdminWebserviceController.php:276</note>
       </trans-unit>
-      <trans-unit id="5b8f192b08644fdc9fd1fd86bcbbc57b">
-        <source>(click to open "Generators" page)</source>
-        <target>(click to open "Generators" page)</target>
+      <trans-unit id="e11a22a5910f9f84a6630ee78e1a39f5">
+        <source>Please activate the 'mod_rewrite' Apache module to allow the PrestaShop webservice.</source>
+        <target>Please activate the 'mod_rewrite' Apache module to allow the PrestaShop webservice.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:702</note>
+File: controllers/admin/AdminWebserviceController.php:279</note>
       </trans-unit>
-      <trans-unit id="4f12b222c9659d62afa795987259933f">
-        <source>The uploaded file was only partially uploaded.</source>
-        <target>The uploaded file was only partially uploaded.</target>
+      <trans-unit id="2c19e4b707a422ddbbc4d1c32966661d">
+        <source>We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they've been activated in order to use the PrestaShop webservice.</source>
+        <target>We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they've been activated in order to use the PrestaShop webservice.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:706</note>
+File: controllers/admin/AdminWebserviceController.php:282</note>
       </trans-unit>
-      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
-        <source>No file was uploaded.</source>
-        <target>No file was uploaded.</target>
+      <trans-unit id="ab60321a106f1e1ab65b76c1ca15dd7c">
+        <source>Please activate the 'SimpleXML' PHP extension to allow testing of PrestaShop's webservice.</source>
+        <target>Please activate the 'SimpleXML' PHP extension to allow testing of PrestaShop's webservice.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:710</note>
+File: controllers/admin/AdminWebserviceController.php:286</note>
       </trans-unit>
-      <trans-unit id="fc2e88db6e13898dab6ddf3b44c5d68a">
-        <source>The extension of your file should be .csv.</source>
-        <target>The extension of your file should be .csv.</target>
+      <trans-unit id="0508bbb36fb6b5db31edf2f45cd687ea">
+        <source>It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.</source>
+        <target>It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.</target>
         <note>Context:
-File: controllers/admin/AdminImportController.php:715</note>
-      </trans-unit>
-      <trans-unit id="50844c635a86264cc59d737d532df573">
-        <source>An error occurred while uploading / copying the file.</source>
-        <target>An error occurred while uploading / copying the file.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:718</note>
-      </trans-unit>
-      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
-        <source>To proceed, please upload a file first.</source>
-        <target>To proceed, please upload a file first.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4455</note>
-      </trans-unit>
-      <trans-unit id="a080a85258618039d010a2136f85e69f">
-        <source>There is an empty row in the file that won't be imported.</source>
-        <target>There is an empty row in the file that won't be imported.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3651</note>
-      </trans-unit>
-      <trans-unit id="53d9fc1aa79e85c0f845139c6358daee">
-        <source>The category ID must be unique. It can't be the same as the one for Root or Home category.</source>
-        <target>The category ID must be unique. It can't be the same as the one for Root or Home category.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1273</note>
-      </trans-unit>
-      <trans-unit id="7a1bebdbf5770873f8172ecf27b2aa50">
-        <source>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</source>
-        <target>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1295</note>
-      </trans-unit>
-      <trans-unit id="521531266ae042d0725d7a4aa22a49f4">
-        <source>A category can't be its own parent. You should rename it (current name: %1$s).</source>
-        <target>A category can't be its own parent. You should rename it (current name: %1$s).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1309</note>
-      </trans-unit>
-      <trans-unit id="43bf950e043950e2da10f917b902c131">
-        <source>%1$s (ID: %2$s) cannot be saved</source>
-        <target>%1$s (ID: %2$s) cannot be saved</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3772</note>
-      </trans-unit>
-      <trans-unit id="86b00089e0a8e76925f3d4b28ef43317">
-        <source>URL rewriting failed to auto-generate a friendly URL for: %s</source>
-        <target>URL rewriting failed to auto-generate a friendly URL for: %s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1364</note>
-      </trans-unit>
-      <trans-unit id="4798b868d51d8e259321deff0452c0f9">
-        <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
-        <target>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1819</note>
-      </trans-unit>
-      <trans-unit id="a118c8120ef45c8b1bed36f341fa45f1">
-        <source>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</source>
-        <target>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1396</note>
-      </trans-unit>
-      <trans-unit id="7bc08d1a3178f4927b2c07a18f417b4b">
-        <source>The root category cannot be modified.</source>
-        <target>The root category cannot be modified.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1414</note>
-      </trans-unit>
-      <trans-unit id="50fe5f166bc7695a0c0db12ea8a346e7">
-        <source>cannot be copied.</source>
-        <target>cannot be copied.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3686</note>
-      </trans-unit>
-      <trans-unit id="87098ca5171ae766269f50b24ef3189d">
-        <source>%1$s (ID: %2$s) cannot be %3$s</source>
-        <target>%1$s (ID: %2$s) cannot be %3$s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1437</note>
-      </trans-unit>
-      <trans-unit id="2666baaca25feea0b2dc641cfab50d8a">
-        <source>Unknown tax rule group ID. You need to create a group with this ID first.</source>
-        <target>Unknown tax rule group ID. You need to create a group with this ID first.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1669</note>
-      </trans-unit>
-      <trans-unit id="d99f26740f41fec60f4ec3302c8abec6">
-        <source>%1$s cannot be saved</source>
-        <target>%1$s cannot be saved</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1790</note>
-      </trans-unit>
-      <trans-unit id="32fa1d06b5d0a192c9991c4bf038b30c">
-        <source>Shop is not valid</source>
-        <target>Shop is not valid</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:1943</note>
-      </trans-unit>
-      <trans-unit id="87aae49bd054f2cfa4b7b395dee5f2d3">
-        <source>Discount is invalid</source>
-        <target>Discount is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2018</note>
-      </trans-unit>
-      <trans-unit id="664d4132fc8dc3a158be4692b4246528">
-        <source>Tags list is invalid</source>
-        <target>Tags list is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2048</note>
-      </trans-unit>
-      <trans-unit id="58ea14ba16169d5bee49c8b87265a1f6">
-        <source>Error copying image: %s</source>
-        <target>Error copying image: %s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2420</note>
-      </trans-unit>
-      <trans-unit id="ab054e32acddee1ba3ca0eed6a01fa04">
-        <source>Product #%1$d: the picture (%2$s) cannot be saved.</source>
-        <target>Product #%1$d: the picture (%2$s) cannot be saved.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2113</note>
-      </trans-unit>
-      <trans-unit id="72f371934700495cf4577d651d893062">
-        <source>Advanced stock management has incorrect value. Not set for product %1$s </source>
-        <target>Advanced stock management has incorrect value. Not set for product %1$s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2157</note>
-      </trans-unit>
-      <trans-unit id="3f0e9ea4ef36840b91e260412dd86277">
-        <source>Advanced stock management is not enabled, cannot enable on product %1$s </source>
-        <target>Advanced stock management is not enabled, cannot enable on product %1$s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2159</note>
-      </trans-unit>
-      <trans-unit id="9c98aa7840c0e4678f15ef30e940d6e3">
-        <source>Advanced stock management is not enabled, warehouse not set on product %1$s </source>
-        <target>Advanced stock management is not enabled, warehouse not set on product %1$s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2172</note>
-      </trans-unit>
-      <trans-unit id="2882774e4ec018d3ea9e4072cb2ee5c7">
-        <source>Warehouse did not exist, cannot set on product %1$s.</source>
-        <target>Warehouse did not exist, cannot set on product %1$s.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2717</note>
-      </trans-unit>
-      <trans-unit id="05a4ef007052620ef82d7f310722c5c8">
-        <source>Incorrect value for "Depends on stock" for product %1$s </source>
-        <target>Incorrect value for "Depends on stock" for product %1$s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2200</note>
-      </trans-unit>
-      <trans-unit id="3375ea6446150e66aa0f87a15c9f3a1b">
-        <source>Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s </source>
-        <target>Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2727</note>
-      </trans-unit>
-      <trans-unit id="3818f5098eb424045680b8037035a97c">
-        <source>%s cannot be saved</source>
-        <target>%s cannot be saved</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3749</note>
-      </trans-unit>
-      <trans-unit id="5c8707f79dbdd3abb28a8aa09e34f02f">
-        <source>No image was found for combination with id_product = %s and image position = %s.</source>
-        <target>No image was found for combination with id_product = %s and image position = %s.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2457</note>
-      </trans-unit>
-      <trans-unit id="09c8816f408ca93f87bc69aba0a07d10">
-        <source>EAN13 "%1s" has incorrect value for product with id %2d.</source>
-        <target>EAN13 "%1s" has incorrect value for product with id %2d.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2575</note>
-      </trans-unit>
-      <trans-unit id="315cc26c8e5bb6894b7ecd688b197ed1">
-        <source>Advanced stock management has incorrect value. Not set for product with id %d.</source>
-        <target>Advanced stock management has incorrect value. Not set for product with id %d.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2686</note>
-      </trans-unit>
-      <trans-unit id="13b1d269e4e3d55b68f561ae5348addd">
-        <source>Advanced stock management is not enabled, cannot enable on product with id %d.</source>
-        <target>Advanced stock management is not enabled, cannot enable on product with id %d.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2688</note>
-      </trans-unit>
-      <trans-unit id="2c4291fc4b59696fb964af5182c8e2ca">
-        <source>Advanced stock management is not enabled, warehouse is not set on product with id %d.</source>
-        <target>Advanced stock management is not enabled, warehouse is not set on product with id %d.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:2701</note>
-      </trans-unit>
-      <trans-unit id="fd6d9d3ba7d4aaacc49f53c2e8c082c0">
-        <source>Email address %1$s (ID: %2$s) cannot be validated.</source>
-        <target>Email address %1$s (ID: %2$s) cannot be validated.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3007</note>
-      </trans-unit>
-      <trans-unit id="9a19980e3db9fa010269bb72d31ee42a">
-        <source>Email address %1$s (ID: %2$s) cannot be saved.</source>
-        <target>Email address %1$s (ID: %2$s) cannot be saved.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3016</note>
-      </trans-unit>
-      <trans-unit id="14118fbc7d8c233f0ac36ffb31716605">
-        <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</source>
-        <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3190</note>
-      </trans-unit>
-      <trans-unit id="597cf702e07f3b35431d2a499b00cefd">
-        <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</source>
-        <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3200</note>
-      </trans-unit>
-      <trans-unit id="355aea3f1c2b10f3f82819ef338ecc22">
-        <source>"%s" is not a valid email address.</source>
-        <target>"%s" is not a valid email address.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3177</note>
-      </trans-unit>
-      <trans-unit id="4a69d9da990728e003654d32a0b283a4">
-        <source>The customer ID #%d does not exist in the database, and therefore cannot be validated.</source>
-        <target>The customer ID #%d does not exist in the database, and therefore cannot be validated.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3213</note>
-      </trans-unit>
-      <trans-unit id="608ec99cc3ef74d962769c1958a1fa62">
-        <source>The customer ID #%d does not exist in the database, and therefore cannot be saved.</source>
-        <target>The customer ID #%d does not exist in the database, and therefore cannot be saved.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3221</note>
-      </trans-unit>
-      <trans-unit id="964e5a863ba051181f8f537626f5c953">
-        <source>Supplier is invalid</source>
-        <target>Supplier is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3550</note>
-      </trans-unit>
-      <trans-unit id="3cc21b7970c348679cb6a1323a2dc173">
-        <source>Alias is invalid</source>
-        <target>Alias is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3627</note>
-      </trans-unit>
-      <trans-unit id="52629716aa86c04b8d81bc7e9522463f">
-        <source>Store is invalid</source>
-        <target>Store is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3778</note>
-      </trans-unit>
-      <trans-unit id="6d5030fd40c1e08767b4b70d3786b0fb">
-        <source>Supplier ID (%d) is not valid (at line %d).</source>
-        <target>Supplier ID (%d) is not valid (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3848</note>
-      </trans-unit>
-      <trans-unit id="0c8476c5f5cdedcf296f6b3c22e0dffb">
-        <source>Lang ID (%d) is not valid (at line %d).</source>
-        <target>Lang ID (%d) is not valid (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3851</note>
-      </trans-unit>
-      <trans-unit id="95a6134288586bc854f6793506d00efd">
-        <source>Warehouse ID (%d) is not valid (at line %d).</source>
-        <target>Warehouse ID (%d) is not valid (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3854</note>
-      </trans-unit>
-      <trans-unit id="8fb2f7240d1cbeb86010e76827af5751">
-        <source>Currency ID (%d) is not valid (at line %d).</source>
-        <target>Currency ID (%d) is not valid (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3857</note>
-      </trans-unit>
-      <trans-unit id="2eca847eb03cb63596621d5480ca7c24">
-        <source>Reference (%s) already exists (at line %d).</source>
-        <target>Reference (%s) already exists (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3863</note>
-      </trans-unit>
-      <trans-unit id="f49f836c284f6cc5cc41737dfab70cc2">
-        <source>Date format (%s) is not valid (at line %d). It should be: %s.</source>
-        <target>Date format (%s) is not valid (at line %d). It should be: %s.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3866</note>
-      </trans-unit>
-      <trans-unit id="70e7a6fcceb39a1e3ea3925182b85d18">
-        <source>YYYY-MM-DD</source>
-        <target>YYYY-MM-DD</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3868</note>
-      </trans-unit>
-      <trans-unit id="c8d9173d79c5d4c90be6f9daaec5f617">
-        <source>Date (%s) cannot be in the past (at line %d). Format: %s.</source>
-        <target>Date (%s) cannot be in the past (at line %d). Format: %s.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3868</note>
-      </trans-unit>
-      <trans-unit id="8f7627c77b01dc968a9665c0156da405">
-        <source>Discount rate (%d) is not valid (at line %d). %s.</source>
-        <target>Discount rate (%d) is not valid (at line %d). %s.</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4015</note>
-      </trans-unit>
-      <trans-unit id="ef1a78ea7433cfc92f358d6dbf4fcd48">
-        <source>Format: Between 0 and 100</source>
-        <target>Format: Between 0 and 100</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4026</note>
-      </trans-unit>
-      <trans-unit id="8985093401a36bb0b31a127caccfaf0d">
-        <source>Supply Order (%d) is not editable (at line %d).</source>
-        <target>Supply Order (%d) is not editable (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3874</note>
-      </trans-unit>
-      <trans-unit id="6afcfa28445fa35c1f6618a471891ed8">
-        <source>Supply Order could not be saved (at line %d).</source>
-        <target>Supply Order could not be saved (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3905</note>
-      </trans-unit>
-      <trans-unit id="bb19d4490bdc48656603c0a7ef30db73">
-        <source>Supply Order (%s) could not be loaded (at line %d).</source>
-        <target>Supply Order (%s) could not be loaded (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3971</note>
-      </trans-unit>
-      <trans-unit id="5e063c49ce8203f2ca7a496da24b819e">
-        <source>Product/Attribute (%d/%d) cannot be added twice (at line %d).</source>
-        <target>Product/Attribute (%d/%d) cannot be added twice (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:3989</note>
-      </trans-unit>
-      <trans-unit id="0a657a7416c29bdc5b134b61b863e7ee">
-        <source>Product (%d/%d) is not available for this order (at line %d).</source>
-        <target>Product (%d/%d) is not available for this order (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4001</note>
-      </trans-unit>
-      <trans-unit id="ca676c9ec4e1ae9fe9df3ac28910e6ef">
-        <source>Unit Price (tax excl.) (%d) is not valid (at line %d).</source>
-        <target>Unit Price (tax excl.) (%d) is not valid (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4008</note>
-      </trans-unit>
-      <trans-unit id="406eba9770c82a84cae2d6ee3e846a56">
-        <source>Quantity Expected (%d) is not valid (at line %d).</source>
-        <target>Quantity Expected (%d) is not valid (at line %d).</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4023</note>
-      </trans-unit>
-      <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
-        <source>Cannot read the .CSV file</source>
-        <target>Cannot read the .CSV file</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4112</note>
-      </trans-unit>
-      <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
-        <source>Linking Accessories...</source>
-        <target>Linking Accessories...</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4367</note>
-      </trans-unit>
-      <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
-        <source>%s import</source>
-        <target>%s import</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4443</note>
-      </trans-unit>
-      <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
-        <source>(from %s to %s)</source>
-        <target>(from %s to %s)</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4445</note>
-      </trans-unit>
-      <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
-        <source>with truncate</source>
-        <target>with truncate</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4448</note>
-      </trans-unit>
-      <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
-        <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
-        <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4576</note>
-      </trans-unit>
-      <trans-unit id="fa072aec56f675fa4e267c90bac014a6">
-        <source>Importing...</source>
-        <target>Importing...</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:4590</note>
+File: controllers/admin/AdminWebserviceController.php:289</note>
       </trans-unit>
     </body>
   </file>
@@ -826,164 +570,6 @@ File: controllers/admin/AdminInformationController.php:131</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminPerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="fff137fc306769c3d7db8aacd682cf02">
-        <source>(the directory %s must be writable)</source>
-        <target>(the directory %s must be writable)</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:134</note>
-      </trans-unit>
-      <trans-unit id="023d53a99c8074e823e5b2db4c19dfa4">
-        <source>(you must install the [a]Memcache PECL extension[/a])</source>
-        <target>(you must install the [a]Memcache PECL extension[/a])</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:466</note>
-      </trans-unit>
-      <trans-unit id="82742001d67f4446f50d68908f0f8b96">
-        <source>(you must install the [a]Memcached PECL extension[/a])</source>
-        <target>(you must install the [a]Memcached PECL extension[/a])</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:474</note>
-      </trans-unit>
-      <trans-unit id="78ae94b19fc38f9a35d20bc67cde2d61">
-        <source>(you must install the [a]APC PECL extension[/a])</source>
-        <target>(you must install the [a]APC PECL extension[/a])</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:482</note>
-      </trans-unit>
-      <trans-unit id="8b763a82c2aa7875f3da39399ba350d7">
-        <source>(you must install the [a]Xcache extension[/a])</source>
-        <target>(you must install the [a]Xcache extension[/a])</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:490</note>
-      </trans-unit>
-      <trans-unit id="0c34331bf9aad4193a8ba2cc52502dff">
-        <source>The Memcached IP is missing.</source>
-        <target>The Memcached IP is missing.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:621</note>
-      </trans-unit>
-      <trans-unit id="a862d237b9d1b0ee4e704ce981eea63a">
-        <source>The Memcached port is missing.</source>
-        <target>The Memcached port is missing.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:624</note>
-      </trans-unit>
-      <trans-unit id="b31cf7fa72a130f2727c6add7cb6dd4c">
-        <source>The Memcached weight is missing.</source>
-        <target>The Memcached weight is missing.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:627</note>
-      </trans-unit>
-      <trans-unit id="9ad28fef1c6184adfe7397838891ba76">
-        <source>The Memcached server cannot be added.</source>
-        <target>The Memcached server cannot be added.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:635</note>
-      </trans-unit>
-      <trans-unit id="bf4ddd37d9f82a3ad1f405891dfaa235">
-        <source>There was an error when attempting to delete the Memcached server.</source>
-        <target>There was an error when attempting to delete the Memcached server.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:648</note>
-      </trans-unit>
-      <trans-unit id="525bb5c93bbb92dd0a3e8378a43ee1e7">
-        <source>To use Smarty Cache, the directory %directorypath% must be writable.</source>
-        <target>To use Smarty Cache, the directory %directorypath% must be writable.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:704</note>
-      </trans-unit>
-      <trans-unit id="79b2a5e09f30660e30830ffc336ffb7c">
-        <source><![CDATA[Before being able to use this tool, you need to:
-                            <br />- Create a blank .htaccess in your root directory.
-                            <br />- Give it write permissions (CHMOD 666 on Unix system).]]></source>
-        <target><![CDATA[Before being able to use this tool, you need to:
-                            <br />- Create a blank .htaccess in your root directory.
-                            <br />- Give it write permissions (CHMOD 666 on Unix system).]]></target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:791</note>
-      </trans-unit>
-      <trans-unit id="ea030df6cb392bef66cde22c94578ae4">
-        <source>Media server #1 is invalid</source>
-        <target>Media server #1 is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:753</note>
-      </trans-unit>
-      <trans-unit id="32d841e578ff7560bbaeda96f5328e9e">
-        <source>Media server #2 is invalid</source>
-        <target>Media server #2 is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:756</note>
-      </trans-unit>
-      <trans-unit id="63ae8982fa76c668cbfc774ccf083d26">
-        <source>Media server #3 is invalid</source>
-        <target>Media server #3 is invalid</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:759</note>
-      </trans-unit>
-      <trans-unit id="026324b2ba696031a2bbc518bd6e3a35">
-        <source>The caching system is missing.</source>
-        <target>The caching system is missing.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:826</note>
-      </trans-unit>
-      <trans-unit id="32a2e7694628335252aceb0552a6f6ba">
-        <source>To use Memcached, you must install the Memcache PECL extension on your server.</source>
-        <target>To use Memcached, you must install the Memcache PECL extension on your server.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:830</note>
-      </trans-unit>
-      <trans-unit id="4f727dc405dd5666f581c535acd93a5a">
-        <source>To use Memcached, you must install the Memcached PECL extension on your server.</source>
-        <target>To use Memcached, you must install the Memcached PECL extension on your server.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:833</note>
-      </trans-unit>
-      <trans-unit id="edf1f94126dbe21f81874c2f63a64d62">
-        <source>To use APC cache, you must install the APC PECL extension on your server.</source>
-        <target>To use APC cache, you must install the APC PECL extension on your server.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:836</note>
-      </trans-unit>
-      <trans-unit id="aadb27e7677e4c4c85e4aa747ef7626e">
-        <source>To use Xcache, you must install the Xcache extension on your server.</source>
-        <target>To use Xcache, you must install the Xcache extension on your server.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:839</note>
-      </trans-unit>
-      <trans-unit id="fd88b530d2e1c9cc6ecaf5f20aaafc6c">
-        <source>To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).</source>
-        <target>To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:842</note>
-      </trans-unit>
-      <trans-unit id="6f6a61bc2bf0a0f7a104f8c526d86206">
-        <source>The settings file cannot be overwritten.</source>
-        <target>The settings file cannot be overwritten.</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:862</note>
-      </trans-unit>
-      <trans-unit id="d4fb191ef219af010cc664bf47393e97">
-        <source>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: Could not find whether debug mode is enabled. Make sure that the correct permissions are set on the file %s</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:896</note>
-      </trans-unit>
-      <trans-unit id="667685497be44ab0fc2d4334a512405b">
-        <source>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: Could not write to file. Make sure that the correct permissions are set on the file %s</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:902</note>
-      </trans-unit>
-      <trans-unit id="a22bb81de6e3b8e82ac5a09f2bb7e0b4">
-        <source>Error: Could not read file. Make sure that the correct permissions are set on the file %s</source>
-        <target>Error: Could not read file. Make sure that the correct permissions are set on the file %s</target>
-        <note>Context:
-File: controllers/admin/AdminPerformanceController.php:905</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminProfilesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7d6f235518e595f4e988b6811d2ceeab">
@@ -991,6 +577,28 @@ File: controllers/admin/AdminPerformanceController.php:905</note>
         <target>For security reasons, you cannot delete the Administrator's profile.</target>
         <note>Context:
 File: controllers/admin/AdminProfilesController.php:100</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3235afa1d3eec16220f80e4acd0dd8da">
+        <source>You cannot have two shops with the same name in the same group.</source>
+        <target>You cannot have two shops with the same name in the same group.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:241</note>
+      </trans-unit>
+      <trans-unit id="55d56a8de1af2dc393f6bf33e873f0b4">
+        <source>Unable to load this shop.</source>
+        <target>Unable to load this shop.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:266</note>
+      </trans-unit>
+      <trans-unit id="cf52c411b5659457074fd9962435307f">
+        <source>You need to select at least the root category.</source>
+        <target>You need to select at least the root category.</target>
+        <note>Context:
+File: controllers/admin/AdminShopController.php:637</note>
       </trans-unit>
     </body>
   </file>
@@ -1062,115 +670,843 @@ File: controllers/admin/AdminRequestSqlController.php:506</note>
         <note>Context:
 File: controllers/admin/AdminRequestSqlController.php:514</note>
       </trans-unit>
-      <trans-unit id="7e5c57294aa1779581e33d6af9d85600">
-        <source>Is an unauthorized keyword.</source>
-        <target>Is an unauthorized keyword.</target>
+      <trans-unit id="890f261dbde9c8c5ac0a40c74b1a3a2c">
+        <source>"%s" is an unauthorized keyword.</source>
+        <target>"%s" is an unauthorized keyword.</target>
         <note>Context:
 File: controllers/admin/AdminRequestSqlController.php:523</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3235afa1d3eec16220f80e4acd0dd8da">
-        <source>You cannot have two shops with the same name in the same group.</source>
-        <target>You cannot have two shops with the same name in the same group.</target>
+      <trans-unit id="af395851b27882221a6df82c727bca3e">
+        <source>The import directory doesn't exist. Please check your file path.</source>
+        <target>The import directory doesn't exist. Please check your file path.</target>
         <note>Context:
-File: controllers/admin/AdminShopController.php:241</note>
+File: controllers/admin/AdminImportController.php:591</note>
       </trans-unit>
-      <trans-unit id="55d56a8de1af2dc393f6bf33e873f0b4">
-        <source>Unable to load this shop.</source>
-        <target>Unable to load this shop.</target>
+      <trans-unit id="c775530fad852632f78395a11820ba23">
+        <source>The import directory must be writable (CHMOD 755 / 777).</source>
+        <target>The import directory must be writable (CHMOD 755 / 777).</target>
         <note>Context:
-File: controllers/admin/AdminShopController.php:266</note>
+File: controllers/admin/AdminImportController.php:595</note>
       </trans-unit>
-      <trans-unit id="cf52c411b5659457074fd9962435307f">
-        <source>You need to select at least the root category.</source>
-        <target>You need to select at least the root category.</target>
+      <trans-unit id="68e8d36b17584f88614fb3201925a7ac">
+        <source>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</source>
+        <target>The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.</target>
         <note>Context:
-File: controllers/admin/AdminShopController.php:637</note>
+File: controllers/admin/AdminImportController.php:696</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="6e61f7cd17315db8599a202172a096d5">
-        <source>You've selected a state for a country that does not contain states.</source>
-        <target>You've selected a state for a country that does not contain states.</target>
+      <trans-unit id="0bedafc96db94da3f85caa7101944eb5">
+        <source>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</source>
+        <target>The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:</target>
         <note>Context:
-File: controllers/admin/AdminStoresController.php:333</note>
+File: controllers/admin/AdminImportController.php:699</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminTabsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5bb701014490e33a37ecdc43ce578404">
-        <source>You can't put this menu inside itself. </source>
-        <target>You can't put this menu inside itself.</target>
+      <trans-unit id="5b8f192b08644fdc9fd1fd86bcbbc57b">
+        <source>(click to open "Generators" page)</source>
+        <target>(click to open "Generators" page)</target>
         <note>Context:
-File: controllers/admin/AdminTabsController.php:293</note>
+File: controllers/admin/AdminImportController.php:702</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminWebserviceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="155657899b93f70358eed115631fdb04">
-        <source>Key length must be 32 character long.</source>
-        <target>Key length must be 32 character long.</target>
+      <trans-unit id="4f12b222c9659d62afa795987259933f">
+        <source>The uploaded file was only partially uploaded.</source>
+        <target>The uploaded file was only partially uploaded.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:249</note>
+File: controllers/admin/AdminImportController.php:706</note>
       </trans-unit>
-      <trans-unit id="441006dbdaef41a163047624fe1241ab">
-        <source>This key already exists.</source>
-        <target>This key already exists.</target>
+      <trans-unit id="8c9067e52e4440d8a20e74fdc745b0c6">
+        <source>No file was uploaded.</source>
+        <target>No file was uploaded.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:252</note>
+File: controllers/admin/AdminImportController.php:710</note>
       </trans-unit>
-      <trans-unit id="3a1d42e50ada009f2ef187fbf6dc8a3f">
-        <source>To avoid operating problems, please use an Apache server.</source>
-        <target>To avoid operating problems, please use an Apache server.</target>
+      <trans-unit id="fc2e88db6e13898dab6ddf3b44c5d68a">
+        <source>The extension of your file should be .csv.</source>
+        <target>The extension of your file should be .csv.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:272</note>
+File: controllers/admin/AdminImportController.php:715</note>
       </trans-unit>
-      <trans-unit id="d6305f2f8c5c0f95a367e618a64bb458">
-        <source>Please activate the 'mod_auth_basic' Apache module to allow authentication of PrestaShop's webservice.</source>
-        <target>Please activate the 'mod_auth_basic' Apache module to allow authentication of PrestaShop's webservice.</target>
+      <trans-unit id="50844c635a86264cc59d737d532df573">
+        <source>An error occurred while uploading / copying the file.</source>
+        <target>An error occurred while uploading / copying the file.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:276</note>
+File: controllers/admin/AdminImportController.php:718</note>
       </trans-unit>
-      <trans-unit id="e11a22a5910f9f84a6630ee78e1a39f5">
-        <source>Please activate the 'mod_rewrite' Apache module to allow the PrestaShop webservice.</source>
-        <target>Please activate the 'mod_rewrite' Apache module to allow the PrestaShop webservice.</target>
+      <trans-unit id="197f1953efd11637a634a7f9b269eac3">
+        <source>To proceed, please upload a file first.</source>
+        <target>To proceed, please upload a file first.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:279</note>
+File: controllers/admin/AdminImportController.php:4480</note>
       </trans-unit>
-      <trans-unit id="2c19e4b707a422ddbbc4d1c32966661d">
-        <source>We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they've been activated in order to use the PrestaShop webservice.</source>
-        <target>We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they've been activated in order to use the PrestaShop webservice.</target>
+      <trans-unit id="a080a85258618039d010a2136f85e69f">
+        <source>There is an empty row in the file that won't be imported.</source>
+        <target>There is an empty row in the file that won't be imported.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:282</note>
+File: controllers/admin/AdminImportController.php:3670</note>
       </trans-unit>
-      <trans-unit id="ab60321a106f1e1ab65b76c1ca15dd7c">
-        <source>Please activate the 'SimpleXML' PHP extension to allow testing of PrestaShop's webservice.</source>
-        <target>Please activate the 'SimpleXML' PHP extension to allow testing of PrestaShop's webservice.</target>
+      <trans-unit id="53d9fc1aa79e85c0f845139c6358daee">
+        <source>The category ID must be unique. It can't be the same as the one for Root or Home category.</source>
+        <target>The category ID must be unique. It can't be the same as the one for Root or Home category.</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:286</note>
+File: controllers/admin/AdminImportController.php:1273</note>
       </trans-unit>
-      <trans-unit id="0508bbb36fb6b5db31edf2f45cd687ea">
-        <source>It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.</source>
-        <target>It is preferable to use SSL (https:) for webservice calls, as it avoids the "man in the middle" type security issues.</target>
+      <trans-unit id="7a1bebdbf5770873f8172ecf27b2aa50">
+        <source>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</source>
+        <target>The category ID must be unique. It can't be the same as the one for the parent category (ID: %1$s).</target>
         <note>Context:
-File: controllers/admin/AdminWebserviceController.php:289</note>
+File: controllers/admin/AdminImportController.php:1295</note>
+      </trans-unit>
+      <trans-unit id="521531266ae042d0725d7a4aa22a49f4">
+        <source>A category can't be its own parent. You should rename it (current name: %1$s).</source>
+        <target>A category can't be its own parent. You should rename it (current name: %1$s).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1309</note>
+      </trans-unit>
+      <trans-unit id="43bf950e043950e2da10f917b902c131">
+        <source>%1$s (ID: %2$s) cannot be saved</source>
+        <target>%1$s (ID: %2$s) cannot be saved</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3797</note>
+      </trans-unit>
+      <trans-unit id="86b00089e0a8e76925f3d4b28ef43317">
+        <source>URL rewriting failed to auto-generate a friendly URL for: %s</source>
+        <target>URL rewriting failed to auto-generate a friendly URL for: %s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1364</note>
+      </trans-unit>
+      <trans-unit id="4798b868d51d8e259321deff0452c0f9">
+        <source>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</source>
+        <target>Rewrite link for %1$s (ID %2$s): re-written as %3$s.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1825</note>
+      </trans-unit>
+      <trans-unit id="a118c8120ef45c8b1bed36f341fa45f1">
+        <source>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</source>
+        <target>A category cannot be its own parent. The parent category ID is either missing or unknown (ID: %1$s).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1396</note>
+      </trans-unit>
+      <trans-unit id="7bc08d1a3178f4927b2c07a18f417b4b">
+        <source>The root category cannot be modified.</source>
+        <target>The root category cannot be modified.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1414</note>
+      </trans-unit>
+      <trans-unit id="50fe5f166bc7695a0c0db12ea8a346e7">
+        <source>cannot be copied.</source>
+        <target>cannot be copied.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3707</note>
+      </trans-unit>
+      <trans-unit id="87098ca5171ae766269f50b24ef3189d">
+        <source>%1$s (ID: %2$s) cannot be %3$s</source>
+        <target>%1$s (ID: %2$s) cannot be %3$s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1437</note>
+      </trans-unit>
+      <trans-unit id="2666baaca25feea0b2dc641cfab50d8a">
+        <source>Unknown tax rule group ID. You need to create a group with this ID first.</source>
+        <target>Unknown tax rule group ID. You need to create a group with this ID first.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1669</note>
+      </trans-unit>
+      <trans-unit id="3818f5098eb424045680b8037035a97c">
+        <source>%s cannot be saved</source>
+        <target>%s cannot be saved</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3774</note>
+      </trans-unit>
+      <trans-unit id="32fa1d06b5d0a192c9991c4bf038b30c">
+        <source>Shop is not valid</source>
+        <target>Shop is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:1949</note>
+      </trans-unit>
+      <trans-unit id="87aae49bd054f2cfa4b7b395dee5f2d3">
+        <source>Discount is invalid</source>
+        <target>Discount is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2024</note>
+      </trans-unit>
+      <trans-unit id="664d4132fc8dc3a158be4692b4246528">
+        <source>Tags list is invalid</source>
+        <target>Tags list is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2054</note>
+      </trans-unit>
+      <trans-unit id="58ea14ba16169d5bee49c8b87265a1f6">
+        <source>Error copying image: %s</source>
+        <target>Error copying image: %s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2426</note>
+      </trans-unit>
+      <trans-unit id="ab054e32acddee1ba3ca0eed6a01fa04">
+        <source>Product #%1$d: the picture (%2$s) cannot be saved.</source>
+        <target>Product #%1$d: the picture (%2$s) cannot be saved.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2119</note>
+      </trans-unit>
+      <trans-unit id="72f371934700495cf4577d651d893062">
+        <source>Advanced stock management has incorrect value. Not set for product %1$s </source>
+        <target>Advanced stock management has incorrect value. Not set for product %1$s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2163</note>
+      </trans-unit>
+      <trans-unit id="3f0e9ea4ef36840b91e260412dd86277">
+        <source>Advanced stock management is not enabled, cannot enable on product %1$s </source>
+        <target>Advanced stock management is not enabled, cannot enable on product %1$s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2165</note>
+      </trans-unit>
+      <trans-unit id="9c98aa7840c0e4678f15ef30e940d6e3">
+        <source>Advanced stock management is not enabled, warehouse not set on product %1$s </source>
+        <target>Advanced stock management is not enabled, warehouse not set on product %1$s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2178</note>
+      </trans-unit>
+      <trans-unit id="2882774e4ec018d3ea9e4072cb2ee5c7">
+        <source>Warehouse did not exist, cannot set on product %1$s.</source>
+        <target>Warehouse did not exist, cannot set on product %1$s.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2724</note>
+      </trans-unit>
+      <trans-unit id="05a4ef007052620ef82d7f310722c5c8">
+        <source>Incorrect value for "Depends on stock" for product %1$s </source>
+        <target>Incorrect value for "Depends on stock" for product %1$s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2206</note>
+      </trans-unit>
+      <trans-unit id="3375ea6446150e66aa0f87a15c9f3a1b">
+        <source>Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s </source>
+        <target>Advanced stock management is not enabled, cannot set "Depends on stock" for product %1$s</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2734</note>
+      </trans-unit>
+      <trans-unit id="994e8f1b72a9fe7a9e8949343be6bde7">
+        <source>%data% cannot be saved</source>
+        <target>%data% cannot be saved</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3114</note>
+      </trans-unit>
+      <trans-unit id="5c8707f79dbdd3abb28a8aa09e34f02f">
+        <source>No image was found for combination with id_product = %s and image position = %s.</source>
+        <target>No image was found for combination with id_product = %s and image position = %s.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2464</note>
+      </trans-unit>
+      <trans-unit id="09c8816f408ca93f87bc69aba0a07d10">
+        <source>EAN13 "%1s" has incorrect value for product with id %2d.</source>
+        <target>EAN13 "%1s" has incorrect value for product with id %2d.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2582</note>
+      </trans-unit>
+      <trans-unit id="315cc26c8e5bb6894b7ecd688b197ed1">
+        <source>Advanced stock management has incorrect value. Not set for product with id %d.</source>
+        <target>Advanced stock management has incorrect value. Not set for product with id %d.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2693</note>
+      </trans-unit>
+      <trans-unit id="13b1d269e4e3d55b68f561ae5348addd">
+        <source>Advanced stock management is not enabled, cannot enable on product with id %d.</source>
+        <target>Advanced stock management is not enabled, cannot enable on product with id %d.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2695</note>
+      </trans-unit>
+      <trans-unit id="2c4291fc4b59696fb964af5182c8e2ca">
+        <source>Advanced stock management is not enabled, warehouse is not set on product with id %d.</source>
+        <target>Advanced stock management is not enabled, warehouse is not set on product with id %d.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:2708</note>
+      </trans-unit>
+      <trans-unit id="fd6d9d3ba7d4aaacc49f53c2e8c082c0">
+        <source>Email address %1$s (ID: %2$s) cannot be validated.</source>
+        <target>Email address %1$s (ID: %2$s) cannot be validated.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3014</note>
+      </trans-unit>
+      <trans-unit id="9a19980e3db9fa010269bb72d31ee42a">
+        <source>Email address %1$s (ID: %2$s) cannot be saved.</source>
+        <target>Email address %1$s (ID: %2$s) cannot be saved.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3023</note>
+      </trans-unit>
+      <trans-unit id="14118fbc7d8c233f0ac36ffb31716605">
+        <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</source>
+        <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be validated</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3209</note>
+      </trans-unit>
+      <trans-unit id="597cf702e07f3b35431d2a499b00cefd">
+        <source>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</source>
+        <target>%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3219</note>
+      </trans-unit>
+      <trans-unit id="355aea3f1c2b10f3f82819ef338ecc22">
+        <source>"%s" is not a valid email address.</source>
+        <target>"%s" is not a valid email address.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3196</note>
+      </trans-unit>
+      <trans-unit id="4a69d9da990728e003654d32a0b283a4">
+        <source>The customer ID #%d does not exist in the database, and therefore cannot be validated.</source>
+        <target>The customer ID #%d does not exist in the database, and therefore cannot be validated.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3232</note>
+      </trans-unit>
+      <trans-unit id="608ec99cc3ef74d962769c1958a1fa62">
+        <source>The customer ID #%d does not exist in the database, and therefore cannot be saved.</source>
+        <target>The customer ID #%d does not exist in the database, and therefore cannot be saved.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3240</note>
+      </trans-unit>
+      <trans-unit id="964e5a863ba051181f8f537626f5c953">
+        <source>Supplier is invalid</source>
+        <target>Supplier is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3569</note>
+      </trans-unit>
+      <trans-unit id="3cc21b7970c348679cb6a1323a2dc173">
+        <source>Alias is invalid</source>
+        <target>Alias is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3646</note>
+      </trans-unit>
+      <trans-unit id="52629716aa86c04b8d81bc7e9522463f">
+        <source>Store is invalid</source>
+        <target>Store is invalid</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3803</note>
+      </trans-unit>
+      <trans-unit id="6d5030fd40c1e08767b4b70d3786b0fb">
+        <source>Supplier ID (%d) is not valid (at line %d).</source>
+        <target>Supplier ID (%d) is not valid (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3873</note>
+      </trans-unit>
+      <trans-unit id="0c8476c5f5cdedcf296f6b3c22e0dffb">
+        <source>Lang ID (%d) is not valid (at line %d).</source>
+        <target>Lang ID (%d) is not valid (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3876</note>
+      </trans-unit>
+      <trans-unit id="95a6134288586bc854f6793506d00efd">
+        <source>Warehouse ID (%d) is not valid (at line %d).</source>
+        <target>Warehouse ID (%d) is not valid (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3879</note>
+      </trans-unit>
+      <trans-unit id="8fb2f7240d1cbeb86010e76827af5751">
+        <source>Currency ID (%d) is not valid (at line %d).</source>
+        <target>Currency ID (%d) is not valid (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3882</note>
+      </trans-unit>
+      <trans-unit id="2eca847eb03cb63596621d5480ca7c24">
+        <source>Reference (%s) already exists (at line %d).</source>
+        <target>Reference (%s) already exists (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3888</note>
+      </trans-unit>
+      <trans-unit id="f49f836c284f6cc5cc41737dfab70cc2">
+        <source>Date format (%s) is not valid (at line %d). It should be: %s.</source>
+        <target>Date format (%s) is not valid (at line %d). It should be: %s.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3891</note>
+      </trans-unit>
+      <trans-unit id="70e7a6fcceb39a1e3ea3925182b85d18">
+        <source>YYYY-MM-DD</source>
+        <target>YYYY-MM-DD</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3893</note>
+      </trans-unit>
+      <trans-unit id="c8d9173d79c5d4c90be6f9daaec5f617">
+        <source>Date (%s) cannot be in the past (at line %d). Format: %s.</source>
+        <target>Date (%s) cannot be in the past (at line %d). Format: %s.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3893</note>
+      </trans-unit>
+      <trans-unit id="8f7627c77b01dc968a9665c0156da405">
+        <source>Discount rate (%d) is not valid (at line %d). %s.</source>
+        <target>Discount rate (%d) is not valid (at line %d). %s.</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4040</note>
+      </trans-unit>
+      <trans-unit id="ef1a78ea7433cfc92f358d6dbf4fcd48">
+        <source>Format: Between 0 and 100</source>
+        <target>Format: Between 0 and 100</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4051</note>
+      </trans-unit>
+      <trans-unit id="8985093401a36bb0b31a127caccfaf0d">
+        <source>Supply Order (%d) is not editable (at line %d).</source>
+        <target>Supply Order (%d) is not editable (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3899</note>
+      </trans-unit>
+      <trans-unit id="6afcfa28445fa35c1f6618a471891ed8">
+        <source>Supply Order could not be saved (at line %d).</source>
+        <target>Supply Order could not be saved (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3930</note>
+      </trans-unit>
+      <trans-unit id="bb19d4490bdc48656603c0a7ef30db73">
+        <source>Supply Order (%s) could not be loaded (at line %d).</source>
+        <target>Supply Order (%s) could not be loaded (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:3996</note>
+      </trans-unit>
+      <trans-unit id="5e063c49ce8203f2ca7a496da24b819e">
+        <source>Product/Attribute (%d/%d) cannot be added twice (at line %d).</source>
+        <target>Product/Attribute (%d/%d) cannot be added twice (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4014</note>
+      </trans-unit>
+      <trans-unit id="0a657a7416c29bdc5b134b61b863e7ee">
+        <source>Product (%d/%d) is not available for this order (at line %d).</source>
+        <target>Product (%d/%d) is not available for this order (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4026</note>
+      </trans-unit>
+      <trans-unit id="ca676c9ec4e1ae9fe9df3ac28910e6ef">
+        <source>Unit Price (tax excl.) (%d) is not valid (at line %d).</source>
+        <target>Unit Price (tax excl.) (%d) is not valid (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4033</note>
+      </trans-unit>
+      <trans-unit id="406eba9770c82a84cae2d6ee3e846a56">
+        <source>Quantity Expected (%d) is not valid (at line %d).</source>
+        <target>Quantity Expected (%d) is not valid (at line %d).</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4048</note>
+      </trans-unit>
+      <trans-unit id="243c959202a4f6ce7f1ccba6bc19ff08">
+        <source>Cannot read the .CSV file</source>
+        <target>Cannot read the .CSV file</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4137</note>
+      </trans-unit>
+      <trans-unit id="931bbbb741d025e3ff25ee3c2e72f414">
+        <source>Linking Accessories...</source>
+        <target>Linking Accessories...</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4392</note>
+      </trans-unit>
+      <trans-unit id="d165f0c742c272ed88dc27acc91e2642">
+        <source>%s import</source>
+        <target>%s import</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4468</note>
+      </trans-unit>
+      <trans-unit id="02b5205ddff3073efc5c8b5b9cc165ba">
+        <source>(from %s to %s)</source>
+        <target>(from %s to %s)</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4470</note>
+      </trans-unit>
+      <trans-unit id="b53b06c0e98a2db123f953f0059a0948">
+        <source>with truncate</source>
+        <target>with truncate</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4473</note>
+      </trans-unit>
+      <trans-unit id="32de857e46ef2b55ce3582004fef7a95">
+        <source>The confirmation email couldn't be sent, but the import is successful. Yay!</source>
+        <target>The confirmation email couldn't be sent, but the import is successful. Yay!</target>
+        <note>Context:
+File: controllers/admin/AdminImportController.php:4601</note>
       </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="d85366190ecd2aebf8363980ad9d6740">
+        <source>Importing your data...</source>
+        <target>Importing your data...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="8a1d14318cfc965da76c0b9d0a53bb93">
+        <source>Aborting, please wait...</source>
+        <target>Aborting, please wait...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="e130ff31fe5f7a054a2db876a7acc94d">
+        <source>Data imported!</source>
+        <target>Data imported!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="118f9dbc8442c6be19dfc0b70d965929">
+        <source>Look at your listings to make sure it's all there as you wished.</source>
+        <target>Look at your listings to make sure it's all there as you wished.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="4959a069997257077022c1b96b3b8001">
+        <source>Errors occurred:</source>
+        <target>Errors occurred:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="0ccb924c3db6a900cff26de895f756b8">
+        <source>Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP "post_max_size" setting to [1]%size%[/1]MB at least, and try again.</source>
+        <target>Warning, the current import may require a PHP setting update, to allow more data to be transferred. If the current import stops before the end, you should increase your PHP "post_max_size" setting to [1]%size%[/1]MB at least, and try again.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="841e4579e55a01ab8f0c565995ba7cfc">
+        <source>Some errors were detected. Please check the details:</source>
+        <target>Some errors were detected. Please check the details:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="3df311b82f78fa4059e9a78a26e77b06">
+        <source>We made the following adjustments:</source>
+        <target>We made the following adjustments:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="6e17621d481059924339f91ed431a116">
+        <source>Validating data...</source>
+        <target>Validating data...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:57</note>
+      </trans-unit>
+      <trans-unit id="95fdb0ead4798ff27cce78fac3fd3c11">
+        <source>[1]%percentage%[/1]% validated</source>
+        <target>[1]%percentage%[/1]% validated</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="fd2f43e6f9f4de5be1b08cdac13d7749">
+        <source>Processing next page...</source>
+        <target>Processing next page...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:92</note>
+      </trans-unit>
+      <trans-unit id="f438c83e3ff4dd40a3fc1bf4bb3e79f5">
+        <source>Linking accessories...</source>
+        <target>Linking accessories...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:81</note>
+      </trans-unit>
+      <trans-unit id="2a44b5ac9f88c57f584bf083730a93f7">
+        <source>[1]%size%[/1]% imported</source>
+        <target>[1]%size%[/1]% imported</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:84</note>
+      </trans-unit>
       <trans-unit id="650e0b1fd707ad8ad3a94e2eb494de3d">
         <source>Ignore warnings and continue?</source>
         <target>Ignore warnings and continue?</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:88</note>
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:100</note>
+      </trans-unit>
+      <trans-unit id="b8388ec68dcac2402d944fbb3382b0f1">
+        <source>Abort import</source>
+        <target>Abort import</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/modal_import_progress.tpl:104</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="67df6a66c109fbe53bfa02dc398bc258">
+        <source>Can't add the voucher.</source>
+        <target>Can't add the voucher.</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:628</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/backup.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b42cd3af71fc00ef268910709255320a">
+        <source>You do not have permission to view this.</source>
+        <target>You do not have permission to view this.</target>
+        <note>Context:
+File: admin-dev/backup.php:43</note>
+      </trans-unit>
+      <trans-unit id="e38d3ed240ea149315399f76813ad836">
+        <source>There is no "/backup" directory.</source>
+        <target>There is no "/backup" directory.</target>
+        <note>Context:
+File: admin-dev/backup.php:53</note>
+      </trans-unit>
+      <trans-unit id="8a5a71bcb5b4e12673c79e3d8b1deb56">
+        <source>No file has been specified.</source>
+        <target>No file has been specified.</target>
+        <note>Context:
+File: admin-dev/backup.php:61</note>
+      </trans-unit>
+      <trans-unit id="db5aa3efeee3f75954f4a6de541f7fd2">
+        <source>Unable to open backup file(s).</source>
+        <target>Unable to open backup file(s).</target>
+        <note>Context:
+File: admin-dev/backup.php:85</note>
+      </trans-unit>
+      <trans-unit id="089426c3b86f7f52cc14c3ebf5ca5b8f">
+        <source>Unable to display backup file(s).</source>
+        <target>Unable to display backup file(s).</target>
+        <note>Context:
+File: admin-dev/backup.php:105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b04c5e39cb3460a062bba48d85567cdb">
+        <source>Administrator permissions cannot be modified.</source>
+        <target>Administrator permissions cannot be modified.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:515</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/backup/download/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="54ee283a75b8a8a38f0b4996e4e69db5">
+        <source>Disclaimer before creating a new backup</source>
+        <target>Disclaimer before creating a new backup</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:46</note>
+      </trans-unit>
+      <trans-unit id="cc6f77e8d23517366b4380f9a180655f">
+        <source>PrestaShop is open-source software. You are using it at your own risk under the license agreement.</source>
+        <target>PrestaShop is open-source software. You are using it at your own risk under the license agreement.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="99c8acd81f347dd6268fda9bf9e61b97">
+        <source>You should back up your data on a regular basis (both files and database).</source>
+        <target>You should back up your data on a regular basis (both files and database).</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="4d247cbe2dbd06ce20b9affd635e7982">
+        <source>This function only backs up your database, not your files.</source>
+        <target>This function only backs up your database, not your files.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="b2a110974050263fde4c0c7cf15013b3">
+        <source>By default, your existing database tables will be dropped during the backup recovery (see "Backup options" below).</source>
+        <target>By default, your existing database tables will be dropped during the backup recovery (see "Backup options" below).</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:52</note>
+      </trans-unit>
+      <trans-unit id="dba49284eb0830e849635506a961aa7c">
+        <source>Always verify the quality and integrity of your backup files!</source>
+        <target>Always verify the quality and integrity of your backup files!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:53</note>
+      </trans-unit>
+      <trans-unit id="5cb0e756d153cfcfac763077a5f0628c">
+        <source>Always verify that your backup files are complete, up-to-date and valid, even if you had a success message appear during the backup process.</source>
+        <target>Always verify that your backup files are complete, up-to-date and valid, even if you had a success message appear during the backup process.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:54</note>
+      </trans-unit>
+      <trans-unit id="0dc51a7afc30b342b827df535ff616f2">
+        <source>Always check your data.</source>
+        <target>Always check your data.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="804206afa5249349d8bfea4cc78c48d7">
+        <source>Never restore a backup on a live site.</source>
+        <target>Never restore a backup on a live site.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="5b739e824ccebf9cd8c5b4ef774c59a7">
+        <source>I have read the disclaimer. Please create a new backup.</source>
+        <target>I have read the disclaimer. Please create a new backup.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/download/view.tpl:61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0869c85782ee2481b83a9f580a09e963">
+        <source>PrestaShop is not responsible for your database, its backups and/or recovery.</source>
+        <target>PrestaShop is not responsible for your database, its backups and/or recovery.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:50</note>
+      </trans-unit>
+      <trans-unit id="088e7482af32200b588d22e5f0af4f94">
+        <source>How to restore a database backup</source>
+        <target>How to restore a database backup</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="bcb4db2b36ea3b1e20e5ee4aa9a68665">
+        <source>If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].</source>
+        <target>If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:71</note>
+      </trans-unit>
+      <trans-unit id="0929b3759c8eef31c299400f513072dd">
+        <source>Our team will take care of restoring your database safely.</source>
+        <target>Our team will take care of restoring your database safely.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:73</note>
+      </trans-unit>
+      <trans-unit id="c4b6a12f5f4cbbeb2353a718ee9a8a9a">
+        <source>Why can't I restore it by myself?</source>
+        <target>Why can't I restore it by myself?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="d4ef96663955ee203ce986ef40945199">
+        <source>Your shop is hosted by PrestaShop. Although you can create backup files here below, there are core settings you cannot access for security reasons, like the database management. Thus, only our team can proceed to a restoration.</source>
+        <target>Your shop is hosted by PrestaShop. Although you can create backup files here below, there are core settings you cannot access for security reasons, like the database management. Thus, only our team can proceed to a restoration.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/list/list_header.tpl:78</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/backup/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cd7fa1b4a137bf4da20f84bed6624fa5">
+        <source>Beginning the download ...</source>
+        <target>Beginning the download ...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/view/view.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="6a278621d6f2e7dbd56c7beca4081e2d">
+        <source>Backup files should automatically start downloading.</source>
+        <target>Backup files should automatically start downloading.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/view/view.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="da61b0c3311560af7fa1d9a515b309f6">
+        <source>If not,[1][2] please click here[/1]!</source>
+        <target>If not,[1][2] please click here[/1]!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/backup/helpers/view/view.tpl:34</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/performance/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1685fd092c1feefe8e80aa476f86f067">
+        <source>Do you really want to remove the server %s:%s</source>
+        <target>Do you really want to remove the server %s:%s</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/performance/helpers/form/form.tpl:116</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/request_sql/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0fe194d9bb812c48dfe35a3cf6d0af52">
+        <source>Please choose a MySQL table</source>
+        <target>Please choose a MySQL table</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/request_sql/helpers/form/form.tpl:49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3be751fc7ab3f3ced8007796fe8bde7d">
+        <source>This SQL query has no result.</source>
+        <target>This SQL query has no result.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/request_sql/helpers/view/view.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="613260718349db00d0b7b9c1eb77c76c">
+        <source>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</source>
+        <target>Your file has been successfully imported into your shop. Don't forget to re-build the products' search index.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="418dde4b22e22a725e75b2819c0373b2">
+        <source>Note that the Category import does not support having two categories with the same name.</source>
+        <target>Note that the Category import does not support having two categories with the same name.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:65</note>
+      </trans-unit>
+      <trans-unit id="b990d5cecd822de3b6922abcf71549b4">
+        <source>Note that you can have several products with the same reference.</source>
+        <target>Note that you can have several products with the same reference.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:66</note>
+      </trans-unit>
+      <trans-unit id="7ec8e6a8a53cd81e13594780931cfce5">
+        <source>Importing Supply Order Details will reset your history of ordered products, if there are any.</source>
+        <target>Importing Supply Order Details will reset your history of ordered products, if there are any.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="df6e9862566912e908ef785e860f9c71">
+        <source>Are you sure that you would like to delete this entity: </source>
+        <target>Are you sure that you would like to delete this entity: </target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:493</note>
+      </trans-unit>
+      <trans-unit id="83a1698a445036a9a65686ac61879794">
+        <source>You do not have permission to delete this. When the MultiStore mode is enabled, only a SuperAdmin can delete all items before an import.</source>
+        <target>You do not have permission to delete this. When the MultiStore mode is enabled, only a SuperAdmin can delete all items before an import.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl:497</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a2db667abfde7a08ee094d460102f268">
+        <source>Missing files</source>
+        <target>Missing files</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="b5871613cbf4ab8b21d528ff2576fcbf">
+        <source>Updated files</source>
+        <target>Updated files</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:45</note>
+      </trans-unit>
+      <trans-unit id="c49d6d58d1c98f34a15bbd169f82961a">
+        <source>Changed/missing files have been detected.</source>
+        <target>Changed/missing files have been detected.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="4757718002cbae6feee5c372b66b6a29">
+        <source>No change has been detected in your files.</source>
+        <target>No change has been detected in your files.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="e0aa021e21dddbd6d8cecec71e9cf564">
+        <source>OK</source>
+        <target>OK</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:230</note>
+      </trans-unit>
+      <trans-unit id="2ad1ffcbe2184ed25baa66baece8908b">
+        <source>Please fix the following error(s)</source>
+        <target>Please fix the following error(s)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:233</note>
+      </trans-unit>
+      <trans-unit id="d5df5b42d8fa5fed36fbd1cda0112f40">
+        <source>Checking files...</source>
+        <target>Checking files...</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/information/helpers/view/view.tpl:253</note>
       </trans-unit>
     </body>
   </file>

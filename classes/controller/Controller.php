@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -380,7 +380,11 @@ abstract class ControllerCore
                 }
             }
 
-            if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path))) {
+            if (
+                $css_path
+                && isset($this->css_files[key($css_path)])
+                && ($this->css_files[key($css_path)] == reset($css_path))
+            ) {
                 unset($this->css_files[key($css_path)]);
             }
         }
@@ -502,7 +506,6 @@ abstract class ControllerCore
                 $this->addCSS(key($plugin_path['css']), 'all', null, false);
             }
         }
-
     }
 
     /**
@@ -513,7 +516,10 @@ abstract class ControllerCore
      */
     public function isXmlHttpRequest()
     {
-        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
+        return (
+            !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+            && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+        );
     }
 
     public function getLayout()
@@ -645,7 +651,9 @@ abstract class ControllerCore
     /**
      * Construct the container of dependencies
      */
-    protected function buildContainer(){}
+    protected function buildContainer()
+    {
+    }
 
     public function get($serviceId)
     {

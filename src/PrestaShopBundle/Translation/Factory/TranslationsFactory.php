@@ -8,7 +8,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -21,7 +21,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -74,12 +74,12 @@ class TranslationsFactory implements TranslationsFactoryInterface
      *
      * @throws ProviderNotFoundException
      */
-    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null)
+    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null)
     {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
                 $treeBuilder = new TreeBuilder($locale, $theme);
-                return $treeBuilder->makeTranslationArray($provider);
+                return $treeBuilder->makeTranslationArray($provider, $search);
             }
         }
 

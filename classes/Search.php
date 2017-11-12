@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -169,9 +169,17 @@ class SearchCore
         return $string;
     }
 
-    public static function find($id_lang, $expr, $page_number = 1, $page_size = 1, $order_by = 'position',
-        $order_way = 'desc', $ajax = false, $use_cookie = true, Context $context = null)
-    {
+    public static function find(
+        $id_lang,
+        $expr,
+        $page_number = 1,
+        $page_size = 1,
+        $order_by = 'position',
+        $order_way = 'desc',
+        $ajax = false,
+        $use_cookie = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -198,21 +206,18 @@ class SearchCore
                 $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
                 $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
                 $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
+                $start_pos = (int)$word[0] == '-';
+                $sql_param_search = $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
 
-                $intersect_array[] = 'SELECT si.id_product
+                $intersect_array[] = 'SELECT DISTINCT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
 					WHERE sw.id_lang = '.(int)$id_lang.'
 						AND sw.id_shop = '.$context->shop->id.'
 						AND sw.word LIKE
-					'.($word[0] == '-'
-                        ? ' \''.$start_search.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\''
-                        : ' \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\''
-                    );
+					\''.$sql_param_search.'\'';
 
-                if ($word[0] != '-') {
-                    $score_array[] = 'sw.word LIKE \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\'';
-                }
+                $score_array[] = 'sw.word LIKE \''.$sql_param_search.'\'';
             } else {
                 unset($words[$key]);
             }
@@ -242,7 +247,7 @@ class SearchCore
         }
 
         $results = $db->executeS('
-		SELECT cp.`id_product`
+		SELECT DISTINCT cp.`id_product`
 		FROM `'._DB_PREFIX_.'category_product` cp
 		'.(Group::isFeatureActive() ? 'INNER JOIN `'._DB_PREFIX_.'category_group` cg ON cp.`id_category` = cg.`id_category`' : '').'
 		INNER JOIN `'._DB_PREFIX_.'category` c ON cp.`id_category` = c.`id_category`
@@ -258,19 +263,17 @@ class SearchCore
         foreach ($results as $row) {
             $eligible_products[] = $row['id_product'];
         }
+
+        $eligible_products2 = array();
         foreach ($intersect_array as $query) {
-            $eligible_products2 = array();
             foreach ($db->executeS($query, true, false) as $row) {
                 $eligible_products2[] = $row['id_product'];
             }
-
-            $eligible_products = array_intersect($eligible_products, $eligible_products2);
-            if (!count($eligible_products)) {
-                return ($ajax ? array() : array('total' => 0, 'result' => array()));
-            }
         }
-
-        $eligible_products = array_unique($eligible_products);
+        $eligible_products = array_unique(array_intersect($eligible_products, array_unique($eligible_products2)));
+        if (!count($eligible_products)) {
+            return ($ajax ? array() : array('total' => 0, 'result' => array()));
+        }
 
         $product_pool = '';
         foreach ($eligible_products as $id_product) {
@@ -440,16 +443,16 @@ class SearchCore
                     switch ($key) {
                         case 'pa_reference':
                             $sql .= ', pa.reference AS pa_reference';
-                        break;
+                            break;
                         case 'pa_supplier_reference':
                             $sql .= ', pa.supplier_reference AS pa_supplier_reference';
-                        break;
+                            break;
                         case 'pa_ean13':
                             $sql .= ', pa.ean13 AS pa_ean13';
-                        break;
+                            break;
                         case 'pa_upc':
                             $sql .= ', pa.upc AS pa_upc';
-                        break;
+                            break;
                     }
                 }
             }
@@ -486,31 +489,31 @@ class SearchCore
                     switch ($key) {
                         case 'pname':
                             $sql .= ', pl.name pname';
-                        break;
+                            break;
                         case 'reference':
                             $sql .= ', p.reference';
-                        break;
+                            break;
                         case 'supplier_reference':
                             $sql .= ', p.supplier_reference';
-                        break;
+                            break;
                         case 'ean13':
                             $sql .= ', p.ean13';
-                        break;
+                            break;
                         case 'upc':
                             $sql .= ', p.upc';
-                        break;
+                            break;
                         case 'description_short':
                             $sql .= ', pl.description_short';
-                        break;
+                            break;
                         case 'description':
                             $sql .= ', pl.description';
-                        break;
+                            break;
                         case 'cname':
                             $sql .= ', cl.name cname';
-                        break;
+                            break;
                         case 'mname':
                             $sql .= ', m.name mname';
-                        break;
+                            break;
                     }
                 }
             }
@@ -767,9 +770,17 @@ class SearchCore
         $queryArray3 = array();
     }
 
-    public static function searchTag($id_lang, $tag, $count = false, $pageNumber = 0, $pageSize = 10, $orderBy = false, $orderWay = false,
-            $useCookie = true, Context $context = null)
-    {
+    public static function searchTag(
+        $id_lang,
+        $tag,
+        $count = false,
+        $pageNumber = 0,
+        $pageSize = 10,
+        $orderBy = false,
+        $orderWay = false,
+        $useCookie = true,
+        Context $context = null
+    ) {
         if (!$context) {
             $context = Context::getContext();
         }
@@ -814,7 +825,7 @@ class SearchCore
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 			WHERE product_shop.`active` = 1
-			AND p.visibility IN (\'both\', \'search\')
+			AND product_shop.`visibility` IN (\'both\', \'search\')
 			AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 			'.$sql_groups.'
 			AND t.`name` LIKE \'%'.pSQL($tag).'%\'');
@@ -849,6 +860,7 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
+                    AND product_shop.`visibility` IN (\'both\', \'search\')
 					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
 					'.$sql_groups.'
 					AND t.`name` LIKE \'%'.pSQL($tag).'%\'

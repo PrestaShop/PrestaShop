@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use Shudrum\Component\ArrayFinder\ArrayFinder;
 use Symfony\Component\Yaml\Yaml;
+use AbstractAssetManager;
 
 class Theme implements AddonInterface
 {
@@ -80,7 +81,10 @@ class Theme implements AddonInterface
         foreach ($modulesToHook as $hookName => $modules) {
             if (is_array($modules)) {
                 foreach (array_values($modules) as $module) {
-                    if (!in_array($module, $modulesToEnable)) {
+                    if (is_array($module)) {
+                        $module=key($module);
+                    }
+                    if (null !== $module && !in_array($module, $modulesToEnable)) {
                         $modulesToEnable[] = $module;
                     }
                 }
@@ -88,6 +92,11 @@ class Theme implements AddonInterface
         }
 
         return $modulesToEnable;
+    }
+
+    public function getModulesToDisable()
+    {
+        return $this->get('dependencies.modules', array());
     }
 
     public function getPageSpecificAssets($pageId)
@@ -202,10 +211,10 @@ class Theme implements AddonInterface
                 continue;
             }
             if (!isset($entry['media'])) {
-                $entry['media'] = \AbstractAssetManager::DEFAULT_MEDIA;
+                $entry['media'] = AbstractAssetManager::DEFAULT_MEDIA;
             }
             if (!isset($entry['priority'])) {
-                $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+                $entry['priority'] = AbstractAssetManager::DEFAULT_PRIORITY;
             }
             if (!isset($entry['inline'])) {
                 $entry['inline'] = false;
@@ -228,10 +237,10 @@ class Theme implements AddonInterface
                 continue;
             }
             if (!isset($entry['position'])) {
-                $entry['position'] = \AbstractAssetManager::DEFAULT_JS_POSITION;
+                $entry['position'] = AbstractAssetManager::DEFAULT_JS_POSITION;
             }
             if (!isset($entry['priority'])) {
-                $entry['priority'] = \AbstractAssetManager::DEFAULT_PRIORITY;
+                $entry['priority'] = AbstractAssetManager::DEFAULT_PRIORITY;
             }
             if (!isset($entry['inline'])) {
                 $entry['inline'] = false;

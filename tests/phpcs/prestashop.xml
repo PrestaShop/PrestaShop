@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="PrestaShop">
+    <description>Coding standard for legacy files.</description>
+    <rule ref="PSR2">
+        <!-- allow newlines after `if(` -->
+        <exclude name="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+        <!-- allow blank lines at the start of a control structure -->
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
+    </rule>
+</ruleset>

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -358,7 +358,7 @@ class AdminSuppliersControllerCore extends AdminController
             $products[$i]->loadStockData();
             // Build attributes combinations
             $combinations = $products[$i]->getAttributeCombinations($this->context->language->id);
-            foreach ($combinations as $k => $combination) {
+            foreach ($combinations as $combination) {
                 $comb_infos = Supplier::getProductInformationsBySupplier($this->object->id,
                                                                          $products[$i]->id,
                                                                          $combination['id_product_attribute']);
@@ -413,7 +413,7 @@ class AdminSuppliersControllerCore extends AdminController
         if (($id_supplier = (int)Tools::getValue('id_supplier')) &&
              isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg')) {
             $images_types = ImageType::getImagesTypes('suppliers');
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 $file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
                 if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height'])) {
                     $return = false;

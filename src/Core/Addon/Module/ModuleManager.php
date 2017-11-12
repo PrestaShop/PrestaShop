@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
@@ -28,16 +28,16 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
-use Tools;
 
 class ModuleManager implements AddonManagerInterface
 {
@@ -86,6 +86,13 @@ class ModuleManager implements AddonManagerInterface
     private $dispatcher;
 
     /**
+     * Additionnal data used for module actions
+     *
+     * @var ParameterBag
+     */
+    private $actionParams;
+
+    /**
      * @param AdminModuleDataProvider $adminModulesProvider
      * @param ModuleDataProvider $modulesProvider
      * @param ModuleDataUpdater $modulesUpdater
@@ -95,7 +102,7 @@ class ModuleManager implements AddonManagerInterface
      * @param Employee|null $employee
      */
     public function __construct(
-        AdminModuleDataProvider $adminModulesProvider,
+        AdminModuleDataProvider $adminModuleProvider,
         ModuleDataProvider $modulesProvider,
         ModuleDataUpdater $modulesUpdater,
         ModuleRepository $moduleRepository,
@@ -105,7 +112,7 @@ class ModuleManager implements AddonManagerInterface
         Employee $employee = null
         )
     {
-        $this->adminModuleProvider = $adminModulesProvider;
+        $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
         $this->moduleUpdater = $modulesUpdater;
         $this->moduleRepository = $moduleRepository;
@@ -113,6 +120,21 @@ class ModuleManager implements AddonManagerInterface
         $this->translator = $translator;
         $this->employee = $employee;
         $this->dispatcher = $dispatcher;
+
+        $this->actionParams = new ParameterBag();
+    }
+
+    /**
+     * For some actions, you may need to add params like confirmation details.
+     * This setter is the way to register them in the manager.
+     * 
+     * @param array $actionParams
+     * @return $this
+     */
+    public function setActionParams(array $actionParams)
+    {
+        $this->actionParams->replace($actionParams);
+        return $this;
     }
 
     /**
@@ -170,10 +192,10 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param $installedProduct
+     * @param Module $installedProduct
      * @return bool
      */
-    protected function shouldRecommendConfigurationForModule($installedProduct)
+    protected function shouldRecommendConfigurationForModule(Module $installedProduct)
     {
         $warnings = $this->getModuleInstallationWarnings($installedProduct);
 
@@ -181,31 +203,21 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param $installedProduct
+     * @param Module $installedProduct
      * @return array
      */
-    protected function getModuleInstallationWarnings($installedProduct)
+    protected function getModuleInstallationWarnings(Module $installedProduct)
     {
-        $warnings = array();
-        $moduleName = $installedProduct->attributes->get('name');
-
-        if ($this->moduleProvider->isModuleMainClassValid($moduleName)) {
-            $moduleMainClassFilepath = _PS_MODULE_DIR_ . $moduleName . '/' . $moduleName . '.php';
-            if (file_exists($moduleMainClassFilepath)) {
-                require_once $moduleMainClassFilepath;
-            }
-
-            $module = ServiceLocator::get($moduleName);
-            $warnings = $module->warning;
+        if ($installedProduct->hasValidInstance()) {
+            return $installedProduct->getInstance()->warning;
         }
-
-        return $warnings;
+        return array();
     }
 
     /**
      * Add new module from zipball. This will unzip the file and move the content
      * to the right locations.
-     * A theme can bundle modules, resources, docuementation, email templates and so on.
+     * A theme can bundle modules, resources, documentation, email templates and so on.
      *
      * @param string $source The source can be a module name (installed from either local disk or addons.prestashop.com).
      * or a location (url or path to the zip file)
@@ -214,14 +226,12 @@ class ModuleManager implements AddonManagerInterface
     public function install($source)
     {
         // in CLI mode, there is no employee set up
-        if (!Tools::isPHPCLI()) {
-            if (!$this->employee->can('edit', 'AdminModulessf')) {
-                throw new Exception(
-                    $this->translator->trans(
-                        'You are not allowed to install modules.',
-                        array(),
-                        'Admin.Modules.Notification'));
-            }
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__)) {
+            throw new Exception(
+                $this->translator->trans(
+                    'You are not allowed to install modules.',
+                    array(),
+                    'Admin.Modules.Notification'));
         }
 
         if (is_file($source)) {
@@ -237,12 +247,12 @@ class ModuleManager implements AddonManagerInterface
 
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        }
-        else if (! $this->moduleProvider->isOnDisk($name)) {
+        } elseif (! $this->moduleProvider->isOnDisk($name)) {
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
         $module = $this->moduleRepository->getModule($name);
+        $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
@@ -256,13 +266,12 @@ class ModuleManager implements AddonManagerInterface
      * or a location (url or path to the zip file)
      * @return bool true for success
      */
-    public function uninstall($name, $file_deletion = false)
+    public function uninstall($name)
     {
         // Check permissions:
         // * Employee can delete
         // * Employee can delete this specific module
-        if (!$this->employee->can('delete', 'AdminModulessf')
-            || !$this->moduleProvider->can('uninstall', $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to uninstall this module.',
@@ -270,16 +279,13 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
-        // Is module installed ?
-        if (! $this->moduleProvider->isInstalled($name)) {
-            return false;
-        }
+        $this->checkIsInstalled($name);
 
         // Get module instance and uninstall it
         $module = $this->moduleRepository->getModule($name);
         $result = $module->onUninstall();
 
-        if ($result && (bool)$file_deletion) {
+        if ($result && $this->actionParams->get('deletion', false)) {
             $result &= $this->removeModuleFromDisk($name);
         }
 
@@ -299,8 +305,7 @@ class ModuleManager implements AddonManagerInterface
     */
     public function upgrade($name, $version = 'latest', $source = null)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to upgrade this module.',
@@ -308,29 +313,24 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
-        if (! $this->moduleProvider->isInstalled($name)) {
-            throw new Exception(
-                $this->translator->trans(
-                    'The module %module% must be installed first',
-                    array('%module%' => $name),
-                'Admin.Modules.Notification'));
-        }
+        $this->checkIsInstalled($name);
 
         // Get new module
         // 1- From source
         if ($source != null) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        }
-        // 2- From Addons
-        else {
+        } else {
+            // 2- From Addons
             // This step is not mandatory (in case of local module),
             // we do not check the result
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
+        $module = $this->moduleRepository->getModule($name);
+
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name);
-        $this->dispatch(ModuleManagementEvent::UPGRADE, $this->moduleRepository->getModule($name));
+        $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
     }
@@ -344,14 +344,15 @@ class ModuleManager implements AddonManagerInterface
      */
     public function disable($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module.',
                     array(),
                     'Admin.Modules.Notification'));
         }
+
+        $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
         try {
@@ -380,14 +381,15 @@ class ModuleManager implements AddonManagerInterface
      */
     public function enable($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module.',
                     array(),
                     'Admin.Modules.Notification'));
         }
+
+        $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
         try {
@@ -410,19 +412,33 @@ class ModuleManager implements AddonManagerInterface
      * Not written in camel case because the route and the displayed action in the template
      * are related to this function name.
      *
+     * @deprecated use disableMobile()
+     *
      * @param  string $name The module name to disable
      * @return bool         True for success
      */
     public function disable_mobile($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        return $this->disableMobile($name);
+    }
+
+    /**
+     * Disable a module specifically on mobile.
+     *
+     * @param  string $name The module name to disable
+     * @return bool         True for success
+     */
+    public function disableMobile($name)
+    {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to disable this module on mobile.',
                     array(),
                     'Admin.Modules.Notification'));
         }
+
+        $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
         try {
@@ -444,19 +460,33 @@ class ModuleManager implements AddonManagerInterface
      * Not written in camel case because the route and the displayed action in the template
      * are related to this function name.
      *
+     * @deprecated use enableMobile.
+     *
      * @param  string $name The module name to enable
      * @return bool         True for success
      */
     public function enable_mobile($name)
     {
-        if (!$this->employee->can('edit', 'AdminModulessf')
-            || !$this->moduleProvider->can('configure', $name)) {
+        return $this->enableMobile($name);
+    }
+
+    /**
+     * Enable a module previously disabled on mobile.
+     *
+     * @param string $name The module name to enable
+     * @return bool True for success
+     */
+    public function enableMobile($name)
+    {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to enable this module on mobile.',
                     array(),
                     'Admin.Modules.Notification'));
         }
+
+        $this->checkIsInstalled($name);
 
         $module = $this->moduleRepository->getModule($name);
         try {
@@ -480,9 +510,7 @@ class ModuleManager implements AddonManagerInterface
      */
     public function reset($name, $keep_data = false)
     {
-        if (!$this->employee->can('add', 'AdminModulessf')
-            || !$this->employee->can('delete', 'AdminModulessf')
-            || !$this->moduleProvider->can('uninstall', $name)) {
+        if (!$this->adminModuleProvider->isAllowedAccess('install') || !$this->adminModuleProvider->isAllowedAccess('uninstall', $name)) {
             throw new Exception(
                 $this->translator->trans(
                     'You are not allowed to reset this module.',
@@ -490,12 +518,16 @@ class ModuleManager implements AddonManagerInterface
                     'Admin.Modules.Notification'));
         }
 
+        $this->checkIsInstalled($name);
+
         $module = $this->moduleRepository->getModule($name);
         try {
             if ((bool)$keep_data && method_exists($this, 'reset')) {
+                $this->dispatch(ModuleManagementEvent::UNINSTALL, $module);
                 $status = $module->onReset();
+                $this->dispatch(ModuleManagementEvent::INSTALL, $module);
             } else {
-                $status = ($module->onUninstall() && $module->onInstall());
+                $status = ($this->uninstall($name) && $this->install($name));
             }
         } catch (Exception $e) {
             throw new Exception(
@@ -508,7 +540,6 @@ class ModuleManager implements AddonManagerInterface
                 0, $e);
         }
 
-        $this->dispatch(ModuleManagementEvent::RESET, $module);
         return $status;
     }
 
@@ -577,5 +608,32 @@ class ModuleManager implements AddonManagerInterface
     private function dispatch($event, $module)
     {
         $this->dispatcher->dispatch($event, new ModuleManagementEvent($module));
+    }
+
+    private function checkIsInstalled($name)
+    {
+        if (!$this->moduleProvider->isInstalled($name)) {
+            throw new Exception(
+                $this->translator->trans(
+                    'The module %module% must be installed first',
+                    array('%module%' => $name),
+                'Admin.Modules.Notification'));
+        }
+    }
+
+    /**
+     * We check the module does not ask for pre-requesites to be respected prior the action being executed.
+     *
+     * @param string $action
+     * @param Module $module
+     * @throws UnconfirmedModuleActionException
+     */
+    private function checkConfirmationGiven($action, Module $module)
+    {
+        if ($action === 'install') {
+            if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
+                throw (new UnconfirmedModuleActionException())->setModule($module)->setAction($action)->setSubject('PrestaTrust');
+            }
+        }
     }
 }

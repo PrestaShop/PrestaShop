@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -112,9 +112,8 @@ class AdminCmsCategoriesControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex.'&conf=3&id_cms_category='.(int)$object->id.'&token='.Tools::getValue('token'));
             }
             return $object;
-        }
-        /* Change object statuts (active, inactive) */
-        elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
+        } elseif (Tools::isSubmit('statuscms_category') && Tools::getValue($this->identifier)) {
+            // Change object statuts (active, inactive)
             if ($this->access('edit')) {
                 if (Validate::isLoadedObject($object = $this->loadObject())) {
                     if ($object->toggleStatus()) {
@@ -130,9 +129,8 @@ class AdminCmsCategoriesControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-        /* Delete object */
-        elseif (Tools::isSubmit('delete'.$this->table)) {
+        } elseif (Tools::isSubmit('delete'.$this->table)) {
+            // Delete object
             if ($this->access('delete')) {
                 if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
                     // check if request at least one object with noZeroObject
@@ -174,9 +172,8 @@ class AdminCmsCategoriesControllerCore extends AdminController
                     self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.$identifier.'&token='.$token
                 );
             }
-        }
-        /* Delete multiple objects */
-        elseif (Tools::getValue('submitDel'.$this->table) || Tools::getValue('submitBulkdelete'.$this->table)) {
+        } elseif (Tools::getValue('submitDel'.$this->table) || Tools::getValue('submitBulkdelete'.$this->table)) {
+            // Delete multiple objects
             if ($this->access('delete')) {
                 if (Tools::isSubmit($this->table.'Box')) {
                     $cms_category = new CMSCategory();
@@ -246,7 +243,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
                 // custom template
                 array(
                     'type' => 'select_category',
-                    'label' => $this->trans('Parent CMS Category', array(), 'Admin.Design.Feature'),
+                    'label' => $this->trans('Parent category', array(), 'Admin.Design.Feature'),
                     'name' => 'id_parent',
                     'options' => array(
                         'html' => $html_categories,

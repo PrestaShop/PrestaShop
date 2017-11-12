@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Translation\Provider;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\Util\Flattenizer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Translation\MessageCatalogue;
 
 class ThemeProvider extends AbstractProvider
 {
@@ -51,12 +52,48 @@ class ThemeProvider extends AbstractProvider
      */
     public $themeExtractor;
 
+    private $domain;
+
+    /**
+     * @var string Path to app/Resources/translations/
+     */
+    public $defaultTranslationDir;
+
+    /**
+     * Set domain
+     *
+     * @param $domain
+     * @return $this
+     */
+    public function setDomain($domain)
+    {
+        $this->domain = $domain;
+
+        return $this;
+    }
+
+    /**
+     * Get domain
+     *
+     * @return mixed
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getTranslationDomains()
     {
-        return array('*');
+        if (empty($this->domain)) {
+            return array('*');
+        } else {
+            return array(
+                '^'.$this->getDomain(),
+            );
+        }
     }
 
     /**
@@ -64,7 +101,13 @@ class ThemeProvider extends AbstractProvider
      */
     public function getFilters()
     {
-        return array('*');
+        if (empty($this->domain)) {
+            return array('*');
+        } else {
+            return array(
+                '#^'.$this->getDomain().'#',
+            );
+        }
     }
 
     /**
@@ -153,7 +196,7 @@ class ThemeProvider extends AbstractProvider
     {
         $theme = $this->themeRepository->getInstanceByName($this->themeName);
 
-        $path = $this->resourceDirectory.'/'.$this->themeName.'/translations';
+        $path = $this->resourceDirectory.DIRECTORY_SEPARATOR.$this->themeName.DIRECTORY_SEPARATOR.'translations';
 
         $this->filesystem->remove($path);
         $this->filesystem->mkdir($path);
@@ -164,7 +207,7 @@ class ThemeProvider extends AbstractProvider
             ->extract($theme, $this->locale)
         ;
 
-        $translationFilesPath = $path.'/'.$this->locale;
+        $translationFilesPath = $path.DIRECTORY_SEPARATOR.$this->locale;
         Flattenizer::flatten($translationFilesPath, $translationFilesPath, $this->locale, false);
 
         $finder = Finder::create();
@@ -178,6 +221,40 @@ class ThemeProvider extends AbstractProvider
      */
     public function getThemeCatalogue()
     {
-        return $this->getCatalogueFromPaths($this->getThemeResourcesDirectory(), $this->locale, '*');
+        $path = $this->resourceDirectory.DIRECTORY_SEPARATOR.$this->themeName.DIRECTORY_SEPARATOR.'translations';
+
+        return $this->getCatalogueFromPaths($path, $this->locale, current($this->getFilters()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultCatalogue($empty = true)
+    {
+        $defaultCatalogue = new MessageCatalogue($this->getLocale());
+
+        foreach ($this->getFilters() as $filter) {
+            $filteredCatalogue = $this->getCatalogueFromPaths(
+                array($this->getDefaultResourceDirectory()),
+                $this->getLocale(),
+                $filter
+            );
+            $defaultCatalogue->addCatalogue($filteredCatalogue);
+        }
+
+        if ($empty) {
+            $defaultCatalogue = $this->emptyCatalogue($defaultCatalogue);
+        }
+
+        return $defaultCatalogue;
+    }
+
+    /**
+     * {@inheritdoc}
+     * string Path to app/Resources/translations/{locale}
+     */
+    public function getDefaultResourceDirectory()
+    {
+        return $this->defaultTranslationDir.DIRECTORY_SEPARATOR.$this->locale;
     }
 }

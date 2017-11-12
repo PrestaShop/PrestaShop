@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -69,6 +69,17 @@ Thanks for your patience.", array(), 'Admin.Shopparameters.Feature', $this->loca
                     // NW_CONDITIONS on configuration_lang table - From ps_emailsubscription module
                     $this->translator->trans('You may unsubscribe at any moment. For that purpose, please find our contact info in the legal notice.', array(), 'Admin.Shopparameters.Feature', $this->locale),
 
+                md5('In Stock') =>
+                    // PS_LABEL_IN_STOCK_PRODUCTS on configuration_lang table
+                    $this->translator->trans('In Stock', array(), 'Admin.Shopparameters.Feature', $this->locale),
+
+                md5('Product available for orders') =>
+                    // PS_LABEL_OOS_PRODUCTS_BOA on configuration_lang table
+                    $this->translator->trans('Product available for orders', array(), 'Admin.Shopparameters.Feature', $this->locale),
+
+                md5('Out-of-Stock') =>
+                    // PS_LABEL_OOS_PRODUCTS_BOD on configuration_lang table
+                    $this->translator->trans('Out-of-Stock', array(), 'Admin.Shopparameters.Feature', $this->locale),
             ),
         );
     }

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -64,6 +64,14 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     public function testIsBirthDate($expected, $input)
     {
         $this->assertSame($expected, Validate::isBirthDate($input));
+    }
+
+    /**
+     * @dataProvider isDateOrNullProvider
+     */
+    public function testIsDateOrNull($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isDateOrNull($input));
     }
 
     /**
@@ -166,6 +174,24 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, '2020-03-19'),
             array(false, '1991-03-33'),
             array(false, '1991-15-19'),
+        );
+    }
+
+    public function isDateOrNullProvider()
+    {
+        return array(
+            array(true, '1991-04-19'),
+            array(true, '2015-03-22'),
+            array(true, '1945-07-25'),
+            array(true, '2020-03-19'),
+            array(true, '2020-03-19 10:23:00'),
+            array(true, '2020-03-19 45:99:99'), // Only the date is actually checked
+            array(false, '1991-03-33'),
+            array(false, '1991-03-33 00:50:00'),
+            array(false, '1991-15-19'),
+            array(true, null),
+            array(true, '0000-00-00 00:00:00'),
+            array(true, '0000-00-00'),
         );
     }
 

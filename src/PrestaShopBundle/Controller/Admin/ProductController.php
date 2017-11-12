@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,16 +20,19 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,14 +43,14 @@ use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterf
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use PrestaShopBundle\Form\Admin\Product as ProductForms;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
+use Product;
+use Tools;
 
 /**
  * Admin controller for the Product pages using the Symfony architecture:
@@ -72,7 +75,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/catalog.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -237,7 +240,8 @@ class ProductController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-                'permission_error' => $permissionError
+                'permission_error' => $permissionError,
+                'layoutTitle' => $this->trans('Products', 'Admin.Global'),
             )
         );
     }
@@ -247,7 +251,7 @@ class ProductController extends FrameworkBundleAdminController
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/list.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -349,11 +353,12 @@ class ProductController extends FrameworkBundleAdminController
         $context = $contextAdapter->getContext();
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
-        /** @var \Product $product */
+        /** @var Product $product */
         $product = $productAdapter->getProductInstance();
-        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->id_category_default = $context->shop->id_category;
-        $product->state = \Product::STATE_TEMP;
+        $product->id_tax_rules_group = 0;
+        $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
+        $product->state = Product::STATE_TEMP;
 
         //set name and link_rewrite in each lang
         foreach ($contextAdapter->getLanguages() as $lang) {
@@ -370,10 +375,10 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/form.html.twig")
      * @param int $id The product ID
      * @param Request $request
-     * @return array Template vars
+     * @return array|Response Template vars
      */
     public function formAction($id, Request $request)
     {
@@ -416,11 +421,12 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
-        $form = $this->createFormBuilder($modelMapper->getFormData())
+        $form = $this->createFormBuilder($modelMapper->getFormData(), array('allow_extra_fields' => true))
             ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
             ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
             ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
@@ -435,16 +441,26 @@ class ProductController extends FrameworkBundleAdminController
         $combinations = $modelMapper->getAttributesResume();
         if (is_array($combinations)) {
             foreach ($combinations as $combination) {
-                $form->add('combination_'.$combination['id_product_attribute'], 'PrestaShopBundle\Form\Admin\Product\ProductCombination');
+                $form->add(
+                    'combination_'.$combination['id_product_attribute'],
+                    'PrestaShopBundle\Form\Admin\Product\ProductCombination'
+                );
             }
         }
 
         $form = $form->getForm();
 
-        $formBulkCombinations = $this->createForm('PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk', null, array(
-            'iso_code' => $this->get('prestashop.adapter.legacy.context')->getContext()->currency->iso_code,
-            'price_display_precision' => $this->configuration->get('_PS_PRICE_DISPLAY_PRECISION_'),
-        ));
+        $formBulkCombinations = $this->createForm(
+            'PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk',
+            null,
+            array(
+                'iso_code' => $this
+                    ->get('prestashop.adapter.legacy.context')
+                    ->getContext()->currency->iso_code,
+                'price_display_precision' => $this->configuration
+                    ->get('_PS_PRICE_DISPLAY_PRECISION_'),
+            )
+        );
 
         // Legacy code. To fix when Object model will change. But report Hooks.
         $postData = $request->request->all();
@@ -468,6 +484,7 @@ class ProductController extends FrameworkBundleAdminController
             );
         }
 
+        /* @var $form Form */
         $form->handleRequest($request);
         $formData = $form->getData();
         $formData['step3']['combinations'] = $combinationsList;
@@ -483,7 +500,7 @@ class ProductController extends FrameworkBundleAdminController
 
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
-                $_POST['state'] = \Product::STATE_SAVED;
+                $_POST['state'] = Product::STATE_SAVED;
 
                 $adminProductController = $adminProductWrapper->getInstance();
                 $adminProductController->setIdObject($formData['id_product']);
@@ -494,34 +511,40 @@ class ProductController extends FrameworkBundleAdminController
                 // actionProductAdd or actionProductUpdate (from processSave() -> processAdd() or processUpdate())
                 // actionAdminSaveAfter; actionAdminProductsControllerSaveAfter
                 if ($product = $adminProductController->postCoreProcess()) {
+                    /* @var $product Product */
                     $adminProductController->processSuppliers($product->id);
                     $adminProductController->processFeatures($product->id);
                     $adminProductController->processSpecificPricePriorities();
                     foreach ($_POST['combinations'] as $combinationValues) {
                         $adminProductWrapper->processProductAttribute($product, $combinationValues);
                         // For now, each attribute set the same value.
-                        $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'), $combinationValues['id_product_attribute']);
+                        $adminProductWrapper->processDependsOnStock(
+                            $product,
+                            ($_POST['depends_on_stock'] == '1'),
+                            $combinationValues['id_product_attribute']
+                        );
                     }
                     $adminProductWrapper->processDependsOnStock($product, ($_POST['depends_on_stock'] == '1'));
 
                     // If there is no combination, then quantity is managed for the whole product (as combination ID 0)
                     // In all cases, legacy hooks are triggered: actionProductUpdate and actionUpdateQuantity
-                    if (count($_POST['combinations']) === 0) {
-                        if (isset($_POST['qty_0'])){
-                            $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
-                        }
+                    if (count($_POST['combinations']) === 0 && isset($_POST['qty_0'])) {
+                        $adminProductWrapper->processQuantityUpdate($product, $_POST['qty_0']);
                     }
                     // else quantities are managed from $adminProductWrapper->processProductAttribute() above.
 
                     $adminProductWrapper->processProductOutOfStock($product, $_POST['out_of_stock']);
-                    $customization_fields_ids = $adminProductWrapper->processProductCustomization($product, $_POST['custom_fields']);
+
+                    $customizationFieldsIds = $adminProductWrapper
+                        ->processProductCustomization($product, $_POST['custom_fields']);
+
                     $adminProductWrapper->processAttachments($product, $_POST['attachments']);
 
                     $adminProductController->processWarehouses();
 
                     $response->setData([
                         'product' => $product,
-                        'customization_fields_ids' => $customization_fields_ids
+                        'customization_fields_ids' => $customizationFieldsIds
                     ]);
                 }
 
@@ -589,10 +612,11 @@ class ProductController extends FrameworkBundleAdminController
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
             'attribute_groups' => $attributeGroups,
-            'max_upload_size' => \Tools::formatBytes(UploadedFile::getMaxFilesize()),
+            'max_upload_size' => Tools::formatBytes(UploadedFile::getMaxFilesize()),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
             'drawerModules' => $drawerModules,
+            'layoutTitle' => $this->trans('Product', 'Admin.Global'),
         );
     }
 
@@ -847,22 +871,10 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
-    /**
-     * Export product list (like the catalog should list, taking into account the filters, but not the pagination)
-     * in CSV format (or else for later if needed).
-     *
-     * This action does not finish correctly: a die is done to stop the stream that is downloaded by the browser.
-     * So Symfony router cannot take back the hand of the process for the last event listeners (terminate events).
-     *
-     * @param string $_format The format of the output
-     */
-    public function exportAction($_format)
+    public function exportAction()
     {
-        // init vars
+
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
-        $csvTools = $this->get('prestashop.csv');
-        /* @var $csvTools Csv */
 
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         $orderBy = $persistedFilterParameters['last_orderBy'];
@@ -873,26 +885,27 @@ class ProductController extends FrameworkBundleAdminController
             return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
         };
 
-        // export CSV
-        $csvTools->exportData(
-            $dataCallback,
-            ['id_product' => 'Product ID',
-                'image_link' => 'Image',
-                'name' => 'Name',
-                'reference' => 'Reference',
-                'name_category' => 'Category',
-                'price' => 'Base price',
-                'price_final' => 'Final price',
-                'sav_quantity' => 'Quantity',
-                'badge_danger' => 'Status',
-                'position' => 'Position',
-            ],
-            100,
-            'product_' . date('Y-m-d_His') . '.csv',
-            30 * 60, // 30 minutes of download max!
-            true // TODO: windows CRLF, to make dynamic or always ON?
+        $translator = $this->get('translator');
+
+        $headersData = array(
+            'id_product' => 'Product ID',
+            'image_link' => $translator->trans('Image', array(), 'Admin.Global'),
+            'name' => $translator->trans('Name', array(), 'Admin.Global'),
+            'reference' => $translator->trans('Reference', array(), 'Admin.Global'),
+            'name_category' => $translator->trans('Category', array(), 'Admin.Global'),
+            'price' => $translator->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
+            'price_final' => $translator->trans('Price (tax incl.)', array(), 'Admin.Catalog.Feature'),
+            'sav_quantity' => $translator->trans('Quantity', array(), 'Admin.Global'),
+            'badge_danger' => $translator->trans('Status', array(), 'Admin.Global'),
+            'position' => $translator->trans('Position', array(), 'Admin.Global'),
         );
-        // exportData will "die" at the end of its process.
+
+        return (new CsvResponse())
+            ->setData($dataCallback)
+            ->setHeadersData($headersData)
+            ->setModeType(CsvResponse::MODE_OFFSET)
+            ->setLimit(5000)
+            ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
 
     /**
@@ -970,7 +983,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->get('prestashop.adapter.data_provider.warehouse'),
             $this->get('prestashop.adapter.data_provider.feature'),
             $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context')
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
 
         $form = $this->createFormBuilder($modelMapper->getFormData());

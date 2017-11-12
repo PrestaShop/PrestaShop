@@ -8,7 +8,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -21,7 +21,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -63,7 +63,7 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * {@inheritdoc}
      */
-    public function createTranslationsArray($themeName, $locale = 'en_US')
+    public function createTranslationsArray($themeName, $locale = 'en_US', $theme = null, $search = null)
     {
         $this->themeProvider
             ->setThemeName($themeName)
@@ -71,68 +71,12 @@ class ThemeTranslationsFactory extends TranslationsFactory
             ->synchronizeTheme();
         ;
 
-        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale);
-        $translations = $this->pushThemeTranslations($translations, $locale);
+        $translations = $this->getFrontTranslationsForThemeAndLocale($themeName, $locale, $search);
 
         ksort($translations);
 
         return $translations;
     }
-
-    /**
-     * @param $translations
-     * @param $locale
-     * @return mixed
-     */
-    protected function pushThemeTranslations($translations, $locale)
-    {
-        $themeTranslations = $this->themeProvider->getXliffCatalogue()->all();
-        $databaseCatalogue = $this->themeProvider->getDatabaseCatalogue()->all();
-
-        foreach ($themeTranslations as $domain => $messages) {
-            $databaseDomain = $this->removeLocaleFromDomain($locale, $domain);
-
-            $missingTranslations = 0;
-
-            foreach ($messages as $translationKey => $translationValue) {
-                $keyExists = array_key_exists($databaseDomain, $databaseCatalogue) &&
-                    array_key_exists($translationKey, $databaseCatalogue[$databaseDomain])
-                ;
-
-                $themeTranslations[$domain][$translationKey] = array(
-                    'xlf' => $translationKey != $translationValue ? $themeTranslations[$domain][$translationKey] : '',
-                    'db' => $keyExists ? $databaseCatalogue[$databaseDomain][$translationKey] : '',
-                );
-
-                if (
-                    empty($themeTranslations[$domain][$translationKey]['xlf']) &&
-                    empty($themeTranslations[$domain][$translationKey]['db'])
-                ) {
-                    $missingTranslations++;
-                }
-            }
-
-            $translations[$domain]['__metadata'] = array('missing_translations' => $missingTranslations);
-        }
-
-        foreach ($translations as $domain => $messages) {
-            if (!array_key_exists($domain, $themeTranslations)) {
-                $themeTranslations[$domain] = $messages;
-
-                continue;
-            }
-
-            foreach ($messages as $translationKey => $translationValues) {
-                if (!array_key_exists($translationKey, $themeTranslations[$domain])) {
-                    $themeTranslations[$domain][$translationKey] = $translationValues;
-                }
-
-            }
-        }
-
-        return $themeTranslations;
-    }
-
 
     /**
      * @param $locale
@@ -147,10 +91,11 @@ class ThemeTranslationsFactory extends TranslationsFactory
     /**
      * @param $themeName
      * @param $locale
-     * @return mixed
+     * @param null $search
+     * @return array
      */
-    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale)
+    protected function getFrontTranslationsForThemeAndLocale($themeName, $locale, $search = null)
     {
-        return parent::createTranslationsArray('front', $locale, $themeName);
+        return parent::createTranslationsArray('theme', $locale, $themeName, $search);
     }
 }

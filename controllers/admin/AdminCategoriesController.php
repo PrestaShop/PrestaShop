@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -456,9 +456,9 @@ class AdminCategoriesControllerCore extends AdminController
         $guest = new Group(Configuration::get('PS_GUEST_GROUP'));
         $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
-        $unidentified_group_information = sprintf($this->trans('%s - All people without a valid customer account.', array(), 'Admin.Catalog.Feature'), '<b>'.$unidentified->name[$this->context->language->id].'</b>');
-        $guest_group_information = sprintf($this->trans('%s - Customer who placed an order with the guest checkout.', array(), 'Admin.Catalog.Feature'), '<b>'.$guest->name[$this->context->language->id].'</b>');
-        $default_group_information = sprintf($this->trans('%s - All people who have created an account on this site.', array(), 'Admin.Catalog.Feature'), '<b>'.$default->name[$this->context->language->id].'</b>');
+        $unidentified_group_information = $this->trans('%group_name% - All people without a valid customer account.', array('%group_name%' => '<b>'.$unidentified->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
+        $guest_group_information = $this->trans('%group_name% - Customer who placed an order with the guest checkout.', array('%group_name%' => '<b>'.$guest->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
+        $default_group_information = $this->trans('%group_name% - All people who have created an account on this site.', array('%group_name%' => '<b>'.$default->name[$this->context->language->id].'</b>'), 'Admin.Catalog.Feature');
 
         if (!($obj = $this->loadObject(true))) {
             return;
@@ -761,7 +761,7 @@ class AdminCategoriesControllerCore extends AdminController
 
             $images_types = ImageType::getImagesTypes('categories');
             $formatted_small = ImageType::getFormattedName('small');
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 if ($formatted_small == $image_type['name'] &&
                     file_exists(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType) &&
                     !unlink(_PS_CAT_IMG_DIR_.$category->id.'-'.$image_type['name'].'.'.$this->imageType)
@@ -835,7 +835,7 @@ class AdminCategoriesControllerCore extends AdminController
 
             if (parent::processBulkDelete()) {
                 $this->setDeleteMode();
-                foreach ($cats_ids as $id => $id_parent) {
+                foreach ($cats_ids as $id_parent) {
                     $this->processFatherlessProducts((int)$id_parent);
                 }
                 return true;
@@ -1049,7 +1049,7 @@ class AdminCategoriesControllerCore extends AdminController
                 die(Tools::jsonEncode(array('thumbnail' => array($total_errors))));
             }
 
-            foreach ($files as $key => &$file) {
+            foreach ($files as &$file) {
                 $id = array_shift($available_keys);
                 $errors = array();
                 // Evaluate the memory required to resize the image: if it's too much, you can't resize it.

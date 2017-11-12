@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -166,45 +166,44 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         // Create WHERE clause with an array value (IN, NOT IN)
         if (is_array($value)) {
             switch (strtolower($operator)) {
-                case '=' :
-                case 'in' :
+                case '=':
+                case 'in':
                     $this->query->$method($this->parseField($field).' IN('.implode(', ', $this->formatValue($value, $field)).')');
-                break;
+                    break;
 
-                case '!=' :
-                case '<>' :
-                case 'notin' :
+                case '!=':
+                case '<>':
+                case 'notin':
                     $this->query->$method($this->parseField($field).' NOT IN('.implode(', ', $this->formatValue($value, $field)).')');
-                break;
+                    break;
 
-                default :
+                default:
                     throw new PrestaShopException('Operator not supported for array value');
             }
-        }
-        // Create WHERE clause
-        else {
+        } else {
+            // Create WHERE clause
             switch (strtolower($operator)) {
-                case '=' :
-                case '!=' :
-                case '<>' :
-                case '>' :
-                case '>=' :
-                case '<' :
-                case '<=' :
-                case 'like' :
-                case 'regexp' :
+                case '=':
+                case '!=':
+                case '<>':
+                case '>':
+                case '>=':
+                case '<':
+                case '<=':
+                case 'like':
+                case 'regexp':
                     $this->query->$method($this->parseField($field).' '.$operator.' '.$this->formatValue($value, $field));
-                break;
+                    break;
 
-                case 'notlike' :
+                case 'notlike':
                     $this->query->$method($this->parseField($field).' NOT LIKE '.$this->formatValue($value, $field));
-                break;
+                    break;
 
-                case 'notregexp' :
+                case 'notregexp':
                     $this->query->$method($this->parseField($field).' NOT REGEXP '.$this->formatValue($value, $field));
-                break;
+                    break;
 
-                default :
+                default:
                     throw new PrestaShopException('Operator not supported');
             }
         }
@@ -331,17 +330,17 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         foreach ($this->join_list as $data) {
             $on = '('.implode(') AND (', $data['on']).')';
             switch ($data['type']) {
-                case self::LEFT_JOIN :
+                case self::LEFT_JOIN:
                     $this->query->leftJoin($data['table'], $data['alias'], $on);
-                break;
+                    break;
 
-                case self::INNER_JOIN :
+                case self::INNER_JOIN:
                     $this->query->innerJoin($data['table'], $data['alias'], $on);
-                break;
+                    break;
 
-                case self::LEFT_OUTER_JOIN :
+                case self::LEFT_OUTER_JOIN:
                     $this->query->leftOuterJoin($data['table'], $data['alias'], $on);
-                break;
+                    break;
             }
         }
 

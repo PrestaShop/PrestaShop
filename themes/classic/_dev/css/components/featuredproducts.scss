@@ -31,8 +31,14 @@
           bottom: 4.2rem;
         }
       }
-      .product-description{
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+      .product-description::after{
+        content: "";
+        border-top: $gray 1px solid;
+        position: absolute;
+        width: 80%;
+        top: 0;
+        left: 10%;
+        opacity: .25;
       }
     }
   }
@@ -51,17 +57,18 @@
     text-align: center;
   }
   .variant-links {
-    background: $gray-light;
     position: relative;
     text-align: center;
     width: 100%;
-    top: 0.25em;
+    top: -0.25em;
     padding-top: 0.1875rem;
     min-height: 2.5rem;
+    background: white;
   }
   .highlighted-informations {
     position: absolute;
     bottom: 1.25rem;
+    padding-top: 0.625rem;
     z-index: 0;
     background: white;
     text-align: center;
@@ -98,11 +105,12 @@
     .product-flags .new,
     .online-only,
     .on-sale,
-    .discount-percentage {
+    .discount-percentage,
+    .discount-amount,
+    .pack {
       display: block;
       position: absolute;
       left: -0.4375rem;
-      top:0.4375rem;
       padding: 0.3125rem 0.4375rem;
       color: white;
       background: $brand-primary;
@@ -112,7 +120,8 @@
       font-size: $base-font-size;
       font-weight: 600;
       @include box-shadow-light;
-      &.discount-percentage {
+      &.discount-percentage,
+      &.discount-amount {
         z-index: 2;
         background: $brand-secondary;
       }

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -249,7 +249,7 @@ class AdminCustomersControllerCore extends AdminController
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
                     array_pop($this->toolbar_title);
-                    $this->toolbar_title[] = sprintf($this->trans('Information about customer %s', array(), 'Admin.Orderscustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                    $this->toolbar_title[] = $this->trans('Information about customer %name%', array('%name%' => Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname), 'Admin.Orderscustomers.Feature');
                 }
                 break;
             case 'add':
@@ -257,7 +257,7 @@ class AdminCustomersControllerCore extends AdminController
                 array_pop($this->toolbar_title);
                 /** @var Customer $customer */
                 if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer)) {
-                    $this->toolbar_title[] = sprintf($this->trans('Editing customer %s', array(), 'Admin.Orderscustomers.Feature'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
+                    $this->toolbar_title[] = $this->trans('Editing customer %name%', array('%name%' => Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname), 'Admin.Orderscustomers.Feature');
                 } else {
                     $this->toolbar_title[] = $this->trans('Creating a new Customer', array(), 'Admin.Orderscustomers.Feature');
                 }
@@ -397,7 +397,7 @@ class AdminCustomersControllerCore extends AdminController
                     'required' => ($obj->id ? false : true),
                     'col' => '4',
                     'hint' => ($obj->id ? $this->trans('Leave this field blank if there\'s no change.', array(), 'Admin.Orderscustomers.Help') :
-                        sprintf($this->trans('Password should be at least %s characters long.', array(), 'Admin.Orderscustomers.Help'), Validate::PASSWORD_LENGTH))
+                        $this->trans('Password should be at least %length% characters long.', array('%length%' => Validate::PASSWORD_LENGTH), 'Admin.Orderscustomers.Help'))
                 ),
                 array(
                     'type' => 'birthday',
@@ -682,10 +682,10 @@ class AdminCustomersControllerCore extends AdminController
         $gender_image = $gender->getImage();
 
         $customer_stats = $customer->getStats();
-        $sql = 'SELECT SUM(total_paid_real) FROM '._DB_PREFIX_.'orders WHERE id_customer = %d AND valid = 1';
-        if ($total_customer = Db::getInstance()->getValue(sprintf($sql, $customer->id))) {
-            $sql = 'SELECT SQL_CALC_FOUND_ROWS COUNT(*) FROM '._DB_PREFIX_.'orders WHERE valid = 1 AND id_customer != '.(int)$customer->id.' GROUP BY id_customer HAVING SUM(total_paid_real) > %d';
-            Db::getInstance()->getValue(sprintf($sql, (int)$total_customer));
+        $sql = 'SELECT SUM(total_paid_real) FROM '._DB_PREFIX_.'orders WHERE id_customer = '.(int)$customer->id.' AND valid = 1';
+        if ($total_customer = Db::getInstance()->getValue($sql)) {
+            $sql = 'SELECT SQL_CALC_FOUND_ROWS COUNT(*) FROM '._DB_PREFIX_.'orders WHERE valid = 1 AND id_customer != '.(int)$customer->id.' GROUP BY id_customer HAVING SUM(total_paid_real) > '.(int)$total_customer;
+            Db::getInstance()->getValue($sql);
             $count_better_customers = (int)Db::getInstance()->getValue('SELECT FOUND_ROWS()') + 1;
         } else {
             $count_better_customers = '-';
@@ -1025,7 +1025,7 @@ class AdminCustomersControllerCore extends AdminController
      * @param string $name
      * @return mixed
      */
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
 

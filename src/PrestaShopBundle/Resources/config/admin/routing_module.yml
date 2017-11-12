@@ -6,7 +6,6 @@ admin_module_cart:
     requirements:
         moduleId: \d+
 
-
 admin_module_catalog:
     path:     /catalog
     methods:  [GET]
@@ -81,3 +80,10 @@ admin_module_notification:
     defaults:
         _controller: PrestaShopBundle:Admin/Module:notification
         _legacy_controller: AdminModules
+
+admin_module_addons_store:
+    path:     /addons-store
+    methods:  [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Improve\AddonsStore:index'
+        _legacy_controller: AdminAddonsCatalog

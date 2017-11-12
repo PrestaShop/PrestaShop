@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -543,7 +543,7 @@ class ValidateCore
 
     public static function isDateOrNull($date)
     {
-        if (is_null($date) || $date === '0000-00-00 00:00:00') {
+        if (is_null($date) || $date === '0000-00-00 00:00:00' || $date === '0000-00-00') {
             return true;
         }
 
@@ -615,7 +615,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $isbn);
+        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
     }
 
     /**
@@ -954,7 +954,7 @@ class ValidateCore
     }
 
     /**
-     * Price display method validity
+     * Check if $data is a string
      *
      * @param string $data Data to validate
      * @return bool Validity is ok or not
@@ -1009,9 +1009,9 @@ class ValidateCore
     }
 
     /**
-     * Check for PHP serialized data
+     * Check if $string is a valid JSON string
      *
-     * @param string $data json data to validate
+     * @param string $string JSON string to validate
      * @return bool Validity is ok or not
      */
     public static function isJson($string)

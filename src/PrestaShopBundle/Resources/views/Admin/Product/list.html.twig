@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <tbody
@@ -30,8 +30,8 @@
         <tr data-uniturl="{{ product.unit_action_url|default('#') }}" data-product-id="{{ product.id_product }}">
             <td class="checkbox-column">
               <div class="checkbox">
-                <label>
-                  <input type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}" />
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" name="bulk_action_selected_products[]" value="{{ product.id_product }}">
                   {{ product.id_product }}
                 </label>
               </div>
@@ -58,7 +58,7 @@
                 {% if product.sav_quantity is defined and product.sav_quantity > 0 %}
                   {{ product.sav_quantity }}
                 {% else %}
-                  <span class="badge badge-danger">{{ product.sav_quantity|default('N/A'|trans({}, 'Admin.Global')) }}</span>
+                  {{ product.sav_quantity|default('N/A'|trans({}, 'Admin.Global')) }}
                 {% endif %}
               </a>
             </td>
@@ -98,16 +98,13 @@
                       }
                     ] %}
 
-                    {# Only duplicate if shop or group is selected #}
-                    {% if is_shop_context %}
-                      {% set buttons_action = buttons_action|merge([
-                        {
-                        "onclick": "unitProductAction(this, 'duplicate');",
-                        "icon": "content_copy",
-                        "label": "Duplicate"|trans({}, 'Admin.Actions')
-                        }
-                      ]) %}
-                    {% endif %}
+                    {% set buttons_action = buttons_action|merge([
+                      {
+                      "onclick": "unitProductAction(this, 'duplicate');",
+                      "icon": "content_copy",
+                      "label": "Duplicate"|trans({}, 'Admin.Actions')
+                      }
+                    ]) %}
 
                     {% set buttons_action = buttons_action|merge([
                       {

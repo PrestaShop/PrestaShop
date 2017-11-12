@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,14 +20,15 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use PrestaShop\PrestaShop\Adapter\CombinationDataProvider;
+use Product;
+
 
 /**
  * Admin controller for the attribute / attribute group
@@ -164,10 +165,10 @@ class AttributeController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param \ProductCore $product
+     * @param Product $product
      * @param array $combinations
      */
-    public function ensureProductHasDefaultCombination(\ProductCore $product, array $combinations)
+    public function ensureProductHasDefaultCombination(Product $product, array $combinations)
     {
         if (count($combinations)) {
             $defaultProductAttributeId = $product->getDefaultIdProductAttribute();
@@ -194,6 +195,8 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
+        $legacyResponse = false;
+
         if ($request->request->has('attribute-ids')) {
             $attributeIds = $request->request->get('attribute-ids');
             foreach ($attributeIds as $attributeId) {
@@ -207,7 +210,6 @@ class AttributeController extends FrameworkBundleAdminController
 
             $response->setData(['message' => $legacyResponse['message']]);
         }
-
 
         return $response;
     }
@@ -231,6 +233,8 @@ class AttributeController extends FrameworkBundleAdminController
         if (!$combinations || !$request->isXmlHttpRequest()) {
             return $response;
         }
+
+        $res = false;
 
         foreach ($combinations as $combination) {
             $res = $this->container->get('prestashop.adapter.admin.controller.attribute_generator')

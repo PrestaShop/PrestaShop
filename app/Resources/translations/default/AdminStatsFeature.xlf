@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminStatsTabController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
+        <source>Stats</source>
+        <target>Stats</target>
+        <note>Context:
+File: controllers/admin/AdminStatsTabController.php:44</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminStatsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ee6b00aa9d931ecaf45cd5d0e3fcec0c">
@@ -61,16 +71,6 @@ File: controllers/admin/AdminStatsController.php:725</note>
         <target>No category</target>
         <note>Context:
 File: controllers/admin/AdminStatsController.php:795</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminStatsTabController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="452a7601dbc6f2c38aa89e68bda8b603">
-        <source>Stats</source>
-        <target>Stats</target>
-        <note>Context:
-File: controllers/admin/AdminStatsTabController.php:44</note>
       </trans-unit>
     </body>
   </file>

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -226,5 +226,25 @@ class CustomerThreadCore extends ObjectModel
                 'AND ct.id_lang = '.(int)$context->cookie->{'customer_threadFilter_l!id_lang'} : '').
             ' ORDER BY ct.date_upd ASC
 		');
+    }
+
+    public static function getCustomerMessagesOrder($id_customer, $id_order)
+    {
+        $sql = 'SELECT cm.*, c.`firstname` AS cfirstname, c.`lastname` AS clastname,
+                e.`firstname` AS efirstname, e.`lastname` AS elastname
+			FROM '._DB_PREFIX_.'customer_thread ct
+			LEFT JOIN '._DB_PREFIX_.'customer_message cm
+				ON ct.id_customer_thread = cm.id_customer_thread
+            LEFT JOIN `'._DB_PREFIX_.'customer` c 
+                ON ct.`id_customer` = c.`id_customer`
+            LEFT OUTER JOIN `'._DB_PREFIX_.'employee` e 
+                ON e.`id_employee` = cm.`id_employee`
+			WHERE ct.id_customer = '.(int)$id_customer.
+                ' AND ct.`id_order` = '.(int)$id_order.'
+            GROUP BY cm.id_customer_message
+		 	ORDER BY cm.date_add DESC
+            LIMIT 2';
+
+        return Db::getInstance()->executeS($sql);
     }
 }

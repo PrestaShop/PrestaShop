@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 var Tree = function (element, options)
@@ -28,6 +28,36 @@ var Tree = function (element, options)
 	this.options = $.extend({}, $.fn.tree.defaults, options);
 	this.init();
 };
+
+function getCategoryById(param) {
+	var elem = null;
+	$('input[name=id_parent]').each(function (index) {
+		if ($(this).val() === param + '') {
+			elem = $(this);
+		}
+	});
+	return elem;
+}
+
+function disableTreeItem(item) {
+	item.find('input[name=id_parent]').attr('disabled', 'disabled');
+	if (item.hasClass('tree-folder')) {
+		item.find('span.tree-folder-name').addClass('tree-folder-name-disable');
+		item.find('ul li').each(function (index) {
+			disableTreeItem($(this));
+		});
+	} else if (item.hasClass('tree-item')) {
+		item.addClass('tree-item-disable');
+	}
+}
+
+function organizeTree() {
+	if ($('#id_category').length != 0) {
+		var id = $('#id_category').val();
+		var item = getCategoryById(id).parent().parent();
+		disableTreeItem(item);
+	}
+}
 
 Tree.prototype =
 {
@@ -186,8 +216,9 @@ Tree.prototype =
 				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected, inputName:name,useCheckBox:useCheckBox},
 				function(content)
 				{
-					$('#'+idTree).html(content);
-					$('#'+idTree).tree('init');
+					$('#' + idTree).html(content);
+					organizeTree();
+					$('#' + idTree).tree('init');
 					that.$element.find("label.tree-toggler").each(
 						function()
 						{

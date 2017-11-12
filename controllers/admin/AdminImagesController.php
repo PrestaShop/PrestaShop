@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -335,7 +335,7 @@ class AdminImagesControllerCore extends AdminController
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
         if (file_exists(_PS_PROD_IMG_DIR_.'duplicates/')) {
-            $this->warnings[] = sprintf($this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %s only contains demonstration images, and then delete it.', array(), 'Admin.Design.Notification'), _PS_PROD_IMG_DIR_.'duplicates/');
+            $this->warnings[] = $this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.', array('%folder%' => _PS_PROD_IMG_DIR_.'duplicates/'), 'Admin.Design.Notification');
         }
 
         if (Tools::isSubmit('submitRegenerate'.$this->table)) {

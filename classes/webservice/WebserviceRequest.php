@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -240,14 +240,14 @@ class WebserviceRequestCore
         }
         $this->outputFormat = $type;
         switch ($type) {
-            case 'JSON' :
+            case 'JSON':
                 require_once dirname(__FILE__).'/WebserviceOutputJSON.php';
                 $obj_render = new WebserviceOutputJSON();
                 break;
-            case 'XML' :
-            default :
+            case 'XML':
+            default:
                 $obj_render = new WebserviceOutputXML();
-            break;
+                break;
         }
         return $obj_render;
     }
@@ -415,12 +415,12 @@ class WebserviceRequestCore
 
     /**
      * Start Webservice request
-     * 	Check webservice activation
-     * 	Check autentication
-     * 	Check resource
-     * 	Check HTTP Method
-     * 	Execute the action
-     * 	Display the result
+     * Check webservice activation
+     * Check autentication
+     * Check resource
+     * Check HTTP Method
+     * Execute the action
+     * Display the result
      *
      * @param string $key
      * @param string $method
@@ -541,9 +541,8 @@ class WebserviceRequestCore
                     if (isset($object)) {
                         $this->objects['empty'] = $object;
                     }
-                }
-                // if the management is specific
-                else {
+                } else {
+                    // if the management is specific
                     $specificObjectName = 'WebserviceSpecificManagement'.ucfirst(Tools::toCamelCase($this->urlSegment[0]));
                     if (!class_exists($specificObjectName)) {
                         $this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
@@ -1081,9 +1080,8 @@ class WebserviceRequestCore
                                         $language_filter = '['.implode('|', $this->_available_languages).']';
                                         $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
                                     }
-                                }
-                                // if there are filters on linked tables but there are no linked table
-                                elseif (is_array($url_param)) {
+                                } elseif (is_array($url_param)) {
+                                    // if there are filters on linked tables but there are no linked table
                                     if (isset($this->resourceConfiguration['linked_tables'])) {
                                         $this->setErrorDidYouMean(400, 'This linked table does not exist', $field, array_keys($this->resourceConfiguration['linked_tables']), 30);
                                     } else {
@@ -1142,9 +1140,8 @@ class WebserviceRequestCore
                 } elseif (!in_array($fieldName, $available_filters) && !in_array($fieldName, $i18n_available_filters)) {
                     $this->setError(400, 'Unable to filter by this field. However, these are available: '.implode(', ', $available_filters).', for i18n fields:'.implode(', ', $i18n_available_filters), 38);
                     return false;
-                }
-                // for sort on i18n field
-                elseif (in_array($fieldName, $i18n_available_filters)) {
+                } elseif (in_array($fieldName, $i18n_available_filters)) {
+                    // for sort on i18n field
                     if (!preg_match('#main_i18n#', $sql_join)) {
                         $sql_join .= 'LEFT JOIN `'._DB_PREFIX_.bqSQL($this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
                     }
@@ -1595,9 +1592,8 @@ class WebserviceRequestCore
         // if just one language is asked
         if (is_numeric($this->urlFragments['language'])) {
             $arr_languages[] = (int)$this->urlFragments['language'];
-        }
-        // if a range or a list is asked
-        elseif (strpos($this->urlFragments['language'], '[') === 0
+        } elseif (strpos($this->urlFragments['language'], '[') === 0
+            // if a range or a list is asked
             && strpos($this->urlFragments['language'], ']') === $length_values - 1) {
             if (strpos($this->urlFragments['language'], '|') !== false
                 xor strpos($this->urlFragments['language'], ',') !== false) {
@@ -1606,9 +1602,8 @@ class WebserviceRequestCore
                 if (strpos($params_values, '|') !== false) {
                     $list_enabled_lang = explode('|', $params_values);
                     $arr_languages = $list_enabled_lang;
-                }
-                // it's a range
-                elseif (strpos($params_values, ',') !== false) {
+                } elseif (strpos($params_values, ',') !== false) {
+                    // it's a range
                     $range_enabled_lang = explode(',', $params_values);
                     if (count($range_enabled_lang) != 2) {
                         $this->setError(400, 'A range value for a language must contains only 2 values', 78);

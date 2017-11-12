@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -169,10 +169,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
                 $order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
             } elseif ($order_detail['reduction_percent'] > 0) {
                 $has_discount = true;
-                if ($order_detail['reduction_percent'] == 100)
+                if ($order_detail['reduction_percent'] == 100) {
                     $order_detail['unit_price_tax_excl_before_specific_price'] = 0;
-                else
+                } else {
                     $order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - $order_detail['reduction_percent']);
+                }
             }
 
             // Set tax_code
@@ -351,7 +352,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             'product_tab' => $this->smarty->fetch($this->getTemplate('invoice.product-tab')),
             'tax_tab' => $this->getTaxTabContent(),
             'payment_tab' => $this->smarty->fetch($this->getTemplate('invoice.payment-tab')),
-			'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
+            'note_tab' => $this->smarty->fetch($this->getTemplate('invoice.note-tab')),
             'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
             'shipping_tab' => $this->smarty->fetch($this->getTemplate('invoice.shipping-tab')),
         );

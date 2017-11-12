@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,9 +20,12 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Adapter\StockManager as StockManagerAdapter;
 
 class OrderHistoryCore extends ObjectModel
 {
@@ -312,6 +315,25 @@ class OrderHistoryCore extends ObjectModel
                         }
                     }
                 }
+
+                // Save movement if :
+                // not Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+                // new_os->shipped != old_os->shipped
+                if (Validate::isLoadedObject($old_os) && Validate::isLoadedObject($new_os) && $new_os->shipped != $old_os->shipped && !Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
+                    $product_quantity = (int) ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']);
+
+                    if ($product_quantity > 0) {
+                        (new StockManager)->saveMovement(
+                            (int)$product['product_id'],
+                            (int)$product['product_attribute_id'],
+                            (int)$product_quantity * ($new_os->shipped == 1 ? -1 : 1),
+                            array(
+                                'id_order' => $order->id,
+                                'id_stock_mvt_reason' => ($new_os->shipped == 1 ? Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON') : Configuration::get('PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON'))
+                            )
+                        );
+                    }
+                }
             }
         }
 
@@ -363,7 +385,7 @@ class OrderHistoryCore extends ObjectModel
                     }
                     $order->save();
 
-                    $payment->conversion_rate = 1;
+                    $payment->conversion_rate = ($order ? $order->conversion_rate : 1);
                     $payment->save();
                     Db::getInstance()->execute('
                     INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
@@ -379,6 +401,15 @@ class OrderHistoryCore extends ObjectModel
 
         // executes hook
         Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id, ), null, false, true, false, $order->id_shop);
+
+        // sync all stock
+        (new StockManagerAdapter())->updatePhysicalProductQuantity(
+            (int)$order->id_shop,
+            (int)Configuration::get('PS_OS_ERROR'),
+            (int)Configuration::get('PS_OS_CANCELED'),
+            null,
+            (int)$order->id
+        );
 
         ShopUrl::resetMainDomainCache();
     }

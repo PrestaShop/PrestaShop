@@ -200,8 +200,11 @@ $min-height: 950px
 			> a
 				> i
 					display: inline-block !important
+					font-size: 1.25rem
 				> span
 					display: none
+					& + i
+						display: none !important
 				&:hover
 					> span
 						display: inline-block
@@ -209,6 +212,17 @@ $min-height: 950px
 			text-align: center
 			> span
 				display: none
+		@media (max-height: 870px)
+			> ul > li.maintab:hover#subtab-ShopParameters,
+			> ul > li.maintab:hover#subtab-AdminAdvancedParameters
+				ul.submenu
+					display: flex!important
+					flex-direction: column-reverse
+					top: 0!important
+					transform: rotate(180deg)
+					transform-origin: top
+					li
+						transform: rotate(180deg)
 		> ul > li.maintab:hover
 			width: 250px!important
 			position: relative

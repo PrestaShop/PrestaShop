@@ -11,10 +11,6 @@ body#checkout {
       width: auto;
     }
   }
-
-  [data-action="show-password"]{
-    background: $gray;
-  }
   .custom-checkbox {
     display: flex;
     span {
@@ -157,6 +153,7 @@ body#checkout {
       background: $gray-lighter;
       flex: 0 0 49%;
       margin-bottom: $small-space;
+      border: 3px solid transparent;
       &.selected {
         background: white;
         border: $brand-primary 3px solid;
@@ -174,6 +171,7 @@ body#checkout {
     .radio-block {
       padding: 0.9375rem;
       text-align: left;
+      cursor: pointer;
     }
     .custom-radio {
       margin-right: 0;
@@ -337,9 +335,13 @@ body#checkout {
       }
     }
   }
-  #gift_message{
+  #gift_message, #delivery{
     max-width: 100%;
     border-color: $gray-darker;
+    textarea {
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
   }
   #footer {
     @include box-shadow;

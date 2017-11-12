@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,12 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Security;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Tools;
+use Configuration;
 
 /**
  * Middleware that is triggered during kernel.request event on Symfony routing process, to redirect to HTTPS in some cases.
@@ -46,12 +48,12 @@ class SslMiddleware
     public function onKernelRequest(GetResponseEvent $event)
     {
         // already SSL, do nothing more
-        if (\ToolsCore::usingSecureMode()) {
+        if (Tools::usingSecureMode()) {
             return;
         }
 
-        $enabled = (1 == \Configuration::get('PS_SSL_ENABLED'));
-        $forced = (1 == \Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+        $enabled = (1 == Configuration::get('PS_SSL_ENABLED'));
+        $forced = (1 == Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
         $serverParams = $event->getRequest()->server;
         $refererSsl = ($serverParams->has('HTTP_REFERER') && strpos($serverParams->get('HTTP_REFERER'), 'https') === 0);
 

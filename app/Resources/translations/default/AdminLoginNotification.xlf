@@ -103,4 +103,50 @@ File: controllers/admin/AdminLoginController.php:387</note>
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7860cb5f5994f37f332dda3f250e035b">
+        <source>You will be redirected to the login page in a few seconds.</source>
+        <target>You will be redirected to the login page in a few seconds.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:118</note>
+      </trans-unit>
+      <trans-unit id="d2bd0a6c92a4501d3459335139825d21">
+        <source>Please, check your mailbox.</source>
+        <target>Please, check your mailbox.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:145</note>
+      </trans-unit>
+      <trans-unit id="95faaabab0eea73e0dddecfb101e9c59">
+        <source>A link to reset your password has been sent to you.</source>
+        <target>A link to reset your password has been sent to you.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:145</note>
+      </trans-unit>
+      <trans-unit id="d84626aafd2ead966ff2f5c2e0bca73f">
+        <source>For security reasons, you cannot connect to the back office until you have:</source>
+        <target>For security reasons, you cannot connect to the back office until you have:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:150</note>
+      </trans-unit>
+      <trans-unit id="362b56674d07160fab60725a927bbf13">
+        <source>deleted the /install folder</source>
+        <target>deleted the /install folder</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:153</note>
+      </trans-unit>
+      <trans-unit id="83c8a48abe6dd9b6fcc44986069b36dd">
+        <source>renamed the /admin folder (e.g. %s)</source>
+        <target>renamed the /admin folder (e.g. %s)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:156</note>
+      </trans-unit>
+      <trans-unit id="1a728f70318152b93421d59a6f7b4110">
+        <source>Please then access this page by the new URL (e.g. %s)</source>
+        <target>Please then access this page by the new URL (e.g. %s)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:161</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

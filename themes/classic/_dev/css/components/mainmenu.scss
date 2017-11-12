@@ -51,6 +51,7 @@
   }
   .popover {
     max-width: inherit;
+    border-radius: 0;
   }
 }
 .popover.bs-tether-element-attached-top {
@@ -137,9 +138,6 @@
       ul[data-depth="4"] li a {
         padding-left: 3.75rem;
       }
-    }
-    .popover {
-      border-radius: 0;
     }
   }
   .js-top-menu-bottom {

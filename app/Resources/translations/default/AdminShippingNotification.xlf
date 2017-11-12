@@ -6,7 +6,7 @@
         <source>An error occurred while updating carrier information.</source>
         <target>An error occurred while updating carrier information.</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:547</note>
+File: controllers/admin/AdminCarriersController.php:549</note>
       </trans-unit>
     </body>
   </file>
@@ -75,6 +75,66 @@ File: controllers/admin/AdminCarrierWizardController.php:868</note>
         <target>An error occurred while attempting to update fees (cannot load carrier object).</target>
         <note>Context:
 File: controllers/admin/AdminShippingController.php:173</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e23375136c63fb5936352717f495bc82">
+        <source>Ranges are not correctly ordered:</source>
+        <target>Ranges are not correctly ordered:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:34</note>
+      </trans-unit>
+      <trans-unit id="11a5324fcccfa07ed027b0226bbf5ee1">
+        <source>Reordering</source>
+        <target>Reordering</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/form.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d6bdbfede9754a46df1a5b801f7a6c04">
+        <source>Please validate the last range before creating a new one.</source>
+        <target>Please validate the last range before creating a new one.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="d9c830e9dc70798aef5634594d183f1c">
+        <source>Are you sure to delete this range ?</source>
+        <target>Are you sure to delete this range ?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="8a896dc0288ba4be64367f3006d51b98">
+        <source>This range is not valid</source>
+        <target>This range is not valid</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="f3fb906c0bd487b3341bc200d23e8faf">
+        <source>Ranges are overlapping</source>
+        <target>Ranges are overlapping</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl:44</note>
+      </trans-unit>
+      <trans-unit id="1add5d6b48d9f20ab77e9900918999ff">
+        <source>Please select at least one zone</source>
+        <target>Please select at least one zone</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl:45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/carrier_wizard/logo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b9bc8a98f12d9decfe96d41c44513157">
+        <source>Are you sure you want to delete the logo?</source>
+        <target>Are you sure you want to delete the logo?</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/carrier_wizard/logo.tpl:43</note>
       </trans-unit>
     </body>
   </file>

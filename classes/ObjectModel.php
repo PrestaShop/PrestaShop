@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -242,7 +242,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         if ($id) {
-            $entity_mapper = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get("\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper");
+            $entity_mapper = ServiceLocator::get("\\PrestaShop\\PrestaShop\\Adapter\\EntityMapper");
             $entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
         }
     }
@@ -397,11 +397,11 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Formats a value
      *
-     * @param mixed	$value
-     * @param int	$type
-     * @param bool	$with_quotes
-     * @param bool	$purify
-     * @param bool	$allow_null
+     * @param mixed $value
+     * @param int $type
+     * @param bool $with_quotes
+     * @param bool $purify
+     * @param bool $allow_null
      * @return mixed
      */
     public static function formatValue($value, $type, $with_quotes = false, $purify = true, $allow_null = false)
@@ -449,7 +449,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return $value;
 
             case self::TYPE_STRING:
-            default :
+            default:
                 if ($with_quotes) {
                     return '\''.pSQL($value).'\'';
                 }
@@ -460,6 +460,17 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     private function getFullyQualifiedName()
     {
         return str_replace('\\', '', get_class($this));
+    }
+
+    /**
+     * Get object name
+     * Used for read/write in required fields table
+     *
+     * @return string
+     */
+    public function getObjectName()
+    {
+        return get_class($this);
     }
 
     /**
@@ -743,9 +754,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                                 $result &= Db::getInstance()->insert($this->def['table'].'_lang', $field);
                             }
                         }
-                    }
-                    // If this table is not linked to multishop system ...
-                    else {
+                    } else {
+                        // If this table is not linked to multishop system ...
                         $where = pSQL($this->def['primary']).' = '.(int)$this->id
                                     .' AND id_lang = '.(int)$field['id_lang'];
                         if (Db::getInstance()->getValue('SELECT COUNT(*) FROM '.pSQL(_DB_PREFIX_.$this->def['table']).'_lang WHERE '.$where)) {
@@ -1030,7 +1040,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
 
         // Check if field is required
-        $required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
+        $required_fields = $this->getCachedFieldsRequiredDatabase();
         if (!$id_lang || $id_lang == $ps_lang_default) {
             if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields))) {
                 if (Tools::isEmpty($value)) {
@@ -1157,7 +1167,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $this->cacheFieldsRequiredDatabase();
         $errors = array();
-        $required_fields_database = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
+        $required_fields_database = $this->getCachedFieldsRequiredDatabase();
         foreach ($this->def['fields'] as $field => $data) {
             $value = Tools::getValue($field, $this->{$field});
             // Check if field is required by user
@@ -1263,7 +1273,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         $resource_parameters = array_merge_recursive($default_resource_parameters, $this->{$ws_params_attribute_name});
 
-        $required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)]) ? self::$fieldsRequiredDatabase[get_class($this)] : array());
+        $required_fields = $this->getCachedFieldsRequiredDatabase();
         foreach ($this->def['fields'] as $field_name => $details) {
             if (!isset($resource_parameters['fields'][$field_name])) {
                 $resource_parameters['fields'][$field_name] = array();
@@ -1369,7 +1379,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $this->cacheFieldsRequiredDatabase();
         $errors = array();
-        $required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
+        $required_fields = $this->getCachedFieldsRequiredDatabase();
 
         foreach ($this->def['fields'] as $field => $data) {
             if (!in_array($field, $required_fields)) {
@@ -1403,7 +1413,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         return Db::getInstance()->executeS('
 		SELECT id_required_field, object_name, field_name
 		FROM '._DB_PREFIX_.'required_field
-		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
+		'.(!$all ? 'WHERE object_name = \''.pSQL($this->getObjectName()).'\'' : ''));
     }
 
     /**
@@ -1423,7 +1433,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             SELECT id_required_field
             FROM '._DB_PREFIX_.'required_field
             WHERE field_name = "'. Db::getInstance()->escape($field_name) .'"
-            '.(!$all ? ' AND object_name = \''.pSQL(get_class($this)).'\'' : ''));
+            '.(!$all ? ' AND object_name = \''.pSQL($this->getObjectName()).'\'' : ''));
         }
     }
 
@@ -1447,6 +1457,28 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * Get required fields list for this model or for all the models
+     *
+     * @param bool $all : whether it should return required fields for this model or all the models
+     *
+     * @return array
+     */
+    public function getCachedFieldsRequiredDatabase($all = false)
+    {
+        $this->cacheFieldsRequiredDatabase($all);
+
+        if ($all) {
+            return self::$fieldsRequiredDatabase;
+        }
+
+        $objectName = $this->getObjectName();
+
+        return !empty(self::$fieldsRequiredDatabase[$objectName])
+            ? self::$fieldsRequiredDatabase[$objectName]
+            : array();
+    }
+
+    /**
      * Sets required field for this class in the database.
      *
      * @param array $fields
@@ -1460,12 +1492,19 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             return false;
         }
 
-        if (!Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'required_field WHERE object_name = \''.get_class($this).'\'')) {
+        $objectName = $this->getObjectName();
+        if (!Db::getInstance()->execute(
+            'DELETE FROM ' . _DB_PREFIX_ . 'required_field'
+            . " WHERE object_name = '" . Db::getInstance()->escape($objectName) . "'")
+        ) {
             return false;
         }
 
         foreach ($fields as $field) {
-            if (!Db::getInstance()->insert('required_field', array('object_name' => get_class($this), 'field_name' => pSQL($field)))) {
+            if (!Db::getInstance()->insert(
+                'required_field',
+                array('object_name' => $objectName, 'field_name' => pSQL($field))
+            )) {
                 return false;
             }
         }

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -46,11 +46,8 @@ class StockMvtReasonLangCore extends DataLangCore
                 md5('Customer Order')
                     => $this->translator->trans('Customer Order', array(), 'Admin.Catalog.Feature', $this->locale),
 
-                md5('Regulation following an inventory of stock')
-                    => $this->translator->trans('Regulation following an inventory of stock', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Regulation following an inventory of stock')
-                    => $this->translator->trans('Regulation following an inventory of stock', array(), 'Admin.Catalog.Feature', $this->locale),
+                md5('Adjustment following an inventory of stock')
+                    => $this->translator->trans('Adjustment following an inventory of stock', array(), 'Admin.Catalog.Feature', $this->locale),
 
                 md5('Transfer to another warehouse')
                     => $this->translator->trans('Transfer to another warehouse', array(), 'Admin.Catalog.Feature', $this->locale),
@@ -60,6 +57,12 @@ class StockMvtReasonLangCore extends DataLangCore
 
                 md5('Supply Order')
                     => $this->translator->trans('Supply Order', array(), 'Admin.Catalog.Feature', $this->locale),
+
+                md5('Product Return')
+                => $this->translator->trans('Product Return', array(), 'Admin.Catalog.Feature', $this->locale),
+
+                md5('Manual Entry')
+                => $this->translator->trans('Manual Entry', array(), 'Admin.Catalog.Feature', $this->locale),
 
             ),
         );

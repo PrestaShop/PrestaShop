@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,20 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 define('_PS_ROOT_DIR_', __DIR__ . '/..');
+define('_PS_IN_TEST_', true);
+umask(0000); // This will let the permissions be 0777
+if (!defined('_PS_ADMIN_DIR_')) {
+    define('_PS_ADMIN_DIR_', __DIR__."/admin-dev");
+}
+if (!defined('PS_ADMIN_DIR')) {
+    define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
+}
+
 define('_PS_MODULE_DIR_', _PS_ROOT_DIR_.'/tests/resources/modules/');
-require_once(dirname(__FILE__).'/../admin-dev/bootstrap.php');
+require_once(dirname(__FILE__).'/../config/defines.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 require_once(dirname(__FILE__).'/../config/bootstrap.php');

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -242,7 +242,7 @@ class AdminCartsControllerCore extends AdminController
             $total_price = $summary['total_price'];
             $total_shipping = $summary['total_shipping'];
         }
-        foreach ($products as $k => &$product) {
+        foreach ($products as &$product) {
             if ($tax_calculation_method == PS_TAX_EXC) {
                 $product['product_price'] = $product['price'];
                 $product['product_total'] = $product['total'];
@@ -743,7 +743,6 @@ class AdminCartsControllerCore extends AdminController
         $id_customer = (int)Tools::getValue('id_customer');
         $carts = Cart::getCustomerCarts((int)$id_customer);
         $orders = Order::getCustomerOrders((int)$id_customer);
-        $customer = new Customer((int)$id_customer);
 
         if (count($carts)) {
             foreach ($carts as $key => &$cart) {
@@ -762,9 +761,12 @@ class AdminCartsControllerCore extends AdminController
         }
         if ($orders || $carts) {
             $to_return = array_merge($this->ajaxReturnVars(),
-                                            array('carts' => $carts,
-                                                     'orders' => $orders,
-                                                     'found' => true));
+                array(
+                    'carts' => $carts,
+                    'orders' => $orders,
+                    'found' => true
+                )
+            );
         } else {
             $to_return = array_merge($this->ajaxReturnVars(), array('found' => false));
         }
@@ -865,7 +867,7 @@ class AdminCartsControllerCore extends AdminController
         return ($echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo);
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         // don't display ordered carts
         foreach ($this->_list as $row) {

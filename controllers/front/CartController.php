@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -35,6 +35,11 @@ class CartControllerCore extends FrontController
     protected $id_address_delivery;
     protected $customization_id;
     protected $qty;
+    /**
+     * To specify if you are in the preview mode or not
+     * @var boolean
+     */
+    protected $preview;
     public $ssl = true;
 
     /**
@@ -63,6 +68,7 @@ class CartControllerCore extends FrontController
         $this->customization_id = (int)Tools::getValue('id_customization');
         $this->qty = abs(Tools::getValue('qty', 1));
         $this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
+        $this->preview = ('1' === Tools::getValue('preview'));
     }
 
     /**
@@ -105,11 +111,13 @@ class CartControllerCore extends FrontController
         $productQuantity = $updatedProduct['quantity'];
 
         if (!$this->errors) {
+            $cartPresenter = new CartPresenter();
             $this->ajaxDie(Tools::jsonEncode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
                 'quantity' => $productQuantity,
+                'cart' => $cartPresenter->present($this->context->cart),
             ]));
         } else {
             $this->ajaxDie(Tools::jsonEncode([
@@ -153,7 +161,10 @@ class CartControllerCore extends FrontController
                 false,
                 false,
                 true,
-                ['quantity_wanted' => (int)$this->qty]
+                [
+                    'quantity_wanted' => (int)$this->qty,
+                    'preview' => $this->preview,
+                ]
             );
         } else {
             $url = false;
@@ -286,6 +297,15 @@ class CartControllerCore extends FrontController
             return;
         }
 
+        if (!$this->id_product_attribute && $product->hasAttributes()) {
+            $minimum_quantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
+            $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimum_quantity);
+            // @todo do something better than a redirect admin !!
+            if (!$this->id_product_attribute) {
+                Tools::redirectAdmin($this->context->link->getProductLink($product));
+            }
+        }
+
         $qty_to_check = $this->qty;
         $cart_products = $this->context->cart->getProducts();
 
@@ -310,15 +330,6 @@ class CartControllerCore extends FrontController
             if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
                 $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
             }
-        } elseif ($product->hasAttributes()) {
-            $minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
-            $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimumQuantity);
-            // @todo do something better than a redirect admin !!
-            if (!$this->id_product_attribute) {
-                Tools::redirectAdmin($this->context->link->getProductLink($product));
-            } elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
-            }
         } elseif (!$product->checkQty($qty_to_check)) {
             $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
         }
@@ -338,7 +349,7 @@ class CartControllerCore extends FrontController
             }
 
             // Check customizable fields
-            if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
+            if ($product->hasActivatedRequiredCustomizableFields() && !$this->customization_id) {
                 $this->errors[] = $this->trans('Please fill in all of the required fields, and then save your customizations.', array(), 'Shop.Notifications.Error');
             }
 

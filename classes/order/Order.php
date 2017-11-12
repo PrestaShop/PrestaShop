@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,9 +20,11 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class OrderCore extends ObjectModel
 {
@@ -622,7 +624,7 @@ class OrderCore extends ObjectModel
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
 
-			$customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int)$row['id_customization']);
+            $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, null, (int)$row['id_customization']);
 
             $this->setProductCustomizedDatas($row, $customized_datas);
 
@@ -636,8 +638,8 @@ class OrderCore extends ObjectModel
             $row['id_address_delivery'] = $this->id_address_delivery;
 
             if ($customized_datas) {
-	            Product::addProductCustomizationPrice($row, $customized_datas);
-	        }
+                Product::addProductCustomizationPrice($row, $customized_datas);
+            }
 
             /* Stock product */
             $result_array[(int)$row['id_order_detail']] = $row;
@@ -1349,7 +1351,7 @@ class OrderCore extends ObjectModel
 
         $address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
         $carrier = new Carrier((int)$this->id_carrier);
-        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
+        $tax_calculator = (Configuration::get('PS_ATCP_SHIPWRAP')) ? ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id) : $carrier->getTaxCalculator($address);
         $order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
         $order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
         $order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1364,7 +1366,7 @@ class OrderCore extends ObjectModel
         $order_invoice->save();
 
         if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-            $wrapping_tax_calculator = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+            $wrapping_tax_calculator = ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
         } else {
             $wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
             $wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();

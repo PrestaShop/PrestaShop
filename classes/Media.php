@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -66,6 +66,29 @@ class MediaCore
         'effects.transfer' => array('fileName' => 'jquery.effects.transfer.min.js', 'dependencies' => array('effects.core'), 'theme' => false)
     );
 
+    private static $jquery_ui_datepicker_iso_code = array(
+        'bn' => 'en',
+        'bz' => 'en',
+        'dh' => 'de',
+        'gb' => 'en-GB',
+        'ag' => 'es',
+        'cb' => 'es',
+        'mx' => 'es',
+        'pe' => 'es',
+        've' => 'es',
+        'qc' => 'fr-CA',
+        'ga' => 'en',
+        'lo' => 'en',
+        'br' => 'pt-BR',
+        'sh' => 'en',
+        'si' => 'sl',
+        'ug' => 'en',
+        'ur' => 'en',
+        'vn' => 'vi',
+        'zh' => 'zh-CN',
+        'tw' => 'zh-TW',
+    );
+
     /**
      * @var array list of javascript definitions
      */
@@ -109,7 +132,7 @@ class MediaCore
     {
         if (!empty($jsContent)) {
             try {
-                $jsContent = \JSMin::minify($jsContent);
+                $jsContent = JSMin::minify($jsContent);
             } catch (Exception $e) {
                 if (_PS_MODE_DEV_) {
                     echo $e->getMessage();
@@ -136,7 +159,7 @@ class MediaCore
         Media::$current_css_file = $fileUri;
 
         if (strlen($cssContent) > 0) {
-            $cssContent = \Minify_CSSmin::minify($cssContent);
+            $cssContent = Minify_CSSmin::minify($cssContent);
             $limit  = Media::getBackTrackLimit();
             $cssContent = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $cssContent, $limit);
             $cssContent = str_replace('\'images_ie/', '\'images/', $cssContent);
@@ -375,7 +398,11 @@ class MediaCore
                 $uiPath['js'] = array($uiPath['js']);
             }
 
-            $uiPath['js'][] = Media::getJSPath($folder.'i18n/jquery.ui.datepicker-'.Context::getContext()->language->iso_code.'.js');
+            $datePickerIsoCode = Context::getContext()->language->iso_code;
+            if (array_key_exists($datePickerIsoCode, self::$jquery_ui_datepicker_iso_code)) {
+                $datePickerIsoCode = self::$jquery_ui_datepicker_iso_code[$datePickerIsoCode];
+            }
+            $uiPath['js'][] = Media::getJSPath($folder.'i18n/jquery.ui.datepicker-'.$datePickerIsoCode.'.js');
         }
 
         return $uiPath;

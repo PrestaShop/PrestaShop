@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 /**
@@ -524,7 +524,7 @@ abstract class DbCore
      */
     public function delete($table, $where = '', $limit = 0, $use_cache = true, $add_prefix = true)
     {
-        if (_DB_PREFIX_ && !preg_match('#^'._DB_PREFIX_.'#i', $table) && $add_prefix) {
+        if ($add_prefix) {
             $table = _DB_PREFIX_.$table;
         }
 
@@ -578,8 +578,9 @@ abstract class DbCore
         $this->last_query = $sql;
 
         if ($use_cache && $this->is_cache_enabled && $array) {
-            $this->last_query_hash = Tools::hashIV($sql);
+            $this->last_query_hash = Cache::getInstance()->getQueryHash($sql);
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
+                Cache::getInstance()->incrementQueryCounter($sql);
                 $this->last_cached = true;
                 return $result;
             }
@@ -633,8 +634,9 @@ abstract class DbCore
         $this->last_query = $sql;
 
         if ($use_cache && $this->is_cache_enabled) {
-            $this->last_query_hash = Tools::hashIV($sql);
+            $this->last_query_hash = Cache::getInstance()->getQueryHash($sql);
             if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
+                Cache::getInstance()->incrementQueryCounter($sql);
                 $this->last_cached = true;
                 return $result;
             }

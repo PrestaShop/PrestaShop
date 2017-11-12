@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -170,7 +170,7 @@ class AdminLanguagesControllerCore extends AdminController
                     'label' => $this->trans('Date format', array(), 'Admin.International.Feature'),
                     'name' => 'date_format_lite',
                     'required' => true,
-                    'hint' => sprintf($this->trans('Short date format (e.g., %s).', array(), 'Admin.International.Help'), 'Y-m-d')
+                    'hint' => $this->trans('Short date format (e.g., Y-m-d).', array(), 'Admin.International.Help'),
                     /* TO DO - ajouter les liens dans le hint ? */
                     /*'desc' => sprintf($this->trans('Short date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d</a>')*/
                 ),
@@ -179,7 +179,7 @@ class AdminLanguagesControllerCore extends AdminController
                     'label' => $this->trans('Date format (full)', array(), 'Admin.International.Feature'),
                     'name' => 'date_format_full',
                     'required' => true,
-                    'hint' => sprintf($this->trans('Full date format (e.g., %s).', array(), 'Admin.International.Help'), 'Y-m-d H:i:s')
+                    'hint' => $this->trans('Full date format (e.g., Y-m-d H:i:s).', array(), 'Admin.International.Help'),
                     /* TO DO - ajouter les liens dans le hint ? */
                     /*'desc' => sprintf($this->trans('Full date format (e.g., %s)'), '<a href="http://php.net/date" target="_blank">Y-m-d H:i:s</a>')*/
                 ),
@@ -308,7 +308,6 @@ class AdminLanguagesControllerCore extends AdminController
 
     protected function processBulkDelete()
     {
-        $can_bulk = true;
         if (is_array($this->boxes) && !empty($this->boxes)) {
             foreach ($this->boxes as $id_lang) {
                 $object = new Language((int)$id_lang);
@@ -464,7 +463,7 @@ class AdminLanguagesControllerCore extends AdminController
                     $this->errors[] = $this->trans('An error occurred while copying "No picture" image to your brand folder.', array(), 'Admin.International.Notification');
                 } else {
                     $images_types = ImageType::getImagesTypes('products');
-                    foreach ($images_types as $k => $image_type) {
+                    foreach ($images_types as $image_type) {
                         if (!ImageManager::resize($tmp_name, _PS_IMG_DIR_.'p/'.$language.'-default-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'])) {
                             $this->errors[] = $this->trans('An error occurred while resizing "No picture" image to your product directory.', array(), 'Admin.International.Notification');
                         }
@@ -493,7 +492,7 @@ class AdminLanguagesControllerCore extends AdminController
         $images_types = ImageType::getImagesTypes('products');
         $dirs = array(_PS_PROD_IMG_DIR_, _PS_CAT_IMG_DIR_, _PS_MANU_IMG_DIR_, _PS_SUPP_IMG_DIR_, _PS_MANU_IMG_DIR_);
         foreach ($dirs as $dir) {
-            foreach ($images_types as $k => $image_type) {
+            foreach ($images_types as $image_type) {
                 if (file_exists($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg')) {
                     if (!unlink($dir.$language.'-default-'.stripslashes($image_type['name']).'.jpg')) {
                         $this->errors[] = $this->trans('An error occurred during image deletion process.', array(), 'Admin.International.Notification');

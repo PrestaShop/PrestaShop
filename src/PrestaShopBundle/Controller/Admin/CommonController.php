@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Controller\Admin;
@@ -53,13 +53,13 @@ class CommonController extends FrameworkBundleAdminController
      * {% render controller('PrestaShopBundle\\Controller\\Admin\\CommonController::paginationAction',
      *   {'limit': limit, 'offset': offset, 'total': product_count, 'caller_parameters': pagination_parameters}) %}
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Common/pagination.html.twig")
      * @param Request $request
      * @param integer $limit
      * @param integer $offset
      * @param integer $total
      * @param string $view full|quicknav To change default template used to render the content
-     * @return array Template vars
+     * @return array|\Symfony\Component\HttpFoundation\Response
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
@@ -149,7 +149,7 @@ class CommonController extends FrameworkBundleAdminController
     /**
      * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
      * @param string $domain
      * @param integer $limit
      * @param integer $randomize
@@ -190,12 +190,17 @@ class CommonController extends FrameworkBundleAdminController
 
     /**
      * Render a right sidebar with content from an URL
+     *
+     * @param $url
+     * @param string $title
+     * @param string $footer
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {
         $tools = $this->container->get('prestashop.adapter.tools');
 
-        return $this->render('PrestaShopBundle:Admin:Common/_partials/_sidebar.html.twig', [
+        return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', [
             'footer' => $tools->purifyHTML($footer),
             'title' => $title,
             'url' => urldecode($url),

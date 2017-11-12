@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -69,6 +69,8 @@ class ProductAssemblerCore
         $sql = "SELECT
                     p.*,
                     pl.*,
+                    sa.out_of_stock,
+                    IFNULL(sa.quantity, 0) as quantity,
                     (DATEDIFF(
 				p.`date_add`,
 				DATE_SUB(
@@ -81,11 +83,14 @@ class ProductAssemblerCore
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
-                    AND p.id_product = $idProduct";
+                    AND p.id_product = $idProduct
+                LEFT JOIN {$prefix}stock_available sa
+			        ON sa.id_product = p.id_product 
+			        AND sa.id_shop = $idShop";
 
         $rows = Db::getInstance()->executeS($sql);
 
-        return array_merge($rawProduct, $rows[0]);
+        return array_merge($rows[0], $rawProduct);
     }
 
     /**

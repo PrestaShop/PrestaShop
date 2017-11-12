@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -505,7 +505,7 @@
                     </div>
                   </td>
                   <td>
-                    <input name="payment_method" list="payment_method" class="payment_method">
+                    <input name="payment_method" list="payment_method" class="payment_method form-control fixed-width-sm">
                     <datalist id="payment_method">
                     {foreach from=$payment_methods item=payment_method}
                       <option value="{$payment_method}">
@@ -919,7 +919,7 @@
                   <th></th>
                   <th><span class="title_box ">{l s='Product' d='Admin.Global'}</span></th>
                   <th>
-                    <span class="title_box ">{l s='Price per unit' d='Admin.AdvParameters.Feature'}</span>
+                    <span class="title_box ">{l s='Price per unit' d='Admin.Advparameters.Feature'}</span>
                     <small class="text-muted">{$smarty.capture.TaxMethod}</small>
                   </th>
                   <th class="text-center"><span class="title_box ">{l s='Qty' d='Admin.Orderscustomers.Feature'}</span></th>

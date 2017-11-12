@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -186,7 +186,7 @@ class CustomerCore extends ObjectModel
             'optin' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'website' => array('type' => self::TYPE_STRING, 'validate' => 'isUrl'),
             'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-            'siret' => array('type' => self::TYPE_STRING, 'validate' => 'isSiret'),
+            'siret' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
             'ape' => array('type' => self::TYPE_STRING, 'validate' => 'isApe'),
             'outstanding_allow_amount' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'copy_post' => false),
             'show_public_prices' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'copy_post' => false),
@@ -500,10 +500,6 @@ class CustomerCore extends ObjectModel
     public static function customerExists($email, $returnId = false, $ignoreGuest = true)
     {
         if (!Validate::isEmail($email)) {
-            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-                die(Context::getContext()->getTranslator()->trans('Invalid email', array(), 'Admin.Orderscustomers.Notification'));
-            }
-
             return false;
         }
 
@@ -563,8 +559,12 @@ class CustomerCore extends ObjectModel
      */
     public function getAddresses($idLang)
     {
-        $shareOrder = (bool) Context::getContext()->shop->getGroup()->share_order;
-        $cacheId = 'Customer::getAddresses'.(int) $this->id.'-'.(int) $idLang.'-'.$shareOrder;
+        $group      = Context::getContext()->shop->getGroup();
+        $shareOrder = isset($group->share_order) ? (bool)$group->share_order : false;
+        $cacheId    = 'Customer::getAddresses'
+            . '-' . (int)$this->id
+            . '-' . (int)$idLang
+            . '-' . ($shareOrder ? 1 : 0);
         if (!Cache::isStored($cacheId)) {
             $sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
                     FROM `'._DB_PREFIX_.'address` a
@@ -1055,22 +1055,6 @@ class CustomerCore extends ObjectModel
         $ids = Address::getCountryAndState($idAddress);
 
         return (int) ($ids['id_country'] ? $ids['id_country'] : Configuration::get('PS_COUNTRY_DEFAULT'));
-    }
-
-    /**
-     * Toggle Customer status.
-     *
-     * @return bool Indicates whether the status has been successfully toggled
-     */
-    public function toggleStatus()
-    {
-        parent::toggleStatus();
-
-        /* Change status to active/inactive */
-        return Db::getInstance()->execute('
-        UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
-        SET `date_upd` = NOW()
-        WHERE `'.bqSQL($this->def['primary']).'` = '.(int) $this->id);
     }
 
     /**

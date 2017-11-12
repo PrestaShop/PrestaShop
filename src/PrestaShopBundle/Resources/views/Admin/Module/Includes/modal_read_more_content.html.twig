@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set ats = module.attributes %}
@@ -42,11 +42,6 @@
   <!-- Modal content-->
   <div class="modal-content module-modal-content no-padding">
     <div class="modal-header module-modal-header">
-      <button aria-label="Close" data-dismiss="modal" class="close" type="button">
-          <span aria-hidden="true">
-            <i class="material-icons">close</i>
-          </span>
-      </button>
       {% if nbRates > 0 %}
         <div class="read-more-stars module-star-ranking-grid-{{ starsRate }}">
           (
@@ -58,7 +53,7 @@
         <img class="module-logo-thumb" height="57" width="57" src="{{ img }}" alt="{{ displayName }}"/>
         <div class="modal-title module-modal-title">
           <h1>{{ displayName }}<br>
-            <small class="version">
+            <small class="version small-text">
               {% if serviceUrl is defined and serviceUrl|length > 0 %}
                 {{ 'Service by %author%'|trans({'%author%' : author}, 'Admin.Modules.Feature') }}
               {% else %}
@@ -69,6 +64,9 @@
 
         </div>
       </div>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
 
     <div class="modal-body row module-modal-body">
@@ -78,9 +76,9 @@
       <div class="col-md-12 module-menu-readmore">
         <nav class="navbar navbar-light">
           {# tab list #}
-          <ul class="nav navbar-nav navbar-separator">
-            <li class="nav-item active">
-              <a class="nav-link module-readmore-tab" data-toggle="tab" href="#overview-{{ name }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a class="nav-link module-readmore-tab active" data-toggle="tab" href="#overview-{{ name }}">{{ 'Overview'|trans({}, 'Admin.Modules.Feature') }}</a>
             </li>
             {% if additionalDescription %}
               <li class="nav-item">
@@ -184,15 +182,26 @@
     </div>
 
     <div class="modal-footer module-modal-footer">
-      {% if badges %}
-        <div class="pull-left module-badges-display">
+      <div class="module-stars-price">
+        <div class="module-price text-sm-right">
+          {% if module.attributes.url_active == 'buy' and module.attributes.price.raw != '0.00' %}
+            {{ module.attributes.price.displayPrice }}
+          {% elseif module.attributes.url_active != 'buy' %}
+            {{ 'Free'|trans({}, 'Admin.Modules.Feature') }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="module-badges-action">
+        <div class="float-left module-badges-display">
           {% for badge in badges %}
             <img src="{{badge.img}}" alt="{{badge.label}}"/>
             {{badge.label}}
           {% endfor %}
         </div>
-      {% endif %}
-      {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module, 'level' : level } %}
+        <div class="float-right module-action">
+          {% include 'PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig' with { 'module': module, 'level' : level } %}
+        </div>
+      </div>
     </div>
   </div>
 </div>
