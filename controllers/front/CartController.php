@@ -429,7 +429,7 @@ class CartControllerCore extends FrontController
                         $this->{$ErrorKey},
                         $this->trans(
                             'You must add %d minimum quantity',
-                            array($minimal_quantity),
+                            array('%quantity%' => $minimal_quantity),
                             'Shop.Notifications.Error'
                         )
                     );
