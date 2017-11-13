@@ -224,11 +224,11 @@
                         <div
                           class="feature-collection nostyle"
                           data-prototype="{% filter escape %}
-                            {{ include('PrestaShopBundle:Admin/Product/Include:form_feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
+                            {{ include('@Product/ProductPage/Forms/form_feature.html.twig', { 'form': form.step1.features.vars.prototype }) }}
                           {% endfilter %}"
                         >
                           {% for feature in form.step1.features %}
-                            {{ include('PrestaShopBundle:Admin/Product/Include:form_feature.html.twig', { 'form': feature }) }}
+                            {{ include('@Product/ProductPage/Forms/form_feature.html.twig', { 'form': feature }) }}
                           {% endfor %}
                         </div>
                       </div>
@@ -240,11 +240,11 @@
                     </div>
 
                     <div id="manufacturer" class="mb-3">
-                      {{ include('PrestaShopBundle:Admin/Product/Include:form_manufacturer.html.twig', { 'form':form.step1.id_manufacturer }) }}
+                      {{ include('@Product/ProductPage/Forms/form_manufacturer.html.twig', { 'form':form.step1.id_manufacturer }) }}
                     </div>
 
                     <div id="related-product" class="mb-3">
-                      {{ include('PrestaShopBundle:Admin/Product/Include:form_related_products.html.twig', { 'form':form.step1.related_products }) }}
+                      {{ include('@Product/ProductPage/Forms/form_related_products.html.twig', { 'form':form.step1.related_products }) }}
                     </div>
 
                     {{ renderhook('displayAdminProductsMainStepLeftColumnBottom', { 'id_product': id_product }) }}
@@ -359,7 +359,7 @@
                           </div>
 
                           <div class="form-group mb-4" id="categories">
-                            {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
+                            {{ include('@Product/ProductPage/Forms/form_categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
                           </div>
 
                           {{ renderhook('displayAdminProductsMainStepRightColumnBottom', { 'id_product': id_product }) }}
@@ -524,7 +524,7 @@
                         </div>
                       </div>
                     {% endif %}
-                    {{ include('PrestaShopBundle:Admin/Product/Include:form_combinations.html.twig', {'form': form.step3, 'form_combination_bulk': formCombinations}) }}
+                    {{ include('@Product/ProductPage/Forms/form_combinations.html.twig', {'form': form.step3, 'form_combination_bulk': formCombinations}) }}
 
                     {{ renderhook('displayAdminProductsQuantitiesStepBottom', { 'id_product': id_product }) }}
 
@@ -541,7 +541,7 @@
             <div class="col-md-12">
               <div class="container-fluid">
                 <div class="row">
-                  {{ include('PrestaShopBundle:Admin/Product/Include:form_shipping.html.twig', {
+                  {{ include('@Product/ProductPage/Forms/form_shipping.html.twig', {
                     'form' : form.step4,
                     'asm_globally_activated': asm_globally_activated,
                     'isNotVirtual': form.step1.type_product.vars.value != "2",
@@ -689,7 +689,7 @@
                           </table>
                         </div>
                         <div class="collapse" id="specific_price_form" data-action="{{ path('admin_specific_price_add') }}">
-                          {{ include('PrestaShopBundle:Admin:Product/Include/form-specific-price.html.twig', {'form': form.step2.specific_price, 'is_multishop_context': is_multishop_context}) }}
+                          {{ include('@Product/ProductPage/Forms/form_specific_price.html.twig', {'form': form.step2.specific_price, 'is_multishop_context': is_multishop_context}) }}
                         </div>
                       </div>
                     </div>
@@ -753,7 +753,7 @@
               <div class="container-fluid">
                 <div class="row">
 
-                  {{ include('PrestaShopBundle:Admin/Product/Include:form_seo.html.twig', {'form' : form.step5}) }}
+                  {{ include('@Product/ProductPage/Forms/form_seo.html.twig', {'form' : form.step5}) }}
 
                 </div>
               </div>
@@ -888,11 +888,11 @@
                           {{ form_errors(form.step6.custom_fields) }}
                           <ul class="customFieldCollection nostyle" data-prototype="
                                       {% filter escape %}
-                                      {{ include('PrestaShopBundle:Admin/Product/Include:form_custom_fields.html.twig', { 'form': form.step6.custom_fields.vars.prototype }) }}
+                                      {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': form.step6.custom_fields.vars.prototype }) }}
                                       {% endfilter %}">
                             {% for field in form.step6.custom_fields %}
                               <li>
-                                {{ include('PrestaShopBundle:Admin/Product/Include:form_custom_fields.html.twig', { 'form': field }) }}
+                                {{ include('@Product/ProductPage/Forms/form_custom_fields.html.twig', { 'form': field }) }}
                               </li>
                             {% endfor %}
                           </ul>
@@ -940,12 +940,12 @@
 
                     <div class="row mt-3">
                       <div class="col-md-8" id="supplier_collection">
-                        {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-choice.html.twig', { 'form': form.step6 }) }}
+                        {{ include('@Product/ProductPage/Forms/form_supplier_choice.html.twig', { 'form': form.step6 }) }}
                       </div>
                     </div>
                     <div class="row">
                       <div id="supplier_combination_collection" class="col-md-12" data-url="{{ path('admin_supplier_refresh_product_supplier_combination_form', { 'idProduct': 1, 'supplierIds': 1}) }}">
-                        {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
+                        {{ include('@Product/ProductPage/Forms/form_supplier_combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                       </div>
                     </div>
 
