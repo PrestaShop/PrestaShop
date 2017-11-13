@@ -97,7 +97,7 @@ services:
             - "@prestashop.core.admin.module.repository"
             - "@prestashop.adapter.legacy.configuration"
             - "@doctrine.dbal.default_connection"
-            
+
     # PRESTATRUST
     prestashop.adapter.module.prestatrust.checker:
         class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\PrestaTrustChecker
@@ -105,7 +105,7 @@ services:
             - "@doctrine.cache.provider"
             - "@prestashop.addons.client_api"
             - "@translator"
-        
+
     prestashop.adapter.module.prestatrust.eventsubscriber:
         class: PrestaShop\PrestaShop\Adapter\Module\PrestaTrust\ModuleEventSubscriber
         arguments:
