@@ -72,6 +72,7 @@
         {{ include('@Product/CatalogPage/Forms/form_products.html.twig', {
             'limit': limit,
             'orderBy': orderBy,
+            'offset': offset,
             'sortOrder': sortOrder,
             'filter_category': filter_category,
             'filter_column_id_product': filter_column_id_product,
@@ -80,6 +81,7 @@
             'filter_column_name_category': filter_column_name_category,
             'filter_column_price': filter_column_price,
             'filter_column_sav_quantity': filter_column_sav_quantity,
+            'filter_column_active': filter_column_active,
             'has_category_filter': has_category_filter,
             'activate_drag_and_drop': activate_drag_and_drop,
             'products': products,
