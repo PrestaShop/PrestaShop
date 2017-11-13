@@ -400,7 +400,7 @@ abstract class ControllerCore
     public function addJS($js_uri, $check_path = true)
     {
         if (!is_array($js_uri)) {
-            $js_uri = [$js_uri];
+            $js_uri = array($js_uri);
         }
 
         foreach ($js_uri as $js_file) {
@@ -429,7 +429,7 @@ abstract class ControllerCore
     public function removeJS($js_uri, $check_path = true)
     {
         if (!is_array($js_uri)) {
-            $js_uri = [$js_uri];
+            $js_uri = array($js_uri);
         }
 
         foreach ($js_uri as $js_file) {
@@ -537,7 +537,7 @@ abstract class ControllerCore
         $this->context->smarty->assign($js_tag, $js_tag);
 
         if (!is_array($content)) {
-            $content = [$content];
+            $content = array($content);
         }
 
         foreach ($content as $tpl) {
