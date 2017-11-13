@@ -97,44 +97,32 @@
                 <tr class="column-headers">
                   <th class="small-text" style="width: 8%">
                     {{ "ID"|trans({}, 'Admin.Global') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'id_product'
-                    } %}
+                    {{ ps.carrets('id_product') }}
                   </th>
                   <th class="small-text">
                     {{ "Image"|trans({}, 'Admin.Global') }}
                   </th>
                   <th class="small-text">
                     {{ "Name"|trans({}, 'Admin.Global') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'name'
-                    } %}
+                    {{ ps.carrets('name') }}
                   </th>
                   <th class="small-text" style="width: 9%">
                     {{ "Reference"|trans({}, 'Admin.Global') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'reference'
-                    } %}
+                    {{ ps.carrets('reference') }}
                   </th>
                   <th class="small-text">
                     {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'name_category'
-                    } %}
+                    {{ ps.carrets('name_category') }}
                   </th>
                   <th class="small-text" style="width: 9%">
                     {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'price'
-                    } %}
+                    {{ ps.carrets('price') }}
                   </th>
 
                   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                   <th class="small-text" style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'sav_quantity'
-                    } %}
+                    {{ ps.carrets('sav_quantity') }}
                   </th>
                   {% else %}
                     <th></th>
@@ -142,16 +130,12 @@
 
                   <th class="small-text">
                     {{ "Status"|trans({}, 'Admin.Global') }}
-                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                      'column': 'active'
-                    } %}
+                    {{ ps.carrets('active') }}
                   </th>
                   {% if has_category_filter == true %}
                     <th class="small-text">
                       {{ "Position"|trans({}, 'Admin.Global') }}
-                      {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
-                        'column': 'position'
-                      } %}
+                      {{ ps.carrets('position') }}
                     </th>
                   {% endif %}
                   <th class="small-text" style="width: 6%"></th>
