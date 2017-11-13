@@ -2572,8 +2572,8 @@ FileETag none
         }
 
         $tab['GB'] = array(
-            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
-            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
+            '?order=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+            '&order=','&tag=','&id_currency=','&search_query=','&back=','&n='
         );
 
         foreach ($disallow_controllers as $controller) {
