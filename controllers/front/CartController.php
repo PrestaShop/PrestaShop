@@ -41,6 +41,11 @@ class CartControllerCore extends FrontController
      */
     protected $preview;
     public $ssl = true;
+    /**
+     * An array of errors, in case the update action of product is wrong
+     * @var string[] $updateOperationError
+     */
+    private $updateOperationError = array();
 
     /**
      * This is not a public page, so the canonical redirection is disabled
@@ -69,6 +74,17 @@ class CartControllerCore extends FrontController
         $this->qty = abs(Tools::getValue('qty', 1));
         $this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
         $this->preview = ('1' === Tools::getValue('preview'));
+
+        /** Check if the products in the cart are available */
+        if ("show" === Tools::getValue('action')) {
+            $isAvailable = $this->areProductsAvailable();
+            if (Tools::getIsset('checkout')) {
+                return Tools::redirect($this->context->link->getPageLink('order'));
+            }
+            if (true !== $isAvailable ) {
+                $this->errors[] = $isAvailable;
+            }
+        }
     }
 
     /**
@@ -118,6 +134,7 @@ class CartControllerCore extends FrontController
                 'id_product_attribute' => $this->id_product_attribute,
                 'quantity' => $productQuantity,
                 'cart' => $cartPresenter->present($this->context->cart),
+                'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
         } else {
             $this->ajaxDie(Tools::jsonEncode([
@@ -268,6 +285,11 @@ class CartControllerCore extends FrontController
                 $this->context->cart->gift_message = '';
                 $this->context->cart->update();
             }
+
+            $isAvailable = $this->areProductsAvailable();
+            if (true !== $isAvailable) {
+                $this->updateOperationError[] = $isAvailable;
+            }
         }
 
         CartRule::autoRemoveFromCart();
@@ -280,20 +302,42 @@ class CartControllerCore extends FrontController
     protected function processChangeProductInCart()
     {
         $mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
+        $ErrorKey = ('update' === $mode) ? 'updateOperationError' : 'errors';
 
         if (Tools::getIsset('group')) {
             $this->id_product_attribute = (int)Product::getIdProductAttributesByIdAttributes($this->id_product, Tools::getValue('group'));
         }
 
         if ($this->qty == 0) {
-            $this->errors[] = $this->trans('Null quantity.', array(), 'Shop.Notifications.Error');
+            array_push(
+                $this->{$ErrorKey},
+                $this->trans(
+                    'Null quantity.',
+                    array(),
+                    'Shop.Notifications.Error'
+                )
+            );
         } elseif (!$this->id_product) {
-            $this->errors[] = $this->trans('Product not found', array(), 'Shop.Notifications.Error');
+            array_push(
+                $this->{$ErrorKey},
+                $this->trans(
+                    'Product not found',
+                    array(),
+                    'Shop.Notifications.Error'
+                )
+            );
         }
 
         $product = new Product($this->id_product, true, $this->context->language->id);
         if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer)) {
-            $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
+            array_push(
+                $this->{$ErrorKey},
+                $this->trans(
+                    'This product is no longer available.',
+                    array(),
+                    'Shop.Notifications.Error'
+                )
+            );
             return;
         }
 
@@ -326,12 +370,15 @@ class CartControllerCore extends FrontController
         }
 
         // Check product quantity availability
-        if ($this->id_product_attribute) {
-            if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check)) {
-                $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
-            }
-        } elseif (!$product->checkQty($qty_to_check)) {
-            $this->errors[] = $this->trans('There are not enough products in stock', array(), 'Shop.Notifications.Error');
+        if ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+            array_push(
+                $this->{$ErrorKey},
+                $this->trans(
+                    'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                    array('%product%' => $product->name),
+                    'Shop.Notifications.Error'
+                )
+            );
         }
 
         // If no errors, process product addition
@@ -349,20 +396,52 @@ class CartControllerCore extends FrontController
             }
 
             // Check customizable fields
-            if ($product->hasActivatedRequiredCustomizableFields() && !$this->customization_id) {
-                $this->errors[] = $this->trans('Please fill in all of the required fields, and then save your customizations.', array(), 'Shop.Notifications.Error');
+
+            if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
+                array_push(
+                    $this->{$ErrorKey},
+                    $this->trans(
+                        'Please fill in all of the required fields, and then save your customizations.',
+                        array(),
+                        'Shop.Notifications.Error'
+                    )
+                );
             }
 
             if (!$this->errors) {
                 $cart_rules = $this->context->cart->getCartRules();
                 $available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
-                $update_quantity = $this->context->cart->updateQty($this->qty, $this->id_product, $this->id_product_attribute, $this->customization_id, Tools::getValue('op', 'up'), $this->id_address_delivery);
+                $update_quantity = $this->context->cart->updateQty(
+                    $this->qty,
+                    $this->id_product,
+                    $this->id_product_attribute,
+                    $this->customization_id,
+                    Tools::getValue('op', 'up'),
+                    $this->id_address_delivery,
+                    null,
+                    true,
+                    true
+                );
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
-                    $this->errors[] = $this->trans('You must add %d minimum quantity', array($minimal_quantity), 'Shop.Notifications.Error');
+                    array_push(
+                        $this->{$ErrorKey},
+                        $this->trans(
+                            'You must add %quantity% minimum quantity',
+                            array('%quantity%' => $minimal_quantity),
+                            'Shop.Notifications.Error'
+                        )
+                    );
                 } elseif (!$update_quantity) {
-                    $this->errors[] = $this->trans('You already have the maximum quantity available for this product.', array(), 'Shop.Notifications.Error');
+                    array_push(
+                        $this->{$ErrorKey},
+                        $this->trans(
+                            'You already have the maximum quantity available for this product.',
+                            array(),
+                            'Shop.Notifications.Error'
+                        )
+                    );
                 }
             }
         }
@@ -397,5 +476,48 @@ class CartControllerCore extends FrontController
         }
 
         return $page;
+    }
+
+    /**
+     * Check product quantity availability
+     *
+     * @param Product $product
+     * @param int $qtyToCheck
+     * @return bool
+     */
+    private function shouldAvailabilityErrorBeRaised($product, $qtyToCheck)
+    {
+        if (($this->id_product_attribute)) {
+            return (!Product::isAvailableWhenOutOfStock($product->out_of_stock)
+                && !Attribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck));
+        } else {
+            return (!$product->checkQty($qtyToCheck));
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the products in the cart are available
+     *
+     * @return bool|string
+     */
+    private function areProductsAvailable()
+    {
+        $product = $this->context->cart->checkQuantities(true);
+
+        if (true === $product || !is_array($product)) {
+            return true;
+        }
+        if ($product['active']) {
+            return $this->trans(
+                'The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                array('%product%' => $product['name']),
+                'Shop.Notifications.Error');
+        }
+        return $this->trans(
+            'This product (%product%) is no longer available.',
+            array('%product%' => $product['name']),
+           'Shop.Notifications.Error');
     }
 }
