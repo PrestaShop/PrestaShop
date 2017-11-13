@@ -54,6 +54,9 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_horizontal_layout.html.twig'
+    paths:
+        '%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin/Product': Product
+        '%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm': Twig
     globals:
         webpack_server:   false
     paths:

@@ -216,7 +216,7 @@
                 <tr class="column-headers">
                   <th class="small-text" style="width: 8%">
                     {{ "ID"|trans({}, 'Admin.Global') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'id_product'
                     } %}
                   </th>
@@ -225,25 +225,25 @@
                   </th>
                   <th class="small-text">
                     {{ "Name"|trans({}, 'Admin.Global') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'name'
                     } %}
                   </th>
                   <th class="small-text" style="width: 9%">
                     {{ "Reference"|trans({}, 'Admin.Global') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'reference'
                     } %}
                   </th>
                   <th class="small-text">
                     {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'name_category'
                     } %}
                   </th>
                   <th class="small-text" style="width: 9%">
                     {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'price'
                     } %}
                   </th>
@@ -251,7 +251,7 @@
                   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
                   <th class="small-text" style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'sav_quantity'
                     } %}
                   </th>
@@ -261,14 +261,14 @@
 
                   <th class="small-text">
                     {{ "Status"|trans({}, 'Admin.Global') }}
-                    {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                    {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                       'column': 'active'
                     } %}
                   </th>
                   {% if has_category_filter == true %}
                     <th class="small-text">
                       {{ "Position"|trans({}, 'Admin.Global') }}
-                      {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
+                      {% include '@Product/CatalogPage/catalog_order_carrets.html.twig' with {
                         'column': 'position'
                       } %}
                     </th>

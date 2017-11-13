@@ -35,7 +35,7 @@
 {%- block form_widget_simple -%}
   {%- set type = type|default('text') -%}
   <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-  {% include "PrestaShopBundle:Admin/Product/Include:form_max_length.html.twig" with {"attr": attr} %}
+  {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
 {%- endblock form_widget_simple -%}
 
 {%- block form_widget_compound -%}
@@ -57,7 +57,7 @@
 
 {%- block textarea_widget -%}
   <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
-  {% include "PrestaShopBundle:Admin:Product/Include/form_max_length.html.twig" with {"attr": attr} %}
+  {% include "@Twig/form_max_length.html.twig" with {"attr": attr} %}
 {%- endblock textarea_widget -%}
 
 {%- block choice_widget -%}

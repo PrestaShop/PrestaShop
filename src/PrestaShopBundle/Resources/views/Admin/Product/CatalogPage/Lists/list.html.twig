@@ -114,7 +114,7 @@
                       }
                     ]) %}
 
-                    {% include 'PrestaShopBundle:Admin/Product/Include:form_edit_dropdown.html.twig' with {
+                    {% include '@Product/CatalogPage/Forms:form_edit_dropdown.html.twig' with {
                       'button_id': "product_list_id_" ~ product.id_product ~ "_menu",
                       'default_item': {
                         "href": product.url|default('#'),
