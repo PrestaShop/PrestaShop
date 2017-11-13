@@ -62,8 +62,8 @@
 </label>
 {% endmacro %}
 
- {# Display carrets to reverse order of items #}
- {% macro carrets(column, sortOrder, orderBy) %}
+ {# Display arrows to reverse order of items #}
+ {% macro sort_arrows(column, sortOrder, orderBy) %}
     {% set sortOrder, orderBy = sortOrder|default(''), orderBy|default('') %}
 
     {% spaceless %}

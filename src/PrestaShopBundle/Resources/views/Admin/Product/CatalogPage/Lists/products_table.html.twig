@@ -37,32 +37,32 @@
       <tr class="column-headers">
         <th class="small-text" style="width: 8%">
           {{ "ID"|trans({}, 'Admin.Global') }}
-          {{ ps.carrets('id_product') }}
+          {{ ps.sort_arrows('id_product') }}
         </th>
         <th class="small-text">
           {{ "Image"|trans({}, 'Admin.Global') }}
         </th>
         <th class="small-text">
           {{ "Name"|trans({}, 'Admin.Global') }}
-          {{ ps.carrets('name') }}
+          {{ ps.sort_arrows('name') }}
         </th>
         <th class="small-text" style="width: 9%">
           {{ "Reference"|trans({}, 'Admin.Global') }}
-          {{ ps.carrets('reference') }}
+          {{ ps.sort_arrows('reference') }}
         </th>
         <th class="small-text">
           {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
-          {{ ps.carrets('name_category') }}
+          {{ ps.sort_arrows('name_category') }}
         </th>
         <th class="small-text" style="width: 9%">
           {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
-          {{ ps.carrets('price') }}
+          {{ ps.sort_arrows('price') }}
         </th>
 
         {% if 'PS_STOCK_MANAGEMENT'|configuration %}
         <th class="small-text" style="width: 9%">
           {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-          {{ ps.carrets('sav_quantity') }}
+          {{ ps.sort_arrows('sav_quantity') }}
         </th>
         {% else %}
           <th></th>
@@ -70,12 +70,12 @@
 
         <th class="small-text">
           {{ "Status"|trans({}, 'Admin.Global') }}
-          {{ ps.carrets('active') }}
+          {{ ps.sort_arrows('active') }}
         </th>
         {% if has_category_filter == true %}
           <th class="small-text">
             {{ "Position"|trans({}, 'Admin.Global') }}
-            {{ ps.carrets('position') }}
+            {{ ps.sort_arrows('position') }}
           </th>
         {% endif %}
         <th class="small-text" style="width: 6%"></th>
