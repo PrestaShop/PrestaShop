@@ -100,7 +100,7 @@ module.exports = {
       //catalog selector
       CatalogPage: {
         menu_button: '//*[@id="subtab-AdminCatalog"]/a',
-        success_panel: '//*[@id="content"]/div[3]/div',
+        success_panel: '//*[@id="content"]/div[4]/div',
         select_all_product_button: '//*[@id="bulk_action_select_all"]',
         action_group_button: '//*[@id="product_bulk_menu"]',
         disable_all_selected: '//*[@id="main-div"]/div[3]/div/div/div[2]/div/div[2]/div[2]/div/div/a[2]',
@@ -242,7 +242,41 @@ module.exports = {
           }
         }
       },
-
+      //Customers
+      Customers: {
+        Customer: {
+          customer_menu: '//*[@id="subtab-AdminParentCustomer"]/a',
+          new_customer_button: '//*[@id="page-header-desc-customer-new_customer"]',
+          social_title_button: '//*[@id="gender_1"]',
+          first_name_input: '//*[@id="firstname"]',
+          last_name_input: '//*[@id="lastname"]',
+          email_address_input: '//*[@id="email"]',
+          password_input: '//*[@id="passwd"]',
+          days_select: '//*[@id="fieldset_0"]/div[2]/div[6]/div/div/div[1]/select',
+          month_select: '//*[@id="fieldset_0"]/div[2]/div[6]/div/div/div[2]/select',
+          years_select: '//*[@id="fieldset_0"]/div[2]/div[6]/div/div/div[3]/select',
+          save_button: '//*[@id="customer_form_submit_btn"]'
+        },
+        addresses: {
+          addresses_menu: '//*[@id="subtab-AdminAddresses"]/a',
+          new_address_button:'//*[@id="page-header-desc-address-new_address"]',
+          email_input: '//*[@id="email"]',
+          id_number_input: '//*[@id="dni"]',
+          address_alias_input: '//*[@id="alias"]',
+          first_name_input: '//*[@id="firstname"]',
+          last_name_input: '//*[@id="lastname"]',
+          company: '//*[@id="company"]',
+          VAT_number_input: '//*[@id="vat_number"]',
+          address_input: '//*[@id="address1"]',
+          address_second_input: '//*[@id="address2"]',
+          zip_code_input: '//*[@id="postcode"]',
+          city_input: '//*[@id="city"]',
+          country_input: '//*[@id="id_country"]',
+          phone_input: '//*[@id="phone"]',
+          other_input: '//*[@id="other"]',
+          save_button:'//*[@id="address_form_submit_btn"]'
+        }
+      },
       //Order selector
       OrderPage: {
         orders_subtab: '//*[@id="subtab-AdminParentOrders"]/a',
