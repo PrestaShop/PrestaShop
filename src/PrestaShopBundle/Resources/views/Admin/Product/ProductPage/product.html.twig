@@ -48,27 +48,11 @@
       </div>
     </div>
 
-    {# FORM TABS CONTAINER #}
     <div id="form-loading" class="col-md-10">
-      <div class="tabs js-tabs">
-        <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
-          <li id="tab_step1" class="nav-item"><a href="#step1" role="tab" data-toggle="tab" class="nav-link active">{{ 'Basic settings'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-          <li id="tab_step3" class="nav-item"><a href="#step3" role="tab" data-toggle="tab" class="nav-link">{{ 'Quantities'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-          <li id="tab_step4" class="nav-item"><a href="#step4" role="tab" data-toggle="tab" class="nav-link">{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-          <li id="tab_step2" class="nav-item"><a href="#step2" role="tab" data-toggle="tab" class="nav-link">{{ 'Pricing'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-          <li id="tab_step5" class="nav-item"><a href="#step5" role="tab" data-toggle="tab" class="nav-link">{{ 'SEO'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-          <li id="tab_step6" class="nav-item"><a href="#step6" role="tab" data-toggle="tab" class="nav-link">{{ 'Options'|trans({}, 'Admin.Global') }}</a></li>
-          {% if hookcount('displayAdminProductsExtra') > 0 %}
-            <li id="tab_hooks" class="nav-item"><a href="#hooks" role="tab" data-toggle="tab" class="nav-link">{{ 'Modules'|trans({}, 'Admin.Catalog.Feature') }}</a></li>
-          {% endif %}
-        </ul>
-        <div class="arrow d-xl-none js-arrow left-arrow float-left">
-          <i class="material-icons hide">chevron_left</i>
-        </div>
-        <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
-          <i class="material-icons hide">chevron_right</i>
-        </div>
-      </div>
+      {# FORM TABS CONTAINER #}
+      {% block product_tabs_container %}
+        {{ include('@Product/ProductPage/Blocks/tabs.html.twig') }}
+      {% endblock %}
       <div id="form_content" class="tab-content">
 
         {# PANEL ESSENTIALS #}
