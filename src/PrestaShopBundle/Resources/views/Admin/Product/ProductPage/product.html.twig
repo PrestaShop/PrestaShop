@@ -1,4 +1,4 @@
-{#**
+ {#**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -31,76 +31,15 @@
     {% if not editable %} <fieldset disabled id="field-disabled"> {% endif %}
     {# PRODUCT HEADER #}
     {% block product_header %}
-      <div class="product-header col-md-12">
-        <div class="row justify-content-md-center">
-        {% if is_multishop_context %}
-          <div class="col-md-10">
-            <div class="alert alert-warning" role="alert">
-              <p class="alert-text">{{ 'You are in a multistore context: any modification will impact all your shops, or each shop of the active group.'|trans({}, 'Admin.Catalog.Notification') }}</p>
-            </div>
-          </div>
-        {% endif %}
-
-          <div class="col-md-10">
-            <div class="row">
-              <div class="col-md-7 big-input {{ 'PS_FORCE_FRIENDLY_PRODUCT'|configuration == 1 ? 'friendly-url-force-update' : '' }}" id="form_step1_names">
-                {{ form_widget(form.step1.name) }}
-              </div>
-              <div class="col-md-2 form_step1_type_product">
-                {{ form_widget(form.step1.type_product) }}
-                <span class="help-box pull-xs-right" data-toggle="popover"
-                  data-content="{{ "Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?"|trans({}, 'Admin.Catalog.Help') }}"></span>
-              </div>
-              <div class="col-md-1 form_switch_language">
-                <div class="{{ languages|length == 1 ? 'hide' : '' }}">
-                  <select id="form_switch_language" class="custom-select">
-                    {% for language in languages %}
-                      <option value="{{ language.iso_code }}" {% if default_language_iso == language.iso_code %}selected="selected"{% endif %}>{{ language.iso_code }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-              <div class="toolbar col-md-2 text-md-right">
-                <a class="toolbar-button btn-sales" href="{{ stats_link }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
-                  id="product_form_go_to_sales">
-                  <i class="material-icons">assessment</i>
-                  <span class="title">{{ 'Sales'|trans({}, 'Admin.Global') }}</span>
-                </a>
-
-                <a
-                  class="toolbar-button btn-quicknav btn-sidebar"
-                  href="#"
-                  title="{{ 'Quick navigation'|trans({}, 'Admin.Global') }}"
-                  data-toggle="sidebar"
-                  data-target="#right-sidebar"
-                  data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
-                  id="product_form_open_quicknav"
-                >
-                  <i class="material-icons">list</i>
-                  <span class="title">{{ 'Product list'|trans({}, 'Admin.Catalog.Feature') }}</span>
-                </a>
-
-                <a class="toolbar-button btn-help btn-sidebar" href="#"
-                  title="{{ 'Help'|trans({}, 'Admin.Global') }}"
-                  data-toggle="sidebar"
-                  data-target="#right-sidebar"
-                  data-url="{{ help_link }}"
-                  id="product_form_open_help"
-                >
-                  <i class="material-icons">help</i>
-                  <span class="title">{{ 'Help'|trans({}, 'Admin.Global') }}</span>
-                </a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-12">
-                {{ form_errors(form.step1.name) }}
-                {{ form_errors(form.step1.type_product) }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {{ include('@Product/ProductPage/Blocks/header.html.twig', {
+        'formName': form.step1.name,
+        'formType': form.step1.type_product,
+        'is_multishop_context': is_multishop_context,
+        'languages': languages,
+        'help_link': help_link,
+        'stats_link': stats_link
+        })
+      }}
     {% endblock %}
 
     <div class="col-md-10">
