@@ -76,9 +76,8 @@
         <div class="sf-toolbar-info-piece">
           <b>Resources</b>
           <span>
-            {%  set appDotVersion = collector.applicationversion|split('.')|join()[:2] %}
-            {% set appVersion = appDotVersion|split('')|join() %}
-              <a href="http://doc.prestashop.com/display/{{ appVersion }}/PrestaShop+{{ appDotVersion }}+documentation" rel="help">
+            {% set appVersion = collector.applicationversion|split('.')|join()[:2] %}
+              <a href="http://doc.prestashop.com/display/PS{{ appVersion }}" rel="help">
                   Read PrestaShop {{ collector.applicationversion }} Docs
               </a>
           </span>
