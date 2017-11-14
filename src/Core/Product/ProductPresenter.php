@@ -850,7 +850,7 @@ class ProductPresenter
         // features can either be "raw" (id_feature, id_product_id_feature_value)
         // or "full" (id_feature, name, value)
         // grouping can only be performed if they are "full"
-        if (empty($productFeatures) || !array_key_exists('name', $productFeatures[0])) {
+        if (empty($productFeatures) || !array_key_exists('name', reset($productFeatures))) {
             return array();
         }
 
