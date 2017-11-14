@@ -2430,6 +2430,7 @@ class AdminOrdersControllerCore extends AdminController
             'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
             'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
             'refresh' => $refresh,
+            'displayExcludedTaxMethod' => (bool)Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         )));
     }
 
@@ -2677,6 +2678,7 @@ class AdminOrdersControllerCore extends AdminController
             'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
             'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
             'customized_product' => is_array(Tools::getValue('product_quantity')),
+            'displayExcludedTaxMethod' => (bool)Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         )));
     }
 
@@ -2758,6 +2760,7 @@ class AdminOrdersControllerCore extends AdminController
             'invoices' => $invoice_array,
             'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
             'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
+            'displayExcludedTaxMethod' => (bool)Group::getPriceDisplayMethod($this->context->customer->id_default_group),
         )));
     }
 
