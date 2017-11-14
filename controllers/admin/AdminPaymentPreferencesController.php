@@ -44,7 +44,7 @@ class AdminPaymentPreferencesControllerCore extends AdminController
 
         foreach ($modules as $module) {
             $addonModule = $moduleRepository->getModule($module->name);
-            if ($addonModule->attributes->get('parent_class') == 'PaymentModule') {
+            if ($addonModule->attributes->get('is_paymentModule')) {
                 if ($module->id) {
                     if (!get_class($module) == 'SimpleXMLElement') {
                         $module->country = array();

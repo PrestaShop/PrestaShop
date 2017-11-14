@@ -468,6 +468,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
 
                 $main_class_attributes['parent_class'] = get_parent_class($name);
+                $main_class_attributes['is_paymentModule'] = is_subclass_of($name, 'PaymentModule');
                 $main_class_attributes['is_configurable'] = (int) method_exists($tmp_module, 'getContent');
 
                 $disk['is_valid'] = 1;
