@@ -29,6 +29,7 @@ ul.category-tree {
   .category-label {
     display: block;
     padding-left: 0;
+    position: relative;
     .category {
       cursor: pointer;
       position: absolute;
