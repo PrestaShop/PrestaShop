@@ -135,12 +135,7 @@ var productCatalogFilterChanged = false;
 function updateFilterMenu() {
          var columnFilters = $('#product_catalog_list').find('tr.column-filters');
 	var count = columnFilters.find('option:selected[value!=""]').length;
-	columnFilters.find('input[type="text"]:visible').each(function() {
-		if ($(this).val() !== '') {
-			count ++;
-		}
-	});
-	columnFilters.find('input[type="text"][sql!=""][sql]').each(function() {
+	columnFilters.find('input[type="text"][sql!=""][sql], input[type="text"]:visible').each(function() {
 		if ($(this).val() !== '') {
 			count ++;
 		}
