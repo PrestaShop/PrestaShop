@@ -25,28 +25,52 @@
 var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
+var cssLoaders = [{
+  loader: "css-loader"
+}];
 
 module.exports = {
-  entry: [
-    './js/theme.js'
-  ],
+  entry: {
+    main: ['./js/theme.js'],
+    productPage: [
+      './js/bundle/product/form.js',
+      './js/bundle/product/product-manufacturer.js',
+      './js/bundle/product/product-related.js',
+      './js/bundle/product/product-category-tags.js',
+      './js/bundle/product/default-category.js',
+      './js/bundle/product/product-combinations.js',
+      './js/bundle/category-tree.js',
+      './js/bundle/module/module_card.js',
+      './js/bundle/modal-confirmation.js',
+    ]
+  },
   output: {
-    path: './public',
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'public'),
+    filename: '[name].bundle.js'
   },
   module: {
-    loaders: [{
+    loaders: [
+      {
       test: path.join(__dirname, 'js'),
-      loader: 'babel',
-      query: {
-        presets: ['es2015']
-      }
+      exclude: ['/node_modules/', '/tiny_mce/', '/js\/admin/'],
+      use: ["babel-loader"]
     }, {
       test: /\.scss$/,
-      loader: ExtractTextPlugin.extract('style', 'css!sass')
+      use: ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: [
+          ...cssLoaders,
+          "sass-loader"
+        ]
+      })
     }, {
       test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style', 'css?sourceMap!postcss!sass?sourceMap')
+      use: ExtractTextPlugin.extract({
+        fallback: "style-loader",
+        use: cssLoaders
+    })
     }, {
       test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
       loader: 'file-loader?name=[hash].[ext]'
@@ -54,18 +78,17 @@ module.exports = {
   },
   plugins: [
     new ExtractTextPlugin('theme.css'),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: false
+    new UglifyJSPlugin({
+      sourceMap: true,
+      uglifyOptions: {
+          output: {
+            comments: true,
+            "ascii_only": true
+          },
+          mangle: false,
+          compress: {
+              warnings: false
+          }
       }
     })
   ]

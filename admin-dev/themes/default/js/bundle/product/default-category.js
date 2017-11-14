@@ -7,12 +7,18 @@ var defaultCategory = (function() {
     'init': function () {
       /** Populate category tree with the default category **/
       var defaultCategoryId = defaultCategoryForm.find('input:checked').val();
-      productCategoriesTags.checkDefaultCategory(defaultCategoryId);
+
+      this.checkDefaultCategory(defaultCategoryId);
 
       /** Hide the default form, if javascript disabled it will be visible and so we
        * still can select a default category using the form
        */
       defaultCategoryForm.hide();
+    },
+    'checkDefaultCategory': function (categoryId) {
+      var categoriesForm = $('#form_step1_categories');
+      var selector = 'input[value="'+categoryId+'"].default-category';
+      categoriesForm.find(selector).prop('checked', true);
     },
 
     /**
@@ -34,7 +40,7 @@ var defaultCategory = (function() {
       var firstInput = defaultCategoryForm.find('input:first-child');
       firstInput.prop('checked', true);
       var categoryId = firstInput.val();
-      productCategoriesTags.checkDefaultCategory(categoryId);
+      this.checkDefaultCategory(categoryId);
     }
   };
 })();
