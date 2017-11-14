@@ -216,7 +216,7 @@ class AdminThemesControllerCore extends AdminController
                     'storeLink' => array(
                         'title' => $this->l('Visit the theme catalog'),
                         'icon' => 'process-icon-themes',
-                        'href' => 'http://addons.prestashop.com/en/3-templates-prestashop'
+                        'href' => 'https://addons.prestashop.com/en/3-templates-prestashop'
                         .'?utm_source=back-office&utm_medium=theme-button'
                         .'&utm_campaign=back-office-'.$iso_lang_uc
                         .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
