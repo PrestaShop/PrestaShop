@@ -24,7 +24,7 @@
  */
 
 $(document).ready(function() {
-  form.init();
+  PsProductForm.init();
   nav.init();
   featuresCollection.init();
   displayFormCategory.init();
@@ -44,12 +44,6 @@ $(document).ready(function() {
   tags.init();
   rightSidebar.init();
   recommendedModules.init();
-  BOEvent.emitEvent("Product Categories Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Default category Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Manufacturer Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Related Management started", "CustomEvent");
-  BOEvent.emitEvent("Modal confirmation started", "CustomEvent");
-  BOEvent.emitEvent("Product Combinations Management started", "CustomEvent");
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function() {
@@ -80,7 +74,7 @@ $(document).ready(function() {
 /**
  * Manage show or hide fields
  */
-var displayFieldsManager = (function() {
+global.displayFieldsManager = (function() {
 
   var typeProduct = $('#form_step1_type_product');
   var showVariationsSelector = $('#show_variations_selector');
@@ -471,7 +465,7 @@ var supplier = (function() {
 /**
  * Supplier combination collection management
  */
-var supplierCombinations = (function() {
+global.supplierCombinations = (function() {
   var id_product = $('#form_id_product').val();
   var collectionHolder = $('#supplier_combination_collection');
 
@@ -782,7 +776,7 @@ var specificPrices = (function() {
 /**
  * Warehouse combination collection management (ASM only)
  */
-var warehouseCombinations = (function() {
+global.warehouseCombinations = (function() {
   var id_product = $('#form_id_product').val();
   var collectionHolder = $('#warehouse_combination_collection');
 
@@ -833,7 +827,7 @@ var warehouseCombinations = (function() {
 /**
  * Form management
  */
-var form = (function() {
+global.PsProductForm = (function() {
   var elem = $('#form');
 
   function send(redirect, target, callBack) {
@@ -2130,7 +2124,7 @@ var recommendedModules = (function() {
       $(this.moduleActionMenuLinkSelectors).on('module_card_action_event', this.saveProduct);
     },
     'saveProduct': function(event, action) {
-      form.send();
+      PsProductForm.send();
     }
   };
 })();

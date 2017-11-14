@@ -82,9 +82,9 @@ var productCategoriesTags = (function () {
 
       return true;
     },
-    'checkDefaultCategory': function (categoryId) {
+    'checkDefaultCategory': function () {
       var categoriesForm = $('#form_step1_categories');
-      var selector = 'input[value="'+categoryId+'"].default-category';
+      var selector = 'input[value=""].default-category';
       categoriesForm.find(selector).prop('checked', true);
     },
     'getTree': function () {
@@ -200,6 +200,4 @@ var productCategoriesTags = (function () {
   };
 })();
 
-BOEvent.on("Product Categories Management started", function initTagsManagement() {
-  productCategoriesTags.init();
-}, "Back office");
+productCategoriesTags.init();

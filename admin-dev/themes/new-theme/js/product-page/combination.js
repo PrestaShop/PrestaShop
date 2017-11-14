@@ -19,7 +19,7 @@ export default function() {
         }
         $('#create-combinations').click(function(event) {
           event.preventDefault();
-          form.send(false, false, generate);
+          PsProductForm.send(false, false, generate);
         });
       });
 

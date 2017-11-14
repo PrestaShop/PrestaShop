@@ -5,27 +5,34 @@
     "main": "index.js",
     "scripts": {
         "postinstall": "webpack --progress",
-        "build": "webpack --progress --colors --debug --display-chunks",
-        "watch": "webpack --progress --colors --debug --display-chunks --watch"
+        "build": "webpack --progress",
+        "watch": "webpack --progress --colors --debug --watch"
     },
     "author": "PrestaShop",
     "license": "OSL-3.0",
+    "browserslist": [
+        "> 1%",
+        "last 2 versions",
+        "not ie <= 10"
+    ],
     "devDependencies": {
-        "babel-core": "^6.5.2",
-        "babel-loader": "^6.2.2",
-        "babel-preset-es2015": "^6.5.0",
-        "css-loader": "^0.23.1",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-preset-env": "^1.6.0",
+        "babel-preset-stage-3": "^6.24.1",
+        "css-loader": "^0.28.7",
         "exports-loader": "^0.6.3",
         "expose-loader": "^0.7.1",
-        "extract-text-webpack-plugin": "^1.0.1",
-        "file-loader": "^0.8.5",
+        "extract-text-webpack-plugin": "^3.0.2",
+        "file-loader": "^1.1.4",
         "imports-loader": "^0.6.5",
         "material-design-icons": "^2.1.3",
         "node-sass": "^3.4.2",
         "path": "^0.12.7",
         "postcss-loader": "^0.8.1",
-        "sass-loader": "^3.1.2",
+        "sass-loader": "^6.0.6",
         "style-loader": "^0.13.0",
-        "webpack": "^1.12.12"
+        "uglifyjs-webpack-plugin": "^1.0.1",
+        "webpack": "^3.8.1"
     }
 }
