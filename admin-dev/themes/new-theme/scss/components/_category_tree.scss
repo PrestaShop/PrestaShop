@@ -4,26 +4,34 @@ ul.category-tree {
   .more {
     background: none;
     position: relative;
-    > .checkbox {
+    > .checkbox,
+    > .radio {
       cursor: pointer;
-    }
-    &::before {
-      position: absolute;
-      font-family: 'Material Icons';
-      cursor: pointer;
-      font-size: 1.25rem;
-      color: $gray-medium;
-      top: -0.25rem;
+      &::before {
+        position: absolute;
+        font-family: 'Material Icons';
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: $gray-medium;
+        top: -0.25rem;
+        left: -0.1rem;
+      }
     }
   }
   .less {
-    &::before {
-      content: "\E313";
+    > .checkbox,
+    > .radio {
+      &::before {
+        content: "\E313";
+      }
     }
   }
   .more {
-    &::before {
-      content: "\E5CC";
+    > .checkbox,
+    > .radio {
+      &::before {
+        content: "\E5CC";
+      }
     }
   }
   .category-label {
