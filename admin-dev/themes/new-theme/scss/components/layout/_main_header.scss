@@ -281,6 +281,8 @@
   .items-list {
     list-style: none;
     padding-left: 0;
+    overflow-y: auto;
+    max-height: 500px;
     li:first-child a {
       color: $brand-primary;
       &:hover {
