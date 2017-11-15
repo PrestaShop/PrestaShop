@@ -386,7 +386,7 @@ class StockManagerCore implements StockManagerInterface
                             $timestamp = $date->format('U');
 
                             // history of the mvt
-                            $stock_history_qty_available[$timestamp] = array(
+                            $stock_history_qty_available[$timestamp.'_'.$row['id_stock_mvt']] = array(
                                 'id_stock' => $stock->id,
                                 'id_stock_mvt' => (int)$row['id_stock_mvt'],
                                 'qty' => (int)$row['qty']
