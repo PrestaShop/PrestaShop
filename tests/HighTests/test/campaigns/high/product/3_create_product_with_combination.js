@@ -37,17 +37,18 @@ scenario('Create product with combination', client => {
     test('should go to the product combinations form', () => client.goToProductCombinationsForm());
     test('should create first combination', () => client.createFirstCombination());
     test('should create second combination', () => client.createSecondCombination());
-    test('should click on edit the first combination', () => client.goToEditFirstCombination());
-    test('should edit the first combination', () => client.editFirstCombination());
-    test('should click on back to product button', () => client.backToProduct());
-    test('should click on edit the second combination', () => client.goToEditSecondCombination());
-    test('should edit the second combination', () => client.editSecondCombination());
-    test('should click on back to product button', () => client.backToProductButton());
+    test('should get combination data', () => client.getCombinationData(1));
+    test('should go to edit first combination', () => client.goToEditCombination());
+    test('should edit first combination', () => client.editCombination(1));
+    test('should go back to combination list', () => client.backToProduct());
+    test('should get combination data', () => client.getCombinationData(2));
+    test('should go to edit second combination', () => client.goToEditCombination());
+    test('should edit second combination', () => client.editCombination(2));
+    test('should go back to combination list', () => client.backToProduct());
     test('should select the availability preferences', () => client.availabilityPreferences());
     test('should enter the available label in stock', () => client.availabilityLabelInStock());
     test('should enter the available label out of stock', () => client.availabilityLabelOutStock());
   }, 'product/createcombinations');
-
   scenario('Edit product pricing', client => {
     test('should go to the product pricing tab', () => client.goToPricingTab());
     test('should enter the pricing unity', () => client.pricingUnity());

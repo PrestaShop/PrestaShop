@@ -14,10 +14,7 @@ class EditOptions extends PrestashopClient {
   selectVisibility() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.options_visibility, 90000)
-      .click(selector.BO.AddProductPage.options_visibility)
-      .pause(2000)
-      .waitForExist(selector.BO.AddProductPage.options_visibility_option, 90000)
-      .click(selector.BO.AddProductPage.options_visibility_option)
+      .selectByValue(selector.BO.AddProductPage.options_visibility,'search')
       .pause(2000)
   }
 
@@ -31,10 +28,8 @@ class EditOptions extends PrestashopClient {
     return this.client
       .scroll(0, 500)
       .waitForExist(selector.BO.AddProductPage.options_condition_select, 90000)
-      .click(selector.BO.AddProductPage.options_condition_select)
-      .pause(2000)
-      .waitForExist(selector.BO.AddProductPage.options_condition_option, 90000)
-      .click(selector.BO.AddProductPage.options_condition_option)
+      .selectByValue(selector.BO.AddProductPage.options_condition_select,'refurbished')
+      .pause(1000)
   }
 
   ISBNEntry() {

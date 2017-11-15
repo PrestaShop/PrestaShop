@@ -13,7 +13,7 @@ class Category extends PrestashopClient {
       .click(selector.BO.CatalogPage.CategorySubmenu.submenu)
   }
 
-  createCategory() {
+  removeHomeCategorycreateCategory() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.new_category_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.new_category_button)

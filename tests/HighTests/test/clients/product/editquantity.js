@@ -29,11 +29,8 @@ class EditQuantity extends PrestashopClient {
   packQuantity() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_stock_type, 60000)
-      .click(selector.BO.AddProductPage.pack_stock_type)
-      .pause(2000)
-      .waitForExist(selector.BO.AddProductPage.pack_stock_type_option, 60000)
-      .click(selector.BO.AddProductPage.pack_stock_type_option)
-      .pause(2000)
+      .selectByValue(selector.BO.AddProductPage.pack_stock_type,'2')
+      .pause(1000)
   }
 
   associatedFile() {
@@ -97,6 +94,7 @@ class EditQuantity extends PrestashopClient {
 
   availableOutOfStock(){
     return this.client
+      .scroll(0,600)
       .waitForExist(selector.BO.AddProductPage.pack_label_out_stock, 90000)
       .click(selector.BO.AddProductPage.pack_label_out_stock)
       .pause(2000)
