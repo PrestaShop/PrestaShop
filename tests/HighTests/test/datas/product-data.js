@@ -12,8 +12,7 @@ module.exports = {
         custom_value: "5",
       },
     },
-    variations: {
-      variation1: {
+    variations: [{
         ref: "variation_1",
         ean13: "1313131313131",
         isbn: "121212121212",
@@ -26,7 +25,7 @@ module.exports = {
         available_date: common.getCustomDate(30),
         quantity: "20",
       },
-      variation2: {
+      {
         ref: "variation_2",
         ean13: "3131313131313",
         isbn: "212121212121",
@@ -38,9 +37,8 @@ module.exports = {
         minimal_quantity: "2",
         available_date: common.getCustomDate(30),
         quantity: "10",
-      }
+      }]
     },
-  },
 
   pack: {
     name: "AutoNewPack",

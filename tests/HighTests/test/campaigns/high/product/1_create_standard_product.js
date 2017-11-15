@@ -25,8 +25,8 @@ scenario('Create Standard Product', client => {
     test('should make the product on line', () => client.productOnline());
   }, 'product/editbasicsettings');
 
-  scenario('Edit product quantities', client => {
-    test('should go to the product quantities form', () => client.goToProductQuantity());
+  scenario('Edit product quantity', client => {
+    test('should go to the product quantity form', () => client.goToProductQuantity());
     test('should enter the product quantity', () => client.productQuantity());
     test('should enter the minimum quantity for sale', () => client.minQuantitySale());
     test('should select the availability preferences', () => client.selectAvailabilityPreferences('standard'));
