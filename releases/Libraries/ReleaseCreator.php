@@ -93,7 +93,7 @@ class ReleaseCreator
     {
         $this->version = $version;
         $this->branch = exec('git symbolic-ref --short HEAD');
-        $this->projectPath = realpath(__DIR__ . '/..');
+        $this->projectPath = realpath(__DIR__ . '/../..');
         $this->setFilesConstants()
             ->generateLicensesFile()
             ->updateComposerJsonFile()
