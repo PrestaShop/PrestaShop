@@ -1,6 +1,6 @@
 <?php
 
-require_once 'ReleaseCreator.php';
+require_once 'Libraries/ReleaseCreator.php';
 require_once 'Libraries/functions.php';
 
 $options = getopt('', ['version:']);
