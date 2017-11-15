@@ -216,3 +216,7 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+
+### Release creation ###
+releases/releases/*
+!releases/releases/.gitkeep
