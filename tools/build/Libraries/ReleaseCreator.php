@@ -83,17 +83,13 @@ class ReleaseCreator
     /** @var string */
     protected $version;
 
-    /** @var string */
-    protected $branch;
-
     /**
      * @param string $version
      */
     public function __construct($version)
     {
         $this->version = $version;
-        $this->branch = exec('git symbolic-ref --short HEAD');
-        $this->projectPath = realpath(__DIR__ . '/../..');
+        $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->setFilesConstants()
             ->generateLicensesFile()
             ->updateComposerJsonFile()
@@ -108,10 +104,12 @@ class ReleaseCreator
      */
     protected function setFilesConstants()
     {
+        echo "\e[33mSetting files constants...\e[m\n";
         $this->setConfigDefinesConstants()
             ->setConfigAutoloadConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
+        echo "\e[32mFiles constants set\e[m\n";
 
         return $this;
     }
@@ -195,6 +193,7 @@ class ReleaseCreator
      */
     protected function generateLicensesFile()
     {
+        echo "\e[33mGenerating licences file...\e[m\n";
         $content = null;
         $directory = new \RecursiveDirectoryIterator($this->projectPath);
         $iterator = new \RecursiveIteratorIterator($directory);
@@ -207,6 +206,7 @@ class ReleaseCreator
         if (!file_put_contents($this->projectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
         }
+        echo "\e[32mLicences file successfully generated...\e[m\n";
 
         return $this;
     }
@@ -217,6 +217,7 @@ class ReleaseCreator
      */
     protected function updateComposerJsonFile()
     {
+        echo "\e[33mUpdating composer.json...\e[m\n";
         $replacement = '"PrestaShop\\\\\\PrestaShop\\\\\\Core\\\\\\Cldr\\\\\\Composer\\\\\\Hook::init",
             "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::buildBootstrap",
             "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::installRequirementsFile",
@@ -228,6 +229,7 @@ class ReleaseCreator
         if (!file_put_contents($this->projectPath . '/composer.json', $content)) {
             throw new BuildException('Unable to update composer.json');
         }
+        echo "\e[32mcomposer.json successfully updated...\e[m\n";
 
         return $this;
     }
@@ -238,14 +240,14 @@ class ReleaseCreator
      */
     protected function runComposerInstall()
     {
-        var_dump('composer install');
+        echo "\e[33mRunning composer install...\e[m\n";
         $command = "cd $this->projectPath && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
         if ($returnCode != 0) {
             throw new BuildException('Unable to run composer install.');
         }
-        var_dump('end of composer install');
+        echo "\e[32mcomposer install successfully run...\e[m\n";
 
         return $this;
     }
@@ -271,6 +273,7 @@ class ReleaseCreator
      */
     protected function createPackages()
     {
+        echo "\e[33mCreating package...\e[m\n";
         $this->filesList = get_directory_structure($this->projectPath);
         $this->cleanFilesList(
             $this->filesList,
@@ -279,7 +282,7 @@ class ReleaseCreator
             $this->patternsRemoveList,
             $this->projectPath
         );
-        $this->generateLicensesFile();
+//        $this->generateLicensesFile();
         $this->createZipArchive();
         $this->generateXMLChecksum();
 
@@ -289,6 +292,7 @@ class ReleaseCreator
 //            $this->createZipArchive($iso_code);
 //            $this->generateXMLChecksum($iso_code);
 //        }
+        echo "\e[32mPackage successfully created...\e[m\n";
 
         return $this;
     }
@@ -308,7 +312,6 @@ class ReleaseCreator
         array &$patternsRemoveList,
         $folder
     ) {
-        var_dump('begin clean files');
         foreach ($filesList as $key => $value) {
             if (is_numeric($key)) {
                 // Remove files.
@@ -355,7 +358,6 @@ class ReleaseCreator
                 $this->cleanFilesList($filesList[$key], $filesRemoveList, $foldersRemoveList, $patternsRemoveList, $folder);
             }
         }
-        var_dump('end clean files');
 
         return $this;
     }
@@ -366,10 +368,12 @@ class ReleaseCreator
      */
     protected function createZipArchive($lang = false)
     {
-        $zipZile = "prestashop_$this->version.zip";
-
-        if ($lang !== false) {
+        if ($lang === false) {
+            $zipZile = "prestashop_$this->version.zip";
+            echo "\e[33m---Creating zip archive without lang...\e[m\n";
+        } else {
             $zipZile = $this->projectPath."/prestashop_".$this->version."_".$lang.".zip";
+            echo "\e[33m---Creating zip archive for lang $lang...\e[m\n";
         }
         $subZip = 'prestashop.zip';
         $subDir = '';
@@ -386,8 +390,6 @@ class ReleaseCreator
                 $filesAdded++;
 
                 if ($filesAdded % 100 === 0) {
-                    var_dump($filesAdded);
-                    var_dump('Close and re-open ZIP');
                     $zip->close();
                     $zip->open($subZip);
                 }
@@ -429,6 +431,7 @@ class ReleaseCreator
         }
         $zip->close();
         unlink($subZip);
+        echo "\e[32m---Zip archive successfully created...\e[m\n";
 
         return $this;
     }
@@ -463,11 +466,11 @@ class ReleaseCreator
      */
     protected function generateXMLChecksum($lang = false)
     {
-        var_dump('begin XML checksum');
-        $xml_path = "$this->projectPath/build/prestashop_$this->version.xml";
+        echo "\e[33m---Generating XML checksum...\e[m\n";
+        $xml_path = "$this->projectPath/tools/build/prestashop_$this->version.xml";
 
         if ($lang !== false) {
-            $xml_path = "$this->projectPath/build/prestashio_$this->version" . '_' . "$lang.xml";
+            $xml_path = "$this->projectPath/tools/build/prestashio_$this->version" . '_' . "$lang.xml";
         }
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>".PHP_EOL;
         $content .= "<checksum_list>".PHP_EOL;
@@ -480,7 +483,7 @@ class ReleaseCreator
         if (!file_put_contents($xml_path, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
         }
-        var_dump('end XML checksum');
+        echo "\e[32m---XML checksum successfully generated...\e[m\n";
 
         return $this;
     }
@@ -523,35 +526,36 @@ class ReleaseCreator
     {
         $reference = $this->version . "_" . date("Ymd_His");
 
-//        if (!file_exists("$this->projectPath/build/publications")) {
-//            mkdir("$this->projectPath/build/publications", 0777, true);
+//        if (!file_exists("$this->projectPath/tools/build/publications")) {
+//            mkdir("$this->projectPath/tools/build/publications", 0777, true);
 //        }
-        mkdir("$this->projectPath/build/release/$reference", 0777, true);
+        mkdir("$this->projectPath/tools/build/releases/$reference", 0777, true);
         rename(
-            "$this->projectPath/build/prestashop_$this->version.zip",
-            "$this->projectPath/build/release/$reference/prestashop_$this->version.zip"
+            "$this->projectPath/tools/build/prestashop_$this->version.zip",
+            "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
         );
+        unlink("$this->projectPath/tools/build/prestashop_$this->version.xml");
 //        rename(
-//            "$this->projectPath/build/release/prestashop",
-//            "$this->projectPath/build/publications/$reference/prestashop"
+//            "$this->projectPath/tools/build/releases/prestashop",
+//            "$this->projectPath/tools/build/publications/$reference/prestashop"
 //        );
 //        rename(
-//            "$this->projectPath/build/release/prestashop_$this->version.xml",
-//            "$this->projectPath/build/publications/$reference/prestashop_$this->version.xml"
+//            "$this->projectPath/tools/build/releases/prestashop_$this->version.xml",
+//            "$this->projectPath/tools/build/publications/$reference/prestashop_$this->version.xml"
 //        );
 //        rename(
-//            "$this->projectPath/build/release/prestashop_$this->version.zip",
-//            "$this->projectPath/build/publications/$reference/prestashop_$this->version.zip"
+//            "$this->projectPath/tools/build/releases/prestashop_$this->version.zip",
+//            "$this->projectPath/tools/build/publications/$reference/prestashop_$this->version.zip"
 //        );
 //
 //        foreach ($this->packages as $iso_code => $lang) {
 //            rename(
-//                "$this->projectPath/build/release/prestashop_".$this->version."_".$iso_code.".xml",
-//                "$this->projectPath/build/publications/$reference/prestashop_".$this->version."_".$iso_code.".xml"
+//                "$this->projectPath/tools/build/releases/prestashop_".$this->version."_".$iso_code.".xml",
+//                "$this->projectPath/tools/build/publications/$reference/prestashop_".$this->version."_".$iso_code.".xml"
 //            );
 //            rename(
-//                "$this->projectPath/build/release/prestashop_".$this->version."_".$iso_code.".zip",
-//                "$this->projectPath/build/publications/$reference/prestashop_".$this->version."_".$iso_code.".zip"
+//                "$this->projectPath/tools/build/releases/prestashop_".$this->version."_".$iso_code.".zip",
+//                "$this->projectPath/tools/build/publications/$reference/prestashop_".$this->version."_".$iso_code.".zip"
 //            );
 //        }
 

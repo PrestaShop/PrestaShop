@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Libraries/ReleaseCreator.php';
+require_once 'Libraries/GitClient.php';
 require_once 'Libraries/functions.php';
 require_once 'Exception/BuildException.php';
 
