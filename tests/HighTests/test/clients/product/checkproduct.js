@@ -89,7 +89,7 @@ class CheckProductBO extends PrestashopClient {
       .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_quantity, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_quantity))
-      .then((text) => expect(text).to.be.equal((parseInt(data.standard.variations.variation1.quantity) + parseInt(data.standard.variations.variation2.quantity)).toString()));
+      .then((text) => expect(text).to.be.equal((parseInt(data.standard.variations[0].quantity) + parseInt(data.standard.variations[1].quantity)).toString()));
   }
 
   checkProductStatus() {

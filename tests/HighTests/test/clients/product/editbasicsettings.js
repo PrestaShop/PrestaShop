@@ -154,17 +154,15 @@ class EditBasicSettings extends PrestashopClient {
   createCategory() {
     return this.client
       .scroll(0, 1000)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.category_create_btn, 90000)
       .click(selector.BO.AddProductPage.category_create_btn)
-      .pause(2000)
   }
 
   removeHomeCategory() {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.category_home, 90000)
-      .click(selector.BO.AddProductPage.category_home)
+      .waitForVisible(selector.BO.AddProductPage.product_create_category_btn, 90000)
       .pause(2000)
+      .click(selector.BO.AddProductPage.category_home)
   }
 
   addBrand(type) {

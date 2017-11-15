@@ -53,6 +53,7 @@ class EditShipping extends PrestashopClient {
 
   selectAvailableCarrier(){
     return this.client
+      .scroll(0, 600)
       .waitForExist(selector.BO.AddProductPage.shipping_available_carriers, 90000)
       .click(selector.BO.AddProductPage.shipping_available_carriers)
       .pause(2000)
