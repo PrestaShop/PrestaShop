@@ -3,28 +3,6 @@
 class ReleaseCreator
 {
     /** @var array */
-    protected $packages = [
-        'cs' => ['cs'],
-        'de' => ['de'],
-        'es' => ['ca', 'es'],
-        'fa' => ['fa'],
-        'fr' => ['fr', 'qc'],
-        'hu' => ['hu'],
-        'id' => ['id'],
-        'it' => ['it'],
-        'pl' => ['pl'],
-        'pt' => ['br', 'pt'],
-        'ru' => ['ru'],
-        'zh' => ['tw', 'zh'],
-    ];
-
-    /** @var array */
-    protected $createdFiles = ['CONTRIBUTORS.md', 'docs/CHANGELOG.txt', 'translations/en.gzip', 'translations/fr.gzip'];
-
-    /** @var array */
-    protected $commitMessagesFlags = ['project', 'installer', 'security', 'fo', 'bo', 'classes', 'core', 'deprecated', 'install', 'in', 'performances', 'mo', 'ws', 'pdf', 'tr', 'lo'];
-
-    /** @var array */
     protected $itemsToRename = ['/admin-dev' => '/admin', '/install-dev' => '/install'];
 
     /** @var array */
@@ -99,9 +77,7 @@ class ReleaseCreator
             ->updateComposerJsonFile()
             ->runComposerInstall()
             ->createAppFolders()
-            ->createPackages()
-            ->storePublication();
-
+            ->createPackages();
     }
 
     /**
@@ -287,16 +263,10 @@ class ReleaseCreator
             $this->patternsRemoveList,
             $this->projectPath
         );
-//        $this->generateLicensesFile();
+        $this->generateLicensesFile();
         $this->createZipArchive();
         $this->generateXMLChecksum();
-
-//        foreach ($this->packages as $iso_code => $langs) {
-//            $this->filesList = get_directory_structure($this->projectPath);
-//            $this->cleanFilesList($this->filesList, $this->filesRemoveList, $this->foldersRemoveList, $this->patternsRemoveList, $this->projectPath);
-//            $this->createZipArchive($iso_code);
-//            $this->generateXMLChecksum($iso_code);
-//        }
+        unlink("$this->projectPath/tools/build/tmp/prestashop_$this->version.xml");
         echo "\e[32mPackage successfully created...\e[m\n";
 
         return $this;
@@ -368,19 +338,18 @@ class ReleaseCreator
     }
 
     /**
-     * @param bool $lang
      * @return $this
      */
-    protected function createZipArchive($lang = false)
+    protected function createZipArchive()
     {
-        if ($lang === false) {
-            $zipZile = "prestashop_$this->version.zip";
-            echo "\e[33m---Creating zip archive without lang...\e[m\n";
-        } else {
-            $zipZile = $this->projectPath."/prestashop_".$this->version."_".$lang.".zip";
-            echo "\e[33m---Creating zip archive for lang $lang...\e[m\n";
+        echo "\e[33m---Creating zip archive...\e[m\n";
+        $tmpPath = "$this->projectPath/tools/build/tmp";
+
+        if (!file_exists($tmpPath)) {
+            mkdir($tmpPath, 0777, true);
         }
-        $subZip = 'prestashop.zip';
+        $zipZile = "$this->projectPath/tools/build/tmp/prestashop_$this->version.zip";
+        $subZip = "$this->projectPath/tools/build/tmp/prestashop.zip";
         $subDir = '';
         $zip = new ZipArchive();
         $zip->open($subZip, ZipArchive::CREATE | ZipArchive::OVERWRITE);
@@ -403,39 +372,17 @@ class ReleaseCreator
                 exit(1);
             }
         }
-
-        // we close the zip and we open another one
-//        $PSdezipper = new PSDezipper($this->github);
-//
-//        if (!$PSdezipper->isReady('index.php')) {
-//            $PSdezipper->prepare();
-//            $PSdezipper->compile();
-//        }
         $zip->close();
         $zip->open($zipZile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-        // Add prestashop.zip
         $zip->addFile($subZip);
-
-        // Add index.php (the dezipper)
-//        $zip->addFile($PSdezipper->getStoragePath().'index.php', 'index.php');
-        $docPath = "$this->projectPath/public/doc/17";
-
-        if (!file_exists($docPath)) {
-            mkdir($docPath, 0777, true);
-        }
-
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($docPath, FilesystemIterator::CURRENT_AS_SELF | FilesystemIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::LEAVES_ONLY
-        );
-
-        foreach ($files as $name => $file) {
-            $fileName = str_replace($docPath, null, $name);
-            $zip->addFile($file->getRealPath(), ltrim($fileName, '/'));
-        }
         $zip->close();
         unlink($subZip);
+        $reference = $this->version . "_" . date("Ymd_His");
+        mkdir("$this->projectPath/tools/build/releases/$reference", 0777, true);
+        rename(
+            "$this->projectPath/tools/build/tmp/prestashop_$this->version.zip",
+            "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
+        );
         echo "\e[32m---Zip archive successfully created...\e[m\n";
 
         return $this;
@@ -465,25 +412,19 @@ class ReleaseCreator
     }
 
     /**
-     * @param bool $lang
      * @return self
      * @throws BuildException
      */
-    protected function generateXMLChecksum($lang = false)
+    protected function generateXMLChecksum()
     {
         echo "\e[33m---Generating XML checksum...\e[m\n";
-        $xml_path = "$this->projectPath/tools/build/prestashop_$this->version.xml";
-
-        if ($lang !== false) {
-            $xml_path = "$this->projectPath/tools/build/prestashio_$this->version" . '_' . "$lang.xml";
-        }
+        $xml_path = "$this->projectPath/tools/build/tmp/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>".PHP_EOL;
         $content .= "<checksum_list>".PHP_EOL;
         $content .= "\t<ps_root_dir version=\"$this->version\">".PHP_EOL;
         $content .= $this->generateXMLDirectoryChecksum($this->filesList);
         $content .= "\t".'</ps_root_dir>'.PHP_EOL;
         $content .= '</checksum_list>'.PHP_EOL;
-
 
         if (!file_put_contents($xml_path, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
@@ -522,48 +463,5 @@ class ReleaseCreator
         }
 
         return $content;
-    }
-
-    /**
-     * @return $this
-     */
-    protected function storePublication()
-    {
-        $reference = $this->version . "_" . date("Ymd_His");
-
-//        if (!file_exists("$this->projectPath/tools/build/publications")) {
-//            mkdir("$this->projectPath/tools/build/publications", 0777, true);
-//        }
-        mkdir("$this->projectPath/tools/build/releases/$reference", 0777, true);
-        rename(
-            "$this->projectPath/tools/build/prestashop_$this->version.zip",
-            "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
-        );
-        unlink("$this->projectPath/tools/build/prestashop_$this->version.xml");
-//        rename(
-//            "$this->projectPath/tools/build/releases/prestashop",
-//            "$this->projectPath/tools/build/publications/$reference/prestashop"
-//        );
-//        rename(
-//            "$this->projectPath/tools/build/releases/prestashop_$this->version.xml",
-//            "$this->projectPath/tools/build/publications/$reference/prestashop_$this->version.xml"
-//        );
-//        rename(
-//            "$this->projectPath/tools/build/releases/prestashop_$this->version.zip",
-//            "$this->projectPath/tools/build/publications/$reference/prestashop_$this->version.zip"
-//        );
-//
-//        foreach ($this->packages as $iso_code => $lang) {
-//            rename(
-//                "$this->projectPath/tools/build/releases/prestashop_".$this->version."_".$iso_code.".xml",
-//                "$this->projectPath/tools/build/publications/$reference/prestashop_".$this->version."_".$iso_code.".xml"
-//            );
-//            rename(
-//                "$this->projectPath/tools/build/releases/prestashop_".$this->version."_".$iso_code.".zip",
-//                "$this->projectPath/tools/build/publications/$reference/prestashop_".$this->version."_".$iso_code.".zip"
-//            );
-//        }
-
-        return $this;
     }
 }
