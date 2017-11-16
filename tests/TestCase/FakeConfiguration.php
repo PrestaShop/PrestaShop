@@ -25,7 +25,7 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace Tests\TestCase;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Exception;

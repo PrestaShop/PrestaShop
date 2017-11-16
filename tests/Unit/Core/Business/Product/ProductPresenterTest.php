@@ -24,11 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product;
+namespace Tests\Unit\Core\Product;
 
 use Phake;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
 use Product;

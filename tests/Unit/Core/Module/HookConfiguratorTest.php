@@ -24,11 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Module;
+namespace Tests\Unit\Core\Module;
 
 use Phake;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Module\HookConfigurator;
 
 class HookConfiguratorTest extends UnitTestCase

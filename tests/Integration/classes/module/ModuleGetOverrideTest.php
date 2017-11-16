@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace Tests\Integration;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 
 use Module;
-use PrestaShop\PrestaShop\Tests\TestCase\Module as HelperModule;
+use Tests\TestCase\Module as HelperModule;
 
 class ModulesGetOverrideTest extends IntegrationTestCase
 {
