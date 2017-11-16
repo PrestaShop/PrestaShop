@@ -230,18 +230,6 @@ File: src/PrestaShopBundle/Command/ExportThemeCommand.php:59</note>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:34</note>
       </trans-unit>
-      <trans-unit id="12bf9c0c5d7e214fc1a0ec4784ed751b">
-        <source>You have to select a shop to use Live Edit</source>
-        <target>You have to select a shop to use Live Edit</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:175</note>
-      </trans-unit>
-      <trans-unit id="db585f2b876aa7212aa4b1d3e70fae16">
-        <source>Click here to be redirected to the front office of your shop where you can move and delete modules directly.</source>
-        <target>Click here to be redirected to the front office of your shop where you can move and delete modules directly.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl:177</note>
-      </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/cms/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">

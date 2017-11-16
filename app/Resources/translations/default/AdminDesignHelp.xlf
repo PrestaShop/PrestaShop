@@ -232,7 +232,7 @@ File: controllers/admin/AdminCmsContentController.php:113</note>
         <source>E.g. address, addresses, attachment</source>
         <target>E.g. address, addresses, attachment</target>
         <note>Context:
-File: controllers/admin/AdminModulesPositionsController.php:468</note>
+File: controllers/admin/AdminModulesPositionsController.php:425</note>
       </trans-unit>
     </body>
   </file>

@@ -6,7 +6,7 @@
         <source>You cannot place a new order from your country (%s).</source>
         <target>You cannot place a new order from your country (%s).</target>
         <note>Context:
-File: classes/controller/FrontController.php:950</note>
+File: classes/controller/FrontController.php:873</note>
       </trans-unit>
     </body>
   </file>

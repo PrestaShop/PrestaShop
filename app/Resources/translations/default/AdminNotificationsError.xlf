@@ -248,13 +248,13 @@ File: controllers/admin/AdminProductsController.php:2881</note>
         <source>file (%s) not writable</source>
         <target>file (%s) not writable</target>
         <note>Context:
-File: classes/module/Module.php:2810</note>
+File: classes/module/Module.php:2806</note>
       </trans-unit>
       <trans-unit id="a9de928286071f457fcbc45656353761">
         <source>directory (%s) not writable</source>
         <target>directory (%s) not writable</target>
         <note>Context:
-File: classes/module/Module.php:2887</note>
+File: classes/module/Module.php:2883</note>
       </trans-unit>
     </body>
   </file>

@@ -22,7 +22,7 @@ File: themes/classic/templates/catalog/_partials/miniatures/product.tpl:49</note
         <source>Discount</source>
         <target>Discount</target>
         <note>Context:
-File: classes/controller/FrontController.php:1609</note>
+File: classes/controller/FrontController.php:1524</note>
       </trans-unit>
     </body>
   </file>

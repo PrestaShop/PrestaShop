@@ -160,49 +160,49 @@ File: classes/module/Module.php:1799</note>
         <source>No template found for module</source>
         <target>No template found for module</target>
         <note>Context:
-File: classes/module/Module.php:2236</note>
+File: classes/module/Module.php:2232</note>
       </trans-unit>
       <trans-unit id="45e26faecce815f7e1ac16b32ac5278e">
         <source>The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.</source>
         <target>The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.</target>
         <note>Context:
-File: classes/module/Module.php:2834</note>
+File: classes/module/Module.php:2830</note>
       </trans-unit>
       <trans-unit id="03c32a7a2568d41e186d59293b02f662">
         <source>The method %1$s in the class %2$s is already overridden.</source>
         <target>The method %1$s in the class %2$s is already overridden.</target>
         <note>Context:
-File: classes/module/Module.php:2836</note>
+File: classes/module/Module.php:2832</note>
       </trans-unit>
       <trans-unit id="71bf68c93ca29a72a3a5080a30e20ecc">
         <source>Failed to override method %1$s in class %2$s.</source>
         <target>Failed to override method %1$s in class %2$s.</target>
         <note>Context:
-File: classes/module/Module.php:2903</note>
+File: classes/module/Module.php:2899</note>
       </trans-unit>
       <trans-unit id="a08302edbf2d9f7ddd43ae8bd1de5caa">
         <source>The property %1$s in the class %2$s is already defined.</source>
         <target>The property %1$s in the class %2$s is already defined.</target>
         <note>Context:
-File: classes/module/Module.php:2848</note>
+File: classes/module/Module.php:2844</note>
       </trans-unit>
       <trans-unit id="7893f5f2917811b37c628f787c83af8a">
         <source>Failed to override property %1$s in class %2$s.</source>
         <target>Failed to override property %1$s in class %2$s.</target>
         <note>Context:
-File: classes/module/Module.php:2911</note>
+File: classes/module/Module.php:2907</note>
       </trans-unit>
       <trans-unit id="6f89d5bc3c94e885d4a3716accc12983">
         <source>The constant %1$s in the class %2$s is already defined.</source>
         <target>The constant %1$s in the class %2$s is already defined.</target>
         <note>Context:
-File: classes/module/Module.php:2859</note>
+File: classes/module/Module.php:2855</note>
       </trans-unit>
       <trans-unit id="d27626d5c768d3782dcc6343e8a0c0f6">
         <source>Failed to override constant %1$s in class %2$s.</source>
         <target>Failed to override constant %1$s in class %2$s.</target>
         <note>Context:
-File: classes/module/Module.php:2919</note>
+File: classes/module/Module.php:2915</note>
       </trans-unit>
     </body>
   </file>
@@ -612,13 +612,13 @@ File: src/Core/Addon/Module/ModuleRepository.php:434</note>
         <source>Parse error detected in module %module%. %error_details%.</source>
         <target>Parse error detected in module %module%. %error_details%.</target>
         <note>Context:
-File: src/Core/Addon/Module/ModuleRepository.php:553</note>
+File: src/Core/Addon/Module/ModuleRepository.php:554</note>
       </trans-unit>
       <trans-unit id="40e7db035e09d8f198b96a7d5d9e821f">
         <source>Exception detected while loading module %module%. %error_details%.</source>
         <target>Exception detected while loading module %module%. %error_details%.</target>
         <note>Context:
-File: src/Core/Addon/Module/ModuleRepository.php:561</note>
+File: src/Core/Addon/Module/ModuleRepository.php:562</note>
       </trans-unit>
     </body>
   </file>

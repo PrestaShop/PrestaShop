@@ -476,55 +476,73 @@ File: controllers/front/IdentityController.php:57</note>
         <source>This product is no longer available.</source>
         <target>This product is no longer available.</target>
         <note>Context:
-File: controllers/front/CartController.php:296</note>
+File: controllers/front/CartController.php:336</note>
       </trans-unit>
       <trans-unit id="897bbb78781eb767eee3a4ac3e820185">
         <source>You must enter a voucher code.</source>
         <target>You must enter a voucher code.</target>
         <note>Context:
-File: controllers/front/CartController.php:196</note>
+File: controllers/front/CartController.php:213</note>
       </trans-unit>
       <trans-unit id="417d63b1effb110e438d4b4b9f0fbd95">
         <source>The voucher code is invalid.</source>
         <target>The voucher code is invalid.</target>
         <note>Context:
-File: controllers/front/CartController.php:198</note>
+File: controllers/front/CartController.php:215</note>
       </trans-unit>
       <trans-unit id="d21c3bf7d25db04b73e7e269aef555fe">
         <source>This voucher does not exist.</source>
         <target>This voucher does not exist.</target>
         <note>Context:
-File: controllers/front/CartController.php:207</note>
+File: controllers/front/CartController.php:224</note>
       </trans-unit>
       <trans-unit id="0d38c90d843c787c0be14f790998210c">
         <source>You must add %d minimum quantity</source>
         <target>You must add %d minimum quantity</target>
         <note>Context:
-File: controllers/front/CartController.php:363</note>
+File: controllers/front/CartController.php:259</note>
       </trans-unit>
       <trans-unit id="9730e222894d4568ed4cd2de30cb233a">
         <source>Null quantity.</source>
         <target>Null quantity.</target>
         <note>Context:
-File: controllers/front/CartController.php:289</note>
+File: controllers/front/CartController.php:315</note>
       </trans-unit>
       <trans-unit id="dfbe69c6d9568ecb0e65e7b32ed92a3a">
         <source>Product not found</source>
         <target>Product not found</target>
         <note>Context:
-File: controllers/front/CartController.php:291</note>
+File: controllers/front/CartController.php:324</note>
+      </trans-unit>
+      <trans-unit id="9a7c79186c1ff1cd48b31ed6caf6ff48">
+        <source>The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.</source>
+        <target>The item %product% in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.</target>
+        <note>Context:
+File: controllers/front/CartController.php:514</note>
       </trans-unit>
       <trans-unit id="84a7c3aeebf09d169aca8555be640bbf">
         <source>Please fill in all of the required fields, and then save your customizations.</source>
         <target>Please fill in all of the required fields, and then save your customizations.</target>
         <note>Context:
-File: controllers/front/CartController.php:353</note>
+File: controllers/front/CartController.php:404</note>
+      </trans-unit>
+      <trans-unit id="8b84452c494aa9106d26b20c9df0e431">
+        <source>You must add %quantity% minimum quantity</source>
+        <target>You must add %quantity% minimum quantity</target>
+        <note>Context:
+File: controllers/front/CartController.php:431</note>
       </trans-unit>
       <trans-unit id="de10fc28511b894f704c1a67fcff7b4f">
         <source>You already have the maximum quantity available for this product.</source>
         <target>You already have the maximum quantity available for this product.</target>
         <note>Context:
-File: controllers/front/CartController.php:365</note>
+File: controllers/front/CartController.php:440</note>
+      </trans-unit>
+      <trans-unit id="cb0b5b032f2426b3fe341460320b5a8e">
+        <source>This product (%product%) is no longer available.</source>
+        <target>This product (%product%) is no longer available.</target>
+        <note>Context:
+File: controllers/front/CartController.php:519</note>
       </trans-unit>
     </body>
   </file>
@@ -604,16 +622,6 @@ File: controllers/front/OrderFollowController.php:103</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a923575984949608ce04c4984806ec2a">
-        <source>There are not enough products in stock</source>
-        <target>There are not enough products in stock</target>
-        <note>Context:
-File: src/Core/Product/ProductPresenter.php:448</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/PdfInvoiceController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6b9cc232bf4044274ec42062b60736fb">
@@ -633,6 +641,16 @@ File: controllers/front/PdfInvoiceController.php:57</note>
         <target>No invoice is available.</target>
         <note>Context:
 File: controllers/front/PdfInvoiceController.php:61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Product/ProductPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a923575984949608ce04c4984806ec2a">
+        <source>There are not enough products in stock</source>
+        <target>There are not enough products in stock</target>
+        <note>Context:
+File: src/Core/Product/ProductPresenter.php:448</note>
       </trans-unit>
     </body>
   </file>
