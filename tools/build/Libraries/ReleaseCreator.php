@@ -70,6 +70,8 @@ class ReleaseCreator
      */
     public function __construct($version)
     {
+        $startTime = date('H:i:s');
+        echo "\e[32m--- Script started at {$startTime} \e[m\n\n";
         $this->version = $version;
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->setFilesConstants()
@@ -78,6 +80,8 @@ class ReleaseCreator
             ->runComposerInstall()
             ->createAppFolders()
             ->createPackages();
+        $endTime = date('H:i:s');
+        echo "\n\e[32m--- Script ended at {$endTime} \e[m\n";
     }
 
     /**
@@ -341,7 +345,7 @@ class ReleaseCreator
      */
     protected function createZipArchive()
     {
-        echo "\e[33m---Creating zip archive...\e[m\n";
+        echo "\e[33m--- Creating zip archive...\e[m\n";
         $tmpPath = "$this->projectPath/tools/build/tmp";
 
         if (!file_exists($tmpPath)) {
@@ -382,7 +386,7 @@ class ReleaseCreator
             "$this->projectPath/tools/build/tmp/prestashop_$this->version.zip",
             "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
         );
-        echo "\e[32m---Zip archive successfully created...\e[m\n";
+        echo "\e[32m--- Zip archive successfully created...\e[m\n";
 
         return $this;
     }
@@ -416,7 +420,7 @@ class ReleaseCreator
      */
     protected function generateXMLChecksum()
     {
-        echo "\e[33m---Generating XML checksum...\e[m\n";
+        echo "\e[33m--- Generating XML checksum...\e[m\n";
         $xml_path = "$this->projectPath/tools/build/tmp/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>".PHP_EOL;
         $content .= "<checksum_list>".PHP_EOL;
@@ -428,7 +432,7 @@ class ReleaseCreator
         if (!file_put_contents($xml_path, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
         }
-        echo "\e[32m---XML checksum successfully generated...\e[m\n";
+        echo "\e[32m--- XML checksum successfully generated...\e[m\n";
 
         return $this;
     }
