@@ -91,7 +91,10 @@ class TabCore extends ObjectModel
         self::$_cache_tabs = array();
 
         // Set good position for new tab
-        (is_int($this->position) && $this->position > 0) ? $requestedPosition = $this->position : $requestedPosition = null;
+        $requestedPosition = null;
+        if (is_int($this->position) && $this->position > 0) {
+            $requestedPosition = $this->position;
+        }
         $this->position = Tab::getNewLastPosition($this->id_parent);
         $this->module = Tools::strtolower($this->module);
 
@@ -619,7 +622,11 @@ class TabCore extends ObjectModel
 
         $res = parent::update($nullValues);
 
-        if ($res && is_int($requestedPosition) && $requestedPosition > 0 && $requestedPosition < Tab::getNewLastPosition($this->id_parent)) {
+        if ($res
+            && is_int($requestedPosition)
+            && $requestedPosition > 0
+            && $requestedPosition < Tab::getNewLastPosition($this->id_parent)
+        ) {
             ($requestedPosition < $this->position) ? $way = false : $way = true;
             $this->updatePosition($way, $requestedPosition);
         }
