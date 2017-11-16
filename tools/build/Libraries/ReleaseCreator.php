@@ -72,6 +72,10 @@ class ReleaseCreator
         'themes/package\.json$',
         'vendor\/[a-zA-Z0-0_-]+\/[a-zA-Z0-0_-]+\/[Tt]ests?$',
         'vendor/tecnickcom/tcpdf/examples$',
+        'app/cache/..*$',
+        '.idea',
+        'tools/build$',
+        '.*node_modules.*',
     ];
 
     /** @var array */
@@ -97,6 +101,7 @@ class ReleaseCreator
             ->createAppFolders()
             ->createPackages()
             ->storePublication();
+
     }
 
     /**
