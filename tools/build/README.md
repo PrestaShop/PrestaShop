@@ -2,8 +2,9 @@
 
 To create a release:
 
-`php CreateRelease.php --version="1.7.2.4"`
-
+```
+php CreateRelease.php --version="1.7.2.4"
+```
 This will:
             
 * Define constants (`_PS_MODE_DEV_` to false etc...)
