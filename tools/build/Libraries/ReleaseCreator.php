@@ -2,6 +2,8 @@
 
 class ReleaseCreator
 {
+    const TEMP_PROJECT_PATH = '/tmp/PrestaShop-release-tmp';
+
     /** @var array */
     protected $itemsToRename = ['/admin-dev' => '/admin', '/install-dev' => '/install'];
 
@@ -259,18 +261,35 @@ class ReleaseCreator
     protected function createPackages()
     {
         echo "\e[33mCreating package...\e[m\n";
-        $this->filesList = get_directory_structure($this->projectPath);
-        $this->cleanFilesList(
+        $this->cleanTmpProject();
+        $this->generateXMLChecksum();
+        $this->createZipArchive();
+        echo "\e[32mPackage successfully created...\e[m\n";
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function cleanTmpProject()
+    {
+        echo "\e[33m--- Cleaning project...\e[m\n";
+        $destination = self::TEMP_PROJECT_PATH;
+
+        if (file_exists($destination)) {
+            exec("rm -rf $destination");
+        }
+        exec("cp -r {$this->projectPath} $destination");
+        $this->filesList = get_directory_structure($destination);
+        $this->removeUnnecessaryFiles(
             $this->filesList,
             $this->filesRemoveList,
             $this->foldersRemoveList,
             $this->patternsRemoveList,
-            $this->projectPath
+            self::TEMP_PROJECT_PATH
         );
-        $this->createZipArchive();
-        $this->generateXMLChecksum();
-        unlink("$this->projectPath/tools/build/tmp/prestashop_$this->version.xml");
-        echo "\e[32mPackage successfully created...\e[m\n";
+        echo "\e[32m--- Project cleaned...\e[m\n";
 
         return $this;
     }
@@ -282,8 +301,9 @@ class ReleaseCreator
      * @param array $patternsRemoveList
      * @param string $folder
      * @return self
+     * @throws BuildException
      */
-    protected function cleanFilesList(
+    protected function removeUnnecessaryFiles(
         array &$filesList,
         array &$filesRemoveList,
         array &$foldersRemoveList,
@@ -291,12 +311,22 @@ class ReleaseCreator
         $folder
     ) {
         foreach ($filesList as $key => $value) {
+            $pathToTest = $value;
+
+            if (!is_string($pathToTest)) {
+                $pathToTest = $key;
+            }
+
+            if (substr($pathToTest, 0, 4) != '/tmp') {
+                throw new BuildException("Trying to delete a file somewhere else than in /tmp, path: $pathToTest");
+            }
+
             if (is_numeric($key)) {
                 // Remove files.
                 foreach ($filesRemoveList as $file_to_remove) {
-
                     if ($folder.'/'.$file_to_remove == $value) {
                         unset($filesList[$key]);
+                        exec("rm -f $value");
                         continue 2;
                     }
                 }
@@ -305,6 +335,7 @@ class ReleaseCreator
                 foreach ($foldersRemoveList as $folder_to_remove) {
                     if ($folder.'/'.$folder_to_remove == $value) {
                         unset($filesList[$key]);
+                        exec("rm -rf $value");
                         continue 2;
                     }
                 }
@@ -313,6 +344,7 @@ class ReleaseCreator
                 foreach ($patternsRemoveList as $pattern_to_remove) {
                     if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
                         unset($filesList[$key]);
+                        exec("rm -rf $value");
                         continue 2;
                     }
                 }
@@ -321,6 +353,7 @@ class ReleaseCreator
                 foreach ($foldersRemoveList as $folder_to_remove) {
                     if ($folder.'/'.$folder_to_remove == $key) {
                         unset($filesList[$key]);
+                        exec("rm -rf $key");
                         continue 2;
                     }
                 }
@@ -329,11 +362,11 @@ class ReleaseCreator
                 foreach ($patternsRemoveList as $pattern_to_remove) {
                     if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
                         unset($filesList[$key]);
+                        exec("rm -rf $key");
                         continue 2;
                     }
                 }
-
-                $this->cleanFilesList($filesList[$key], $filesRemoveList, $foldersRemoveList, $patternsRemoveList, $folder);
+                $this->removeUnnecessaryFiles($filesList[$key], $filesRemoveList, $foldersRemoveList, $patternsRemoveList, $folder);
             }
         }
 
@@ -346,46 +379,26 @@ class ReleaseCreator
     protected function createZipArchive()
     {
         echo "\e[33m--- Creating zip archive...\e[m\n";
-        $tmpPath = "$this->projectPath/tools/build/tmp";
-
-        if (!file_exists($tmpPath)) {
-            mkdir($tmpPath, 0777, true);
-        }
-        $zipZile = "$this->projectPath/tools/build/tmp/prestashop_$this->version.zip";
-        $subZip = "$this->projectPath/tools/build/tmp/prestashop.zip";
-        $subDir = '';
+        $tempProjectPath = self::TEMP_PROJECT_PATH;
+        $zipZile = "prestashop_$this->version.zip";
+        $subZip = "prestashop.zip";
+        exec("zip -r /tmp/$subZip $tempProjectPath > /dev/null");
         $zip = new ZipArchive();
-        $zip->open($subZip, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-        $filesAdded = 0;
-
-        foreach ($this->arrayFlatten($this->filesList) as $file) {
-            $fileName = str_replace($this->projectPath, null, $file);
-            $fileName = str_replace(array_keys($this->itemsToRename), $this->itemsToRename, $fileName);
-
-            try {
-                $zip->addFile($file, $subDir."/".ltrim($fileName, '/'));
-                $filesAdded++;
-
-                if ($filesAdded % 100 === 0) {
-                    $zip->close();
-                    $zip->open($subZip);
-                }
-            } catch (Exception $e) {
-                echo $e->getMessage();
-                exit(1);
-            }
-        }
-        $zip->close();
         $zip->open($zipZile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-        $zip->addFile($subZip);
+        $zip->addFile("/tmp/$subZip", $subZip);
         $zip->close();
-        unlink($subZip);
+        unlink("/tmp/$subZip");
         $reference = $this->version . "_" . date("Ymd_His");
         mkdir("$this->projectPath/tools/build/releases/$reference", 0777, true);
         rename(
-            "$this->projectPath/tools/build/tmp/prestashop_$this->version.zip",
+            "prestashop_$this->version.zip",
             "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
         );
+        rename(
+            "/tmp/prestashop_$this->version.xml",
+            "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.xml"
+        );
+        exec("rm -rf $tempProjectPath");
         echo "\e[32m--- Zip archive successfully created...\e[m\n";
 
         return $this;
@@ -421,7 +434,7 @@ class ReleaseCreator
     protected function generateXMLChecksum()
     {
         echo "\e[33m--- Generating XML checksum...\e[m\n";
-        $xml_path = "$this->projectPath/tools/build/tmp/prestashop_$this->version.xml";
+        $xmlPath = "/tmp/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>".PHP_EOL;
         $content .= "<checksum_list>".PHP_EOL;
         $content .= "\t<ps_root_dir version=\"$this->version\">".PHP_EOL;
@@ -429,7 +442,7 @@ class ReleaseCreator
         $content .= "\t".'</ps_root_dir>'.PHP_EOL;
         $content .= '</checksum_list>'.PHP_EOL;
 
-        if (!file_put_contents($xml_path, $content)) {
+        if (!file_put_contents($xmlPath, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
         }
         echo "\e[32m--- XML checksum successfully generated...\e[m\n";
