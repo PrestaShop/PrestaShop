@@ -263,7 +263,6 @@ class ReleaseCreator
             $this->patternsRemoveList,
             $this->projectPath
         );
-        $this->generateLicensesFile();
         $this->createZipArchive();
         $this->generateXMLChecksum();
         unlink("$this->projectPath/tools/build/tmp/prestashop_$this->version.xml");
