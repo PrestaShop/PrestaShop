@@ -627,7 +627,7 @@ class TabCore extends ObjectModel
             && $requestedPosition > 0
             && $requestedPosition < Tab::getNewLastPosition($this->id_parent)
         ) {
-            ($requestedPosition < $this->position) ? $way = false : $way = true;
+            $way = $requestedPosition >= $this->position;
             $this->updatePosition($way, $requestedPosition);
         }
 
