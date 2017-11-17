@@ -66,7 +66,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
      */
     private function getAddonsUrl(Request $request)
     {
-        $psVersion = $this->get('prestashop.adapter.legacy.configuration')->get('__PS_VERSION__');
+        $psVersion = $this->get('prestashop.adapter.legacy.configuration')->get('_PS_VERSION_');
         $parent_domain = $request->getSchemeAndHttpHost();
         $context = $this->getContext();
         $currencyCode = $context->currency->iso_code;
