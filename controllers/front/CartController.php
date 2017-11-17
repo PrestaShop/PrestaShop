@@ -280,8 +280,8 @@ class CartControllerCore extends FrontController
 
             if ($total_quantity < $minimal_quantity) {
                 $this->errors[] = $this->trans(
-                    'You must add %qty% minimum quantity',
-                    array('%qty%' => $minimal_quantity),
+                    'You must add %quantity% minimum quantity',
+                    array('%quantity%' => $minimal_quantity),
                     'Shop.Notifications.Error'
                 );
                 return false;
