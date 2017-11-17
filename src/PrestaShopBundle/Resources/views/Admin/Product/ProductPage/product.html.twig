@@ -123,7 +123,7 @@
         {# PANEL PRICING #}
         {% block product_panel_pricing %}
           {{ include('@Product/ProductPage/Blocks/pricing.html.twig', {
-            'pricingForm' : form.step2,
+            'pricingForm': form.step2,
             'is_multishop_context': is_multishop_context,
             'productId': id_product
           }) }}
@@ -131,19 +131,10 @@
 
         {# PANEL SEO #}
         {% block product_panel_seo %}
-          <div role="tabpanel" class="form-contenttab tab-pane" id="step5">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="container-fluid">
-                  <div class="row">
-
-                    {{ include('@Product/ProductPage/Forms/form_seo.html.twig', {'form' : form.step5}) }}
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {{ include('@Product/ProductPage/Blocks/seo.html.twig', {
+            'seoForm': form.step5,
+            'productId': id_product
+          }) }}
         {% endblock %}
 
         {# PANEL OPTIONS #}
