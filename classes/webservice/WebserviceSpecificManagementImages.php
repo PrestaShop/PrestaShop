@@ -669,7 +669,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
         if (empty($this->wsObject->urlSegment[2])) {
             $results = Db::getInstance()->executeS('SELECT DISTINCT `id_cart` FROM `'._DB_PREFIX_.'customization`');
-            $ids = [];
+            $ids = array();
             foreach ($results as $result) {
                 $ids[] = $result['id_cart'];
             }
