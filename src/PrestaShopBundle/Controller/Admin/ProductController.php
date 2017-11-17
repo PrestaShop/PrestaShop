@@ -317,7 +317,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
+            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,

@@ -152,7 +152,7 @@ class AttributeController extends FrameworkBundleAdminController
                         $combinationDataProvider->getFormCombination($combination['id_product_attribute'])
                     );
                 $result['form'] .= $this->renderView(
-                    'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
+                    '@Product/ProductPage/Forms/form_combination.html.twig',
                     array(
                         'form' => $form->createView(),
                     )
