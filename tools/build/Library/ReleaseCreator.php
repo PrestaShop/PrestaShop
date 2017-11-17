@@ -2,10 +2,8 @@
 
 class ReleaseCreator
 {
+    /** @var string */
     const TEMP_PROJECT_PATH = '/tmp/PrestaShop-release-tmp';
-
-    /** @var array */
-    protected $itemsToRename = ['/admin-dev' => '/admin', '/install-dev' => '/install'];
 
     /** @var array */
     protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
@@ -72,18 +70,26 @@ class ReleaseCreator
      */
     public function __construct($version)
     {
-        $startTime = date('H:i:s');
-        echo "\e[32m--- Script started at {$startTime} \e[m\n\n";
         $this->version = $version;
         $this->projectPath = realpath(__DIR__ . '/../../..');
+    }
+
+    /**
+     * @return $this
+     */
+    public function createRelease()
+    {
+        $startTime = date('H:i:s');
+        echo "\e[32m--- Script started at {$startTime} \e[m\n\n";
         $this->setFilesConstants()
             ->generateLicensesFile()
             ->updateComposerJsonFile()
             ->runComposerInstall()
-            ->createAppFolders()
             ->createPackages();
         $endTime = date('H:i:s');
         echo "\n\e[32m--- Script ended at {$endTime} \e[m\n";
+
+        return $this;
     }
 
     /**
@@ -91,12 +97,12 @@ class ReleaseCreator
      */
     protected function setFilesConstants()
     {
-        echo "\e[33mSetting files constants...\e[m\n";
+        echo "\e[33mSetting files constants...\e[m";
         $this->setConfigDefinesConstants()
             ->setConfigAutoloadConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
-        echo "\e[32mFiles constants set\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
     }
@@ -180,7 +186,7 @@ class ReleaseCreator
      */
     protected function generateLicensesFile()
     {
-        echo "\e[33mGenerating licences file...\e[m\n";
+        echo "\e[33mGenerating licences file...\e[m";
         $content = null;
         $directory = new \RecursiveDirectoryIterator($this->projectPath);
         $iterator = new \RecursiveIteratorIterator($directory);
@@ -193,7 +199,7 @@ class ReleaseCreator
         if (!file_put_contents($this->projectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
         }
-        echo "\e[32mLicences file successfully generated...\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
     }
@@ -204,7 +210,7 @@ class ReleaseCreator
      */
     protected function updateComposerJsonFile()
     {
-        echo "\e[33mUpdating composer.json...\e[m\n";
+        echo "\e[33mUpdating composer.json...\e[m";
         $replacement = '"PrestaShop\\\\\\PrestaShop\\\\\\Core\\\\\\Cldr\\\\\\Composer\\\\\\Hook::init",
             "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::buildBootstrap",
             "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::installRequirementsFile",
@@ -216,7 +222,7 @@ class ReleaseCreator
         if (!file_put_contents($this->projectPath . '/composer.json', $content)) {
             throw new BuildException('Unable to update composer.json');
         }
-        echo "\e[32mcomposer.json successfully updated...\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
     }
@@ -227,22 +233,23 @@ class ReleaseCreator
      */
     protected function runComposerInstall()
     {
-        echo "\e[33mRunning composer install...\e[m\n";
+        echo "\e[33mRunning composer install...\e[m";
         $command = "cd $this->projectPath && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
         if ($returnCode != 0) {
             throw new BuildException('Unable to run composer install.');
         }
-        echo "\e[32mcomposer install successfully run...\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
     }
 
     /**
      * @return $this
+     * @throws BuildException
      */
-    protected function createAppFolders()
+    protected function createAndRenameFolders()
     {
         if (!file_exists($this->projectPath . '/app/cache/')) {
             mkdir($this->projectPath . '/app/cache', 0777, true);
@@ -250,6 +257,16 @@ class ReleaseCreator
 
         if (!file_exists($this->projectPath . '/app/logs/')) {
             mkdir($this->projectPath . '/app/logs', 0777, true);
+        }
+        $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
+        $basePath = self::TEMP_PROJECT_PATH;
+
+        foreach ($itemsToRename as $oldName => $newName) {
+            if (file_exists("$basePath/$oldName")) {
+                rename("{$basePath}/$oldName", "{$basePath}/$newName");
+            } else {
+                throw new BuildException("Unable to rename $oldName to $newName, file does not exist.");
+            }
         }
 
         return $this;
@@ -274,14 +291,15 @@ class ReleaseCreator
      */
     protected function cleanTmpProject()
     {
-        echo "\e[33m--- Cleaning project...\e[m\n";
+        echo "\e[33m--- Cleaning project...\e[m";
         $destination = self::TEMP_PROJECT_PATH;
 
         if (file_exists($destination)) {
             exec("rm -rf $destination");
         }
         exec("cp -r {$this->projectPath} $destination");
-        $this->filesList = get_directory_structure($destination);
+        $this->createAndRenameFolders();
+        $this->filesList = $this->getDirectoryStructure($destination);
         $this->removeUnnecessaryFiles(
             $this->filesList,
             $this->filesRemoveList,
@@ -289,9 +307,39 @@ class ReleaseCreator
             $this->patternsRemoveList,
             self::TEMP_PROJECT_PATH
         );
-        echo "\e[32m--- Project cleaned...\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
+    }
+
+    /**
+     * @param string $path
+     * @return array
+     */
+    protected function getDirectoryStructure($path)
+    {
+        $flags = FilesystemIterator::SKIP_DOTS | RecursiveIteratorIterator::CHILD_FIRST;
+        $iterator = new RecursiveDirectoryIterator($path, $flags);
+        $childrens = iterator_count($iterator);
+        $structure = [];
+
+        if ($childrens > 0) {
+            $children = $iterator->getChildren();
+
+            for ($index = 0; $index < $childrens; $index += 1) {
+                $pathname = $children->getPathname();
+
+                if ($children->hasChildren() === true) {
+                    $structure[$pathname] = $this->getDirectoryStructure($pathname);
+                } else {
+                    $structure[] = $pathname;
+                }
+                $children->next();
+            }
+        }
+        ksort($structure);
+
+        return $structure;
     }
 
     /**
@@ -378,20 +426,24 @@ class ReleaseCreator
      */
     protected function createZipArchive()
     {
-        echo "\e[33m--- Creating zip archive...\e[m\n";
+        echo "\e[33m--- Creating zip archive...\e[m";
         $tempProjectPath = self::TEMP_PROJECT_PATH;
         $zipZile = "prestashop_$this->version.zip";
-        $subZip = "prestashop.zip";
-        exec("zip -r /tmp/$subZip $tempProjectPath > /dev/null");
-        $zip = new ZipArchive();
-        $zip->open($zipZile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-        $zip->addFile("/tmp/$subZip", $subZip);
-        $zip->close();
-        unlink("/tmp/$subZip");
+        // Will be used with the index.php installer
+        //$subZip = "prestashop.zip";
+        $cmd = "cd $tempProjectPath \
+            && zip -rq $zipZile . \
+            && cd -";
+        exec($cmd);
+        // Will be used with the index.php installer
+        // $zip = new ZipArchive();
+        // $zip->open($zipZile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        // $zip->addFile("$tempProjectPath/$subZip", $subZip);
+        // $zip->close();
         $reference = $this->version . "_" . date("Ymd_His");
         mkdir("$this->projectPath/tools/build/releases/$reference", 0777, true);
         rename(
-            "prestashop_$this->version.zip",
+            "$tempProjectPath/$zipZile",
             "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
         );
         rename(
@@ -399,32 +451,9 @@ class ReleaseCreator
             "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.xml"
         );
         exec("rm -rf $tempProjectPath");
-        echo "\e[32m--- Zip archive successfully created...\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
-    }
-
-    /**
-     * @param array|null $array
-     * @return array
-     */
-    protected function arrayFlatten($array = null)
-    {
-        $result = array();
-
-        if (!is_array($array)) {
-            $array = func_get_args();
-        }
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $result = array_merge($result, $this->arrayFlatten($value));
-            } else {
-                $result = array_merge($result, array($key => $value));
-            }
-        }
-
-        return $result;
     }
 
     /**
@@ -433,7 +462,7 @@ class ReleaseCreator
      */
     protected function generateXMLChecksum()
     {
-        echo "\e[33m--- Generating XML checksum...\e[m\n";
+        echo "\e[33m--- Generating XML checksum...\e[m";
         $xmlPath = "/tmp/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>".PHP_EOL;
         $content .= "<checksum_list>".PHP_EOL;
@@ -445,7 +474,7 @@ class ReleaseCreator
         if (!file_put_contents($xmlPath, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
         }
-        echo "\e[32m--- XML checksum successfully generated...\e[m\n";
+        echo "\e[32m DONE\e[m\n";
 
         return $this;
     }
@@ -457,20 +486,18 @@ class ReleaseCreator
     protected function generateXMLDirectoryChecksum(array $files)
     {
         $content = null;
-        $subCount = substr_count($this->projectPath, DIRECTORY_SEPARATOR);
+        $subCount = substr_count(self::TEMP_PROJECT_PATH, DIRECTORY_SEPARATOR);
 
         foreach ($files as $key => $value) {
             if (is_numeric($key)) {
                 $md5 = md5_file($value);
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $file_name = str_replace($this->projectPath, null, $value);
-                $file_name = str_replace(array_keys($this->itemsToRename), $this->itemsToRename, $file_name);
+                $file_name = str_replace(self::TEMP_PROJECT_PATH, null, $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $dir_name = str_replace($this->projectPath, null, $key);
-                $dir_name = str_replace(array_keys($this->itemsToRename), $this->itemsToRename, $dir_name);
+                $dir_name = str_replace(self::TEMP_PROJECT_PATH, null, $key);
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;
                 $content .= $this->generateXMLDirectoryChecksum($value);

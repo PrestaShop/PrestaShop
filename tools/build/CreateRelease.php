@@ -1,8 +1,7 @@
 <?php
 
-require_once 'Libraries/ReleaseCreator.php';
-require_once 'Libraries/functions.php';
 require_once 'Exception/BuildException.php';
+require_once 'Library/ReleaseCreator.php';
 
 $options = getopt('', ['version:']);
 
@@ -15,7 +14,8 @@ if (empty($options['version'])) {
 }
 
 try {
-    new ReleaseCreator($options['version']);
+    $releaseCreator = new ReleaseCreator($options['version']);
+    $releaseCreator->createRelease();
 } catch (Exception $e) {
     echo "\e[31mERROR:\n";
     echo "Can not create the release.\n";
