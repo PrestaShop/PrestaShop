@@ -277,10 +277,6 @@ var combinations = (function() {
   };
 })();
 
-BOEvent.on("Product Combinations Management started", function initCombinationsManagement() {
-  combinations.init();
-}, "Back office");
-
 /**
  * Refresh bulk actions combination number after creating or deleting combinations
  *
@@ -292,3 +288,5 @@ var refreshTotalCombinations = function (sign, number) {
   var currentnumber = parseInt($bulkCombinationsTotal.text()) + (sign * number);
   $bulkCombinationsTotal.text(currentnumber);
 }
+
+combinations.init();

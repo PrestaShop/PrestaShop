@@ -44,12 +44,6 @@ $(document).ready(function() {
   tags.init();
   rightSidebar.init();
   recommendedModules.init();
-  BOEvent.emitEvent("Product Categories Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Default category Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Manufacturer Management started", "CustomEvent");
-  BOEvent.emitEvent("Product Related Management started", "CustomEvent");
-  BOEvent.emitEvent("Modal confirmation started", "CustomEvent");
-  BOEvent.emitEvent("Product Combinations Management started", "CustomEvent");
 
   /** Type product fields display management */
   $('#form_step1_type_product').change(function() {

@@ -29,6 +29,4 @@ var manufacturer = (function() {
   };
 })();
 
-BOEvent.on("Product Manufacturer Management started", function initManufacturerManagement() {
-  manufacturer.init();
-}, "Back office");
+manufacturer.init();
