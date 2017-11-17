@@ -131,6 +131,7 @@ class ProductDataProvider
      * Get an image
      *
      * @param int $id_image
+     * @param int $id_lang
      *
      * @return array()
      */
