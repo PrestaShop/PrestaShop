@@ -200,6 +200,4 @@ var productCategoriesTags = (function () {
   };
 })();
 
-BOEvent.on("Product Categories Management started", function initTagsManagement() {
-  productCategoriesTags.init();
-}, "Back office");
+productCategoriesTags.init();
