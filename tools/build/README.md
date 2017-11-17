@@ -11,6 +11,5 @@ This will:
 * Concatenate all licence files into one unique in /LICENCES
 * Update composer.json
 * Create somes folders (app/cache, app/logs...)
-* Create packages for all langs (only fr currently).
 
 Created releases are available in tools/build/releases directory.
