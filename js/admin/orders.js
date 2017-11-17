@@ -712,6 +712,7 @@ function init()
 						$('.add_product_fields').hide();
 						$('.row-editing-warning').hide();
 						$('td.product_action').attr('colspan', 3);
+						$('.cancel_product_change_link').trigger('click');
 					}
 					else
 						jAlert(data.error);
