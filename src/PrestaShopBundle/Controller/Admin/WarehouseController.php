@@ -86,7 +86,7 @@ class WarehouseController extends FrameworkBundleAdminController
 
         $form->add($simpleSubForm);
 
-        return $this->render('PrestaShopBundle:Admin:Product/Include/form-warehouse-combination.html.twig', array(
+        return $this->render('@Product/ProductPage/Forms/form_warehouse_combination.html.twig', array(
             'warehouses' => $warehouses,
             'form' => $form->getForm()['step4']->createView()
         ));

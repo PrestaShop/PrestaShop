@@ -105,7 +105,7 @@ class SupplierController extends FrameworkBundleAdminController
 
         $form->add($simpleSubForm);
 
-        return $this->render('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', array(
+        return $this->render('@Product/ProductPage/Forms/form_supplier_combination.html.twig', array(
             'suppliers' => $suppliers,
             'form' => $form->getForm()['step6']->createView()
         ));
