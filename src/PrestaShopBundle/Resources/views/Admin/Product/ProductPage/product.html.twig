@@ -57,7 +57,7 @@
 
         {# PANEL ESSENTIALS #}
         {% block product_panel_essentials %}
-          {{ include('@Product/ProductPage/Blocks/essentials.html.twig', {
+          {{ include('@Product/ProductPage/Panels/essentials.html.twig', {
               'formPackItems': form.step1.inputPackItems,
               'productId': id_product,
               'images': form.step1.vars.value.images,
@@ -79,7 +79,7 @@
 
         {# PANEL COMBINATIONS #}
         {% block product_panel_combinations %}
-          {{ include('@Product/ProductPage/Blocks/combinations.html.twig', {
+          {{ include('@Product/ProductPage/Panels/combinations.html.twig', {
               'formDependsOnStocks': form.step3.depends_on_stock,
               'productId': id_product,
               'formStockQuantity': form.step3.qty_0,
@@ -122,7 +122,7 @@
 
         {# PANEL PRICING #}
         {% block product_panel_pricing %}
-          {{ include('@Product/ProductPage/Blocks/pricing.html.twig', {
+          {{ include('@Product/ProductPage/Panels/pricing.html.twig', {
             'pricingForm': form.step2,
             'is_multishop_context': is_multishop_context,
             'productId': id_product
@@ -131,7 +131,7 @@
 
         {# PANEL SEO #}
         {% block product_panel_seo %}
-          {{ include('@Product/ProductPage/Blocks/seo.html.twig', {
+          {{ include('@Product/ProductPage/Panels/seo.html.twig', {
             'seoForm': form.step5,
             'productId': id_product
           }) }}
@@ -139,7 +139,7 @@
 
         {# PANEL OPTIONS #}
         {% block product_panel_options %}
-          {{ include('@Product/ProductPage/Blocks/options.html.twig', {
+          {{ include('@Product/ProductPage/Panels/options.html.twig', {
             'optionsForm': form.step6,
             'productId': id_product
           }) }}
@@ -249,132 +249,14 @@
 
     </div>
     {# FOOTER #}
-    {% block product_footer %}
-      <div class="product-footer justify-content-md-center">
-        <div class="col-lg-5">
-          <a
-            href="{{ path('admin_product_unit_action', {action: 'delete', id: id_product}) }}"
-            class="tooltip-link btn btn-lg"
-            data-toggle="pstooltip"
-            id="product_form_delete_btn"
-            title="{{ 'Permanently delete this product.'|trans({}, 'Admin.Catalog.Help') }}"
-            data-placement="left"
-            data-original-title="Delete"
-          >
-            <i class="material-icons">delete</i>
-          </a>
-          <a
-            href=""
-            data-redirect="{{ preview_link }}"
-            data-url-deactive="{{ preview_link_deactivate }}"
-            target="_blank"
-            class="btn btn-secondary preview"
-            data-toggle="pstooltip"
-            id="product_form_preview_btn"
-            title="{{ 'See how your product sheet will look online: ALT+SHIFT+V'|trans({}, 'Admin.Catalog.Help') }}"
-          >
-            {{ 'Preview'|trans({}, 'Admin.Actions')}}
-          </a>
-          {% if editable %}
-          <h2 class="for-switch online-title" {% if not form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="pstooltip"
-              title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
-          <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="pstooltip"
-              title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
-          <input
-            class="switch-input-lg"
-            id="form_step1_active"
-            data-toggle="switch"
-            type="checkbox"
-            name="form[step1][active]"
-            value="1"
-            {{ form.step1.vars.value.active ? 'checked="checked"' : '' }}
-          />
-          {% endif %}
-        </div>
-        <div class="col-lg-6 text-lg-right">
-          {% if is_shop_context %}
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-submit hidden-xs uppercase duplicate ml-3"
-              id="product_form_save_duplicate_btn"
-              data-redirect="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
-              data-toggle="pstooltip"
-              title="{{ 'Save and duplicate this product, then go to the new product: ALT+SHIFT+D'|trans({}, 'Admin.Catalog.Help') }}"
-              >
-              {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
-            </button>
-          {% endif %}
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-submit hidden-xs uppercase go-catalog ml-3"
-            id="product_form_save_go_to_catalog_btn"
-            data-redirect="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
-            data-toggle="pstooltip"
-            title="{{ 'Save and go back to the catalog: ALT+SHIFT+Q'|trans({}, 'Admin.Catalog.Help') }}"
-            >
-            {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-submit hidden-xs uppercase new-product ml-3"
-            id="product_form_save_new_btn"
-            data-redirect="{{ path('admin_product_new') }}"
-            data-toggle="pstooltip"
-            title="{{ 'Save and create a new product: ALT+SHIFT+P'|trans({}, 'Admin.Catalog.Help') }}"
-            >
-            {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
-          </button>
-          <input
-            id="submit"
-            type="submit"
-            class="btn btn-primary save uppercase ml-3"
-            value="{{ 'Save'|trans({}, 'Admin.Actions') }}"
-            data-toggle="pstooltip"
-            title="{{ 'Save the product and stay on the current page: ALT+SHIFT+S'|trans({}, 'Admin.Catalog.Help') }}"
-            />
-
-            <div class="js-spinner spinner hide btn-primary-reverse onclick mr-1 btn"></div>
-            <div class="btn-group hide dropdown">
-              <button
-              class="btn btn-primary js-btn-save ml-3"
-              type="submit"
-              >
-                <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
-              </button><button
-                class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-                type="button"
-                id="dropdownMenu"
-                data-toggle="dropdown"
-                aria-expanded="false"
-              >
-                <span class="sr-only">Toggle Dropdown</span>
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-                {% if is_shop_context %}
-                  <a
-                  class="dropdown-item duplicate js-btn-save"
-                  href="{{ path('admin_product_unit_action', {action: 'duplicate', id: id_product}) }}"
-                  >
-                  {{ 'Duplicate'|trans({}, 'Admin.Actions')|raw }}
-                  </a>
-                {% endif %}
-              <a
-                class="dropdown-item go-catalog js-btn-save"
-                href="{{ path('admin_product_catalog', {'offset': 'last', 'limit': 'last'}) }}"
-                >
-                {{ 'Go to catalog'|trans({}, 'Admin.Catalog.Feature')|raw }}
-              </a>
-              <a
-                class="dropdown-item new-product js-btn-save"
-                href="{{ path('admin_product_new') }}"
-                >
-                {{ 'Add new product'|trans({}, 'Admin.Catalog.Feature')|raw }}
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    {% endblock %}
+    {{ include('@Product/ProductPage/Blocks/footer.html.twig', {
+      'preview_link': preview_link,
+      'preview_link_deactivate': preview_link_deactivate,
+      'is_shop_context': is_shop_context,
+      'editable': editable,
+      'is_active': form.step1.vars.value.active,
+      'productId': id_product
+    }) }}
     {% if not editable %} </fieldset> {% endif %}
   </form>
 
