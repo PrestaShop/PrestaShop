@@ -110,12 +110,13 @@ abstract class AbstractAdminQueryBuilder
      * @param array[array[mixed]] $select
      * @param array[mixed] $table
      * @param array[mixed] $where
+     * @param array[string] $groupBy
      * @param array[string] $order
      * @param string $limit
      * @throws LogicException if SQL elements cannot be joined.
      * @return string The SQL query ready to be executed.
      */
-    protected function compileSqlQuery(array $select, array $table, array $where = array(), array $order = array(), $limit = null)
+    protected function compileSqlQuery(array $select, array $table, array $where = array(), array $groupBy = array(), array $order = array(), $limit = null)
     {
         $sql = array();
 
@@ -164,6 +165,11 @@ abstract class AbstractAdminQueryBuilder
             if (strlen($s) > 0) {
                 $sql[] = 'WHERE '.$s.PHP_EOL;
             }
+        }
+
+        // GROUP BY
+        if (!empty($groupBy)) {
+            $sql[] = 'GROUP BY '. implode(', ', $groupBy) . PHP_EOL;
         }
 
         // ORDER
