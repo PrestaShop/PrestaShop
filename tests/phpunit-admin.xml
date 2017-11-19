@@ -1,13 +1,16 @@
-<phpunit bootstrap="bootstrap-admin.php">
+<phpunit
+  bootstrap="bootstrap-admin.php"
+  processIsolation="false"
+>
     <php>
-      <env name="kernel.environment" value="test" />
-      <server name="KERNEL_DIR" value="../app/" />
+        <env name="SYMFONY_ENV" value="test"/>
+        <env name="kernel.environment" value="test" />
+      <server name="KERNEL_DIR" value="app" />
     </php>
     <groups>
       <include>
         <group>admin</group>
-      </include>
-      <include>
+        <group>api</group>
         <group>demo</group>
       </include>
     </groups>

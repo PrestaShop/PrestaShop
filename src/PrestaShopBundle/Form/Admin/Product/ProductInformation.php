@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,20 +20,19 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormError;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use Symfony\Component\Form\Extension\Core\Type as FormType;
 
 /**
  * This form class is responsible to generate the basic product information form
@@ -120,6 +119,9 @@ class ProductInformation extends CommonAbstractType
                 $this->translator->trans('Pack of products', [], 'Admin.Catalog.Feature') => 1,
                 $this->translator->trans('Virtual product', [], 'Admin.Catalog.Feature') => 2,
             ),
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
             'choices_as_values' => true,
             'label' =>  $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'required' => true,
@@ -157,7 +159,15 @@ class ProductInformation extends CommonAbstractType
         ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => array('class' => 'autoload_rte'),
+                'attr' => array(
+                    'class' => 'autoload_rte',
+                    'counter' => 21844
+                ),
+                'constraints' => array(
+                    new TinyMceMaxLength(array(
+                        'max' => 21844
+                    ))
+                ),
                 'required' => false
             ],
             'locales' => $this->locales,
@@ -170,20 +180,13 @@ class ProductInformation extends CommonAbstractType
             'options' => [
                 'attr' => array(
                     'class' => 'autoload_rte',
-                    'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help')
+                    'placeholder' => $this->translator->trans('The summary is a short sentence describing your product.<br />It will appears at the top of your shop\'s product page, in product lists, and in search engines\' results page (so it\'s important for SEO). To give more details about your product, use the "Description" tab.', [], 'Admin.Catalog.Help'),
+                    'counter' => (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
                 ),
                 'constraints' => array(
-                    new Assert\Callback(function ($str, ExecutionContextInterface $context) {
-                        $str = strip_tags($str);
-                        $limit = (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <=0 ? 800 : $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
-
-                        if (strlen($str) > $limit) {
-                            $context->addViolation(
-                                $this->translator->trans('This value is too long. It should have %limit% characters or less.', [], 'Admin.Catalog.Notification'),
-                                array('%limit%' => $limit)
-                            );
-                        }
-                    }),
+                    new TinyMceMaxLength(array(
+                        'max' => (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT') <= 0 ? 800 : (int)$this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT')
+                    ))
                 ),
                 'required' => false
             ],
@@ -204,6 +207,10 @@ class ProductInformation extends CommonAbstractType
             'choices' => $this->manufacturers,
             'choices_as_values' => true,
             'required' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'label' => $this->translator->trans('Brand', [], 'Admin.Catalog.Feature')
         ))
 
@@ -228,7 +235,7 @@ class ProductInformation extends CommonAbstractType
             'mapped' => false,
             'currency' => $this->currency->iso_code,
         ));
-        if ($is_stock_management){
+        if ($is_stock_management) {
             $builder->add('qty_0_shortcut', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
                 'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),

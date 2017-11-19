@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -137,13 +137,21 @@ class ThemeExporter
     }
 
     /**
+     * @param mixed $exportDir
+     */
+    public function setExportDir($exportDir)
+    {
+        $this->exportDir = str_replace('/export', DIRECTORY_SEPARATOR . 'export', $exportDir);
+    }
+
+    /**
      * @param $filePath
      * @return bool
      * @throws \Exception
      */
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
-        $validFileLocation = substr(realpath($filePath), 0, strlen($this->exportDir)) === $this->exportDir;
+        $validFileLocation = substr(realpath($filePath), 0, strlen(realpath($this->exportDir))) === realpath($this->exportDir);
 
         if (!$validFileLocation) {
             throw new \Exception('Invalid file location. This file should belong to the export directory');
@@ -174,7 +182,7 @@ class ThemeExporter
             ->setOutputPath($tmpFolderPath)
             ->extract($theme, $locale, $rootDir);
 
-        Flattenizer::flatten($tmpFolderPath . '/' . $locale, $folderPath . '/' . $locale, $locale);
+        Flattenizer::flatten($tmpFolderPath . DIRECTORY_SEPARATOR . $locale, $folderPath . DIRECTORY_SEPARATOR . $locale, $locale);
 
         return $this->themeProvider->getCatalogueFromPaths($folderPath, $locale, '*');
     }
@@ -187,20 +195,20 @@ class ThemeExporter
     {
         $finder = Finder::create();
 
-        foreach ($finder->in($archiveParentDirectory . '/' . $locale)->files() as $file) {
-            $parentDirectoryParts = explode('/', dirname($file));
+        foreach ($finder->in($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale)->files() as $file) {
+            $parentDirectoryParts = explode(DIRECTORY_SEPARATOR, dirname($file));
             $destinationFilenameParts = array(
                 $archiveParentDirectory,
                 $parentDirectoryParts[count($parentDirectoryParts) - 1] . '.' . $locale . '.xlf'
             );
-            $destinationFilename = implode('/', $destinationFilenameParts);
+            $destinationFilename = implode(DIRECTORY_SEPARATOR, $destinationFilenameParts);
             if ($this->filesystem->exists($destinationFilename)) {
                 $this->filesystem->remove($destinationFilename);
             }
             $this->filesystem->rename($file->getPathname(), $destinationFilename);
         }
 
-        $this->filesystem->remove($archiveParentDirectory . '/' . $locale);
+        $this->filesystem->remove($archiveParentDirectory . DIRECTORY_SEPARATOR . $locale);
     }
 
     public function cleanArtifacts($themeName)
@@ -215,7 +223,7 @@ class ThemeExporter
      */
     protected function getTemporaryExtractionFolder($themeName)
     {
-        return $this->cacheDir . '/' . $themeName . '-tmp';
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName . '-tmp';
     }
 
     /**
@@ -224,7 +232,7 @@ class ThemeExporter
      */
     protected function getFlattenizationFolder($themeName)
     {
-        return $this->cacheDir . '/' . $themeName;
+        return $this->cacheDir . DIRECTORY_SEPARATOR . $themeName;
     }
 
     /**
@@ -233,7 +241,7 @@ class ThemeExporter
      */
     protected function getExportDir($themeName)
     {
-        return $this->exportDir . '/' . $themeName;
+        return $this->exportDir . DIRECTORY_SEPARATOR . $themeName;
     }
 
     /**
@@ -289,8 +297,7 @@ class ThemeExporter
         MessageCatalogue $catalogue,
         $messages,
         $domain
-    )
-    {
+    ) {
         foreach ($messages as $id => $translation) {
             $metadata = $catalogue->getMetadata($id, $domain);
             if ($this->shouldAddFileMetadata($metadata)) {

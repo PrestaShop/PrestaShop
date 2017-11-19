@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -38,7 +38,7 @@ class AdminAddressesControllerCore extends AdminController
         $this->required_database = true;
         $this->required_fields = array('company','address2', 'postcode', 'other', 'phone', 'phone_mobile', 'vat_number', 'dni');
         $this->table = 'address';
-        $this->className = 'Address';
+        $this->className = 'CustomerAddress';
         $this->lang = false;
         $this->addressType = 'customer';
         $this->explicitSelect = true;
@@ -440,27 +440,23 @@ class AdminAddressesControllerCore extends AdminController
      */
     protected function processAddressFormat()
     {
-        $tmp_addr = new Address((int)Tools::getValue('id_address'));
+        $tmp_addr = new CustomerAddress((int)Tools::getValue('id_address'));
 
         $selected_country = ($tmp_addr && $tmp_addr->id_country) ? $tmp_addr->id_country : (int)Configuration::get('PS_COUNTRY_DEFAULT');
+        $adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
 
-        $inv_adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
-        $dlv_adr_fields = AddressFormat::getOrderedAddressFields($selected_country, false, true);
-
-        $inv_all_fields = array();
-        $dlv_all_fields = array();
-
+        $all_fields = array();
         $out = array();
 
-        foreach (array('inv', 'dlv') as $adr_type) {
-            foreach (${$adr_type.'_adr_fields'} as $fields_line) {
-                foreach (explode(' ', $fields_line) as $field_item) {
-                    ${$adr_type.'_all_fields'}[] = trim($field_item);
-                }
+        foreach ($adr_fields as $fields_line) {
+            foreach (explode(' ', $fields_line) as $field_item) {
+                $all_fields[] = trim($field_item);
             }
+        }
 
-            $out[$adr_type.'_adr_fields'] = ${$adr_type.'_adr_fields'};
-            $out[$adr_type.'_all_fields'] = ${$adr_type.'_all_fields'};
+        foreach (array('inv', 'dlv') as $adr_type) {
+            $out[$adr_type.'_adr_fields'] = $adr_fields;
+            $out[$adr_type.'_all_fields'] = $all_fields;
         }
 
         return $out;

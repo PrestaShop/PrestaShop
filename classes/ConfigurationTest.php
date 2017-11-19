@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 class ConfigurationTestCore
@@ -55,8 +55,8 @@ class ConfigurationTestCore
     {
         $tests = array(
             'upload' => false,
-            'cache_dir' => 'app/cache',
-            'log_dir' => 'app/logs',
+            'cache_dir' => 'var/cache',
+            'log_dir' => 'var/logs',
             'img_dir' => 'img',
             'module_dir' => 'modules',
             'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',
@@ -66,6 +66,7 @@ class ConfigurationTestCore
             'customizable_products_dir' => 'upload',
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
+            'translations_sf2' => 'app/Resources/translations',
         );
 
         if (!defined('_PS_HOST_MODE_')) {
@@ -88,6 +89,7 @@ class ConfigurationTestCore
                 'simplexml' => false,
                 'zip' => false,
                 'fileinfo' => false,
+                'fopen' => false,
             ));
         }
 
@@ -104,7 +106,6 @@ class ConfigurationTestCore
     {
         return array(
             'new_phpversion' => false,
-            'fopen' => false,
             'gz' => false,
             'mbstring' => false,
             'dom' => false,
@@ -145,7 +146,8 @@ class ConfigurationTestCore
 
     public static function test_apache_mod_rewrite()
     {
-        if (strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
+        if (isset($_SERVER['SERVER_SOFTWARE'])
+            && strpos(strtolower($_SERVER['SERVER_SOFTWARE']), 'apache') === false || !function_exists('apache_get_modules')) {
             return true;
         }
 
@@ -420,5 +422,10 @@ class ConfigurationTestCore
         }
 
         return true;
+    }
+
+    public static function test_translations_sf2($dir)
+    {
+        return ConfigurationTest::test_dir($dir);
     }
 }

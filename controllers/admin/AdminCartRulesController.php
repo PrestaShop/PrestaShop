@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -332,9 +332,8 @@ class AdminCartRulesControllerCore extends AdminController
 			INSERT INTO `'._DB_PREFIX_.'cart_rule_combination` (`id_cart_rule_1`, `id_cart_rule_2`) (
 				SELECT id_cart_rule, '.(int)$currentObject->id.' FROM `'._DB_PREFIX_.'cart_rule` WHERE cart_rule_restriction = 1
 			)');
-        }
-        // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
-        else {
+        } else {
+            // And if the new cart rule has restrictions, previously unrestricted cart rules may now be restricted (a mug of coffee is strongly advised to understand this sentence)
             $ruleCombinations = Db::getInstance()->executeS('
 			SELECT cr.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule cr
@@ -401,7 +400,7 @@ class AdminCartRulesControllerCore extends AdminController
             foreach ($cart_rule->getProductRuleGroups() as $productRuleGroup) {
                 $j = 1;
                 $productRulesDisplay = array();
-                foreach ($productRuleGroup['product_rules'] as $id_product_rule => $productRule) {
+                foreach ($productRuleGroup['product_rules'] as $productRule) {
                     $productRulesDisplay[] = $this->getProductRuleDisplay($i, $j++, $productRule['type'], $productRule['values']);
                 }
                 $productRuleGroupsArray[] = $this->getProductRuleGroupDisplay($i++, $productRuleGroup['quantity'], $productRulesDisplay);
@@ -509,7 +508,7 @@ class AdminCartRulesControllerCore extends AdminController
                 $choose_content = $this->createTemplate('product_rule_itemlist.tpl')->fetch();
                 Context::getContext()->smarty->assign('product_rule_choose_content', $choose_content);
                 break;
-            default :
+            default:
                 Context::getContext()->smarty->assign('product_rule_itemlist', array('selected' => array(), 'unselected' => array()));
                 Context::getContext()->smarty->assign('product_rule_choose_content', '');
         }
@@ -538,6 +537,7 @@ class AdminCartRulesControllerCore extends AdminController
 				OR `firstname` LIKE "%'.pSQL($search_query).'%"
 				OR `lastname` LIKE "%'.pSQL($search_query).'%"
 			)
+			'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 			ORDER BY `firstname`, `lastname` ASC
 			LIMIT 50');
             die(json_encode($customers));

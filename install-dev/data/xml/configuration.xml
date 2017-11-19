@@ -110,15 +110,15 @@
   <configuration id="PS_PRODUCT_PICTURE_HEIGHT" name="PS_PRODUCT_PICTURE_HEIGHT">
     <value>64</value>
   </configuration>
-    <configuration id="PS_INVOICE_PREFIX" name="PS_INVOICE_PREFIX">
-      <value>#IN</value>
-    </configuration>
-    <configuration id="PS_INVCE_INVOICE_ADDR_RULES" name="PS_INVCE_INVOICE_ADDR_RULES">
-      <value>{"avoid":[]}</value>
-    </configuration>
-    <configuration id="PS_INVCE_DELIVERY_ADDR_RULES" name="PS_INVCE_DELIVERY_ADDR_RULES">
-      <value>{"avoid":[]}</value>
-    </configuration>
+  <configuration id="PS_INVOICE_PREFIX" name="PS_INVOICE_PREFIX">
+    <value>#IN</value>
+  </configuration>
+  <configuration id="PS_INVCE_INVOICE_ADDR_RULES" name="PS_INVCE_INVOICE_ADDR_RULES">
+    <value>{"avoid":[]}</value>
+  </configuration>
+  <configuration id="PS_INVCE_DELIVERY_ADDR_RULES" name="PS_INVCE_DELIVERY_ADDR_RULES">
+    <value>{"avoid":[]}</value>
+  </configuration>
   <configuration id="PS_DELIVERY_PREFIX" name="PS_DELIVERY_PREFIX">
     <value>#DE</value>
   </configuration>
@@ -457,6 +457,18 @@
   </configuration>
   <configuration id="PS_STOCK_MVT_SUPPLY_ORDER" name="PS_STOCK_MVT_SUPPLY_ORDER">
     <value>8</value>
+  </configuration>
+  <configuration id="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON" name="PS_STOCK_CUSTOMER_ORDER_CANCEL_REASON">
+    <value>9</value>
+</configuration>
+  <configuration id="PS_STOCK_CUSTOMER_RETURN_REASON" name="PS_STOCK_CUSTOMER_RETURN_REASON">
+    <value>10</value>
+  </configuration>
+  <configuration id="PS_STOCK_MVT_INC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_INC_EMPLOYEE_EDITION">
+    <value>11</value>
+  </configuration>
+  <configuration id="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION" name="PS_STOCK_MVT_DEC_EMPLOYEE_EDITION">
+    <value>12</value>
   </configuration>
   <configuration id="PS_STOCK_CUSTOMER_ORDER_REASON" name="PS_STOCK_CUSTOMER_ORDER_REASON">
     <value>3</value>
@@ -816,6 +828,18 @@ Country</value>
     </configuration>
     <configuration id="PS_MAINTENANCE_TEXT" name="PS_MAINTENANCE_TEXT">
       <value/>
+    </configuration>
+    <configuration id="PS_PRODUCT_SHORT_DESC_LIMIT" name="PS_PRODUCT_SHORT_DESC_LIMIT">
+      <value>800</value>
+    </configuration>
+    <configuration id="PS_LABEL_IN_STOCK_PRODUCTS" name="PS_LABEL_IN_STOCK_PRODUCTS">
+      <value>In Stock</value>
+    </configuration>
+    <configuration id="PS_LABEL_OOS_PRODUCTS_BOA" name="PS_LABEL_OOS_PRODUCTS_BOA">
+      <value>Product available for orders</value>
+    </configuration>
+    <configuration id="PS_LABEL_OOS_PRODUCTS_BOD" name="PS_LABEL_OOS_PRODUCTS_BOD">
+      <value>Out-of-Stock</value>
     </configuration>
   </entities>
 </entity_configuration>

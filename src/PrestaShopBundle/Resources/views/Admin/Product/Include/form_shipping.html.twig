@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,12 +19,12 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set dimension_unit, weight_unit = 'PS_DIMENSION_UNIT'|configuration, 'PS_WEIGHT_UNIT'|configuration %}
 
-<div class="col-md-12 p-b-1">
+<div class="col-md-12 pb-1">
   <h2>{{ 'Package dimension'|trans({}, 'Admin.Catalog.Feature') }}</h2>
   <p class="subtitle">{{ 'Adjust your shipping costs by filling in the product dimensions.'|trans({}, 'Admin.Catalog.Feature') }}</p>
 </div>
@@ -73,6 +73,47 @@
 <div class="col-md-12">
   <div class="form-group">
     <h2>
+      {{ form.additional_delivery_times.vars.label }}
+      <span class="help-box" data-toggle="popover"
+        data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+    </h2>
+    <div class="row">
+       <div class="col-md-12" {{ block('widget_container_attributes') }}>
+          {% for child in form.additional_delivery_times %}
+            {% if child.vars.value == 1 %}
+              <div class="widget-radio-inline">
+                {{ form_widget(child) }}
+                <a href="{{ getAdminLink("AdminPPreferences") }}" class="btn sensitive px-0" target=_blank><i class="material-icons">open_in_new</i> {{ "edit"|trans({}, 'Admin.Catalog.Help') }}</a>
+              </div>
+            {% else %}
+              {{ form_widget(child) }}
+            {% endif %}
+          {% endfor %}
+        </div>
+     </div>
+  </div>
+</div>
+
+<div class="col-xl-6 col-lg-6">
+  <div class="form-group">
+    <label class="form-control-label">{{ form.delivery_in_stock.vars.label }}</label>
+    {{ form_errors(form.delivery_in_stock) }}
+    {{ form_widget(form.delivery_in_stock) }}
+    <p class="subtitle italic">{{ 'Leave empty to disable.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+  </div>
+</div>
+<div class="col-xl-6 col-lg-6">
+  <div class="form-group">
+    <label class="form-control-label">{{ form.delivery_out_stock.vars.label }}</label>
+    {{ form_errors(form.delivery_out_stock) }}
+    {{ form_widget(form.delivery_out_stock) }}
+    <p class="subtitle italic">{{ 'Leave empty to disable.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="form-group">
+    <h2>
       {{ form.additional_shipping_cost.vars.label }}
       <span class="help-box" data-toggle="popover"
         data-content="{{ "If a carrier has a tax, it will be added to the shipping fees."|trans({}, 'Admin.Catalog.Help') }}" ></span>
@@ -95,7 +136,6 @@
 
 <div class="col-md-12">
   <div class="alert alert-warning" role="alert">
-    <i class="material-icons">info_outline</i>
     <p>{{ 'If no carrier is selected then all the carriers will be available for customers orders.'|trans({}, 'Admin.Catalog.Notification')|raw }}</p>
   </div>
 </div>
@@ -107,3 +147,5 @@
     {% endif %}
   </div>
 </div>
+
+{{ renderhook('displayAdminProductsShippingStepBottom', { 'id_product': id_product }) }}

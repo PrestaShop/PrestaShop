@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -67,7 +67,7 @@ if (defined('_PS_ADMIN_DIR_')) {
     define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 }
 if (!defined('_PS_CACHE_DIR_')) {
-    $prestashopCacheDir =  _PS_ROOT_DIR_.'/app/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
+    $prestashopCacheDir =  _PS_ROOT_DIR_.'/var/cache/'.(_PS_MODE_DEV_ ? 'dev': 'prod'). DIRECTORY_SEPARATOR;
     define('_PS_CACHE_DIR_',$prestashopCacheDir);
 }
 define('_PS_CONFIG_DIR_', _PS_CORE_DIR_.'/config/');

@@ -8,7 +8,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -21,15 +21,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\classes;
+namespace Tests\Integration\classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
-use PrestaShop\PrestaShop\Tests\TestCase\DatabaseDump;
 use Exception;
 use Address;
 use Carrier;
@@ -41,6 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
+use Tests\PrestaShopBundle\Utils\Database;
 use Product;
 use Tools;
 use Tax;
@@ -51,19 +51,24 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 {
     private static $dump;
     private static $id_address;
+    protected $previousConfig = array(
+        'PS_CART_RULE_FEATURE_ACTIVE' => null,
+        'PS_GROUP_FEATURE_ACTIVE'     => null,
+        'PS_ATCP_SHIPWRAP'            => null,
+        'PS_PRICE_ROUND_MODE'         => null,
+        'PS_ROUND_TYPE'               => null,
+        'PS_PRICE_DISPLAY_PRECISION'  => null,
+        'PS_TAX'                      => null,
+    );
 
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        // Save the database to restore it later: we're not the only test running so let's leave things
-        // the way we found them.
-        self::$dump = DatabaseDump::create();
+        Database::restoreTestDB();
+
         // Some tests might have cleared the configuration
         Configuration::loadConfiguration();
-
-        // Context needs a currency but doesn't set it by itself, use default one.
-        Context::getContext()->currency = new Currency(self::getCurrencyId());
 
         // We'll base all our computations on the invoice address
         Configuration::updateValue('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
@@ -73,13 +78,6 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         // Create the address only once
         self::$id_address = self::makeAddress()->id;
-    }
-
-    public static function tearDownAfterClass()
-    {
-        // After the test, we restore the database in the state it was
-        // before we started.
-        self::$dump->restore();
     }
 
     /**
@@ -370,6 +368,14 @@ class CartGetOrderTotalTest extends IntegrationTestCase
      */
     public function setUp()
     {
+        parent::setUp();
+
+        // Context needs a currency but doesn't set it by itself, use default one.
+        Context::getContext()->currency = new Currency(self::getCurrencyId());
+
+        foreach (array_keys($this->previousConfig) as $key) {
+            $this->previousConfig[$key] = Configuration::get($key);
+        }
         Group::clearCachedValues();
         self::setRoundingType('line');
         self::setRoundingMode('half_up');
@@ -380,6 +386,13 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
         Configuration::set('PS_GROUP_FEATURE_ACTIVE', true);
         Configuration::set('PS_ATCP_SHIPWRAP', false);
+    }
+
+    protected function tearDown()
+    {
+        foreach ($this->previousConfig as $key => $value) {
+            Configuration::set($key, $value);
+        }
     }
 
     public function testBasicOnlyProducts()
@@ -492,5 +505,33 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
         $this->assertEquals($preTax, $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, null, $id_carrier));
         $this->assertEquals(5, $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, null, $id_carrier));
+    }
+
+    /**
+     * Check getOrderTotal return the same value with and without when PS_TAX is disable
+     */
+    public function testSameTotalWithoutTax()
+    {
+        Configuration::set('PS_TAX', false);
+        $product = self::makeProduct('Hello Product', 10, self::getIdTaxRulesGroup(20));
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product->id);
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS),
+            $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::BOTH),
+            $cart->getOrderTotal(true, Cart::BOTH));
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_SHIPPING),
+            $cart->getOrderTotal(true, Cart::ONLY_SHIPPING));
+
+        $this->assertEquals(
+            $cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS),
+            $cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS));
     }
 }

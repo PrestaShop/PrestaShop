@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -44,6 +44,7 @@ use OrderReturn;
 use ProductDownload;
 use TaxConfiguration;
 use Tools;
+use Currency;
 
 class OrderPresenter implements PresenterInterface
 {
@@ -82,11 +83,14 @@ class OrderPresenter implements PresenterInterface
             throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
+        $products = $this->getProducts($order);
+        $amounts = $this->getAmounts($order);
+
         return array(
-            'products' => $this->getProducts($order),
-            'products_count' => count($this->getProducts($order)),
-            'totals' => $this->getAmounts($order)['totals'],
-            'subtotals' => $this->getAmounts($order)['subtotals'],
+            'products' => $products,
+            'products_count' => count($products),
+            'totals' => $amounts['totals'],
+            'subtotals' => $amounts['subtotals'],
             'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
             'messages' => $this->getMessages($order),
@@ -115,9 +119,9 @@ class OrderPresenter implements PresenterInterface
 
         foreach ($orderProducts as &$orderProduct) {
             $orderProduct['name'] = $orderProduct['product_name'];
-            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price']);
+            $orderProduct['price'] = $this->priceFormatter->format($orderProduct['product_price'], Currency::getCurrencyInstance((int)$order->id_currency));
             $orderProduct['quantity'] = $orderProduct['product_quantity'];
-            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price']);
+            $orderProduct['total'] = $this->priceFormatter->format($orderProduct['total_price'], Currency::getCurrencyInstance((int)$order->id_currency));
 
             if ($orderPaid && $orderProduct['is_virtual']) {
                 $id_product_download = ProductDownload::getIdFromIdProduct($orderProduct['product_id']);
@@ -130,7 +134,7 @@ class OrderPresenter implements PresenterInterface
             }
 
             foreach ($cartProducts['products'] as $cartProduct) {
-                if ($cartProduct['id_product'] === $orderProduct['product_id']) {
+                if (($cartProduct['id_product'] === $orderProduct['id_product']) && ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute'])) {
                     if (isset($cartProduct['attributes'])) {
                         $orderProduct['attributes'] = $cartProduct['attributes'];
                     } else {
@@ -164,7 +168,7 @@ class OrderPresenter implements PresenterInterface
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
             'amount' => $total_products,
-            'value' => $this->priceFormatter->format($total_products),
+            'value' => $this->priceFormatter->format($total_products, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         $discount_amount = ($this->includeTaxes())
@@ -175,7 +179,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'discount',
                 'label' => $this->translator->trans('Discount', array(), 'Shop.Theme.Checkout'),
                 'amount' => $discount_amount,
-                'value' => $this->priceFormatter->format($discount_amount),
+                'value' => $this->priceFormatter->format($discount_amount, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
 
@@ -186,7 +190,7 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'shipping',
                 'label' => $this->translator->trans('Shipping and handling', array(), 'Shop.Theme.Checkout'),
                 'amount' => $shippingCost,
-                'value' => $shippingCost != 0 ? $this->priceFormatter->format($shippingCost) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
+                'value' => $shippingCost != 0 ? $this->priceFormatter->format($shippingCost, Currency::getCurrencyInstance((int)$order->id_currency)) : $this->translator->trans('Free', array(), 'Shop.Theme.Checkout'),
             );
         }
 
@@ -202,37 +206,38 @@ class OrderPresenter implements PresenterInterface
                 'type' => 'tax',
                 'label' => $this->translator->trans('Tax', array(), 'Shop.Theme.Checkout'),
                 'amount' => $tax,
-                'value' => $this->priceFormatter->format($tax),
+                'value' => $this->priceFormatter->format($tax, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
 
         if ($order->gift) {
             $giftWrapping = ($this->includeTaxes())
                 ? $order->total_wrapping_tax_incl
-                : $order->total_wrapping_tax_incl;
+                : $order->total_wrapping_tax_excl;
             $subtotals['gift_wrapping'] = array(
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
                 'amount' => $giftWrapping,
-                'value' => $this->priceFormatter->format($giftWrapping),
+                'value' => $this->priceFormatter->format($giftWrapping, Currency::getCurrencyInstance((int)$order->id_currency)),
             );
         }
 
         $amounts['subtotals'] = $subtotals;
 
         $amounts['totals'] = array();
+        $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
         $amounts['totals']['total'] = array(
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
-            'amount' => $order->total_paid,
-            'value' => $this->priceFormatter->format($order->total_paid),
+            'amount' => $amount,
+            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         $amounts['totals']['total_paid'] = array(
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid_real,
-            'value' => $this->priceFormatter->format($order->total_paid_real),
+            'value' => $this->priceFormatter->format($order->total_paid_real, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         return $amounts;
@@ -259,6 +264,7 @@ class OrderPresenter implements PresenterInterface
             'is_returnable' => (int) $order->isReturnable(),
             'is_virtual' => $cart->isVirtualCart(),
             'payment' => $order->payment,
+            'module' => $order->module,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
             'is_valid' => $order->valid,
@@ -342,7 +348,7 @@ class OrderPresenter implements PresenterInterface
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
                     if ($shipping['url'] && $shipping['tracking_number']) {
-                        $tracking_line = '<a href="'.str_replace('@', $shipping['tracking_number'], $shipping['url']).'">'.$shipping['tracking_number'].'</a>';
+                        $tracking_line = '<a href="'.str_replace('@', $shipping['tracking_number'], $shipping['url']).'" target="_blank">'.$shipping['tracking_number'].'</a>';
                     } else {
                         $tracking_line = $shipping['tracking_number'];
                     }
@@ -446,11 +452,11 @@ class OrderPresenter implements PresenterInterface
     {
         return array(
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
         );
     }
 }

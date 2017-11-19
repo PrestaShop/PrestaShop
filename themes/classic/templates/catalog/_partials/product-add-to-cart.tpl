@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="product-add-to-cart">
@@ -27,7 +27,7 @@
     <span class="control-label">{l s='Quantity' d='Shop.Theme.Catalog'}</span>
 
     {block name='product_quantity'}
-      <div class="product-quantity">
+      <div class="product-quantity clearfix">
         <div class="qty">
           <input
             type="text"
@@ -36,6 +36,7 @@
             value="{$product.quantity_wanted}"
             class="input-group"
             min="{$product.minimal_quantity}"
+            aria-label="{l s='Quantity' d='Shop.Theme.Actions'}"
           >
         </div>
 
@@ -51,27 +52,25 @@
             <i class="material-icons shopping-cart">&#xE547;</i>
             {l s='Add to cart' d='Shop.Theme.Actions'}
           </button>
-
-          {block name='product_availability'}
-            <span id="product-availability">
-              {if $product.show_availability && $product.availability_message}
-                {if $product.availability == 'available'}
-                  <i class="material-icons product-available">&#xE5CA;</i>
-                {elseif $product.availability == 'last_remaining_items'}
-                  <i class="material-icons product-last-items">&#xE002;</i>
-                {else}
-                  <i class="material-icons product-unavailable">&#xE14B;</i>
-                {/if}
-                {$product.availability_message}
-              {/if}
-            </span>
-          {/block}
-
         </div>
       </div>
-      <div class="clearfix"></div>
     {/block}
 
+    {block name='product_availability'}
+      <span id="product-availability">
+        {if $product.show_availability && $product.availability_message}
+          {if $product.availability == 'available'}
+            <i class="material-icons rtl-no-flip product-available">&#xE5CA;</i>
+          {elseif $product.availability == 'last_remaining_items'}
+            <i class="material-icons product-last-items">&#xE002;</i>
+          {else}
+            <i class="material-icons product-unavailable">&#xE14B;</i>
+          {/if}
+          {$product.availability_message}
+        {/if}
+      </span>
+    {/block}
+    
     {block name='product_minimal_quantity'}
       <p class="product-minimal-quantity">
         {if $product.minimal_quantity > 1}

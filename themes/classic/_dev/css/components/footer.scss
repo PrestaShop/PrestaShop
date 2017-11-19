@@ -19,13 +19,14 @@
     }
     input {
       height: 42px;
+      box-shadow: none;
     }
   }
-  margin-bottom: rem(10px);
+  margin-bottom: 0.625rem;
 }
 .block-contact {
   border-left: $gray-light 2px solid;
-  padding-left: rem(48px);
+  padding-left: 3rem;
   color: $gray;
   .block-contact-title{
     color:$gray-darker;
@@ -53,12 +54,12 @@
   text-align: right;
 }
 .block-social li {
-  height: rem(40px);
-  width: rem(40px);
+  height: 2.5rem;
+  width: 2.5rem;
   background-color: $gray-light;
   background-repeat: no-repeat;
   display: inline-block;
-  margin: rem(2px);
+  margin: 0.125rem;
   cursor: pointer;
   &:hover {
     background-color: $brand-primary;
@@ -149,26 +150,27 @@
   overflow: hidden;
   box-shadow: 2px 2px 11px 0px rgba(0, 0, 0, 0.3);
   li {
-    margin-bottom: rem(5px);
+    margin-bottom: 0.3125rem;
   }
   li a {
-    color: $gray-dark;
+    color: $gray;
     cursor: pointer;
     font-size: $font-size-sm;
     &:hover {
       color: $brand-primary;
     }
   }
-  .links {
-    .collapse {
-      display: inherit;
-    }
+}
+.links {
+  .collapse {
+    display: inherit;
   }
 }
 
+
 @include media-breakpoint-down(sm) {
   .block_newsletter {
-    padding-bottom: rem(10px);
+    padding-bottom: 0.625rem;
     border-bottom: 1px solid $gray-lighter;
   }
   .footer-container {
@@ -181,39 +183,13 @@
     .links {
       .h3 {
         line-height: 1.5;
-        font-size: rem(16px);
-      }
-      .title {
-        padding: rem(10px);
-        border-bottom: 1px solid $gray-lighter;
-        cursor: pointer;
-        .collapse-icons .remove {
-          display: none;
-        }
-      }
-      .title[aria-expanded="true"] .collapse-icons {
-        .add {
-          display: none;
-        }
-        .remove {
-          display: block;
-        }
-      }
-      .navbar-toggler {
-        display: inline-block;
-        padding: 0;
-      }
-      .collapse {
-        display: none;
-        &.in {
-          display: block;
-        }
+        font-size: 1rem;
       }
       ul {
         background-color: $gray-lighter;
         margin-bottom: 0;
         > li {
-          padding: rem(10px);
+          padding: 0.625rem;
           border-bottom: 1px solid white;
           font-weight: bold;
           a {
@@ -223,12 +199,40 @@
       }
     }
   }
+  .links {
+    .collapse {
+      display: none;
+      &.in {
+        display: block;
+      }
+    }
+    .title {
+      padding: 0.625rem;
+      border-bottom: 1px solid $gray-lighter;
+      cursor: pointer;
+      .collapse-icons .remove {
+        display: none;
+      }
+    }
+    .title[aria-expanded="true"] .collapse-icons {
+      .add {
+        display: none;
+      }
+      .remove {
+        display: block;
+      }
+    }
+    .navbar-toggler {
+      display: inline-block;
+      padding: 0;
+    }
+  }
 }
 @include media-breakpoint-down(md) {
   .block-social {
     text-align: center;
   }
   .block-contact {
-    padding-left: rem(24px);
+    padding-left: 1.5rem;
   }
 }

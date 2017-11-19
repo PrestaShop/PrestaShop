@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,19 +20,24 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Filesystem\Exception\IOException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\TranslatorInterface;
+use Module as LegacyModule;
+use Context;
+use Employee;
+use Tools;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -46,26 +51,46 @@ class AdminModuleDataProvider implements ModuleInterface
 
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
+    /**
+     * @var array of defined and callable module actions
+     */
+    protected $moduleActions = array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade');
+
     private $languageISO;
-    private $router;
+    private $logger;
+    private $router = null;
     private $addonsDataProvider;
     private $categoriesProvider;
+    private $moduleProvider;
     private $cacheProvider;
+    private $employee;
+
     protected $catalog_modules = array();
     protected $catalog_modules_names;
+    public $failed = false;
 
     public function __construct(
-        $languageISO,
-        Router $router = null,
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
-        CacheProvider $cacheProvider = null
+        ModuleDataProvider $modulesProvider,
+        CacheProvider $cacheProvider = null,
+        Employee $employee = null
     ) {
-        $this->languageISO = $languageISO;
-        $this->router = $router;
+        list($this->languageISO) = explode('-', $translator->getLocale());
+
+        $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
+        $this->moduleProvider = $modulesProvider;
         $this->cacheProvider = $cacheProvider;
+        $this->employee = $employee;
+    }
+
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
     }
 
     public function clearCatalogCache()
@@ -76,17 +101,21 @@ class AdminModuleDataProvider implements ModuleInterface
         $this->catalog_modules = array();
     }
 
+    /**
+     * @deprecated since version 1.7.3.0
+     * @return array
+     */
     public function getAllModules()
     {
-        return \Module::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
-            (int) \Context::getContext()->employee->id
+            (int) Context::getContext()->employee->id
         );
     }
 
     public function getCatalogModules(array $filters = array())
     {
-        if (count($this->catalog_modules) === 0) {
+        if (count($this->catalog_modules) === 0 && !$this->failed) {
             $this->loadCatalogData();
         }
 
@@ -100,11 +129,54 @@ class AdminModuleDataProvider implements ModuleInterface
         return array_keys($this->getCatalogModules($filter));
     }
 
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a module
+     *
+     * @param array $actions Actions to check
+     * @param string $name The module name
+     * @return array of allowed actions
+     */
+    protected function filterAllowedActions(array $actions, $name = '')
+    {
+        $allowedActions = array();
+        foreach (array_keys($actions) as $actionName) {
+            if ($this->isAllowedAccess($actionName, $name)) {
+                $allowedActions[$actionName] = $actions[$actionName];
+            }
+        }
+        return $allowedActions;
+    }
+
+    /**
+     * Check the permissions of the current context (CLI or employee) for a specified action
+     *
+     * @param string $action The action called in the module
+     * @param string $name (Optionnal for 'install') The module name to check
+     * @return boolean
+     */
+    public function isAllowedAccess($action, $name = '')
+    {
+        if (Tools::isPHPCLI()) {
+            return true;
+        }
+
+        if (in_array($action, array('install', 'upgrade'))) {
+            return $this->employee->can('add', 'AdminModulessf');
+        }
+
+        if ('uninstall' === $action) {
+            return ($this->employee->can('delete', 'AdminModulessf') && $this->moduleProvider->can('uninstall', $name));
+        }
+
+        return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
+    }
+
     public function generateAddonsUrls(array $addons, $specific_action = null)
     {
         foreach ($addons as &$addon) {
             $urls = array();
-            foreach (array('install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade') as $action) {
+            foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
                     'action' => $action,
                     'module_name' => $addon->attributes->get('name'),
@@ -176,13 +248,15 @@ class AdminModuleDataProvider implements ModuleInterface
             } else {
                 $url_active = 'buy';
             }
-            if (count($urls)) {
-                $addon->attributes->set('urls', $urls);
-            }
+
+            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
+            $addon->attributes->set('urls', $urls);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
-            } else {
+            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
                 $addon->attributes->set('url_active', $url_active);
+            } else {
+                $addon->attributes->set('url_active', key($urls));
             }
 
             $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
@@ -278,6 +352,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->categoryParent = $this->categoriesProvider
                             ->getParentCategory($addon->categoryName)
                         ;
+                        if (isset($addon->version)) {
+                            $addon->version_available = $addon->version;
+                        }
                         if (! isset($addon->product_type)) {
                             $addon->productType = isset($addonsType)?rtrim($addonsType, 's'):'module';
                         } else {
@@ -294,7 +371,8 @@ class AdminModuleDataProvider implements ModuleInterface
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
                     $this->catalog_modules = array();
-                    throw new \Exception('Data from PrestaShop Addons is invalid, and cannot fallback on cache', 0, $e);
+                    $this->failed = true;
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
         }

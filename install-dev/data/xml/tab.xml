@@ -87,6 +87,9 @@
                     <tab id="Catalog_Price_Rules" id_parent="Price_Rules" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminSpecificPriceRule</class_name>
                     </tab>
+                <tab id="Stock" id_parent="Catalog" active="1" hide_host_mode="0" icon="">
+                    <class_name>AdminStockManagement</class_name>
+                </tab>
 
             <!--CUSTOMERS-->
             <tab id="Customers" id_parent="SELL" active="1" hide_host_mode="0" icon="account_circle">
@@ -244,12 +247,11 @@
                 <tab id="Locations" id_parent="International" active="1" hide_host_mode="0" icon="">
                     <class_name>AdminParentCountries</class_name>
                 </tab>
-
+                    <tab id="Zones" id_parent="Locations" active="1" hide_host_mode="0" icon="">
+                      <class_name>AdminZones</class_name>
+                    </tab>
                     <tab id="Countries" id_parent="Locations" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminCountries</class_name>
-                    </tab>
-                    <tab id="Zones" id_parent="Locations" active="1" hide_host_mode="0" icon="">
-                        <class_name>AdminZones</class_name>
                     </tab>
                     <tab id="States" id_parent="Locations" active="1" hide_host_mode="0" icon="">
                         <class_name>AdminStates</class_name>

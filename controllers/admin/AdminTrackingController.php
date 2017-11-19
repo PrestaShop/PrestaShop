@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -378,7 +378,7 @@ class AdminTrackingControllerCore extends AdminController
         return $this->_helper_list->displayEnableLink($this->_list_token, $id, $value, $active, $id_category, $id_product);
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         $this->_helper_list->currentIndex = $this->_list_index;
         $this->_helper_list->identifier = $this->identifier;
@@ -387,7 +387,7 @@ class AdminTrackingControllerCore extends AdminController
         return $this->_helper_list->displayDeleteLink($this->_list_token, $id, $name);
     }
 
-    public function displayEditLink($token = null, $id, $name = null)
+    public function displayEditLink($token, $id, $name = null)
     {
         $this->_helper_list->currentIndex = $this->_list_index;
         $this->_helper_list->identifier = $this->identifier;

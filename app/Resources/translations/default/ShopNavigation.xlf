@@ -170,9 +170,9 @@ File: classes/lang/MetaLang.php:73</note>
         <note>Context:
 File: classes/lang/MetaLang.php:76</note>
       </trans-unit>
-      <trans-unit id="2db6e05274a36fb0a305ce287b58b16a">
-        <source>Manufacturers list</source>
-        <target>Manufacturers list</target>
+      <trans-unit id="67c2b2e2172f6d03a44c4a93adbb4845">
+        <source>Brand list</source>
+        <target>Brand list</target>
         <note>Context:
 File: classes/lang/MetaLang.php:79</note>
       </trans-unit>

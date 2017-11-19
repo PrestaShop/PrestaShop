@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,10 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
@@ -93,7 +92,6 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
         $this->list_modules_categories['customer_reviews']['name'] = $this->l('Customer Reviews');
         $this->list_modules_categories['export']['name'] = $this->trans('Export', array(), 'Admin.Actions');
-        $this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
         $this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
         $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
         $this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandising');
@@ -287,7 +285,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $installed = $uninstalled = array();
-        foreach ($tab_modules_list as $key => $value) {
+        foreach ($tab_modules_list as $value) {
             $continue = 0;
             foreach ($modules_list_unsort['installed'] as $mod_in) {
                 if ($mod_in->name == $value) {
@@ -415,7 +413,7 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
         } else {
-            $archive = new \Archive_Tar($file);
+            $archive = new Archive_Tar($file);
             if ($archive->extract($tmp_folder)) {
                 $zip_folders = scandir($tmp_folder);
                 if ($archive->extract(_PS_MODULE_DIR_)) {
@@ -586,16 +584,16 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     default:
                         $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
-                    break;
+                        break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
                 $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
@@ -761,7 +759,7 @@ class AdminModulesControllerCore extends AdminController
                 }
 
                 $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
-                $upgradeAvailable = 0;
+
                 $modules = array();
 
                 foreach ($allModules as $km => $moduleToUpdate) {
@@ -806,7 +804,7 @@ class AdminModulesControllerCore extends AdminController
                                 $this->errors[] = $this->trans(
                                     'You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s',
                                     array(
-                                        '<strong>'.$name.'</strong>',
+                                        '<strong>'.htmlspecialchars($name).'</strong>',
                                         '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.
                                             $this->trans('Click here to log in.', array(), 'Admin.Modules.Help').
                                         '</a>'
@@ -1396,10 +1394,36 @@ class AdminModulesControllerCore extends AdminController
     {
         parent::initModal();
 
+        $languages = Language::getLanguages(false);
+        $translateLinks = array();
+        
+        if (Tools::getIsset('configure')) {
+            $module = Module::getInstanceByName(Tools::getValue('configure'));
+            $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
+            $link = Context::getContext()->link;
+            foreach ($languages as $lang) {
+                if ($isNewTranslateSystem) {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslationSf', true, array(
+                        'lang' => $lang['iso_code'],
+                        'type' => 'modules',
+                        'selected' => $module->name,
+                        'locale' => $lang['locale'],
+                    ));
+                } else {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslations', true, array(), array(
+                        'type' => 'modules',
+                        'module' => $module->name,
+                        'lang' => $lang['iso_code'],
+                    ));
+                }
+            }
+        }
+
         $this->context->smarty->assign(array(
             'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&module='.Tools::getValue('configure').'&lang=',
-            'module_languages' => Language::getLanguages(false),
-            'module_name' => Tools::getValue('module_name'),
+            'module_languages' => $languages,
+            'module_name' => Tools::getValue('configure'),
+            'translateLinks' => $translateLinks,
         ));
 
         $modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');
@@ -1438,240 +1462,13 @@ class AdminModulesControllerCore extends AdminController
         // If we are on a module configuration, no need to load all modules
         if (Tools::getValue('configure') != '') {
             $this->context->smarty->assign(array('maintenance_mode' => !(bool)Configuration::Get('PS_SHOP_ENABLE')));
-
             return true;
         }
 
-        // Init
-        $smarty = $this->context->smarty;
-        $autocomplete_list = 'var moduleList = [';
-        $category_filtered = array();
-        $filter_categories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_'.(int)$this->id_employee));
-        if (count($filter_categories) > 0) {
-            foreach ($filter_categories as $fc) {
-                if (!empty($fc)) {
-                    $category_filtered[$fc] = 1;
-                }
-            }
-        }
-
-        if (empty($category_filtered) && Tools::getValue('tab_module')) {
-            $category_filtered[Tools::getValue('tab_module')] = 1;
-        }
-
-        foreach ($this->list_modules_categories as $k => $v) {
-            $this->list_modules_categories[$k]['nb'] = 0;
-        }
-
-        // Retrieve Modules Preferences
-        $modules_preferences = '';
-        $tab_modules_preferences = array();
-        $modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
-        $tab_modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
-
-        foreach ($tab_modules_preferences_tmp as $i => $j) {
-            $tab_modules_preferences[$j['module']][] = $j['id_tab'];
-        }
-
-        foreach ($modules_preferences_tmp as $k => $v) {
-            if ($v['interest'] == null) {
-                unset($v['interest']);
-            }
-            if ($v['favorite'] == null) {
-                unset($v['favorite']);
-            }
-            $modules_preferences[$v['module']] = $v;
-        }
-
-        // Retrieve Modules List
-        $modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
-        $this->initModulesList($modules);
-        $this->nb_modules_total = count($modules);
-        $module_errors = array();
-        $module_success = array();
-        $upgrade_available = array();
-        $dont_filter = false;
-
-        //Add succes message for one module update
-        if (Tools::getValue('updated') && Tools::getValue('module_name')) {
-            $module_names = (string)Tools::getValue('module_name');
-            if (strpos($module_names, '|')) {
-                $module_names = explode('|', $module_names);
-                $dont_filter = true;
-            }
-
-            if (!is_array($module_names)) {
-                $module_names = (array)$module_names;
-            }
-
-            foreach ($modules as $km => $module) {
-                if (in_array($module->name, $module_names)) {
-                    $module_success[] = array('name' => $module->displayName, 'message' => array(
-                        0 => sprintf($this->l('Current version: %s'), $module->version)));
-                }
-            }
-        }
-
-        if (Tools::getValue('allUpdated')) {
-            $this->confirmations[] = $this->l('All modules updated successfully.');
-        }
-
-        // Browse modules list
-        foreach ($modules as $km => $module) {
-            //if we are in favorites view we only display installed modules
-            if (Tools::getValue('select') == 'favorites' && !$module->id) {
-                unset($modules[$km]);
-                continue;
-            }
-
-            // Upgrade Module process, init check if a module could be upgraded
-            if (Module::initUpgradeModule($module)) {
-                // When the XML cache file is up-to-date, the module may not be loaded yet
-                if (!class_exists($module->name)) {
-                    if (!file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
-                        continue;
-                    }
-                    require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                }
-
-                if ($object = ServiceLocator::get($module->name)) {
-                    /** @var Module $object */
-                    $object->runUpgradeModule();
-                    if ((count($errors_module_list = $object->getErrors()))) {
-                        $module_errors[] = array('name' => $module->displayName, 'message' => $errors_module_list);
-                    } elseif ((count($conf_module_list = $object->getConfirmations()))) {
-                        $module_success[] = array('name' => $module->displayName, 'message' => $conf_module_list);
-                    }
-                    unset($object);
-                }
-            }
-            // Module can't be upgraded if not file exist but can change the database version...
-            // User has to be prevented
-            elseif (Module::getUpgradeStatus($module->name)) {
-                // When the XML cache file is up-to-date, the module may not be loaded yet
-                if (!class_exists($module->name)) {
-                    if (file_exists(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php')) {
-                        require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
-                        $object = ServiceLocator::get($module->name);
-                        $module_success[] = array('name' => $module->name, 'message' => array(
-                            0 => sprintf($this->l('Current version: %s'), $object->version),
-                            1 => $this->l('No file upgrades applied (none exist).'))
-                        );
-                    } else {
-                        continue;
-                    }
-                }
-                unset($object);
-            }
-
-            // Make modules stats
-            $this->makeModulesStats($module);
-
-            // Assign warnings
-            if ($module->active && isset($module->warning) && !empty($module->warning) && !$this->ajax) {
-                $href = Context::getContext()->link->getAdminLink('AdminModules', true).'&module_name='.$module->name.'&tab_module='.$module->tab.'&configure='.$module->name;
-                $this->context->smarty->assign('text', sprintf($this->l('%1$s: %2$s'), $module->displayName, $module->warning));
-                $this->context->smarty->assign('module_link', $href);
-                $this->displayWarning($this->context->smarty->fetch('controllers/modules/warning_module.tpl'));
-            }
-
-            // AutoComplete array
-            $autocomplete_list .= json_encode(array(
-                'displayName' => (string)$module->displayName,
-                'desc' => (string)$module->description,
-                'name' => (string)$module->name,
-                'author' => (string)$module->author,
-                'image' => (isset($module->image) ? (string)$module->image : ''),
-                'option' => '',
-            )).', ';
-
-            // Apply filter
-            if ($this->isModuleFiltered($module) && Tools::getValue('select') != 'favorites') {
-                unset($modules[$km]);
-            } else {
-                if (isset($modules_preferences[$modules[$km]->name])) {
-                    $modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
-                }
-
-                $this->fillModuleData($module, 'array', null, 'back-office,AdminModules,index');
-                $module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
-            }
-            unset($object);
-            if ($module->installed && isset($module->version_addons) && $module->version_addons) {
-                $upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);
-            }
-
-            if (in_array($module->name, $this->list_partners_modules)) {
-                $module->type = 'addonsPartner';
-            }
-
-            if (isset($module->description_full) && trim($module->description_full) != '') {
-                $module->show_quick_view = true;
-            }
-        }
-
-        // Don't display categories without modules
-        $cleaned_list = array();
-        foreach ($this->list_modules_categories as $k => $list) {
-            if ($list['nb'] > 0) {
-                $cleaned_list[$k] = $list;
-            }
-        }
-
-        // Actually used for the report of the upgraded errors
-        if (count($module_errors)) {
-            $html = $this->generateHtmlMessage($module_errors);
-            $this->errors[] = $this->trans('The following module(s) were not upgraded successfully: %s.', array($html), 'Admin.Modules.Notification');
-        }
-        if (count($module_success)) {
-            $html = $this->generateHtmlMessage($module_success);
-            $this->confirmations[] = sprintf($this->l('The following module(s) were upgraded successfully: %s.'), $html);
-        }
-
-        ConfigurationKPI::updateValue('UPDATE_MODULES', count($upgrade_available));
-
-        if (count($upgrade_available) == 0 && (int)Tools::getValue('check') == 1) {
-            $this->confirmations[] = $this->l('Everything is up-to-date');
-        }
-
-        // Init tpl vars for smarty
-        $tpl_vars = array(
-            'token' => $this->token,
-            'upgrade_available' => $upgrade_available,
-            'currentIndex' => self::$currentIndex,
-            'dirNameCurrentIndex' => dirname(self::$currentIndex),
-            'ajaxCurrentIndex' => str_replace('index', 'ajax-tab', self::$currentIndex),
-            'autocompleteList' => rtrim($autocomplete_list, ' ,').'];',
-            'showTypeModules' => $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee],
-            'showCountryModules' => $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee],
-            'showInstalledModules' => $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee],
-            'showEnabledModules' => $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee],
-            'nameCountryDefault' => Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT')),
-            'isoCountryDefault' => $this->iso_default_country,
-            'categoryFiltered' => $category_filtered,
-            'modules' => $modules,
-            'nb_modules' => $this->nb_modules_total,
-            'nb_modules_favorites' => count($this->context->employee->favoriteModulesList()),
-            'nb_modules_installed' => $this->nb_modules_installed,
-            'nb_modules_uninstalled' => $this->nb_modules_total - $this->nb_modules_installed,
-            'nb_modules_activated' => $this->nb_modules_activated,
-            'nb_modules_unactivated' => $this->nb_modules_installed - $this->nb_modules_activated,
-            'list_modules_categories' => $cleaned_list,
-            'list_modules_authors' => $this->modules_authors,
-            'add_permission' => $this->access('add'),
-            'tab_modules_preferences' => $tab_modules_preferences,
-            'kpis' => $this->renderKpis(),
-            'module_name' => Tools::getValue('module_name'),
-            'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
-            'dont_filter' => $dont_filter,
-            'is_contributor' => (int)$this->context->cookie->is_contributor,
-        );
-
-        if ($this->logged_on_addons) {
-            $tpl_vars['logged_on_addons'] = 1;
-            $tpl_vars['username_addons'] = $this->context->cookie->username_addons;
-        }
-        $smarty->assign($tpl_vars);
+        // Since 1.7, legacy modules page does not have to be show
+        // Redirect to the new page, can not do this into __construct because
+        // some install module, configuration are done with this controller...
+        Tools::redirectAdmin($this->getAdminModulesUrl());
     }
 
     public function assignReadMoreSmartyVar()

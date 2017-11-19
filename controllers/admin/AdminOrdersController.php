@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,20 +20,11 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-class BoOrder extends PaymentModule
-{
-    public $active = 1;
-    public $name = 'bo_order';
-
-    public function __construct()
-    {
-        $this->displayName = $this->trans('Back office order', array(), 'Admin.Orderscustomers.Feature');
-    }
-}
+use PrestaShop\PrestaShop\Adapter\StockManager;
 
 /**
  * @property Order $object
@@ -386,7 +377,7 @@ class AdminOrdersControllerCore extends AdminController
                 $order_state = new OrderState($id_order_state);
 
                 if (!Validate::isLoadedObject($order_state)) {
-                    $this->errors[] = sprintf($this->trans('Order status #%d cannot be loaded', array(), 'Admin.Orderscustomers.Notification'), $id_order_state);
+                    $this->errors[] = $this->trans('Order status #%id% cannot be loaded', array('%id%' => $id_order_state), 'Admin.Orderscustomers.Notification');
                 } else {
                     foreach (Tools::getValue('orderBox') as $id_order) {
                         $order = new Order((int)$id_order);
@@ -419,7 +410,13 @@ class AdminOrdersControllerCore extends AdminController
                                         }
                                     }
                                 } else {
-                                    $this->errors[] = $this->trans('An error occurred while changing order status #%d, or we were unable to send an email to the customer.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
+                                    $this->errors[] = $this->trans(
+                                        'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
+                                        array(
+                                            '#%d' => $id_order,
+                                        ),
+                                        'Admin.Orderscustomers.Notification'
+                                    );
                                 }
                             }
                         }
@@ -494,8 +491,7 @@ class AdminOrdersControllerCore extends AdminController
                     if ($order_carrier->update()) {
                         //send mail only if tracking number is different AND not empty
                         if (!empty($tracking_number) && $old_tracking_number != $tracking_number) {
-                            if ($order_carrier->sendInTransitEmail($order))
-                            {
+                            if ($order_carrier->sendInTransitEmail($order)) {
                                 $customer = new Customer((int)$order->id_customer);
                                 $carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
 
@@ -565,10 +561,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        /* Add a new message for the current order and send an e-mail to the customer if needed */
-        elseif (Tools::isSubmit('submitMessage') && isset($order)) {
+        } elseif (Tools::isSubmit('submitMessage') && isset($order)) {
+            // Add a new message for the current order and send an e-mail to the customer if needed
             if ($this->access('edit')) {
                 $customer = new Customer(Tools::getValue('id_customer'));
                 if (!Validate::isLoadedObject($customer)) {
@@ -677,10 +671,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        /* Partial refund from order */
-        elseif (Tools::isSubmit('partialRefund') && isset($order)) {
+        } elseif (Tools::isSubmit('partialRefund') && isset($order)) {
+            // Partial refund from order
             if ($this->access('edit')) {
                 if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds)) {
                     $amount = 0;
@@ -884,10 +876,8 @@ class AdminOrdersControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        /* Cancel product from order */
-        elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
+        } elseif (Tools::isSubmit('cancelProduct') && isset($order)) {
+            // Cancel product from order
             if ($this->access('delete')) {
                 if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization')) {
                     $this->errors[] = $this->trans('You must select a product.', array(), 'Admin.Orderscustomers.Notification');
@@ -1728,7 +1718,7 @@ class AdminOrdersControllerCore extends AdminController
         );
         if (Shop::isFeatureActive()) {
             $shop = new Shop((int)$order->id_shop);
-            $this->toolbar_title .= ' - '.sprintf($this->trans('Shop: %s', array(), 'Admin.Orderscustomers.Feature'), $shop->name);
+            $this->toolbar_title .= ' - '.$this->trans('Shop: %shop_name%', array('%shop_name%' => $shop->name), 'Admin.Orderscustomers.Feature');
         }
 
         // gets warehouses to ship products, if and only if advanced stock management is activated
@@ -1783,7 +1773,7 @@ class AdminOrdersControllerCore extends AdminController
             $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
-            $product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
+            $product['amount_refund'] = $order->getTaxCalculationMethod() ? Tools::displayPrice($resume['amount_tax_excl'], $currency) : Tools::displayPrice($resume['amount_tax_incl'], $currency);
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -1871,7 +1861,7 @@ class AdminOrdersControllerCore extends AdminController
             'shipping_refundable_tax_incl' => $shipping_refundable_tax_incl,
             'customer_thread_message' => CustomerThread::getCustomerMessages($order->id_customer, null, $order->id),
             'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
-            'messages' => Message::getMessagesByOrderId($order->id, true),
+            'messages' => CustomerThread::getCustomerMessagesOrder($order->id_customer, $order->id),
             'carrier' => new Carrier($order->id_carrier),
             'history' => $history,
             'states' => OrderState::getOrderStates($this->context->language->id),
@@ -2079,9 +2069,9 @@ class AdminOrdersControllerCore extends AdminController
             $combination = new Combination($product_informations['product_attribute_id']);
             if (!Validate::isLoadedObject($combination)) {
                 die(json_encode(array(
-                'result' => false,
-                'error' => $this->trans('The combination object cannot be loaded.', array(), 'Admin.Orderscustomers.Notification')
-            )));
+                    'result' => false,
+                    'error' => $this->trans('The combination object cannot be loaded.', array(), 'Admin.Orderscustomers.Notification')
+                )));
             }
         }
 
@@ -2225,9 +2215,8 @@ class AdminOrdersControllerCore extends AdminController
                 $order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->add();
-            }
-            // Update current invoice
-            else {
+            } else {
+                // Update current invoice
                 $order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
                 $order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
                 $order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
@@ -2861,23 +2850,23 @@ class AdminOrdersControllerCore extends AdminController
                 $left_to_reinject -= $quantity_to_reinject;
                 if (Pack::isPack((int)$product->id)) {
                     // Gets items
-                        if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
-                            $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
-                            // Foreach item
-                            foreach ($products_pack as $product_pack) {
-                                if ($product_pack->advanced_stock_management == 1) {
-                                    $manager->addProduct(
-                                        $product_pack->id,
-                                        $product_pack->id_pack_product_attribute,
-                                        new Warehouse($movement['id_warehouse']),
-                                        $product_pack->pack_quantity * $quantity_to_reinject,
-                                        null,
-                                        $movement['price_te'],
-                                        true
-                                    );
-                                }
+                    if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                        $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
+                        // Foreach item
+                        foreach ($products_pack as $product_pack) {
+                            if ($product_pack->advanced_stock_management == 1) {
+                                $manager->addProduct(
+                                    $product_pack->id,
+                                    $product_pack->id_pack_product_attribute,
+                                    new Warehouse($movement['id_warehouse']),
+                                    $product_pack->pack_quantity * $quantity_to_reinject,
+                                    null,
+                                    $movement['price_te'],
+                                    true
+                                );
                             }
                         }
+                    }
                     if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
                             ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
                         $manager->addProduct(
@@ -2910,11 +2899,25 @@ class AdminOrdersControllerCore extends AdminController
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
             StockAvailable::updateQuantity(
-                    $order_detail->product_id,
-                    $order_detail->product_attribute_id,
-                    $quantity_to_reinject,
-                    $order_detail->id_shop
-                );
+                $order_detail->product_id,
+                $order_detail->product_attribute_id,
+                $quantity_to_reinject,
+                $order_detail->id_shop,
+                true,
+                array(
+                    'id_order' => $order_detail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON')
+                )
+            );
+
+            // sync all stock
+            (new StockManager())->updatePhysicalProductQuantity(
+                (int)$order_detail->id_shop,
+                (int)Configuration::get('PS_OS_ERROR'),
+                (int)Configuration::get('PS_OS_CANCELED'),
+                null,
+                (int)$order_detail->id_order
+            );
 
             if ($delete) {
                 $order_detail->delete();

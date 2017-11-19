@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Category;
@@ -81,13 +81,17 @@ class SimpleCategory extends CommonAbstractType
             'attr' => ['placeholder' => $this->translator->trans('Category name', [], 'Admin.Catalog.Feature'), 'class' => 'ajax'],
             'constraints' => $options['ajax'] ? [] : array(
                 new Assert\NotBlank(),
-                new Assert\Length(array('min' => 1))
+                new Assert\Length(array('min' => 1, 'max' => 128))
             )
         ))
         ->add('id_parent', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->categories,
             'choices_as_values' => true,
             'required' => true,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'label' => $this->translator->trans('Parent of the category', [], 'Admin.Catalog.Feature')
         ));
     }

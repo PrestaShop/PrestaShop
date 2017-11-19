@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
@@ -97,6 +97,10 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => false,
             'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('All currencies', array(), 'Admin.Global'),
         ))
         ->add('sp_id_country', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
@@ -104,6 +108,10 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => false,
             'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('All countries', array(), 'Admin.Global'),
         ))
         ->add('sp_id_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
@@ -111,6 +119,10 @@ class ProductSpecificPrice extends CommonAbstractType
             'choices_as_values' => true,
             'required' => false,
             'label' => false,
+            'attr' => array(
+                'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('All groups', array(), 'Admin.Global'),
         ))
         ->add('sp_id_customer', 'PrestaShopBundle\Form\Admin\Type\TypeaheadCustomerCollectionType', array(
@@ -118,7 +130,7 @@ class ProductSpecificPrice extends CommonAbstractType
             'mapping_value' => 'id_customer',
             'mapping_name' => 'fullname_and_email',
             'placeholder' => $this->translator->trans('All customers', array(), 'Admin.Global'),
-            'template_collection' => '<div class="title col-md-10">%s</div><button type="button" class="btn btn-danger delete"><i class="material-icons">delete</i></button>',
+            'template_collection' => '<div class="media-body"><div class="label">%s</div><i class="material-icons delete">clear</i></div>',
             'limit' => 1,
             'required' => false,
             'label' => $this->translator->trans('Add customer', array(), 'Admin.Catalog.Feature'),
@@ -184,11 +196,11 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Apply', array(), 'Admin.Actions'),
-            'attr' => array('class' => 'btn-primary-outline js-save'),
+            'attr' => array('class' => 'btn-outline-primary js-save'),
         ))
         ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Cancel', array(), 'Admin.Actions'),
-            'attr' => array('class' => 'btn-tertiary-outline js-cancel'),
+            'attr' => array('class' => 'btn-outline-secondary js-cancel'),
         ));
         //
         // ResetType can't be used because the product page is wrapped

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -63,8 +63,8 @@ class OrderSlipControllerCore extends FrontController
         foreach ($orders_slip as $order_slip) {
             $order = new Order($order_slip['id_order']);
             $credit_slips[$order_slip['id_order_slip']] = $order_slip;
-            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.Customeraccount'), $order_slip['id_order_slip']);
-            $credit_slips[$order_slip['id_order_slip']]['order_number'] = sprintf($this->trans('#%06d', array(), 'Shop.Theme.Customeraccount'), $order_slip['id_order']);
+            $credit_slips[$order_slip['id_order_slip']]['credit_slip_number'] = $this->trans('#%id%', array('%id%' => $order_slip['id_order_slip']), 'Shop.Theme.Customeraccount');
+            $credit_slips[$order_slip['id_order_slip']]['order_number'] = $this->trans('#%id%', array('%id%' => $order_slip['id_order']), 'Shop.Theme.Customeraccount');
             $credit_slips[$order_slip['id_order_slip']]['order_reference'] = $order->reference;
             $credit_slips[$order_slip['id_order_slip']]['credit_slip_date'] = Tools::displayDate($order_slip['date_add'], null, false);
             $credit_slips[$order_slip['id_order_slip']]['url'] = $this->context->link->getPageLink('pdf-order-slip', true, null, 'id_order_slip='.(int)$order_slip['id_order_slip']);

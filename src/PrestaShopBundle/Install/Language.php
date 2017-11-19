@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -31,6 +31,7 @@ class Language
     public $id;
     public $name;
     public $locale;
+    public $iso_code;
     public $language_code;
     public $is_rtl;
     public $date_format_lite;
@@ -39,6 +40,7 @@ class Language
 
     public function __construct($iso)
     {
+        $this->iso_code = strtolower($iso);
         $xmlPath = _PS_INSTALL_LANGS_PATH_.$iso.'/';
         $this->setPropertiesFromXml($xmlPath);
         $this->is_rtl = ($this->is_rtl === 'true') ? true : false;

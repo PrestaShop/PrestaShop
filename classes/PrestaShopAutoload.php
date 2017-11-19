@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -88,7 +88,7 @@ class PrestaShopAutoload
      */
     public static function getCacheFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'var'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_index.php';
     }
 
     /**
@@ -98,7 +98,7 @@ class PrestaShopAutoload
      */
     public static function getNamespacedStubFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'namespaced_class_stub.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'var'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'namespaced_class_stub.php';
     }
 
     /**
@@ -108,7 +108,7 @@ class PrestaShopAutoload
      */
     public static function getStubFileIndex()
     {
-        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'app'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_stub.php';
+        return _PS_ROOT_DIR_.DIRECTORY_SEPARATOR. 'var'.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.(_PS_MODE_DEV_ ? 'dev' : 'prod').DIRECTORY_SEPARATOR.'class_stub.php';
     }
 
     /**
@@ -131,7 +131,7 @@ class PrestaShopAutoload
         }
 
         // If $classname has not core suffix (E.g. Shop, Product)
-        if (substr($className, -4) != 'Core') {
+        if (substr($className, -4) != 'Core' && !class_exists($className, false)) {
             $classDir = (isset($this->index[$className]['override'])
                 && $this->index[$className]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
@@ -175,7 +175,7 @@ class PrestaShopAutoload
 
         $contentNamespacedStub = '<?php '."\n".'namespace PrestaShop\\PrestaShop\\Adapter\\Entity;'."\n\n";
 
-        foreach($coreClasses as $coreClassName => $coreClass) {
+        foreach ($coreClasses as $coreClassName => $coreClass) {
             if (substr($coreClassName, -4) == 'Core') {
                 $coreClassName = substr($coreClassName, 0, -4);
                 if ($coreClass['type'] != 'interface') {
@@ -199,7 +199,7 @@ class PrestaShopAutoload
 
         $contentStub = '<?php'."\n\n";
 
-        foreach($coreClassesWOOverrides as $coreClassName => $coreClass) {
+        foreach ($coreClassesWOOverrides as $coreClassName => $coreClass) {
             if (substr($coreClassName, -4) == 'Core') {
                 $coreClassNameNoCore = substr($coreClassName, 0, -4);
                 if ($coreClass['type'] != 'interface') {
@@ -260,7 +260,8 @@ class PrestaShopAutoload
     /**
      * Retrieve recursively all classes in a directory and its subdirectories
      *
-     * @param string $path Relativ path from root to the directory
+     * @param string $path Relative path from root to the directory
+     * @param bool $hostMode Since 1.7, deprecated.
      *
      * @return array
      */

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -185,7 +185,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'name' => 'name',
                         'required' => true,
                         'hint' => array(
-                            sprintf($this->trans('Allowed characters: letters, spaces and "%s".', array(), 'Admin.Shipping.Help'), '().-'),
+                            $this->trans('Allowed characters: letters, spaces and "%special_chars%".', array('%special_chars%' => '().-'), 'Admin.Shipping.Help'),
                             $this->trans('The carrier\'s name will be displayed during checkout.', array(), 'Admin.Shipping.Help'),
                             $this->trans('For in-store pickup, enter 0 to replace the carrier name with your shop name.', array(), 'Admin.Shipping.Help')
                         )
@@ -196,7 +196,7 @@ class AdminCarrierWizardControllerCore extends AdminController
                         'name' => 'delay',
                         'lang' => true,
                         'required' => true,
-                        'maxlength' => 128,
+                        'maxlength' => 512,
                         'hint' => $this->trans('The delivery time will be displayed during checkout.', array(), 'Admin.Shipping.Help')
                     ),
                     array(

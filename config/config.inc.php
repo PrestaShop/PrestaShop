@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -30,7 +30,9 @@ $currentDir = dirname(__FILE__);
 if (is_file($currentDir.'/defines_custom.inc.php')) {
     include_once($currentDir.'/defines_custom.inc.php');
 }
+
 require_once($currentDir.'/defines.inc.php');
+
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
 $start_time = microtime(true);
@@ -50,14 +52,6 @@ if (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin-dev') && (!is_dir(_PS_ROOT_D
 /* No settings file? goto installer... */
 if (!file_exists(_PS_ROOT_DIR_.'/app/config/parameters.yml') && !file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
     Tools::redirectToInstall();
-}
-
-/* include settings file only if we are not in multi-tenancy mode */
-require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
-require_once(_PS_CONFIG_DIR_.'autoload.php');
-
-if (isset($timer_start) && $timer_start) {
-    AdminController::$timer_start = $timer_start;
 }
 
 require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';

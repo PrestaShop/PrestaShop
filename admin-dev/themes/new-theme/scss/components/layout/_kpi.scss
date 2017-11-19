@@ -20,15 +20,15 @@
     position: absolute;
     top: 0;
     left: 0;
-    font-size: rem(36px);
+    font-size: 2.25rem;
     color: $primary;
   }
 
   > .title,
   > .subtitle,
   > .value {
-    font-size: rem(12px);
-    padding-left: rem(50px);
+    font-size: 0.75rem;
+    padding-left: 3.125rem;
     display: block;
     color: $gray-dark;
   }
@@ -37,7 +37,7 @@
     color: $gray-medium;
   }
   > .value {
-    font-size: rem(20px);
+    font-size: 1.25rem;
     color: $primary;
   }
 }

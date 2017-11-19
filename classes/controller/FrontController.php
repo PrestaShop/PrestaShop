@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
@@ -187,8 +187,6 @@ class FrontControllerCore extends Controller
             $this->ssl = true;
         }
 
-        $this->guestAllowed = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
-
         if (isset($useSSL)) {
             $this->ssl = $useSSL;
         } else {
@@ -313,7 +311,7 @@ class FrontControllerCore extends Controller
             $this->context->cookie->id_cart = (int) $id_cart;
         }
 
-        if ($this->auth && !$this->context->customer->isLogged()) {
+        if ($this->auth && !$this->context->customer->isLogged($this->guestAllowed)) {
             Tools::redirect('index.php?controller=authentication'.($this->authRedirection ? '&back='.$this->authRedirection : ''));
         }
 
@@ -496,6 +494,17 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
+        /* Begin patch to purge sensible data from cart to avoid expose them in html page */
+        $cleancart = $this->cart_presenter->present($this->context->cart);
+        if (count($cleancart['products']) > 0) {
+            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
+                unset($cleancart['products'][$idx_cart_line]['id_supplier']);
+                unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
+                unset($cleancart['products'][$idx_cart_line]['wholesale_price']);
+                unset($cleancart['products'][$idx_cart_line]['embedded_attributes']);
+            }
+        }
+        /* /patch */
         $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
@@ -660,7 +669,7 @@ class FrontControllerCore extends Controller
             $html = $this->context->smarty->fetch($content, null, $this->getLayout());
         }
 
-        Hook::exec('actionOutputHTMLBefore',  array('html' => &$html));
+        Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
         echo trim($html);
     }
 
@@ -701,6 +710,7 @@ class FrontControllerCore extends Controller
 
                 $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
                 $this->context->smarty->assign(array(
+                    'urls' => $this->getTemplateVarUrls(),
                     'shop' => $this->getTemplateVarShop(),
                     'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
@@ -722,6 +732,7 @@ class FrontControllerCore extends Controller
 
         $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
         $this->context->smarty->assign(array(
+            'urls' => $this->getTemplateVarUrls(),
             'shop' => $this->getTemplateVarShop(),
             'stylesheets' => $this->getStylesheets(),
         ));
@@ -827,7 +838,7 @@ class FrontControllerCore extends Controller
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
                                 $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                                $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), $record->country->name);
+                                $this->warning[] = $this->trans('You cannot place a new order from your country (%s).', array($record->country->name), 'Shop.Notifications.Warning');
                             }
                         } else {
                             $hasBeenSet = !isset($this->context->cookie->iso_code_country);
@@ -854,7 +865,15 @@ class FrontControllerCore extends Controller
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                    $this->warning[] = sprintf($this->l('You cannot place a new order from your country (%s).'), (isset($record->country->name) && $record->country->name) ? $record->country->name : $this->l('Undefined'));
+                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme.Global');
+                    if (isset($record->country->name) && $record->country->name) {
+                        $countryName = $record->country->name;
+                    }
+                    $this->warning[] = $this->trans(
+                        'You cannot place a new order from your country (%s).',
+                        array($countryName),
+                        'Shop.Notifications.Warning'
+                    );
                 }
             }
         }
@@ -1300,8 +1319,13 @@ class FrontControllerCore extends Controller
     public function getLayout()
     {
         $entity = $this->php_self;
+        if (empty($entity)) {
+            $entity = $this->getPageName();
+        }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
+        
+        $content_only = (int) Tools::getValue('content_only');
 
         if ($overridden_layout = Hook::exec(
             'overrideLayoutTemplate',
@@ -1310,12 +1334,13 @@ class FrontControllerCore extends Controller
                 'entity' => $entity,
                 'locale' => $this->context->language->locale,
                 'controller' => $this,
+                'content_only' => $content_only,
             )
         )) {
             return $overridden_layout;
         }
 
-        if ((int) Tools::getValue('content_only')) {
+        if ($content_only) {
             $layout = 'layouts/layout-content-only.tpl';
         }
 
@@ -1646,7 +1671,7 @@ class FrontControllerCore extends Controller
         $breadcrumb = array();
 
         $breadcrumb['links'][] = array(
-            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme'),
+            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('index', true),
         );
 
@@ -1714,7 +1739,7 @@ class FrontControllerCore extends Controller
             $params = array();
         }
 
-        $queryString = str_replace('%2F', '/', http_build_query($params));
+        $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
 
         return $url.($queryString ? "?$queryString" : '');
     }
@@ -1751,17 +1776,37 @@ class FrontControllerCore extends Controller
 
     protected function render($template, array $params = array())
     {
+        $templateContent = '';
         $scope = $this->context->smarty->createData(
             $this->context->smarty
         );
 
         $scope->assign($params);
-        $tpl = $this->context->smarty->createTemplate(
-            $this->getTemplateFile($template),
-            $scope
-        );
 
-        return $tpl->fetch();
+        try {
+            $tpl = $this->context->smarty->createTemplate(
+                $this->getTemplateFile($template),
+                $scope
+            );
+
+            $templateContent = $tpl->fetch();
+        } catch (PrestaShopException $e) {
+            PrestaShopLogger::addLog($e->getMessage());
+
+            if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
+                $this->warning[] = $e->getMessage();
+                $scope->assign(array('notifications' => $this->prepareNotifications()));
+
+                $tpl = $this->context->smarty->createTemplate(
+                    $this->getTemplateFile('_partials/notifications'),
+                    $scope
+                );
+
+                $templateContent = $tpl->fetch();
+            }
+        }
+
+        return $templateContent;
     }
 
     protected function getTranslator()
@@ -1804,6 +1849,7 @@ class FrontControllerCore extends Controller
 
     protected function makeCustomerForm()
     {
+        $guestAllowedCheckout = Configuration::get('PS_GUEST_CHECKOUT_ENABLED');
         $form = new CustomerForm(
             $this->context->smarty,
             $this->context,
@@ -1813,12 +1859,12 @@ class FrontControllerCore extends Controller
                 $this->context,
                 $this->get('hashing'),
                 $this->getTranslator(),
-                $this->guestAllowed
+                $guestAllowedCheckout
             ),
             $this->getTemplateVarUrls()
         );
 
-        $form->setGuestAllowed($this->guestAllowed);
+        $form->setGuestAllowed($guestAllowedCheckout);
 
         $form->setAction($this->getCurrentURL());
 
@@ -1857,28 +1903,6 @@ class FrontControllerCore extends Controller
         $form->setAction($this->getCurrentURL());
 
         return $form;
-    }
-
-    public function displayAjaxAddressForm()
-    {
-        $addressForm = $this->makeAddressForm();
-
-        if (Tools::getIsset('id_address')) {
-            $addressForm->loadAddressById(Tools::getValue('id_address'));
-        }
-
-        if (Tools::getIsset('id_country')) {
-            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
-        }
-
-        ob_end_clean();
-        header('Content-Type: application/json');
-        $this->ajaxDie(Tools::jsonEncode(array(
-            'address_form' => $this->render(
-                'customer/_partials/address-form',
-                $addressForm->getTemplateVariables()
-            ),
-        )));
     }
 
     private function initDebugguer()

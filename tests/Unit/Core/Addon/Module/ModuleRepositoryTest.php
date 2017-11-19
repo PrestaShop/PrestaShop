@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,22 +20,20 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
+namespace Tests\Core\Addon\Module;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Tests\TestCase\FakeLogger;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\FakeLogger;
+use Tests\TestCase\UnitTestCase;
 
 /**
  * @runInSeparateProcess
@@ -85,7 +83,7 @@ class ModuleRepositoryTest extends UnitTestCase
             ->willReturn(true);
 
         $this->setupSfKernel();
-        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+        $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->apiClientS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient')
             ->disableOriginalConstructor()
@@ -102,15 +100,6 @@ class ModuleRepositoryTest extends UnitTestCase
             ->getmock()
         ;
 
-        $this->adminModuleDataProviderStub = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('getCatalogModulesNames'),
-            array('en', $this->sfRouter, $this->addonsDataProviderS, $this->categoriesProviderS)
-        );
-
-        $this->adminModuleDataProviderStub
-            ->method('getCatalogModulesNames')
-            ->willReturn(array());
-
         $this->translatorStub = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
             ->getMock();
@@ -118,26 +107,37 @@ class ModuleRepositoryTest extends UnitTestCase
             ->method('trans')
             ->will($this->returnArgument(0));
 
-        $this->moduleRepositoryStub = $this->getMock(
-            'PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository',
-            array('readCacheFile', 'generateCacheFile'),
-            array(
+        $this->adminModuleDataProviderStub = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
+            ->setConstructorArgs(array($this->translatorStub, $this->logger, $this->addonsDataProviderS, $this->categoriesProviderS, $this->moduleDataProviderStub))
+            ->setMethods(array('getCatalogModulesNames'))
+            ->getMock()
+        ;
+
+        $this->adminModuleDataProviderStub
+            ->method('getCatalogModulesNames')
+            ->willReturn(array());
+
+        $this->moduleRepositoryStub = $this->getMockBuilder('PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleRepository')
+            ->setConstructorArgs(array(
                 $this->adminModuleDataProviderStub,
                 $this->moduleDataProviderStub,
                 new ModuleDataUpdater(
                     $this->addonsDataProviderS,
                     new AdminModuleDataProvider(
-                        'en',
-                        $this->sfRouter,
+                        $this->translatorStub,
+                        $this->logger,
                         $this->addonsDataProviderS,
-                        $this->categoriesProviderS
+                        $this->categoriesProviderS,
+                        $this->moduleDataProviderStub
                     )
                 ),
                 new FakeLogger(),
                 $this->translatorStub,
-                'en'
-            )
-        );
+                __DIR__.'/../../../../resources/modules/'
+            ))
+            ->setMethods(array('readCacheFile', 'generateCacheFile'))
+            ->getMock()
+        ;
 
         /*
          * Mock function 'readCacheFile()' to disable the cache

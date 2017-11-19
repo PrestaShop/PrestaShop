@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -62,11 +62,6 @@ class ModuleTabRegister
     private $translator;
 
     /**
-     * @var Finder
-     */
-    private $finder;
-
-    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -76,13 +71,12 @@ class ModuleTabRegister
      */
     private $languages;
 
-    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Finder $finder, Filesystem $filesystem, array $languages)
+    public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator, Filesystem $filesystem, array $languages)
     {
         $this->langRepository = $langRepository;
         $this->tabRepository = $tabRepository;
         $this->logger = $logger;
         $this->translator = $translator;
-        $this->finder = $finder;
         $this->filesystem = $filesystem;
         $this->languages = $languages;
     }
@@ -109,7 +103,6 @@ class ModuleTabRegister
                 $this->logger->error($e->getMessage());
             }
         }
-
     }
 
     /**
@@ -123,7 +116,7 @@ class ModuleTabRegister
     protected function addUndeclaredTabs($moduleName, array $tabs)
     {
         // Function to get only class name from tabs already declared
-        $tabsNames = array_map(function($tab) {
+        $tabsNames = array_map(function ($tab) {
             if (array_key_exists('class_name', $tab)) {
                 return $tab['class_name'];
             }
@@ -132,6 +125,10 @@ class ModuleTabRegister
         foreach ($this->getModuleAdminControllersFilename($moduleName) as $adminControllerFileName) {
             $adminControllerName = str_replace('Controller.php', '', $adminControllerFileName);
             if (in_array($adminControllerName, $tabsNames)) {
+                continue;
+            }
+
+            if ($this->tabRepository->findOneIdByClassName($adminControllerName)) {
                 continue;
             }
 
@@ -161,6 +158,10 @@ class ModuleTabRegister
         if (!in_array($className.'Controller.php', $this->getModuleAdminControllersFilename($moduleName))) {
             throw new Exception(sprintf('Class "%sController" not found in controllers/admin', $className));
         }
+        // Deprecation check
+        if ($data->has('ParentClassName') && !$data->has('parent_class_name')) {
+            $this->logger->warning('Tab attribute "ParentClassName" is deprecated. You must use "parent_class_name" instead.');
+        }
         return true;
     }
 
@@ -181,12 +182,12 @@ class ModuleTabRegister
             return array();
         }
 
-        $moduleFolder = $this->finder->files()
+        $moduleFolder = Finder::create()->files()
                     ->in($modulePath)
                     ->depth('== 0')
-                    ->name('*.php')
+                    ->name('*Controller.php')
                     ->exclude(['index.php'])
-                    ->contains('/extends\s+ModuleAdminController/i');
+                    ->contains('/Controller\s+extends\s+/i');
 
         return iterator_to_array($moduleFolder);
     }
@@ -199,7 +200,7 @@ class ModuleTabRegister
      */
     protected function getModuleAdminControllersFilename($moduleName)
     {
-        return array_map(function(SplFileInfo $file) {
+        return array_map(function (SplFileInfo $file) {
             return $file->getFilename();
         }, $this->getModuleAdminControllers($moduleName));
     }
@@ -208,7 +209,7 @@ class ModuleTabRegister
     {
         $translatedNames = array();
 
-        foreach($this->languages as $lang) {
+        foreach ($this->languages as $lang) {
             // In case we just receive a string, we apply it to all languages
             if (!is_array($names)) {
                 $translatedNames[$lang['id_lang']] = $names;
@@ -216,8 +217,10 @@ class ModuleTabRegister
                 $translatedNames[$lang['id_lang']] = $names[$lang['locale']];
             } elseif (array_key_exists($lang['language_code'], $names)) {
                 $translatedNames[$lang['id_lang']] = $names[$lang['language_code']];
+            } elseif (array_key_exists($lang['iso_code'], $names)) {
+                $translatedNames[$lang['id_lang']] = $names[$lang['iso_code']];
             } else {
-                $translatedNames[$lang['id_lang']] = $names[$lang[0]];
+                $translatedNames[$lang['id_lang']] = reset($names); // Get the first name available in the array
             }
         }
         return $translatedNames;
@@ -246,7 +249,7 @@ class ModuleTabRegister
         $tab->icon = $data->get('icon');
 
         // Handle parent menu
-        $parentClassName = $data->get('ParentClassName');
+        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
         if (!empty($parentClassName)) {
             $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
         } elseif (true === $tab->active) {

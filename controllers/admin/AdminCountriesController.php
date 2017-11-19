@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -203,7 +203,7 @@ class AdminCountriesControllerCore extends AdminController
                     'maxlength' => 3,
                     'class' => 'uppercase',
                     'required' => true,
-                    'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us for United States).', array(), 'Admin.International.Help')
+                    'hint' => $this->trans('Two -- or three -- letter ISO code (e.g. "us" for United States).', array(), 'Admin.International.Help')
                     /* @TODO - add two lines for the hint? */
                     /*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
                             <a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
@@ -425,7 +425,7 @@ class AdminCountriesControllerCore extends AdminController
 
         if (!$tmp_addr_format->checkFormatFields()) {
             $error_list = $tmp_addr_format->getErrorList();
-            foreach ($error_list as $num_error => $error) {
+            foreach ($error_list as $error) {
                 $this->errors[] = $error;
             }
         }
@@ -516,7 +516,7 @@ class AdminCountriesControllerCore extends AdminController
         }
         $html_tabnav .= '</ul>';
         $html_tabcontent .= '</div>';
-        return $html = $html_tabnav.$html_tabcontent;
+        return $html_tabnav.$html_tabcontent;
     }
 
     public static function displayCallPrefix($prefix)

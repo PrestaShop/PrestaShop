@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,16 +19,10 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/module/drop.css') }}" />
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/plugins/jquery.pstagger.css') }}" />
-{% endblock %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -39,10 +33,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
             {# Bulk Action confirm modal #}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_bulk_action.html.twig' %}
+            {# PrestaTrust modal #}
+            {% include 'PrestaShopBundle:Admin/Module/Includes:modal_confirm_prestatrust.html.twig' %}
             {# Addons connect modal with level authorization#}
             {% include 'PrestaShopBundle:Admin/Module/Includes:modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
             {# Contains toolbar-nav for module page with level authorization #}
@@ -53,8 +49,8 @@
                 <div class="row">
                     <div class="col-lg-12">
                         {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
-                            <div class="module-sorting module-bulk-actions pull-right">
-                                <select class="c-select c-select-sm">
+                            <div class="module-sorting module-bulk-actions float-right">
+                                <select class="custom-select sort-component">
                                   <option value="" disabled selected>{{ 'Bulk Actions'|trans({}, 'Admin.Global') }}</option>
                                   <option value="bulk-uninstall">{{ 'Uninstall'|trans({}, 'Admin.Actions') }}</option>
                                   <option value="bulk-disable">{{ 'Disable'|trans({}, 'Admin.Actions') }}</option>
@@ -65,8 +61,8 @@
                                 </select>
                             </div>
                         {% endif %}
-                        <div class="module-sorting module-sorting-author pull-right">
-                            <select class="c-select c-select-sm">
+                        <div class="module-sorting module-sorting-author float-right">
+                            <select class="custom-select sort-component">
                               <option value="" disabled>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
                               <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
                               <option value="access-desc" selected>{{ 'Last access'|trans({}, 'Admin.Modules.Feature') }}</option>
@@ -77,36 +73,37 @@
             </div>
 
             {# Actual Page Content #}
-		<div class="module-short-list">
-			<span class="module-search-result-wording">{{ '%nbModules% installed modules'|trans({'%nbModules%' : modules.modules|length}, 'Admin.Modules.Feature') }}</span>
-                           <span class="help-box" data-toggle="popover"
-                                data-title="{{ "Installed modules"|trans({}, 'Admin.Modules.Feature') }}"
-                                data-content="{{ "These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly."|trans({}, 'Admin.Modules.Help') }}">
-                           </span>
-                   </div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': modules.modules, 'display_type': 'list', 'origin': 'manage', 'id': 'all' } %}
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{ '%nbModules% installed modules'|trans({'%nbModules%' : modules.modules|length}, 'Admin.Modules.Feature') }}</span>
+                <span class="help-box" data-toggle="popover"
+                  data-title="{{ "Installed modules"|trans({}, 'Admin.Modules.Feature') }}"
+                  data-content="{{ "These are all the modules you’ve added to your shop, either by buying it from PrestaShop Addons, or by uploading it directly."|trans({}, 'Admin.Modules.Help') }}">
+                </span>
+            </div>
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': modules.modules, 'display_type': 'list', 'origin': 'manage', 'id': 'all' } %}
 
-		<hr class="top-menu-separator">
+            <hr class="top-menu-separator">
 
-		<div class="module-short-list">
-			<span class="module-search-result-wording">{{ '%nbModules% built-in modules'|trans({'%nbModules%' : modules.native_modules|length}, 'Admin.Modules.Feature') }}</span>
-                           <span class="help-box" data-toggle="popover"
-                                 data-title="{{ "Built-in modules"|trans({}, 'Admin.Modules.Feature') }}"
-                                data-content="{{ "These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free."|trans({}, 'Admin.Modules.Help') }}">
-                           </span>
-		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': modules.native_modules, 'display_type': 'list', 'origin': 'manage', 'id': 'native' } %}
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{ '%nbModules% built-in modules'|trans({'%nbModules%' : modules.native_modules|length}, 'Admin.Modules.Feature') }}</span>
+                <span class="help-box" data-toggle="popover"
+                  data-title="{{ "Built-in modules"|trans({}, 'Admin.Modules.Feature') }}"
+                  data-content="{{ "These modules from PrestaShop are preinstalled when you set-up your shop. They cover the basics of e-commerce and comes for free."|trans({}, 'Admin.Modules.Help') }}">
+                </span>
+            </div>
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': modules.native_modules, 'display_type': 'list', 'origin': 'manage', 'id': 'native' } %}
 
-		<hr class="top-menu-separator">
+            <hr class="top-menu-separator">
 
-		<div class="module-short-list">
-			<span class="module-search-result-wording">{{ '%nbModules% theme modules'|trans({'%nbModules%' : modules.theme_bundle|length}, 'Admin.Modules.Feature') }}</span>
-                           <span class="help-box" data-toggle="popover"
-                                data-title="{{ "Theme modules"|trans({}, 'Admin.Modules.Feature') }}"
-                                data-content="{{ "Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme."|trans({}, 'Admin.Modules.Help') }}">
-                           </span>
-		</div>
-		{% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': modules.theme_bundle, 'display_type': 'list', 'origin': 'manage', 'id': 'theme' } %}
+            <div class="module-short-list">
+                <span class="module-search-result-wording">{{ '%nbModules% theme modules'|trans({'%nbModules%' : modules.theme_bundle|length}, 'Admin.Modules.Feature') }}</span>
+                <span class="help-box" data-toggle="popover"
+                  data-title="{{ "Theme modules"|trans({}, 'Admin.Modules.Feature') }}"
+                  data-content="{{ "Each theme you install will come with its own set of modules. You’ll find here all the modules related to your active theme."|trans({}, 'Admin.Modules.Help') }}">
+                </span>
+            </div>
+            {% include 'PrestaShopBundle:Admin/Module/Includes:grid_manage_installed.html.twig' with { 'modules': modules.theme_bundle, 'display_type': 'list', 'origin': 'manage', 'id': 'theme' } %}
+
         </div>
     </div>
 {% endblock %}

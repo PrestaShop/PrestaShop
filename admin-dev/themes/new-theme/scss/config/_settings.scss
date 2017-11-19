@@ -5,17 +5,87 @@ $gray-dark-text: #bebebe;
 $gray-dark-title: #bbcdd1;
 $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
-$gray-dark-text-hover: $white;
+$gray-dark-text-hover: #ffffff;
 $color-separator: #dfdfdf;
 
 // Sizes
 
-$size-navbar-width: rem(210px);
-$size-navbar-width-mini: rem(50px);
-$size-navbar-link-height: rem(28px);
-$size-header-height: rem(40px);
-$size-header-toolbar-height: rem(100px);
+$size-navbar-width: 13.13rem;
+$size-navbar-width-mini: 3.125rem;
+$size-navbar-link-height: 1.75rem;
+$size-header-height: 2.5rem;
+$size-header-toolbar-height: 6.25rem;
 
 // Imported from bootstrap
 
 $grid-gutter-width: 1.875rem !default;
+
+$border-radius: 0;
+
+//UI Kit variables - to be removed
+$gray-soft: #FAFBFC;
+$gray-light: #BBCDD2;
+$medium-gray: #6c868e;
+$gray-medium: $medium-gray;
+$gray-dark: #363a41;
+$primary: #25b9d7;
+$primary-hover: #3ED2F0;
+$secondary: $medium-gray;
+$secondary-hover: $gray-dark;
+$notice: #DFF5F9;
+$success: #78D07D;
+$warning: #CD9321;
+$warning-hover: #FDE7BB;
+$danger: #c05c67;
+$danger-hover: #fde1e1;
+$brand-primary: $primary;
+$brand-secondary: $secondary;
+$brand-info: #5bc0de !default;
+$brand-warning: #f0ad4e !default;
+$font-size-base: .875rem;
+$font-weight-normal: 400;
+$font-weight-semibold: 600;
+$font-size-xs: 0.625rem;
+$font-size-h1: 1.5rem;
+$nav-tabs-active-link-hover-border-color: $brand-primary;
+$link-color: $brand-primary;
+$brand-success: $success;
+$brand-danger: $danger;
+$dropdown-link-hover-color: $primary;
+$dropdown-link-hover-bg: #fff;
+$spacing-base: 30px;
+$spacing-widths: (
+  xxs: $spacing-base / 6,
+  xs: $spacing-base / 3,
+  s: $spacing-base / 2,
+  n: $spacing-base,
+  l: $spacing-base * 2
+);
+$grid-breakpoints: (
+  xs: 0,
+  sm: 544px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1300px
+);
+
+$card-border-color: #e5e5e5 !default;
+$module-logo-size: 45px;
+
+$card-spacer-x: 1.25rem !default;
+$card-spacer-y: .75rem !default;
+$card-border-width: 1px !default;
+$card-border-radius: $border-radius !default;
+$card-border-radius-inner: $card-border-radius !default;
+$card-cap-bg: #f5f5f5 !default;
+$card-bg: #fff !default;
+$card-link-hover-color: #fff !default;
+$enable-rounded: true !default;
+$enable-hover-media-query: true;
+
+$btn-primary-bg: $primary-hover;
+$btn-secondary-border: #000;
+$btn-info-bg: $brand-info !default;
+$btn-success-bg: $brand-success !default;
+$btn-warning-bg: $brand-warning !default;
+$btn-danger-bg: $brand-danger !default;

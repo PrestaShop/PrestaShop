@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
@@ -102,8 +102,17 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
              * allow showing the product
              * In all the others cases => 404 "Product is no longer available"
              */
-            if (!$this->product->isAssociatedToShop() || !$this->product->active) {
-                if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int) Tab::getIdFromClassName('AdminProducts').(int) Tools::getValue('id_employee')) && $this->product->isAssociatedToShop()) {
+            $isAssociatedToProduct = (
+                Tools::getValue('adtoken') == Tools::getAdminToken(
+                    'AdminProducts'
+                    .(int) Tab::getIdFromClassName('AdminProducts')
+                    .(int) Tools::getValue('id_employee')
+                )
+                && $this->product->isAssociatedToShop()
+            );
+            $isPreview = ('1' === Tools::getValue('preview'));
+            if ((!$this->product->isAssociatedToShop() || !$this->product->active) && !$isPreview) {
+                if ($isAssociatedToProduct) {
                     $this->adminNotifications['inactive_product'] = array(
                         'type' => 'warning',
                         'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
@@ -144,14 +153,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 404 Not Found');
                             $this->errors[] = $this->trans('This product is no longer available.', array(), 'Shop.Notifications.Error');
                             $this->setTemplate('errors/404');
-                        break;
+                            break;
                     }
                 }
             } elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int) $this->context->customer->id : 0)) {
                 header('HTTP/1.1 403 Forbidden');
                 header('Status: 403 Forbidden');
                 $this->errors[] = $this->trans('You do not have access to this product.', array(), 'Shop.Notifications.Error');
+                $this->setTemplate('errors/forbidden');
             } else {
+                if ($isAssociatedToProduct && $isPreview) {
+                    $this->adminNotifications['inactive_product'] = array(
+                        'type' => 'warning',
+                        'message' => $this->trans('This product is not visible to your customers.', array(), 'Shop.Notifications.Warning'),
+                    );
+                }
                 // Load category
                 $id_category = false;
                 if (isset($_SERVER['HTTP_REFERER']) && $_SERVER['HTTP_REFERER'] == Tools::secureReferrer($_SERVER['HTTP_REFERER']) // Assure us the previous page was one of the shop
@@ -315,12 +331,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $filteredProduct = Hook::exec(
                 'filterProductContent',
                 array('object' => $product_for_template),
-                $id_module = null,
-                $array_return = false,
-                $check_exceptions = true,
-                $use_push = false,
-                $id_shop = null,
-                $chain = true
+                null,
+                false,
+                true,
+                false,
+                null,
+                true
             );
             if (!empty($filteredProduct['object'])) {
                 $product_for_template = $filteredProduct['object'];
@@ -372,6 +388,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $product = $this->getTemplateVarProduct();
         $minimalProductQuantity = $this->getMinimalProductOrDeclinationQuantity($product);
+        $isPreview = ('1' === Tools::getValue('preview'));
 
         ob_end_clean();
         header('Content-Type: application/json');
@@ -400,7 +417,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $product['id_product_attribute'],
                 false,
                 false,
-                true
+                true,
+                $isPreview ? array('preview' => '1') : array()
             ),
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
@@ -610,15 +628,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $count++;
                 if ($count > 1) {
                     //find attributes of current group, having a possible combination with current selected
-                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2 
-                        WHERE `id_product_attribute` IN (
-                            SELECT pac.`id_product_attribute`
-                                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-                                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                                WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
-                                GROUP BY id_product_attribute
-                                HAVING COUNT(id_product) = '.count($current_selected_attributes).'
-                        ) AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
+                    $id_product_attributes = array(0);
+                    $query = 'SELECT pac.`id_product_attribute`
+                        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
+                        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                        WHERE id_product = '.$this->product->id.' AND id_attribute IN ('.implode(',', array_map('intval', $current_selected_attributes)).')
+                        GROUP BY id_product_attribute
+                        HAVING COUNT(id_product) = '.count($current_selected_attributes);
+                    if ($results = Db::getInstance()->executeS($query)) {
+                        foreach ($results as $row) {
+                            $id_product_attributes[] = $row['id_product_attribute'];
+                        }
+                    }
+                    $id_attributes = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'product_attribute_combination` pac2
+                        WHERE `id_product_attribute` IN ('.implode(',', array_map('intval', $id_product_attributes)).')
+                        AND id_attribute NOT IN ('.implode(',', array_map('intval', $current_selected_attributes)).')');
                     foreach ($id_attributes as $k => $row) {
                         $id_attributes[$k] = (int)$row['id_attribute'];
                     }
@@ -816,6 +840,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
+    /**
+     * Calculation of currency-converted discounts for specific prices on product
+     *
+     * @param array $specific_prices array of specific prices definitions (DEFAULT currency)
+     * @param float $price           current price in CURRENT currency
+     * @param float $tax_rate        in percents
+     * @param float $ecotax_amount   in DEFAULT currency, with tax
+     *
+     * @return array
+     */
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
         $priceFormatter = new PriceFormatter();
@@ -825,25 +859,30 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             if ($row['price'] >= 0) {
                 // The price may be directly set
 
-                $cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
+                /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
+                $currentPriceDefaultCurrency = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
+                // Since this price is set in default currency,
+                // we need to convert it into current currency
+                $row['id_currency'];
+                $currentPriceCurrentCurrency = Tools::convertPrice($currentPriceDefaultCurrency, $this->context->currency, true, $this->context);
 
                 if ($row['reduction_type'] == 'amount') {
-                    $cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+                    $currentPriceCurrentCurrency -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
                     $row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
                 } else {
-                    $cur_price *= 1 - $row['reduction'];
+                    $currentPriceCurrentCurrency *= 1 - $row['reduction'];
                 }
-                $row['real_value'] = $price > 0 ? $price - $cur_price : $cur_price;
+                $row['real_value'] = $price > 0 ? $price - $currentPriceCurrentCurrency : $currentPriceCurrentCurrency;
                 $discountPrice = $price - $row['real_value'];
 
                 if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                     if ($row['reduction_tax'] == 0 && !$row['price']) {
-                        $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
+                        $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                     } else {
-                        $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
+                        $row['discount'] = $priceFormatter->format($price - $row['real_value']);
                     }
                 } else {
-                    $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
+                    $row['discount'] = $priceFormatter->format($row['real_value']);
                 }
             } else {
                 if ($row['reduction_type'] == 'amount') {
@@ -856,21 +895,21 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     $discountPrice = $price - $row['real_value'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0 && !$row['price']) {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - $row['real_value']);
+                            $row['discount'] = $priceFormatter->format($price - $row['real_value']);
                         }
                     } else {
-                        $row['discount'] = $priceFormatter->convertAndFormat($row['real_value']);
+                        $row['discount'] = $priceFormatter->format($row['real_value']);
                     }
                 } else {
                     $row['real_value'] = $row['reduction'] * 100;
                     $discountPrice = $price - $price * $row['reduction'];
                     if (Configuration::get('PS_DISPLAY_DISCOUNT_PRICE')) {
                         if ($row['reduction_tax'] == 0) {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction_with_tax']));
+                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction_with_tax']));
                         } else {
-                            $row['discount'] = $priceFormatter->convertAndFormat($price - ($price * $row['reduction']));
+                            $row['discount'] = $priceFormatter->format($price - ($price * $row['reduction']));
                         }
                     } else {
                         $row['discount'] = $row['real_value'].'%';
@@ -878,7 +917,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 }
             }
 
-            $row['save'] = $priceFormatter->convertAndFormat((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
+            $row['save'] = $priceFormatter->format((($price * $row['quantity']) - ($discountPrice * $row['quantity'])));
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int) $specific_prices[$key + 1]['from_quantity'] : -1);
         }
 
@@ -931,6 +970,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product['minimal_quantity'] = $this->getProductMinimalQuantity($product);
         $product['quantity_wanted'] = $this->getRequiredQuantity($product);
         $product['extraContent'] = $extraContentFinder->addParams(array('product' => $this->product))->present();
+        $product['ecotax'] = Tools::convertPrice((float) $product['ecotax'], $this->context->currency, true, $this->context);
 
         $product_full = Product::getProductProperties($this->context->language->id, $product, $this->context);
 
@@ -1037,7 +1077,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $breadcrumb['links'][] = array(
             'title' => $this->context->controller->product->name,
-            'url' => $this->context->link->getProductLink($this->context->controller->product),
+            'url' => $this->context->link->getProductLink($this->context->controller->product, null, null, null, null, null, (int) $this->getIdProductAttribute()),
         );
 
         return $breadcrumb;

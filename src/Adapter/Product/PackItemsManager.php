@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
+
+use Pack;
+use Product;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class PackItemsManager
 {
@@ -32,43 +36,43 @@ class PackItemsManager
      *
      * @param \Pack $pack
      * @param integer $id_lang Optional
-     * @return Array[Product] The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
+     * @return array(Product) The products contained in this Pack, with special dynamic attributes [pack_quantity, id_pack_product_attribute]
      */
     public function getPackItems($pack, $id_lang = false)
     {
         if ($id_lang === false) {
-            $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+            $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \PackCore::getItems($pack->id, $id_lang);
+        return Pack::getItems($pack->id, $id_lang);
     }
 
     /**
      * Get all Packs that contains the given item in the corresponding declination.
      *
-     * @param \ProductCore $item
+     * @param Product $item
      * @param integer $item_attribute_id
-     * @param integer $id_lang Optional
-     * @return Array[Pack] The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
+     * @param boolean|integer $id_lang Optional
+     * @return array(Pack) The packs that contains the given item, with special dynamic attribute [pack_item_quantity]
      */
     public function getPacksContainingItem($item, $item_attribute_id, $id_lang = false)
     {
         if ($id_lang === false) {
-            $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+            $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
             $id_lang = (int)$configuration->get('PS_LANG_DEFAULT');
         }
-        return \PackCore::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
+        return Pack::getPacksContainingItem($item->id, $item_attribute_id, $id_lang);
     }
 
     /**
      * Is this product a pack?
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @return boolean
      */
     public function isPack($product)
     {
-        return \PackCore::isPack($product->id);
+        return Pack::isPack($product->id);
     }
 
     /**
@@ -76,12 +80,12 @@ class PackItemsManager
      * If $id_product_attribute specified, then will restrict search on the given combination,
      * else this method will match a product if at least one of all its combination is in a pack.
      *
-     * @param \ProductCore $product
+     * @param Product $product
      * @param integer $id_product_attribute Optional combination of the product
      * @return boolean
      */
     public function isPacked($product, $id_product_attribute = false)
     {
-        return \PackCore::isPacked($product->id, $id_product_attribute);
+        return Pack::isPacked($product->id, $id_product_attribute);
     }
 }

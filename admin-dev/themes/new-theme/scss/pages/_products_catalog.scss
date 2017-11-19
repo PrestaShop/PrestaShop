@@ -1,12 +1,16 @@
 .products-catalog {
 
   > .content {
-    background: $white;
+    background: #ffffff;
     padding: {
       top: $grid-gutter-width / 2;
       bottom: $grid-gutter-width / 2;
     }
     margin-bottom: 20px;
+
+    .row {
+      align-items: center;
+    }
   }
 
   > .content:last-child {
@@ -14,8 +18,8 @@
   }
 
   .icon-caret {
-    font-size: rem(10px);
-    vertical-align: rem(1px);
+    font-size: 0.625rem;
+    vertical-align: 0.0625rem;
     cursor: pointer;
     display: inline-block;
 
@@ -41,6 +45,15 @@
     }
   }
 
+  #product_catalog_category_tree_filter {
+    margin-left: auto;
+  }
+
+  .bulk-catalog {
+    .dropdown-item {
+      border: 0;
+    }
+  }
 }
 
 .emptycatalog-icon {

@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 <div id="module-modal-import" class="modal modal-vcenter fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -27,8 +27,8 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button id="module-modal-import-closing-cross" type="button" class="close">&times;</button>
                 <h4 class="modal-title module-modal-title">{{ 'Upload a module'|trans({}, 'Admin.Modules.Feature') }}</h4>
+                <button id="module-modal-import-closing-cross" type="button" class="close">&times;</button>
             </div>
             <div class="modal-body">
                 {% if level <= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class='module-import-processing'>
                                     <!-- Loader -->
-                                    <button class="btn btn-primary-reverse btn-lg onclick" ></button>
+                                    <div class="spinner"></div>
                                     <p class=module-import-processing-main-text>{{ 'Installing module...'|trans({}, 'Admin.Modules.Notification') }}</p>
                                     <p class=module-import-processing-footer-text>
                                         {{ "It will close as soon as the module is installed. It won't be long!"|trans({}, 'Admin.Modules.Notification') }}
@@ -67,7 +67,7 @@
                                     <i class="module-import-success-icon material-icons">done</i><br/>
                                     <p class='module-import-success-msg'>{{ 'Module installed!'|trans({}, 'Admin.Modules.Notification') }}</p>
                                     <p class="module-import-success-details"></p>
-                                    <a class="module-import-success-configure btn btn-primary btn-sm light-button" href='#'>{{ 'Configure'|trans({}, 'Admin.Actions') }}</a>
+                                    <a class="module-import-success-configure btn btn-primary-reverse btn-outline-primary light-button" href='#'>{{ 'Configure'|trans({}, 'Admin.Actions') }}</a>
                                 </div>
                                 <div class='module-import-failure'>
                                     <i class="module-import-failure-icon material-icons">error</i><br/>
@@ -75,6 +75,8 @@
                                     <a href="#" class="module-import-failure-details-action">{{ 'What happened?'|trans({}, 'Admin.Modules.Help') }}</a>
                                     <div class='module-import-failure-details'></div>
                                     <a class="module-import-failure-retry btn btn-tertiary" href='#'>{{ 'Try again'|trans({}, 'Admin.Actions') }}</a>
+                                </div>
+                                <div class='module-import-confirm'>
                                 </div>
                             </form>
                         </div>

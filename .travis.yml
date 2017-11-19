@@ -1,6 +1,7 @@
 language: php
 
 addons:
+    #chrome: stable
     apt:
         packages:
         - apache2
@@ -17,9 +18,17 @@ sudo: required
 dist: trusty
 
 php:
-  - 5.4
   - 5.6
   - 7.0
+
+env:
+    global:
+        - SYMFONY_DEPRECATIONS_HELPER=disabled
+
+matrix:
+  include:
+    - php: 7.1
+      env: EXTRA_TESTS=functional
 
 before_install:
   # Apache & php-fpm configuration
@@ -27,8 +36,8 @@ before_install:
   - bash travis-scripts/setup-apache.sh
 
   # PrestaShop configuration
-  - cp -Rf .composer/* ~/.composer/ & composer global install;
   - cp tests/parameters.yml.travis app/config/parameters.yml
+
 
 notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
@@ -37,11 +46,15 @@ script:
   - composer install --prefer-dist --no-interaction --no-progress
   - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
-  - php bin/phpunit -c tests/
-  - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit -c tests/phpunit-admin.xml
+  - php bin/console lint:twig src
+  - php bin/console lint:twig app
+  - composer phpunit-legacy
+  - composer phpunit-admin
   - composer phpunit-sf
   - composer phpunit-controllers
+  - bash travis-scripts/install-prestashop
   - bash ./travis-scripts/run-selenium-tests
+  - bash ./travis-scripts/run-functional-tests # Must run before starter theme
   - bash ./travis-scripts/test-startertheme
 
 after_script:

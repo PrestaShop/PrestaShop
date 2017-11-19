@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
   <div id="search_filters">
@@ -48,7 +48,7 @@
           {/foreach}
           <div class="title hidden-md-up" data-target="#facet_{$_expand_id}" data-toggle="collapse"{if !$_collapse} aria-expanded="true"{/if}>
             <h1 class="h6 facet-title">{$facet.label}</h1>
-            <span class="pull-xs-right">
+            <span class="float-xs-right">
               <span class="navbar-toggler collapse-icons">
                 <i class="material-icons add">&#xE313;</i>
                 <i class="material-icons remove">&#xE316;</i>
@@ -60,13 +60,14 @@
 
             {block name='facet_item_other'}
               <ul id="facet_{$_expand_id}" class="collapse{if !$_collapse} in{/if}">
-                {foreach from=$facet.filters item="filter"}
+                {foreach from=$facet.filters key=filter_key item="filter"}
                   {if $filter.displayed}
                     <li>
-                      <label class="facet-label{if $filter.active} active {/if}">
+                      <label class="facet-label{if $filter.active} active {/if}" for="facet_input_{$_expand_id}_{$filter_key}">
                         {if $facet.multipleSelectionAllowed}
                           <span class="custom-checkbox">
                             <input
+                              id="facet_input_{$_expand_id}_{$filter_key}"
                               data-search-url="{$filter.nextEncodedFacetsURL}"
                               type="checkbox"
                               {if $filter.active } checked {/if}
@@ -76,12 +77,13 @@
                               {elseif isset($filter.properties.texture)}
                                 <span class="color texture" style="background-image:url({$filter.properties.texture})"></span>
                               {else}
-                              <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                              <span {if !$js_enabled} class="ps-shown-by-js" {/if}><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
                             {/if}
                           </span>
                         {else}
-                          <span class="custom-checkbox">
+                          <span class="custom-radio">
                             <input
+                              id="facet_input_{$_expand_id}_{$filter_key}"
                               data-search-url="{$filter.nextEncodedFacetsURL}"
                               type="radio"
                               name="filter {$facet.label}"
@@ -127,10 +129,10 @@
                           {/if}
                         {/foreach}
                         {if !$active_found}
-                          {l s='(no filter)' d='Shop.Theme'}
+                          {l s='(no filter)' d='Shop.Theme.Global'}
                         {/if}
                       </span>
-                      <i class="material-icons pull-xs-right">&#xE5C5;</i>
+                      <i class="material-icons float-xs-right">&#xE5C5;</i>
                     </a>
                     <div class="dropdown-menu">
                       {foreach from=$facet.filters item="filter"}

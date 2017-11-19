@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -53,11 +53,18 @@ class StylesheetManagerCore extends AbstractAssetManager
         $media = self::DEFAULT_MEDIA,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $server = 'local'
+        $server = 'local',
+        $needRtl = true
     ) {
+        $fullPath = $this->getFullPath($relativePath);
+        $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
+        $context = Context::getContext();
+        $isRTL = is_object($context->language) && $context->language->is_rtl;
         if ('remote' === $server) {
             $this->add($id, $relativePath, $media, $priority, $inline, $server);
-        } else if ($fullPath = $this->getFullPath($relativePath)) {
+        } else if ($needRtl && $isRTL && $rtlFullPath) {
+            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server);
+        } else if ($fullPath) {
             $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }
@@ -112,7 +119,7 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function sortList()
     {
-        foreach ($this->list as $type => &$items) {
+        foreach ($this->list as &$items) {
             Tools::uasort(
                 $items,
                 function ($a, $b) {

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -31,12 +31,12 @@ function ps_1700_right_management()
     /**
      * Add roles
      */
-    foreach (array('TAB', 'MODULE') as $element) {
+    foreach (array('TAB' => 'class_name', 'MODULE' => 'name') as $element => $nameColumn) {
         foreach ($actions as $action) {
             Db::getInstance()->execute('
                 INSERT IGNORE INTO `'._DB_PREFIX_.'authorization_role`
                 (`slug`)
-                SELECT CONCAT("ROLE_MOD_'.$element.'_", UCASE(`class_name`), "_'.$action.'")
+                SELECT CONCAT("ROLE_MOD_'.$element.'_", UCASE(`'.$nameColumn.'`), "_'.$action.'")
                 FROM `'._DB_PREFIX_.strtolower($element).'`
             ');
         }

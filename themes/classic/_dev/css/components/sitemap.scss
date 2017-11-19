@@ -3,14 +3,14 @@
 }
 
 .sitemap {
-  margin-top: rem(15px);
+  margin-top: 0.9375rem;
 
   h2 {
-    color: #414141;
+    color: $gray-darker;
     text-transform: uppercase;
     font-size: 1.1rem;
     font-weight: 600;
-    border-bottom: 1px solid #acaaa6;
+    border-bottom: 1px solid $gray;
     margin-left: -15px;
     width: 100%;
     height: 35px;

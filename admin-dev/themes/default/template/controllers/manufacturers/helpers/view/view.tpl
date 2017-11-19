@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -27,9 +27,9 @@
 
 {block name="override_tpl"}
 <div class="panel">
-	<h3>{l s='Addresses'} <span class="badge">{count($addresses)}</span></h3>
+	<h3>{l s='Addresses' d='Admin.Global'} <span class="badge">{count($addresses)}</span></h3>
 	{if !count($addresses)}
-		{l s='No address has been found for this brand.'}
+		{l s='No address has been found for this brand.' d='Admin.Catalog.Notification'}
 	{else}
 		{foreach $addresses AS $addresse}
 		<div class="panel">
@@ -65,7 +65,7 @@
 	{/if}
 </div>
 <div class="panel">
-	<h3>{l s='Products'} <span class="badge">{count($products)}</span></h3>
+	<h3>{l s='Products' d='Admin.Global'} <span class="badge">{count($products)}</span></h3>
 
 	{foreach $products AS $product}
 		{if !$product->hasAttributes()}
@@ -85,10 +85,10 @@
 				<table class="table">
 					<thead>
 						<tr>
-							{if !empty($product->reference)}<th><span class="title_box">{l s='Ref:'}</span> {$product->reference}</th>{/if}
-							{if !empty($product->ean13)}<th><span class="title_box">{l s='EAN13:'}</span> {$product->ean13}</th>{/if}
-							{if !empty($product->upc)}<th><span class="title_box">{l s='UPC:'}</span> {$product->upc}</th>{/if}
-							{if $stock_management}<th><span class="title_box">{l s='Qty:'}</span> {$product->quantity}</th>{/if}
+							{if !empty($product->reference)}<th><span class="title_box">{l s='Ref:' d='Admin.Catalog.Feature'}</span> {$product->reference}</th>{/if}
+							{if !empty($product->ean13)}<th><span class="title_box">{l s='EAN13:' d='Admin.Catalog.Feature'}</span> {$product->ean13}</th>{/if}
+							{if !empty($product->upc)}<th><span class="title_box">{l s='UPC:' d='Admin.Catalog.Feature'}</span> {$product->upc}</th>{/if}
+							{if $stock_management}<th><span class="title_box">{l s='Qty:' d='Admin.Catalog.Feature'}</span> {$product->quantity}</th>{/if}
 						</tr>
 					</thead>
 				</table>
@@ -116,12 +116,12 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th><span class="title_box">{l s='Attribute name'}</span></th>
+							<th><span class="title_box">{l s='Attribute name' d='Admin.Catalog.Feature'}</span></th>
 							<th><span class="title_box">{l s='Reference' d='Admin.Global'}</span></th>
-							<th><span class="title_box">{l s='EAN13'}</span></th>
-							<th><span class="title_box">{l s='UPC'}</span></th>
+							<th><span class="title_box">{l s='EAN13' d='Admin.Catalog.Feature'}</span></th>
+							<th><span class="title_box">{l s='UPC' d='Admin.Catalog.Feature'}</span></th>
 							{if $stock_management && $shopContext != Shop::CONTEXT_ALL}
-								<th><span class="title_box">{l s='Available Quantity'}</span></th>
+								<th><span class="title_box">{l s='Available quantity' d='Admin.Catalog.Feature'}</span></th>
 							{/if}
 						</tr>
 					</thead>

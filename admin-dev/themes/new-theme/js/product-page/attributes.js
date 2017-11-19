@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,11 +19,9 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import $ from 'jquery';
-// import Bloodhound from 'typeahead.js';
 
 export default function () {
   $(document).ready(function () {
@@ -53,18 +51,29 @@ export default function () {
       }
     });
 
-  $('input.form-control[counter], textarea.form-control[counter]').each(function () {
-    var attr = $(this).attr('counter');
+  $('input.form-control[counter], textarea.form-control:not(.autoload_rte)[counter]').each(function () {
+    let counter = $(this).attr('counter');
 
-    if (typeof attr === undefined || attr === false) {
+    if (typeof counter === undefined || counter === false) {
       return;
     }
 
-    $(this).parent().find('span.currentLength').text($(this).val().length);
-    $(this).parent().find('span.currentTotalMax').text(attr);
+    handleCounter($(this));
     $(this).on('input', function () {
-      $(this).parent().find('span.currentLength').text($(this).val().length);
-      $(this).parent().find('span.currentTotalMax').text(attr);
+      handleCounter($(this));
     });
+
+    function handleCounter(object) {
+      let counter = $(object).attr('counter');
+      let counter_type = $(object).attr('counter_type');
+      let max = $(object).val().length;
+
+      $(object).parent().find('span.currentLength').text(max);
+      if ('recommended' !== counter_type && max > counter) {
+        $(object).parent().find('span.maxLength').addClass('text-danger');
+      } else {
+        $(object).parent().find('span.maxLength').removeClass('text-danger');
+      }
+    }
   });
 }

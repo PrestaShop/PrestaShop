@@ -135,6 +135,8 @@ div.mce-edit-area
     background: #FFF
     filter: none
     padding: 1px
+    max-height: 400px
+    overflow: auto
 
 .mce-statusbar
     position: relative
@@ -198,10 +200,6 @@ div.mce-tinymce-inline
     padding-bottom: 2px
     .mce-flow-layout-item
         margin-bottom: 0
-
-.mce-rtl .mce-wordcount
-    left: 0
-    right: auto
 
 .mce-container, .mce-container-body
     display: block
@@ -398,18 +396,6 @@ div.mce-fullscreen
         border-radius: 0
         .mce-foot
             border-radius: 0
-
-.mce-rtl .mce-window-head
-    .mce-close
-        position: absolute
-        right: auto
-        left: 15px
-    .mce-dragh
-        left: auto
-        right: 0
-    .mce-title
-        direction: rtl
-        text-align: right
 
 .mce-abs-layout
     position: relative
@@ -629,9 +615,6 @@ body .mce-abs-layout-item
     border-bottom: 4px solid #333
     border-top: 0
 
-.mce-rtl .mce-btn button
-    direction: rtl
-
 .mce-btn-group
     .mce-btn
         border: solid 1px #ccc
@@ -679,13 +662,6 @@ i.mce-i-checkbox
         .mce-label, i.mce-i-checkbox
             color: #acacac
 
-.mce-rtl
-    .mce-checkbox
-        direction: rtl
-        text-align: right
-    i.mce-i-checkbox
-        margin: 0 0 0 3px
-
 .mce-colorbutton .mce-ico
     position: relative
 
@@ -720,25 +696,6 @@ i.mce-i-checkbox
         border-right-color: #bdbdbd
     &.mce-btn-small .mce-open
         padding: 0 3px 0 3px
-
-.mce-rtl .mce-colorbutton
-    direction: rtl
-    .mce-preview
-        margin-left: 0
-        padding-right: 0
-        padding-left: 4px
-        margin-right: 14px
-    &.mce-btn-small .mce-preview
-        margin-left: 0
-        padding-right: 0
-        margin-right: -17px
-        padding-left: 0
-    button
-        padding-right: 10px
-        padding-left: 10px
-    .mce-open
-        padding-left: 4px
-        padding-right: 4px
 
 .mce-combobox
     display: inline-block
@@ -797,9 +754,6 @@ i.mce-i-checkbox
 .mce-disabled .mce-path-item
     color: #aaa
 
-.mce-rtl .mce-path
-    direction: rtl
-
 .mce-fieldset
     border: 0 solid #9E9E9E
     border-radius: 3px
@@ -832,15 +786,6 @@ i.mce-i-checkbox
 .mce-tinymce-inline .mce-flow-layout
     white-space: nowrap
 
-.mce-rtl
-    .mce-flow-layout
-        text-align: right
-        direction: rtl
-    .mce-flow-layout-item
-        margin: 2px 2px 2px 0
-        &.mce-last
-            margin-left: 2px
-
 .mce-iframe
     border: 0 solid #9e9e9e
     width: 100%
@@ -858,10 +803,6 @@ i.mce-i-checkbox
         color: #aaa
     &.mce-multiline
         white-space: pre-wrap
-
-.mce-rtl .mce-label
-    text-align: right
-    direction: rtl
 
 .mce-menubar
     border: 1px solid #EEEEEE
@@ -902,10 +843,6 @@ i.mce-i-checkbox
     .mce-caret
         *margin-top: 6px
 
-.mce-rtl .mce-menubtn button
-    direction: rtl
-    text-align: right
-
 .mce-listbox
     button
         text-align: left
@@ -916,14 +853,6 @@ i.mce-i-checkbox
         margin-top: -2px
         right: 8px
         top: 50%
-
-.mce-rtl .mce-listbox
-    .mce-caret
-        right: auto
-        left: 8px
-    button
-        padding-right: 10px
-        padding-left: 20px
 
 .mce-menu-item
     display: block
@@ -1006,29 +935,6 @@ div.mce-menu .mce-menu-item-sep, .mce-menu-item-sep:hover
     cursor: default
     filter: none
 
-.mce-menu.mce-rtl
-    direction: rtl
-
-.mce-rtl .mce-menu-item
-    text-align: right
-    direction: rtl
-    padding: 6px 12px 6px 15px
-
-.mce-menu-align.mce-rtl
-    .mce-menu-shortcut, .mce-caret
-        right: auto
-        left: 0
-
-.mce-rtl .mce-menu-item
-    .mce-caret
-        margin-left: 6px
-        margin-right: 0
-        border-right: 4px solid #333
-        border-left: 0
-    &.mce-selected .mce-caret, &:focus .mce-caret, &:hover .mce-caret
-        border-left-color: transparent
-        border-right-color: #fff
-
 .mce-menu
     position: absolute
     left: 0
@@ -1095,16 +1001,6 @@ i.mce-i-resize
     &.mce-btn-small .mce-open
         padding: 0 3px 0 3px
 
-.mce-rtl .mce-splitbtn
-    direction: rtl
-    text-align: right
-    button
-        padding-right: 10px
-        padding-left: 10px
-    .mce-open
-        padding-left: 4px
-        padding-right: 4px
-
 .mce-stack-layout-item
     display: block
 
@@ -1129,13 +1025,6 @@ i.mce-i-resize
         margin-bottom: -1px
         height: 14px
 
-.mce-rtl
-    .mce-tabs
-        text-align: right
-        direction: rtl
-    .mce-tab
-        border-width: 0 0 0 1px
-
 .mce-textbox
     background: #fff
     border: 1px solid #c5c5c5
@@ -1159,10 +1048,6 @@ i.mce-i-resize
         padding: 4px
     &.mce-disabled
         color: #adadad
-
-.mce-rtl .mce-textbox
-    text-align: right
-    direction: rtl
 
 .mce-throbber
     position: absolute
@@ -1312,3 +1197,7 @@ i.mce-i-resize
 
 i.mce-i-backcolor
     background: #bbb
+
+.mce-rtl
+    i.mce-i-checkbox
+        direction: rtl

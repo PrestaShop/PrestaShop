@@ -2,31 +2,27 @@ body#checkout {
   color: $gray-darker;
   #header .header-nav {
     max-height: none;
-    padding: rem(80px) 0 rem(15px);
+    padding: 5rem 0 0.9375rem;
     border: none;
     margin-bottom: 0;
     @include box-shadow;
     .logo {
-      max-height: rem(70px);
+      max-height: 4.375rem;
       width: auto;
     }
   }
-
-  [data-action="show-password"]{
-    background: $gray-dark;
-  }
   .custom-checkbox {
-    @include display(flex);
+    display: flex;
     span {
-      @include flex(0 0 15px);
-      margin-top: rem(3px);
+      flex: 0 0 15px;
+      margin-top: 0.1875rem;
     }
   }
   a:hover {
     color: #1a8196;
   }
   section#content {
-    margin-bottom: rem(25px);
+    margin-bottom: 1.563rem;
   }
   .container {
     min-height: 100%;
@@ -34,15 +30,18 @@ body#checkout {
   section.checkout-step {
     @include box-shadow;
     background-color: white;
-    border: 1px $gray-light solid;
-    padding: rem(15px);
+    border-bottom: 1px rgba(0, 0, 0, 0.25) solid;
+    padding: 0.9375rem;
+    &:last-child {
+      border: 0;
+    }
     .step-title {
       text-transform: uppercase;
       cursor: pointer;
       margin-bottom: 0;
     }
     .content {
-      padding: 0 rem(37px);
+      padding: 0 2.313rem;
     }
     .step-edit {
       text-transform: lowercase;
@@ -89,7 +88,7 @@ body#checkout {
           cursor: pointer;
           display: block;
           float: right;
-          margin-right: rem(2px);
+          margin-right: 0.125rem;
           color: $gray;
         }
       }
@@ -108,26 +107,26 @@ body#checkout {
       }
     }
     .radio-field {
-      margin-top: rem(30px);
+      margin-top: 1.875rem;
       label {
         display: inline;
       }
     }
     .checkbox-field div {
-      margin-top: rem(60px);
+      margin-top: 3.75rem;
     }
     .checkbox-field + .checkbox-field div {
       margin-top: 0;
     }
     .select-field div {
       background: $gray-lighter;
-      padding: rem(10px) rem(50px);
+      padding: 0.625rem 3.125rem;
     }
     .form-footer {
       text-align: center;
     }
     #conditions-to-approve {
-      padding-top: rem(16px);
+      padding-top: 1rem;
     }
     .payment-options {
       label {
@@ -137,23 +136,24 @@ body#checkout {
         margin-right: $medium-space;
       }
       .payment-option {
-        margin-bottom: rem(8px);
+        margin-bottom: 0.5rem;
       }
     }
     .step-number {
       display: inline-block;
-      padding: rem(10px);
+      padding: 0.625rem;
     }
     .address-selector {
-      @include display(flex);
-      @include justify-content(space-between);
-      @include align-items(flex-start);
-      @include flex-wrap(wrap);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
     }
     .address-item {
       background: $gray-lighter;
-      @include flex(0 0 49%);
+      flex: 0 0 49%;
       margin-bottom: $small-space;
+      border: 3px solid transparent;
       &.selected {
         background: white;
         border: $brand-primary 3px solid;
@@ -162,28 +162,29 @@ body#checkout {
     .address-alias {
       display: inline-block;
       font-weight: 600;
-      margin-bottom: rem(10px);
+      margin-bottom: 0.625rem;
     }
     .address {
-      margin-left: rem(25px);
+      margin-left: 1.563rem;
       font-weight: normal;
     }
     .radio-block {
-      padding: rem(15px);
+      padding: 0.9375rem;
       text-align: left;
+      cursor: pointer;
     }
     .custom-radio {
       margin-right: 0;
       input[type="radio"] {
-        height: rem(20px);
-        width: rem(20px);
+        height: 1.25rem;
+        width: 1.25rem;
       }
     }
     .delete-address,
     .edit-address {
       color: $gray;
       display: inline-block;
-      margin: 0 rem(5px);
+      margin: 0 0.3125rem;
       .delete,
       .edit {
         font-size: $base-font-size;
@@ -194,14 +195,14 @@ body#checkout {
     }
     .address-footer {
       text-align: center;
-      padding: rem(10px);
+      padding: 0.625rem;
     }
     #delivery-addresses,
     #invoice-addresses {
-      margin-top: rem(20px);
+      margin-top: 1.25rem;
     }
     .add-address {
-      margin-top: rem(20px);
+      margin-top: 1.25rem;
       a {
         color: $gray-darker;
         i {
@@ -211,8 +212,8 @@ body#checkout {
     }
     .delivery-option {
       background: $gray-lighter;
-      padding: rem(15px) 0;
-      margin-bottom: rem(15px);
+      padding: 0.9375rem 0;
+      margin-bottom: 0.9375rem;
       label {
         text-align: inherit;
       }
@@ -227,8 +228,8 @@ body#checkout {
     #delivery-address,
     #invoice-address,
     #login-form {
-      margin-left: rem(5px);
-      margin-top: rem(25px);
+      margin-left: 0.3125rem;
+      margin-top: 1.563rem;
       .form-control-label {
         text-align: left;
       }
@@ -240,25 +241,25 @@ body#checkout {
       font-size: $font-size-sm;
     }
     .forgot-password {
-      margin-left: rem(230px);
+      margin-left: 14.38rem;
     }
   }
   .additional-information {
     font-size: $font-size-sm;
-    margin-left: rem(46px);
-    margin-top: rem(20px);
+    margin-left: 2.875rem;
+    margin-top: 1.25rem;
   }
   .condition-label {
-    margin-left: rem(40px);
-    margin-top: rem(10px);
+    margin-left: 2.5rem;
+    margin-top: 0.625rem;
     label {
       text-align: inherit;
     }
   }
   .cancel-address {
-    margin: rem(10px);
+    margin: 0.625rem;
     display: block;
-    color: $gray-dark;
+    color: $gray;
     text-decoration: underline;
   }
   .modal-content {
@@ -269,24 +270,24 @@ body#checkout {
     font-size: $font-size-sm;
     img {
       border: $gray-light 1px solid;
-      width: rem(50px);
+      width: 3.125rem;
     }
     .media-body {
       vertical-align: middle;
     }
   }
   #order-summary-content {
-    padding-top: rem(15px);
+    padding-top: 0.9375rem;
     h4.h4 {
-      margin-top: rem(10px);
-      margin-bottom: rem(20px);
+      margin-top: 0.625rem;
+      margin-bottom: 1.25rem;
       color: $gray-darker;
     }
     h4.black {
       color: #000000;
     }
     h4.addresshead {
-      margin-top: rem(3px);
+      margin-top: 0.1875rem;
     }
     .noshadow {
       box-shadow: none;
@@ -295,7 +296,7 @@ body#checkout {
       border-right: 0;
       h3.h3 {
         color: $gray-darker;
-        margin-top: rem(20px);
+        margin-top: 1.25rem;
       }
       table {
         tr {
@@ -334,13 +335,17 @@ body#checkout {
       }
     }
   }
-  #gift_message{
+  #gift_message, #delivery{
     max-width: 100%;
     border-color: $gray-darker;
+    textarea {
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
   }
   #footer {
     @include box-shadow;
-    padding: rem(15px);
+    padding: 0.9375rem;
     background: white;
     color: $gray;
   }
@@ -375,29 +380,29 @@ body#checkout {
     }
   }
   .order-line {
-    margin-top: rem(16px);
+    margin-top: 1rem;
   }
   .image {
     img {
         width: 100%;
         border: 1px solid gray-lighter;
-        margin-bottom: rem(16px);
+        margin-bottom: 1rem;
     }
   }
   .details {
-    margin-bottom: rem(16px);
+    margin-bottom: 1rem;
     .customizations {
-      margin-top: rem(10px);
+      margin-top: 0.625rem;
     }
   }
   .qty {
-    margin-bottom: rem(16px);
+    margin-bottom: 1rem;
   }
 }
 #order-confirmation {
   #registration-form {
     width: 50%;
-    margin: 0 auto rem(16px);
+    margin: 0 auto 1rem;
   }
 }
 @include media-breakpoint-down(md) {
@@ -406,16 +411,16 @@ body#checkout {
     padding: 0;
   }
   body#checkout section.checkout-step .address-item {
-    @include flex-grow(1);
+    flex-grow: 1;
   }
   body#checkout section.checkout-step .delivery-option-2 {
-    @include flex-direction(column);
+    flex-direction: column;
   }
   .delivery-option {
-    @include display(flex);
+    display: flex;
     margin: auto;
     .custom-radio {
-      @include flex(0 0 auto);
+      flex: 0 0 auto;
     }
   }
   .condition-label {
@@ -433,7 +438,7 @@ body#checkout {
 @include media-breakpoint-down(sm) {
   body#checkout section.checkout-step.-reachable.-complete h1 .step-edit {
     float: none;
-    margin-top: rem(4px);
+    margin-top: 0.25rem;
     margin-left: $medium-space;
   }
   body#checkout {
@@ -443,20 +448,20 @@ body#checkout {
     }
     section.checkout-step {
       .content {
-        padding: rem(15px);
+        padding: 0.9375rem;
       }
     }
     .form-group {
-      margin-bottom: rem(8px);
+      margin-bottom: 0.5rem;
     }
   }
   #order-items {
     border-right: 0;
-    margin-bottom: rem(40px);
+    margin-bottom: 2.5rem;
     .card-title {
       border-bottom: 1px solid $gray-light;
-      margin-bottom: rem(16px);
-      padding-bottom: rem(16px);
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
     }
     hr {
       border-top-color: $gray-light;
@@ -466,11 +471,11 @@ body#checkout {
     font-weight: bold;
   }
   #order-details {
-    padding-left: rem(15px);
+    padding-left: 0.9375rem;
     .card-title {
       border-bottom: 1px solid $gray-light;
-      margin-bottom: rem(16px);
-      padding-bottom: rem(16px);
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
     }
   }
 
@@ -480,13 +485,13 @@ body#checkout {
   body#checkout {
     section.checkout-step {
       .content {
-        padding: rem(15px) 0;
+        padding: 0.9375rem 0;
       }
     }
   }
   #payment-confirmation {
     button {
-      font-size: rem(14px);
+      font-size: 0.875rem;
       &.btn {
         white-space: normal;
       }

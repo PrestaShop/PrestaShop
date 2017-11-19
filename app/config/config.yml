@@ -8,6 +8,7 @@ imports:
 parameters:
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
+    translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
 
 framework:
     assets:
@@ -27,9 +28,7 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ~
     session:
-        # handler_id set to null will use default session handler from php.ini
         handler_id:  ~
     fragments:       ~
     http_method_override: true
@@ -39,7 +38,7 @@ monolog:
     handlers:
         main:
             type: stream
-            path: %kernel.logs_dir%/%kernel.environment%.log
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: notice
         legacy:
             type: service
@@ -54,6 +53,8 @@ twig:
     strict_variables: "%kernel.debug%"
     form_themes:
         - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_horizontal_layout.html.twig'
+    globals:
+        webpack_server:   false
 
 # Doctrine Configuration
 doctrine:
@@ -78,6 +79,9 @@ doctrine:
                 #     path:     "%database_path%"
                 mapping_types:
                     enum: string
+
+                options:
+                    1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -114,6 +118,8 @@ csa_guzzle:
 
 prestashop:
     addons:
+        prestatrust:
+            enabled: true
         api_client:
             ttl: 7200 # 2h
             # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage

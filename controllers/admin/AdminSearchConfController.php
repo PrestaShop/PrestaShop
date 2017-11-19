@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -108,112 +108,176 @@ class AdminSearchConfControllerCore extends AdminController
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
-            'search' => array(
-                'title' =>    $this->trans('Search', array(), 'Admin.Shopparameters.Feature'),
-                'icon' =>    'icon-search',
-                'fields' =>    array(
-                    'PS_SEARCH_START' => array(
-                        'title' => $this->trans('Search within word', array(), 'Admin.Shopparameters.Feature'),
+            'search'    => array(
+                'title'  => $this->trans('Search', array(), 'Admin.Shopparameters.Feature'),
+                'icon'   => 'icon-search',
+                'fields' => array(
+                    'PS_SEARCH_START'      => array(
+                        'title'      => $this->trans('Search within word', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
-                        'cast' => 'intval',
-                        'type' => 'bool',
-                        'desc' => $this->trans('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).', array(), 'Admin.Shopparameters.Help').'<br/>'.
-                                  $this->trans('With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.', array(), 'Admin.Shopparameters.Help'),
-                        'hint' => array(
-                            $this->trans('Enable search within a whole word, rather than from its beginning only.', array(), 'Admin.Shopparameters.Help'),
-                            $this->trans('It checks if the searched term is contained in the indexed word. This may be resource-consuming.', array(), 'Admin.Shopparameters.Help')
+                        'cast'       => 'intval',
+                        'type'       => 'bool',
+                        'desc'       => $this->trans(
+                                'By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ).'<br/>'.
+                            $this->trans(
+                                'With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                        'hint'       => array(
+                            $this->trans(
+                                'Enable search within a whole word, rather than from its beginning only.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                            $this->trans(
+                                'It checks if the searched term is contained in the indexed word. This may be resource-consuming.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            )
                         )
                     ),
-                    'PS_SEARCH_END' => array(
-                        'title' => $this->trans('Search exact end match', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_END'        => array(
+                        'title'      => $this->trans('Search exact end match', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isBool',
-                        'cast' => 'intval',
-                        'type' => 'bool',
-                        'desc' => $this->trans('By default, if you search "book", you will have "book", "bookcase" and "bookend".', array(), 'Admin.Shopparameters.Help').'<br/>'.
-                                  $this->trans('With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.', array(), 'Admin.Shopparameters.Help'),
-                        'hint' => array(
-                            $this->trans('Enable more precise search with the end of the word.', array(), 'Admin.Shopparameters.Help'),
-                            $this->trans('It checks if the searched term is the exact end of the indexed word.', array(), 'Admin.Shopparameters.Help')
+                        'cast'       => 'intval',
+                        'type'       => 'bool',
+                        'desc'       => $this->trans(
+                                'By default, if you search "book", you will have "book", "bookcase" and "bookend".',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ).'<br/>'.
+                            $this->trans(
+                                'With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                        'hint'       => array(
+                            $this->trans(
+                                'Enable more precise search with the end of the word.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            ),
+                            $this->trans(
+                                'It checks if the searched term is the exact end of the indexed word.',
+                                array(),
+                                'Admin.Shopparameters.Help'
+                            )
                         )
                     ),
                     'PS_SEARCH_MINWORDLEN' => array(
-                        'title' => $this->trans('Minimum word length (in characters)', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('Only words this size or larger will be indexed.', array(), 'Admin.Shopparameters.Help'),
+                        'title'      => $this->trans(
+                            'Minimum word length (in characters)',
+                            array(),
+                            'Admin.Shopparameters.Feature'
+                        ),
+                        'hint'       => $this->trans(
+                            'Only words this size or larger will be indexed.',
+                            array(),
+                            'Admin.Shopparameters.Help'
+                        ),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
-                    'PS_SEARCH_BLACKLIST' => array(
-                        'title' => $this->trans('Blacklisted words', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_BLACKLIST'  => array(
+                        'title'      => $this->trans('Blacklisted words', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isGenericName',
-                        'hint' => $this->trans('Please enter the index words separated by a "|".', array(), 'Admin.Shopparameters.Help'),
-                        'type' => 'textareaLang'
+                        'hint'       => $this->trans(
+                            'Please enter the index words separated by a "|".',
+                            array(),
+                            'Admin.Shopparameters.Help'
+                        ),
+                        'type'       => 'textareaLang'
                     )
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))
             ),
             'relevance' => array(
-                'title' =>    $this->trans('Weight', array(), 'Admin.Shopparameters.Feature'),
-                'icon' =>    'icon-cogs',
-                'info' =>
-                        $this->trans('The "weight" represents its importance and relevance for the ranking of the products when completing a new search.', array(), 'Admin.Shopparameters.Feature').'<br />
-						'.$this->trans('A word with a weight of eight will have four times more value than a word with a weight of two.', array(), 'Admin.Shopparameters.Feature').'<br /><br />
-						'.$this->trans('We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.', array(), 'Admin.Shopparameters.Feature').'<br /><br />
-						'.$this->trans('Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0', array(), 'Admin.Shopparameters.Feature'),
-                'fields' =>    array(
-                    'PS_SEARCH_WEIGHT_PNAME' => array(
-                        'title' => $this->trans('Product name weight', array(), 'Admin.Shopparameters.Feature'),
-                        'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                'title'  => $this->trans('Weight', array(), 'Admin.Shopparameters.Feature'),
+                'icon'   => 'icon-cogs',
+                'info'   =>
+                    $this->trans(
+                        'The "weight" represents its importance and relevance for the ranking of the products when completing a new search.',
+                        array(),
+                        'Admin.Shopparameters.Feature'
+                    ).'<br />
+						'.$this->trans(
+                        'A word with a weight of eight will have four times more value than a word with a weight of two.',
+                        array(),
+                        'Admin.Shopparameters.Feature'
+                    ).'<br /><br />
+						'.$this->trans(
+                        'We advise you to set a greater weight for words which appear in the name or reference of a product. This will allow the search results to be as precise and relevant as possible.',
+                        array(),
+                        'Admin.Shopparameters.Feature'
+                    ).'<br /><br />
+						'.$this->trans(
+                        'Setting a weight to 0 will exclude that field from search index. Re-build of the entire index is required when changing to or from 0',
+                        array(),
+                        'Admin.Shopparameters.Feature'
                     ),
-                    'PS_SEARCH_WEIGHT_REF' => array(
-                        'title' => $this->trans('Reference weight', array(), 'Admin.Shopparameters.Feature'),
+                'fields' => array(
+                    'PS_SEARCH_WEIGHT_PNAME'     => array(
+                        'title'      => $this->trans('Product name weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
+                    ),
+                    'PS_SEARCH_WEIGHT_REF'       => array(
+                        'title'      => $this->trans('Reference weight', array(), 'Admin.Shopparameters.Feature'),
+                        'validation' => 'isUnsignedInt',
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
                     'PS_SEARCH_WEIGHT_SHORTDESC' => array(
-                        'title' => $this->trans('Short description weight', array(), 'Admin.Shopparameters.Feature'),
+                        'title'      => $this->trans(
+                            'Short description weight',
+                            array(),
+                            'Admin.Shopparameters.Feature'
+                        ),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
-                    'PS_SEARCH_WEIGHT_DESC' => array(
-                        'title' => $this->trans('Description weight', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_WEIGHT_DESC'      => array(
+                        'title'      => $this->trans('Description weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
-                    'PS_SEARCH_WEIGHT_CNAME' => array(
-                        'title' => $this->trans('Category weight', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_WEIGHT_CNAME'     => array(
+                        'title'      => $this->trans('Category weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
-                    'PS_SEARCH_WEIGHT_MNAME' => array(
-                        'title' => $this->trans('Brand weight', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_WEIGHT_MNAME'     => array(
+                        'title'      => $this->trans('Brand weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
-                    'PS_SEARCH_WEIGHT_TAG' => array(
-                        'title' => $this->trans('Tags weight', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_WEIGHT_TAG'       => array(
+                        'title'      => $this->trans('Tags weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
                     'PS_SEARCH_WEIGHT_ATTRIBUTE' => array(
-                        'title' => $this->trans('Attributes weight', array(), 'Admin.Shopparameters.Feature'),
+                        'title'      => $this->trans('Attributes weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     ),
-                    'PS_SEARCH_WEIGHT_FEATURE' => array(
-                        'title' => $this->trans('Features weight', array(), 'Admin.Shopparameters.Feature'),
+                    'PS_SEARCH_WEIGHT_FEATURE'   => array(
+                        'title'      => $this->trans('Features weight', array(), 'Admin.Shopparameters.Feature'),
                         'validation' => 'isUnsignedInt',
-                        'type' => 'text',
-                        'cast' => 'intval'
+                        'type'       => 'text',
+                        'cast'       => 'intval'
                     )
                 ),
                 'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions'))

@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <nav class="nav-bar">
@@ -48,7 +48,7 @@
 
         {else}
 
-          <li class="category-title hidden-sm-down {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
+          <li class="category-title d-none d-sm-block {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -68,7 +68,7 @@
                     <span>
                     {$level2Name}
                     {if $level2.sub_tabs|@count}
-                      <i class="material-icons pull-right hidden-md-up">keyboard_arrow_down</i>
+                      <i class="material-icons float-right d-md-none">keyboard_arrow_down</i>
                     {/if}
                     </span>
 
@@ -104,7 +104,7 @@
     {/foreach}
   </ul>
 
-  <span class="menu-collapse hidden-md-down">
+  <span class="menu-collapse d-none d-md-inline-block">
     <i class="material-icons">&#xE8EE;</i>
   </span>
 

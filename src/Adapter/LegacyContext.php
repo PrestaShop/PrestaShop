@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,19 +20,24 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\Process\Exception\LogicException;
-use ContextCore as OldContext;
+use Context;
 use Language;
+use AdminController;
+use Link;
+use Tools as ToolsLegacy;
+use Dispatcher;
+use AdminLegacyLayoutControllerCore;
 
 /**
  * This adapter will complete the new architecture Context with legacy values.
- * A merge is done, but the legacy values will be transfered to the new Context
+ * A merge is done, but the legacy values will be transferred to the new Context
  * during legacy refactoring.
  */
 class LegacyContext
@@ -43,18 +48,18 @@ class LegacyContext
      *
      * @throws LogicException If legacy context is not set properly
      *
-     * @return \ContextCore The Legacy context, for Adapter use only.
+     * @return Context The Legacy context, for Adapter use only.
      */
     public function getContext()
     {
         static $legacyContext = null;
 
         if (is_null($legacyContext)) {
-            $legacyContext = OldContext::getContext();
+            $legacyContext = Context::getContext();
 
             if ($legacyContext && !empty($legacyContext->shop) && !isset($legacyContext->controller) && isset($legacyContext->employee)) {
                 //init real legacy shop context
-                $adminController = new \AdminControllerCore();
+                $adminController = new AdminController();
                 $adminController->initShopContext();
             }
         }
@@ -81,14 +86,14 @@ class LegacyContext
      */
     public function getAdminLink($controller, $withToken = true, $extraParams = array())
     {
-        $id_lang = OldContext::getContext()->language->id;
+        $id_lang = Context::getContext()->language->id;
         $params = $extraParams;
         if ($withToken) {
-            $params['token'] = \ToolsCore::getAdminTokenLite($controller);
+            $params['token'] = ToolsLegacy::getAdminTokenLite($controller);
         }
 
-        $link = new \LinkCore();
-        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.\DispatcherCore::getInstance()->createUrl($controller, $id_lang, $params, false);
+        $link = new Link();
+        return $link->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
     }
 
     /**
@@ -121,7 +126,7 @@ class LegacyContext
      */
     public function setupLegacyTranslationContext($legacyController = 'AdminTab')
     {
-        OldContext::getContext()->override_controller_name_for_translations = $legacyController;
+        Context::getContext()->override_controller_name_for_translations = $legacyController;
     }
 
     /**
@@ -137,9 +142,18 @@ class LegacyContext
      *
      * @return string The html layout
      */
-    public function getLegacyLayout($controllerName = "", $title = "", $headerToolbarBtn = [], $displayType = "", $showContentHeader = true, $headerTabContent = '', $enableSidebar, $helpLink = '')
-    {
-        $originCtrl = new \AdminLegacyLayoutControllerCore(
+    public function getLegacyLayout(
+        $controllerName,
+        $title,
+        $headerToolbarBtn,
+        $displayType,
+        $showContentHeader,
+        $headerTabContent,
+        $enableSidebar,
+        $helpLink = '',
+        $routeName = ''
+    ) {
+        $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
             $title,
             $headerToolbarBtn,
@@ -147,7 +161,8 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink
+            $helpLink,
+            $routeName
         );
         $originCtrl->run();
 
@@ -165,13 +180,13 @@ class LegacyContext
      */
     public function getLanguages($active = true, $id_shop = false, $ids_only = false)
     {
-        $languages = \LanguageCore::getLanguages($active, $id_shop, $ids_only);
-        $defaultLanguageFirst = $this->getContext()->employee->id_lang;
+        $languages = Language::getLanguages($active, $id_shop, $ids_only);
+        $defaultLanguageFirst = $this->getLanguage();
         usort($languages, function ($a, $b) use ($defaultLanguageFirst) {
-            if ($a['id_lang'] == $defaultLanguageFirst) {
+            if ($a['id_lang'] == $defaultLanguageFirst->id) {
                 return -1; // $a is the default one.
             }
-            if ($b['id_lang'] == $defaultLanguageFirst) {
+            if ($b['id_lang'] == $defaultLanguageFirst->id) {
                 return 1; // $b is the default one.
             }
             return 0;
@@ -182,11 +197,11 @@ class LegacyContext
     /**
      * Returns language ISO code set for the current employee
 
-     * @return array Languages
+     * @return string Languages
      */
     public function getEmployeeLanguageIso()
     {
-        return \LanguageCore::getIsoById($this->getContext()->employee->id_lang);
+        return Language::getIsoById($this->getContext()->employee->id_lang);
     }
 
     /**
@@ -196,7 +211,7 @@ class LegacyContext
     {
         static $employeeCurrency;
 
-        if(null === $employeeCurrency) {
+        if (null === $employeeCurrency) {
             $employeeCurrency = $this->getContext()->currency->sign;
         }
         return $employeeCurrency;

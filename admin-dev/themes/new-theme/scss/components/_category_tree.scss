@@ -11,9 +11,9 @@ ul.category-tree {
       position: absolute;
       font-family: 'Material Icons';
       cursor: pointer;
-      font-size: rem(20px);
+      font-size: 1.25rem;
       color: $gray-medium;
-      top: rem(-4px);
+      top: -0.25rem;
     }
   }
   .less {
@@ -28,12 +28,16 @@ ul.category-tree {
   }
   .category-label {
     display: block;
+    padding-left: 0;
     .category {
       cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: -9px;
     }
   }
   ul {
-    padding-left: rem(25px);
+    padding-left: 1.563rem;
   }
   li {
     list-style: none;
@@ -51,12 +55,12 @@ ul.category-tree {
   }
 }
 #tree-categories {
-  padding: rem(10px);
+  padding: 0.625rem;
   border: $gray-light 1px solid;
-  border-radius: rem(3px);
+  border-radius: 0.1875rem;
   .categories-tree-actions {
     display: inline-block;
-    margin-left: rem(15px);
+    margin-left: 0.9375rem;
     i.material-icons {
       font-size: 1.25rem;
       vertical-align: bottom;

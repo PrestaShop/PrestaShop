@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="product-line-grid">
@@ -36,11 +36,27 @@
       <a class="label" href="{$product.url}" data-id_customization="{$product.id_customization|intval}">{$product.name}</a>
     </div>
 
-    <div class="product-line-info">
-      <span class="value">{$product.price}</span>
-      {if $product.unit_price_full}
-        <div class="unit-price-cart">{$product.unit_price_full}</div>
+    <div class="product-line-info product-price h5 {if $product.has_discount}has-discount{/if}">
+      {if $product.has_discount}
+        <div class="product-discount">
+          <span class="regular-price">{$product.regular_price}</span>
+          {if $product.discount_type === 'percentage'}
+            <span class="discount discount-percentage">
+                -{$product.discount_percentage_absolute}
+              </span>
+          {else}
+            <span class="discount discount-amount">
+                -{$product.discount_to_display}
+              </span>
+          {/if}
+        </div>
       {/if}
+      <div class="current-price">
+        <span class="price">{$product.price}</span>
+        {if $product.unit_price_full}
+          <div class="unit-price-cart">{$product.unit_price_full}</div>
+        {/if}
+      </div>
     </div>
 
     <br/>
@@ -142,7 +158,7 @@
               data-id-customization   	  = "{$product.id_customization|escape:'javascript'}"
           >
             {if !isset($product.is_gift) || !$product.is_gift}
-            <i class="material-icons pull-xs-left">delete</i>
+            <i class="material-icons float-xs-left">delete</i>
             {/if}
           </a>
 

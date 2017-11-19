@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set url, priceRaw, priceDisplay, url_active, urls, name =
@@ -31,46 +31,41 @@
   module.attributes.name
 %}
 
-<div class="pull-right btn-group">
-  {% if level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_READ') %}
-    {% if url_active == 'buy' %}
-      <a class="btn pull-left btn-primary btn-primary-reverse btn-primary-outline light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
-        {% if priceRaw != '0.00' %}{{ priceDisplay }}
-        {% else %}{{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}{% endif %}
-      </a>
-    {% else %}
-      <form class="btn-group" method="post" action="{{ urls[url_active] }}">
-        <button type="submit" class="btn btn-primary-reverse btn-primary-outline light-button module_action_menu_{{ url_active }}"
-           data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}" {% if (level < constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE')) or (level < constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_DELETE') and (url_active not in ['configure', 'install', 'upgrade'])) %} disabled="disabled" {% endif %}>
-            {{ url_active|capitalize|replace({'_': " "}) }}
-        </button>
-        {% if urls|length > 1 %}
-        <input type="hidden" class="btn">
-        {% endif %}
-      </form>
-      {% if (urls|length > 1) %}
-        {% if (level > constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_CREATE')) or ((('configure' in urls|keys) and ('upgrade' in urls|keys)) and  url_active in ['configure', 'install', 'upgrade']) %}
-            <button type="button" class="btn btn-primary-outline  dropdown-toggle light-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="caret"></span>
-              <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
-            </button>
-            <div class="dropdown-menu">
-              {% for module_action, module_url in urls %}
-                {% if module_action != url_active %}
-                  {% if ((level >= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_DELETE')) or ((level < constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_DELETE')) and (module_action in ['configure', 'install', 'upgrade']))) %}
-                    <li>
-                      <form method="post" action="{{ module_url }}">
-                        <button type="submit" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
-                          {{module_action|capitalize|replace({'_': " "})}}
-                        </button>
-                      </form>
-                    </li>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-            </div>
-        {% endif %}
+  {% if url_active == 'buy' %}
+  <div class="form-action-button-container">
+    <a class="btn btn-primary btn-primary-reverse btn-block btn-outline-primary light-button module_action_menu_go_to_addons" href="{{ url }}" target="_blank">
+      {{ 'Discover'|trans({}, 'Admin.Modules.Feature') }}
+    </a>
+  </div>
+  {% elseif urls|length %}
+  <div class="btn-group form-action-button-container">
+    <form class="btn-group form-action-button" method="post" action="{{ urls[url_active] }}">
+      <button type="submit" class="btn btn-primary-reverse btn-outline-primary light-button module_action_menu_{{ url_active }}"
+          data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
+          {{ url_active|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
+      </button>
+      {% if urls|length > 1 %}
+      <input type="hidden" class="btn">
       {% endif %}
+    </form>
+    {% if (urls|length > 1) %}
+          <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+          </button>
+          <div class="dropdown-menu">
+            {% for module_action, module_url in urls %}
+              {% if module_action != url_active %}
+                  <li>
+                    <form method="post" action="{{ module_url }}">
+                      <button type="submit" class="dropdown-item module_action_menu_{{ module_action }}" data-confirm_modal="module-modal-confirm-{{ name }}-{{ module_action }}">
+                        {{module_action|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions')}}
+                      </button>
+                    </form>
+                  </li>
+              {% endif %}
+            {% endfor %}
+          </div>
     {% endif %}
+  </div>
   {% endif %}
-</div>

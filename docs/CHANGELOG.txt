@@ -24,6 +24,889 @@ International Registered Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.7
 --------------------------------
 ####################################
+#   v1.7.2.4 - (2017-10-24)
+####################################
+- Front Office:
+  - Bug fix:
+    - #8433: Fix product information leak on the front office
+
+####################################
+#   v1.7.2.3 - (2017-10-05)
+####################################
+- Back Office:
+  - Improvement:
+    - #7810: Add a loading spinner into product page
+  - Bug fix:
+    - #8366: Use default country instead of translator locale for marketplace API
+    - #7938: Update bulk action combinations number after delete or add combination
+    - #8232: Fixed bug in AdminCartRulesController when limiting the validity …
+    - #8346: Fix the currency display in supply order
+    - #8287: Fix the category search in the product page
+    - #8288: Fix displaying empty zip code of tax rule
+
+- Front Office:
+  - Bug fix:
+    - #7848: Fix switching combination when the product is offline
+    - #7781: Add error message when updating quantity wanted input
+    - #8283: Currency exchange fixes on product page
+
+- Core:
+  - Improvement:
+    - #8360: Fixing the version for core modules ps_legalcompliance ps_linklist ps_customtext ps_customeraccountlinks
+  - Bug fix:
+    - #8380: Fix Context::getTranslator() cache
+    - #8361: Fix conflict between two cart rules and a single product cart
+    - #8213: Voucher issue fix
+
+- Web Services:
+  - Bug fix:
+    - #8275: Fix update product with WS
+
+####################################
+#   v1.7.2.2 - (2017-08-31)
+####################################
+- Back Office:
+  - Bug fix:
+    - #8238: Fix wrong final combination price if BC Math is not available
+    - #8063: Display texture image in combination form
+    - #8057: Save before generate combinations
+    - #8266: Fix error while reaching AdminModules
+
+- Front Office:
+  - Improvement:
+    - #8082: Scroll top to product list when paginate
+
+- Core:
+  - Improvement:
+    - #8212: Optimize specific price computing by executing the query only when needed
+  - Bug fix:
+    - #8210: Fix missing product limit/offset when ordering by price on Sale page
+    - #8138: Fix tax calculation when vat number is used
+
+####################################
+#   v1.7.2.1 - (2017-08-16)
+####################################
+- Back Office:
+  - Improvement:
+    - #8140: Update modules page design
+  - Bug fix:
+    - #8236: Fix module modal layout
+    - #8046: Fix legacy submenu laptop
+    - #8141: Fix the module "translate" button with the new link of translation page
+    - #8173: Fix the search error with white spaces in stock page
+    - #8160: Fix the style of product reference in the stock management page
+    - #8166: Fix the misalignment of the search button in the stock page
+    - #8167: Fix the search tags in the stock management
+
+- Front Office:
+  - Improvement:
+    - #8205: Fix custom content link opening in the same page
+    - #8145: Fix custom content link opening in the same page
+    - #7855: Add link to products for Pack
+  - Bug fix:
+    - #8206: Fix flags on products front-office
+    - #8152: Make the slider appears on Mobile view
+    - #8191: Fix flags on products front-office
+    - #8155: Fix the style of forgotten password page
+    - #8169: Fix typo in bootstrap class
+    - #7716: Fix displaying product thumbnails
+    - #8111: Fix unclosed tag
+    - #8170: Limit the description's image by the size of description's frame
+
+- Core:
+  - Improvement:
+    - #8201: Speed up search queries (17)
+  - Bug fix:
+    - #8228: Optimise synchronization stock sql
+    - #8215: Add translations in database when importing theme
+    - #8165: Use MessageCatalog function to get all message
+    - #8186: Improve stock sql performance
+
+- Installer:
+  - Bug fix:
+    - #8021: Use correct module name column for authorization role
+
+
+####################################
+#   v1.7.2.0 - (2017-07-20)
+####################################
+- Back Office:
+  - New feature:
+    - #8080: Translations confirmation modal
+    - #7808: Add tooltips on product's combination image
+    - #8031: Placeholder width in declination page
+    - #8027: Currencies live exchanges rates upload
+    - #7910: Can translate submenu tab!
+    - #7865: Fix redirect payment module retrieving good category
+  - Improvement:
+    - #8096: Add ids to recommended-payment & carriers & others
+    - #8098: Wording update for 1.7.2 catalog
+    - #8004: Fix displayed combination creation field
+    - #8008: Clean AdminProductsController
+    - #7911: Fix style of selected customer in product page
+    - #7835: Translations page rework & Stock management
+    - #7956: Remove length validation from ISBN field
+    - #7972: 1.7.2 wording update - BO + FO
+    - #7980: Fix html tags to get the current ISO country code
+    - #7942: Code Optimization
+    - #7933: Add translation domains to more BO templates
+    - #7820: Improve tag tips in product page
+    - #7887: Allow filtering of modules by display name inside the translations controller
+    - #7882: Add translations domains to BO templates
+    - #7613: Add new hooks to admin product page
+    - #7839: Add sprintf check constraint on translations
+    - #7834: Use most used tax for product creation on BO
+    - #7863: Add firstname & lastname on address form
+    - #7784: Complete category tooltip in Product Page
+    - #7735: Add translation domains to order templates
+    - #7706: Rewrite string to translate it more easily
+    - #7715: Change text tooltip in SEO
+    - #7618: Update addons authentication form
+  - Bug fix:
+    - #8161: Fix reset translation button
+    - #8074: Fix authorization panel
+    - #8129: Fix translations behavior
+    - #8135: Last wording update for 1.7.2.x
+    - #8093: Fix stock management filters
+    - #8094: Fix stock datepicker
+    - #8119: Fix the display of placeholder in combinations tab
+    - #8076: Fix upgrade button with update from disk
+    - #8107: Fix module enabling when ~ in theme.yml
+    - #8085: Fix JS event thrown on module uninstall
+    - #8106: Fix the upload quota for the product image
+    - #8120: Update catalog
+    - #8109: Fix the weird syntax in customer information page
+    - #8095: Feedback on translation page
+    - #8077: Revert Stock to singular
+    - #8068: Stock Management fixes
+    - #8065: Feedback on translation page
+    - #8054: Fix api category tree
+    - #8059: Fix missing use in ModuleDataUpdater
+    - #8052: Fix strings for specific price rules
+    - #7939: Fix the categories tree
+    - #8003: Fixed import store in backoffice
+    - #8044: Fix the conversion_rate in the order_payment table
+    - #8045: GSA quick fixes
+    - #8039: Translations feedback
+    - #7934: Fix float conversion from strings using comma as decimal separator
+    - #8041: Feedback stock management
+    - #8024: Fix legacy submenu laptop
+    - #8016: Display module confirm uninstall message
+    - #8014: Show Duplicate option when multishop selected
+    - #8007: Update Country in Store Contacts CSV File
+    - #7983: Add discount to cart
+    - #7853: Fix selecting category for product
+    - #7923: Fix displayed price on cart (HT/TTC)
+    - #7989: "Slightly" improve performance on Modules > notifications tab
+    - #7987: Fallback datepicker if needed
+    - #7978: Update diplayed module count on successful uninstall
+    - #7922: Fix redirection when filtering in attribute's value
+    - #7916: Fix min width to select filters
+    - #7964: Fix flush of local cache when adding a new specific price
+    - #7698: Unable to unselect the last  image associated to a combination
+    - #7894: Fix bug when having more than three product image
+    - #7955: Don't get admin notifications while it's all disabled
+    - #7957: Add Missing space
+    - #7951: Fix displayed shortcut in product page
+    - #7937: Add missing simple quote in Design -> Images view
+    - #7932: Fix fatal on order page
+    - #7921: Fix trans errors of old translation page
+    - #7903: Fix moving module from a hook to another one
+    - #7837: Image not displayed in BO when creating new store
+    - #7898: Merge PRs from 1.7.1.x
+    - #7861: Bug with override AdminProductsController
+    - #7864: Fix recommended modules popup on legacy BO
+    - #7875: Fix datepicker design
+    - #7817: Introduce tinymce constraint & fixed short_description length
+    - #7809: No order notification message was wrong
+    - #7792: Remove all bourbon deprecations
+    - #7777: Make module actions translatable
+    - #7763: Updated path in maintenance message
+    - #7623: Avoid silencious fail of simple category creation from product form
+    - #7680: Fixed javascript bug on form submission
+    - #7662: Fix show currency name in tab "Catalog Price Rules" for option "All currencies"
+    - #7590: Fix bug on uploading too large images
+- Front Office:
+  - New feature:
+    - #7833: Added message delivery information on checkout process
+  - Improvement:
+    - #8034: Apache rules for .woff2 font files
+    - #7998: Format error message
+    - #7990: Remove banner hidden class for mobile device
+    - #7564: Enabling category canonical redirection
+    - #7780: Allow to define module front controllers layout
+    - #7661: Update wording cart-detailed-actions.tpl
+    - #7566: Send response data to emitted events
+    - #7521: Consistency & additionnal infos
+    - #7554: Allow HTML in notifications
+    - #7688: Introduce new hooks for main wrapper
+    - #7880: Feat/classic improvements
+    - #7836: Harmonization of Brand name variable - wording
+    - #7813: Close thumbs modal when area under thumbs is clicked
+    - #7020: Improve front-end accessibility
+    - #7681: Improve readability on Classic theme
+  - Bug fix:
+    - #8142: Fix the price update on quantity change on cart
+    - #8121: Limit the description's image by the size of description's frame
+    - #8132: Fix the height of the "Show password" button
+    - #8088: Auto width for the selector on product page
+    - #8012: Show the forbiden message on product page
+    - #8040: Wrong close of 'product_tabs' {block} in product.tpl
+    - #7959: Empty customization ID after adding to cart
+    - #8009: Remove contact form after submit
+    - #8036: Fix cart front
+    - #8005: Fix legal compliance in footer in mobile display
+    - #8010: Make the edit link translatable
+    - #7952: Add class selected to selected address
+    - #8019: Missing product-flag class on product miniature
+    - #8006: Fix classic responsive
+    - #7992: Fix refresh availability of product
+    - #7994: Optimize search::find queries
+    - #7816: Order in catalog for calculate vouchers
+    - #7926: Fix mobile style toggling
+    - #7909: Wording checkout delivery
+    - #7907: Edit address for a Guest
+    - #7866: Fixed full size order-item table
+    - #7796: Fix address form Ajax refresh
+    - #7602: Let translate the edit label on order checkout
+- Core:
+  - New feature:
+    - #8053: Add theme configurator translation & update catalog
+    - #7760: Allow free order
+    - #7889: Introduce module self configurator feature
+    - #7825: Handle multishop in console commands
+    - #7778: Remove lang dependancies for module manager and add cli command
+    - #7840: Add command to check duplicates in translation catalog
+    - #7567: Introduce release script
+  - Improvement:
+    - #7941: Add total amount TTC in credit slip
+    - #7523: Change all OrderController private methods and var to protected
+    - #7304: Fixed processChangeProductInCart method
+    - #7931: Update comments of Validate class
+    - #7678: Disable php in the "img" directory
+    - #7827: Fix spelling from conversation to conversion rate.
+    - #7912: Increase carrier delay length
+    - #7899: Refactoring naming
+    - #5082: Override admin and front controllers of modules
+    - #7871: Failure during module catalog fetch do not throw an exception anymore
+    - #7666: Use HTTPS where available in README.md
+    - #7606: Updates README.md file.
+  - Bug fix:
+    - #8118: Extract theme with default translation in any language
+    - #8101: Fix the tab permissions when only one profile
+    - #8103: Fix get attributes in order presenter
+    - #8124: Remove Finder from depency injection
+    - #8108: Fix update prefix sql
+    - #8070: Module tab registration must check filenames
+    - #8056: Fix type of errors variable in module configuration feature
+    - #8058: Fix missing @Template annotation created by refactoring
+    - #8047: License, composer, catalog, assets
+    - #8028: Update regex for tab registration
+    - #7996: Fix product with combinations auto-indexation
+    - #7984: Fix module loading for upgrade process and version displayed
+    - #7966: Use the right array index while getting controller tab name
+    - #7862: Throw module events right after each action and remove reset
+    - #7962: Fix wrong keys for cache
+    - #7557: Increase size of the hours column in PREFIX_store db table
+    - #7965: Allow .ico to /img, provide error server
+    - #7936: Fix value giftWrapping in OrderPresenter.php
+    - #7563: Update customerExists function in Customer.php
+    - #7915: Rethrow an exception instead of calling die when there is an erro…
+    - #7914: Changed SearchController extend to allow override
+    - #7904: Initialize getSynopsisDetails() output as an array instead of ''
+    - #7811: Display the login form after an failed authentication
+    - #7838: Return empty array instead of false.
+    - #7872: Display translated strings properly in SF debugger!
+    - #7852: Improve upgrade command
+    - #7611: Removed setSortOption in ProductSearchQuery
+    - #7609: Removed return duplication from search provider
+- Installer:
+  - New feature:
+    - #7744: Adding 5 languages to the installer (SK, UK, ET, EL, FI)
+  - Improvement:
+    - #7977: Drop unused fields from ps_product_lang
+  - Bug fix:
+    - #8087: Translate fixtures with CLI install
+    - #8049: Reflect new Finnish tax rate in tax rule group names
+    - #8055: Fix update sql for upgrade
+    - #7981: Fix upgrade from very old versions
+    - #8018: URL update for installer
+    - #7993: Avoid INSTALL_PATH re-define error
+    - #7879: Set allow_url_fopen mandatory
+    - #7832: Fix install/upgrade/upgrade.php for php-5.4 syntax
+    - #7601: Use new module name for OrderState creation
+- Web Services:
+  - Bug fix:
+    - #7664: Retrieve text only from selected customization
+    - #5352: Fix webservice unit_price_ratio set to 0
+- Localization:
+  - New feature:
+    - #7828: New localization packs - DZ, KR, MA, ZA
+  - Improvement:
+    - #7949: India states update
+    - #8000: Install Deutsch instead of Deutsch CH for Switzerland
+    - #7696: Update colombian tax rate
+    - #7818: Replace EN (US) by EN (UK) in UK localization pack
+
+
+####################################
+#   v1.7.1.2 - (2017-06-07)
+####################################
+- Back Office:
+   - Bug fix:
+     - #7891: Set value for Short Desc
+     - #7860: Deny legacy module page view
+     - #7789: Message Customer on order details page
+     - #7801: Choose Theme on Mail Translation
+     - #7790: Add a scrollbar for TinyMCE
+     - #7783: Versions completions for the max value
+     - #7807: Partial revert of 0c42257 to fix profiling mode in BO
+
+ - Front Office:
+   - Bug fix:
+     - #7795: Fix allow order value
+     - #7773: Fix for CMS tree on sitemap
+     - #7785: Fix slide down of carrier extra content in order funnel
+     - #7797: Translate file upload button label
+     - #7805: Fix word break classic
+     - #7762: Allow image for categories when no description
+     - #7761: Refresh product line on quantity change in cart & Show discount to cart summary
+     - #7747: Fix the except_pages in theme.yml
+     - #7745: Fix radio buttons on faceted search
+     - #7759: Convert voucher value
+
+ - Core:
+   - Bug fix:
+     - #7901: Use composer cacert file by default
+     - #7826: Allowed redirect protocol with Tools::file_get_content (curl)
+     - #7800: Fix assets path when theme has the same name than PS
+     - #7770: Return array when it's wanted if the hook doesn't exist
+     - #7766: Fix displayError when string is using sprintf
+     - #7740: Fix missing {url entity=product id=X}
+     - #7752: Upgrade theme modules & disabling them in the same time that the theme
+
+ - Installer:
+   - Bug fix:
+     - #7846: Fix install/upgrade/upgrade.php for php-5.4 syntax
+
+ - Web Services:
+   - Bug fix:
+     - #7732: Change variable from string to array for php 7
+
+
+####################################
+#   v1.7.1.1 - (2017-04-19)
+####################################
+- Back Office:
+   - Bug fix:
+     - #7769: Fix the datepicker to use locale instead of iso code
+     - #7738: Fix access to domainized modules translations
+     - #7723: Fix catalog ASC sorting
+     - #7724: Fix translations theme export on Windows
+     - #7690: Incorrect translation on Symfony page (problems with TinyMCE)
+     - #7730: Alphabetically sort features on product page
+
+ - Front Office:
+   - Bug fix:
+     - #7710: Fix country change in checkout form
+     - #7742: Fix for image change in zoom modal window
+     - #7734: Catch the exception when a template is missing in prod mode
+     - #7720: Display product reference when product has no combination
+     - #7689: Save zero to id_state if country has no states
+     - #7729: Fixed display amount with good taxes
+     - #7726: Fixed Terms and conditions popup on mobile not possible to close
+     - #7693: Password controller must be in SSL when available
+
+ - Core:
+   - Bug fix:
+     - #7776: Fix cache on install
+     - #7753: Added nullable for Tab entity
+     - #7746: Doctrine without foreign for autoupgrade backup
+     - #7714: Module code cleanup and fix module action in details modal
+     - #7739: Allow modules compliancy on 3 digits
+
+ - Installer:
+   - Improvement:
+     - #7743: Allow 255 char to company field in Adress
+
+
+####################################
+#   v1.7.1.0 - (2017-04-03)
+####################################
+- Back Office:
+   - New feature:
+     - #7619: Add responsive nav-bar
+     - #7529: Product module page
+     - #7508: Mail in-transit improvement (webservice, markup)
+     - #7491: Allow to exclude tax and shipping in affiliation sales total
+     - #7287: Add counter to the inputs
+     - #6906: Implement "Update all" modules feature
+   - Improvement:
+     - #7596: Add displayProductPageDrawer hook
+     - #7570: Notification after theme reset, warning about images regeneration
+     - #7576: Remove useless meta_title
+     - #7573: Two wordings on the module tab of the product page
+     - #7551: Restore compiled assets
+     - #7516: Check if hook exists before get hook module exec list
+     - #7439: Header BO responsive (legacy part)
+     - #7497: Display shipping max. refundable amount in order partial refund form
+     - #7206: Update wording form.html.twig
+     - #7435: Remove initForm* from old product controller
+     - #7467: Update comment for jQuery migrate
+     - #7256: Add notifications counter
+     - #7421: Remove useless isset
+     - #7405: Domains tree on translations page now on more than 2 levels
+     - #7373: Add a new hook on dashboard
+     - #7364: Sort products in descending order
+     - #7315: Fix integration issues with translation page
+     - #7352: Reduce width of brand select input
+     - #7320: Only display the module you want to translate
+     - #7254: Add redirect to category for product not available
+     - #6712: Rename the productDisplayButtons hook to productDisplayAdditionalInfo
+     - #7308: Add version to help api feedback
+     - #7280: Change locales json
+     - #7175: Test admin controllers
+     - #7025: Add translation domains to Adv. param controllers 2
+     - #7238: Harmonize wording cms.xml tab.xml
+     - #6990: Change Stores controller option from 'Status' to 'Active'
+     - #7100: Add some more translation domains to controllers
+     - #7230: Change PS color for tinymce
+     - #7188: Add text format selector to TinyMCE
+     - #6743: Implement optionnal but specific action to display on module page
+     - #7015: Set new product cover when current is deleted
+     - #7098: Removed sensor parameter from Google Maps JS API
+     - #6776: Do not display empty module categories
+     - #3915: Removed _includeContainer ; never more used
+   - Bug fix:
+     - #7701: Fix access denied on Customers Service
+     - #7668: Implode Translation Permission
+     - #7670: Allow upgrade for modules coming from Must-have json
+     - #7646: Fix imageFolder path for colorPicker inputs
+     - #7665: Fix inactive request in HookEvent
+     - #7663: Fix issue of Module notification page after 1.7.0.x backport
+     - #7648: Fix product attachments lookup
+     - #7585: Fix placeholder width in product options
+     - #7627: Fix wrong domain for product module page
+     - #7616: Fix getAvailableFields malformed json
+     - #7599: Fix required custom field alignment
+     - #7584: Employee permissions not saved
+     - #7586: Fix chosen width
+     - #7542: Update default catalog & compile assets
+     - #7572: Fix bug with TinyMCE button
+     - #7574: Fix tab registration (non-instantiated module)
+     - #7568: Fix default products sorting order
+     - #7559: Fix filter image icon
+     - #7552: Callback on HelperList should have highest priority
+     - #7546: Prevent widgets to break back-office
+     - #7544: Fix module configure button when in dropdown
+     - #7535: Fix desktop menu regressions
+     - #7534: Remove call to an undefined attribute
+     - #7520: Fix minors integration issues on sidebar
+     - #7513: Refresh forms for specific price
+     - #7514: Fix product customization duplication
+     - #7511: Fix back-office order
+     - #7503: Add missing attributes on function removeProduct
+     - #7507: Fix unclosed tag
+     - #7496: You can now search for a customer with several words
+     - #7492: Add missing metadata to translations catalogues on export
+     - #7486: Fix incorrect product-list-colors caching
+     - #7489: Update deleteFeatures() for Multi-shop
+     - #7481: Bug Fix on Save product
+     - #7479: Fix problem with default combination
+     - #6950:  BO: allow disabled by item in Helper Form
+     - #7474: Fix Administering email setting whith/without log
+     - #7455: Fix Module configure permission
+     - #7473: Update ObjectModelCore::getFieldsLang
+     - #7470: Fix image doesn't exists
+     - #7449: Update keyboard shortcuts in product page
+     - #7462: Update invoice pdf
+     - #7459: Fix id_order ambiguous search
+     - #7454: Fixed use of hook return value in customer address validation
+     - #7444: Update the dashboardTop hook
+     - #7436: Remove tinymce synchronous loading
+     - #7415: Display correct quantities for shared stock
+     - #7428: Update wording AdminPerformanceController.php
+     - #7150: Fix "Uncaught ReferenceError: prestashop is not defined"
+     - #7395: Add the disabled categories in product page
+     - #7406: Custom error-layout for maintenance/restricted country page
+     - #7404: Replace "Default-bootstrap" in Translations tab
+     - #7390: Changed ID column name in CSV products export
+     - #7389: Fix translation page integration issues
+     - #7380: Remove wrong URL encoding from AdminStockMvtController
+     - #7371: Fix nested categories cache id
+     - #7366: Fix wrong domain
+     - #7332: Redirect with message when root category is not available for a shop
+     - #6997: Fix buttons alignments on modal on import page
+     - #7139: Fix product redirection from back office search results
+     - #7341: Update version on profile configuration page
+     - #6775: Add potential email error in order bulk action message failure.
+     - #6833: Deleted space and : in sql manager page
+     - #7330: Fix email translation edit when file doesn't exist
+     - #7115: Fix "Other translations" save action
+     - #7281: Module action template can now be used everywhere
+     - #7282: Fix selection of boolean option
+     - #7260: Set product image container to static position
+     - #7270: Add number of selected images in edit combination page
+     - #7255: Remove hardcoded version from help links
+     - #7196: Update keyboard shortcut in product page for preview
+     - #7251: Fix quick links with apostrophes
+     - #7236: Partial refund tax method always tax incl.
+     - #7039: Fix friendly url text on product page
+     - #7071: Add hints on some category fields
+     - #7229: Do not check module download on upgrade
+     - #7052: Fixed help wording for Tax Rules Group
+     - #7210: Fix date filter on dashboard when entering BO
+     - #7215: TinyMCE media plugin shouldn't be activated twice
+     - #7204: Fix import information display
+     - #7171: Fix rights issues on legacy module page
+     - #6942: Fix modules translation form
+     - #7180: Fixed "new client" column in orders list
+     - #6935: Fix localization pack import
+     - #7174: Fix warning on BO
+     - #6988: Clear cache on url rewriting settings modification
+     - #6996: Fix products alignment in delivery slip pdf
+     - #7019: Fix fancybox on cart rules conditions
+     - #6970: Fix virtual product file removal
+     - #6976: Fix error on layout when warnings exist
+     - #7023: Fix permission issues when creating modules sandbox folders recursively
+     - #6742: Fixed file attachment on product form
+     - #7050: Fix fallback dataformate duplicate value
+     - #7060: Fix save product when empty name in default lang
+     - #7136: Fixed search and redirection to module
+     - #6992: Fixed warning on AdminStore Controller
+     - #7010: Disable FK checks during DB export
+     - #7007: Display preview button in 13 inches
+     - #6930: Fixed bulk actions affecting single products
+     - #7048: Fix access to payment preferences
+     - #6926: Fixed payment methods of carriers
+     - #6978: Fixed security issue on SpecificPrice class
+     - #6957: Fix email preview in translation page
+     - #6955: Fix updating positions when sorting products
+     - #6953: Fix recommended modules modal window
+     - #6941: Fix email translations
+     - #6936: Return empty array on API error for customer data
+     - #6920: Fixed translation choice in BO
+     - #6891: Remove z-index of ps tagger reset button
+     - #6921: Removed warning notice on translation
+     - #6898: Fixed imagesController icons
+     - #6764: Add hotkeys on product page
+     - #6797: Display missing hook (displayCustomerAccountForm)
+     - #6825: Fixed wrong order detail updated
+     - #6858: Fixed css animation on onboarding
+     - #6868: Fix theme export
+     - #6812: Encrypt modules cookies
+     - #6857: Fixed error compile
+     - #6799: Add missing hook call for actionSubmitAccountBefore
+     - #6748: Fixed customers registration in Back Office
+     - #6811: Fixed border style of translation textarea
+     - #6805: Remove synchronous call to the CLDR
+     - #6778: Fix create combination
+     - #6793: Fixed employee password validation
+     - #6792: Use the correct email template for employee password recovery
+     - #6758: Fixed load of Jquery-ui JS/CSS cache
+     - #6750: Fixed delete combination on product
+
+ - Front Office:
+   - New feature:
+     - #7675: Allow delivery module to confirm the checkout step
+     - #6903: Ported emailalert on classic
+     - #6886: Ported ps_crosseling module on classic
+     - #6881: Ported module ps_viewedproduct on classic
+     - #6878: Ported ps_specials module on classic
+     - #6877: Ported ps_newsproduct on classic
+     - #6871: Ported ps_supplierlist on classic & some fix on ps_brandlist
+     - #6866: Ported module ps_brandlist on classic
+     - #6828: Ported module ps_rssfeed for classic
+     - #6800: Ported module ps_productinfo for classic
+     - #6820: Ported bestsellers module on classic
+   - Improvement:
+     - #7575: Restore hook displayProductListReviews on catalog
+     - #6908: Add customization message
+     - #7478: Expose checkout process to inheriting classes
+     - #7362: Add smarty blocks everywhere
+     - #7384: Fix alerts icons and margin
+     - #7309: Integrate sitemap
+     - #7344: Hide virtual product download link until it's paid
+     - #7314: Integrate forgotten password alerts
+     - #7243: Add "quick_view" block to classic theme
+     - #7199: Fix "There is 0 product." label
+     - #7076: Add external libraries
+     - #7104: Add missing translation keys in home slider
+     - #6875: Replace Open Sans with Noto Sans
+     - #6766: Export translations when exporting theme
+   - Bug fix:
+     - #7694: Fixed a typo in template Product
+     - #7684: Incorrect event dataset call
+     - #7686: Fix Mixed-Content issues when SSL partially enabled
+     - #7657: Fix translation cache preventing load of new language
+     - #7603: Validate lengths of fields submitted from registration form
+     - #7636: Fix wrong translation/variable syntax
+     - #7617: Fix out of stock combination hiding
+     - #7561: Remove fakepath
+     - #7598: Fix registration form validation
+     - #7594: Restore hook displayBanner
+     - #7533: Fix url rewrite starting with numbers
+     - #7518: Fix front initcontent and My account display
+     - #7512: Fix a problem when a voucher is added on checkout
+     - #7500: Add cart in prestashop javascript object
+     - #7368: Allow HTML in customization when it's displayed by a module
+     - #7475: Fix hook name due to conflict resolution
+     - #7372: Bug fix for specific product combination cases
+     - #7461: Add manufacturer name in cart products
+     - #7453: Fix %email% are not replaced by user's email when asking a new password
+     - #7446: Remove wrong opening table tag
+     - #7445: Fix div tag in ordersummary header
+     - #7433: Fix button on the same line in order confirmation modal
+     - #7116: Fix some facets design
+     - #5053: Orders amount currency fixed
+     - #7410: Redirect to 404 when CMS page doesn't exist
+     - #7409: Fix empty title tag in CMS category
+     - #7345: Product with 0 quantity should be buyable when stock management is disabled
+     - #7361: Mobile Cart - Carriers Improperly integrated
+     - #7378: Fix FrontController#setTemplate default locale parameter
+     - #7365: Mobile Cart - Improperly integrated Fields
+     - #7272: Fixed bug when logged in customer can access login/registration p…
+     - #7358: Fix duplicate payment submissions and address initialization
+     - #7343: Check whether order is paid before serving a virtual product download
+     - #6597: Add carriage return to store information
+     - #7329: Fix arrow click & position
+     - #7323: Fix fatal when requesting product refresh without product id in cart
+     - #7297: Fix clean filter event handler
+     - #7264: Display Add to cart button in product listing
+     - #7259: Fix missing displayNavFullWidth into checkout
+     - #7247: Fix search bar icon display
+     - #7182: Remove useless vars display_column_*
+     - #7202: Fix order return format in OrderReturnPresenter
+     - #7009: Remove box-shadow around contact form in classic
+     - #7170: Fix classic's override of ps_imageslider
+     - #6995: Fix empty cart on logout display
+     - #6972: Add missing nofilter after display hook
+     - #7166: Fix total products label
+     - #7037: Fix breadcrumb margin on classic
+     - #7042: Add download link for virtual products
+     - #6987: Fix changing combination when catalog mode is enabled
+     - #6980: Fix undefined event in core.js
+     - #6905: Fix category images generation
+     - #6892: Revert to Bootstrap 4 alpha 4
+     - #6847: Fix geolocation
+     - #6829: Fix PDF generation by removing non existing files requirement
+     - #6790: Replaced placeholder with email in notification
+     - #6808: Fix fatal on Best Sales
+     - #6741: Properly translate isbn, ean and upc
+     - #6774: Ported ps_categoryproducts for classic theme
+     - #6780: Add missing link on footer
+     - #6752: Remove extra tag block closed
+
+ - Core:
+   - New feature:
+     - #5922: Install module tabs automatically
+     - #7291: Happy new Year PrestaShop!
+   - Improvement:
+     - #7621: Allows multiple retro names for a hook
+     - #7685: Don't update url_rewrite with upside lang
+     - #7679: Upside down language for crowdin
+     - #7669: Updated wording
+     - #7625: All we need to autoupgrade!
+     - #7577: Improved model namescape handling
+     - #7592: Default catalog update
+     - #7562: Add missing domains
+     - #7536: Add windows 8.1 & 10 to guest useragent
+     - #7532: Use Address:initialize to manage default state in one area
+     - #7522: Make sure that invoice siblings are related to the same order id
+     - #7524: Revert "Check if hook exists before get hook module exec list"
+     - #7495: Remove some globals
+     - #7490: Pass the object we're displaying to the action{$controller}FormMo…
+     - #6959: Convert namespaced object model class names to hook compatible names
+     - #7480: Sql fix & documentation
+     - #7468: Allow rel="nofollow" in anchors
+     - #7443: Add actionEmailSendBefore hook
+     - #6327: Deprecate getOrderByCartId method, add alternative
+     - #7456: Pass variables of hook `actionProductSearchComplete` by link
+     - #7442: Add new hook 'actionClearCache'
+     - #7440: Add new hook actionOutputHTMLBefore
+     - #7403: Make email templates parent/child compatible
+     - #7413: Optimized products counting in BO product list
+     - #7269: Webservices now show PS validation errors
+     - #7289: Code standard fixes & improvements
+     - #7335: Re-introduce server media
+     - #6911: Added dependency injection container in legacy
+     - #7142: Replace specific cache management with doctrine cache for module catalog
+     - #7298: Add file line number where the error occured
+     - #7265: Product.php optimization if not $id_cart
+     - #7183: Add app/config/config.php to gitignore
+     - #7093: Move entity repositories in existing subfolder
+     - #7178: Use ModuleZipManager for addons downloads
+     - #7177: Doctrine optimizations
+     - #6734: Generate robots.txt on install
+     - #7095: Add Reply-To recipient name to Mail::send()
+     - #7157: Be able to send an e-mail with multiple BCC
+     - #6694: Send email in English if current language don't have email template
+     - #6918: Allowed to add remote assets
+     - #6753: Improve global performances
+   - Bug fix:
+     - #7719: Delete unique key name for ps_profile_lang
+     - #7711: Use trans() instead of undefined l()
+     - #7700: Fixes needed for upgrade
+     - #7708: Use the browser country prior to the shop one
+     - #7705: Hide upside down language
+     - #7652: Rename id_product_redirected variable
+     - #7683: Remove clear cache for autoupgrade
+     - #7674: Fix ThemeValidator for child themes
+     - #7653: Fix invoice generation
+     - #7589: Fix missing reference symbol into Product::getProductProperties
+     - #7635: Update robot.txt using english
+     - #7629: Merge 1.7.0.x on 1.7.1.x
+     - #7633: Fix doctrine association between translation and lang
+     - #7597: Change CLDR url
+     - #7593: Fix the product page
+     - #7587: Increase curl timeout to 60s
+     - #7509: Format price for noPackPrice in product and Gift wrapping
+     - #7569: Fix entity integrity for upgrade
+     - #7538: Add composer.lock in order to fix composer install
+     - #7539: Update licences
+     - #7531: Payment method title extended to 255 characters
+     - #6681: Fix work authorization for (back|front)-office. After transition from RC1 to RC2.
+     - #7519:  Fix fatal when no product to set in CategorySearchProvider
+     - #7312: Fixed Huge Bug for passed validation
+     - #7505: Fix nonexistent field on customer
+     - #7501: Do not display related product id customer can't see it
+     - #7485: Don't convert already converted currency
+     - #7502: Prevents problem with missing params in getWidgetVariables()
+     - #7499: Use UTF-8 for PaymentOptions
+     - #7482: Use default state for tax purposes
+     - #7488: Allow quotes in translation strings
+     - #7483: Update Mail lang settings
+     - #7148: Fix send to multiple addresses with different names
+     - #7477: Only link orders with same cart
+     - #7476: IdLang shouldn't be <= 0
+     - #7471: Fix installation & tab entity
+     - #7472: Add "use instead" doc on method display as deprecated when possible
+     - #7463: Use boolean variables for tracking configuration value type
+     - #7466: Improvement in SpecificPrice::getSpecificPrice
+     - #7464: Calculate carrier price on the real order price
+     - #7460: Superfluous table alias
+     - #7457: Harmonize hook
+     - #7438: Add 2 new hooks actionDispatcherBefore and actionDispatcherAfter
+     - #7452: Revert "CO: fix Validate::isUnsignedInt"
+     - #7441: Add displayAfterProductThumb hook
+     - #7437: Use 1.7.1 modules
+     - #7430: Fixed rendering condition of default groups form
+     - #7429: Fix Validate::isUnsignedInt
+     - #7293: Fix dependencies definitions
+     - #7382: Use shop email as sender for template order_customer_comment
+     - #7334: Remove smartyDump() in Smarty config
+     - #7425: Update composer with modules
+     - #7420: Use the right modules branch
+     - #6928: Fix Cart cache key on CartRules
+     - #7401: Change some translated strings
+     - #7412: Fix logger namespace for ServiceLocator
+     - #7402: Update doc import files
+     - #7400: Fix array_merge call on null
+     - #7399: Fix pdf header
+     - #7393: Deprecate Tools::displayError()
+     - #6527: Fixed Geolocation behavior for NON existing countries
+     - #7386: Fix empty query
+     - #7316: Fixed bug that erases current customization fields
+     - #7277: Improve MARIA DB compatibility
+     - #7348: Fix wrong domain
+     - #7346: Fix getPriceWithoutReduct default id_product_attribute
+     - #7321: Improved translator performances
+     - #6722: Fix uncaught IOException on module deletion
+     - #7311: Introduce new hooks filtered & use it for product/category/brand/supplier/cms & html content
+     - #7313: Add actionSearch hook on ProductSearchProvider
+     - #7328: Fix store image & implement generation
+     - #7163: Enable the cart rule feature when updating one if it's enabled
+     - #7222: Fixed method Order::isVirtual
+     - #7257: Impossible to uninstall module when overridden file is missing
+     - #7241: Add native email missing
+     - #7194: Fix issue on translations without params
+     - #7235: Fix getImageLink for watermark module
+     - #7237: Fix pack price calc when using non-default attributes
+     - #7225: Fix missing subfolder in Repository namespace
+     - #6904: Fixes for module upgrade with zip upload
+     - #7211: Add missing SQL alias
+     - #7176: Set size limits on Doctrine Translation entity
+     - #7164: Update Mail::send documentation
+     - #7096: Use english email template as fallback in getEmailTemplateContent
+     - #7056: Restore deprecated method
+     - #7061: Fix command description
+     - #7111: Fix notice on $currency_to which may be null
+     - #7109: Fix unregisteration of Stylesheet by ID
+     - #7108: Fix unregisteration of JavaScript by ID
+     - #7014: Removed realpath for assets
+     - #6966: Fixed tools var
+     - #7126: Merge 1.7.0.x on develop
+     - #7081: Fixed CORS setting the header
+     - #7069: Protect translations display against XSS injections
+     - #7034: Use the locale to fallback on the good one in CLDR Repository
+     - #6927: Fix sprintf condition
+     - #6974: Created temporary file in cache directory
+     - #6929: Fix Cookie standalone mode
+     - #7013: Load autoload first
+     - #6994: Fixed on included files for autoupgrade
+     - #6848: Refresh CA bundle
+     - #6925: Prevent password reset on user check by email
+     - #6902: Fix PHP version for composer
+     - #6895: Fixed path windows assets
+     - #6890: Fixed translation render
+     - #6883: Fix multilang configuration insert
+     - #6803: Fix AJAX sync calls - Partial revert of 840fb00
+     - #6856: Cart cache key should take id_zone into account
+     - #6849: Fixed missing escape
+     - #6872: Fixed path for windows
+     - #6831: Use module_name to get error on upload
+     - #6798: Hook:exec should always return an array when array_return = true
+     - #6837: Fix fatal if payment module return a non array result
+     - #6761: Clean installation files from deleted hooks
+     - #6816: Fixed hook & moved hook before body
+     - #6802: Configured Twig autoescape option
+     - #6779: Fixed module cache with 2 systems
+     - #6745: Fixed path for asset directory
+     - #6755: Fixed customer account add/update hook call
+     - #6739: Fix changed namespace
+
+ - Installer:
+   - New feature:
+     - #7021: Adding country Tanzania
+   - Improvement:
+     - #7691: Remove awaiting Paypal order status
+     - #7517: Refactoring of the upgrade, to be easily usable in the auto upgrade module
+     - #7363: Update install with trans from crowdin
+     - #7302: Refacto 1.7.1.0.sql & remove 1.7.1.x.sql
+     - #7306: Add installed modules to quick access
+     - #7083: Updated tabs in FR
+     - #6939: Increase memory limit
+     - #6859: Declare default timezone when none is available
+   - Bug fix:
+     - #7638: Fix language refresh on dropdown change
+     - #7579: Avoid ERR_TOO_MANY_REDIRECTS at install
+     - #7571: Fix installation for languages without fixtures
+     - #7375: Fix error message display in installer
+     - #7374: Import sql upgrade from 1.6.x
+     - #6965: Add missing hooks actionObjectProductInCartDelete(Before|After)
+     - #7082: Small fixes for installer
+     - #7283: Do not launch install wizard if no write access to the cache folder
+     - #7057: Change india address form
+     - #7138: Fix wrong extension in the install.txt
+     - #7085: Update configuration.xml in SV
+     - #6817: Do not create parameters.php during install
+     - #7064: Install.txt file & documentation link update
+     - #7032: Required fileinfo extension
+     - #7053: Fix settings migration script
+     - #6967: Caught broken environment exception
+     - #6944: Add default message on ajax error in installer
+     - #6887: Add JSON, SimpleXML and DOM extensions as install requirements
+     - #6818: Clear the cache before trying to update the DB schema
+     - #6864: Fixed redirect on installer
+     - #6854: Add cURL check at installation
+     - #6845: Fix BDD required during install
+     - #6769: Added PS_MAINTENANCE_TEXT key in database
+
+ - Web Services:
+   - Bug fix:
+     - #6910: Add watermark to new product images
+
+####################################
 #   v1.7.0.5 - (2017-02-06)
 ####################################
 - Back Office:

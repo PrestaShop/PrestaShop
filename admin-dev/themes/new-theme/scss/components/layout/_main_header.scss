@@ -1,12 +1,14 @@
 .main-header {
   position: fixed;
   z-index: 503;
-  background: $white;
+  background: #ffffff;
   height: $size-header-height;
   width: 100%;
+  display: flex;
+  align-items: center;
   @include media-breakpoint-down(sm) {
     box-shadow:rgba(black,0.7) 0 0 10px;
-    padding: rem(10px) 0;
+    padding: 0.625rem 0;
     height: $size-header-height + 1;
   }
   .mobile & {
@@ -14,14 +16,14 @@
       margin-right: 0;
     }
     .notification {
-      margin-right: rem(5px);
+      margin-right: 0.3125rem;
     }
     .notification-center .dropdown-menu {
-      margin-top: rem(5px);
+      margin-top: 0.3125rem;
     }
     > .material-icons {
-      padding-top: rem(10px);
-      font-size: rem(21px);
+      padding-top: 0.625rem;
+      font-size: 1.313rem;
     }
   }
   > .logo {
@@ -30,26 +32,29 @@
     height: 100%;
     width: $size-navbar-width;
   }
+  .ajax-spinner {
+    position: absolute;
+    left: 0;
+    margin-left: 0;
+    top: 5px;
+    width: 30px;
+    height: 30px;
+  }
+  #header-search-container {
+    margin-right: auto;
+  }
   > .component {
     display: inline-block;
     margin: {
-      left: rem(8px);
-      right: rem(8px);
+      left: 0.5rem;
+      right: 0.5rem;
     }
-    > .ps-dropdown:not(.stores) {
-      > .ps-dropdown-menu {
-        left: rem(17px);
-        .dropdown-item {
-          @include justify-content(flex-start);
-          margin: 0;
-          padding-top: rem(10px);
-          padding-bottom: rem(10px);
-        }
-        .material-icons {
-          margin-top: rem(2px);
-          margin-right: rem(10px);
-          font-size: rem(20px);
-        }
+    > .quick-accesses {
+      .dropdown-item {
+        border-bottom: 0;
+      }
+      .material-icons {
+        vertical-align: bottom;
       }
     }
     > .stores .ps-dropdown-menu {
@@ -57,24 +62,27 @@
       right: 0;
     }
     > .bo_search_form {
-      position: relative;
-      margin-top: rem(4px);
-      .items-list {
-        list-style: none;
-        padding-left: 0;
+      .input-group-btn {
+        border: 0;
+        > .btn {
+          padding: 0.5625rem;
+        }
+      }
+      .dropdown-item {
+        border-bottom: 0;
         .material-icons {
-          vertical-align: middle;
-          margin-right: rem(10px);
+          font-size: 0.875rem;
         }
       }
     }
   }
   .shop-state {
-    margin-right: rem(20px);
+    margin-right: 1.25rem;
     line-height: $size-header-height;
     > .material-icons {
-      color: $secondary;
+      color: $warning;
       vertical-align: middle;
+      font-size: 1rem;
     }
   }
   > .component.-norightmargin {
@@ -85,7 +93,7 @@
   > .link {
     display: inline-block;
     color: $gray-dark;
-    margin-right: rem(20px);
+    margin-right: 1.25rem;
     @include single-line-block($size-header-height);
   }
 }
@@ -120,24 +128,24 @@
         }
       }
       a:not(.link-shop) {
-        padding-top: rem(5px);
-        padding-bottom: rem(5px);
+        padding-top: 0.3125rem;
+        padding-bottom: 0.3125rem;
         display: inline-block;
         width: inherit;
       }
     }
     .group {
       a {
-        padding-left: rem(30px);
-        padding-top: rem(5px);
-        padding-bottom: rem(5px);
+        padding-left: 1.875rem;
+        padding-top: 0.3125rem;
+        padding-bottom: 0.3125rem;
       }
     }
     .shop {
       display: flex;
       a {
-        padding-left: rem(60px);
-        @include justify-content(space-between);
+        padding-left: 3.75rem;
+        justify-content: space-between;
       }
       a.disabled {
         cursor: not-allowed;
@@ -153,9 +161,9 @@
           cursor: pointer;
           color: $gray-medium;
           border: solid 1px $gray-light;
-          border-radius: rem(3px);
+          border-radius: 0.1875rem;
           padding: 3px 8px;
-          font-size: rem(13px);
+          font-size: 0.8125rem;
           width: inherit;
           height: inherit;
         }
@@ -163,7 +171,7 @@
     }
     .material-icons {
       vertical-align: middle;
-      margin-right: rem(10px);
+      margin-right: 0.625rem;
     }
   }
   .selected-item {
@@ -175,38 +183,49 @@
     .arrow-down {
       top: 0;
       left: 0;
-      font-size: rem(20px);
+      font-size: 1.25rem;
     }
     vertical-align: middle;
   }
   .dropdown-menu {
     &::before {
-      left: rem(185px);
+      left: 11.56rem;
     }
     &::after {
-      left: rem(186px);
+      left: 11.63rem;
     }
   }
   .dropdown-item {
     margin: 0;
-    @include justify-content(flex-start);
+    justify-content: flex-start;
   }
 }
 .employee-dropdown {
   > .person {
     border: solid 1px $gray-medium;
-    margin: rem(8px) rem(30px) 0 0;
+    margin-right: 1rem;
     cursor: pointer;
     .material-icons {
-      font-size: rem(20px);
+      font-size: 1.25rem;
       color: $gray-medium;
       vertical-align: bottom;
     }
   }
   .dropdown-menu {
-    top: rem(30px);
+    top: 0.4rem !important;
+    left: 0.3rem !important;
     hr {
       border-top-width: 2px;
+    }
+    > div {
+      @extend .py-1;
+    }
+    > div:not(:last-of-type) {
+      border-bottom: 1px solid $color-separator;
+    }
+    .employee_avatar {
+      @extend .py-2;
+      text-align: center;
     }
     &::after {
       position: absolute;
@@ -231,19 +250,30 @@
     }
     .avatar {
       cursor: pointer;
-      width: rem(80px);
-      height: rem(80px);
-      margin-bottom: rem(5px);
+      width: 5rem;
+      height: 5rem;
+      margin-bottom: 0.3125rem;
     }
     .employee-link {
+      @extend .px-2;
       color: $gray-dark;
-      font-size: rem(14px);
-      display: inline-block;
+      font-size: 0.75rem;
+      display: block;
+      padding-top: .188rem;
+      padding-bottom: .188rem;
+      &:hover {
+        text-decoration: none;
+        color: $gray-dark-text-hover !important;
+        background-color: $primary;
+        .material-icons {
+          color: $gray-dark-text-hover !important;
+        }
+      }
       .material-icons {
-        vertical-align: middle;
         color: $gray-medium;
-        font-size: rem(22px);
-        margin-right: rem(5px);
+        font-size: 1.375rem;
+        margin-right: 0.3125rem;
+        line-height: .85rem;
       }
     }
   }

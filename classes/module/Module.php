@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,15 +20,18 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
-abstract class ModuleCore
+abstract class ModuleCore implements ModuleInterface
 {
     /** @var int Module ID */
     public $id = null;
@@ -177,6 +180,9 @@ abstract class ModuleCore
     /** @var bool Random session for modules perfs logs*/
     public static $_log_modules_perfs_session = null;
 
+    /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+    private $container;
+
     const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
@@ -254,6 +260,14 @@ abstract class ModuleCore
 
         if (strlen($this->ps_versions_compliancy['min']) == 3) {
             $this->ps_versions_compliancy['min'] .= '.0.0';
+        }
+
+        if (strlen($this->ps_versions_compliancy['min']) == 5) {
+            $this->ps_versions_compliancy['min'] .= '.0';
+        }
+
+        if (strlen($this->ps_versions_compliancy['max']) == 5) {
+            $this->ps_versions_compliancy['max'] .= '.999';
         }
 
         if (strlen($this->ps_versions_compliancy['max']) == 3) {
@@ -653,7 +667,7 @@ abstract class ModuleCore
         }
 
         // Retrieve hooks used by the module
-        $sql = 'SELECT `id_hook` FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
+        $sql = 'SELECT DISTINCT(`id_hook`) FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$this->id;
         $result = Db::getInstance()->executeS($sql);
         foreach ($result as $row) {
             $this->unregisterHook((int)$row['id_hook']);
@@ -1069,12 +1083,12 @@ abstract class ModuleCore
             $override = $module_name.'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($override);
+                $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($override);
             }
         }
 
         if (!$r && class_exists($module_name, false)) {
-            $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module_name);
+            $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($module_name);
         }
 
         return $r;
@@ -1190,7 +1204,7 @@ abstract class ModuleCore
         $result = Db::getInstance()->executeS('
         SELECT m.name, m.version, mp.interest, module_shop.enable_device
         FROM `'._DB_PREFIX_.'module` m
-        '.Shop::addSqlAssociation('module', 'm').'
+        '.Shop::addSqlAssociation('module', 'm', false).'
         LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
         foreach ($result as $row) {
             $modules_installed[$row['name']] = $row;
@@ -1243,7 +1257,7 @@ abstract class ModuleCore
                         }
                     }
 
-                    $item = new stdClass();
+                    $item = new \stdClass();
                     $item->id = 0;
                     $item->warning = '';
 
@@ -1298,9 +1312,9 @@ abstract class ModuleCore
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
                     try {
-                        $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module);
+                        $tmp_module = ServiceLocator::get($module);
 
-                        $item = new stdClass();
+                        $item = new \stdClass();
 
                         $item->id = (int)$tmp_module->id;
                         $item->warning = $tmp_module->warning;
@@ -1407,7 +1421,7 @@ abstract class ModuleCore
                         }
 
                         if ($flag_found == 0) {
-                            $item = new stdClass();
+                            $item = new \stdClass();
                             $item->id = 0;
                             $item->warning = '';
                             $item->type = strip_tags((string)$f['type']);
@@ -1868,19 +1882,20 @@ abstract class ModuleCore
      *
      * @param string $string String to translate
      * @param bool|string $specific filename to use in translation key
+     * @param string|null $locale Give a context for the translation
      * @return string Translation
      */
-    public function l($string, $specific = false)
+    public function l($string, $specific = false, $locale = null)
     {
         if (self::$_generate_config_xml_mode) {
             return $string;
         }
 
-        if (($translation = Context::getContext()->getTranslator()->trans($string)) !== $string) {
+        if (($translation = Context::getContext()->getTranslator()->trans($string, array(), null, $locale)) !== $string) {
             return $translation;
         }
 
-        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name);
+        return Translate::getModuleTranslation($this, $string, ($specific) ? $specific : $this->name, null, false, $locale);
     }
 
     /*
@@ -3134,6 +3149,67 @@ abstract class ModuleCore
     {
         $parameters['legacy'] = 'htmlspecialchars';
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
+    }
+
+    /**
+     * Check if the module uses the new translation system
+     * @return bool
+     */
+    public function isUsingNewTranslationSystem()
+    {
+        $moduleName = $this->name;
+        $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
+        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+
+        foreach ($domains as $domain) {
+            if (false !== stripos($domain, $moduleName)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the module is executed in Admin Legacy context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isAdminLegacyContext()
+    {
+        return defined('ADMIN_LEGACY_CONTEXT');
+    }
+
+    /**
+     * Check if the module is executed in Symfony context.
+     *
+     * To be removed - because useless - when the migration will be done.
+     * @return bool
+     */
+    public function isSymfonyContext()
+    {
+        return !defined('ADMIN_LEGACY_CONTEXT');
+    }
+
+    /**
+     * Access the Symfony Container if we are in Symfony Context.
+     * Note: in this case, we must get a container from SymfonyContainer class.
+     * @param string $serviceName
+     *
+     * @return Object|false if Symfony is not booted, it returns false.
+     */
+    public function get($serviceName)
+    {
+        if ($this->isSymfonyContext()) {
+            if (is_null($this->container)) {
+                $this->container = SymfonyContainer::getInstance();
+            }
+
+            return $this->container->get($serviceName);
+        }
+
+        return false;
     }
 }
 

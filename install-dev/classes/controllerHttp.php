@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -345,7 +345,7 @@ class InstallControllerHttp
             return InstallSession::getInstance()->support_phone;
         }
         if ($this->phone === null) {
-            $this->phone = $this->translator->trans('XXXXXXXXXXXXXX', array(), 'Install');
+            $this->phone = '';
             if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3)) {
                 if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1])) {
                     $this->phone = $matches[1];
@@ -375,7 +375,7 @@ class InstallControllerHttp
     public function getTutorialLink()
     {
         /* Link to localized video tutorial (if available) */
-        return $this->translator->trans('https://www.youtube.com/watch?v=psz4aIPZZuk', array(), 'Install');
+        return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', array(), 'Install');
     }
 
     /**

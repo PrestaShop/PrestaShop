@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,11 +19,11 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% form_theme categories _self %}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
@@ -53,8 +53,8 @@
                    type="radio"
                    name="form[{{ form.vars.id }}][tree]"
                    value="{{ child.id_category }}" {{ checked }}
-                   class="category pull-right"
-                 />
+                   class="category float-right"
+                 >
              </label>
          </div>
 
@@ -70,7 +70,6 @@
 {%- endblock choice_tree_item_widget %}
 
 {% block content %}
-
   <div class="products-catalog">
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
@@ -93,7 +92,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <div class="pull-right">
+          <div class="float-right">
             <a id="desc-product-export" class="list-toolbar-btn" href="{{ path('admin_product_export_action') }}">
               {{ ps.tooltip(("Export"|trans({}, 'Admin.Actions')), 'cloud_upload') }}
             </a>
@@ -112,16 +111,16 @@
 
       <div class="row">
         <div class="col-md-1">
-          <div class="checkbox">
-            <label>
-              <input
-                type="checkbox"
-                id="bulk_action_select_all"
-                onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
-              />
-              {{ "Select all"|trans({}, 'Admin.Actions') }}
-            </label>
-          </div>
+          <label class="form-check-label">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="bulk_action_select_all"
+              onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
+              value=""
+            >
+            {{ "Select all"|trans({}, 'Admin.Actions') }}
+          </label>
         </div>
 
         <div
@@ -144,19 +143,17 @@
           }
           ] %}
 
-          {# Only duplicate if shop or group is selected #}
-          {% if is_shop_context %}
-            {% set buttons_action = buttons_action|merge([
-            {
-            "divider": true
-            },
-            {
-            "onclick": "bulkProductAction(this, 'duplicate_all');",
-            "icon": "content_copy",
-            "label": "Duplicate selection"|trans({}, 'Admin.Actions')
-            }
-            ]) %}
-          {% endif %}
+          {% set buttons_action = buttons_action|merge([
+          {
+          "divider": true
+          },
+          {
+          "onclick": "bulkProductAction(this, 'duplicate_all');",
+          "icon": "content_copy",
+          "label": "Duplicate selection"|trans({}, 'Admin.Actions')
+          }
+          ]) %}
+
 
           {% set buttons_action = buttons_action|merge([
           {
@@ -170,25 +167,25 @@
           ]) %}
 
           {% include 'PrestaShopBundle:Admin/Helpers:dropdown_menu.html.twig' with {
-            'div_style': "btn-group dropup",
+            'div_style': "btn-group dropup bulk-catalog",
             'button_id': "product_bulk_menu",
             'disabled': true,
             'menu_label': "Bulk actions"|trans({}, 'Admin.Global'),
-            'buttonType': "tertiary-outline",
+            'buttonType': "outline-secondary",
             'menu_icon': "icon-caret-up",
             'items': buttons_action
           }%}
         </div>
-        <div id="product_catalog_category_tree_filter" class="pull-right col-md-3">
+        <div id="product_catalog_category_tree_filter" class="col-md-3">
           <button
-            class="btn btn-tertiary-outline"
+            class="btn btn-outline-secondary"
             data-toggle="collapse"
             data-target="#tree-categories"
           >
           {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
           <i class="material-icons">expand_more</i>
           </button>
-          <div id="tree-categories" class="collapse p-t-1">
+          <div id="tree-categories" class="collapse pt-1">
             <a
               class="categories-tree-actions"
               href="#"
@@ -230,7 +227,7 @@
         id="product_catalog_list"
         method="post"
         action="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
-        orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'desc'}) }}"
+        orderingurl="{{ path('admin_product_catalog', {'limit': limit, 'orderBy': 'name', 'sortOrder': 'asc'}) }}"
         newproducturl="{{ path('admin_product_new') }}"
       >
         <div class="row">
@@ -242,7 +239,7 @@
         <div class="row">
           <div class="col-md-12">
             <table
-              class="table table-condensed table-striped product m-t-1"
+              class="table product mt-3"
               redirecturl="{{ path('admin_product_catalog', {
                 'limit': limit,
                 'offset': offset,
@@ -250,36 +247,36 @@
                 'sortOrder': sortOrder})
               }}"
             >
-              <thead>
+              <thead class="thead-default">
                 <tr class="column-headers">
-                  <th style="width: 8%">
+                  <th class="small-text" style="width: 8%">
                     {{ "ID"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'id_product'
                     } %}
                   </th>
-                  <th>
+                  <th class="small-text">
                     {{ "Image"|trans({}, 'Admin.Global') }}
                   </th>
-                  <th>
+                  <th class="small-text">
                     {{ "Name"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'name'
                     } %}
                   </th>
-                  <th style="width: 9%">
+                  <th class="small-text" style="width: 9%">
                     {{ "Reference"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'reference'
                     } %}
                   </th>
-                  <th>
+                  <th class="small-text">
                     {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'name_category'
                     } %}
                   </th>
-                  <th style="width: 9%">
+                  <th class="small-text" style="width: 9%">
                     {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'price'
@@ -287,7 +284,7 @@
                   </th>
 
                   {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-                  <th style="width: 9%">
+                  <th class="small-text" style="width: 9%">
                     {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'sav_quantity'
@@ -297,21 +294,21 @@
                     <th></th>
                   {% endif %}
 
-                  <th>
+                  <th class="small-text">
                     {{ "Status"|trans({}, 'Admin.Global') }}
                     {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                       'column': 'active'
                     } %}
                   </th>
                   {% if has_category_filter == true %}
-                    <th>
+                    <th class="small-text">
                       {{ "Position"|trans({}, 'Admin.Global') }}
                       {% include 'PrestaShopBundle:Admin/Product/Include:catalog_order_carrets.html.twig' with {
                         'column': 'position'
                       } %}
                     </th>
                   {% endif %}
-                  <th style="width: 6%"></th>
+                  <th class="small-text" style="width: 6%"></th>
                 </tr>
                 <tr class="column-filters">
                   <th>
@@ -378,17 +375,19 @@
                     <th></th>
                   {% endif %}
 
-                  <th>
-                    <select data-toggle="select2" name="filter_column_active">
-                      <option value=""></option>
-                      <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
-                      <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
-                    </select>
+                  <th id="product_filter_column_active">
+                    <div class="form-select">
+                      <select class="custom-select"  name="filter_column_active">
+                        <option value=""></option>
+                        <option value="1" {% if (filter_column_active is defined) and filter_column_active == '1' %}selected="selected"{% endif %}>Active</option>
+                        <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
+                      </select>
+                    </div>
                   </th>
                   {% if has_category_filter == true %}
                     <th>
                       {% if not(activate_drag_and_drop) %}
-                        <input type="button" class="btn btn-tertiary-outline" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
+                        <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
                         {% else %}
                         <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
                     {% endif %}
@@ -407,7 +406,7 @@
                     </button>
                     <button
                       type="reset"
-                      class="btn btn-invisible"
+                      class="btn btn-link"
                       name="products_filter_reset"
                       onclick="productColumnFilterReset($(this).closest('tr.column-filters'))"
                       title="{{ "Reset"|trans({}, 'Admin.Actions') }}"

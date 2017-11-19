@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -96,7 +96,8 @@ class AdminAccessControllerCore extends AdminController
             'perms' => array('view', 'add', 'edit', 'delete'),
             'id_perms' => array('view' => 0, 'add' => 1, 'edit' => 2, 'delete' => 3, 'all' => 4),
             'modules' => $modules,
-            'link' => $this->context->link
+            'link' => $this->context->link,
+            'employee_profile_id' => (int) $this->context->employee->id_profile,
         );
 
         return parent::renderForm();
@@ -142,7 +143,6 @@ class AdminAccessControllerCore extends AdminController
         }
 
         if (Tools::isSubmit('submitAddAccess')) {
-            $res = array();
             $access = new Access;
             $perm = Tools::getValue('perm');
             if (!in_array($perm, array('view', 'add', 'edit', 'delete', 'all'))) {

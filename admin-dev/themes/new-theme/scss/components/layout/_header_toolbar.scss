@@ -1,19 +1,19 @@
 .header-toolbar {
   position: fixed;
-  background: $white;
+  background: #ffffff;
   top: $size-header-height;
   left: $size-navbar-width;
   height: $size-header-toolbar-height;
   right: 0;
   z-index: 501;
-  padding-left: rem(10px);
-  border-bottom: rem(1px) solid $color-separator;
+  padding-left: 0.625rem;
+  border-bottom: 0.0625rem solid $color-separator;
 
   > .title {
-    padding: rem(5px);
-    font-size: rem(26px);
+    padding: 0.3125rem;
+    font-size: 1.625rem;
     font-weight: normal;
-    margin-top: rem(-10px);
+    margin-top: -0.625rem;
   }
 
   > .breadcrumb {
@@ -23,8 +23,10 @@
 
 .toolbar-icons {
   position: absolute;
-  top: rem(20px);
-  right: rem(10px);
+  top: 1.25rem;
+  right: 0.625rem;
+  display: flex;
+  align-items: center;
 }
 
 .page-head-tabs {

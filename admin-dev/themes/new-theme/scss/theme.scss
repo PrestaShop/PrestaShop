@@ -1,10 +1,14 @@
 // Tools
+@import "~prestakit/dist/css/bootstrap-prestashop-ui-kit";
 @import "~bourbon/app/assets/stylesheets/bourbon";
-@import "../node_modules/PrestaKit/scss/custom/_variables.scss";
+@import "../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 @import "mixins/single_line_block";
 @import "mixins/notification_container";
 @import "mixins/notification_counter";
 @import "mixins/breakpoints";
+@import "mixins/cards";
+@import "mixins/hover";
+@import "mixins/stars";
 // Settings
 @import "config/settings";
 
@@ -15,9 +19,14 @@
 @import "components/layout/main_header";
 @import "components/layout/nav_bar";
 @import "components/layout/non_responsive";
+@import "components/cards";
 @import "components/category_tree";
 @import "components/dropzone";
+@import "components/modulescards";
 @import "components/notifications";
+@import "components/datepicker";
+@import "components/help_box";
+@import "components/ps_dropdown";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
@@ -30,21 +39,25 @@
 // Other
 @import "components/tinymce";
 
+@import "../css/right-sidebar.css";
+@import "../css/module/drop.css";
+
 // Main Layout
 body {
+  direction: ltr;
   background: $background-grey;
 }
 
 // To put into the PrestaKit
 $color-icons: #6c868e;
 .breadcrumb {
-  padding: rem(5px);
+  padding: 0.3125rem;
   background: none;
   border-radius: 0;
-  font-size: rem(12px);
+  font-size: 0.75rem;
   > li + li::before {
-    padding-right: rem(0px);
-    padding-left: rem(3px);
+    padding-right: 0;
+    padding-left: 0.1875rem;
   }
   > li > a {
     color: #363A41; // TODO: Place the text color
@@ -54,12 +67,12 @@ $color-icons: #6c868e;
   color: $color-icons;
   text-align: center;
   display: inline-block;
-  margin: 0 rem(5px);
+  margin: 0 0.3125rem;
   > .material-icons {
-    font-size: rem(24px);
+    font-size: 1.5rem;
   }
   > .title {
-    font-size: rem(12px);
+    font-size: 0.75rem;
     color: $color-icons;
     display: block;
   }
@@ -83,5 +96,24 @@ $color-icons: #6c868e;
     &.active {
       border-bottom: 1px solid #FFFFFF;
     }
+  }
+}
+#product_filter_column_active .select2 {
+  min-width: 4.375rem;
+}
+// Needed to override the default inline style of typeahead and take all the width
+span.twitter-typeahead {
+  display: block !important;
+  width: 100% !important;
+  input.tt-input {
+    width: 100% !important;
+  }
+}
+
+.translation-field {
+  display: none;
+
+  &.visible {
+    display: block;
   }
 }

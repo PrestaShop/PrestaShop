@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,16 +19,16 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <table id="total-tab" width="100%">
 
 	<tr>
-		<td class="grey" width="70%">
+		<td class="grey" width="50%">
 			{l s='Total Products' d='Shop.Pdf' pdf='true'}
 		</td>
-		<td class="white" width="30%">
+		<td class="white" width="50%">
 			{displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
 		</td>
 	</tr>
@@ -36,10 +36,10 @@
 	{if $footer.product_discounts_tax_excl > 0}
 
 		<tr>
-			<td class="grey" width="70%">
+			<td class="grey" width="50%">
 				{l s='Total Discounts' d='Shop.Pdf' pdf='true'}
 			</td>
-			<td class="white" width="30%">
+			<td class="white" width="50%">
 				- {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
 			</td>
 		</tr>
@@ -47,10 +47,10 @@
 	{/if}
 	{if !$order->isVirtual()}
 	<tr>
-		<td class="grey" width="70%">
+		<td class="grey" width="50%">
 			{l s='Shipping Costs' d='Shop.Pdf' pdf='true'}
 		</td>
-		<td class="white" width="30%">
+		<td class="white" width="50%">
 			{if $footer.shipping_tax_excl > 0}
 				{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
 			{else}

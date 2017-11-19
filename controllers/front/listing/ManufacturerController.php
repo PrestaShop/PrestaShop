@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
@@ -75,8 +75,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
-                    'List of products by brand %name%', array(
-                        '%name%' => $this->manufacturer->name
+                    'List of products by brand %brand_name%', array(
+                        '%brand_name%' => $this->manufacturer->name
                         ),
                     'Shop.Theme.Catalog'
                 );
@@ -183,7 +183,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['text'] = $manufacturer['short_description'];
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['image'] = $this->context->link->getManufacturerImageLink($manufacturer['id_manufacturer'], 'small_default');
             $manufacturers_for_display[$manufacturer['id_manufacturer']]['url'] = $this->context->link->getmanufacturerLink($manufacturer['id_manufacturer']);
-            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog')) : sprintf($this->trans('%number% product', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog'));
+            $manufacturers_for_display[$manufacturer['id_manufacturer']]['nb_products'] = $manufacturer['nb_products'] > 1 ? ($this->trans('%number% products', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog')) : $this->trans('%number% product', array('%number%' => $manufacturer['nb_products']), 'Shop.Theme.Catalog');
         }
 
         return $manufacturers_for_display;

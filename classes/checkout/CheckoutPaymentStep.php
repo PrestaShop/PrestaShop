@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -60,6 +60,11 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
 
     public function render(array $extraParams = array())
     {
+        $isFree = 0 == (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
+        $paymentOptions = $this->paymentOptionsFinder->present($isFree);
+
+        $conditionsToApprove = $this->conditionsToApproveFinder->getConditionsToApproveForTemplate();
+
         $deliveryOptions = $this->getCheckoutSession()->getDeliveryOptions();
         $deliveryOptionKey = $this->getCheckoutSession()->getSelectedDeliveryOption();
         if (isset($deliveryOptions[$deliveryOptionKey])) {
@@ -70,12 +75,9 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         unset($selectedDeliveryOption['product_list']);
 
         $assignedVars = array(
-            'payment_options' => $this
-                ->paymentOptionsFinder
-                ->present(),
-            'conditions_to_approve' => $this
-                ->conditionsToApproveFinder
-                ->getConditionsToApproveForTemplate(),
+            'is_free' => $isFree,
+            'payment_options' => $paymentOptions,
+            'conditions_to_approve' => $conditionsToApprove,
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),

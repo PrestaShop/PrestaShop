@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -103,6 +103,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'simplexml' => $this->translator->trans('SimpleXML extension is not loaded', array(), 'Install'),
                         'zip' => $this->translator->trans('ZIP extension is not enabled', array(), 'Install'),
                         'fileinfo' => $this->translator->trans('Fileinfo extension is not enabled', array(), 'Install'),
+                        'fopen' => $this->translator->trans('Cannot open external URLs (requires allow_url_fopen as On)', array(), 'Install'),
                     )
                 ),
                 array(
@@ -124,8 +125,8 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'success' => 1,
                     'checks' => array(
                         'config_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/config/'), 'Install'),
-                        'cache_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/cache/'), 'Install'),
-                        'log_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/logs/'), 'Install'),
+                        'cache_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/var/cache/'), 'Install'),
+                        'log_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/var/logs/'), 'Install'),
                         'img_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/img/'), 'Install'),
                         'mails_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/mails/'), 'Install'),
                         'module_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/modules/'), 'Install'),
@@ -136,6 +137,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                         'customizable_products_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/upload/'), 'Install'),
                         'virtual_products_dir' => $this->translator->trans('Recursive write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/download/'), 'Install'),
                         'config_sf2_dir' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/config/'), 'Install'),
+                        'translations_sf2' => $this->translator->trans('Write permissions for %user% user on %folder%', array('%user%' => $user, '%folder%' => '~/app/Resources/translations/'), 'Install'),
                     )
                 ),
             ),
@@ -144,7 +146,6 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'title' => $this->translator->trans('Recommended PHP parameters', array(), 'Install'),
                     'success' => $this->tests['optional']['success'],
                     'checks' => array(
-                        'fopen' => $this->translator->trans('Cannot open external URLs', array(), 'Install'),
                         'gz' => $this->translator->trans('GZIP compression is not activated', array(), 'Install'),
                         'mbstring' => $this->translator->trans('Mbstring extension is not enabled', array(), 'Install'),
                         'dom' => $this->translator->trans('Dom extension is not loaded', array(), 'Install'),

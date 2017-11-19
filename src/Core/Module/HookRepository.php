@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -104,25 +104,23 @@ class HookRepository
      * Saves hook settings for a list of hooks.
      * The $hooks array should have this format:
      * [
-     * 		"hookName" => [
-     * 			"module1",
-     * 			"module2",
-     * 			"module3" => [
-     * 				"except_pages" => [
-     * 					"page1",
-     * 					"page2",
-     * 					"page3"
-     * 				]
-     * 			]
-     * 		]
+     *     "hookName" => [
+     *         "module1",
+     *         "module2",
+     *         "module3" => [
+     *             "except_pages" => [
+     *                 "page1",
+     *                 "page2",
+     *                 "page3"
+     *             ]
+     *         ]
+     *     ]
      * ]
      * Only hooks present as keys in the $hooks array are affected and all changes
      * are only done for the shop this Repository belongs to.
      */
     public function persistHooksConfiguration(array $hooks)
     {
-        $hook_module = [];
-
         foreach ($hooks as $hook_name => $module_names) {
             $id_hook = $this->getIdByName($hook_name);
             if (!$id_hook) {
@@ -139,8 +137,8 @@ class HookRepository
             $position = 0;
             foreach ($module_names as $key => $module) {
                 if (is_array($module)) {
-                    $module_name = $key;
-                    $extra_data  = $module;
+                    $module_name = key($module);
+                    $extra_data  = current($module);
                 } else {
                     $module_name = $module;
                     $extra_data  = [];

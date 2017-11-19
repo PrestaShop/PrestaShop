@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,12 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Test;
+namespace Tests\Integration\PrestaShopBundle\Test;
 
+use Tests\PrestaShopBundle\Utils\Database;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 
 class WebTestCase extends TestCase
@@ -45,27 +47,62 @@ class WebTestCase extends TestCase
      */
     protected $translator;
 
+    public static function setUpBeforeClass()
+    {
+        Database::restoreTestDB();
+    }
+
     public function setUp()
     {
+        parent::setUp();
         $this->client = self::createClient();
         $this->router = self::$kernel->getContainer()->get('router');
         $this->translator = self::$kernel->getContainer()->get('translator');
 
         $employeeMock = $this->getMockBuilder('\Employee')
-        ->getMock();
+            ->getMock();
+        $employeeMock->id_profile = 1;
 
         $contextMock = $this->getMockBuilder('\Context')
-            ->disableAutoload()
+            ->setMethods(array('getTranslator', 'getBaseURL'))
             ->disableOriginalConstructor()
             ->getMock();
 
+        $contextMock->method('getTranslator')
+            ->will($this->returnValue($this->translator));
+
         $contextMock->employee = $employeeMock;
+
+        $shopMock = $this->getMockBuilder('\Shop')
+            ->setMethods(array('getBaseURL'))
+            ->getMock();
+        $shopMock->id = 1;
+        $shopMock->method('getBaseURL')
+            ->willReturn('my-awesome-url.com');
+
+        $contextMock->shop = $shopMock;
+
+        $themeMock = $this->getMockBuilder('\Theme')
+            ->setMethods(array('getName'))
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $themeMock->method('getName')
+            ->willReturn('classic');
+
+        $contextMock->shop->theme = $themeMock;
 
         $languageMock = $this->getMockBuilder('\Language')
             ->disableAutoload()
             ->disableOriginalConstructor()
             ->getMock();
         $contextMock->language = $languageMock;
+
+        $currencyMock = $this->getMockBuilder('\Currency')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $contextMock->currency = $currencyMock;
 
         $legacyContextMock = $this->getMockBuilder('\PrestaShop\PrestaShop\Adapter\LegacyContext')
             ->setMethods([
@@ -82,6 +119,7 @@ class WebTestCase extends TestCase
             ->will($this->returnValue($contextMock));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.context', $legacyContextMock);
+        self::$kernel->getContainer()->set('logger', new NullLogger());
     }
 
     protected function enableDemoMode()
@@ -92,8 +130,13 @@ class WebTestCase extends TestCase
             ->disableAutoload()
             ->getMock();
 
-        $configurationMock->method('get')->with('_PS_MODE_DEMO_')
-            ->will($this->returnValue(true));
+        $values = array(
+            array('_PS_MODE_DEMO_', true),
+            array('_PS_MODULE_DIR_', __DIR__.'/../../../resources/modules/'),
+        );
+
+        $configurationMock->method('get')
+            ->will($this->returnValueMap($values));
 
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
     }

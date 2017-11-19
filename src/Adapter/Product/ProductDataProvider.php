@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
+
+use Image;
+use Product;
+use Context;
 
 /**
  * This class will provide data from DB / ORM about Product, for both Front and Admin interfaces.
@@ -33,11 +37,16 @@ class ProductDataProvider
     /**
      * Get a new ProductCore instance
      *
-     * @return object product
+     * @param null $idProduct
+     * @return Product
      */
-    public function getProductInstance()
+    public function getProductInstance($idProduct = null)
     {
-        return new \ProductCore();
+        if ($idProduct) {
+            return new Product($idProduct);
+        }
+
+        return new Product();
     }
 
     /**
@@ -51,7 +60,7 @@ class ProductDataProvider
      *
      * @throws \LogicException If the product id is not set
      *
-     * @return \ProductCore $product
+     * @return Product $product
      */
     public function getProduct($id_product, $full = false, $id_lang = null, $id_shop = null, $context = null)
     {
@@ -59,7 +68,7 @@ class ProductDataProvider
             throw new \LogicException('You need to provide a product id', 5002);
         }
 
-        $product = new \ProductCore($id_product, $full, $id_lang, $id_shop, $context);
+        $product = new Product($id_product, $full, $id_lang, $id_shop, $context);
         if ($product) {
             if (!is_array($product->link_rewrite)) {
                 $linkRewrite = $product->link_rewrite;
@@ -67,8 +76,8 @@ class ProductDataProvider
                 $linkRewrite = $product->link_rewrite[$id_lang ? $id_lang : key($product->link_rewrite)];
             }
 
-            $cover = \ProductCore::getCover($product->id);
-            $product->image = \Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
+            $cover = Product::getCover($product->id);
+            $product->image = Context::getContext()->link->getImageLink($linkRewrite, $cover ? $cover['id_image'] : '', 'home_default');
         }
 
         return $product;
@@ -81,7 +90,7 @@ class ProductDataProvider
      */
     public function getIdTaxRulesGroup()
     {
-        $product = new \ProductCore();
+        $product = new Product();
         return $product->getIdTaxRulesGroup();
     }
 
@@ -96,7 +105,7 @@ class ProductDataProvider
      */
     public function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
     {
-        return \ProductCore::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
+        return Product::getQuantity($id_product, $id_product_attribute, $cache_is_pack);
     }
 
     /**
@@ -110,7 +119,7 @@ class ProductDataProvider
     public function getImages($id_product, $id_lang)
     {
         $data = [];
-        foreach (\ImageCore::getImages($id_lang, $id_product) as $image) {
+        foreach (Image::getImages($id_lang, $id_product) as $image) {
             $data[] = $this->getImage($image['id_image']);
         }
 
@@ -122,11 +131,11 @@ class ProductDataProvider
      *
      * @param int $id_image
      *
-     * @return object
+     * @return array()
      */
     public function getImage($id_image)
     {
-        $imageData = new \ImageCore((int)$id_image);
+        $imageData = new Image((int)$id_image);
 
         return [
             'id' => $imageData->id,

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,12 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LinkCore
@@ -493,10 +494,10 @@ class LinkCore
     /**
      * Create a link to a CMS page.
      *
-     * @param CMS    $cms     CMS object
-     * @param string $alias
-     * @param bool   $ssl
-     * @param int    $idLang
+     * @param CMS|int $cms     CMS object
+     * @param string  $alias
+     * @param bool    $ssl
+     * @param int     $idLang
      *
      * @return string
      */
@@ -637,7 +638,8 @@ class LinkCore
      *
      * @return string
      */
-    public function getModuleLink($module,
+    public function getModuleLink(
+        $module,
         $controller = 'default',
         array $params = array(),
         $ssl = null,
@@ -685,15 +687,15 @@ class LinkCore
 
         // Even if URL rewriting is not enabled, the page handled by Symfony must work !
         // For that, we add an 'index.php' in the URL before the route
-        global $kernel; // sf kernel
-        if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
-            $sfRouter = $kernel->getContainer()->get('router');
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer)) {
+            $sfRouter = $sfContainer->get('router');
         }
 
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
-                $pagePreference = $kernel->getContainer()->get('prestashop.core.admin.page_preference_interface');
+                $pagePreference = $sfContainer->get('prestashop.core.admin.page_preference_interface');
                 $redirectLegacy = $pagePreference->getTemporaryShouldUseLegacyPage('product');
                 if (!$redirectLegacy) {
                     if (array_key_exists('id_product', $sfRouteParams)) {
@@ -719,17 +721,41 @@ class LinkCore
                         return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
                     }
 
-                    return $sfRouter->generate('admin_product_catalog');
+                    return $sfRouter->generate('admin_product_catalog', $sfRouteParams);
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
+
             case 'AdminModulesSf':
-                if (array_key_exists('route', $sfRouteParams)) {
-                    return $sfRouter->generate($sfRouteParams['route'], array(), UrlGeneratorInterface::ABSOLUTE_URL);
-                }
-                // New architecture modification: temporary behavior to switch between old and new controllers.
-                return $sfRouter->generate('admin_module_catalog', array(), UrlGeneratorInterface::ABSOLUTE_URL);
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_module_manage';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminStockManagement':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_stock_overview';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminTranslationSf':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_international_translation_overview';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminInformation':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_system_information';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminAddonsCatalog':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_module_addons_store';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminPerformance':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_performance';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
@@ -1177,7 +1203,7 @@ class LinkCore
 
         $patterns = array(
             '#'.Context::getContext()->link->getBaseLink().'#',
-            '#'.basename(_PS_ADMIN_DIR_).'#',
+            '#'.basename(_PS_ADMIN_DIR_).'/#',
             '/index.php/',
             '/_?token=[a-zA-Z0-9\_]+/'
         );
@@ -1239,6 +1265,19 @@ class LinkCore
             case 'language':
                 $link = $context->link->getLanguageLink($params['id']);
                 break;
+            case 'product':
+                $link = $context->link->getProductLink(
+                    $params['id'],
+                    $params['alias'],
+                    (isset($params['category']) ? $params['category'] : null),
+                    (isset($params['ean13']) ? $params['ean13'] : null),
+                    $params['id_lang'],
+                    $params['id_shop'],
+                    (isset($params['ipa']) ? (int)$params['ipa'] : 0),
+                    false,
+                    $params['relative_protocol']
+                );
+                break;
             case 'category':
                 $params = array_merge(array('selected_filters' => null), $params);
                 $link = $context->link->getCategoryLink(
@@ -1288,9 +1327,10 @@ class LinkCore
                 if (!array_key_exists('route', $params)) {
                     throw new \InvalidArgumentException('You need to setup a `route` attribute.');
                 }
-                global $kernel; // sf kernel
-                if ($kernel instanceof Symfony\Component\HttpKernel\HttpKernelInterface) {
-                    $sfRouter = $kernel->getContainer()->get('router');
+
+                $sfContainer = SymfonyContainer::getInstance();
+                if (!is_null($sfContainer)) {
+                    $sfRouter = $sfContainer->get('router');
 
                     if (array_key_exists('sf-params', $params)) {
                         return $sfRouter->generate($params['route'], $params['sf-params'], UrlGeneratorInterface::ABSOLUTE_URL);

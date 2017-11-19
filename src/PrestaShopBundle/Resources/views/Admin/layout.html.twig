@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,28 +19,24 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% extends(template_from_string(
-    getLegacyLayout(
-        app.request.attributes.get('_legacy_controller'),
-        layoutTitle is defined ? layoutTitle : '',
-        layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
-        layoutDisplayType is defined ? layoutDisplayType : '',
-        showContentHeader is defined ? showContentHeader : true,
-        headerTabContent is defined ? headerTabContent : '',
-        enableSidebar is defined ? enableSidebar : false,
-        help_link is defined ? help_link : ''
-    )
+getLegacyLayout(
+app.request.attributes.get('_legacy_controller'),
+layoutTitle is defined ? layoutTitle : '',
+layoutHeaderToolbarBtn is defined ? layoutHeaderToolbarBtn : [],
+layoutDisplayType is defined ? layoutDisplayType : '',
+showContentHeader is defined ? showContentHeader : true,
+headerTabContent is defined ? headerTabContent : '',
+enableSidebar is defined ? enableSidebar : false,
+help_link is defined ? help_link : '',
+app.request.attributes.get('_route')
+)
 )) %}
 
 {% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('themes/default/css/bundle/right-sidebar.css') }}" />
-{% endblock %}
 
 {% block javascripts %}
     <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
@@ -56,29 +52,38 @@
 
 {% block content_header %}
     {% if app.session.flashbag.peek('error')|length() > 0 %}
-        <div class="flash-message-list alert alert-danger">
-            <ul>
-            {% for flashMessage in app.session.flashbag.get('error') %}
-                <li>{{ flashMessage }}</li>
-            {% endfor %}
+        <div class="alert alert-danger" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
+            <ul class="alert-text">
+                {% for flashMessage in app.session.flashbag.get('error') %}
+                    <li>{{ flashMessage|raw }}</li>
+                {% endfor %}
             </ul>
         </div>
     {% endif %}
     {% if app.session.flashbag.peek('failure')|length() > 0 %}
-        <div class="flash-message-list alert alert-danger">
-            <ul>
-            {% for flashMessage in app.session.flashbag.get('failure') %}
-                <li>{{ flashMessage }}</li>
-            {% endfor %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
+            <ul class="alert-text">
+                {% for flashMessage in app.session.flashbag.get('failure') %}
+                    <li>{{ flashMessage|raw }}</li>
+                {% endfor %}
             </ul>
         </div>
     {% endif %}
     {% if app.session.flashbag.peek('success')|length() > 0 %}
-        <div class="flash-message-list alert alert-success">
+        <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="material-icons">close</i></span>
+            </button>
             <ul>
-            {% for flashMessage in app.session.flashbag.get('success') %}
-                <li>{{ flashMessage }}</li>
-            {% endfor %}
+                {% for flashMessage in app.session.flashbag.get('success') %}
+                    <li>{{ flashMessage|raw }}</li>
+                {% endfor %}
             </ul>
         </div>
     {% endif %}
@@ -88,7 +93,7 @@
     <nav
             id="right-sidebar"
             role="navigation"
-            class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-xs-center"
+            class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
     >
         <img
                 src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"
@@ -96,4 +101,3 @@
         />
     </nav>
 {% endblock %}
-

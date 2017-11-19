@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,16 +20,16 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Prophecy\Exception\Doubler\MethodNotFoundException;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use PrestaShopBundle\Service\Hook\RenderingHookEvent;
-use \ContextCore as OldContext;
+use Context;
+use Hook;
 
 /**
  * The subscriber for HookDispatcher that triggers legacy Hooks.
@@ -224,12 +224,12 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $listeners = array();
 
         //Hack SF2 cache clear : if context not mounted, bypass legacy call
-        $legacyContext = OldContext::getContext();
+        $legacyContext = Context::getContext();
         if (!$legacyContext || empty($legacyContext->shop) || empty($legacyContext->employee)) {
             return $listeners;
         }
 
-        $hooks = \HookCore::getHooks();
+        $hooks = Hook::getHooks();
 
         if (is_array($hooks)) {
             foreach ($hooks as $hook) {
@@ -240,7 +240,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                 $modules = array();
                 //SF2 cache clear bug fix : call bqSQL alias function
                 if (function_exists("bqSQL")) {
-                    $modules = \HookCore::getHookModuleExecList($name);
+                    $modules = Hook::getHookModuleExecList($name);
                 }
 
                 if (is_array($modules)) {
@@ -287,7 +287,7 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $hookName = $args[1];
         $event = $args[0];
         /* @var $event HookEvent */
-        $content = \HookCore::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
+        $content = Hook::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
 
         if ($event instanceof RenderingHookEvent) {
             $event->setContent(array_values($content)[0], array_keys($content)[0]);

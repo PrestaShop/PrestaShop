@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='page.tpl'}
@@ -31,7 +31,7 @@
 {block name='page_content'}
   {block name='cms_sub_categories'}
     {if $sub_categories}
-      <p>{l s='List of sub categories in %name%:' d='Shop.Theme' sprintf=['%name%' => $cms_category.name]}</p>
+      <p>{l s='List of sub categories in %name%:' d='Shop.Theme.Global' sprintf=['%name%' => $cms_category.name]}</p>
       <ul>
         {foreach from=$sub_categories item=sub_category}
           <li><a href="{$sub_category.link}">{$sub_category.name}</a></li>
@@ -42,7 +42,7 @@
 
   {block name='cms_sub_pages'}
     {if $cms_pages}
-      <p>{l s='List of pages in %name%:' d='Shop.Theme' sprintf=['%name%' => $cms_category.name]}</p>
+      <p>{l s='List of pages in %category_name%:' d='Shop.Theme.Global' sprintf=['%category_name%' => $cms_category.name]}</p>
       <ul>
         {foreach from=$cms_pages item=cms_page}
           <li><a href="{$cms_page.link}">{$cms_page.meta_title}</a></li>

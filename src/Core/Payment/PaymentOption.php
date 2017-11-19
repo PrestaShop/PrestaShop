@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Payment;
@@ -73,10 +73,10 @@ class PaymentOption implements HookContentClassInterface
      * An associative array of additional parameters to use when sending
      * the request to $action,
      * e.g. if  $action is "http://payment-provider.example.com/process",
-     * 			$method is "GET"
-     *      	and $inputs is ['customerName' => 'bob']
+     *          $method is "GET"
+     *      and $inputs is ['customerName' => 'bob']
      *      then the request will be made to:
-     *      	"http://payment-provider.example.com/process?customerName=bob"
+     *          "http://payment-provider.example.com/process?customerName=bob"
      *
      * @var array
      */
@@ -294,9 +294,9 @@ class PaymentOption implements HookContentClassInterface
 
     /**
      * Legacy options were specified this way:
-     * - either an array with a top level property 'cta_text'
-     * 	and then the other properties
+     * - either an array with a top level property 'cta_text' and then the other properties
      * - or a numerically indexed array or arrays as described above
+     *
      * Since this was a mess, this method is provided to convert them.
      * It takes as input a legacy option (in either form) and always
      * returns an array of instances of PrestaShop\PrestaShop\Core\Payment\PaymentOption

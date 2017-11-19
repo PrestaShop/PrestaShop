@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,13 +20,13 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module;
+namespace Tests\Unit\Adapter\Module;
 
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Phake;
 
 class AdminModuleDataProviderTest extends UnitTestCase
@@ -38,16 +38,12 @@ class AdminModuleDataProviderTest extends UnitTestCase
     private $addonsDataProviderS;
     private $categoriesProviderS;
     private $adminModuleDataProvider;
+    private $moduleDataProviderS;
 
     public function setUp()
     {
-        parent::setup();
+        parent::setUp();
 
-        return $this->markTestSkipped(
-            "Cannot use kernel in unit tests while legacy is here. To fix when legacy will be fully refactored."
-        );
-
-        $this->languageISOCode = 'en';
         $this->legacyContext = Phake::partialMock('PrestaShop\\PrestaShop\\Adapter\\LegacyContext');
         Phake::when($this->legacyContext)->getAdminBaseUrl()->thenReturn('admin_fake_base');
 
@@ -57,7 +53,9 @@ class AdminModuleDataProviderTest extends UnitTestCase
         }
 
         $this->setupSfKernel();
-        $this->sfRouter = $this->sfKernel->getContainer()->get('router');
+        $this->translator = $this->sfKernel->getContainer()->get('translator');
+        list($this->languageISOCode) = explode('-', $this->translator->getLocale());
+        $this->logger = $this->sfKernel->getContainer()->get('logger');
 
         $this->addonsDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider')
             ->disableOriginalConstructor()
@@ -66,6 +64,10 @@ class AdminModuleDataProviderTest extends UnitTestCase
         $this->categoriesProviderS = $this->getMockBuilder('PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider')
             ->disableOriginalConstructor()
             ->getmock();
+
+        $this->moduleDataProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         /* The module catalog will contains only 5 modules for theses tests */
         $fakeModules = array(
@@ -106,10 +108,11 @@ class AdminModuleDataProviderTest extends UnitTestCase
         Phake::when($this->cacheProviderS)->fetch($this->languageISOCode.'_addons_modules')->thenReturn($fakeModules);
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
-            $this->languageISOCode,
-            $this->sfRouter,
+            $this->translator,
+            $this->logger,
             $this->addonsDataProviderS,
             $this->categoriesProviderS,
+            $this->moduleDataProviderS,
             $this->cacheProviderS
         );
     }
@@ -157,16 +160,17 @@ class AdminModuleDataProviderTest extends UnitTestCase
 
     public function testCallToAddonsShouldReturnSameResultOk()
     {
-        $mock = $this->getMock('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider',
-            array('convertJsonForNewCatalog'),
-            array(
-                'languageISO' => $this->languageISOCode,
-                'router' => $this->sfRouter,
+        $mock = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
+            ->setConstructorArgs(array(
+                'languageISO' => $this->translator,
+                'logger' => $this->logger,
                 'addonsDataProvider' => $this->addonsDataProviderS,
                 'categoriesProvider' => $this->categoriesProviderS,
+                'moduleDataProvider' => $this->moduleDataProviderS,
                 'cacheProvider' => $this->cacheProviderS,
-            )
-        );
+            ))
+            ->setMethods(array('convertJsonForNewCatalog'))
+            ->getMock();
 
         $mock->clearCatalogCache();
 

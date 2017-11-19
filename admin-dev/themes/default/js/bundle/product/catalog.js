@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -115,7 +115,7 @@ $(document).ready(function() {
 
 function productOrderTable(orderBy, orderWay) {
 	var form = $('form#product_catalog_list');
-	var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/desc/, orderWay);
+	var url = form.attr('orderingurl').replace(/name/, orderBy).replace(/asc/, orderWay);
 	window.location.href = url;
 }
 
@@ -127,13 +127,13 @@ function productOrderPrioritiesTable() {
 }
 
 function updateBulkMenu() {
-	var selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').size();
+	var selectedCount = $('form#product_catalog_list input:checked[name="bulk_action_selected_products[]"][disabled!="disabled"]').length;
 	$('#product_bulk_menu').prop('disabled', (selectedCount === 0));
 }
 
 var productCatalogFilterChanged = false;
 function updateFilterMenu() {
-	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').size();
+	var count = $('form#product_catalog_list tr.column-filters select option:selected[value!=""]').length;
 	$('form#product_catalog_list tr.column-filters input[type="text"]:visible').each(function() {
 		if ($(this).val() !== '') {
 			count ++;
@@ -167,17 +167,17 @@ function productCategoryFilterCollapse(div, btn) {
 }
 
 function categoryFilterButtons() {
-	if ($('div#product_catalog_category_tree_filter ul ul:visible').size() === 0) {
+	if ($('div#product_catalog_category_tree_filter ul ul:visible').length === 0) {
 		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_collapse"]').hide();
 	} else {
 		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_collapse"]').show();
 	}
-	if ($('div#product_catalog_category_tree_filter ul ul:hidden').size() === 0) {
+	if ($('div#product_catalog_category_tree_filter ul ul:hidden').length === 0) {
 		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_expand"]').hide();
 	} else {
 		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_expand"]').show();
 	}
-	if ($('div#product_catalog_category_tree_filter ul input:checked').size() === 0) {
+	if ($('div#product_catalog_category_tree_filter ul input:checked').length === 0) {
 		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_reset"]').hide();
 	} else {
 		$('div#product_catalog_category_tree_filter ~ div button[name="product_catalog_category_tree_filter_reset"]').show();
@@ -262,7 +262,7 @@ function bulkProductAction(element, action) {
   var urlHandler = null;
 
   var items = $('input:checked[name="bulk_action_selected_products[]"]', form);
-  if (items.size() === 0) {
+  if (items.length === 0) {
     return false;
   } else {
     urlHandler = $(element).closest('[bulkurl]');

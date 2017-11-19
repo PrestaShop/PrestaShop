@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,13 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 class AdminLegacyLayoutControllerCore extends AdminController
 {
     public $outPutHtml = '';
+    private $routeName = '';
     private $headerToolbarBtn = array();
     private $title;
     private $showContentHeader = true;
@@ -34,11 +35,12 @@ class AdminLegacyLayoutControllerCore extends AdminController
     private $enableSidebar = false;
     private $helpLink;
 
-    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '')
+    public function __construct($controllerName = '', $title = '', $headerToolbarBtn = array(), $displayType = '', $showContentHeader = true, $headerTabContent = '', $enableSidebar = false, $helpLink = '', $routeName = '')
     {
         parent::__construct($controllerName, 'new-theme');
 
         $this->title = $title;
+        $this->meta_title = $title;
         $this->display = $displayType;
         $this->bootstrap = true;
         $this->controller_name = $_GET['controller'] = $controllerName;
@@ -48,6 +50,8 @@ class AdminLegacyLayoutControllerCore extends AdminController
         $this->headerTabContent = $headerTabContent;
         $this->enableSidebar = $enableSidebar;
         $this->helpLink = $helpLink;
+        $this->php_self = $controllerName;
+        $this->routeName = $routeName;
     }
 
     public function setMedia()
@@ -108,6 +112,16 @@ class AdminLegacyLayoutControllerCore extends AdminController
     public function initPageHeaderToolbar()
     {
         parent::initPageHeaderToolbar();
+    }
+
+    /**
+     * Returns the route name (this allow to identify the page)
+     *
+     * @return string
+     */
+    public function getRoute()
+    {
+        return $this->routeName;
     }
 
     public function display()

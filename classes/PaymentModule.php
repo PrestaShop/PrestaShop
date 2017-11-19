@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,11 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\StockManager;
 abstract class PaymentModuleCore extends Module
 {
     /** @var int Current order's id */
@@ -192,10 +193,18 @@ abstract class PaymentModuleCore extends Module
      * @return bool
      * @throws PrestaShopException
      */
-    public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown',
-        $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
-        $secure_key = false, Shop $shop = null)
-    {
+    public function validateOrder(
+        $id_cart,
+        $id_order_state,
+        $amount_paid,
+        $payment_method = 'Unknown',
+        $message = null,
+        $extra_vars = array(),
+        $currency_special = null,
+        $dont_touch_amount = false,
+        $secure_key = false,
+        Shop $shop = null
+    ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
         }
@@ -281,7 +290,7 @@ abstract class PaymentModuleCore extends Module
                             Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
                         } else {
                             $rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
-                            $error = $this->trans('The cart rule named "%2s" (ID %1s) used in this cart is not valid and has been withdrawn from cart', array((int)$rule->id, $rule_name), 'Admin.Payment.Notification');
+                            $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', array($rule_name, (int)$rule->id), 'Admin.Payment.Notification');
                             PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
                         }
                     }
@@ -606,7 +615,6 @@ abstract class PaymentModuleCore extends Module
                             $voucher->quantity = 1;
                             $voucher->reduction_currency = $order->id_currency;
                             $voucher->quantity_per_user = 1;
-                            $voucher->free_shipping = 0;
                             if ($voucher->add()) {
                                 // If the voucher has conditions, they are now copied to the new voucher
                                 CartRule::copyConditions($cart_rule['obj']->id, $voucher->id);
@@ -638,6 +646,10 @@ abstract class PaymentModuleCore extends Module
 
                             $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
                             $values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
+                            if (1 == $voucher->free_shipping) {
+                                 $values['tax_incl'] += $order->total_shipping_tax_incl;
+                                 $values['tax_excl'] += $order->total_shipping_tax_excl;  
+                            }
                         }
                         $total_reduction_value_ti += $values['tax_incl'];
                         $total_reduction_value_tex += $values['tax_excl'];
@@ -853,6 +865,15 @@ abstract class PaymentModuleCore extends Module
                     }
 
                     $order->updateOrderDetailTax();
+
+                    // sync all stock
+                    (new StockManager())->updatePhysicalProductQuantity(
+                        (int)$order->id_shop,
+                        (int)Configuration::get('PS_OS_ERROR'),
+                        (int)Configuration::get('PS_OS_CANCELED'),
+                        null,
+                        (int)$order->id
+                    );
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');
                     PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));

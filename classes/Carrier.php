@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,9 +20,12 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+
 class CarrierCore extends ObjectModel
 {
     /**
@@ -140,7 +143,7 @@ class CarrierCore extends ObjectModel
             'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
             /* Lang fields */
-            'delay' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
+            'delay' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 512),
         ),
     );
 
@@ -188,6 +191,15 @@ class CarrierCore extends ObjectModel
         }
 
         $this->image_dir = _PS_SHIP_IMG_DIR_;
+    }
+
+    public static function resetStaticCache()
+    {
+        static::$price_by_weight  = array();
+        static::$price_by_weight2 = array();
+        static::$price_by_price   = array();
+        static::$price_by_price2  = array();
+        static::$cache_tax_rule   = array();
     }
 
     /**
@@ -1296,7 +1308,7 @@ class CarrierCore extends ObjectModel
     public function getTaxCalculator(Address $address, $id_order = null, $use_average_tax_of_products = false)
     {
         if ($use_average_tax_of_products) {
-            return \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
+            return ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($id_order);
         } else {
             $tax_manager = TaxManagerFactory::getManager($address, $this->getIdTaxRulesGroup());
 

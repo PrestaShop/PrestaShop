@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,12 +20,15 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
+use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Kernel;
+use PrestaShopBundle\Kernel\ModuleRepository;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
@@ -54,6 +57,13 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
         }
 
+        /**
+         * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
+         */
+        if ('dev' === $this->getEnvironment()) {
+            $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
+        }
+
         if (extension_loaded('apc')) {
             $_SERVER['SYMFONY__CACHE__DRIVER'] = 'apc';
         } else {
@@ -63,8 +73,123 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    /**
+     * @{inheritdoc}
+     */
+    protected function getKernelParameters()
+    {
+        $kernelParameters = parent::getKernelParameters();
+
+        $activeModules = array();
+
+        if ($this->parametersFileExists()) {
+            try {
+                $this->getConnection()->connect();
+                $activeModules = $this->getActiveModules();
+            } catch (\Exception $e) {
+            }
+        }
+
+        return array_merge(
+            $kernelParameters,
+            array('kernel.active_modules' => $activeModules)
+        );
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getRootDir()
+    {
+        return __DIR__;
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getCacheDir()
+    {
+        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
+    }
+
+    /**
+     * @{inheritdoc}
+     */
+    public function getLogDir()
+    {
+        return dirname(__DIR__).'/var/logs';
+    }
+
+    /**
+     * @{inheritdoc}
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+    }
+
+    /**
+     * Return all active modules.
+     *
+     * @return array list of modules names.
+     */
+    private function getActiveModules()
+    {
+        $databasePrefix = $this->getParameters()['database_prefix'];
+
+        $modulesRepository = new ModuleRepository(
+            $this->getConnection(),
+            $databasePrefix
+        );
+
+        return $modulesRepository->getActiveModules();
+    }
+
+    /**
+     * @return array The root parameters of PrestaShop
+     */
+    private function getParameters()
+    {
+        if ($this->parametersFileExists()) {
+            $config = require($this->getParametersFile());
+
+            return $config['parameters'];
+        }
+
+        return array();
+    }
+
+    /**
+     * @var bool
+     */
+    private function parametersFileExists()
+    {
+        return file_exists($this->getParametersFile());
+    }
+
+    /**
+     * @return string filepath to PrestaShop configuration parameters
+     */
+    private function getParametersFile()
+    {
+        return $this->getRootDir().'/config/parameters.php';
+    }
+
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
+    private function getConnection()
+    {
+        $parameters = $this->getParameters();
+
+        return DriverManager::getConnection(array(
+            'dbname' => $parameters['database_name'],
+            'user' => $parameters['database_user'],
+            'password' => $parameters['database_password'],
+            'host' => $parameters['database_host'],
+            'port' => $parameters['database_port'],
+            'charset' => 'utf8',
+            'driver' => 'pdo_mysql',
+        ));
     }
 }

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,9 +20,11 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 /**
  * Represents quantities available
@@ -198,9 +200,8 @@ class StockAvailableCore extends ObjectModel
                                         'id_shop' => $id_shop
                                         )
                     );
-                }
-                // else this product has attributes, hence loops on $ids_product_attribute
-                else {
+                } else {
+                    // else this product has attributes, hence loops on $ids_product_attribute
                     foreach ($ids_product_attribute as $id_product_attribute) {
                         $allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int)$id_product, (int)$id_product_attribute, (int)$id_shop);
                         $allowed_warehouse_for_combination_clean = array();
@@ -444,7 +445,7 @@ class StockAvailableCore extends ObjectModel
 			AND id_product_attribute <> 0 '.
             StockAvailable::addSqlShopRestriction(null, $id_shop)
         );
-        $this->setQuantity($this->id_product, 0, $total_quantity, $id_shop);
+        $this->setQuantity($this->id_product, 0, $total_quantity, $id_shop, false);
 
         return true;
     }
@@ -457,8 +458,10 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_product_attribute Optional
      * @param int $delta_quantity The delta quantity to update
      * @param int $id_shop Optional
+     * @param boolean $add_movement Optional
+     * @param array $params Optional
      */
-    public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null)
+    public static function updateQuantity($id_product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
@@ -468,41 +471,48 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
-        $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null);
+        $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
+        $stockManager->updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop, $add_movement, $params);
         return true;
     }
 
     /**
      * For a given id_product and id_product_attribute sets the quantity available
      *
-     * @param int $id_product
-     * @param int $id_product_attribute Optional
-     * @param int $delta_quantity The delta quantity to update
-     * @param int $id_shop Optional
+     * @param $id_product
+     * @param $id_product_attribute
+     * @param $quantity
+     * @param null $id_shop
+     * @param bool $add_movement
+     * @return bool
      */
-    public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null)
+    public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true)
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
         }
-
         $context = Context::getContext();
-
         // if there is no $id_shop, gets the context one
         if ($id_shop === null && Shop::getContext() != Shop::CONTEXT_GROUP) {
             $id_shop = (int)$context->shop->id;
         }
-
         $depends_on_stock = StockAvailable::dependsOnStock($id_product);
-
         //Try to set available quantity if product does not depend on physical stock
         if (!$depends_on_stock) {
+            $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Stock\\StockManager');
+
             $id_stock_available = (int)StockAvailable::getStockAvailableIdByProductId($id_product, $id_product_attribute, $id_shop);
             if ($id_stock_available) {
                 $stock_available = new StockAvailable($id_stock_available);
+
+                $deltaQuantity = -1 * ((int)$stock_available->quantity - (int)$quantity);
+
                 $stock_available->quantity = (int)$quantity;
                 $stock_available->update();
+
+                if (true === $add_movement && 0 != $deltaQuantity) {
+                    $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
+                }
             } else {
                 $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
                 $stock_available = new StockAvailable();
@@ -510,13 +520,11 @@ class StockAvailableCore extends ObjectModel
                 $stock_available->id_product = (int)$id_product;
                 $stock_available->id_product_attribute = (int)$id_product_attribute;
                 $stock_available->quantity = (int)$quantity;
-
                 if ($id_shop === null) {
                     $shop_group = Shop::getContextShopGroup();
                 } else {
                     $shop_group = new ShopGroup((int)Shop::getGroupFromShop((int)$id_shop));
                 }
-
                 // if quantities are shared between shops of the group
                 if ($shop_group->share_stock) {
                     $stock_available->id_shop = 0;
@@ -526,6 +534,10 @@ class StockAvailableCore extends ObjectModel
                     $stock_available->id_shop_group = 0;
                 }
                 $stock_available->add();
+
+                if (true === $add_movement && 0 != $quantity) {
+                    $stockManager->saveMovement($id_product, $id_product_attribute, (int)$quantity);
+                }
             }
 
             Hook::exec('actionUpdateQuantity',
@@ -536,7 +548,6 @@ class StockAvailableCore extends ObjectModel
                 )
             );
         }
-
         Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
     }
 

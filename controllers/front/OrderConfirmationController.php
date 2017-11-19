@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
@@ -44,6 +44,10 @@ class OrderConfirmationControllerCore extends FrontController
     public function init()
     {
         parent::init();
+
+        if (true === (bool) Tools::getValue('free_order')) {
+            $this->checkFreeOrder();
+        }
 
         $this->id_cart = (int) (Tools::getValue('id_cart', 0));
 
@@ -87,7 +91,7 @@ class OrderConfirmationControllerCore extends FrontController
             ->fillWith(Tools::getAllValues());
 
         parent::initContent();
-        
+
         $this->context->smarty->assign(array(
             'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
             'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
@@ -120,5 +124,37 @@ class OrderConfirmationControllerCore extends FrontController
     public function displayOrderConfirmation($order)
     {
         return Hook::exec('displayOrderConfirmation', array('order' => $order));
+    }
+
+    /**
+     * Check if an order is free and create it
+     */
+    private function checkFreeOrder()
+    {
+        $cart = $this->context->cart;
+        if ($cart->id_customer == 0 || $cart->id_address_delivery == 0 || $cart->id_address_invoice == 0) {
+            Tools::redirect($this->context->link->getPageLink('order'));
+        }
+
+        $customer = new Customer($cart->id_customer);
+        if (!Validate::isLoadedObject($customer)) {
+            Tools::redirect($this->context->link->getPageLink('order'));
+        }
+
+        $total = (float)$cart->getOrderTotal(true, Cart::BOTH);
+        if ($total > 0) {
+            Tools::redirect($this->context->link->getPageLink('order'));
+        }
+
+        $order = new PaymentFree();
+        $order->validateOrder(
+            $cart->id,
+            Configuration::get('PS_OS_PAYMENT'),
+            0,
+            $this->trans('Free order', array(), 'Admin.Orderscustomers.Feature'),
+            null, array(), null, false,
+            $cart->secure_key
+        );
+
     }
 }

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -68,7 +68,7 @@ class AdminEmployeesControllerCore extends AdminController
         if ($super_admin == 1) {
             $super_admin_array = Employee::getEmployeesByProfile(_PS_ADMIN_PROFILE_, true);
             $super_admin_id = array();
-            foreach ($super_admin_array as $key => $val) {
+            foreach ($super_admin_array as $val) {
                 $super_admin_id[] = $val['id_employee'];
             }
             $this->addRowActionSkipList('delete', $super_admin_id);
@@ -259,14 +259,14 @@ class AdminEmployeesControllerCore extends AdminController
                     'type' => 'html',
                     'name' => 'employee_avatar',
                     'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
-					<div class="alert alert-info">'.sprintf($this->trans(
+					<div id="employee-avatar-thumbnail" class="alert alert-info">'.$this->trans(
                         'Your avatar in PrestaShop 1.7.x is your profile picture on %url%. To change your avatar, log in to PrestaShop.com with your email %email% and follow the on-screen instructions.',
                         array(
                             '%url%' => '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>',
                             '%email%' => $obj->email,
                         ),
                         'Admin.Advparameters.Help'
-                        )).'
+                        ).'
                     </div>',
                 ),
                 array(
@@ -595,8 +595,7 @@ class AdminEmployeesControllerCore extends AdminController
         $employee = new Employee((int)Tools::getValue('id_employee'));
 
         if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH)) {
-            return !($this->errors[] = sprintf($this->trans('The password must be at least %s characters long.', array(), 'Admin.Advparameters.Notification'),
-                Validate::ADMIN_PASSWORD_LENGTH));
+            return !($this->errors[] = $this->trans('The password must be at least %length% characters long.', array('%length%' => Validate::ADMIN_PASSWORD_LENGTH), 'Admin.Advparameters.Notification'));
         }
 
         return parent::validateRules($class_name);

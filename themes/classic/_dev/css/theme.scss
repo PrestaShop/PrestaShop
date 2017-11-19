@@ -48,24 +48,24 @@
     #menu-icon {
       vertical-align: middle;
       cursor: pointer;
-      margin-left: rem(16px);
+      margin-left: 1rem;
       .material-icons {
         line-height: 50px;
       }
     }
     .right-nav {
-      @include display(flex);
-      @include flex-wrap(nowrap);
-      @include justify-content(flex-end);
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
     }
     .currency-selector {
-      margin-top: rem(15px);
-      margin-left: rem(15px);
+      margin-top: 0.9375rem;
+      margin-left: 0.9375rem;
       white-space: nowrap;
     }
     .user-info {
-      margin-left: rem(40px);
-      margin-top: rem(15px);
+      margin-left: 2.5rem;
+      margin-top: 0.9375rem;
       text-align: right;
       white-space: nowrap;
       .account {
@@ -73,21 +73,19 @@
       }
     }
     .language-selector {
-      margin-top: rem(15px);
+      margin-top: 0.9375rem;
       white-space: nowrap;
     }
     .cart-preview {
       &.active {
         background: $brand-primary;
-        a {
+        a, i {
           color: white;
-        }
-        i {
-          color: rgba(255, 255, 255, 0.6);
         }
       }
       .shopping-cart {
         vertical-align: middle;
+        color: $gray;
       }
       .body {
         display: none;
@@ -95,9 +93,9 @@
     }
     .blockcart {
       background: $gray-light;
-      height: rem(48px);
-      padding: rem(12px);
-      margin-left: rem(15px);
+      height: 3rem;
+      padding: 0.75rem;
+      margin-left: 0.9375rem;
       text-align: center;
       white-space: nowrap;
       a {
@@ -112,16 +110,16 @@
         }
       }
       .header {
-        margin-top: rem(2px);
+        margin-top: 0.125rem;
       }
     }
     #contact-link {
-      margin-top: rem(15px);
+      margin-top: 0.9375rem;
     }
     .material-icons {
       line-height: inherit;
       &.expand-more {
-        margin-left: rem(-6px);
+        margin-left: -0.375rem;
       }
     }
   }
@@ -129,7 +127,7 @@
     > .container {
       position: relative;
     }
-    padding-bottom: rem(20px);
+    padding-bottom: 1.25rem;
     .menu {
       > ul {
         > li {
@@ -137,7 +135,7 @@
         }
       }
       padding-left: 15px;
-      margin-bottom: rem(6px);
+      margin-bottom: 0.375rem;
     }
     .position-static {
       position: static;
@@ -159,9 +157,9 @@
 #wrapper {
   background: $gray-light;
   box-shadow: inset 0 2px 5px 0 rgba(0,0,0,0.11);
-  padding-top: rem(25px);
+  padding-top: 1.563rem;
   .banner {
-    margin-bottom: rem(24px);
+    margin-bottom: 1.5rem;
     display: block;
     img {
       box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
@@ -181,12 +179,12 @@
       display: inline;
       &::after {
         content: "/";
-        color: $gray-dark;
-        margin: em(5px);
+        color: $gray;
+        margin: 0.3125rem;
       }
       &:last-child {
         content: "/";
-        color: $gray-dark;
+        color: $gray;
         margin: 0;
         &::after {
           content: "";
@@ -201,12 +199,12 @@
 /*** MAIN ***/
 #main {
   .page-header {
-    margin-bottom: rem(25px);
+    margin-bottom: 1.563rem;
   }
   .page-content {
-    margin-bottom: rem(25px);
+    margin-bottom: 1.563rem;
     h6 {
-      margin-bottom: rem(18p);
+      margin-bottom: 1.125rem;
     }
     #notifications {
       margin-left: -15px;
@@ -214,7 +212,7 @@
     }
   }
   .page-footer {
-    margin-bottom: rem(25px);
+    margin-bottom: 1.563rem;
   }
 }
 #notifications {
@@ -224,7 +222,7 @@
 }
 /*** FOOTER ***/
 #footer {
-  padding-top: rem(40px);
+  padding-top: 2.5rem;
 }
 
 /*** Responsive part ***/
@@ -241,7 +239,7 @@
     background: $gray-light;
     .header-nav {
       background: white;
-      margin-bottom: rem(10px);
+      margin-bottom: 0.625rem;
       color: $gray-darker;
       .top-logo {
         line-height: 50px;
@@ -256,7 +254,7 @@
         }
       }
       .right-nav {
-        @include flex-direction(column);
+        flex-direction: column;
       }
       .user-info {
         text-align: left;
@@ -269,7 +267,7 @@
         margin-left: 0;
         background: inherit;
         &.active {
-          margin-left: rem(8px);
+          margin-left: 0.5rem;
         }
         &.inactive {
           .cart-products-count {
@@ -308,7 +306,7 @@
     padding-left: 0;
   }
   #footer {
-    padding-top: rem(8px);
+    padding-top: 0.5rem;
   }
 }
 @include media-breakpoint-down(md) {
@@ -330,7 +328,7 @@
     width: 100%;
     display: block;
     max-width: 250px;
-    margin: 0 auto rem(15px);
+    margin: 0 auto 0.9375rem;
   }
   #blockcart-modal .cart-content {
     padding-left: 0;

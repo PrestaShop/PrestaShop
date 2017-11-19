@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/welcome/welcome.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="83218ac34c1834c26781fe4bde918ee4">
+        <source>Welcome</source>
+        <target>Welcome</target>
+        <note>Context:
+File: modules/welcome/welcome.php:56</note>
+      </trans-unit>
+      <trans-unit id="bf2e8e9545a7aa0e8279986eea30e2db">
+        <source>Help the user to create his first product.</source>
+        <target>Help the user to create his first product.</target>
+        <note>Context:
+File: modules/welcome/welcome.php:57</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/welcome/OnBoarding/Configuration.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="cec23b2350e76e6d8c06b3d44ae04ce3">
@@ -98,9 +114,9 @@ File: modules/welcome/OnBoarding/Configuration.php:147</note>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:148</note>
       </trans-unit>
-      <trans-unit id="21df1a10cfd7a0f51ee662b67b583226">
-        <source>The payments methods are already available to your customers.</source>
-        <target>The payments methods are already available to your customers.</target>
+      <trans-unit id="af7c66bbf83c48324a2787cc5f5b90cc">
+        <source>These payment methods are already available to your customers.</source>
+        <target>These payment methods are already available to your customers.</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:153</note>
       </trans-unit>
@@ -152,9 +168,9 @@ File: modules/welcome/OnBoarding/Configuration.php:197</note>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:199</note>
       </trans-unit>
-      <trans-unit id="2aa32dc808cd1aaef06cf3023af12d3b">
-        <source>A module can be already installed for you, free to install or paying - browse our selection to see what's available!</source>
-        <target>A module can be already installed for you, free to install or paying - browse our selection to see what's available!</target>
+      <trans-unit id="8f2dd8cbf2ed7e2edf0a56c63fe7f8c9">
+        <source>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</source>
+        <target>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:200</note>
       </trans-unit>
@@ -163,66 +179,6 @@ File: modules/welcome/OnBoarding/Configuration.php:200</note>
         <target>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</target>
         <note>Context:
 File: modules/welcome/OnBoarding/Configuration.php:205</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/welcome/welcome.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="83218ac34c1834c26781fe4bde918ee4">
-        <source>Welcome</source>
-        <target>Welcome</target>
-        <note>Context:
-File: modules/welcome/welcome.php:55</note>
-      </trans-unit>
-      <trans-unit id="bf2e8e9545a7aa0e8279986eea30e2db">
-        <source>Help the user to create his first product.</source>
-        <target>Help the user to create his first product.</target>
-        <note>Context:
-File: modules/welcome/welcome.php:56</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
-        <source>Continue</source>
-        <target>Continue</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
-        <source>Hey! Are you lost?</source>
-        <target>Hey! Are you lost?</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:28</note>
-      </trans-unit>
-      <trans-unit id="bfc5a2ef18761320c6f699d790a204c4">
-        <source>To continue, click here:</source>
-        <target>To continue, click here:</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:29</note>
-      </trans-unit>
-      <trans-unit id="bf7b3e2996598c588ca98a6715c5cde9">
-        <source>If you want to stop the tutorial for good, click here:</source>
-        <target>If you want to stop the tutorial for good, click here:</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:33</note>
-      </trans-unit>
-      <trans-unit id="44ae30cf103b6835c27cd42bd0352038">
-        <source>Quit the Welcome tutorial</source>
-        <target>Quit the Welcome tutorial</target>
-        <note>Context:
-File: modules/welcome/views/templates/lost.tpl:35</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/welcome/views/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3342209ae0c129fabccab65b82a503a6">
-        <source>Skip this tutorial</source>
-        <target>Skip this tutorial</target>
-        <note>Context:
-File: modules/welcome/views/content.tpl:41</note>
       </trans-unit>
     </body>
   </file>
@@ -343,6 +299,50 @@ File: modules/welcome/views/navbar.tpl:37</note>
         <target>Stop the OnBoarding</target>
         <note>Context:
 File: modules/welcome/views/navbar.tpl:40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
+        <source>Hey! Are you lost?</source>
+        <target>Hey! Are you lost?</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="bfc5a2ef18761320c6f699d790a204c4">
+        <source>To continue, click here:</source>
+        <target>To continue, click here:</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:29</note>
+      </trans-unit>
+      <trans-unit id="bf7b3e2996598c588ca98a6715c5cde9">
+        <source>If you want to stop the tutorial for good, click here:</source>
+        <target>If you want to stop the tutorial for good, click here:</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="44ae30cf103b6835c27cd42bd0352038">
+        <source>Quit the Welcome tutorial</source>
+        <target>Quit the Welcome tutorial</target>
+        <note>Context:
+File: modules/welcome/views/templates/lost.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/welcome/views/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
+        <source>Continue</source>
+        <target>Continue</target>
+        <note>Context:
+File: modules/welcome/views/content.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="3342209ae0c129fabccab65b82a503a6">
+        <source>Skip this tutorial</source>
+        <target>Skip this tutorial</target>
+        <note>Context:
+File: modules/welcome/views/content.tpl:41</note>
       </trans-unit>
     </body>
   </file>

@@ -1,6 +1,6 @@
 @mixin notification_container() {
   @include single-line-block($size-header-height);
   cursor: pointer;
-  color: $tertiary;
-  width: rem(30px);
+  color: $medium-gray;
+  width: 1.875rem;
 }

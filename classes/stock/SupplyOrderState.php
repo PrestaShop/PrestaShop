@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -130,13 +130,11 @@ class SupplyOrderStateCore extends ObjectModel
             //check first if the order is editable
             if ($is_editable) {
                 $query->where('s.editable = 1 OR s.delivery_note = 1 OR s.enclosed = 1');
-            }
-            //check if the delivery note is available or if the state correspond to a pending receipt state
-            elseif ($is_delivery_note || $is_pending_receipt) {
+            } elseif ($is_delivery_note || $is_pending_receipt) {
+                //check if the delivery note is available or if the state correspond to a pending receipt state
                 $query->where('(s.delivery_note = 0 AND s.editable = 0) OR s.enclosed = 1');
-            }
-            //check if the state correspond to a receipt state
-            elseif ($is_receipt_state) {
+            } elseif ($is_receipt_state) {
+                //check if the state correspond to a receipt state
                 $query->where('s.receipt_state = 1');
             }
         }

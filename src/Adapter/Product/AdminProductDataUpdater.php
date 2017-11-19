@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Product;
@@ -28,6 +28,17 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
+use Product;
+use Validate;
+use Shop;
+use ShopGroup;
+use Category;
+use GroupReduction;
+use Pack;
+use Search;
+use Db;
+use Configuration;
+use Image;
 
 /**
  * This class will update/insert/delete data from DB / ORM about Product, for both Front and Admin interfaces.
@@ -60,8 +71,8 @@ class AdminProductDataUpdater implements ProductInterface
 
         $failedIdList = array();
         foreach ($productListId as $productId) {
-            $product = new \ProductCore($productId);
-            if (!\ValidateCore::isLoadedObject($product)) {
+            $product = new Product($productId);
+            if (!Validate::isLoadedObject($product)) {
                 $failedIdList[] = $productId;
                 continue;
             }
@@ -87,7 +98,7 @@ class AdminProductDataUpdater implements ProductInterface
 
         $failedIdList = $productIdList; // Since we have just one call to delete all, cannot have distinctive fails.
         // Hooks: will trigger actionProductDelete multiple times
-        $result = (new \ProductCore())->deleteSelection($productIdList);
+        $result = (new Product())->deleteSelection($productIdList);
 
         if ($result === 0) {
             throw new UpdateProductException('Cannot delete many requested products.', 5006);
@@ -125,8 +136,8 @@ class AdminProductDataUpdater implements ProductInterface
      */
     public function deleteProduct($productId)
     {
-        $product = new \ProductCore($productId);
-        if (!\ValidateCore::isLoadedObject($product)) {
+        $product = new Product($productId);
+        if (!Validate::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->deleteProduct() received an unknown ID.', 5005);
         }
 
@@ -146,17 +157,17 @@ class AdminProductDataUpdater implements ProductInterface
     public function duplicateProduct($productId, $namePattern = 'copy of %s')
     {
         //TODO : use the $namePattern var to input translated version of 'copy of %s', if translation requested.
-        $product = new \ProductCore($productId);
-        if (!\ValidateCore::isLoadedObject($product)) {
+        $product = new Product($productId);
+        if (!Validate::isLoadedObject($product)) {
             throw new \Exception('AdminProductDataUpdater->duplicateProduct() received an unknown ID.', 5005);
         }
 
         $id_product_old = $product->id;
-        if (empty($product->price) && \ShopCore::getContext() == \ShopCore::CONTEXT_GROUP) {
-            $shops = \ShopGroupCore::getShopsFromGroup(\ShopCore::getContextShopGroupID());
+        if (empty($product->price) && Shop::getContext() == Shop::CONTEXT_GROUP) {
+            $shops = ShopGroup::getShopsFromGroup(Shop::getContextShopGroupID());
             foreach ($shops as $shop) {
                 if ($product->isAssociatedToShop($shop['id_shop'])) {
-                    $product_price = new \ProductCore($id_product_old, false, null, $shop['id_shop']);
+                    $product_price = new Product($id_product_old, false, null, $shop['id_shop']);
                     $product->price = $product_price->price;
                 }
             }
@@ -178,27 +189,27 @@ class AdminProductDataUpdater implements ProductInterface
         }
 
         if ($product->add()
-            && \CategoryCore::duplicateProductCategories($id_product_old, $product->id)
-            && \ProductCore::duplicateSuppliers($id_product_old, $product->id)
-            && ($combination_images = \ProductCore::duplicateAttributes($id_product_old, $product->id)) !== false
-            && \GroupReductionCore::duplicateReduction($id_product_old, $product->id)
-            && \ProductCore::duplicateAccessories($id_product_old, $product->id)
-            && \ProductCore::duplicateFeatures($id_product_old, $product->id)
-            && \ProductCore::duplicateSpecificPrices($id_product_old, $product->id)
-            && \PackCore::duplicate($id_product_old, $product->id)
-            && \ProductCore::duplicateCustomizationFields($id_product_old, $product->id)
-            && \ProductCore::duplicateTags($id_product_old, $product->id)
-            && \ProductCore::duplicateDownload($id_product_old, $product->id)) {
+            && Category::duplicateProductCategories($id_product_old, $product->id)
+            && Product::duplicateSuppliers($id_product_old, $product->id)
+            && ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
+            && GroupReduction::duplicateReduction($id_product_old, $product->id)
+            && Product::duplicateAccessories($id_product_old, $product->id)
+            && Product::duplicateFeatures($id_product_old, $product->id)
+            && Product::duplicateSpecificPrices($id_product_old, $product->id)
+            && Pack::duplicate($id_product_old, $product->id)
+            && Product::duplicateCustomizationFields($id_product_old, $product->id)
+            && Product::duplicateTags($id_product_old, $product->id)
+            && Product::duplicateDownload($id_product_old, $product->id)) {
             if ($product->hasAttributes()) {
-                \ProductCore::updateDefaultAttribute($product->id);
+                Product::updateDefaultAttribute($product->id);
             }
 
-            if (!\Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
+            if (!Image::duplicateProductImages($id_product_old, $product->id, $combination_images)) {
                 throw new UpdateProductException('An error occurred while copying images.', 5008);
             } else {
                 $this->hookDispatcher->dispatchForParameters('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
-                if (in_array($product->visibility, array('both', 'search')) && \Configuration::get('PS_SEARCH_INDEXATION')) {
-                    \SearchCore::indexation(false, $product->id);
+                if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION')) {
+                    Search::indexation(false, $product->id);
                 }
                 return $product->id;
             }
@@ -273,21 +284,21 @@ class AdminProductDataUpdater implements ProductInterface
         // update current pages.
         $updatePositions = 'UPDATE `'._DB_PREFIX_.'category_product` cp
             INNER JOIN `'._DB_PREFIX_.'product` p ON (cp.`id_product` = p.`id_product`)
-            '.\ShopCore::addSqlAssociation('product', 'p').'
+            '.Shop::addSqlAssociation('product', 'p').'
             SET cp.`position` = ELT(cp.`position`, '.$fields.'),
                 p.`date_upd` = "'.date('Y-m-d H:i:s').'",
                 product_shop.`date_upd` = "'.date('Y-m-d H:i:s').'"
             WHERE cp.`id_category` = '.(int)$categoryId.' AND cp.`id_product` IN ('.implode(',', array_map('intval', array_keys($productList))).')';
 
-        \Db::getInstance()->query($updatePositions);
+        Db::getInstance()->execute($updatePositions);
 
         // Fixes duplicates on all pages
-        \Db::getInstance()->query('SET @i := 0');
+        Db::getInstance()->query('SET @i := 0');
         $selectPositions = 'UPDATE`'._DB_PREFIX_.'category_product` cp
             SET cp.`position` = (SELECT @i := @i + 1)
             WHERE cp.`id_category` = '.(int)$categoryId.'
             ORDER BY cp.`id_product` NOT IN ('.implode(',', array_map('intval', array_keys($productList))).'), cp.`position` ASC';
-        \Db::getInstance()->query($selectPositions);
+        Db::getInstance()->execute($selectPositions);
 
         return true;
     }

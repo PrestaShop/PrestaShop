@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,15 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product;
+namespace Tests\Unit\Core\Product;
 
 use Phake;
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Core\Price\PricePresenterInterface;
 use Product;
@@ -40,11 +39,11 @@ use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter as BasePricePresenter;
 
 class PriceFormatter extends BasePricePresenter
 {
-    public function convertAmount($price)
+    public function convertAmount($price, $currency = null)
     {
         return $price;
     }
-    public function format($price)
+    public function format($price, $currency = null)
     {
         return "#$price";
     }
@@ -56,9 +55,9 @@ class ProductPresenterTest extends UnitTestCase
     private $product;
     private $language;
 
-    public function setup()
+    public function setUp()
     {
-        parent::setup();
+        parent::setUp();
         $this->settings = new ProductPresentationSettings;
 
         $this->settings->catalog_mode = false;
@@ -70,6 +69,7 @@ class ProductPresenterTest extends UnitTestCase
         $this->product['id_product'] = 1;
         $this->product['id_product_attribute'] = 0;
         $this->product['link_rewrite'] = 'hérisson';
+        $this->product['reference'] = 'ref-herisson';
         $this->product['price'] = null;
         $this->product['price_without_reduction'] = null;
         $this->product['price_tax_exc'] = null;

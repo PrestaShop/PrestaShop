@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 export default function() {
   $(document).ready(function() {
     let $jsCombinationsList = $('.js-combinations-list');
@@ -21,7 +19,7 @@ export default function() {
         }
         $('#create-combinations').click(function(event) {
           event.preventDefault();
-          generate();
+          form.send(false, false, generate);
         });
       });
 
@@ -154,9 +152,10 @@ export default function() {
       url: $('#form_step3_attributes').attr('data-action'),
       data: $('#attributes-generator input.attribute-generator, #form_id_product').serialize(),
       beforeSend: function() {
-        $('#create-combinations').attr('disabled', 'disabled');
+        $('#create-combinations, #submit, .btn-submit').attr('disabled', 'disabled');
       },
       success: function(response) {
+        refreshTotalCombinations(1, $(response.form).filter('.combination.loaded').length);
         $('#accordion_combinations').append(response.form);
         displayFieldsManager.refresh();
         let url = $('.js-combinations-list').attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $('.js-combinations-list').data('id-product'));
@@ -175,7 +174,7 @@ export default function() {
         $('#combinations_thead').fadeIn();
       },
       complete: function() {
-        $('#create-combinations').removeAttr('disabled');
+        $('#create-combinations, #submit, .btn-submit').removeAttr('disabled');
         supplierCombinations.refresh();
         warehouseCombinations.refresh();
       }

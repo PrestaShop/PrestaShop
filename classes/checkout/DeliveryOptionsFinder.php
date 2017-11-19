@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -96,21 +96,19 @@ class DeliveryOptionsFinderCore
                                 if ($include_taxes) {
                                     $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_with_tax']);
                                     if ($display_taxes_label) {
-                                        $carrier['price'] = sprintf(
-                                            $this->translator->trans(
-                                                '%s tax incl.', array(), 'Shop.Theme.Checkout'
-                                            ),
-                                            $carrier['price']
+                                        $carrier['price'] = $this->translator->trans(
+                                            '%price% tax incl.',
+                                            array('%price%' => $carrier['price']),
+                                            'Shop.Theme.Checkout'
                                         );
                                     }
                                 } else {
                                     $carrier['price'] = $this->priceFormatter->format($carriers_list['total_price_without_tax']);
                                     if ($display_taxes_label) {
-                                        $carrier['price'] = sprintf(
-                                            $this->translator->trans(
-                                                '%s tax excl.', array(), 'Shop.Theme.Checkout'
-                                            ),
-                                            $carrier['price']
+                                        $carrier['price'] = $this->translator->trans(
+                                            '%price% tax excl.',
+                                            array('%price%' => $carrier['price']),
+                                            'Shop.Theme.Checkout'
                                         );
                                     }
                                 }

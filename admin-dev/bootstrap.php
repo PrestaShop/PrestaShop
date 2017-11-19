@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,10 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-umask(0000); // This will let the permissions be 0775
+umask(0000); // This will let the permissions be 0777
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
@@ -33,4 +33,6 @@ if (!defined('PS_ADMIN_DIR')) {
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
 
-$loader = require_once(dirname(__FILE__).'/../app/bootstrap.php.cache');
+if (PHP_VERSION_ID < 70000) {
+    $loader = require_once(dirname(__FILE__).'/../var/bootstrap.php.cache');
+}

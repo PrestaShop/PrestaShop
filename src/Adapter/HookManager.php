@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,13 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter;
+
+use Hook;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class HookManager
 {
@@ -51,21 +54,25 @@ class HookManager
         $use_push = false,
         $id_shop = null
     ) {
-        global $kernel;
-        if (!is_null($kernel)) {
-            // Ensure Request
-            if (!is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest())) {
-                $hook_args = array_merge(array('request' => $kernel->getContainer()->get('request')), $hook_args);
-            }
+        $sfContainer = SymfonyContainer::getInstance();
+        $request = null;
 
-            // If the Symfony kernel is instanciated, we use it for the event fonctionnality
-            $hookDispatcher = $kernel->getContainer()->get('prestashop.hook.dispatcher');
+        if ($sfContainer instanceof ContainerInterface) {
+            $request = $sfContainer->get('request_stack')->getCurrentRequest();
+        }
+
+        if (!is_null($request)) {
+            $hook_args = array_merge(array('request' => $request), $hook_args);
+
+            // If Symfony application is booted, we use it to dispatch Hooks
+            $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
+
             return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();
         } else {
             try {
-                return \HookCore::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
+                return Hook::exec($hook_name, $hook_args, $id_module, $array_return, $check_exceptions, $use_push, $id_shop);
             } catch (\Exception $e) {
-                $logger = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
+                $logger = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\LegacyLogger');
                 $logger->error(sprintf('Exception on hook %s for module %s. %s', $hook_name, $id_module, $e->getMessage()));
             }
         }

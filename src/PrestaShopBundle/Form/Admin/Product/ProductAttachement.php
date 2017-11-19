@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
@@ -83,11 +83,11 @@ class ProductAttachement extends CommonAbstractType
         ))
         ->add('add', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' =>  $this->translator->trans('Add', [], 'Admin.Actions'),
-            'attr' =>  ['class' => 'btn-primary-outline pull-right']
+            'attr' =>  ['class' => 'btn-outline-primary pull-right']
         ))
         ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' =>  $this->translator->trans('Cancel', [], 'Admin.Actions'),
-            'attr' =>  ['class' => 'btn-tertiary-outline pull-right m-r-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
+            'attr' =>  ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

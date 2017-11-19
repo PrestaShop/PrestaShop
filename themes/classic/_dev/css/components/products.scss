@@ -19,13 +19,18 @@
   .manufacturer-logo {
     height: 35px;
   }
+
+  .product-description img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 .input-color {
   position: absolute;
   opacity: 0;
   cursor: pointer;
-  height: rem(20px);
-  width: rem(20px);
+  height: 1.25rem;
+  width: 1.25rem;
 }
 .input-container {
   position: relative;
@@ -49,62 +54,60 @@
   @include box-shadow;
   background: white;
   display: inline-block;
-  padding: rem(2px) $small-space;
+  padding: 0.125rem $small-space;
   font-weight: 600;
   border: 2px solid white;
 }
 .product-actions {
   .control-label {
     width: 100%;
-    margin-bottom: rem(6px);
+    margin-bottom: 0.375rem;
     display: block;
     width: 100%;
   }
   .add-to-cart {
-    height: rem(44px);
+    height: 2.75rem;
     line-height: inherit;
-    padding-top: rem(10px);
+    padding-top: 0.625rem;
     .material-icons {
       line-height: inherit;
     }
   }
 }
 .product-quantity {
-  .qty {
+  display: flex;
+  .qty, .add {
     float: left;
-    width: 80px;
-    margin-bottom: rem(8px);
+    display: inline-flex;
+    margin-bottom: 0.5rem;
   }
-  .add {
-    float: left;
-    margin-bottom: rem(8px);
+  .qty {
+    margin-right: 0.4rem;
   }
   #quantity_wanted {
     color: $gray-darker;
     background-color: white;
-    height: rem(44px);
+    height: 2.75rem;
     padding: 0.175rem 0.5rem;
-    width: rem(48px);
+    width: 3rem;
   }
   .input-group-btn-vertical {
-    float: left;
-  }
-  .input-group-btn-vertical {
+    width: auto;
     .btn {
-      padding: rem(8px) rem(11px);
+      padding: 0.5rem 0.6875rem;
       i {
-        font-size: rem(16px);
-        top: rem(2px);
-        left: rem(3px);
+        font-size: 1rem;
+        top: 0.125rem;
+        left: 0.1875rem;
       }
     }
   }
   .btn-touchspin {
-    height: rem(23px);
+    height: 1.438rem;
   }
 }
 .product-discounts {
-  margin-bottom: rem(24px);
+  margin-bottom: 1.5rem;
   > .product-discounts-title {
     font-weight: normal;
     font-size: $font-size-sm;
@@ -114,7 +117,7 @@
       width: 33%;
       padding: $small-space $medium-space;
       background: white;
-      border: rem(5px) $gray-light solid;
+      border: 0.3125rem $gray-light solid;
       text-align: center;
     }
     tbody tr {
@@ -125,7 +128,7 @@
       td {
         padding: $small-space $medium-space;
         text-align: center;
-        border: rem(5px) $gray-light solid;
+        border: 0.3125rem $gray-light solid;
       }
     }
   }
@@ -134,12 +137,21 @@
   margin-top: $medium-space;
 
   div {
-    margin-bottom: rem(10px);
+    margin-bottom: 0.625rem;
   }
 
   .tax-shipping-delivery-label {
-    font-size: rem(13px);
-    color: $gray-dark;
+    font-size: 0.8125rem;
+    color: $gray;
+
+    .delivery-information {
+      padding: 0 0 0 2px;
+
+      &::before {
+        content: "-";
+        padding: 0 2px 0 0;
+      }
+    }
   }
 }
 .product-discount {
@@ -158,7 +170,7 @@
     background: $brand-secondary;
     color: white;
     font-weight: 600;
-    padding: rem(5px) $small-space;
+    padding: 0.3125rem $small-space;
     font-size: $font-size-base;
     margin-left: $small-space;
     text-transform: uppercase;
@@ -171,7 +183,7 @@
 }
 .tabs {
   @include box-shadow;
-  margin-top: rem(32px);
+  margin-top: 2rem;
   background: white;
   padding: $medium-space $large-space;
   .tab-pane {
@@ -181,7 +193,7 @@
     border: none;
     border-bottom: $gray-light 2px solid;
     .nav-link {
-      color: $gray-dark;
+      color: $gray;
       border: 0 solid transparent;
       &.active {
         border: none;
@@ -195,7 +207,7 @@
     }
     .nav-item {
       float: left;
-      margin-bottom: rem(-2px);
+      margin-bottom: -0.125rem;
     }
   }
 }
@@ -207,7 +219,7 @@
     background: white;
   }
   .layer {
-    @include display(flex);
+    display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -225,8 +237,8 @@
       opacity: 1;
     }
     .zoom-in {
-      font-size: rem(100px);
-      color: white;
+      font-size: 6.25rem;
+      color: $gray;
     }
   }
 }
@@ -236,7 +248,7 @@
     border: none;
     padding: 0;
     .modal-body {
-      @include display(flex);
+      display: flex;
       margin-left: -30%;
       .product-cover-modal {
         background: white;
@@ -244,7 +256,7 @@
       .image-caption {
         background: white;
         width: 800px;
-        padding: rem(10px) rem(20px);
+        padding: 0.625rem 1.25rem;
         border-top: $gray-light 1px solid;
         p {
           margin-bottom: 0;
@@ -256,8 +268,8 @@
       .mask {
         position: relative;
         overflow: hidden;
-        max-height: rem(790px);
-        margin-top: rem(35px);
+        max-height: 49.38rem;
+        margin-top: 2.188rem;
         z-index: 1;
         &.nomargin {
           margin-top: 0;
@@ -266,7 +278,7 @@
       .product-images {
         margin-left: $extra-large-space;
         img {
-          width: rem(148px);
+          width: 9.25rem;
           cursor: pointer;
           background: white;
           &:hover {
@@ -293,7 +305,7 @@
           bottom: -2rem;
         }
         i {
-          font-size: rem(100px);
+          font-size: 6.25rem;
           display: inline;
         }
         cursor: pointer;
@@ -308,10 +320,10 @@
   }
   .modal-body {
     background: $gray-light;
-    padding: rem(50px) rem(30px);
+    padding: 3.125rem 1.875rem;
     .divide-right span {
       display: inline-block;
-      margin-bottom: rem(5px);
+      margin-bottom: 0.3125rem;
     }
   }
   .modal-dialog {
@@ -324,24 +336,24 @@
   .modal-title {
     font-weight: 600;
     color: white;
-    font-size: rem(18px);
+    font-size: 1.125rem;
     i.material-icons {
       margin-right: $large-space;
     }
   }
   .product-name {
     color: $brand-primary;
-    font-size: rem(18px);
+    font-size: 1.125rem;
   }
   .cart-products-count {
-    font-size: rem(18px);
+    font-size: 1.125rem;
   }
   .cart-content {
     padding-left: $extra-large-space;
     .cart-content-btn {
       display: inline-flex;
       button {
-        margin-right: rem(5px);
+        margin-right: 0.3125rem;
       }
       .btn {
         white-space: inherit;
@@ -360,7 +372,7 @@
       cursor: pointer;
       margin-bottom: $small-space;
       .images-container & {
-        margin-right: rem(13px);
+        margin-right: 0.8125rem;
       }
       &.selected,
       &:hover {
@@ -388,7 +400,7 @@
   }
   i {
     position: absolute;
-    bottom: rem(26px);
+    bottom: 1.625rem;
     height: 100px;
     line-height: 100px;
     cursor: pointer;
@@ -401,9 +413,9 @@
   }
 }
 #product-availability {
+  margin-top: 0.625rem;
   display: inline-block;
   font-weight: 700;
-  margin-left: $small-space;
   .material-icons {
     line-height: inherit;
   }
@@ -426,26 +438,25 @@
 }
 .product-features {
   margin-top: $medium-space;
-  margin-left: rem(5px);
+  margin-left: 0.3125rem;
   > dl.data-sheet {
-    @include display(flex);
-    @include flex-wrap(wrap);
-    @include align-items(flex-start);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
     dd.value,
     dt.name {
-      @include flex(1 0 40%);
+      flex: 1 0 40%;
       font-weight: normal;
       background: $gray-light;
       padding: $small-space;
       margin-right: $small-space;
-      min-height: rem(40px);
-      word-break: break-all;
+      min-height: 2.5rem;
+      word-break: normal;
       &:nth-of-type(even) {
         background: $gray-lighter;
-      }
     }
-    dt.name {
-      text-transform: capitalize;
+    text-transform: capitalize;
+    margin-bottom: .5rem;
     }
   }
 }
@@ -453,9 +464,10 @@
   > .product-variants-item {
     margin: $medium-space 0;
     select {
-      border: 1px solid $gray-light;
-      height: rem(40px);
-      width: rem(60px);
+      background-color: white;
+      width: auto;
+      padding-right: 1.875rem;
+      @include box-shadow-light;
     }
     ul li {
       margin-right: $small-space;
@@ -476,21 +488,21 @@ li.product-flag {
     position: absolute;
     background: $brand-primary;
     font-weight: 700;
-    padding: rem(5px) rem(7px);
+    padding: 0.3125rem 0.4375rem;
     text-transform: uppercase;
     color: white;
     margin-top: $small-space;
-    margin-left: rem(-5px);
     z-index: 2;
+    @include box-shadow-light;
     &.online-only{
-      top: rem(400px);
+      top: 25rem;
       right: 0;
       font-size: $font-size-xs;
       &::before{
         content:"\E30A";
         font-family: 'Material Icons';
         vertical-align: middle;
-        margin: rem(5px);
+        margin: 0.3125rem;
       }
     }
     &.discount {
@@ -504,10 +516,12 @@ li.product-flag {
       left:0;
       top:0;
     }
+    &:not(.discount):not(.on-sale)~li.product-flag {
+        margin-top: 3.75rem;
+    }
 }
 
 .product-customization {
-  @include box-shadow;
   margin: $extra-large-space 0;
   .product-customization-item {
     margin: $medium-space 0;
@@ -516,11 +530,12 @@ li.product-flag {
     background: $gray-light;
     border: none;
     width: 100%;
-    height: rem(50px);
+    height: 3.125rem;
     resize: none;
-    padding: rem(10px);
-    @include placeholder {
-      color: $gray;
+    padding: 0.625rem;
+    &:focus {
+      background-color: white;
+      outline: 0.1875rem solid $brand-primary;
     }
   }
   .file-input {
@@ -529,7 +544,7 @@ li.product-flag {
     left: 0;
     z-index: 1;
     cursor: pointer;
-    height: rem(42px);
+    height: 2.625rem;
     overflow: hidden;
     position: absolute;
   }
@@ -541,9 +556,9 @@ li.product-flag {
     position: relative;
     background: $gray-light;
     width: 100%;
-    height: rem(42px);
-    line-height: rem(42px);
-    text-indent: rem(10px);
+    height: 2.625rem;
+    line-height: 2.625rem;
+    text-indent: 0.625rem;
     display: block;
     color: $gray;
     margin-top: $medium-space;
@@ -561,11 +576,11 @@ li.product-flag {
 .product-pack {
   margin-top: $extra-large-space;
   .pack-product-container {
-    @include display(flex);
+    display: flex;
     justify-content: space-around;
     .pack-product-name {
-      @include flex(0 0 50%);
-      font-size: rem(14px);
+      flex: 0 0 50%;
+      font-size: 0.875rem;
       color: $gray;
     }
     .pack-product-quantity {
@@ -575,7 +590,7 @@ li.product-flag {
     .pack-product-name,
     .pack-product-price,
     .pack-product-quantity {
-      @include display(flex);
+      display: flex;
       align-items: center;
     }
   }
@@ -585,24 +600,24 @@ li.product-flag {
 }
 .social-sharing {
   width: 100%;
-  @include display(flex);
-  @include align-items(center);
-  margin-top: rem(24px);
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
   ul {
     margin-bottom: 0;
   }
   li {
-    @include box-shadow;
-    height: rem(40px);
-    width: rem(40px);
+    @include box-shadow-light;
+    height: 2.5rem;
+    width: 2.5rem;
     border-radius: 50%;
     display: inline-block;
     background-color: white;
     background-repeat: no-repeat;
-    background-size: rem(32px) rem(32px);
-    background-position: rem(4px) rem(4px);
+    background-size: 2rem 2rem;
+    background-position: 0.25rem 0.25rem;
     cursor: pointer;
-    margin-left: rem(8px);
+    margin-left: 0.5rem;
     @include transition(all .2s ease-in);
     a {
       display: block;
@@ -620,7 +635,7 @@ li.product-flag {
 .products-selection {
   margin-bottom: $medium-space;
   .title {
-    color: $gray-dark;
+    color: $gray;
   }
 }
 #blockcart-modal .cart-content {
@@ -635,7 +650,7 @@ li.product-flag {
     }
   }
   #product-modal .modal-content .modal-body {
-    @include flex-direction(column);
+    flex-direction: column;
     margin-left: 0;
     img.product-cover-modal {
       width: 100%;
@@ -652,7 +667,7 @@ li.product-flag {
       width: calc(100% - 20px);
     }
     .modal-body {
-      padding: rem(30px);
+      padding: 1.875rem;
     }
   }
 }
@@ -663,7 +678,7 @@ li.product-flag {
       border-right: none;
     }
     .modal-body {
-      padding: rem(16px);
+      padding: 1rem;
     }
   }
 }

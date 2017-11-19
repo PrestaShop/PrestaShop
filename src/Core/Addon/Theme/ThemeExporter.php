@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -37,21 +37,17 @@ class ThemeExporter
 {
     protected $configuration;
     protected $fileSystem;
-    protected $finder;
     protected $langRepository;
     protected $translationsExporter;
 
     public function __construct(
         ConfigurationInterface $configuration,
         Filesystem $fileSystem,
-        Finder $finder,
         LangRepository $langRepository,
         TranslationsExporter $translationsExporter
-    )
-    {
+    ) {
         $this->configuration = $configuration;
         $this->fileSystem = $fileSystem;
-        $this->finder = $finder;
         $this->langRepository = $langRepository;
         $this->translationsExporter = $translationsExporter;
     }
@@ -64,7 +60,7 @@ class ThemeExporter
         $this->copyModuleDependencies((array) $theme->get('dependencies.modules'), $cacheDir);
         $this->copyTranslations($theme, $cacheDir);
 
-        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_').'/'.$theme->getName().'.zip';
+        $finalFile = $this->configuration->get('_PS_ALL_THEMES_DIR_'). DIRECTORY_SEPARATOR .$theme->getName().'.zip';
         $this->createZip($cacheDir, $finalFile);
 
         $this->fileSystem->remove($cacheDir);
@@ -74,9 +70,7 @@ class ThemeExporter
 
     private function copyTheme($themeDir, $cacheDir)
     {
-        $finderClassName = get_class($this->finder);
-        $this->finder = $finderClassName::create();
-        $fileList = $this->finder
+        $fileList = Finder::create()
             ->files()
             ->in($themeDir)
             ->exclude(['node_modules']);
@@ -133,9 +127,7 @@ class ThemeExporter
         $zip = new ZipArchive();
         $zip->open($destinationFileName, ZipArchive::CREATE);
 
-        $finderClassName = get_class($this->finder);
-        $this->finder = $finderClassName::create();
-        $files = $this->finder
+        $files = Finder::create()
             ->files()
             ->in($sourceDir)
             ->exclude(['node_modules']);

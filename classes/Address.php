@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -120,7 +120,7 @@ class AddressCore extends ObjectModel
             'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
             'alias' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+            'company' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
             'lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'vat_number' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
@@ -197,6 +197,11 @@ class AddressCore extends ObjectModel
 
         if (Validate::isUnsignedId($this->id_customer)) {
             Customer::resetAddressCache($this->id_customer, $this->id);
+        }
+
+        /* Skip the required fields */
+        if ($this->isUsed()) {
+            self::$fieldsRequiredDatabase['Address'] = array();
         }
 
         return parent::update($null_values);
@@ -519,11 +524,6 @@ class AddressCore extends ObjectModel
      */
     public function getFieldsRequiredDB()
     {
-        $this->cacheFieldsRequiredDatabase(false);
-        if (isset(self::$fieldsRequiredDatabase['Address'])) {
-            return self::$fieldsRequiredDatabase['Address'];
-        }
-
-        return array();
+        return parent::getCachedFieldsRequiredDatabase();
     }
 }

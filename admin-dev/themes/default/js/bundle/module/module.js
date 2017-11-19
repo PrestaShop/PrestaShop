@@ -44,11 +44,11 @@ var AdminModuleController = function() {
   this.categoryGridItemSelector = '.module-category-item';
   this.addonItemGridSelector = '.module-addons-item-grid';
   this.addonItemListSelector = '.module-addons-item-list';
-  
+
   // Upgrade All selectors
   this.upgradeAllSource = '.module_action_menu_upgrade_all';
   this.upgradeAllTargets = '#modules-list-container-update .module_action_menu_upgrade:visible';
-  
+
   // Bulk action selectors
   this.bulkActionDropDownSelector = '.module-bulk-actions select';
   this.checkedBulkActionListSelector = '.module-checkbox-bulk-list input:checked';
@@ -77,6 +77,7 @@ var AdminModuleController = function() {
   this.addonsLogoutModalBtnSelector = '#page-header-desc-configuration-addons_logout';
   this.addonsImportModalBtnSelector = '#page-header-desc-configuration-add_module';
   this.dropZoneModalSelector = '#module-modal-import';
+  this.dropZoneModalFooterSelector = '#module-modal-import .modal-footer';
   this.dropZoneImportZoneSelector = '#importDropzone';
   this.addonsConnectModalSelector = '#module-modal-addons-connect';
   this.addonsLogoutModalSelector = '#module-modal-addons-logout';
@@ -91,6 +92,7 @@ var AdminModuleController = function() {
   this.moduleImportFailureDetailsBtnSelector = '.module-import-failure-details-action';
   this.moduleImportSelectFileManualSelector = '.module-import-start-select-manual';
   this.moduleImportFailureMsgDetailsSelector = '.module-import-failure-details';
+  this.moduleImportConfirmSelector = '.module-import-confirm';
 
   /**
    * Initialize all listners and bind everything
@@ -142,6 +144,7 @@ var AdminModuleController = function() {
 
   this.initBOEventRegistering = function() {
     BOEvent.on('Module Disabled', this.onModuleDisabled, this);
+    BOEvent.on('Module Uninstalled', this.updateTotalResults, this);
   };
 
   this.onModuleDisabled = function() {
@@ -257,6 +260,7 @@ var AdminModuleController = function() {
     self.addonsCardGrid = $(this.addonItemGridSelector);
     self.addonsCardList = $(this.addonItemListSelector);
     this.updateModuleVisibility();
+    $('body').trigger('moduleCatalogLoaded');
   };
 
   this.updateModuleVisibility = function() {
@@ -437,7 +441,7 @@ var AdminModuleController = function() {
     var self = this;
     var body = $('body');
     var dropzone = $('.dropzone');
-
+    
     // Reset modal when click on Retry in case of failure
     body.on('click', this.moduleImportFailureRetrySelector, function() {
       $(self.moduleImportSuccessSelector + ', ' + self.moduleImportFailureSelector + ', ' + self.moduleImportProcessingSelector).fadeOut(function() {
@@ -459,6 +463,8 @@ var AdminModuleController = function() {
       dropzone.removeAttr('style');
       $(self.moduleImportFailureMsgDetailsSelector).hide();
       $(self.moduleImportSuccessConfigureBtnSelector).hide();
+      $(self.dropZoneModalFooterSelector).html('');
+      $(self.moduleImportConfirmSelector).hide();
     });
 
     // Change the way Dropzone.js lib handle file input trigger
@@ -502,7 +508,7 @@ var AdminModuleController = function() {
     });
 
     // @see: dropzone.js
-    Dropzone.options.importDropzone = {
+    var dropzoneOptions = {
       url: 'import' + window.location.search,
       acceptedFiles: '.zip, .tar',
       // The name that will be used to transfer the file
@@ -513,20 +519,13 @@ var AdminModuleController = function() {
       dictDefaultMessage: '',
       hiddenInputContainer: self.dropZoneImportZoneSelector,
       addedfile: function() {
-        // State that we start module upload
-        self.isUploadStarted = true;
-        $(self.moduleImportStartSelector).hide(0);
-        dropzone.css('border', 'none');
-        $(self.moduleImportProcessingSelector).fadeIn();
+        self.animateStartUpload();
       },
       processing: function () {
         // Leave it empty since we don't require anything while processing upload
       },
       error: function (file, message) {
-        $(self.moduleImportProcessingSelector).finish().fadeOut(function() {
-          $(self.moduleImportFailureMsgDetailsSelector).html(message);
-          $(self.moduleImportFailureSelector).fadeIn();
-        });
+        self.displayOnUploadError(message);
       },
       complete: function (file) {
         if (file.status !== 'error') {
@@ -534,23 +533,94 @@ var AdminModuleController = function() {
           if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
           if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
 
-          $(self.moduleImportProcessingSelector).finish().fadeOut(function() {
-            if (responseObject.status === true) {
-              if (responseObject.is_configurable === true) {
-                var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + responseObject.module_name + window.location.search;
-                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
-                $(self.moduleImportSuccessConfigureBtnSelector).show();
-              }
-              $(self.moduleImportSuccessSelector).fadeIn();
-            } else {
-              $(self.moduleImportFailureMsgDetailsSelector).html(responseObject.msg);
-              $(self.moduleImportFailureSelector).fadeIn();
-            }
-          });
+          self.displayOnUploadDone(responseObject);
         }
         // State that we have finish the process to unlock some actions
         self.isUploadStarted = false;
       }
+    };
+    dropzone.dropzone($.extend(dropzoneOptions));
+    
+    this.animateStartUpload = function() {
+        // State that we start module upload
+        self.isUploadStarted = true;
+        $(self.moduleImportStartSelector).hide(0);
+        dropzone.css('border', 'none');
+        $(self.moduleImportProcessingSelector).fadeIn();
+    };
+    
+    this.animateEndUpload = function(callback) {
+        $(self.moduleImportProcessingSelector).finish().fadeOut(callback);
+    };
+    
+    /**
+     * Method to call for upload modal, when the ajax call went well.
+     * 
+     * @param object result containing the server response
+     */
+    this.displayOnUploadDone = function(result) {
+        var self = this;
+        self.animateEndUpload(function() {
+            if (result.status === true) {
+              if (result.is_configurable === true) {
+                var configureLink = self.baseAdminDir + 'module/manage/action/configure/' + result.module_name + window.location.search;
+                $(self.moduleImportSuccessConfigureBtnSelector).attr('href', configureLink);
+                $(self.moduleImportSuccessConfigureBtnSelector).show();
+              }
+              $(self.moduleImportSuccessSelector).fadeIn();
+            } else if (typeof result.confirmation_subject !== 'undefined') {
+                self.displayPrestaTrustStep(result);
+            } else {
+              $(self.moduleImportFailureMsgDetailsSelector).html(result.msg);
+              $(self.moduleImportFailureSelector).fadeIn();
+            }
+          });
+    };
+
+    /**
+     * Method to call for upload modal, when the ajax call went wrong or when the action requested could not
+     * succeed for some reason.
+     * 
+     * @param string message explaining the error.
+     */
+    this.displayOnUploadError = function(message) {
+        self.animateEndUpload(function() {
+            $(self.moduleImportFailureMsgDetailsSelector).html(message);
+            $(self.moduleImportFailureSelector).fadeIn();
+        });
+    };
+
+    /**
+     * If PrestaTrust needs to be confirmed, we ask for the confirmation modal content and we display it in the
+     * currently displayed one. We also generate the ajax call to trigger once we confirm we want to install
+     * the module.
+     * 
+     * @param Previous server response result
+     */
+    this.displayPrestaTrustStep = function (result) {
+          var self = this;
+          var modal = module_card_controller.replacePrestaTrustPlaceholders(result);
+          var moduleName = result.module.attributes.name;
+          $(this.moduleImportConfirmSelector).html(modal.find('.modal-body').html()).fadeIn();
+          $(this.dropZoneModalFooterSelector).html(modal.find('.modal-footer').html()).fadeIn();
+          $(this.dropZoneModalFooterSelector).find(".pstrust-install").off('click').on('click', function() {
+            
+            $(self.moduleImportConfirmSelector).hide();
+            $(self.dropZoneModalFooterSelector).html('');
+            self.animateStartUpload();
+            
+            // Install ajax call
+            $.post(result.module.attributes.urls.install, { 'actionParams[confirmPrestaTrust]': "1"})
+              .done(function(data) {
+                self.displayOnUploadDone(data[moduleName]);
+              })
+              .fail(function(data) {
+                self.displayOnUploadError(data[moduleName]);
+              })
+              .always(function() {
+                  self.isUploadStarted = false;
+              });
+          });
     };
   };
 
@@ -559,8 +629,8 @@ var AdminModuleController = function() {
       ? this.bulkActionCheckboxGridSelector
       : this.bulkActionCheckboxListSelector;
   };
-  
-  
+
+
   this.getBulkCheckboxesCheckedSelector = function () {
     return this.currentDisplay == 'grid'
       ? this.checkedBulkActionGridSelector
@@ -627,13 +697,12 @@ var AdminModuleController = function() {
       $(self.categoryItemSelector+'[data-category-ref="'+refCategory+'"]').click();
     });
   };
-  
+
   this.initCurrentDisplay = function() {
-    var currentDisplaySwitch = $('.module-sort-active');
-    if (currentDisplaySwitch.length) {
-      this.currentDisplay = currentDisplaySwitch.attr('data-switch');
-    } else {
+    if (this.currentDisplay === '') {
       this.currentDisplay = 'list';
+    } else {
+      this.currentDisplay = 'grid';
     }
   }
 
@@ -727,7 +796,7 @@ var AdminModuleController = function() {
         $next.fadeOut();
       });
     });
-    
+
     // "Upgrade All" button handler
     var that = this;
     $('body').on('click', this.upgradeAllSource, function(event) {
@@ -816,12 +885,6 @@ var AdminModuleController = function() {
       inputPlaceholder: translate_javascripts['Search - placeholder'],
       closingCross: true,
       context: self,
-      clearAllBtn: true,
-      clearAllIconClassAdditional: 'material-icons',
-      clearAllSpanClassAdditional: 'module-tags-clear-btn ',
-      tagInputClassAdditional: 'module-tags-input',
-      tagClassAdditional: 'module-tag ',
-      tagsWrapperClassAdditional: 'module-tags-labels'
     });
 
     $('body').on('click', '.module-addons-search-link', function(event) {

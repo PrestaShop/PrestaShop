@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -32,6 +32,7 @@ use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Tab as TabClass;
 
 class ModuleTabUnregister
 {
@@ -46,15 +47,15 @@ class ModuleTabUnregister
     protected $tabRepository;
 
     /**
-     * @var Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     private $translator;
-    
+
     public function __construct(TabRepository $tabRepository, LangRepository $langRepository, LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->langRepository = $langRepository;
@@ -72,7 +73,7 @@ class ModuleTabUnregister
      */
     public function unregisterTabs(Module $module)
     {
-        // We use the Tab repository to have only 
+        // We use the Tab repository to have only
         // installed tabs related to the module
         $tabs = $this->tabRepository->findByModule($module->get('name'));
 
@@ -80,27 +81,26 @@ class ModuleTabUnregister
             $this->unregisterTab($tab);
         }
     }
-    
+
     /**
      * Uninstalls a tab given its defined structure.
      *
      * @param Tab $tab The instance of entity tab.
-     * 
+     *
      */
     private function unregisterTab(Tab $tab)
     {
         // We need to use the legacy class because of the right management
-        $tab_legacy = new \Tab($tab->getId());
-            
+        $tab_legacy = new TabClass($tab->getId());
+
         if (!$tab_legacy->delete()) {
             $this->logger->warning(
                 $this->translator->trans(
                     'Failed to uninstall admin tab "%name%".',
                     array(
-                        '%name%' => $tab->className,
+                        '%name%' => $tab->getClassName(),
                     ),
                     'Admin.Modules.Notification'));
         }
     }
-    
 }

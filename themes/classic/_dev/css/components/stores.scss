@@ -1,8 +1,8 @@
 #stores {
   .page-stores {
     .store-item {
-      padding-left: rem(12px);
-      padding-right: rem(12px);
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
     }
     width: 85%;
     margin: 0 auto;
@@ -12,9 +12,9 @@
       }
     }
     .store-item-container {
-      @include display(flex);
-      @include justify-content(space-around);
-      @include align-items(center);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
       padding: $large-space 0;
       ul {
         margin-bottom: 0;
@@ -23,10 +23,10 @@
       .divide-left {
         border-left: $gray-light 1px solid;
         tr {
-          height: rem(25px);
+          height: 1.563rem;
         }
         td {
-          padding-left: rem(6px);
+          padding-left: 0.375rem;
         }
         th {
           text-align: right;
@@ -37,15 +37,15 @@
       }
     }
     .store-item-footer {
-      margin-top: rem(8px);
-      padding-top: rem(8px);
-      @include display(flex);
-      @include justify-content(space-around);
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      display: flex;
+      justify-content: space-around;
       &.divide-top {
         border-top: $gray-light 1px solid;
       }
       div:first-child {
-        @include flex(0 0 65%);
+        flex: 0 0 65%;
       }
       i.material-icons{
         margin-right: $small-space;
@@ -65,7 +65,7 @@
     .page-stores {
       width: 100%;
       .store-item-container {
-        padding: rem(16px) 0;
+        padding: 1rem 0;
       }
     }
   }
@@ -80,10 +80,10 @@
         }
         .store-description {
           a {
-            margin-bottom: rem(8px);
+            margin-bottom: 0.5rem;
           }
           address {
-            margin-bottom: rem(8px);
+            margin-bottom: 0.5rem;
           }
         }
       }
@@ -96,7 +96,7 @@
           margin-bottom: $small-space;
         }
         .card-block {
-          padding: rem(12px) rem(12px) 0;
+          padding: 0.75rem 0.75rem 0;
         }
       }
     }

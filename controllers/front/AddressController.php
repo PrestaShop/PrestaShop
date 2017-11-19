@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -66,19 +66,7 @@ class AddressControllerCore extends FrontController
                 $this->should_redirect = true;
             }
         } elseif (($id_address = (int)Tools::getValue('id_address'))) {
-            $addressForm = $this->address_form->loadAddressById($id_address);
-
-            if ($addressForm->getAddress()->id === null) {
-                return Tools::redirect('index.php?controller=404');
-            }
-
-            if (!$this->context->customer->isLogged()) {
-                return $this->redirectWithNotifications('/index.php?controller=authentication');
-            }
-
-            if ($addressForm->getAddress()->id_customer != $this->context->customer->id) {
-                return Tools::redirect('index.php?controller=404');
-            }
+            $this->address_form->loadAddressById($id_address);
 
             if (Tools::getValue('delete')) {
                 $ok = $this->makeAddressPersister()->delete(
@@ -123,10 +111,32 @@ class AddressControllerCore extends FrontController
         $breadcrumb['links'][] = $this->addMyAccountToBreadcrumb();
 
         $breadcrumb['links'][] = [
-            'title' => $this->trans('Addresses', array(), 'Shop.Theme'),
+            'title' => $this->trans('Addresses', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('addresses')
         ];
 
         return $breadcrumb;
+    }
+
+    public function displayAjaxAddressForm()
+    {
+        $addressForm = $this->makeAddressForm();
+
+        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+            $addressForm->loadAddressById($id_address);
+        }
+
+        if (Tools::getIsset('id_country')) {
+            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
+        }
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+        $this->ajaxDie(Tools::jsonEncode(array(
+            'address_form' => $this->render(
+                'customer/_partials/address-form',
+                $addressForm->getTemplateVariables()
+            ),
+        )));
     }
 }

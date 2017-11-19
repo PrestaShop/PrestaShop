@@ -1,16 +1,9 @@
-.lang-rtl {
-  * {
-    direction: rtl !important;
-  }
-  main {
-    text-align: right !important;
-  }
-}
 body,
 html {
   height: 100%;
 }
 body {
+  direction: ltr;
   font-family: 'Noto Sans', sans-serif;
   font-size: $base-font-size;
   -webkit-font-smoothing: antialiased;
@@ -27,8 +20,8 @@ a:hover {
   text-decoration: none;
 }
 p {
-  font-size: rem(15px);
-  color: $gray-dark;
+  font-size: 0.9375rem;
+  color: $gray;
   font-weight: 400;
 }
 .dropdown-item:focus,
@@ -37,11 +30,11 @@ p {
 }
 .color,
 .custom-checkbox input[type="checkbox"] + span.color {
-  width: rem(20px);
-  height: rem(20px);
+  width: 1.25rem;
+  height: 1.25rem;
   display: inline-block;
-  margin: rem(5px);
-  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+  margin: 0.3125rem;
+  @include box-shadow-light;
   border: 1px solid rgba(0,0,0,0.05);
   cursor: pointer;
   background-size: contain;
@@ -70,25 +63,42 @@ p {
 }
 .btn-primary,
 .btn-secondary {
-  @include box-shadow;
+  @include box-shadow-light;
   text-transform: uppercase;
   font-weight: 600;
-  padding: rem(8px) rem(20px);
+  padding: 0.5rem 1.25rem;
   .material-icons {
     margin-right: $small-space;
   }
 }
 .btn-tertiary {
   @extend .btn-secondary;
+  background-color: #F7F7F7;
   text-transform: lowercase;
   color: $gray;
-  box-shadow: rem(1px) rem(1px) rem(1px) 0 rgba(0, 0, 0, 0.1);
-  padding: rem(4px);
-  margin: rem(4px) 0;
+  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
+  padding: 0.25rem;
+  margin: 0.25rem 0;
   font-weight: 400;
   font-size: $font-size-sm;
   .material-icons {
     font-size: $base-font-size;
+  }
+  &:hover {
+    box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
+    border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
+  }
+}
+.btn-unstyle {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  text-align: inherit;
+  &:focus {
+    outline: 0;
+    .expand-more {
+      color: $brand-primary;
+    }
   }
 }
 .card {
@@ -97,56 +107,92 @@ p {
 label ,.label {
   color: $gray-darker;
   text-align: right;
-  font-size: rem(14px);
+  font-size: 0.875rem;
 }
 small.label, small.value {
-  font-size: rem(13px);
+  font-size: 0.8125rem;
 }
 .form-control-label {
-  padding-top: rem(10px);
+  padding-top: 0.625rem;
 }
 .form-control {
   background: $gray-light;
   color: $gray;
-  border: none;
-  padding: rem(8px) rem(16px);
+  border: $input-btn-border-width solid $input-border-color;
+  padding: 0.5rem 1rem;
   &:focus {
     background-color: white;
-    outline: rem(3px) solid $brand-primary;
+    outline: 0.1875rem solid $brand-primary;
+    color: $gray-darker;
   }
 }
 .input-group {
   &.focus {
-    outline: rem(3px) solid $brand-primary;
+    outline: 0.1875rem solid $brand-primary;
   }
   .form-control:focus {
     outline: none;
   }
-  .input-group-btn > .btn {
-    border: 0;
-    box-shadow: none;
-    color: #ffffff;
-    font-size: rem(11px);
-    font-weight: normal;
-    margin-left: 0;
-    padding: rem(10.5px) rem(16px);
-    text-transform: uppercase;
+  .input-group-btn {
+    height: 100%;
+    > .btn {
+      border: 0;
+      box-shadow: none;
+      color: #ffffff;
+      font-size: 0.6875rem;
+      font-weight: normal;
+      margin-left: 0;
+      padding: 0.625rem 1rem;
+      text-transform: uppercase;
+      &[data-action="show-password"]{
+        background: $gray;
+        height: 100%;
+      }
+    }
+  }
+}
+input, textarea {
+  &::-webkit-input-placeholder {
+    color: $gray;
+  }
+  &::-moz-placeholder {
+    color: $gray;
+  }
+  &:-ms-input-placeholder {
+    color: $gray;
+  }
+  &:-moz-placeholder {
+    color: $gray;
+  }
+  &:active {
+    &::-webkit-input-placeholder {
+      color: $gray-darker;
+    }
+    &::-moz-placeholder {
+      color: $gray-darker;
+    }
+    &:-ms-input-placeholder {
+      color: $gray-darker;
+    }
+    &:-moz-placeholder {
+      color: $gray-darker;
+    }
   }
 }
 .form-control-select {
-  height: rem(42px);
+  height: 2.625rem;
   -moz-appearance: none;
   -webkit-appearance: none;
-  background: $gray-light url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=") no-repeat scroll right rem(8px) center / rem(20px) rem(20px);
-  padding-right: rem(32px);
+  background: $gray-light url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAPklEQVR4Ae3TwREAEBQD0V/6do4SXPZg7EsBhsQ8IEmSMOsiuEfg3gL3oXC7wK0bd1G4o8X9F4yIkyQfSrIByQBjp7QuND8AAAAASUVORK5CYII=") no-repeat scroll right 0.5rem center / 1.25rem 1.25rem;
+  padding: 0 0.5rem;
 }
 .form-control-valign {
-  padding-top: rem(8px);
+  padding-top: 0.5rem;
 }
 .form-control-comment {
-  font-size: rem(14px);
-  padding-top: rem(8px);
-  color: $gray-dark;
+  font-size: 0.875rem;
+  padding-top: 0.5rem;
+  color: $gray;
 }
 .form-control-submit {
   &.disabled {
@@ -158,7 +204,7 @@ small.label, small.value {
   &.has-error {
     input,
     select {
-      outline: rem(3px) solid $brand-danger;
+      outline: 0.1875rem solid $brand-danger;
     }
     .help-block {
       color: $brand-danger;
@@ -174,30 +220,43 @@ small.label, small.value {
     color: white;
     text-transform: uppercase;
     border-radius: 0;
-    font-size: rem(14px);
-    padding: rem(8px) rem(16px);
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
   }
 }
 .bootstrap-touchspin {
+  width: auto;
+  float: left;
+  display: inline-block;
+  @include box-shadow-light;
   input {
     &:focus {
       outline: none;
     }
-    &.form-control {
+    &.form-control,
+    &.input-group {
+      color: $gray-darker;
+      background-color: white;
+      height: $input-height;
+      padding: 0.175rem 0.5rem;
+      width: 3rem;
       border: $input-btn-border-width solid $input-border-color;
+      float: left;
     }
   }
   .btn-touchspin {
     @extend .btn-default;
     background-color: white;
     border: $input-btn-border-width solid $input-border-color;
-    height: ($input-height / 2) + rem($input-btn-border-width);
+    height: $input-height / 2 + 0.0625rem;
     &:hover {
       background-color: $gray-light;
     }
   }
   .input-group-btn-vertical {
     color: $gray-darker;
+    width: auto;
+    float: left;
     .bootstrap-touchspin-up {
       border-radius: 0;
     }
@@ -215,9 +274,9 @@ small.label, small.value {
       }
     }
     i {
-      top: rem(1px);
-      left: rem(3px);
-      font-size: rem(15px);
+      top: 0.0625rem;
+      left: 0.1875rem;
+      font-size: 0.9375rem;
     }
   }
 }
@@ -231,40 +290,45 @@ small.label, small.value {
   border-radius: 50%;
   border: $gray 2px solid;
   background: white;
-  margin-right: rem(20px);
+  margin-right: 1.25rem;
   input[type="radio"] {
     opacity: 0;
     cursor: pointer;
   }
-  input[type="radio"]:checked + span {
-    display: block;
-    background-color: $brand-primary;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    position: absolute;
-    left: rem(2px);
-    top: rem(2px);
+  input[type="radio"] {
+    &:checked + span {
+      display: block;
+      background-color: $brand-primary;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      position: absolute;
+      left: 0.125rem;
+      top: 0.125rem;
+    }
+    &:focus + span {
+      border-color: $gray;
+    }
   }
 }
 .custom-checkbox {
   position: relative;
   input[type="checkbox"] {
-    margin-top: rem(4px);
+    margin-top: 0.25rem;
     opacity: 0;
     cursor: pointer;
     position: absolute;
     + span {
       margin-right: 3px;
       display: inline-block;
-      width: rem(15px);
-      height: rem(15px);
+      width: 0.9375rem;
+      height: 0.9375rem;
       vertical-align: middle;
       cursor: pointer;
       border: 2px $gray-darker solid;
       .checkbox-checked {
         display: none;
-        margin: rem(-4px) rem(-2px);
+        margin: -0.25rem -0.125rem;
         font-size: 1.1rem;
         color: $gray-darker;
       }
@@ -274,25 +338,28 @@ small.label, small.value {
         display: block;
       }
     }
+    &:focus + span {
+      border-color: $gray;
+    }
   }
   label {
     text-align: left;
   }
 }
 .text-muted {
-  font-size: rem(14px);
+  font-size: 0.875rem;
 }
 .done {
   color: $brand-success;
   display: inline-block;
-  padding: 0 rem(13px);
-  margin-right: rem(25px);
+  padding: 0 0.8125rem;
+  margin-right: 1.563rem;
 }
 .thumb-mask {
   > .mask {
     position: relative;
-    width: rem(55px);
-    height: rem(55px);
+    width: 3.438rem;
+    height: 3.438rem;
     overflow: hidden;
     border: $gray-light 1px solid;
     margin: $small-space 0;
@@ -304,17 +371,17 @@ small.label, small.value {
 }
 .definition-list {
   dl {
-    @include display(flex);
-    @include flex-wrap(wrap);
+    display: flex;
+    flex-wrap: wrap;
     dt {
       font-weight: normal;
     }
     dd,
     dt {
-      @include flex(0 0 45%);
+      flex: 0 0 45%;
       background: $gray-light;
-      padding: rem(10px);
-      margin: rem(2px);
+      padding: 0.625rem;
+      margin: 0.125rem;
       &:nth-of-type(even) {
         background: $gray-lighter;
       }
@@ -331,12 +398,12 @@ small.label, small.value {
 .alert-warning {
   .material-icons {
     color: $warning;
-    font-size: rem(32px);
+    font-size: 2rem;
     margin-right: $small-space;
     padding-top: $extra-small-space;
   }
   .alert-text {
-    font-size: rem(15px);
+    font-size: 0.9375rem;
     padding-top: $small-space;
   }
   .alert-link {
@@ -345,7 +412,7 @@ small.label, small.value {
     margin-left: $small-space;
     padding: $extra-small-space $medium-space;
     font-weight: 600;
-    font-size: rem(13px);
+    font-size: 0.8125rem;
     color: $btn-tertiary-color;
   }
   ul li:last-child .alert-link {
@@ -371,7 +438,7 @@ small.label, small.value {
   }
 }
 .alert {
-  font-size: rem(13px);
+  font-size: 0.8125rem;
 }
 .nav-item {
   .nav-link,
@@ -382,4 +449,8 @@ small.label, small.value {
       color: $gray-darker;
     }
   }
+}
+.separator {
+  margin: 0;
+  border-color: rgba(0, 0, 0, 0.25);
 }

@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <form id="header_search" class="bo_search_form" method="post" action="{$baseAdminUrl}index.php?controller=AdminSearch&amp;token={getAdminToken tab='AdminSearch'}" role="search">
@@ -33,42 +33,42 @@
 				</button>
 				<ul id="header_search_options" class="dropdown-menu">
 					<li class="search-all search-option active">
-						<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-search">
-							<i class="icon-search"></i> {l s='Everywhere'}</a>
+						<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?' d='Admin.Navigation.Header'}" data-icon="icon-search">
+							<i class="icon-search"></i> {l s='Everywhere' d='Admin.Navigation.Header'}</a>
 					</li>
 					<li class="divider"></li>
 					<li class="search-book search-option">
-						<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...'}" data-icon="icon-book">
-							<i class="icon-book"></i> {l s='Catalog'}
+						<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...' d='Admin.Navigation.Header'}" data-icon="icon-book">
+							<i class="icon-book"></i> {l s='Catalog' d='Admin.Navigation.Menu'}
 						</a>
 					</li>
 					<li class="search-customers-name search-option">
-						<a href="#" data-value="2" data-placeholder="{l s='Email, name...'}" data-icon="icon-group">
-							<i class="icon-group"></i> {l s='Customers'} {l s='by name'}
+						<a href="#" data-value="2" data-placeholder="{l s='Email, name...' d='Admin.Navigation.Header'}" data-icon="icon-group">
+							<i class="icon-group"></i> {l s='Customers by name' d='Admin.Navigation.Header'}
 						</a>
 					</li>
 					<li class="search-customers-addresses search-option">
 						<a href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop">
-							<i class="icon-desktop"></i> {l s='Customers'} {l s='by ip address'}</a>
+							<i class="icon-desktop"></i> {l s='Customers by IP address' d='Admin.Navigation.Header'}</a>
 					</li>
 					<li class="search-orders search-option">
-						<a href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card">
-							<i class="icon-credit-card"></i> {l s='Orders'}
+						<a href="#" data-value="3" data-placeholder="{l s='Order ID' d='Admin.Navigation.Header'}" data-icon="icon-credit-card">
+							<i class="icon-credit-card"></i> {l s='Orders' d='Admin.Global'}
 						</a>
 					</li>
 					<li class="search-invoices search-option">
-						<a href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book">
-							<i class="icon-book"></i> {l s='Invoices'}
+						<a href="#" data-value="4" data-placeholder="{l s='Invoice Number' d='Admin.Navigation.Header'}" data-icon="icon-book">
+							<i class="icon-book"></i> {l s='Invoices' d='Admin.Navigation.Menu'}
 						</a>
 					</li>
 					<li class="search-carts search-option">
-						<a href="#" data-value="5" data-placeholder="{l s='Cart ID'}" data-icon="icon-shopping-cart">
-							<i class="icon-shopping-cart"></i> {l s='Carts'}
+						<a href="#" data-value="5" data-placeholder="{l s='Cart ID' d='Admin.Navigation.Header'}" data-icon="icon-shopping-cart">
+							<i class="icon-shopping-cart"></i> {l s='Carts' d='Admin.Global'}
 						</a>
 					</li>
 					<li class="search-modules search-option">
-						<a href="#" data-value="7" data-placeholder="{l s='Module name'}" data-icon="icon-puzzle-piece">
-							<i class="icon-puzzle-piece"></i> {l s='Modules'}
+						<a href="#" data-value="7" data-placeholder="{l s='Module name' d='Admin.Navigation.Header'}" data-icon="icon-puzzle-piece">
+							<i class="icon-puzzle-piece"></i> {l s='Modules' d='Admin.Global'}
 						</a>
 					</li>
 				</ul>

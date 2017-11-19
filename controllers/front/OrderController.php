@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
@@ -31,8 +31,17 @@ class OrderControllerCore extends FrontController
     public $ssl = true;
     public $php_self = 'order';
     public $page_name = 'checkout';
+    public $checkoutWarning = false;
 
+    /**
+     * @var CheckoutProcess
+     */
     protected $checkoutProcess;
+
+    /**
+     * @var CartChecksum
+     */
+    protected $cartChecksum;
 
     /**
      * Initialize order controller
@@ -70,7 +79,7 @@ class OrderControllerCore extends FrontController
         $this->bootstrap();
     }
 
-    private function getCheckoutSession()
+    protected function getCheckoutSession()
     {
         $deliveryOptionsFinder = new DeliveryOptionsFinder(
             $this->context,
@@ -87,7 +96,7 @@ class OrderControllerCore extends FrontController
         return $session;
     }
 
-    private function bootstrap()
+    protected function bootstrap()
     {
         $translator = $this->getTranslator();
 
@@ -147,28 +156,80 @@ class OrderControllerCore extends FrontController
         ;
     }
 
-    private function saveDataToPersist(CheckoutProcess $process)
+    /**
+     * Persists cart-related data in checkout session
+     *
+     * @param CheckoutProcess $process
+     */
+    protected function saveDataToPersist(CheckoutProcess $process)
     {
-        $data = $process->getDataToPersist();
-        $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
+        $data             = $process->getDataToPersist();
+        $addressValidator = new AddressValidator($this->context);
+        $customer         = $this->context->customer;
+        $cart             = $this->context->cart;
+
+        $shouldGenerateChecksum = false;
+
+        if ($customer->isGuest()) {
+            $shouldGenerateChecksum = true;
+        } else {
+            $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
+            if (empty($invalidAddressIds)) {
+                $shouldGenerateChecksum = true;
+            }
+        }
+
+        $data['checksum'] = $shouldGenerateChecksum
+            ? $this->cartChecksum->generateChecksum($cart)
+            : null;
 
         Db::getInstance()->execute(
-            'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
-                WHERE id_cart = '.(int) $this->context->cart->id
+            'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
+                WHERE id_cart = ' . (int)$cart->id
         );
     }
 
-    private function restorePersistedData(CheckoutProcess $process)
+    /**
+     * Restores from checkout session some previously persisted cart-related data
+     *
+     * @param CheckoutProcess $process
+     */
+    protected function restorePersistedData(CheckoutProcess $process)
     {
-        $rawData = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int) $this->context->cart->id
+        $cart     = $this->context->cart;
+        $customer = $this->context->customer;
+        $rawData  = Db::getInstance()->getValue(
+            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int)$cart->id
         );
-        $data = json_decode($rawData, true);
+        $data     = json_decode($rawData, true);
         if (!is_array($data)) {
-            $data = [];
+            $data = array();
         }
 
-        $checksum = $this->cartChecksum->generateChecksum($this->context->cart);
+        $addressValidator  = new AddressValidator();
+        $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
+
+        // Build the currently selected address' warning message (if relevant)
+        if (!$customer->isGuest() && !empty($invalidAddressIds)) {
+            $this->checkoutWarning['address'] = array(
+                'id_address' => (int)reset($invalidAddressIds),
+                'exception'  => $this->trans(
+                    'Your address is incomplete, please update it.',
+                    array(),
+                    'Shop.Notifications.Error'
+                ),
+            );
+
+            $checksum = null;
+        } else {
+            $checksum = $this->cartChecksum->generateChecksum($cart);
+        }
+
+        // Prepare all other addresses' warning messages (if relevant).
+        // These messages are displayed when changing the selected address.
+        $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context->language);
+        $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
+
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);
         }
@@ -229,5 +290,41 @@ class OrderControllerCore extends FrontController
 
         parent::initContent();
         $this->setTemplate('checkout/checkout');
+    }
+
+    public function displayAjaxAddressForm()
+    {
+        $addressForm = $this->makeAddressForm();
+
+        if (Tools::getIsset('id_address') && ($id_address = (int)Tools::getValue('id_address'))) {
+            $addressForm->loadAddressById($id_address);
+        }
+
+        if (Tools::getIsset('id_country')) {
+            $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
+        }
+
+        $stepTemplateParameters = array();
+        foreach ($this->checkoutProcess->getSteps() as $step) {
+            if ($step instanceof CheckoutAddressesStep) {
+                $stepTemplateParameters = $step->getTemplateParameters();
+            }
+        }
+
+        $templateParams = array_merge(
+            $addressForm->getTemplateVariables(),
+            $stepTemplateParameters,
+            array('type' => 'delivery')
+        );
+
+        ob_end_clean();
+        header('Content-Type: application/json');
+
+        $this->ajaxDie(Tools::jsonEncode(array(
+            'address_form' => $this->render(
+                'checkout/_partials/address-form',
+                $templateParams
+            ),
+        )));
     }
 }

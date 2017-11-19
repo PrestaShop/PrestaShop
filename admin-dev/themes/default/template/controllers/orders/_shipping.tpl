@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="table-responsive">
@@ -27,22 +27,22 @@
 		<thead>
 			<tr>
 				<th>
-					<span class="title_box ">{l s='Date'}</span>
+					<span class="title_box ">{l s='Date' d='Admin.Global'}</span>
 				</th>
 				<th>
 					<span class="title_box ">&nbsp;</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Carrier'}</span>
+					<span class="title_box ">{l s='Carrier' d='Admin.Shipping.Feature'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Weight'}</span>
+					<span class="title_box ">{l s='Weight' d='Admin.Global'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Shipping cost'}</span>
+					<span class="title_box ">{l s='Shipping cost' d='Admin.Shipping.Feature'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Tracking number'}</span>
+					<span class="title_box ">{l s='Tracking number' d='Admin.Shipping.Feature'}</span>
 				</th>
 				<th></th>
 			</tr>
@@ -106,7 +106,7 @@
 								<div class="col-lg-7"><input type="text" name="shipping_tracking_number" id="shipping_tracking_number" /></div>
 							</div>
 							<div class="form-group">
-								<div class="col-lg-5">{l s='Carrier'}</div>
+								<div class="col-lg-5">{l s='Carrier' d='Admin.Shipping.Feature'}</div>
 								<div class="col-lg-7">
 									<select name="shipping_carrier" id="shipping_carrier">
 										{foreach from=$carrier_list item=carrier}

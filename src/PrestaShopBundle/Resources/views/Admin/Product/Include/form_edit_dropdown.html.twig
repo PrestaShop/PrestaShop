@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,19 +19,19 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% set buttonType = buttonType|default('primary') %}
 {% set right = right|default(false) %}
 
-<div class="{{ div_style|default("btn-group dropdown") }}">
+<div class="{{ div_style|default("btn-group") }}">
 
   {% if default_item is defined %}
     <a
       href="{{ default_item.href|default("#") }}"
       title="{{ default_item.title|default(default_item.label|default("")) }}"
-      class="pull-left product-edit m-r-2"
+      class="btn tooltip-link product-edit"
       {% if disabled is defined and disabled == true %}disabled="disabled"{% endif %}
     >
       {% if default_item.icon %}
@@ -41,12 +41,11 @@
     </a>
   {% endif %}
 
-  <a class="product-edit" data-toggle="dropdown">
+  <a class="btn btn-link dropdown-toggle dropdown-toggle-split product-edit" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     {{ menu_label|default('') }}
-    <i class="material-icons">keyboard_arrow_down</i>
   </a>
 
-  <div class="dropdown-menu{% if right %} dropdown-menu-right{% endif %}">
+  <div class="dropdown-menu{% if right %} dropdown-menu-right{% endif %}" x-placement="bottom-start" >
     {% for entry in items %}
       {% if entry.divider is defined and entry.divider==true %}
         <div class="dropdown-divider"></div>

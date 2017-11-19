@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,13 +19,13 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <div id="carrier_logo_block" class="panel">
 	<div class="panel-heading">
-		{l s='Logo'}
+		{l s='Logo' d='Admin.Global'}
 		<div class="panel-heading-action">
 			<a id="carrier_logo_remove" class="btn btn-default" {if !$carrier_logo}style="display:none"{/if} href="javascript:removeCarrierLogo();">
 				<i class="icon-trash"></i>
@@ -36,11 +36,11 @@
 </div>
 
 <script type="text/javascript">
-	var carrier_translation_undefined = '{l s='undefined' js=1}';
+	var carrier_translation_undefined = '{l s='undefined' js=1 d='Admin.Shipping.Help'}';
 
 	function removeCarrierLogo()
 	{
-		if (confirm('{l s='Are you sure you want to delete the logo?' js=1}'))
+		if (confirm('{l s='Are you sure you want to delete the logo?' js=1 d='Admin.Shipping.Notification'}'))
 		{
 			$('#carrier_logo_img').attr('src', '../img/admin/carrier-default.jpg');
 			$('#logo').val('null');

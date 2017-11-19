@@ -25,9 +25,9 @@ $color-active: #25B9D7;
   color: $color-error;
 }
 .search-translation {
-  margin-bottom: rem(20px);
+  margin-bottom: 1.25rem;
   .summary {
-    font-size: rem(14px);
+    font-size: 0.875rem;
     color: #363A41;
   }
 
@@ -37,14 +37,14 @@ $color-active: #25B9D7;
   }
 
   .search-button {
-    margin-right: rem(10px);
+    margin-right: 0.625rem;
   }
 
   .alert {
     float: left;
-    margin-top: rem(30px);
-    width: rem(682px);
-    height: rem(55px);
+    margin-top: 1.875rem;
+    width: 42.63rem;
+    height: 3.438rem;
 
     i,
     span {
@@ -52,7 +52,7 @@ $color-active: #25B9D7;
     }
 
     span {
-      margin-left: rem(40px);
+      margin-left: 2.5rem;
     }
   }
 }
@@ -62,7 +62,7 @@ $color-active: #25B9D7;
 
   hr {
     clear: both;
-    height: rem(2px);
+    height: 0.125rem;
     border-top: solid 1px #bbcdd2;
     margin-top: 0;
   }
@@ -70,13 +70,13 @@ $color-active: #25B9D7;
   .btn-expand,
   .btn-reduce {
     cursor: pointer;
-    height: rem(14px);
+    height: 0.875rem;
     object-fit: contain;
     font-size: $font-size-xs;
     font-weight: bold;
     font-style: normal;
     font-stretch: normal;
-    margin-bottom: rem(15px);
+    margin-bottom: 0.9375rem;
     text-transform: uppercase;
     color: #70848b;
 
@@ -87,13 +87,13 @@ $color-active: #25B9D7;
 
     span {
       float: left;
-      line-height: rem(25px);
+      line-height: 1.563rem;
     }
   }
 
   .btn-expand {
-    margin-left: rem(-5px);
-    margin-top: rem(15px);
+    margin-left: -0.3125rem;
+    margin-top: 0.9375rem;
   }
 
   .btn-reduce {
@@ -101,21 +101,21 @@ $color-active: #25B9D7;
   }
 
   .card {
-    padding: rem(15px) rem(15px) 0 rem(15px);
+    padding: 0.9375rem 0.9375rem 0 0.9375rem;
     border-radius: 0;
   }
 
   .domain-first-part,
   .domain-part {
     width: 100%;
-    height: rem(22px);
+    height: 1.375rem;
     object-fit: contain;
     font-size: $font-size-base;
     font-weight: 400;
     font-style: normal;
     font-stretch: normal;
-    margin-left: rem(-5px);
-    margin-bottom: rem(15px);
+    margin-left: -0.3125rem;
+    margin-bottom: 0.9375rem;
     overflow: hidden;
     text-align: left;
     color: #363a41;
@@ -123,17 +123,17 @@ $color-active: #25B9D7;
     i {
       color: #70848b;
       float: left;
-      font-size: rem(25px);
+      font-size: 1.563rem;
       font-weight: 400;
 
       &.expanded {
-        @include transform(rotate(90deg));
+        transform: rotate(90deg);
       }
     }
 
     span {
       float: left;
-      line-height: rem(25px);
+      line-height: 1.563rem;
       cursor: pointer;
 
       .missing-translations {
@@ -146,7 +146,7 @@ $color-active: #25B9D7;
     }
 
     .missing-translations {
-      line-height: rem(25px);
+      line-height: 1.563rem;
       color: $color-error;
     }
   }
@@ -161,7 +161,7 @@ $color-active: #25B9D7;
   }
 
   .domain-part {
-    margin-left: rem(20px);
+    margin-left: 1.25rem;
   }
 
   .translation-domain {
@@ -171,23 +171,23 @@ $color-active: #25B9D7;
   }
 
   .domain-actions {
-    margin-left: rem(10px);
-    margin-bottom: rem(15px);
+    margin-left: 0.625rem;
+    margin-bottom: 0.9375rem;
     width: 100%;
 
     i {
       cursor: pointer;
       float: left;
       color: $color-active;
-      line-height: rem(25px);
+      line-height: 1.563rem;
     }
 
     .btn-hide-messages,
     .btn-show-messages {
       cursor: pointer;
       float: left;
-      height: rem(14px);
-      line-height: rem(25px);
+      height: 0.875rem;
+      line-height: 1.563rem;
       font-size: $font-size-xs;
       font-weight: 600;
       font-style: normal;
@@ -199,7 +199,7 @@ $color-active: #25B9D7;
     .missing-translations {
       color: $color-error;
       text-transform: uppercase;
-      margin-right: rem(15px);
+      margin-right: 0.9375rem;
       font-size: $font-size-xs;
     }
   }
@@ -208,19 +208,19 @@ $color-active: #25B9D7;
 .translation-domains {
   background-color: #fff;
   float: left;
-  min-height: rem(800px);
+  min-height: 50rem;
 
   h1 {
     width: auto;
-    height: rem(22px);
+    height: 1.375rem;
     object-fit: contain;
-    font-size: $font-size-lg;
+    font-size: $font-size-h1;
     font-weight: 600;
     font-style: normal;
     font-stretch: normal;
     text-align: left;
     color: #363a41;
-    margin-top: rem(15px);
+    margin-top: 0.9375rem;
   }
 
   .hide {
@@ -229,7 +229,7 @@ $color-active: #25B9D7;
 
   .navbar-container {
     position: absolute;
-    top: rem(-10px);
+    top: -0.625rem;
     right: 0;
 
     &.relative-position {
@@ -248,21 +248,21 @@ $color-active: #25B9D7;
   }
 
   .reset-translation-value {
-    margin-right: rem(5px);
+    margin-right: 0.3125rem;
   }
 
   form {
-    margin-top: rem(10px);
+    margin-top: 0.625rem;
     float: left;
     width: 100%;
 
     p {
-      margin-bottom: rem(5px);
+      margin-bottom: 0.3125rem;
     }
   }
 
   .form-group {
-    margin-bottom: rem(10px);
+    margin-bottom: 0.625rem;
   }
 
   .missing-translations,
@@ -274,20 +274,20 @@ $color-active: #25B9D7;
 
 .translations-results {
   display: none;
-  margin-top: rem(50px);
-  padding-top: rem(15px);
-  padding-left: rem(15px);
-  margin-left: rem(15px);
+  margin-top: 3.125rem;
+  padding-top: 0.9375rem;
+  padding-left: 0.9375rem;
+  margin-left: 0.9375rem;
 }
 
 #jetsContent {
   form {
-    margin-bottom: rem(50px);
-    margin-top: rem(20px);
+    margin-bottom: 3.125rem;
+    margin-top: 1.25rem;
     width: 100%;
 
     .form-group {
-      margin-bottom: rem(10px);
+      margin-bottom: 0.625rem;
     }
 
     .form-control-warning {
@@ -296,12 +296,12 @@ $color-active: #25B9D7;
   }
 
   p {
-    margin-bottom: rem(5px);
+    margin-bottom: 0.3125rem;
   }
 
   .buttons {
     .reset-translation-value {
-      margin-right: rem(5px);
+      margin-right: 0.3125rem;
     }
   }
 }

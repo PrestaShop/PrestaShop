@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -32,6 +32,15 @@ use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
+use Db;
+use Context;
+use Hook;
+use Product;
+use Tools;
+use Configuration;
+use Currency;
+use DbQuery;
+use StockAvailable;
 
 /**
  * Data provider for new Architecture, about Product object model.
@@ -70,8 +79,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function getPersistedFilterParameters()
     {
-        $employee = \ContextCore::getContext()->employee;
-        $shop = \ContextCore::getContext()->shop;
+        $employee = Context::getContext()->employee;
+        $shop = Context::getContext()->shop;
         $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
@@ -116,8 +125,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function persistFilterParameters(array $parameters)
     {
-        $employee = \ContextCore::getContext()->employee;
-        $shop = \ContextCore::getContext()->shop;
+        $employee = Context::getContext()->employee;
+        $shop = Context::getContext()->shop;
         $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
@@ -187,8 +196,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $orderBy = 'position';
         }
 
-        $idShop = \ContextCore::getContext()->shop->id;
-        $idLang = \ContextCore::getContext()->language->id;
+        $idShop = Context::getContext()->shop->id;
+        $idLang = Context::getContext()->language->id;
 
         $sqlSelect = array(
             'id_product' => array('table' => 'p', 'field' => 'id_product', 'filtering' => ' %s '),
@@ -218,7 +227,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
                 'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0'.
-                \StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
+                StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
             ),
             'sa' => array(
                 'table' => 'product_shop',
@@ -280,7 +289,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlGroupBy = [];
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        \HookCore::exec('actionAdminProductsListingFieldsModifier', array(
+        Hook::exec('actionAdminProductsListingFieldsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -294,7 +303,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 continue;
             }
             if (strpos($filterParam, 'filter_column_') === 0) {
-                $filterValue = \Db::getInstance()->escape($filterValue, in_array($filterParam, [
+                $filterValue = Db::getInstance()->escape($filterValue, in_array($filterParam, [
                     'filter_column_id_product',
                     'filter_column_sav_quantity',
                     'filter_column_price',
@@ -308,10 +317,10 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             }
             // for 'filter_category', see next if($showPositionColumn) block.
         }
-        $sqlWhere[] = 'state = '.\Product::STATE_SAVED;
+        $sqlWhere[] = 'state = '.Product::STATE_SAVED;
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        \HookCore::exec('actionAdminProductsListingFieldsModifier', array(
+        Hook::exec('actionAdminProductsListingFieldsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -327,23 +336,23 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new \CurrencyCore(\Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
-            $product['price_final'] = \ProductCore::getPriceStatic($product['id_product'], true, null,
-                (int) \Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
+            $product['price_final'] = Product::getPriceStatic($product['id_product'], true, null,
+                (int) Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1,
                 true, null, null, null, $nothing, true, true);
             if ($formatCldr) {
-                $product['price'] = \ToolsCore::displayPrice($product['price'], $currency);
-                $product['price_final'] = \ToolsCore::displayPrice($product['price_final'], $currency);
+                $product['price'] = Tools::displayPrice($product['price'], $currency);
+                $product['price_final'] = Tools::displayPrice($product['price_final'], $currency);
             }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
-            $product['image_link'] = \ContextCore::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);
+            $product['image_link'] = Context::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);
         }
 
         // post treatment by hooks
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        \HookCore::exec('actionAdminProductsListingResultsModifier', array(
+        Hook::exec('actionAdminProductsListingResultsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'products' => &$products,
             'total' => $total,
@@ -357,14 +366,14 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function countAllProducts()
     {
-        $idShop = \ContextCore::getContext()->shop->id;
+        $idShop = Context::getContext()->shop->id;
 
-        $query = new \DbQuery();
+        $query = new DbQuery();
         $query->select('COUNT(ps.id_product)');
         $query->from('product_shop', 'ps');
         $query->where('ps.id_shop = '.(int)$idShop);
 
-        $total = \Db::getInstance()->getValue($query);
+        $total = Db::getInstance()->getValue($query);
 
         return (int) $total;
     }
@@ -396,7 +405,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $paginationLimitChoices = [20, 50, 100];
 
-        $memory = \ToolsCore::getMemoryLimit();
+        $memory = Tools::getMemoryLimit();
 
         if ($memory >= 512 * 1024 * 1024) {
             $paginationLimitChoices[] = 300;
@@ -413,6 +422,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function isNewProductDefaultActivated()
     {
-        return (bool) \Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
+        return (bool) Configuration::get('PS_PRODUCT_ACTIVATION_DEFAULT');
     }
 }

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -65,7 +65,21 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function loadAddressById($id_address)
     {
+        $context = Context::getContext();
+
         $this->address = new Address($id_address, $this->language->id);
+
+        if ($this->address->id === null) {
+            return Tools::redirect('index.php?controller=404');
+        }
+
+        if (!$context->customer->isLogged() && !$context->customer->isGuest()) {
+            return Tools::redirect('/index.php?controller=authentication');
+        }
+
+        if ($this->address->id_customer != $context->customer->id) {
+            return Tools::redirect('index.php?controller=404');
+        }
 
         $params = get_object_vars($this->address);
         $params['id_address'] = $this->address->id;
@@ -92,30 +106,25 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function validate()
     {
-        $is_valid = parent::validate();
+        $is_valid = true;
 
         if (($postcode = $this->getField('postcode'))) {
             if ($postcode->isRequired()) {
                 $country = $this->formatter->getCountry();
                 if (!$country->checkZipCode($postcode->getValue())) {
-                    // FIXME: the translator adapter is crap at the moment,
-                    // but once it is not, the sprintf needs to go away.
-                    $postcode->addError(sprintf(
-                        $this->translator->trans(
-                            'Invalid postcode - should look like "%1$s"', [], 'Shop.Forms.Errors'
-                        ),
-                        $country->zip_code_format
-                    ));
+                    $postcode->addError($this->translator->trans('Invalid postcode - should look like "%zipcode%"',
+                        array('%zipcode%' => $country->zip_code_format),
+                        'Shop.Forms.Errors'));
                     $is_valid = false;
                 }
             }
         }
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) != '') {
+        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', array('form' => $this))) !== '') {
             $is_valid &= (bool) $hookReturn;
         }
 
-        return $is_valid;
+        return $is_valid && parent::validate();
     }
 
     public function submit()
@@ -131,6 +140,10 @@ class CustomerAddressFormCore extends AbstractForm
 
         foreach ($this->formFields as $formField) {
             $address->{$formField->getName()} = $formField->getValue();
+        }
+
+        if (!isset($this->formFields['id_state'])) {
+            $address->id_state = 0;
         }
 
         if (empty($address->alias)) {
@@ -152,6 +165,8 @@ class CustomerAddressFormCore extends AbstractForm
 
     public function getTemplateVariables()
     {
+        $context = Context::getContext();
+
         if (!$this->formFields) {
             // This is usually done by fillWith but the form may be
             // rendered before fillWith is called.
@@ -162,17 +177,26 @@ class CustomerAddressFormCore extends AbstractForm
         }
 
         $this->setValue('token', $this->persister->getToken());
+        $formFields = array_map(
+            function (FormField $item) {
+                return $item->toArray();
+            },
+            $this->formFields
+        );
+
+        if (empty($formFields['firstname']['value'])) {
+            $formFields['firstname']['value'] = $context->customer->firstname;
+        }
+
+        if (empty($formFields['lastname']['value'])) {
+            $formFields['lastname']['value'] = $context->customer->lastname;
+        }
 
         return array(
             'id_address' => (isset($this->address->id)) ? $this->address->id : 0,
             'action' => $this->action,
             'errors' => $this->getErrors(),
-            'formFields' => array_map(
-                function (FormField $item) {
-                    return $item->toArray();
-                },
-                $this->formFields
-            ),
+            'formFields' => $formFields,
         );
     }
 }

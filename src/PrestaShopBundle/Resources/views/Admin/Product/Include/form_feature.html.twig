@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,33 +19,30 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="row">
+<div class="row product-feature">
     <div class="col-lg-12 col-xl-4">
-        <fieldset class="form-group">
+        <fieldset class="form-group mb-0">
             <label class="form-control-label">{{ form.feature.vars.label }}</label>
             {{ form_widget(form.feature) }}
         </fieldset>
     </div>
     <div class="col-lg-12 col-xl-4">
-        <fieldset class="form-group">
+        <fieldset class="form-group mb-0">
             <label class="form-control-label">{{ form.value.vars.label }}</label>
             {{ form_widget(form.value) }}
         </fieldset>
     </div>
     <div class="col-lg-11 col-xl-3">
-        <fieldset class="form-group">
+        <fieldset class="form-group mb-0">
             <label class="form-control-label">{{ form.custom_value.vars.label }}</label>
             {{ form_widget(form.custom_value) }}
         </fieldset>
     </div>
     <div class="col-lg-1 col-xl-1">
-        <fieldset class="form-group">
-            <label class="form-control-label">&nbsp;</label>
-            <button type="button" class="btn btn-invisible btn-block delete p-l-0 p-r-0"><i class="material-icons">delete</i></button>
-        </fieldset>
+        <a class="btn tooltip-link delete pl-0 pr-0"><i class="material-icons">delete</i></a>
     </div>
 </div>
-<hr class="m-b-2 hidden-xl-up" />
+<hr class="mb-2 d-xl-none" />

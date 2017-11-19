@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,14 +19,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-<div class="ps-dropdown dropdown btn-group">
-    <span type="button"  id="module-status-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<div class="ps-dropdown dropdown btn-group bordered">
+    <div class="dropdown-label" id="module-status-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="js-selected-item selected-item module-status-selector-label">{{ 'Show all modules'|trans({}, 'Admin.Modules.Feature') }}</span>
-        <i class="material-icons arrow-down">keyboard_arrow_down</i>
-    </span>
+        <i class="material-icons arrow-down float-right">keyboard_arrow_down</i>
+    </div>
 
     <div class="ps-dropdown-menu dropdown-menu" aria-labelledby="module-status-dropdown">
         <ul class="items-list js-items-list module-status-selector">

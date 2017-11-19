@@ -6,7 +6,7 @@
   .expand-more{
     color: $gray-darker;
     cursor: pointer;
-    @include user-select(none);
+    user-select: none;
 
   }
 

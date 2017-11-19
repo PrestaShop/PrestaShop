@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -48,6 +48,14 @@ class ToolsCore
         if ($request) {
             self::$request = $request;
         }
+    }
+
+    /**
+     * Reset the request set during the first new Tools($request) call
+     */
+    public static function resetRequest()
+    {
+        self::$request = null;
     }
 
     /**
@@ -961,8 +969,11 @@ class ToolsCore
     public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
     {
         if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
-            return ('<pre>'.Tools::htmlentitiesUTF8(stripslashes($string)).'<br/>'.print_r(debug_backtrace(), true).'</pre>');
+            throw new PrestaShopException($string);
+        } else if ('Fatal error' !== $string) {
+            return $string;
         }
+
         return Context::getContext()->getTranslator()->trans('Fatal error', array(), 'Admin.Notifications.Error');
     }
 
@@ -1854,19 +1865,23 @@ class ToolsCore
     {
         if ((time() - @filemtime(_PS_CACHE_CA_CERT_FILE_) > 1296000)) {
             $stream_context = @stream_context_create(
-              array(
-                'http' => array('timeout' => 3),
-                'ssl' => array(
-                    'cafile' => CaBundle::getBundledCaBundlePath()
+                array(
+                    'http' => array('timeout' => 3),
+                    'ssl' => array(
+                        'cafile' => CaBundle::getBundledCaBundlePath()
+                    )
                 )
-              )
-          );
+            );
+
             $ca_cert_content = @file_get_contents(Tools::CACERT_LOCATION, false, $stream_context);
+            if (empty($ca_cert_content)) {
+                $ca_cert_content = @file_get_contents(CaBundle::getBundledCaBundlePath());
+            }
 
             if (
-              preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
-              substr(rtrim($ca_cert_content), -1) == '-'
-          ) {
+                preg_match('/(.*-----BEGIN CERTIFICATE-----.*-----END CERTIFICATE-----){50}$/Uims', $ca_cert_content) &&
+                substr(rtrim($ca_cert_content), -1) == '-'
+            ) {
                 file_put_contents(_PS_CACHE_CA_CERT_FILE_, $ca_cert_content);
             }
         }
@@ -1889,6 +1904,9 @@ class ToolsCore
             curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
             curl_setopt($curl, CURLOPT_CAINFO, _PS_CACHE_CA_CERT_FILE_);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($curl, CURLOPT_MAXREDIRS, 5);
+
             if ($opts != null) {
                 if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post') {
                     curl_setopt($curl, CURLOPT_POST, true);
@@ -1974,7 +1992,7 @@ class ToolsCore
             }
         }
 
-        return (empty($content) ? false : $content);
+        return $content;
     }
 
     /**
@@ -2120,7 +2138,9 @@ class ToolsCore
 
     public static function generateHtaccess($path = null, $rewrite_settings = null, $cache_control = null, $specific = '', $disable_multiviews = null, $medias = false, $disable_modsec = null)
     {
-        if (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null) {
+        if (defined('_PS_IN_TEST_')
+            || (defined('PS_INSTALLATION_IN_PROGRESS') && $rewrite_settings === null)
+        ) {
             return true;
         }
 
@@ -2352,36 +2372,36 @@ class ToolsCore
         fwrite($write_fd, "AddType font/ttf .ttf\n");
         fwrite($write_fd, "AddType font/otf .otf\n");
         fwrite($write_fd, "AddType application/font-woff .woff\n");
-        fwrite($write_fd, "AddType application/font-woff2 .woff2\n");
+        fwrite($write_fd, "AddType font/woff2 .woff2\n");
         fwrite($write_fd, "<IfModule mod_headers.c>
-    <FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
-        Header set Access-Control-Allow-Origin \"*\"
-    </FilesMatch>
+	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|woff2|svg)$\">
+		Header set Access-Control-Allow-Origin \"*\"
+	</FilesMatch>
 </IfModule>\n\n");
 
         // Cache control
         if ($cache_control) {
             $cache_control = "<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType image/gif \"access plus 1 month\"
-    ExpiresByType image/jpeg \"access plus 1 month\"
-    ExpiresByType image/png \"access plus 1 month\"
-    ExpiresByType text/css \"access plus 1 week\"
-    ExpiresByType text/javascript \"access plus 1 week\"
-    ExpiresByType application/javascript \"access plus 1 week\"
-    ExpiresByType application/x-javascript \"access plus 1 week\"
-    ExpiresByType image/x-icon \"access plus 1 year\"
-    ExpiresByType image/svg+xml \"access plus 1 year\"
-    ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
-    ExpiresByType application/font-woff \"access plus 1 year\"
-    ExpiresByType application/font-woff2 \"access plus 1 year\"
-    ExpiresByType application/x-font-woff \"access plus 1 year\"
-    ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
-    ExpiresByType font/opentype \"access plus 1 year\"
-    ExpiresByType font/ttf \"access plus 1 year\"
-    ExpiresByType font/otf \"access plus 1 year\"
-    ExpiresByType application/x-font-ttf \"access plus 1 year\"
-    ExpiresByType application/x-font-otf \"access plus 1 year\"
+	ExpiresActive On
+	ExpiresByType image/gif \"access plus 1 month\"
+	ExpiresByType image/jpeg \"access plus 1 month\"
+	ExpiresByType image/png \"access plus 1 month\"
+	ExpiresByType text/css \"access plus 1 week\"
+	ExpiresByType text/javascript \"access plus 1 week\"
+	ExpiresByType application/javascript \"access plus 1 week\"
+	ExpiresByType application/x-javascript \"access plus 1 week\"
+	ExpiresByType image/x-icon \"access plus 1 year\"
+	ExpiresByType image/svg+xml \"access plus 1 year\"
+	ExpiresByType image/vnd.microsoft.icon \"access plus 1 year\"
+	ExpiresByType application/font-woff \"access plus 1 year\"
+	ExpiresByType application/x-font-woff \"access plus 1 year\"
+	ExpiresByType font/woff2 \"access plus 1 year\"
+	ExpiresByType application/vnd.ms-fontobject \"access plus 1 year\"
+	ExpiresByType font/opentype \"access plus 1 year\"
+	ExpiresByType font/ttf \"access plus 1 year\"
+	ExpiresByType font/otf \"access plus 1 year\"
+	ExpiresByType application/x-font-ttf \"access plus 1 year\"
+	ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -2552,8 +2572,8 @@ FileETag none
         }
 
         $tab['GB'] = array(
-            '?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
-            '&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
+            '?order=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+            '&order=','&tag=','&id_currency=','&search_query=','&back=','&n='
         );
 
         foreach ($disallow_controllers as $controller) {

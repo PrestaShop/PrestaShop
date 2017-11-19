@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,12 +20,13 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Service\Hook;
 
 use Symfony\Component\EventDispatcher\Event;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * HookEvent is used in HookDispatcher.
@@ -59,12 +60,11 @@ class HookEvent extends Event
      */
     public function getHookParameters()
     {
-        global $kernel;
-
         $globalParameters = array('_ps_version' => _PS_VERSION_);
 
-        if (!is_null($kernel) && !is_null($kernel->getContainer()->get('request_stack')->getCurrentRequest())) {
-            $globalParameters['request'] = $kernel->getContainer()->get('request');
+        $sfContainer = SymfonyContainer::getInstance();
+        if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
+            $globalParameters['request'] = $sfContainer->get('request_stack')->getCurrentRequest();
         }
 
         return array_merge($globalParameters, $this->hookParameters);

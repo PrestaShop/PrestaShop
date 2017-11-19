@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -95,13 +95,18 @@ if ($lastParametersModificationTime) {
     }
 
     define('_DB_SERVER_', $database_host);
-    define('_DB_NAME_', $config['parameters']['database_name']);
+    if (defined('_PS_IN_TEST_')) {
+        define('_DB_NAME_', 'test_'.$config['parameters']['database_name']);
+    } else {
+        define('_DB_NAME_', $config['parameters']['database_name']);
+    }
+
     define('_DB_USER_', $config['parameters']['database_user']);
     define('_DB_PASSWD_', $config['parameters']['database_password']);
     define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
     define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
-    if (!defined('PS_IN_UPGRADE')) {
+    if (!defined('PS_IN_UPGRADE') && !defined('_PS_IN_TEST_')) {
         define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
     } else {
         define('_PS_CACHE_ENABLED_', 0);
@@ -138,4 +143,6 @@ if ($lastParametersModificationTime) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
+} else if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+    require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 }

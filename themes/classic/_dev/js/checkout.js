@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
@@ -37,7 +37,7 @@ function setUpCheckout() {
       // TODO: Handle request if no pretty URL
       url += `?content_only=1`;
       $.get(url, (content) => {
-        $('#modal').find('.modal-content').html($(content).find('.page-cms').contents());
+        $('#modal').find('.js-modal-content').html($(content).find('.page-cms').contents());
       }).fail((resp) => {
         prestashop.emit('handleError', {eventType: 'clickTerms', resp: resp});
       });
@@ -57,9 +57,12 @@ $(document).ready(() => {
   }
 
   prestashop.on('updatedDeliveryForm', (params) => {
+    if (typeof params.deliveryOption === 'undefined' || 0 === params.deliveryOption.length) {
+        return;
+    }
     // Hide all carrier extra content ...
     $(".carrier-extra-content").hide();
     // and show the one related to the selected carrier
-    params.deliveryOption.find(".carrier-extra-content").slideDown();
+    params.deliveryOption.next(".carrier-extra-content").slideDown();
   });
 });

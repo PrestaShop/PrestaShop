@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file='customer/page.tpl'}
@@ -85,8 +85,8 @@
       <table class="table table-striped table-bordered table-labeled hidden-xs-down">
         <thead class="thead-default">
           <tr>
-            <th>{l s='Date' d='Shop.Theme'}</th>
-            <th>{l s='Status' d='Shop.Theme'}</th>
+            <th>{l s='Date' d='Shop.Theme.Global'}</th>
+            <th>{l s='Status' d='Shop.Theme.Global'}</th>
           </tr>
         </thead>
         <tbody>
@@ -161,7 +161,7 @@
         <table class="table table-striped table-bordered hidden-sm-down">
           <thead class="thead-default">
             <tr>
-              <th>{l s='Date' d='Shop.Theme'}</th>
+              <th>{l s='Date' d='Shop.Theme.Global'}</th>
               <th>{l s='Carrier' d='Shop.Theme.Checkout'}</th>
               <th>{l s='Weight' d='Shop.Theme.Checkout'}</th>
               <th>{l s='Shipping cost' d='Shop.Theme.Checkout'}</th>
@@ -175,7 +175,7 @@
                 <td>{$line.carrier_name}</td>
                 <td>{$line.shipping_weight}</td>
                 <td>{$line.shipping_cost}</td>
-                <td>{$line.tracking}</td>
+                <td>{$line.tracking nofilter}</td>
               </tr>
             {/foreach}
           </tbody>
@@ -185,7 +185,7 @@
             <div class="shipping-line">
               <ul>
                 <li>
-                  <strong>{l s='Date' d='Shop.Theme'}</strong> {$line.shipping_date}
+                  <strong>{l s='Date' d='Shop.Theme.Global'}</strong> {$line.shipping_date}
                 </li>
                 <li>
                   <strong>{l s='Carrier' d='Shop.Theme.Checkout'}</strong> {$line.carrier_name}
@@ -197,7 +197,7 @@
                   <strong>{l s='Shipping cost' d='Shop.Theme.Checkout'}</strong> {$line.shipping_cost}
                 </li>
                 <li>
-                  <strong>{l s='Tracking number' d='Shop.Theme.Checkout'}</strong> {$line.tracking}
+                  <strong>{l s='Tracking number' d='Shop.Theme.Checkout'}</strong> {$line.tracking nofilter}
                 </li>
               </ul>
             </div>

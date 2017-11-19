@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -39,6 +39,7 @@ class DbPDOCore extends Db
 
     /**
      * Returns a new PDO object (database link)
+     * @deprecated use getPDO
      *
      * @param string $host
      * @param string $user
@@ -48,6 +49,21 @@ class DbPDOCore extends Db
      * @return PDO
      */
     protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
+    {
+        return static::getPDO($host, $user, $host, $dbname, $timeout);
+    }
+
+    /**
+     * Returns a new PDO object (database link)
+     *
+     * @param string $host
+     * @param string $user
+     * @param string $password
+     * @param string $dbname
+     * @param int $timeout
+     * @return PDO
+     */
+    protected static function getPDO($host, $user, $password, $dbname, $timeout = 5)
     {
         $dsn = 'mysql:';
         if ($dbname) {
@@ -60,6 +76,7 @@ class DbPDOCore extends Db
         } else {
             $dsn .= 'host='.$host;
         }
+        $dsn .= ';charset=utf8';
 
         return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
     }
@@ -77,7 +94,7 @@ class DbPDOCore extends Db
     public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
     {
         try {
-            $link = DbPDO::_getPDO($host, $user, $password, false);
+            $link = DbPDO::getPDO($host, $user, $password, false);
             $success = $link->exec('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
             if ($dropit && ($link->exec('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false)) {
                 return true;
@@ -93,18 +110,14 @@ class DbPDOCore extends Db
      *
      * @see DbCore::connect()
      * @return PDO
+     * @throws PrestaShopException
      */
     public function connect()
     {
         try {
-            $this->link = $this->_getPDO($this->server, $this->user, $this->password, $this->database, 5);
+            $this->link = $this->getPDO($this->server, $this->user, $this->password, $this->database, 5);
         } catch (PDOException $e) {
-            die(sprintf(Tools::displayError('Link to database cannot be established: %s'), utf8_encode($e->getMessage())));
-        }
-
-        // UTF-8 support
-        if ($this->link->exec('SET NAMES \'utf8\'') === false) {
-            die(Tools::displayError('PrestaShop Fatal error: no utf-8 support. Please check your server configuration.'));
+            throw new PrestaShopException('Link to database cannot be established: '.$e->getMessage());
         }
 
         $this->link->exec('SET SESSION sql_mode = \'\'');
@@ -284,7 +297,7 @@ class DbPDOCore extends Db
     public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
     {
         try {
-            $link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
+            $link = DbPDO::getPDO($server, $user, $pwd, $db, 5);
         } catch (PDOException $e) {
             return false;
         }
@@ -308,7 +321,7 @@ class DbPDOCore extends Db
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
         try {
-            $link = DbPDO::_getPDO($server, $user, $pwd, $db, 5);
+            $link = DbPDO::getPDO($server, $user, $pwd, $db, 5);
         } catch (PDOException $e) {
             return false;
         }
@@ -345,7 +358,7 @@ class DbPDOCore extends Db
     public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
     {
         try {
-            $link = DbPDO::_getPDO($server, $user, $pwd, $db, $timeout);
+            $link = DbPDO::getPDO($server, $user, $pwd, $db, $timeout);
         } catch (PDOException $e) {
             // hhvm wrongly reports error status 42000 when the database does not exist - might change in the future
             return ($e->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getCode() == 42000)) ? 2 : 1;
@@ -368,7 +381,7 @@ class DbPDOCore extends Db
 
         if (!$result) {
             $value = 'MyISAM';
-        }else {
+        } else {
             $row = $result->fetch();
             if (!$row || strtolower($row['Value']) != 'yes') {
                 $value = 'MyISAM';
@@ -403,7 +416,7 @@ class DbPDOCore extends Db
     public static function tryUTF8($server, $user, $pwd)
     {
         try {
-            $link = DbPDO::_getPDO($server, $user, $pwd, false, 5);
+            $link = DbPDO::getPDO($server, $user, $pwd, false, 5);
         } catch (PDOException $e) {
             return false;
         }
@@ -424,7 +437,7 @@ class DbPDOCore extends Db
     public static function checkAutoIncrement($server, $user, $pwd)
     {
         try {
-            $link = DbPDO::_getPDO($server, $user, $pwd, false, 5);
+            $link = DbPDO::getPDO($server, $user, $pwd, false, 5);
         } catch (PDOException $e) {
             return false;
         }

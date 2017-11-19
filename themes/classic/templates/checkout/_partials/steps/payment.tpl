@@ -4,13 +4,16 @@
 
   {hook h='displayPaymentTop'}
 
-  <div class="payment-options">
+  {if $is_free}
+    <p>{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
+  {/if}
+  <div class="payment-options {if $is_free}hidden-xs-up{/if}">
     {foreach from=$payment_options item="module_options"}
       {foreach from=$module_options item="option"}
         <div>
           <div id="{$option.id}-container" class="payment-option clearfix">
             {* This is the way an option should be selected when Javascript is enabled *}
-            <span class="custom-radio pull-xs-left">
+            <span class="custom-radio float-xs-left">
               <input
                 class="ps-shown-by-js {if $option.binary} binary {/if}"
                 id="{$option.id}"
@@ -18,7 +21,7 @@
                 name="payment-option"
                 type="radio"
                 required
-                {if $selected_payment_option == $option.id} checked {/if}
+                {if $selected_payment_option == $option.id || $is_free} checked {/if}
               >
               <span></span>
             </span>
@@ -86,7 +89,7 @@
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
-            <div class="pull-xs-left">
+            <div class="float-xs-left">
               <span class="custom-checkbox">
                 <input  id    = "conditions_to_approve[{$condition_name}]"
                         name  = "conditions_to_approve[{$condition_name}]"
@@ -95,7 +98,7 @@
                         value = "1"
                         class = "ps-shown-by-js"
                 >
-                <span><i class="material-icons checkbox-checked">&#xE5CA;</i></span>
+                <span><i class="material-icons rtl-no-flip checkbox-checked">&#xE5CA;</i></span>
               </span>
             </div>
             <div class="condition-label">
@@ -119,7 +122,7 @@
         {l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}
       </button>
       {if $show_final_summary}
-        <article class="alert alert-danger m-t-2 js-alert-payment-conditions" role="alert" data-alert="danger">
+        <article class="alert alert-danger mt-2 js-alert-payment-conditions" role="alert" data-alert="danger">
           {l
             s='Please make sure you\'ve chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].'
             sprintf=[
@@ -145,6 +148,10 @@
   <div class="modal fade" id="modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
+        <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="js-modal-content"></div>
       </div>
     </div>
   </div>

@@ -1,8 +1,8 @@
 #products,.featured-products,.product-accessories,.product-miniature  {
   .products {
-    @include display(flex);
-    @include flex-wrap(wrap);
-    @include justify-content(flex-start);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
   .product-thumbnail {
     display: block;
@@ -16,35 +16,40 @@
   }
   .thumbnail-container {
     position: relative;
-    margin-bottom: em(25px);
+    margin-bottom: 1.563rem;
     height: 318px;
     width: 257px;
     background: white;
-    box-shadow: 0 0 5px 3px rgba(0,0,0,0.05);
-    &:hover {
-      @include box-shadow;
+    @include box-shadow;
+    &:hover, &:focus {
       .highlighted-informations {
-        bottom: rem(90px);
+        bottom: 5.5rem;
         &::after {
           opacity: 1;
         }
         &.no-variants{
-          bottom: rem(70px);
+          bottom: 4.2rem;
         }
       }
-      .product-description{
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+      .product-description::after{
+        content: "";
+        border-top: $gray 1px solid;
+        position: absolute;
+        width: 80%;
+        top: 0;
+        left: 10%;
+        opacity: .25;
       }
     }
   }
   .products-section-title {
     text-align: center;
-    margin-bottom: rem(24px);
+    margin-bottom: 1.5rem;
   }
   .product-title {
     text-align: center;
     text-transform: capitalize;
-    margin-top: rem(16px);
+    margin-top: 1rem;
   }
   .product-price-and-shipping {
     color: $gray-darker;
@@ -52,27 +57,27 @@
     text-align: center;
   }
   .variant-links {
-    background: $gray-light;
     position: relative;
     text-align: center;
     width: 100%;
-    top: 0.25em;
-    padding-top: rem(3px);
-    min-height: rem(40px);
+    top: -0.25em;
+    padding-top: 0.1875rem;
+    min-height: 2.5rem;
+    background: white;
   }
   .highlighted-informations {
     position: absolute;
-    bottom: rem(20px);
+    bottom: 1.25rem;
+    padding-top: 0.625rem;
     z-index: 0;
     background: white;
     text-align: center;
     width: 257px;
-    height: rem(50px);
-    padding-top: rem(5px);
+    height: 3.125rem;
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     transition: bottom .3s;
     .quick-view {
-      color: $gray-dark;
+      color: $gray;
       font-size: $base-font-size;
       &:hover {
         color: $brand-primary;
@@ -93,28 +98,30 @@
   }
 
   .product-miniature {
-    margin: 0 rem(10px);
+    margin: 0 0.625rem;
     .discount {
       display: none;
     }
     .product-flags .new,
     .online-only,
     .on-sale,
-    .discount-percentage {
+    .discount-percentage,
+    .discount-amount,
+    .pack {
       display: block;
       position: absolute;
-      left: rem(-7px);
-      top:rem(7px);
-      padding: rem(5px) rem(7px);
+      left: -0.4375rem;
+      padding: 0.3125rem 0.4375rem;
       color: white;
       background: $brand-primary;
       text-transform: uppercase;
-      min-width: rem(50px);
-      min-height: rem(30px);
+      min-width: 3.125rem;
+      min-height: 1.875rem;
       font-size: $base-font-size;
       font-weight: 600;
-      @include box-shadow;
-      &.discount-percentage {
+      @include box-shadow-light;
+      &.discount-percentage,
+      &.discount-amount {
         z-index: 2;
         background: $brand-secondary;
       }
@@ -127,13 +134,13 @@
       }
       &.online-only {
         font-size: $font-size-xs;
-        margin-top: rem(208px);
-        margin-left: rem(139px);
+        margin-top: 13rem;
+        margin-left: 8.688rem;
         &::before{
           content:"\E30A";
           font-family: 'Material Icons';
           vertical-align: middle;
-          margin: rem(5px);
+          margin: 0.3125rem;
         }
       }
     }
@@ -148,17 +155,17 @@
     font-size: $font-size-sm;
   }
   .count {
-    color: $gray-dark;
+    color: $gray;
     font-weight: 700;
     position: relative;
-    bottom: rem(8px);
+    bottom: 0.5rem;
   }
   .all-product-link {
     clear: both;
-    color: $gray-dark;
+    color: $gray;
     font-weight: 700;
-    margin-top: rem(24px);
-    margin-bottom: rem(24px);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 }
 

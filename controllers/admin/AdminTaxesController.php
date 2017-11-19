@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -137,7 +137,7 @@ class AdminTaxesControllerCore extends AdminController
      * @throws Exception
      * @throws SmartyException
      */
-    public function displayDeleteLink($token = null, $id)
+    public function displayDeleteLink($token, $id)
     {
         if (!array_key_exists('Delete', self::$cache_lang)) {
             self::$cache_lang['Delete'] = $this->trans('Delete', array(), 'Admin.Actions');
@@ -262,10 +262,8 @@ class AdminTaxesControllerCore extends AdminController
                     } else {
                         $this->errors[] = $this->trans('An error occurred while updating an object.', array(), 'Admin.Notifications.Error').' <b>'.$this->table.'</b> '.$this->trans('(cannot load object)', array(), 'Admin.Notifications.Error');
                     }
-                }
-
-                /* Object creation */
-                else {
+                } else {
+                    // Object creation
                     /** @var Tax $object */
                     $object = new $this->className();
                     $this->copyFromPost($object, $this->table);

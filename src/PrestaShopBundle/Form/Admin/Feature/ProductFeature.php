@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Feature;
@@ -78,6 +78,7 @@ class ProductFeature extends CommonAbstractType
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values', array('idFeature' => 1)),
                 'data-toggle' => 'select2',
+                'data-minimumResultsForSearch' => '7',
                 'class' => 'feature-selector',
             ),
             'placeholder' => $this->translator->trans('Choose a feature', array(), 'Admin.Catalog.Feature'),
@@ -86,7 +87,10 @@ class ProductFeature extends CommonAbstractType
             'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
             'required' =>  false,
             'choices_as_values' => true,
-            'attr' => array('class' => 'feature-value-selector'),
+            'attr' => array(
+                'class' => 'feature-value-selector',
+                'data-minimumResultsForSearch' => '7',
+            ),
             'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
             'disabled' => true,
         ))
@@ -114,7 +118,6 @@ class ProductFeature extends CommonAbstractType
             );
 
             $this->updateValueField($form, $choices);
-
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -140,7 +143,11 @@ class ProductFeature extends CommonAbstractType
         $form->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
             'required' =>  false,
-            'attr' => array('class' => 'feature-value-selector'),
+            'attr' => array(
+                'class' => 'feature-value-selector',
+                'data-minimumResultsForSearch' => '7',
+                'data-toggle' => 'select2',
+            ),
             'choices' => $choices,
             'choices_as_values' => true,
             'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),

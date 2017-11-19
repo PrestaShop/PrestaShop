@@ -108,7 +108,7 @@
     <tab id="Stock_Coverage" name="Stock Coverage" />
     <tab id="Stock_Management" name="Stock Management" />
     <tab id="Stock_Movement" name="Stock Movement" />
-    <tab id="Stock" name="Stock" />
+    <tab id="Stock" name="Stocks" />
     <tab id="Store_Contacts" name="Stores" />
     <tab id="Suppliers" name="Suppliers" />
     <tab id="Supply_orders" name="Supply orders" />

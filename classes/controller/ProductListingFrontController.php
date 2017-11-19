@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -430,6 +430,8 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
 
                 return $link;
             }, $pagination->buildLinks()),
+            // Compare to 3 because there are the next and previous links
+            'should_be_displayed' => (count($pagination->buildLinks()) > 3)
         );
     }
 
@@ -483,10 +485,36 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         );
 
         foreach ($search as $key => $value) {
+            if ($key === 'products') {
+                $value = $this->prepareProductArrayForAjaxReturn($value);
+            }
             $data[$key] = $value;
         }
 
         return $data;
+    }
+
+    /**
+     * Cleans the products array with only whitelisted properties.
+     *
+     * @return array
+     */
+    protected function prepareProductArrayForAjaxReturn(array $products)
+    {
+        $allowed_properties = array('id_product', 'price', 'reference', 'active', 'description_short', 'link',
+            'link_rewrite', 'name', 'manufacturer_name', 'position', 'cover', 'url', 'canonical_url', 'add_to_cart_url',
+            'has_discount', 'discount_type', 'discount_percentage', 'discount_percentage_absolute', 'discount_amount',
+            'price_amount', 'regular_price_amount', 'regular_price', 'discount_to_display', 'labels', 'main_variants',
+            'unit_price', 'tax_name', 'rate'
+        );
+        foreach ($products as $product_key => $product) {
+            foreach ($product as $product_property => $data) {
+                if (!in_array($product_property, $allowed_properties)) {
+                    unset($products[$product_key][$product_property]);
+                }
+            }
+        }
+        return $products;
     }
 
     /**
