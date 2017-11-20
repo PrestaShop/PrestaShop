@@ -53,8 +53,8 @@ if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
 // Check PHP version
-if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.4', '<')) {
-    die('You need at least PHP 5.4 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
+if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.6', '<')) {
+    die('You need at least PHP 5.6 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
 }
 
 // we check if theses constants are defined
@@ -99,7 +99,7 @@ define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
 
 require_once _PS_INSTALL_PATH_.'install_version.php';
 
-// PrestaShop autoload is used to load some helpfull classes like Tools.
+// PrestaShop autoload is used to load some helpful classes like Tools.
 // Add classes used by installer bellow.
 
 require_once _PS_CORE_DIR_.'/config/alias.php';
