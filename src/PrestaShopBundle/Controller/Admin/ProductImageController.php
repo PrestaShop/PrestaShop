@@ -126,7 +126,7 @@ class ProductImageController extends FrameworkBundleAdminController
             return new Response();
         }
 
-        $image = $productAdapter->getImage((int)$idImage);
+        $image = $productAdapter->getImage((int)$idImage, $locales[0]['id_lang']);
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
             ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
