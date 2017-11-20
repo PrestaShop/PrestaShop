@@ -1,5 +1,6 @@
 <phpunit bootstrap="bootstrap.php">
     <php>
+        <server name="KERNEL_CLASS" value="AppKernel" />
         <env name="SYMFONY_ENV" value="test"/>
         <env name="kernel.environment" value="test" />
     </php>
