@@ -1,0 +1,9 @@
+#!/bin/bash
+
+FILES=$TRAVIS_BUILD_DIR/tests/Selenium/errorShots/*
+for f in $FILES
+do
+  echo "--- Displaying content of $f ...\n"
+
+  echo "data:image/png;base64,$(base64 -w 0 $f)"
+done
