@@ -34,18 +34,14 @@ class CheckProductBO extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.catalogue_filter_by_name_input, 90000)
       .click(selector.BO.AddProductPage.catalogue_filter_by_name_input)
-      .pause(4000)
       .setValue(selector.BO.AddProductPage.catalogue_filter_by_name_input, productName)
-      .pause(2000)
       .click(selector.BO.AddProductPage.click_outside)
       .waitForExist(selector.BO.AddProductPage.catalogue_submit_filter_button, 60000)
       .click(selector.BO.AddProductPage.catalogue_submit_filter_button)
-      .pause(2000)
   }
 
   checkProductName() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_name, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_name))
       .then((text) => expect(text).to.be.equal(productName));
@@ -53,7 +49,6 @@ class CheckProductBO extends PrestashopClient {
 
   checkProductReference() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_reference, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_reference))
       .then((text) => expect(text).to.be.equal(data.common.product_reference));
@@ -61,7 +56,6 @@ class CheckProductBO extends PrestashopClient {
 
   checkProductCategory() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_category, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_category))
       .then((text) => expect(text).to.be.equal(categoryName));
@@ -69,7 +63,6 @@ class CheckProductBO extends PrestashopClient {
 
   checkProductPriceTE() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_price, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_price))
       .then((price) => price = price.replace('€', ''))
@@ -78,7 +71,6 @@ class CheckProductBO extends PrestashopClient {
 
   checkProductQuantity() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_quantity, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_quantity))
       .then((text) => expect(text).to.be.equal(data.common.quantity));
@@ -86,7 +78,6 @@ class CheckProductBO extends PrestashopClient {
 
   checkProductQuantityCombination() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_quantity, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_quantity))
       .then((text) => expect(text).to.be.equal((parseInt(data.standard.variations[0].quantity) + parseInt(data.standard.variations[1].quantity)).toString()));
@@ -94,7 +85,6 @@ class CheckProductBO extends PrestashopClient {
 
   checkProductStatus() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_product_online, 60000)
       .then(() => this.client.getText(selector.BO.AddProductPage.catalog_product_online))
       .then((text) => expect(text).to.be.equal('check'));
@@ -102,7 +92,6 @@ class CheckProductBO extends PrestashopClient {
 
   resetFilter() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.AddProductPage.catalog_reset_filter, 60000)
       .click(selector.BO.AddProductPage.catalog_reset_filter)
   }
