@@ -4,33 +4,32 @@
     "type": "project",
     "require": {
         "php": ">=5.6.0",
-        "symfony/symfony": "~3.3",
-        "defuse/php-encryption": "~2.0.1",
+        "ext-curl": "*",
+        "ext-intl": "*",
+        "ext-zip": "*",
+        "curl/curl": "1.2.1",
+        "symfony/symfony": "v3.4.0-BETA4",
+        "symfony/swiftmailer-bundle": "^2.6.4",
+        "symfony/monolog-bundle": "^3.1.0",
         "doctrine/dbal": "~2.5.3",
         "doctrine/cache": "~1.6|~1.5",
         "doctrine/common": "~2.5.3",
         "doctrine/orm": "~2.5.3",
-        "ext-curl": "*",
-        "ext-intl": "*",
-        "ext-zip": "*",
-        "geoip2/geoip2": "~2.4.2",
         "doctrine/doctrine-bundle": "^1.6",
+        "twig/twig": "^1.0||^2.0",
+        "sensio/distribution-bundle": "^5.0.19",
+        "sensio/framework-extra-bundle": "^5.0.0",
+        "defuse/php-encryption": "~2.0.1",
+        "geoip2/geoip2": "~2.4.2",
         "mrclay/minify": "~2.3.0",
         "matthiasmullie/minify": "~1.3.0",
         "jakeasmith/http_build_url": "^1",
         "mobiledetect/mobiledetectlib": "~2.8.22",
-        "symfony/swiftmailer-bundle": "^2.3.10",
         "pear/archive_tar": "~1.4.2",
-        "swiftmailer/swiftmailer": "~5.4.3",
-        "symfony/monolog-bundle": "^3.1.0",
-        "sensio/distribution-bundle": "^5.0.19",
-        "sensio/framework-extra-bundle": "^3.0.2",
-        "prestashop/translationtools-bundle": "dev-master",
         "tecnickcom/tcpdf": "6.2.12",
         "composer/installers": "1.0.21",
         "icanboogie/cldr": "1.3.9",
         "incenteev/composer-parameter-handler": "~2.0",
-        "curl/curl": "1.2.1",
         "ircmaxell/password-compat": "1.0.4",
         "ircmaxell/random-lib": "*",
         "shudrum/array-finder": "1.1.0",
@@ -38,7 +37,11 @@
         "guzzlehttp/guzzle": "~5.0",
         "csa/guzzle-bundle": "~1.3",
         "ipresta/localize-fixture": "~v1.0",
+        "beberlei/DoctrineExtensions": "^1.0",
+        "composer/ca-bundle": "^1.0",
+        "nikic/php-parser": "^2.1",
         "paragonie/random_compat": "^1.4|^2.0",
+        "prestashop/translationtools-bundle": "dev-master",
         "prestashop/smarty": "dev-master",
         "prestashop/blockreassurance": "dev-master",
         "prestashop/contactform": "dev-master",
@@ -94,9 +97,6 @@
         "prestashop/statsvisits": "dev-master",
         "prestashop/welcome": "dev-master",
         "prestashop/dashtrends": "dev-master",
-        "beberlei/DoctrineExtensions": "^1.0",
-        "composer/ca-bundle": "^1.0",
-        "nikic/php-parser": "^2.1",
         "prestashop/decimal": "^1.0.0"
     },
     "require-dev": {
@@ -128,7 +128,6 @@
             "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
@@ -171,13 +170,22 @@
         "symfony-app-dir": "app",
         "symfony-bin-dir": "bin",
         "symfony-var-dir": "var",
-        "symfony-web-dir": "web",
+        "symfony-web-dir": ".",
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
     },
-    "author": "PrestaShop",
+    "authors": [
+      {
+        "name": "PrestaShop SA",
+        "email": "contact@prestashop.com"
+      },
+      {
+        "name": "PrestaShop Community",
+        "homepage": "http://contributors.prestashop.com/"
+      }
+    ],
     "license": "OSL-3.0"
 }
