@@ -4,6 +4,7 @@ parameters:
 #    parameter_name: value
 
 services:
+    _defaults: { public: true }
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
