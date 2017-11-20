@@ -19,7 +19,7 @@ class CreateProduct extends PrestashopClient {
   addProductName(name) {
     return this.client
       .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-      .setValue(selector.BO.AddProductPage.product_name_input, name +' '+ global.product_id)
+      .setValue(selector.BO.AddProductPage.product_name_input, name +' '+ global.date_time)
   }
 
   addProductQuantity() {
