@@ -71,3 +71,4 @@ after_failure:
   - sudo cat /var/log/php-fpm.log
   - sudo ls -l /var/log/apache2
   - sudo cat /var/log/apache2/other_vhosts_access.log
+  - cat $TRAVIS_BUILD_DIR/var/log/dev.log
