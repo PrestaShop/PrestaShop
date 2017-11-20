@@ -171,7 +171,7 @@ class CartRuleCalculator
                 // discount on single product
                 foreach ($this->cartRows as $cartRow) {
                     if ($cartRow->getRowData()['id_product'] == $cartRule->reduction_product) {
-                        $concernedRows->add($cartRow);
+                        $concernedRows->addCartRow($cartRow);
                     }
                 }
             } elseif ($cartRule->reduction_product == 0) {
