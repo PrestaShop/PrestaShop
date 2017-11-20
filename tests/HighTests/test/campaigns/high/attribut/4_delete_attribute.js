@@ -11,6 +11,7 @@ scenario('Delete attribute', client => {
 scenario('Check of the deleted attribute in Front Office', client => {
   test('should open the browser', () => client.open());
   test('should sign in BO', () => client.signinFO());
+  test('should change front office language to english', () => client.languageChange('english'));
   test('should search for the product', () => client.searchForProduct('Attribut'));
   test('should Check deleted attribute in Front Office', () => client.checkDeletedAttributeFO());
   test('should sign out FO', () => client.signoutFO());

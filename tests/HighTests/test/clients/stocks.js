@@ -24,6 +24,7 @@ class ModifyQuantity extends PrestashopClient {
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Movements.tabs, 90000)
       .click(selector.BO.CatalogPage.StockSubmenu.Movements.tabs)
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Movements.variation, 90000)
+      .pause(1000)
   }
 
   modifyFirstProductQuantity() {
@@ -62,7 +63,7 @@ class ModifyQuantity extends PrestashopClient {
 
   modifyThirdProductQuantity() {
     return this.client
-      .pause(4000)
+      .pause(2000)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.third_product_quantity_input)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.add_quantity_button)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.add_quantity_button)
@@ -75,9 +76,6 @@ class ModifyQuantity extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Stock.save_third_product_quantity_button, 90000)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.save_third_product_quantity_button)
-      .pause(1000)
-      .then(() => this.client.getText(selector.BO.CatalogPage.StockSubmenu.Stock.success_panel))
-      .then((text) => expect(text.substring(2)).to.be.equal('Stock successfully updated'))
   }
 
   getFourthProductQuantity() {
@@ -89,26 +87,26 @@ class ModifyQuantity extends PrestashopClient {
 
   modifyFourthProductQuantity() {
     return this.client
-      .pause(4000)
+      .pause(2000)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.fourth_product_quantity_input)
-      .waitForExist(selector.BO.CatalogPage.StockSubmenu.Stock.fourth_product_quantity_input, 90000)
-      .setValue(selector.BO.CatalogPage.StockSubmenu.Stock.fourth_product_quantity_input, '-50')
+      .setValue(selector.BO.CatalogPage.StockSubmenu.Stock.fourth_product_quantity_input, '0')
+      .click(selector.BO.CatalogPage.StockSubmenu.Stock.remove_quantity_button)
+      .click(selector.BO.CatalogPage.StockSubmenu.Stock.remove_quantity_button)
+      .click(selector.BO.CatalogPage.StockSubmenu.Stock.remove_quantity_button)
+      .pause(1000)
       .then(() => this.client.getText(selector.BO.CatalogPage.StockSubmenu.Stock.fourth_product_quantity_modified))
-      .then((text) => expect(text.substring(14)).to.be.equal((Number(global.productQuantity) - 50).toString()))
+      .then((text) => expect(text.substring(14)).to.be.equal((Number(global.productQuantity) - 3).toString()))
   }
 
   saveFourthProduct() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Stock.save_fourth_product_quantity_button, 90000)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.save_fourth_product_quantity_button)
-      .pause(1000)
-      .then(() => this.client.getText(selector.BO.CatalogPage.StockSubmenu.Stock.success_panel))
-      .then((text) => expect(text.substring(2)).to.be.equal('Stock successfully updated'))
   }
 
   checkMovement(order, quantity, variation, type) {
     return this.client
-      .waitForExist('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span/span', 90000)
+      .waitForVisible('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span/span', 90000)
       .then(() => this.client.getText('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span/span'))
       .then((text) => expect(text).to.be.equal(variation))
       .then(() => this.client.getText('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[4]/span'))
@@ -116,6 +114,7 @@ class ModifyQuantity extends PrestashopClient {
       .then(() => this.client.getText('//*[@id="app"]/div[3]/section/table/tbody/tr[' + order + ']/td[3]'))
       .then((text) => expect(text.indexOf(type)).to.not.equal(-1))
   }
+
 }
 
 module.exports = ModifyQuantity;

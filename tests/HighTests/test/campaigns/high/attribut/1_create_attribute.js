@@ -33,6 +33,7 @@ scenario('Create product', client => {
 scenario('Check the product attribute in the Front Office', client => {
   test('should open the browser', () => client.open());
   test('should sign in FO', () => client.signinFO());
+  test('should change front office language to english', () => client.languageChange('english'));
   test('should search for the product', () => client.searchForProduct('Attribut'));
   test('should check the product attribute name', () => client.checkCreatedAttributeName());
   test('should Check attribute value', () => client.checkCreatedAttributeValue());

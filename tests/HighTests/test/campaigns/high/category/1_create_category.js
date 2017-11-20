@@ -32,6 +32,7 @@ scenario('Check category in BO', client => {
 scenario('Check category in FO', client => {
   test('should open the browser', () => client.open());
   test('should sign in FO', () => client.signinFO());
+  test('should change front office language to english', () => client.languageChange('english'));
   test('should open product list', () => client.openProductList());
   test('should check category existence', () => client.checkCategoryExistenceFO());
   test('should sign in FO', () => client.signoutFO());

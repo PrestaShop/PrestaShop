@@ -22,7 +22,7 @@ class PrestashopClient {
     return this.client.signoutFO();
   }
 
-  onBoarding(){
+  onBoarding() {
     return this.client.onboarding();
   }
 
@@ -32,12 +32,26 @@ class PrestashopClient {
 
   successPanel(index) {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.CatalogPage.success_panel)
       .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
       .then((text) => expect(text.substr(2)).to.be.equal(index));
   }
 
+  languageChange(language) {
+    if (language === "francais") {
+      return this.client
+        .waitForExist(selector.FO.common.language_selector, 90000)
+        .click(selector.FO.common.language_selector)
+        .waitForVisible(selector.FO.common.language_FR, 90000)
+        .click(selector.FO.common.language_FR)
+    } else {
+      return this.client
+        .waitForExist(selector.FO.common.language_selector, 90000)
+        .click(selector.FO.common.language_selector)
+        .waitForVisible(selector.FO.common.language_EN, 90000)
+        .click(selector.FO.common.language_EN)
+    }
+  }
 
   open() {
     return this.client.init().windowHandleSize({width: 1280, height: 1024});

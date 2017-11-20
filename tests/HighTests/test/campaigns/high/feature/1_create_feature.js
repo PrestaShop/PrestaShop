@@ -31,6 +31,7 @@ scenario('Create product and add the new feature', client => {
 scenario('Check the created feature in Front Office', client => {
   test('should open the browser', () => client.open());
   test('should sign in FO', () => client.signinFO());
+  test('should change front office language to english', () => client.languageChange('english'));
   test('should search for the product', () => client.searchForProduct('Feature'));
   test('should check the created feature in the Front Office', () => client.checkCreatedFeature());
   test('should sign in FO', () => client.signoutFO());

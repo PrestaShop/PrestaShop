@@ -41,7 +41,7 @@ class CreateCustomer extends PrestashopClient {
   addEmailAddress() {
     return this.client
       .waitForExist(selector.BO.Customers.Customer.email_address_input, 90000)
-      .setValue(selector.BO.Customers.Customer.email_address_input, 'demo' + global.product_id + '@prestashop.com')
+      .setValue(selector.BO.Customers.Customer.email_address_input, 'demo' + global.date_time + '@prestashop.com')
       .pause(1000)
   }
 
@@ -82,112 +82,96 @@ class CreateCustomer extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.new_address_button, 90000)
       .click(selector.BO.Customers.addresses.new_address_button)
-      .pause(2000)
   }
 
   addCustomerEmail() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.email_input, 90000)
-      .setValue(selector.BO.Customers.addresses.email_input, 'demo' + global.product_id + '@prestashop.com')
-      .pause(1000)
+      .setValue(selector.BO.Customers.addresses.email_input, 'demo' + global.date_time + '@prestashop.com')
   }
 
   addIdNumber() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.id_number_input, 90000)
       .setValue(selector.BO.Customers.addresses.id_number_input, '0123456789')
-      .pause(1000)
   }
 
   addAliasAddress() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.address_alias_input, 90000)
       .setValue(selector.BO.Customers.addresses.address_alias_input, 'Ma super addresse')
-      .pause(1000)
   }
 
   addFirstName() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.first_name_input, 90000)
       .setValue(selector.BO.Customers.addresses.first_name_input, 'demo')
-      .pause(1000)
   }
 
   addLastName() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.last_name_input, 90000)
       .setValue(selector.BO.Customers.addresses.last_name_input, 'demo')
-      .pause(1000)
   }
 
   addCompanyName() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.company, 90000)
       .setValue(selector.BO.Customers.addresses.company, 'Presta')
-      .pause(1000)
   }
 
   addTVANumber() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.VAT_number_input, 90000)
       .setValue(selector.BO.Customers.addresses.VAT_number_input, '0123456789')
-      .pause(1000)
   }
 
   addAddress() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.address_input, 90000)
       .setValue(selector.BO.Customers.addresses.address_input, "12 rue d'amsterdam")
-      .pause(1000)
   }
 
   addSecondAddress() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.address_second_input, 90000)
       .setValue(selector.BO.Customers.addresses.address_second_input, "RDC")
-      .pause(1000)
   }
 
   addZIPCode() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.zip_code_input, 90000)
       .setValue(selector.BO.Customers.addresses.zip_code_input, "75009")
-      .pause(1000)
   }
 
   addCity() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.city_input, 90000)
       .setValue(selector.BO.Customers.addresses.city_input, "Paris")
-      .pause(2000)
   }
 
   addCountry() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.country_input, 90000)
       .selectByValue(selector.BO.Customers.addresses.country_input, "8")
-      .pause(1000)
   }
 
   addHomePhone() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.phone_input, 90000)
       .setValue(selector.BO.Customers.addresses.phone_input, "0123456789")
-      .pause(1000)
   }
 
   addOther() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.other_input, 90000)
       .setValue(selector.BO.Customers.addresses.other_input, "azerty")
-      .pause(1000)
   }
 
   saveAddress() {
     return this.client
       .waitForExist(selector.BO.Customers.addresses.save_button, 90000)
       .click(selector.BO.Customers.addresses.save_button)
-      .pause(1000)
   }
 }
 

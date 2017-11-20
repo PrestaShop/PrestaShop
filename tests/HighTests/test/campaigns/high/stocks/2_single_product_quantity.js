@@ -12,5 +12,5 @@ scenario('Modify quantity and check movement for single product', client => {
   test('should change fourth product quantity', () => client.modifyFourthProductQuantity());
   test('should save fourth product quantity', () => client.saveFourthProduct());
   test('should go to movements tab', () => client.goToStockMovements());
-  test('should check movement history', () => client.checkMovement(1, "50", "-", "Employee Edition"));
+  test('should check movement history', () => client.checkMovement(1, "3", "-", "Employee Edition"));
 }, 'stocks', true);
