@@ -289,11 +289,11 @@
 									</script>
 									{/if}
 								{elseif $input.type == 'swap'}
-									<div class="form-group">
+									<div class="form-group swap-container">
 										<div class="col-lg-9">
 											<div class="form-control-static row">
 												<div class="col-xs-6">
-													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="availableSwap" name="{$input.name|escape:'html':'utf-8'}_available[]" multiple="multiple">
+													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} availableSwap" name="{$input.name|escape:'html':'utf-8'}_available[]" multiple="multiple">
 													{foreach $input.options.query AS $option}
 														{if is_object($option)}
 															{if !in_array($option->$input.options.id, $fields_value[$input.name])}
@@ -308,10 +308,10 @@
 														{/if}
 													{/foreach}
 													</select>
-													<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
+													<a href="#" class="btn btn-default btn-block addSwap">{l s='Add' d='Admin.Actions'} <i class="icon-arrow-right"></i></a>
 												</div>
 												<div class="col-xs-6">
-													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
+													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if} selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
 													{foreach $input.options.query AS $option}
 														{if is_object($option)}
 															{if in_array($option->$input.options.id, $fields_value[$input.name])}
@@ -326,7 +326,7 @@
 														{/if}
 													{/foreach}
 													</select>
-													<a href="#" id="removeSwap" class="btn btn-default btn-block"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
+													<a href="#" class="btn btn-default btn-block removeSwap"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 												</div>
 											</div>
 										</div>
