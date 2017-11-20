@@ -15,7 +15,6 @@ class EditSEO extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.SEO_meta_title, 90000)
       .click(selector.BO.AddProductPage.SEO_meta_title)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.SEO_meta_title, data.common.metatitle)
   }
 
@@ -23,7 +22,6 @@ class EditSEO extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.SEO_meta_description, 90000)
       .click(selector.BO.AddProductPage.SEO_meta_description)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.SEO_meta_description, data.common.metadesc)
   }
 
@@ -31,7 +29,6 @@ class EditSEO extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.SEO_friendly_url, 90000)
       .click(selector.BO.AddProductPage.SEO_friendly_url)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.SEO_friendly_url, data.common.shortlink)
   }
 

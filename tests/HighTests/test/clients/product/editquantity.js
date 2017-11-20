@@ -50,7 +50,6 @@ class EditQuantity extends PrestashopClient {
       .click(selector.BO.AddProductPage.virtual_file_name)
       .pause(2000)
       .setValue(selector.BO.AddProductPage.virtual_file_name, data.virtual.attached_file_name)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.virtual_file_number_download, 90000)
       .click(selector.BO.AddProductPage.virtual_file_number_download)
       .pause(2000)
@@ -63,7 +62,6 @@ class EditQuantity extends PrestashopClient {
       .click(selector.BO.AddProductPage.virtual_number_days)
       .pause(2000)
       .setValue(selector.BO.AddProductPage.virtual_number_days, data.virtual.number_of_days)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.virtual_save_attached_file, 90000)
       .click(selector.BO.AddProductPage.virtual_save_attached_file)
   }
@@ -74,12 +72,10 @@ class EditQuantity extends PrestashopClient {
         .scroll(0, 1000)
         .waitForExist(selector.BO.AddProductPage.pack_availability_preferences, 60000)
         .click(selector.BO.AddProductPage.pack_availability_preferences)
-        .pause(2000)
     } else {
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_availability_preferences, 60000)
       .click(selector.BO.AddProductPage.pack_availability_preferences)
-      .pause(2000)
     }
   }
 
@@ -87,9 +83,8 @@ class EditQuantity extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_label_in_stock, 90000)
       .click(selector.BO.AddProductPage.pack_label_in_stock)
-      .pause(2000)
+      .pause(1000)
       .setValue(selector.BO.AddProductPage.pack_label_in_stock, data.common.qty_msg_stock)
-      .pause(2000)
   }
 
   availableOutOfStock(){
@@ -97,18 +92,16 @@ class EditQuantity extends PrestashopClient {
       .scroll(0,600)
       .waitForExist(selector.BO.AddProductPage.pack_label_out_stock, 90000)
       .click(selector.BO.AddProductPage.pack_label_out_stock)
-      .pause(2000)
+      .pause(1000)
       .setValue(selector.BO.AddProductPage.pack_label_out_stock, data.common.qty_msg_unstock)
-      .pause(2000)
   }
 
   availabilityDate(){
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_availability_date, 90000)
       .click(selector.BO.AddProductPage.pack_availability_date)
-      .pause(2000)
+      .pause(1000)
       .setValue(selector.BO.AddProductPage.pack_availability_date, data.common.qty_date)
-      .pause(2000)
   }
 
 }

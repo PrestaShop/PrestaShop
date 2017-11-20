@@ -32,16 +32,12 @@ class EditPricing extends PrestashopClient {
       .scroll(0, 250)
       .waitForExist(selector.BO.AddProductPage.pricing_first_priorities_select, 60000)
       .selectByValue(selector.BO.AddProductPage.pricing_first_priorities_select,'id_shop')
-      .pause(1000)
       .waitForExist(selector.BO.AddProductPage.pricing_second_priorities_select, 60000)
       .selectByValue(selector.BO.AddProductPage.pricing_second_priorities_select,'id_currency')
-      .pause(1000)
       .waitForExist(selector.BO.AddProductPage.pricing_third_priorities_select, 60000)
       .selectByValue(selector.BO.AddProductPage.pricing_third_priorities_select,'id_country')
-      .pause(1000)
       .waitForExist(selector.BO.AddProductPage.pricing_fourth_priorities_select, 60000)
       .selectByValue(selector.BO.AddProductPage.pricing_third_priorities_select,'id_group')
-      .pause(1000)
   }
 
 }
