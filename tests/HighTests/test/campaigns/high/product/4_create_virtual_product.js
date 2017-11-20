@@ -74,6 +74,7 @@ scenario('Create virtual Product', client => {
   }, 'product/product');
 }, 'product/product', true);
 
+
 scenario('Check the product in the catalog', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signinBO());

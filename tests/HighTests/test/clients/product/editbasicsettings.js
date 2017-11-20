@@ -38,7 +38,6 @@ class EditBasicSettings extends PrestashopClient {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_combinations, 90000)
         .click(selector.BO.AddProductPage.product_combinations)
-        .pause(3000)
     }
   }
 
@@ -46,38 +45,28 @@ class EditBasicSettings extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.search_product_pack, 60000)
       .click(selector.BO.AddProductPage.search_product_pack)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.search_product_pack, data.pack.pack.pack1.search)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.product_item_pack, 60000)
       .click(selector.BO.AddProductPage.product_item_pack)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.product_pack_item_quantity, 60000)
       .click(selector.BO.AddProductPage.product_pack_item_quantity)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.product_pack_item_quantity, data.pack.pack.pack1.quantity)
       .waitForExist(selector.BO.AddProductPage.product_pack_add_button, 60000)
       .click(selector.BO.AddProductPage.product_pack_add_button)
-      .pause(2000)
   }
 
   addPackProduct2() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.search_product_pack, 60000)
       .click(selector.BO.AddProductPage.search_product_pack)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.search_product_pack, data.pack.pack.pack2.search)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.product_item_pack, 60000)
       .click(selector.BO.AddProductPage.product_item_pack)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.product_pack_item_quantity, 60000)
       .click(selector.BO.AddProductPage.product_pack_item_quantity)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.product_pack_item_quantity, data.pack.pack.pack2.quantity)
       .waitForExist(selector.BO.AddProductPage.product_pack_add_button, 60000)
       .click(selector.BO.AddProductPage.product_pack_add_button)
-      .pause(2000)
   }
 
   setQuantity() {
@@ -168,15 +157,14 @@ class EditBasicSettings extends PrestashopClient {
   addBrand(type) {
     if (type === 'pack') {
       return this.client
-        .scroll(0, 1000)
+        .scroll(0, 600)
         .waitForExist(selector.BO.AddProductPage.product_add_brand_btn, 90000)
         .click(selector.BO.AddProductPage.product_add_brand_btn)
-        .pause(2000)
     } else {
       return this.client
+        .scroll(0,600)
         .waitForExist(selector.BO.AddProductPage.product_add_brand_btn, 90000)
         .click(selector.BO.AddProductPage.product_add_brand_btn)
-        .pause(2000)
     }
   }
 
@@ -184,10 +172,8 @@ class EditBasicSettings extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.product_brand_select, 90000)
       .click(selector.BO.AddProductPage.product_brand_select)
-      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.product_brand_select_option, 90000)
       .click(selector.BO.AddProductPage.product_brand_select_option)
-      .pause(2000)
   }
 
   productOnline() {
@@ -202,12 +188,10 @@ class EditBasicSettings extends PrestashopClient {
         .scroll(0, 1000)
         .waitForExist(selector.BO.AddProductPage.add_related_product_btn, 90000)
         .click(selector.BO.AddProductPage.add_related_product_btn)
-        .pause(2000)
     } else {
       return this.client
         .waitForExist(selector.BO.AddProductPage.add_related_product_btn, 90000)
         .click(selector.BO.AddProductPage.add_related_product_btn)
-        .pause(2000)
     }
   }
 
@@ -222,7 +206,6 @@ class EditBasicSettings extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[1])
       .waitForExist(selector.BO.AddProductPage.related_product_item, 90000)
       .click(selector.BO.AddProductPage.related_product_item)
-      .pause(2000)
   }
 
   addFeatureHeight(type) {
@@ -231,26 +214,22 @@ class EditBasicSettings extends PrestashopClient {
         .scroll(0, 1000)
         .waitForExist(selector.BO.AddProductPage.product_add_feature_btn, 90000)
         .click(selector.BO.AddProductPage.product_add_feature_btn)
-        .pause(2000)
         .waitForExist(selector.BO.AddProductPage.feature_select_button, 90000)
         .click(selector.BO.AddProductPage.feature_select_button)
         .waitForExist(selector.BO.AddProductPage.feature_select_option_height, 90000)
         .click(selector.BO.AddProductPage.feature_select_option_height)
         .waitForExist(selector.BO.AddProductPage.feature_custom_value_height, 90000)
         .setValue(selector.BO.AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
-        .pause(2000)
     } else {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_add_feature_btn, 90000)
         .click(selector.BO.AddProductPage.product_add_feature_btn)
-        .pause(2000)
         .waitForExist(selector.BO.AddProductPage.feature_select_button, 90000)
         .click(selector.BO.AddProductPage.feature_select_button)
         .waitForExist(selector.BO.AddProductPage.feature_select_option_height, 90000)
         .click(selector.BO.AddProductPage.feature_select_option_height)
         .waitForExist(selector.BO.AddProductPage.feature_custom_value_height, 90000)
         .setValue(selector.BO.AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
-        .pause(2000)
     }
   }
 

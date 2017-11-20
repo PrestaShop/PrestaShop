@@ -15,7 +15,6 @@ class EditShipping extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.shipping_width, 90000)
       .click(selector.BO.AddProductPage.shipping_width)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.shipping_width, data.common.cwidth)
   }
 
@@ -23,7 +22,6 @@ class EditShipping extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.shipping_height, 90000)
       .click(selector.BO.AddProductPage.shipping_height)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.shipping_height, data.common.cheight)
   }
 
@@ -31,7 +29,6 @@ class EditShipping extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.shipping_depth, 90000)
       .click(selector.BO.AddProductPage.shipping_depth)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.shipping_depth, data.common.cdepth)
   }
 
@@ -39,7 +36,6 @@ class EditShipping extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.shipping_weight, 90000)
       .click(selector.BO.AddProductPage.shipping_weight)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.shipping_weight, data.common.cweight)
   }
 
@@ -47,7 +43,6 @@ class EditShipping extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.AddProductPage.shipping_fees, 90000)
       .click(selector.BO.AddProductPage.shipping_fees)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.shipping_fees, data.common.cadd_ship_coast)
   }
 
@@ -56,7 +51,6 @@ class EditShipping extends PrestashopClient {
       .scroll(0, 600)
       .waitForExist(selector.BO.AddProductPage.shipping_available_carriers, 90000)
       .click(selector.BO.AddProductPage.shipping_available_carriers)
-      .pause(2000)
   }
 
 }
