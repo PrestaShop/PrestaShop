@@ -73,7 +73,6 @@ class Category extends PrestashopClient {
 
   goToCategoryBO() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.CatalogPage.menu_button, 90000)
       .moveToObject(selector.BO.CatalogPage.menu_button)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.submenu, 90000)
@@ -82,7 +81,6 @@ class Category extends PrestashopClient {
 
   searchCategoryBO() {
     return this.client
-      .pause(3000)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_search_input, 90000)
       .setValue(selector.BO.CatalogPage.CategorySubmenu.name_search_input, global.categoryName)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.search_button, 90000)

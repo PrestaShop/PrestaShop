@@ -72,7 +72,7 @@ class Attribut extends PrestashopClient {
   searchForProduct(name) {
     return this.client
       .waitForExist(selector.FO.SearchProductPage.product_search_input, 90000)
-      .setValue(selector.FO.SearchProductPage.product_search_input,name +' '+ product_id)
+      .setValue(selector.FO.SearchProductPage.product_search_input, name)
       .click(selector.FO.SearchProductPage.product_search_button)
       .click(selector.FO.SearchProductPage.product_result_name);
   }
