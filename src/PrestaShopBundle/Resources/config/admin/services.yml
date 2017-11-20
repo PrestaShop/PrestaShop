@@ -6,6 +6,9 @@ parameters:
     themes_dir:               "%kernel.root_dir%/../themes"
 
 services:
+    _defaults:
+        public: true
+
 # CORE ADMIN (prestashop.core.admin.*)
     # URL generation
     prestashop.core.admin.url_generator_factory:
