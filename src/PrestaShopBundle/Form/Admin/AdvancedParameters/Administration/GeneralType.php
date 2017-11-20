@@ -28,6 +28,8 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class GeneralType extends TranslatorAwareType
 {
@@ -37,7 +39,7 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('check_modules_update', ChoiceType::class, array(
                 'choices_as_values' => true,
                 'choices'  => array(
                     'No' => false,
@@ -46,7 +48,7 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('check_ip_address', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('check_ip_address', ChoiceType::class, array(
                 'choices_as_values' => true,
                 'choices'  => array(
                     'No' => false,
@@ -55,10 +57,10 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('front_cookie_lifetime', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('front_cookie_lifetime', TextType::class, array(
                 'required' => true,
             ))
-            ->add('back_cookie_lifetime', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('back_cookie_lifetime', TextType::class, array(
                 'required' => true,
             ))
         ;

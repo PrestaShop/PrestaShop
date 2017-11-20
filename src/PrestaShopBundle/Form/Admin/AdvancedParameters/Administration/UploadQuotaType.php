@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class UploadQuotaType extends TranslatorAwareType
 {
@@ -37,13 +38,13 @@ class UploadQuotaType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('max_size_attached_files', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('max_size_attached_files', TextType::class, array(
                 'required' => true,
             ))
-            ->add('max_size_downloadable_product', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('max_size_downloadable_product', TextType::class, array(
                 'required' => true,
             ))
-            ->add('max_size_product_image', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('max_size_product_image', TextType::class, array(
                 'required' => true,
             ))
         ;
