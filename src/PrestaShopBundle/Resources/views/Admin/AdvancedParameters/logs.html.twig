@@ -26,7 +26,43 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
-<div class="row">
-  Hello world
-</div>
+  {% block logs_severity_level_meaning %}
+    <div class="col-md-12">
+      Information Block
+    </div>
+  {% endblock %}
+
+  {% block logs_main_panel %}
+    <div class="col-md-12">
+      Panel Block
+    </div>
+  {% endblock %}
+
+  {% block logs_by_mail %}
+    {{ form_start(logsByEmailForm) }}
+    <div class="col-md-12">
+      <div class="col">
+        <div class="card">
+          <h3 class="card-header">
+            <i class="material-icons">business_center</i> {{ 'Logs by email'|trans }}
+          </h3>
+          <div class="card-block">
+            <div class="card-text">
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">{{ 'Minimum severity level'|trans }}</label>
+                <div class="col-sm-8">
+                  {{ form_errors(logsByEmailForm.severity_level) }}
+                  {{ form_widget(logsByEmailForm.severity_level) }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{ form_end(logsByEmailForm) }}
+  {% endblock %}
 {% endblock %}
