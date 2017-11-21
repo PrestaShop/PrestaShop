@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsByEmailType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -57,6 +58,7 @@ class LogsController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => 'ok',
+            'logsByEmailForm' => $this->createForm(LogsByEmailType::class)->createView(),
         );
 
         return $this->render('@PrestaShop/Admin/AdvancedParameters/logs.html.twig', $twigValues);
