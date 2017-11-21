@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Calculation\CartRules;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 /**
@@ -43,90 +41,90 @@ class CartRulesTest extends AbstractCartCalculationTest
     /**
      * @dataProvider cartWithOneCartRulePercentProvider
      */
-    public function testCartWithOneCartRulePercent($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithOneCartRulePercent($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithOneCartRuleAmountProvider
      */
-    public function testCartWithOneCartRuleAmount($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithOneCartRuleAmount($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithMultipleCartRulesPercentProvider
      */
-    public function testCartWithMultipleCartRulesPercent($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithMultipleCartRulesPercent($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithMultipleCartRulesAmountProvider
      */
-    public function testCartWithMultipleCartRulesAmount($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithMultipleCartRulesAmount($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithMultipleCartRulesMixedProvider
      */
-    public function testCartWithMultipleCartRulesMixed($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithMultipleCartRulesMixed($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithOneProductSpecificCartRulesAmountProvider
      */
-    public function testCartWithOneProductSpecificCartRulesAmount($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithOneProductSpecificCartRulesAmount($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithOneProductSpecificCartRulesPercentProvider
      */
-    public function testCartWithOneProductSpecificCartRulesPercent($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithOneProductSpecificCartRulesPercent($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithMultipleProductSpecificCartRulesPercentProvider
      */
-    public function testCartWithMultipleProductSpecificCartRulesPercent($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithMultipleProductSpecificCartRulesPercent($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
     /**
      * @dataProvider cartWithMultipleProductSpecificCartRulesMixedProvider
      */
-    public function testCartWithMultipleProductSpecificCartRulesMixed($productDatas, $expectedTotal, $cartRuleDatas)
+    public function testCartWithMultipleProductSpecificCartRulesMixed($productData, $expectedTotal, $cartRuleData)
     {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
@@ -134,12 +132,12 @@ class CartRulesTest extends AbstractCartCalculationTest
      * @dataProvider cartWithMultipleProductOutOfStockSpecificCartRulesMixedProvider
      */
     public function testCartWithMultipleProductOutOfStockSpecificCartRulesMixed(
-        $productDatas,
+        $productData,
         $expectedTotal,
-        $cartRuleDatas
+        $cartRuleData
     ) {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
     }
 
@@ -147,13 +145,13 @@ class CartRulesTest extends AbstractCartCalculationTest
      * @dataProvider cartWithGiftProvider
      */
     public function testCartWithGift(
-        $productDatas,
+        $productData,
         $expectedTotal,
-        $cartRuleDatas,
+        $cartRuleData,
         $expectedProductCount
     ) {
-        $this->addProductsToCart($productDatas);
-        $this->addCartRulesToCart($cartRuleDatas);
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
         $this->compareCartTotal($expectedTotal);
         $this->assertEquals($expectedProductCount, \Cart::getNbProducts($this->cart->id));
     }
