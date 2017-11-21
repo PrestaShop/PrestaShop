@@ -1,3 +1,11 @@
+# Logs
+admin_logs:
+    path: logs
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle\Controller\Admin\AdvancedParameters\LogsController::indexAction'
+        _legacy_controller: AdminLogs
+
 # System Information
 admin_system_information:
     path: system_information
