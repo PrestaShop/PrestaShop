@@ -165,6 +165,7 @@ class ProductPresenter
             $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
             $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
 
+            // TODO: add percent sign according to locale preferences
             $presentedProduct['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
             $presentedProduct['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             // TODO: Fix issue with tax calculation
