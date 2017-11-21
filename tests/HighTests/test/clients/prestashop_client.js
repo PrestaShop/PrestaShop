@@ -23,7 +23,10 @@ class PrestashopClient {
   }
 
   onBoarding() {
-    return this.client.onboarding();
+    return this.client
+      .waitForVisible(selector.BO.Onboarding.popup_close_button)
+      .click(selector.BO.Onboarding.popup_close_button)
+      .pause(2000)
   }
 
   takeScreenshot() {

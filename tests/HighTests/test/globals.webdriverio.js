@@ -225,7 +225,7 @@ module.exports = {
       //catalog selector
       CatalogPage: {
         menu_button: '//*[@id="subtab-AdminCatalog"]/a',
-        success_panel: '//*[@id="content"]/div[3]/div',
+        success_panel: '//*[@id="content"]/div[4]/div',
         select_all_product_button: '//*[@id="bulk_action_select_all"]',
         action_group_button: '//*[@id="product_bulk_menu"]',
         disable_all_selected: '//*[@id="main-div"]/div[3]/div/div/div[2]/div/div[2]/div[2]/div/div/a[2]',
@@ -255,7 +255,7 @@ module.exports = {
           delete_button: '//*[@id="table-category"]/tbody/tr/td[7]/div/div/ul/li[2]/a',
           image_link: '//*[@id="image-images-thumbnails"]/div/img',
           thumb_link: '//*[@id="thumb-images-thumbnails"]/div/img',
-          second_delete_button: '//*[@id="content"]/div[5]/div/div[2]/div/form/div[5]/button[2]',
+          second_delete_button: '//*[@id="content"]/div[6]/div/div[2]/div/form/div[5]/button[2]',
           select_category: '//*[@id="table-category"]/tbody/tr/td[1]/input',
           action_group_button: '//*[@id="form-category"]/div/div[3]/div/div/button',
           delete_action_group_button: '//*[@id="form-category"]/div/div[3]/div/div/ul/li[7]/a'
@@ -433,7 +433,7 @@ module.exports = {
       // Popup - boutique Onboarding selector
       Onboarding: {
         popup: '.onboarding-popup',
-        popup_close_button: '.onboarding-button-shut-down',
+        popup_close_button: '/html/body/div[1]/div/div/div[3]/button[1]',
         stop_button: '.onboarding-button-stop'
       }
     },
