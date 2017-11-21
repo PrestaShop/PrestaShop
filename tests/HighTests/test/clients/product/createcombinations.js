@@ -38,7 +38,7 @@ class CreateCombinations extends PrestashopClient {
 
   getCombinationData(number) {
     return this.client
-      .pause(3000)
+      .pause(2000)
       .waitForExist(selector.BO.AddProductPage.combination_panel.replace('%NUMBER',number), 60000)
       .then(() => this.client.getAttribute(selector.BO.AddProductPage.combination_panel.replace('%NUMBER',number),'data'))
       .then((text) => global.combinationId = text);
