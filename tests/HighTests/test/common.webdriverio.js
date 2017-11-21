@@ -50,18 +50,6 @@ function initCommands(client) {
       .waitForExist(this.selector.BO.AddProductPage.menu, 90000)
   });
 
-  client.addCommand('onboarding', function (cb) {
-    this.selector = globals.selector;
-    return client
-    if (this.client.isVisible(this.selector.BO.Onboarding.popup)) {
-      this.client
-        .click(this.selector.BO.Onboarding.popup_close_button)
-        .pause(1000)
-        .click(this.selector.BO.Onboarding.stop_button);
-    };
-    this.client.call(done);
-  });
-
   client.addCommand('signinFO', function (cb) {
     this.selector = globals.selector;
     return client
