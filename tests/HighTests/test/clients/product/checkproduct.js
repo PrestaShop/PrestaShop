@@ -9,20 +9,20 @@ class CheckProductBO extends PrestashopClient {
   goToCatalog(type) {
     switch (type) {
       case 'virtual':
-        productName = data.virtual.name + product_id;
-        categoryName = data.virtual.new_category_name + product_id;
+        productName = data.virtual.name + date_time;
+        categoryName = data.virtual.new_category_name + date_time;
         break;
       case 'pack':
-        productName = data.pack.name + product_id;
-        categoryName = data.pack.new_category_name + product_id;
+        productName = data.pack.name + date_time;
+        categoryName = data.pack.new_category_name + date_time;
         break;
       case 'combination':
-        productName = data.standard.name + 'Combination' + product_id;
-        categoryName = data.standard.new_category_name + 'Combination' + product_id;
+        productName = data.standard.name + 'Combination' + date_time;
+        categoryName = data.standard.new_category_name + 'Combination' + date_time;
         break;
       default:
-        productName = data.standard.name + product_id;
-        categoryName = data.standard.new_category_name + product_id;
+        productName = data.standard.name + date_time;
+        categoryName = data.standard.new_category_name + date_time;
     }
     return this.client
       .pause(2000)
