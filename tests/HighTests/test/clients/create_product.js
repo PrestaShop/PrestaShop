@@ -73,11 +73,10 @@ class CreateProduct extends PrestashopClient {
       .click('//*[@id="select2-form_step1_features_0_feature-results"]/li')
       .pause(2000)
       .selectByVisibleText(selector.BO.AddProductPage.feature_value_select,'feature value')
-      .pause(1000)
   }
 
 
-  productEnligne() {
+  productEnLigne() {
     return this.client
       .pause(1000)
       .click(selector.BO.AddProductPage.product_online_toggle)

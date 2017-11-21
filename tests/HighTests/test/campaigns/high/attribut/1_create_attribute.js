@@ -1,6 +1,7 @@
 scenario('Create attribute', client => {
   test('should open the browser', () => client.open());
   test('should sign in BO', () => client.signinBO());
+  test('should close the onboarding modal', () => client.onBoarding());
   test('Should go to the attribute list', () => client.goToAttributeList());
   test('should create new attribute', () => client.createAttribute());
   test('should add attribute name', () => client.addAttributeName());
@@ -24,7 +25,7 @@ scenario('Create product', client => {
   test('should add product quantity', () => client.addProductQuantity());
   test('should add product price', () => client.addProductPrice());
   test('should add product type', () => client.addProductTypeAttribute());
-  test('should make the product en ligne', () => client.productEnligne());
+  test('should make the product en ligne', () => client.productEnLigne());
   test('should save the product', () => client.saveProduct());
   test('should close the green validation', () => client.closeGreenValidation());
   test('should sign out BO', () => client.signoutBO());

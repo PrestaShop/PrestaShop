@@ -9,19 +9,19 @@ class EditBasicSettings extends PrestashopClient {
     if (type === 'virtual') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.virtual.name + product_id);
+        .setValue(selector.BO.AddProductPage.product_name_input, data.virtual.name + date_time);
     } else if (type === 'pack') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.pack.name + product_id);
+        .setValue(selector.BO.AddProductPage.product_name_input, data.pack.name + date_time);
     } else if (type === 'combination') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.standard.name + 'Combination' + product_id);
+        .setValue(selector.BO.AddProductPage.product_name_input, data.standard.name + 'Combination' + date_time);
     } else {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.standard.name + product_id);
+        .setValue(selector.BO.AddProductPage.product_name_input, data.standard.name + date_time);
     }
   }
 
@@ -124,19 +124,19 @@ class EditBasicSettings extends PrestashopClient {
     if (type === 'virtual') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.new_category_name + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.new_category_name + date_time);
     } else if (type === 'pack') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.pack.new_category_name + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.pack.new_category_name + date_time);
     } else if (type === 'combination') {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + 'Combination' + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + 'Combination' + date_time);
     } else {
       return this.client
         .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + product_id);
+        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + date_time);
     }
   }
 
@@ -202,7 +202,6 @@ class EditBasicSettings extends PrestashopClient {
       .setValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[0])
       .waitForExist(selector.BO.AddProductPage.related_product_item, 90000)
       .click(selector.BO.AddProductPage.related_product_item)
-      .pause(2000)
       .setValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[1])
       .waitForExist(selector.BO.AddProductPage.related_product_item, 90000)
       .click(selector.BO.AddProductPage.related_product_item)

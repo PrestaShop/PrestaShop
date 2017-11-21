@@ -1,7 +1,7 @@
 var PrestashopClient = require('./prestashop_client');
 var {selector} = require('../globals.webdriverio.js');
 
-global.categoryName = 'category' + new Date().getTime();
+global.categoryNameEntry = 'category' + new Date().getTime();
 
 class Category extends PrestashopClient {
 
@@ -13,7 +13,7 @@ class Category extends PrestashopClient {
       .click(selector.BO.CatalogPage.CategorySubmenu.submenu)
   }
 
-  removeHomeCategorycreateCategory() {
+  createCategory() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.new_category_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.new_category_button)
@@ -22,7 +22,7 @@ class Category extends PrestashopClient {
   addCategoryName() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input, global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input, global.categoryNameEntry)
   }
 
   addCategoryImage() {
@@ -62,10 +62,10 @@ class Category extends PrestashopClient {
   addCategorySimplifyUrl() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, global.categoryNameEntry)
   }
 
-  addCategorySave() {
+  SaveCategory() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.save_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.save_button)
@@ -82,7 +82,7 @@ class Category extends PrestashopClient {
   searchCategoryBO() {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_search_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_search_input, global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_search_input, global.categoryNameEntry)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.search_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.search_button)
   }
@@ -122,7 +122,7 @@ class Category extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, 90000)
       .then(() => this.client.getAttribute(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, "value"))
-      .then((text) => expect(text).to.be.equal(global.categoryName));
+      .then((text) => expect(text).to.be.equal(global.categoryNameEntry));
   }
 
   openProductList() {
@@ -135,18 +135,18 @@ class Category extends PrestashopClient {
     return this.client
       .waitForExist(selector.FO.SearchProductPage.second_category_name, 90000)
       .then(() => this.client.getText(selector.FO.SearchProductPage.second_category_name))
-      .then((text) => expect(text).to.be.equal(global.categoryName));
+      .then((text) => expect(text).to.be.equal(global.categoryNameEntry));
   }
 
   updateCategory() {
-    global.categoryName = global.categoryName + 'update';
+    global.categoryNameEntry = global.categoryNameEntry + 'update';
     return this.client
       .moveToObject(selector.BO.CatalogPage.CategorySubmenu.update_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.update_button)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.name_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input, global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.name_input, global.categoryNameEntry)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, 90000)
-      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, global.categoryName)
+      .setValue(selector.BO.CatalogPage.CategorySubmenu.simplify_URL_input, global.categoryNameEntry)
       .waitForExist(selector.BO.CatalogPage.CategorySubmenu.save_button, 90000)
       .click(selector.BO.CatalogPage.CategorySubmenu.save_button)
   }
