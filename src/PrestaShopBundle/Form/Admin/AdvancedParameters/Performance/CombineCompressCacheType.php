@@ -42,24 +42,24 @@ class CombineCompressCacheType extends CommonAbstractType
         $builder
             ->add('smart_cache_css', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('smart_cache_js', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('apache_optimization', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
