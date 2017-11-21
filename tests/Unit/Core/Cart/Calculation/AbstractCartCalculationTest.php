@@ -26,7 +26,7 @@
 
 namespace Tests\Unit\Core\Cart\Calculation;
 
-use Tests\Unit\Core\Cart\AbstractCartTest;
+use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
 use Tools;
 
 /**
@@ -37,8 +37,8 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
     protected function compareCartTotal($expectedTotal)
     {
         $totalV1 = $this->cart->getOrderTotal();
-        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail');
+        $this->assertEquals(Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail');
         $totalV2 = $this->cart->getOrderTotalV2();
-        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail');
+        $this->assertEquals(Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail');
     }
 }
