@@ -28,6 +28,8 @@ export default function() {
     if (treeState === 'expand') {
       $('.js-categories-tree ul').show();
       $('.more').toggleClass('less');
+      // scroll right to see the radio buttons
+      scrollCategoryTree();
     } else {
       $('.js-categories-tree ul:not(.category-tree)').hide();
       $('.less').toggleClass('more');
@@ -41,4 +43,22 @@ export default function() {
       treeAction('reduce');
     }
   });
-}
+
+  // scroll right to see the radio buttons
+  $('.category-tree-overflow .checkbox').on('click', (e) => {
+    if (!$(e.target).is('input')) {
+        // do not scroll if (un)checking some inputs
+        scrollCategoryTree();
+    }
+  });
+  $('.category-tree-overflow .checkbox label').on('click', (e) => {
+    if (!$(e.target).is('input')) {
+        // do not scroll if (un)checking some inputs
+        scrollCategoryTree();
+    }
+  });
+
+  function scrollCategoryTree() {
+      var leftPos = $('.category-tree-overflow').width();
+      $('.category-tree-overflow').animate({scrollLeft: leftPos}, 200);
+  }}
