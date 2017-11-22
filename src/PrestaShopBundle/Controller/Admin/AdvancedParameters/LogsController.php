@@ -59,6 +59,7 @@ class LogsController extends FrameworkBundleAdminController
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'errorMessage' => 'ok',
             'logsByEmailForm' => $this->createForm(LogsByEmailType::class)->createView(),
+            'logs' => $this->get('prestashop.core.admin.log.repository')->findAll(),
         );
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
