@@ -22,7 +22,6 @@ var relatedProduct = (function() {
             var items = productItems.find('li').toArray();
 
             items.forEach(function removeItem(item) {
-              console.log(item);
               item.remove();
             });
             searchProductsBar.val('');
@@ -36,7 +35,4 @@ var relatedProduct = (function() {
   };
 })();
 
-BOEvent.on("Product Related Management started", function initRelatedProductManagement() {
-  relatedProduct.init();
-}, "Back office");
-
+relatedProduct.init();

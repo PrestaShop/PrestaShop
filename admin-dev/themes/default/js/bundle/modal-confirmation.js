@@ -54,6 +54,4 @@ var modalConfirmation = (function() {
   };
 })();
 
-BOEvent.on("Modal confirmation started", function initModalConfirmationSystem() {
-  modalConfirmation.init();
-}, "Back office");
+modalConfirmation.init();
