@@ -42,24 +42,24 @@ class OptionalFeaturesType extends CommonAbstractType
         $builder
             ->add('combinations', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'disabled' => $options['are_combinations_used'],
             ))
             ->add('features', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('customer_groups', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'required' => true,
                 'translation_domain' => 'Admin.Advparameters.features',

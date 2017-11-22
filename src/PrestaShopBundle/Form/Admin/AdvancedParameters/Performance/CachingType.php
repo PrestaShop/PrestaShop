@@ -49,8 +49,8 @@ class CachingType extends TranslatorAwareType
         $builder
             ->add('use_cache', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
             ))
@@ -84,7 +84,6 @@ class CachingType extends TranslatorAwareType
                     return $disabled === true ? array('disabled' => $disabled) : array();
                 },
                 'expanded' => true,
-                'choices_as_values' => true,
                 'required' => false,
             ))
         ;
