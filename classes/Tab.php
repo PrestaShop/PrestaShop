@@ -92,7 +92,7 @@ class TabCore extends ObjectModel
 
         // Set good position for new tab
         $requestedPosition = null;
-        if (is_int($this->position) && $this->position > 0) {
+        if (is_int($this->position) && $this->position >= 0) {
             $requestedPosition = $this->position;
         }
         $this->position = Tab::getNewLastPosition($this->id_parent);
@@ -624,7 +624,7 @@ class TabCore extends ObjectModel
 
         if ($res
             && is_int($requestedPosition)
-            && $requestedPosition > 0
+            && $requestedPosition >= 0
             && $requestedPosition < Tab::getNewLastPosition($this->id_parent)
         ) {
             $way = $requestedPosition >= $this->position;
@@ -720,7 +720,8 @@ class TabCore extends ObjectModel
     }
 
     /**
-     * Get position before a tab by class name
+     * Get position before a tab by class name.
+     * Note: If you want to move into the position before a tab, technically you want that tabs current position.
      * @param $className
      * @return bool|int
      */
@@ -728,11 +729,7 @@ class TabCore extends ObjectModel
     {
         $position = Tab::getPositionByClassName($className);
         if (is_numeric($position)) {
-            $newPosition = (int)$position - 1;
-            if ($newPosition <= 0) {
-                $newPosition = 1;
-            }
-            return $newPosition;
+            return (int)$position;
         }
 
         return false;
