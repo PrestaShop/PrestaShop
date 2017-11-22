@@ -22,11 +22,21 @@ class PrestashopClient {
     return this.client.signoutFO();
   }
 
-  onBoarding() {
+  checkOnBoardingModal() {
     return this.client
-      .waitForVisible(selector.BO.Onboarding.popup_close_button)
-      .click(selector.BO.Onboarding.popup_close_button)
-      .pause(2000)
+      .isVisible('.onboarding-welcome')
+      .then((text) => global.onboarding = text)
+  }
+
+  OnBoarding(){
+    if(global.onboarding == true){
+      return this.client
+        .click(selector.BO.Onboarding.popup_close_button)
+        .pause(2000)
+    }else{
+      return this.client
+        .pause(1000)
+    }
   }
 
   takeScreenshot() {

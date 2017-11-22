@@ -13,7 +13,7 @@ scenario('Check the product deleted attribute value in the Front Office', client
   test('should open the browser', () => client.open());
   test('should sign in BO', () => client.signinFO());
   test('should change front office language to english', () => client.languageChange('english'));
-  test('should search for the product', () => client.searchForProduct('Attribut'));
+  test('should search for the product', () => client.searchForProduct());
   test('should Check updated attribute in Front Office', () => client.checkdeletedAttributeValue());
   test('should sign out FO', () => client.signoutFO());
 }, 'attribute', true);
