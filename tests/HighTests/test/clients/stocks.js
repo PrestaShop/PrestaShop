@@ -102,6 +102,7 @@ class ModifyQuantity extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.CatalogPage.StockSubmenu.Stock.save_fourth_product_quantity_button, 90000)
       .click(selector.BO.CatalogPage.StockSubmenu.Stock.save_fourth_product_quantity_button)
+      .pause(2000)
   }
 
   checkMovement(order, quantity, variation, type) {
