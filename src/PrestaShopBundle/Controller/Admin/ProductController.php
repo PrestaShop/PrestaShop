@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
@@ -356,7 +357,9 @@ class ProductController extends FrameworkBundleAdminController
         /** @var Product $product */
         $product = $productAdapter->getProductInstance();
         $product->id_category_default = $context->shop->id_category;
-        $product->id_tax_rules_group = 0;
+        /** @var TaxRuleDataProvider $taxRuleDataProvider */
+        $taxRuleDataProvider = $this->get('prestashop.adapter.data_provider.tax');
+        $product->id_tax_rules_group = $taxRuleDataProvider->getIdTaxRulesGroupMostUsed();
         $product->active = $productProvider->isNewProductDefaultActivated() ? 1 : 0;
         $product->state = Product::STATE_TEMP;
 
