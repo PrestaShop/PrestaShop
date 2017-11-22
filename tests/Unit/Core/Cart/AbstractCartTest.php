@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart;
+namespace Tests\Unit\Core\Cart;
 
 use Cart;
 use CartCore;

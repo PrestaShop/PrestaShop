@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ReflexionHelper
- * @package PrestaShop\PrestaShop\Tests\TestCase
+ * @package Tests\TestCase
  *
  * Provides utilities to access private or protected properties inside classes.
  *
