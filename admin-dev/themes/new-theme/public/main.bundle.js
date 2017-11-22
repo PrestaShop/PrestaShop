@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bfb236a58b74ba6d8c0c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "51e916e4053ed2c69d41"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -56105,6 +56105,8 @@ let setNotificationsNumber = function (id, number) {
     if (treeState === 'expand') {
       $('.js-categories-tree ul').show();
       $('.more').toggleClass('less');
+      // scroll right to see the radio buttons
+      scrollCategoryTree();
     } else {
       $('.js-categories-tree ul:not(.category-tree)').hide();
       $('.less').toggleClass('more');
@@ -56118,7 +56120,25 @@ let setNotificationsNumber = function (id, number) {
       treeAction('reduce');
     }
   });
-});
+
+  // scroll right to see the radio buttons
+  $('.category-tree-overflow .checkbox').on('click', (e) => {
+    if (!$(e.target).is('input')) {
+        // do not scroll if (un)checking some inputs
+        scrollCategoryTree();
+    }
+  });
+  $('.category-tree-overflow .checkbox label').on('click', (e) => {
+    if (!$(e.target).is('input')) {
+        // do not scroll if (un)checking some inputs
+        scrollCategoryTree();
+    }
+  });
+
+  function scrollCategoryTree() {
+      var leftPos = $('.category-tree-overflow').width();
+      $('.category-tree-overflow').animate({scrollLeft: leftPos}, 200);
+  }});
 
 
 /***/ }),
@@ -56145,12 +56165,13 @@ let setNotificationsNumber = function (id, number) {
         if (idsProductAttribute[0] != '') {
           getCombinations(response);
         }
-        $('#create-combinations').click(function(event) {
-          event.preventDefault();
-          form.send(false, false, generate);
-        });
       });
-
+      
+    $('#create-combinations').click(function(event) {
+      event.preventDefault();
+      form.send(false, false, generate);
+    });
+    
     let productDropzone = Dropzone.forElement('#product-images-dropzone');
     let updateCombinationImages = function () {
       var productAttributeIds = $.map($('.js-combinations-list .combination'), function (combination) {
@@ -56168,12 +56189,7 @@ let setNotificationsNumber = function (id, number) {
       var isChecked = input.prop('checked');
       input.prop('checked', isChecked ? false : true);
 
-      if (isChecked) {
-        $(this).removeClass('img-highlight');
-
-      } else {
-        $(this).addClass('img-highlight');
-      }
+      $(this).toggleClass('img-highlight', isChecked);
       refreshDefaultImage();
     });
 
@@ -56225,15 +56241,15 @@ let setNotificationsNumber = function (id, number) {
         $imagesElem = $('#combination_' + $index + '_id_image_attr');
       }
 
-      $imagesElem.html('');
+      var html = '';
 
       $.each(combinationsImages[value], function(key, image) {
-        $imagesElem.append(`<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
+        html += `<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
           <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
-        </div>`);
+        </div>`;
       });
-
+      $imagesElem.html(html);
       $combinationElem.fadeIn(1000);
     });
 
@@ -56269,7 +56285,7 @@ let setNotificationsNumber = function (id, number) {
 
       if (defaultImageUrl) {
         var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
-        $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
+        $('#attribute_' + $(elem).attr('data')).find('td.img').html(img);
       }
     });
   };
@@ -56778,8 +56794,8 @@ class Combination {
 
   $('.js-nav-tabs li').each((index, item) => {
     navWidth += $(item).width();
-    $('.js-nav-tabs').width(navWidth);
   });
+  $('.js-nav-tabs').width(navWidth);
 
   $('.js-nav-tabs [data-toggle="tab"]').on('click', (e) => {
     if (!$(e.target).hasClass('active')) {
