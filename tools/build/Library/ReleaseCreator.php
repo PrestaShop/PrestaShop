@@ -27,7 +27,7 @@
 class ReleaseCreator
 {
     /** @var string */
-    const TEMP_PROJECT_PATH = '/tmp/PrestaShop-release-tmp';
+    protected $tempProjectPath;
 
     /** @var array */
     protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
@@ -94,6 +94,9 @@ class ReleaseCreator
      */
     public function __construct($version)
     {
+        $tmpDir = sys_get_temp_dir();
+        echo "\e[32m--- Temp dir used will be '{$tmpDir}' \e[m\n";
+        $this->tempProjectPath = "{$tmpDir}/PrestaShop-release-tmp";
         $this->version = $version;
         $this->projectPath = realpath(__DIR__ . '/../../..');
     }
@@ -283,7 +286,7 @@ class ReleaseCreator
             mkdir($this->projectPath . '/app/logs', 0777, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
-        $basePath = self::TEMP_PROJECT_PATH;
+        $basePath = $this->tempProjectPath;
 
         foreach ($itemsToRename as $oldName => $newName) {
             if (file_exists("$basePath/$oldName")) {
@@ -316,7 +319,7 @@ class ReleaseCreator
     protected function cleanTmpProject()
     {
         echo "\e[33m--- Cleaning project...\e[m";
-        $destination = self::TEMP_PROJECT_PATH;
+        $destination = $this->tempProjectPath;
 
         if (file_exists($destination)) {
             exec("rm -rf $destination");
@@ -329,7 +332,7 @@ class ReleaseCreator
             $this->filesRemoveList,
             $this->foldersRemoveList,
             $this->patternsRemoveList,
-            self::TEMP_PROJECT_PATH
+            $this->tempProjectPath
         );
         echo "\e[32m DONE\e[m\n";
 
@@ -451,7 +454,7 @@ class ReleaseCreator
     protected function createZipArchive()
     {
         echo "\e[33m--- Creating zip archive...\e[m";
-        $tempProjectPath = self::TEMP_PROJECT_PATH;
+        $tempProjectPath = $this->tempProjectPath;
         $zipZile = "prestashop_$this->version.zip";
         // Will be used with the index.php installer
         //$subZip = "prestashop.zip";
@@ -510,18 +513,18 @@ class ReleaseCreator
     protected function generateXMLDirectoryChecksum(array $files)
     {
         $content = null;
-        $subCount = substr_count(self::TEMP_PROJECT_PATH, DIRECTORY_SEPARATOR);
+        $subCount = substr_count($this->tempProjectPath, DIRECTORY_SEPARATOR);
 
         foreach ($files as $key => $value) {
             if (is_numeric($key)) {
                 $md5 = md5_file($value);
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $file_name = str_replace(self::TEMP_PROJECT_PATH, null, $value);
+                $file_name = str_replace($this->tempProjectPath, null, $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $dir_name = str_replace(self::TEMP_PROJECT_PATH, null, $key);
+                $dir_name = str_replace($this->tempProjectPath, null, $key);
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;
                 $content .= $this->generateXMLDirectoryChecksum($value);
