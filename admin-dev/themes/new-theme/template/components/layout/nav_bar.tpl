@@ -104,7 +104,7 @@
     {/foreach}
   </ul>
 
-  <span class="menu-collapse d-none d-md-inline-block">
+  <span class="menu-collapse d-none d-md-block">
     <i class="material-icons">&#xE8EE;</i>
   </span>
 

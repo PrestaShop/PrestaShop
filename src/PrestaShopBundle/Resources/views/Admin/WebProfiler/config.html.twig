@@ -196,6 +196,17 @@
         </div>
     </div>
 
+    <div class="sf-toolbar-info-group">
+        <div class="sf-toolbar-info-piece">
+          <b>Resources</b>
+          <span>
+            {% set appVersion = collector.applicationversion|split('.')|join()[:2] %}
+              <a href="http://doc.prestashop.com/display/PS{{ appVersion }}" rel="help">
+                  Read PrestaShop {{ collector.applicationversion }} Docs
+              </a>
+          </span>
+        </div>
+    </div>
     <div class="metrics">
         <div class="metric">
             <span class="value">{{ include('@WebProfiler/Icon/' ~ (collector.haszendopcache ? 'yes' : 'no') ~ '.svg') }}</span>

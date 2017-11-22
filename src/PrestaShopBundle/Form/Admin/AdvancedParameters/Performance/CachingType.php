@@ -85,6 +85,7 @@ class CachingType extends TranslatorAwareType
                 },
                 'expanded' => true,
                 'required' => false,
+                'placeholder' => false
             ))
         ;
     }

@@ -1,176 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
-        <source>Save</source>
-        <target>Save</target>
+      <trans-unit id="cc3787ca78f445f481069a4c047f7e7a">
+        <source>Choose language:</source>
+        <target>Choose language:</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/cart_rules/form.tpl:52</note>
-      </trans-unit>
-      <trans-unit id="9ea67be453eaccf020697b4654fc021a">
-        <source>Save and stay</source>
-        <target>Save and stay</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/cart_rules/form.tpl:54</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/tags/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
-        <source>Add</source>
-        <target>Add</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/tags/helpers/form/form.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="1063e38cb53d94d386f21227fcd84717">
-        <source>Remove</source>
-        <target>Remove</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/tags/helpers/form/form.tpl:51</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/login/content.tpl:134</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/helpers/calendar/calendar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9639e32cab248434a17ab32237cb3b71">
-        <source>Apply</source>
-        <target>Apply</target>
-        <note>Context:
-File: admin-dev/themes/default/template/helpers/calendar/calendar.tpl:101</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
-        <source>Reset</source>
-        <target>Reset</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_header.tpl:76</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
-        <source>Search</source>
-        <target>Search</target>
-        <note>Context:
-File: admin-dev/themes/default/template/search_form.tpl:79</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4eac69549b8424b6cf5852421f327838">
-        <source>Confirm this action</source>
-        <target>Confirm this action</target>
-        <note>Context:
-File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:41</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8098b34f582537833b36b58273c3545b">
-        <source>Expand</source>
-        <target>Expand</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:198</note>
-      </trans-unit>
-      <trans-unit id="2b31634e3cfef1bfdd7d0d2cdfdc3f9d">
-        <source>Collapse</source>
-        <target>Collapse</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:208</note>
-      </trans-unit>
-      <trans-unit id="ab76f8687bae4be1912889f2328fc8ea">
-        <source>Filter by categories</source>
-        <target>Filter by categories</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:186</note>
-      </trans-unit>
-      <trans-unit id="6adab6d3fdf92c448d60cf8824e4851c">
-        <source>Delete selection</source>
-        <target>Delete selection</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:166</note>
-      </trans-unit>
-      <trans-unit id="dbcd43f8ba2bafd1bccc57fe9c8b5d7b">
-        <source>Show SQL query</source>
-        <target>Show SQL query</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:104</note>
-      </trans-unit>
-      <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
-        <source>Export to SQL Manager</source>
-        <target>Export to SQL Manager</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:559</note>
-      </trans-unit>
-      <trans-unit id="7bbd046ab824701b2e019e5d07d6ab99">
-        <source>Activate selection</source>
-        <target>Activate selection</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:138</note>
-      </trans-unit>
-      <trans-unit id="fa870a208f7f70af5ead1f1992f6d9e2">
-        <source>Deactivate selection</source>
-        <target>Deactivate selection</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:143</note>
-      </trans-unit>
-      <trans-unit id="e2afd6b97d2eac4817170845d26b9c9b">
-        <source>Duplicate selection</source>
-        <target>Duplicate selection</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:154</note>
-      </trans-unit>
-      <trans-unit id="46b816f573557a53c93ac78bbcfa9493">
-        <source>Unselect</source>
-        <target>Unselect</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:218</note>
-      </trans-unit>
-      <trans-unit id="332c80b1838dc515f5031e09da3b7f3f">
-        <source>Reorder</source>
-        <target>Reorder</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:389</note>
-      </trans-unit>
-      <trans-unit id="f5cb84b93af7d426e14a49b2804d0f29">
-        <source><![CDATA[Save & refresh]]></source>
-        <target><![CDATA[Save & refresh]]></target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:391</note>
-      </trans-unit>
-      <trans-unit id="e54081e38ac9d11f4426975774eca447">
-        <source>Delete now</source>
-        <target>Delete now</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:541</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
-        <source>New product</source>
-        <target>New product</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/ProductController.php:159</note>
+File: admin-dev/themes/default/template/header.tpl:77</note>
       </trans-unit>
     </body>
   </file>
@@ -218,39 +54,77 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/list.html.twig:105</not
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/message.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="4351cfebe4b61d8aa5efa1d020710005">
         <source>View</source>
         <target>View</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/message.tpl:85</note>
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:497</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="7dce122004969d56ae2e0245cb754d35">
         <source>Edit</source>
         <target>Edit</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:106</note>
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:443</note>
       </trans-unit>
+      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
+        <source>Configure</source>
+        <target>Configure</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:501</note>
+      </trans-unit>
+      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
+        <source>Uninstall</source>
+        <target>Uninstall</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:505</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
       <trans-unit id="f2a6c498fb90ee345d997f888fce3b18">
         <source>Delete</source>
         <target>Delete</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/manufacturers/helpers/view/view.tpl:110</note>
+File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:117</note>
+      </trans-unit>
+      <trans-unit id="daf51d7d9e10e6a469434ae548d9a173">
+        <source>Print out</source>
+        <target>Print out</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:43</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/autoupgrade/AdminSelfTab.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/helpers/calendar/calendar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="cc3787ca78f445f481069a4c047f7e7a">
-        <source>Choose language:</source>
-        <target>Choose language:</target>
+      <trans-unit id="9639e32cab248434a17ab32237cb3b71">
+        <source>Apply</source>
+        <target>Apply</target>
         <note>Context:
-File: modules/autoupgrade/AdminSelfTab.php:1809</note>
+File: admin-dev/themes/default/template/helpers/calendar/calendar.tpl:101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/referrers/calendar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/referrers/calendar.tpl:45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ea4788705e6873b424c65e91c2846b19">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:81</note>
       </trans-unit>
     </body>
   </file>
@@ -270,29 +144,13 @@ File: controllers/admin/AdminCategoriesController.php:330</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_customized_data.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_imageslider/views/templates/hook/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="06933067aafd48425d67bcb01bba5cb6">
-        <source>Update</source>
-        <target>Update</target>
+      <trans-unit id="ef61fb324d729c341ea8ab9901e23566">
+        <source>Add new</source>
+        <target>Add new</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:109</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
-        <source>Enable</source>
-        <target>Enable</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:61</note>
-      </trans-unit>
-      <trans-unit id="33d8042bd735c559cc3206f4bc99aedc">
-        <source>Sort by</source>
-        <target>Sort by</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:70</note>
+File: modules/ps_imageslider/views/templates/hook/list.tpl:28</note>
       </trans-unit>
     </body>
   </file>
@@ -306,13 +164,13 @@ File: modules/ps_emailsubscription/ps_emailsubscription.php:990</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/statscatalog/statscatalog.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/search_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
-        <source>All</source>
-        <target>All</target>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3">
+        <source>Search</source>
+        <target>Search</target>
         <note>Context:
-File: modules/statscatalog/statscatalog.php:188</note>
+File: admin-dev/themes/default/template/search_form.tpl:79</note>
       </trans-unit>
     </body>
   </file>
@@ -332,23 +190,141 @@ File: modules/ps_categorytree/ps_categorytree.php:219</note>
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_imageslider/views/templates/hook/list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ef61fb324d729c341ea8ab9901e23566">
-        <source>Add new</source>
-        <target>Add new</target>
+      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
+        <source>Enable</source>
+        <target>Enable</target>
         <note>Context:
-File: modules/ps_imageslider/views/templates/hook/list.tpl:28</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:57</note>
+      </trans-unit>
+      <trans-unit id="33d8042bd735c559cc3206f4bc99aedc">
+        <source>Sort by</source>
+        <target>Sort by</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/manage.html.twig:66</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
-        <source>Delete selected</source>
-        <target>Delete selected</target>
+      <trans-unit id="ec211f7c20af43e742bf2570c3cb84f9">
+        <source>Add</source>
+        <target>Add</target>
         <note>Context:
-File: controllers/admin/AdminCartsController.php:114</note>
+File: admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl:59</note>
+      </trans-unit>
+      <trans-unit id="7bc873cba11f035df692c3549366c722">
+        <source>-- Choose --</source>
+        <target>-- Choose --</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl:48</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="06933067aafd48425d67bcb01bba5cb6">
+        <source>Update</source>
+        <target>Update</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:122</note>
+      </trans-unit>
+      <trans-unit id="d3d2e617335f08df83599665eef8a418">
+        <source>Close</source>
+        <target>Close</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:94</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statscatalog/statscatalog.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b1c94ca2fbc3e78fc30069c8d0f01680">
+        <source>All</source>
+        <target>All</target>
+        <note>Context:
+File: modules/statscatalog/statscatalog.php:188</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6adab6d3fdf92c448d60cf8824e4851c">
+        <source>Delete selection</source>
+        <target>Delete selection</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:130</note>
+      </trans-unit>
+      <trans-unit id="ab76f8687bae4be1912889f2328fc8ea">
+        <source>Filter by categories</source>
+        <target>Filter by categories</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:150</note>
+      </trans-unit>
+      <trans-unit id="dbcd43f8ba2bafd1bccc57fe9c8b5d7b">
+        <source>Show SQL query</source>
+        <target>Show SQL query</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:68</note>
+      </trans-unit>
+      <trans-unit id="351b6d570b6ba15fe66e85c1eaf9ec64">
+        <source>Export to SQL Manager</source>
+        <target>Export to SQL Manager</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:525</note>
+      </trans-unit>
+      <trans-unit id="7bbd046ab824701b2e019e5d07d6ab99">
+        <source>Activate selection</source>
+        <target>Activate selection</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:102</note>
+      </trans-unit>
+      <trans-unit id="fa870a208f7f70af5ead1f1992f6d9e2">
+        <source>Deactivate selection</source>
+        <target>Deactivate selection</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:107</note>
+      </trans-unit>
+      <trans-unit id="e2afd6b97d2eac4817170845d26b9c9b">
+        <source>Duplicate selection</source>
+        <target>Duplicate selection</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:118</note>
+      </trans-unit>
+      <trans-unit id="46b816f573557a53c93ac78bbcfa9493">
+        <source>Unselect</source>
+        <target>Unselect</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:182</note>
+      </trans-unit>
+      <trans-unit id="332c80b1838dc515f5031e09da3b7f3f">
+        <source>Reorder</source>
+        <target>Reorder</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:355</note>
+      </trans-unit>
+      <trans-unit id="f5cb84b93af7d426e14a49b2804d0f29">
+        <source><![CDATA[Save & refresh]]></source>
+        <target><![CDATA[Save & refresh]]></target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:357</note>
+      </trans-unit>
+      <trans-unit id="e54081e38ac9d11f4426975774eca447">
+        <source>Delete now</source>
+        <target>Delete now</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:507</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9ea67be453eaccf020697b4654fc021a">
+        <source>Save and stay</source>
+        <target>Save and stay</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/cart_rules/form.tpl:54</note>
       </trans-unit>
     </body>
   </file>
@@ -386,13 +362,13 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/ma
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f8825c9f08ff15b5ef6bc3a3898817e8">
-        <source>Save and preview</source>
-        <target>Save and preview</target>
+      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
+        <source>Delete selected</source>
+        <target>Delete selected</target>
         <note>Context:
-File: controllers/admin/AdminCmsController.php:228</note>
+File: controllers/admin/AdminGendersController.php:49</note>
       </trans-unit>
     </body>
   </file>
@@ -416,6 +392,16 @@ File: controllers/admin/AdminShippingController.php:110</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminCmsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f8825c9f08ff15b5ef6bc3a3898817e8">
+        <source>Save and preview</source>
+        <target>Save and preview</target>
+        <note>Context:
+File: controllers/admin/AdminCmsController.php:228</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCountriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
@@ -426,50 +412,90 @@ File: controllers/admin/AdminCountriesController.php:48</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d3d2e617335f08df83599665eef8a418">
-        <source>Close</source>
-        <target>Close</target>
+      <trans-unit id="656c3be690ee43df4b845bd2a2ebe587">
+        <source>New product</source>
+        <target>New product</target>
         <note>Context:
-File: admin-dev/themes/default/template/modal.tpl:39</note>
+File: src/PrestaShopBundle/Controller/Admin/ProductController.php:160</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d5ef96e383d376beeec28da7acfea516">
-        <source>Download file</source>
-        <target>Download file</target>
+      <trans-unit id="8098b34f582537833b36b58273c3545b">
+        <source>Expand</source>
+        <target>Expand</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:428</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:40</note>
       </trans-unit>
-      <trans-unit id="a1997856e58a07d80e27aaf4bc7eaf88">
-        <source>Delete this file</source>
-        <target>Delete this file</target>
+      <trans-unit id="2b31634e3cfef1bfdd7d0d2cdfdc3f9d">
+        <source>Collapse</source>
+        <target>Collapse</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:429</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:41</note>
+      </trans-unit>
+      <trans-unit id="686e697538050e4664636337cc3b834f">
+        <source>Create</source>
+        <target>Create</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:74</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-choice.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
-        <source>Read more</source>
-        <target>Read more</target>
+      <trans-unit id="526d688f37a86d3c3f27d0c5016eb71d">
+        <source>Reset</source>
+        <target>Reset</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-choice.html.twig:35</note>
+File: admin-dev/themes/default/template/controllers/tax_rules/helpers/list/list_header.tpl:76</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4eac69549b8424b6cf5852421f327838">
+        <source>Confirm this action</source>
+        <target>Confirm this action</target>
+        <note>Context:
+File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="baf47af13c027a9c747328bbfbcb9178">
+        <source>Save image settings</source>
+        <target>Save image settings</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig:43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
+        <source>Let's go!</source>
+        <target>Let's go!</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:65</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/grid_loader.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f915a95e609bbd517a8a1e7bdcceef37">
+        <source>Try again</source>
+        <target>Try again</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/grid_loader.html.twig:56</note>
       </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/modules/configure.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
-        <source>Configure</source>
-        <target>Configure</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/configure.tpl:44</note>
-      </trans-unit>
       <trans-unit id="bcfaccebf745acfd5e75351095a5394a">
         <source>Disable</source>
         <target>Disable</target>
@@ -484,6 +510,32 @@ File: admin-dev/themes/default/template/controllers/modules/configure.tpl:86</no
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d5ef96e383d376beeec28da7acfea516">
+        <source>Download file</source>
+        <target>Download file</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:450</note>
+      </trans-unit>
+      <trans-unit id="a1997856e58a07d80e27aaf4bc7eaf88">
+        <source>Delete this file</source>
+        <target>Delete this file</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:451</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-choice.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="43340e6cc4e88197d57f8d6d5ea50a46">
+        <source>Read more</source>
+        <target>Read more</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-supplier-choice.html.twig:32</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/statuses/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="31fde7b05ac8952dacf4af8a704074ec">
@@ -491,36 +543,6 @@ File: admin-dev/themes/default/template/controllers/modules/configure.tpl:86</no
         <target>Preview</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/statuses/helpers/form/form.tpl:77</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="50de2399e96ac57bed17e95376046c3b">
-        <source>Check / Uncheck all</source>
-        <target>Check / Uncheck all</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig:42</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e0626222614bdee31951d84c64e5e9ff">
-        <source>Select</source>
-        <target>Select</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_combinations.html.twig:83</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="686e697538050e4664636337cc3b834f">
-        <source>Create</source>
-        <target>Create</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:72</note>
       </trans-unit>
     </body>
   </file>
@@ -556,53 +578,33 @@ File: admin-dev/themes/default/template/controllers/modules/filters.tpl:78</note
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f915a95e609bbd517a8a1e7bdcceef37">
-        <source>Try again</source>
-        <target>Try again</target>
+      <trans-unit id="50de2399e96ac57bed17e95376046c3b">
+        <source>Check / Uncheck all</source>
+        <target>Check / Uncheck all</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_import.html.twig:77</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig:42</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/conditions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="634efc0701950e9b2b97384327c8d5d2">
-        <source>Let's go!</source>
-        <target>Let's go!</target>
+      <trans-unit id="1063e38cb53d94d386f21227fcd84717">
+        <source>Remove</source>
+        <target>Remove</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Module/Includes/modal_addons_connect.html.twig:65</note>
+File: admin-dev/themes/default/template/controllers/cart_rules/conditions.tpl:324</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a27dfe771799a09fd55fea73286eb6ab">
-        <source>Uninstall</source>
-        <target>Uninstall</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/access/helpers/form/form.tpl:505</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="baf47af13c027a9c747328bbfbcb9178">
-        <source>Save image settings</source>
-        <target>Save image settings</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/ProductImage/form.html.twig:43</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/dashtrends/views/templates/hook/dashboard_zone_two.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="63a6a88c066880c5ac42394a22803ca6">
         <source>Refresh</source>
         <target>Refresh</target>
         <note>Context:
-File: modules/dashproducts/views/templates/hook/dashboard_zone_two.tpl:33</note>
+File: modules/dashtrends/views/templates/hook/dashboard_zone_two.tpl:39</note>
       </trans-unit>
     </body>
   </file>
@@ -616,43 +618,13 @@ File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/form/
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/product_rule.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/footer_toolbar.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="961f2247a2070bedff9f9cd8d64e2650">
-        <source>Choose</source>
-        <target>Choose</target>
+      <trans-unit id="e9c7e4df74077626f7e42797c65273c4">
+        <source>and stay</source>
+        <target>and stay</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/cart_rules/product_rule.tpl:38</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
-        <source>Shipping</source>
-        <target>Shipping</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1405</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="daf51d7d9e10e6a469434ae548d9a173">
-        <source>Print out</source>
-        <target>Print out</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:43</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
-        <source>Download</source>
-        <target>Download</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:43</note>
+File: admin-dev/themes/default/template/footer_toolbar.tpl:64</note>
       </trans-unit>
     </body>
   </file>
@@ -678,6 +650,16 @@ File: admin-dev/themes/default/template/controllers/import/helpers/form/form.tpl
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="801ab24683a4a8c433c6eb40c48bcd9d">
+        <source>Download</source>
+        <target>Download</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:43</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/modules_positions/list_modules.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="498f79c4c5bbde77f1bceb6c86fd0f6d">
@@ -688,23 +670,23 @@ File: admin-dev/themes/default/template/controllers/modules_positions/list_modul
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/product_rule.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7bc873cba11f035df692c3549366c722">
-        <source>-- Choose --</source>
-        <target>-- Choose --</target>
+      <trans-unit id="961f2247a2070bedff9f9cd8d64e2650">
+        <source>Choose</source>
+        <target>Choose</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/cart_rules/product_rule_group.tpl:48</note>
+File: admin-dev/themes/default/template/controllers/cart_rules/product_rule.tpl:38</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/cart_rules/informations.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="32b919d18cfaca89383f6000dcc9c031">
-        <source>Generate</source>
-        <target>Generate</target>
+      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
+        <source>Shipping</source>
+        <target>Shipping</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/cart_rules/informations.tpl:83</note>
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1405</note>
       </trans-unit>
     </body>
   </file>
@@ -715,6 +697,16 @@ File: admin-dev/themes/default/template/controllers/cart_rules/informations.tpl:
         <target>Validate</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carrier_wizard/helpers/view/view.tpl:33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/informations.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="32b919d18cfaca89383f6000dcc9c031">
+        <source>Generate</source>
+        <target>Generate</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/cart_rules/informations.tpl:83</note>
       </trans-unit>
     </body>
   </file>

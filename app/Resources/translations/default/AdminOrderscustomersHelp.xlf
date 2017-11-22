@@ -1,54 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a43fd5e0338751959686921566de352e">
-        <source>Leave this field blank if there's no change.</source>
-        <target>Leave this field blank if there's no change.</target>
+      <trans-unit id="ed4bfa76b661f4b6bc94d32fe6147d57">
+        <source>Would you like to allow merchandise returns in your shop?</source>
+        <target>Would you like to allow merchandise returns in your shop?</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:399</note>
+File: controllers/admin/AdminReturnController.php:59</note>
       </trans-unit>
-      <trans-unit id="f44c07e8b6e19d8ea1e551d181993898">
-        <source>Password should be at least %s characters long.</source>
-        <target>Password should be at least %s characters long.</target>
+      <trans-unit id="c503a53add0f47d2497ca363f9ad1b76">
+        <source>How many days after the delivery date does the customer have to return a product?</source>
+        <target>How many days after the delivery date does the customer have to return a product?</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:400</note>
+File: controllers/admin/AdminReturnController.php:63</note>
       </trans-unit>
-      <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
-        <source>Enable or disable customer login.</source>
-        <target>Enable or disable customer login.</target>
+      <trans-unit id="095fcccad5a4585fdc2fe1f97fc89561">
+        <source>Prefix used for return name (e.g. RE00001).</source>
+        <target>Prefix used for return name (e.g. RE00001).</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:431</note>
+File: controllers/admin/AdminReturnController.php:69</note>
       </trans-unit>
-      <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
-        <source>This customer will receive your ads via email.</source>
-        <target>This customer will receive your ads via email.</target>
+      <trans-unit id="2bf0a7ee96f0cba7f7d530ff08f01bf8">
+        <source>Merchandise return (RMA) status.</source>
+        <target>Merchandise return (RMA) status.</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:453</note>
+File: controllers/admin/AdminReturnController.php:129</note>
       </trans-unit>
-      <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
-        <source>Select all the groups that you would like to apply to this customer.</source>
-        <target>Select all the groups that you would like to apply to this customer.</target>
+      <trans-unit id="a3d008a6e1f75882761e48de1b001497">
+        <source>List of products in return package.</source>
+        <target>List of products in return package.</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:479</note>
+File: controllers/admin/AdminReturnController.php:137</note>
       </trans-unit>
-      <trans-unit id="395b64636636e968c756f7514313f760">
-        <source>This group will be the user's default group.</source>
-        <target>This group will be the user's default group.</target>
+      <trans-unit id="db21428a343da97c41ced5ad9ef17d56">
+        <source>The link is only available after validation and before the parcel gets delivered.</source>
+        <target>The link is only available after validation and before the parcel gets delivered.</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:492</note>
-      </trans-unit>
-      <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
-        <source>Only the discount for the selected group will be applied to this customer.</source>
-        <target>Only the discount for the selected group will be applied to this customer.</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:493</note>
-      </trans-unit>
-      <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
-        <source>Valid characters:</source>
-        <target>Valid characters:</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:549</note>
+File: controllers/admin/AdminReturnController.php:145</note>
       </trans-unit>
     </body>
   </file>
@@ -150,43 +138,55 @@ File: controllers/admin/AdminInvoicesController.php:193</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ed4bfa76b661f4b6bc94d32fe6147d57">
-        <source>Would you like to allow merchandise returns in your shop?</source>
-        <target>Would you like to allow merchandise returns in your shop?</target>
+      <trans-unit id="a43fd5e0338751959686921566de352e">
+        <source>Leave this field blank if there's no change.</source>
+        <target>Leave this field blank if there's no change.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:59</note>
+File: controllers/admin/AdminCustomersController.php:399</note>
       </trans-unit>
-      <trans-unit id="c503a53add0f47d2497ca363f9ad1b76">
-        <source>How many days after the delivery date does the customer have to return a product?</source>
-        <target>How many days after the delivery date does the customer have to return a product?</target>
+      <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
+        <source>Password should be at least %length% characters long.</source>
+        <target>Password should be at least %length% characters long.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:63</note>
+File: controllers/admin/AdminCustomersController.php:400</note>
       </trans-unit>
-      <trans-unit id="095fcccad5a4585fdc2fe1f97fc89561">
-        <source>Prefix used for return name (e.g. RE00001).</source>
-        <target>Prefix used for return name (e.g. RE00001).</target>
+      <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
+        <source>Enable or disable customer login.</source>
+        <target>Enable or disable customer login.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:69</note>
+File: controllers/admin/AdminCustomersController.php:431</note>
       </trans-unit>
-      <trans-unit id="2bf0a7ee96f0cba7f7d530ff08f01bf8">
-        <source>Merchandise return (RMA) status.</source>
-        <target>Merchandise return (RMA) status.</target>
+      <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
+        <source>This customer will receive your ads via email.</source>
+        <target>This customer will receive your ads via email.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:129</note>
+File: controllers/admin/AdminCustomersController.php:453</note>
       </trans-unit>
-      <trans-unit id="a3d008a6e1f75882761e48de1b001497">
-        <source>List of products in return package.</source>
-        <target>List of products in return package.</target>
+      <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
+        <source>Select all the groups that you would like to apply to this customer.</source>
+        <target>Select all the groups that you would like to apply to this customer.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:137</note>
+File: controllers/admin/AdminCustomersController.php:479</note>
       </trans-unit>
-      <trans-unit id="db21428a343da97c41ced5ad9ef17d56">
-        <source>The link is only available after validation and before the parcel gets delivered.</source>
-        <target>The link is only available after validation and before the parcel gets delivered.</target>
+      <trans-unit id="395b64636636e968c756f7514313f760">
+        <source>This group will be the user's default group.</source>
+        <target>This group will be the user's default group.</target>
         <note>Context:
-File: controllers/admin/AdminReturnController.php:145</note>
+File: controllers/admin/AdminCustomersController.php:492</note>
+      </trans-unit>
+      <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
+        <source>Only the discount for the selected group will be applied to this customer.</source>
+        <target>Only the discount for the selected group will be applied to this customer.</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:493</note>
+      </trans-unit>
+      <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
+        <source>Valid characters:</source>
+        <target>Valid characters:</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:549</note>
       </trans-unit>
     </body>
   </file>
@@ -197,16 +197,6 @@ File: controllers/admin/AdminReturnController.php:145</note>
         <target>Prefix used for credit slips.</target>
         <note>Context:
 File: controllers/admin/AdminSlipController.php:80</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_new_product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dca6b819ed4897f93a1a8531df9b282a">
-        <source>If you don't select "Free shipping," the normal shipping costs will be applied.</source>
-        <target>If you don't select "Free shipping," the normal shipping costs will be applied.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:120</note>
       </trans-unit>
     </body>
   </file>
@@ -232,13 +222,23 @@ File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_customized_data.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/_new_product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
-        <source>(Max %amount_refundable% %tax_method%)</source>
-        <target>(Max %amount_refundable% %tax_method%)</target>
+      <trans-unit id="dca6b819ed4897f93a1a8531df9b282a">
+        <source>If you don't select "Free shipping," the normal shipping costs will be applied.</source>
+        <target>If you don't select "Free shipping," the normal shipping costs will be applied.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:221</note>
+File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:120</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="576e650084068ed747fb3b22196dcd70">
+        <source>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</source>
+        <target>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_discount_form.tpl:92</note>
       </trans-unit>
     </body>
   </file>
@@ -264,45 +264,23 @@ File: admin-dev/themes/default/template/controllers/orders/form.tpl:1539</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/_product_line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="576e650084068ed747fb3b22196dcd70">
-        <source>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</source>
-        <target>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</target>
+      <trans-unit id="5728ff6d5efd64ef7db72028eefc7262">
+        <source>(Max %amount_refundable% %tax_method%)</source>
+        <target>(Max %amount_refundable% %tax_method%)</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_discount_form.tpl:92</note>
+File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:191</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d17f6ab68839ef4a39ead0638cae47a2">
-        <source>View details on the customer page</source>
-        <target>View details on the customer page</target>
+      <trans-unit id="2605a817441c19cc88eb9e5d17845dc0">
+        <source>You can add a comment here.</source>
+        <target>You can add a comment here.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:32</note>
-      </trans-unit>
-      <trans-unit id="a901cc409fe745be1a29a311b57880ce">
-        <source>View details on the order page</source>
-        <target>View details on the order page</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:37</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
-        <source>Select the fields you would like to be required for this section.</source>
-        <target>Select the fields you would like to be required for this section.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:33</note>
-      </trans-unit>
-      <trans-unit id="a75835a6fe4329ee7884694415c2d46d">
-        <source>Please make sure you are complying with the opt-in legislation applicable in your country.</source>
-        <target>Please make sure you are complying with the opt-in legislation applicable in your country.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:35</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl:56</note>
       </trans-unit>
     </body>
   </file>
@@ -322,13 +300,35 @@ File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2605a817441c19cc88eb9e5d17845dc0">
-        <source>You can add a comment here.</source>
-        <target>You can add a comment here.</target>
+      <trans-unit id="81f32b96f6626b8968e6a0f4a9bce62e">
+        <source>Select the fields you would like to be required for this section.</source>
+        <target>Select the fields you would like to be required for this section.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl:56</note>
+File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="a75835a6fe4329ee7884694415c2d46d">
+        <source>Please make sure you are complying with the opt-in legislation applicable in your country.</source>
+        <target>Please make sure you are complying with the opt-in legislation applicable in your country.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:35</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d17f6ab68839ef4a39ead0638cae47a2">
+        <source>View details on the customer page</source>
+        <target>View details on the customer page</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="a901cc409fe745be1a29a311b57880ce">
+        <source>View details on the order page</source>
+        <target>View details on the order page</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:37</note>
       </trans-unit>
     </body>
   </file>

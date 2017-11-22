@@ -32,16 +32,6 @@ File: controllers/front/GuestTrackingController.php:102</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0dc57d60348fa2a648d69e8d38ec43cc">
-        <source>No addresses are available. %s</source>
-        <target>No addresses are available. %s</target>
-        <note>Context:
-File: controllers/front/AddressesController.php:55</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/front/PasswordController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="6e05d9291d7796566bb503890da070bf">
@@ -58,13 +48,13 @@ File: controllers/front/PasswordController.php:182</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/front/AddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="7c8682d92dfb1522b4cc2975608e582d">
-        <source>Information successfully updated.</source>
-        <target>Information successfully updated.</target>
+      <trans-unit id="0dc57d60348fa2a648d69e8d38ec43cc">
+        <source>No addresses are available. %s</source>
+        <target>No addresses are available. %s</target>
         <note>Context:
-File: controllers/front/IdentityController.php:54</note>
+File: controllers/front/AddressesController.php:55</note>
       </trans-unit>
     </body>
   </file>
@@ -75,6 +65,16 @@ File: controllers/front/IdentityController.php:54</note>
         <target>Message successfully sent</target>
         <note>Context:
 File: controllers/front/OrderDetailController.php:187</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/front/IdentityController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c8682d92dfb1522b4cc2975608e582d">
+        <source>Information successfully updated.</source>
+        <target>Information successfully updated.</target>
+        <note>Context:
+File: controllers/front/IdentityController.php:54</note>
       </trans-unit>
     </body>
   </file>

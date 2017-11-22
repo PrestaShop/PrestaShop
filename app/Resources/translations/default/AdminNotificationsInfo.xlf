@@ -6,7 +6,7 @@
         <source>Delete selected item?</source>
         <target>Delete selected item?</target>
         <note>Context:
-File: controllers/admin/AdminCarriersController.php:726</note>
+File: controllers/admin/AdminCarriersController.php:701</note>
       </trans-unit>
     </body>
   </file>
@@ -30,33 +30,39 @@ File: modules/statsbestmanufacturers/statsbestmanufacturers.php:53</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
-        <source>Invalid characters:</source>
-        <target>Invalid characters:</target>
+      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
+        <source>Forbidden characters:</source>
+        <target>Forbidden characters:</target>
         <note>Context:
-File: controllers/admin/AdminTaxRulesGroupController.php:181</note>
+File: controllers/admin/AdminGroupsController.php:280</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAttachmentsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminBackupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
         <source>Delete selected</source>
         <target>Delete selected</target>
         <note>Context:
-File: controllers/admin/AdminAttachmentsController.php:79</note>
+File: controllers/admin/AdminBackupController.php:52</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
         <note>Context:
-File: controllers/admin/AdminSearchConfController.php:54</note>
+File: controllers/admin/AdminBackupController.php:53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminManufacturersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Context:
+File: controllers/admin/AdminManufacturersController.php:597</note>
       </trans-unit>
     </body>
   </file>
@@ -70,13 +76,25 @@ File: controllers/admin/AdminCustomersController.php:1038</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCategoriesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3e053943605d9e4bf7dd7588ea19e9d2">
-        <source>Forbidden characters:</source>
-        <target>Forbidden characters:</target>
+      <trans-unit id="2fc6204d2ca7e856d9e4844d2786f053">
+        <source>This field will be modified for all your shops.</source>
+        <target>This field will be modified for all your shops.</target>
         <note>Context:
-File: controllers/admin/AdminCategoriesController.php:618</note>
+File: admin-dev/themes/default/template/header.tpl:53</note>
+      </trans-unit>
+      <trans-unit id="7ac170f2b47dbf7d4c5cd38449093c2b">
+        <source>This field will be modified for all shops in this shop group:</source>
+        <target>This field will be modified for all shops in this shop group:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="fe0ae15c8f93a5335f0991accadd13ca">
+        <source>This field will be modified for this shop:</source>
+        <target>This field will be modified for this shop:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/header.tpl:57</note>
       </trans-unit>
     </body>
   </file>

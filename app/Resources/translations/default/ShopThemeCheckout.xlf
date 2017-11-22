@@ -1,136 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="src/Adapter/Order/OrderPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/checkout/CheckoutDeliveryStep.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
-        <source>Subtotal</source>
-        <target>Subtotal</target>
+      <trans-unit id="d62106dfcdba5cacd1a5f5efe9cefc79">
+        <source> (additional cost of %giftcost% %taxlabel%)</source>
+        <target>(additional cost of %giftcost% %taxlabel%)</target>
         <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:166</note>
+File: classes/checkout/CheckoutDeliveryStep.php:113</note>
       </trans-unit>
-      <trans-unit id="104d9898c04874d0fbac36e125fa1369">
-        <source>Discount</source>
-        <target>Discount</target>
+      <trans-unit id="882ed1e831a6175e4a3dd2c09faa225c">
+        <source>I would like my order to be gift wrapped %cost%</source>
+        <target>I would like my order to be gift wrapped %cost%</target>
         <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:177</note>
-      </trans-unit>
-      <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
-        <source>Gift wrapping</source>
-        <target>Gift wrapping</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:216</note>
-      </trans-unit>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:228</note>
-      </trans-unit>
-      <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
-        <source>Shipping and handling</source>
-        <target>Shipping and handling</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:188</note>
-      </trans-unit>
-      <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
-        <source>Tax</source>
-        <target>Tax</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:204</note>
-      </trans-unit>
-      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
-        <source>Total paid</source>
-        <target>Total paid</target>
-        <note>Context:
-File: src/Adapter/Order/OrderPresenter.php:235</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_carriercomparison/ps_carriercomparison.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
-        <source>Free</source>
-        <target>Free</target>
-        <note>Context:
-File: modules/ps_carriercomparison/ps_carriercomparison.php:170</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Adapter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
-        <source>Shipping</source>
-        <target>Shipping</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:340</note>
-      </trans-unit>
-      <trans-unit id="3b5a05f2c4a0373c7a6e8d1cfec7020f">
-        <source>Included taxes</source>
-        <target>Included taxes</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:353</note>
-      </trans-unit>
-      <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
-        <source>Taxes</source>
-        <target>Taxes</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:354</note>
-      </trans-unit>
-      <trans-unit id="adc852563bca51fb6b10c7905010406d">
-        <source>Total (tax incl.)</source>
-        <target>Total (tax incl.)</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:371</note>
-      </trans-unit>
-      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
-        <source>Total (tax excl.)</source>
-        <target>Total (tax excl.)</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:377</note>
-      </trans-unit>
-      <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
-        <source>1 item</source>
-        <target>1 item</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:388</note>
-      </trans-unit>
-      <trans-unit id="cf1e3d72714f82f85aa7f326af340459">
-        <source>%d items</source>
-        <target>%d items</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:389</note>
-      </trans-unit>
-      <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
-        <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
-        <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
-        <note>Context:
-File: src/Adapter/Cart/CartPresenter.php:438</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/form/CustomerAddressForm.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0bf3928d84fde940f6feafac75062280">
-        <source>My Address</source>
-        <target>My Address</target>
-        <note>Context:
-File: classes/form/CustomerAddressForm.php:155</note>
+File: classes/checkout/CheckoutDeliveryStep.php:180</note>
       </trans-unit>
     </body>
   </file>
   <file original="themes/classic/templates/checkout/_partials/order-final-summary.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/order-final-summary.tpl:35</note>
-      </trans-unit>
       <trans-unit id="49ffd9480effff979143d2e8d38931c4">
         <source>Shipping Method</source>
         <target>Shipping Method</target>
         <note>Context:
 File: themes/classic/templates/checkout/_partials/order-final-summary.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/order-final-summary.tpl:35</note>
       </trans-unit>
       <trans-unit id="7ce3a11073ffba68bd1e83e243aaabf7">
         <source>Please check your order before payment</source>
@@ -163,6 +61,104 @@ File: classes/checkout/ConditionsToApproveFinder.php:52</note>
         <target>Personal Information</target>
         <note>Context:
 File: classes/checkout/CheckoutPersonalInformationStep.php:97</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Adapter/Cart/CartPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b24ce0cd392a5b0b8dedc66c25213594">
+        <source>Free</source>
+        <target>Free</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:335</note>
+      </trans-unit>
+      <trans-unit id="2194aaec8cc7086ab0e93f74547e5f53">
+        <source>Subtotal</source>
+        <target>Subtotal</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:293</note>
+      </trans-unit>
+      <trans-unit id="104d9898c04874d0fbac36e125fa1369">
+        <source>Discount</source>
+        <target>Discount</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:301</note>
+      </trans-unit>
+      <trans-unit id="484f5a79672cebe198ebdde45a1d672f">
+        <source>Gift wrapping</source>
+        <target>Gift wrapping</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:316</note>
+      </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:354</note>
+      </trans-unit>
+      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
+        <source>Shipping</source>
+        <target>Shipping</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:331</note>
+      </trans-unit>
+      <trans-unit id="3b5a05f2c4a0373c7a6e8d1cfec7020f">
+        <source>Included taxes</source>
+        <target>Included taxes</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:344</note>
+      </trans-unit>
+      <trans-unit id="719fec04166d6fa75f89cd29ad61fa8c">
+        <source>Taxes</source>
+        <target>Taxes</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:345</note>
+      </trans-unit>
+      <trans-unit id="adc852563bca51fb6b10c7905010406d">
+        <source>Total (tax incl.)</source>
+        <target>Total (tax incl.)</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:362</note>
+      </trans-unit>
+      <trans-unit id="8faf99e02e4d0ccb4dd933404f87a4ea">
+        <source>Total (tax excl.)</source>
+        <target>Total (tax excl.)</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:368</note>
+      </trans-unit>
+      <trans-unit id="7e0eb131cbb6280fe2b38edf92a3bcc5">
+        <source>1 item</source>
+        <target>1 item</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:379</note>
+      </trans-unit>
+      <trans-unit id="ca96f27e7d3e3b67b5d1f43a54296466">
+        <source>%count% items</source>
+        <target>%count% items</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:380</note>
+      </trans-unit>
+      <trans-unit id="2bd544f123f671c597c4b330ef05b5da">
+        <source>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</source>
+        <target>A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).</target>
+        <note>Context:
+File: src/Adapter/Cart/CartPresenter.php:428</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="classes/checkout/DeliveryOptionsFinder.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="464f47d6975750e4cbd91c90ccf1791e">
+        <source>%price% tax incl.</source>
+        <target>%price% tax incl.</target>
+        <note>Context:
+File: classes/checkout/DeliveryOptionsFinder.php:100</note>
+      </trans-unit>
+      <trans-unit id="e532954941a2469e3b3ae35ce44885d6">
+        <source>%price% tax excl.</source>
+        <target>%price% tax excl.</target>
+        <note>Context:
+File: classes/checkout/DeliveryOptionsFinder.php:109</note>
       </trans-unit>
     </body>
   </file>
@@ -206,35 +202,13 @@ File: themes/StarterTheme/templates/customer/history.tpl:43</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/checkout/CheckoutDeliveryStep.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/form/CustomerAddressForm.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d62106dfcdba5cacd1a5f5efe9cefc79">
-        <source> (additional cost of %giftcost% %taxlabel%)</source>
-        <target>(additional cost of %giftcost% %taxlabel%)</target>
+      <trans-unit id="0bf3928d84fde940f6feafac75062280">
+        <source>My Address</source>
+        <target>My Address</target>
         <note>Context:
-File: classes/checkout/CheckoutDeliveryStep.php:114</note>
-      </trans-unit>
-      <trans-unit id="882ed1e831a6175e4a3dd2c09faa225c">
-        <source>I would like my order to be gift wrapped %cost%</source>
-        <target>I would like my order to be gift wrapped %cost%</target>
-        <note>Context:
-File: classes/checkout/CheckoutDeliveryStep.php:182</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/checkout/DeliveryOptionsFinder.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="39600b5774497a945b98321d8b646531">
-        <source>%s tax incl.</source>
-        <target>%s tax incl.</target>
-        <note>Context:
-File: classes/checkout/DeliveryOptionsFinder.php:101</note>
-      </trans-unit>
-      <trans-unit id="0ec8109e3ffa61bcc147c89d9a396cd7">
-        <source>%s tax excl.</source>
-        <target>%s tax excl.</target>
-        <note>Context:
-File: classes/checkout/DeliveryOptionsFinder.php:111</note>
+File: classes/form/CustomerAddressForm.php:150</note>
       </trans-unit>
     </body>
   </file>
@@ -270,161 +244,35 @@ File: controllers/front/GuestTrackingController.php:151</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/Adapter/Order/OrderPresenter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
-        <source>Quantity</source>
-        <target>Quantity</target>
+      <trans-unit id="7589dfa9a5a899e9701335164c9ab520">
+        <source>Shipping and handling</source>
+        <target>Shipping and handling</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl:33</note>
+File: src/Adapter/Order/OrderPresenter.php:191</note>
       </trans-unit>
-      <trans-unit id="861c0c6ef832cd96c5fe152f9d610973">
-        <source>You Save</source>
-        <target>You Save</target>
+      <trans-unit id="4b78ac8eb158840e9638a3aeb26c4a9d">
+        <source>Tax</source>
+        <target>Tax</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl:35</note>
+File: src/Adapter/Order/OrderPresenter.php:207</note>
       </trans-unit>
-      <trans-unit id="bb4c039b2cfaf344b1f599149086dba6">
-        <source>Up to %amount_saved%</source>
-        <target>Up to %amount_saved%</target>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
         <note>Context:
-File: themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl:48</note>
+File: src/Adapter/Order/OrderPresenter.php:238</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/checkout/cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
-        <source>Carrier</source>
-        <target>Carrier</target>
+      <trans-unit id="b75443a19207ed3a3552edda86536857">
+        <source>Shopping Cart</source>
+        <target>Shopping Cart</target>
         <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:131</note>
-      </trans-unit>
-      <trans-unit id="f0aaaae189e9c7711931a65ffcd22543">
-        <source>Payment method</source>
-        <target>Payment method</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:47</note>
-      </trans-unit>
-      <trans-unit id="d350478ea9dc7f1f8ae3c78a41630f1d">
-        <source>Delivery address %alias%</source>
-        <target>Delivery address %alias%</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:97</note>
-      </trans-unit>
-      <trans-unit id="7d0244dc42acadee967bf9d8e612bffb">
-        <source>Invoice address %alias%</source>
-        <target>Invoice address %alias%</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:106</note>
-      </trans-unit>
-      <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
-        <source>Weight</source>
-        <target>Weight</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:132</note>
-      </trans-unit>
-      <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
-        <source>Shipping cost</source>
-        <target>Shipping cost</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:133</note>
-      </trans-unit>
-      <trans-unit id="5068c162a60b5859f973f701333f45c5">
-        <source>Tracking number</source>
-        <target>Tracking number</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/order-detail.tpl:134</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ca0dbad92a874b2f69b549293387925e">
-        <source>Code</source>
-        <target>Code</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
-        <source>Description</source>
-        <target>Description</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:38</note>
-      </trans-unit>
-      <trans-unit id="689202409e48743b914713f96d93947c">
-        <source>Value</source>
-        <target>Value</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="a1d0ec6d56f8833a078b5a7ac4caf2d4">
-        <source>Minimum</source>
-        <target>Minimum</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="eb2527806a7e1ef48009eaaa785368fe">
-        <source>Cumulative</source>
-        <target>Cumulative</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:42</note>
-      </trans-unit>
-      <trans-unit id="8c1279db4db86553e4b9682f78cf500e">
-        <source>Expiration date</source>
-        <target>Expiration date</target>
-        <note>Context:
-File: themes/StarterTheme/templates/customer/discount.tpl:43</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/address-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="5c74d926c4b89517ad64133990d04413">
-        <source>Use this address for invoice too</source>
-        <target>Use this address for invoice too</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:29</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/cart-voucher.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="3111382b0f345f39639de6e580a94933">
-        <source>Have a promo code?</source>
-        <target>Have a promo code?</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0ab608f7e0d1501be457f7646c1e57c0">
-        <source>Promo code</source>
-        <target>Promo code</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:43</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/cart-detailed.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2f0dca8966242e58b83e0afc012b178b">
-        <source>There are no more items in your cart</source>
-        <target>There are no more items in your cart</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/cart-detailed.tpl:39</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/cart-detailed-product-line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
-        <source>Gift</source>
-        <target>Gift</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/cart-detailed-product-line.tpl:88</note>
+File: themes/StarterTheme/templates/checkout/cart.tpl:30</note>
       </trans-unit>
     </body>
   </file>
@@ -462,6 +310,62 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/addresses.tpl:41</n
       </trans-unit>
     </body>
   </file>
+  <file original="themes/classic/templates/checkout/_partials/cart-detailed.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2f0dca8966242e58b83e0afc012b178b">
+        <source>There are no more items in your cart</source>
+        <target>There are no more items in your cart</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/cart-detailed.tpl:39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/order-final-summary-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e3e83a01990288b492a11a955723343d">
+        <source>%product_count% item in your cart</source>
+        <target>%product_count% item in your cart</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/order-final-summary-table.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="3f5cb84c95c577127e3f9e96d405d21b">
+        <source>%products_count% items in your cart</source>
+        <target>%products_count% items in your cart</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/order-final-summary-table.tpl:33</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/address-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5c74d926c4b89517ad64133990d04413">
+        <source>Use this address for invoice too</source>
+        <target>Use this address for invoice too</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/address-form.tpl:29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/cart-voucher.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3111382b0f345f39639de6e580a94933">
+        <source>Have a promo code?</source>
+        <target>Have a promo code?</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/cart-voucher.tpl:47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0ab608f7e0d1501be457f7646c1e57c0">
+        <source>Promo code</source>
+        <target>Promo code</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/cart-voucher.tpl:43</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="themes/classic/templates/checkout/_partials/customer-form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2fdfd506efea08144c0794c32ca8250a">
@@ -484,32 +388,6 @@ File: themes/classic/templates/checkout/_partials/customer-form.tpl:32</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/templates/checkout/_partials/order-final-summary-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e3e83a01990288b492a11a955723343d">
-        <source>%product_count% item in your cart</source>
-        <target>%product_count% item in your cart</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/order-final-summary-table.tpl:31</note>
-      </trans-unit>
-      <trans-unit id="3f5cb84c95c577127e3f9e96d405d21b">
-        <source>%products_count% items in your cart</source>
-        <target>%products_count% items in your cart</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/order-final-summary-table.tpl:33</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/order-confirmation-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="2cee9edacddde0856a46d7db6aff9110">
-        <source>Order items</source>
-        <target>Order items</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/order-confirmation-table.tpl:28</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/StarterTheme/templates/checkout/_partials/steps/personal-information.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3e0b39c8cd14dd15fff36eecf9c19861">
@@ -527,38 +405,6 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/personal-informatio
         <target>Order as a guest</target>
         <note>Context:
 File: themes/classic/templates/checkout/_partials/steps/personal-information.tpl:46</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/templates/checkout/_partials/steps/shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="d93651d012e77dac5581b08db33195b2">
-        <source>If you would like to add a comment about your order, please write it in the field below.</source>
-        <target>If you would like to add a comment about your order, please write it in the field below.</target>
-        <note>Context:
-File: themes/classic/templates/checkout/_partials/steps/shipping.tpl:83</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9193b58520051d8b59ca64a5cc5353ff">
-        <source>I would like to receive my order in recycled packaging.</source>
-        <target>I would like to receive my order in recycled packaging.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl:62</note>
-      </trans-unit>
-      <trans-unit id="5153f37f9159735ef4ae472c19b732e3">
-        <source>If you'd like, you can add a note to the gift:</source>
-        <target>If you'd like, you can add a note to the gift:</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl:70</note>
-      </trans-unit>
-      <trans-unit id="9a605fc0e1667ebdbd0ac37cf9f90789">
-        <source>Unfortunately, there are no carriers available for your delivery address.</source>
-        <target>Unfortunately, there are no carriers available for your delivery address.</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl:80</note>
       </trans-unit>
     </body>
   </file>
@@ -613,6 +459,58 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:11</not
         <target>Please make sure you've chosen a [1]payment method[/1] and accepted the [2]terms and conditions[/2].</target>
         <note>Context:
 File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:100</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/templates/checkout/_partials/steps/shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d93651d012e77dac5581b08db33195b2">
+        <source>If you would like to add a comment about your order, please write it in the field below.</source>
+        <target>If you would like to add a comment about your order, please write it in the field below.</target>
+        <note>Context:
+File: themes/classic/templates/checkout/_partials/steps/shipping.tpl:83</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9193b58520051d8b59ca64a5cc5353ff">
+        <source>I would like to receive my order in recycled packaging.</source>
+        <target>I would like to receive my order in recycled packaging.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="5153f37f9159735ef4ae472c19b732e3">
+        <source>If you'd like, you can add a note to the gift:</source>
+        <target>If you'd like, you can add a note to the gift:</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="9a605fc0e1667ebdbd0ac37cf9f90789">
+        <source>Unfortunately, there are no carriers available for your delivery address.</source>
+        <target>Unfortunately, there are no carriers available for your delivery address.</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/steps/shipping.tpl:80</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/cart-detailed-product-line.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
+        <source>Gift</source>
+        <target>Gift</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/cart-detailed-product-line.tpl:88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/checkout/_partials/order-confirmation-table.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2cee9edacddde0856a46d7db6aff9110">
+        <source>Order items</source>
+        <target>Order items</target>
+        <note>Context:
+File: themes/StarterTheme/templates/checkout/_partials/order-confirmation-table.tpl:28</note>
       </trans-unit>
     </body>
   </file>
@@ -696,16 +594,6 @@ File: themes/classic/templates/checkout/order-confirmation.tpl:64</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/StarterTheme/templates/checkout/cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b75443a19207ed3a3552edda86536857">
-        <source>Shopping Cart</source>
-        <target>Shopping Cart</target>
-        <note>Context:
-File: themes/StarterTheme/templates/checkout/cart.tpl:30</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/StarterTheme/templates/catalog/_partials/product-add-to-cart.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="21cf667b2d56747effd90b0333c6813c">
@@ -713,6 +601,98 @@ File: themes/StarterTheme/templates/checkout/cart.tpl:30</note>
         <target>The minimum purchase order quantity for the product is %quantity%.</target>
         <note>Context:
 File: themes/StarterTheme/templates/catalog/_partials/product-add-to-cart.tpl:45</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/discount.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73">
+        <source>Quantity</source>
+        <target>Quantity</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="ca0dbad92a874b2f69b549293387925e">
+        <source>Code</source>
+        <target>Code</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:37</note>
+      </trans-unit>
+      <trans-unit id="b5a7adde1af5c87d7fd797b6245c2a39">
+        <source>Description</source>
+        <target>Description</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:38</note>
+      </trans-unit>
+      <trans-unit id="689202409e48743b914713f96d93947c">
+        <source>Value</source>
+        <target>Value</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="a1d0ec6d56f8833a078b5a7ac4caf2d4">
+        <source>Minimum</source>
+        <target>Minimum</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:41</note>
+      </trans-unit>
+      <trans-unit id="eb2527806a7e1ef48009eaaa785368fe">
+        <source>Cumulative</source>
+        <target>Cumulative</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:42</note>
+      </trans-unit>
+      <trans-unit id="8c1279db4db86553e4b9682f78cf500e">
+        <source>Expiration date</source>
+        <target>Expiration date</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/discount.tpl:43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/customer/order-detail.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb">
+        <source>Carrier</source>
+        <target>Carrier</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:131</note>
+      </trans-unit>
+      <trans-unit id="f0aaaae189e9c7711931a65ffcd22543">
+        <source>Payment method</source>
+        <target>Payment method</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:47</note>
+      </trans-unit>
+      <trans-unit id="d350478ea9dc7f1f8ae3c78a41630f1d">
+        <source>Delivery address %alias%</source>
+        <target>Delivery address %alias%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:97</note>
+      </trans-unit>
+      <trans-unit id="7d0244dc42acadee967bf9d8e612bffb">
+        <source>Invoice address %alias%</source>
+        <target>Invoice address %alias%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:106</note>
+      </trans-unit>
+      <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
+        <source>Weight</source>
+        <target>Weight</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:132</note>
+      </trans-unit>
+      <trans-unit id="552a0d8c17d95d5dbdc0c28217024f5a">
+        <source>Shipping cost</source>
+        <target>Shipping cost</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:133</note>
+      </trans-unit>
+      <trans-unit id="5068c162a60b5859f973f701333f45c5">
+        <source>Tracking number</source>
+        <target>Tracking number</target>
+        <note>Context:
+File: themes/StarterTheme/templates/customer/order-detail.tpl:134</note>
       </trans-unit>
     </body>
   </file>
@@ -779,6 +759,22 @@ File: themes/classic/modules/ps_shoppingcart/modal.tpl:64</note>
         <target>Choose a password to create an account and save time on your next order (optional)</target>
         <note>Context:
 File: themes/StarterTheme/templates/checkout/_partials/customer-form.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="861c0c6ef832cd96c5fe152f9d610973">
+        <source>You Save</source>
+        <target>You Save</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl:35</note>
+      </trans-unit>
+      <trans-unit id="bb4c039b2cfaf344b1f599149086dba6">
+        <source>Up to %amount_saved%</source>
+        <target>Up to %amount_saved%</target>
+        <note>Context:
+File: themes/StarterTheme/templates/catalog/_partials/product-discounts.tpl:48</note>
       </trans-unit>
     </body>
   </file>

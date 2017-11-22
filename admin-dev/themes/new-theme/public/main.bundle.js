@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0f850ff6de47aaf95d98"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "bfb236a58b74ba6d8c0c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(404)(__webpack_require__.s = 404);
+/******/ 	return hotCreateRequire(466)(__webpack_require__.s = 466);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2561,7 +2561,7 @@ function loadLocale(name) {
         try {
             oldLocale = globalLocale._abbr;
             var aliasedRequire = require;
-            __webpack_require__(302)("./" + name);
+            __webpack_require__(334)("./" + name);
             getSetGlobalLocale(oldLocale);
         } catch (e) {}
     }
@@ -5233,7 +5233,7 @@ return hooks;
 })));
 
 }.call(window));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(22)(module)))
 
 /***/ }),
 /* 1 */,
@@ -5241,8 +5241,7 @@ return hooks;
 /* 3 */,
 /* 4 */,
 /* 5 */,
-/* 6 */,
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -5269,6 +5268,7 @@ module.exports = g;
 
 
 /***/ }),
+/* 7 */,
 /* 8 */
 /***/ (function(module, exports) {
 
@@ -5466,7 +5466,41 @@ process.umask = function() { return 0; };
 /* 13 */,
 /* 14 */,
 /* 15 */,
-/* 16 */
+/* 16 */,
+/* 17 */,
+/* 18 */,
+/* 19 */,
+/* 20 */,
+/* 21 */,
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -15287,290 +15321,6 @@ return jQuery;
 
 
 /***/ }),
-/* 17 */,
-/* 18 */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if(!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var apply = Function.prototype.apply;
-
-// DOM APIs, for completeness
-
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
-}
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
-
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
-
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(20);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
-
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
-    "use strict";
-
-    if (global.setImmediate) {
-        return;
-    }
-
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            process.nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(8)))
-
-/***/ }),
-/* 21 */,
-/* 22 */,
-/* 23 */,
 /* 24 */,
 /* 25 */,
 /* 26 */,
@@ -15633,7 +15383,22 @@ exports.clearImmediate = clearImmediate;
 /* 83 */,
 /* 84 */,
 /* 85 */,
-/* 86 */
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15711,7 +15476,7 @@ return af;
 
 
 /***/ }),
-/* 87 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15775,7 +15540,7 @@ return arDz;
 
 
 /***/ }),
-/* 88 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15839,7 +15604,7 @@ return arKw;
 
 
 /***/ }),
-/* 89 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -15970,7 +15735,7 @@ return arLy;
 
 
 /***/ }),
-/* 90 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16035,7 +15800,7 @@ return arMa;
 
 
 /***/ }),
-/* 91 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16145,7 +15910,7 @@ return arSa;
 
 
 /***/ }),
-/* 92 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16209,7 +15974,7 @@ return arTn;
 
 
 /***/ }),
-/* 93 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16356,7 +16121,7 @@ return ar;
 
 
 /***/ }),
-/* 94 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16466,7 +16231,7 @@ return az;
 
 
 /***/ }),
-/* 95 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16605,7 +16370,7 @@ return be;
 
 
 /***/ }),
-/* 96 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16700,7 +16465,7 @@ return bg;
 
 
 /***/ }),
-/* 97 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16764,7 +16529,7 @@ return bm;
 
 
 /***/ }),
-/* 98 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -16888,7 +16653,7 @@ return bn;
 
 
 /***/ }),
-/* 99 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17012,7 +16777,7 @@ return bo;
 
 
 /***/ }),
-/* 100 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17125,7 +16890,7 @@ return br;
 
 
 /***/ }),
-/* 101 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17273,7 +17038,7 @@ return bs;
 
 
 /***/ }),
-/* 102 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17366,7 +17131,7 @@ return ca;
 
 
 /***/ }),
-/* 103 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17543,7 +17308,7 @@ return cs;
 
 
 /***/ }),
-/* 104 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17611,7 +17376,7 @@ return cv;
 
 
 /***/ }),
-/* 105 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17697,7 +17462,7 @@ return cy;
 
 
 /***/ }),
-/* 106 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17762,7 +17527,7 @@ return da;
 
 
 /***/ }),
-/* 107 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17846,7 +17611,7 @@ return deAt;
 
 
 /***/ }),
-/* 108 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -17929,7 +17694,7 @@ return deCh;
 
 
 /***/ }),
-/* 109 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18012,7 +17777,7 @@ return de;
 
 
 /***/ }),
-/* 110 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18117,7 +17882,7 @@ return dv;
 
 
 /***/ }),
-/* 111 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18222,7 +17987,7 @@ return el;
 
 
 /***/ }),
-/* 112 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18294,7 +18059,7 @@ return enAu;
 
 
 /***/ }),
-/* 113 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18362,7 +18127,7 @@ return enCa;
 
 
 /***/ }),
-/* 114 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18434,7 +18199,7 @@ return enGb;
 
 
 /***/ }),
-/* 115 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18506,7 +18271,7 @@ return enIe;
 
 
 /***/ }),
-/* 116 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18578,7 +18343,7 @@ return enNz;
 
 
 /***/ }),
-/* 117 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18656,7 +18421,7 @@ return eo;
 
 
 /***/ }),
-/* 118 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18752,7 +18517,7 @@ return esDo;
 
 
 /***/ }),
-/* 119 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18840,7 +18605,7 @@ return esUs;
 
 
 /***/ }),
-/* 120 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -18937,7 +18702,7 @@ return es;
 
 
 /***/ }),
-/* 121 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19022,7 +18787,7 @@ return et;
 
 
 /***/ }),
-/* 122 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19093,7 +18858,7 @@ return eu;
 
 
 /***/ }),
-/* 123 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19205,7 +18970,7 @@ return fa;
 
 
 /***/ }),
-/* 124 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19317,7 +19082,7 @@ return fi;
 
 
 /***/ }),
-/* 125 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19382,7 +19147,7 @@ return fo;
 
 
 /***/ }),
-/* 126 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19461,7 +19226,7 @@ return frCa;
 
 
 /***/ }),
-/* 127 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19544,7 +19309,7 @@ return frCh;
 
 
 /***/ }),
-/* 128 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19632,7 +19397,7 @@ return fr;
 
 
 /***/ }),
-/* 129 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19712,7 +19477,7 @@ return fy;
 
 
 /***/ }),
-/* 130 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19793,7 +19558,7 @@ return gd;
 
 
 /***/ }),
-/* 131 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -19875,7 +19640,7 @@ return gl;
 
 
 /***/ }),
-/* 132 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20002,7 +19767,7 @@ return gomLatn;
 
 
 /***/ }),
-/* 133 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20131,7 +19896,7 @@ return gu;
 
 
 /***/ }),
-/* 134 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20235,7 +20000,7 @@ return he;
 
 
 /***/ }),
-/* 135 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20364,7 +20129,7 @@ return hi;
 
 
 /***/ }),
-/* 136 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20514,7 +20279,7 @@ return hr;
 
 
 /***/ }),
-/* 137 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20628,7 +20393,7 @@ return hu;
 
 
 /***/ }),
-/* 138 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20728,7 +20493,7 @@ return hyAm;
 
 
 /***/ }),
-/* 139 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20816,7 +20581,7 @@ return id;
 
 
 /***/ }),
-/* 140 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -20948,7 +20713,7 @@ return is;
 
 
 /***/ }),
-/* 141 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21023,7 +20788,7 @@ return it;
 
 
 /***/ }),
-/* 142 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21108,7 +20873,7 @@ return ja;
 
 
 /***/ }),
-/* 143 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21196,7 +20961,7 @@ return jv;
 
 
 /***/ }),
-/* 144 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21290,7 +21055,7 @@ return ka;
 
 
 /***/ }),
-/* 145 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21382,7 +21147,7 @@ return kk;
 
 
 /***/ }),
-/* 146 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21445,7 +21210,7 @@ return km;
 
 
 /***/ }),
-/* 147 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21576,7 +21341,7 @@ return kn;
 
 
 /***/ }),
-/* 148 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21664,7 +21429,7 @@ return ko;
 
 
 /***/ }),
-/* 149 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21757,7 +21522,7 @@ return ky;
 
 
 /***/ }),
-/* 150 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21899,7 +21664,7 @@ return lb;
 
 
 /***/ }),
-/* 151 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -21974,7 +21739,7 @@ return lo;
 
 
 /***/ }),
-/* 152 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22096,7 +21861,7 @@ return lt;
 
 
 /***/ }),
-/* 153 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22198,7 +21963,7 @@ return lv;
 
 
 /***/ }),
-/* 154 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22314,7 +22079,7 @@ return me;
 
 
 /***/ }),
-/* 155 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22383,7 +22148,7 @@ return mi;
 
 
 /***/ }),
-/* 156 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22478,7 +22243,7 @@ return mk;
 
 
 /***/ }),
-/* 157 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22564,7 +22329,7 @@ return ml;
 
 
 /***/ }),
-/* 158 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22728,7 +22493,7 @@ return mr;
 
 
 /***/ }),
-/* 159 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22816,7 +22581,7 @@ return msMy;
 
 
 /***/ }),
-/* 160 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -22903,7 +22668,7 @@ return ms;
 
 
 /***/ }),
-/* 161 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23004,7 +22769,7 @@ return my;
 
 
 /***/ }),
-/* 162 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23072,7 +22837,7 @@ return nb;
 
 
 /***/ }),
-/* 163 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23200,7 +22965,7 @@ return ne;
 
 
 /***/ }),
-/* 164 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23293,7 +23058,7 @@ return nlBe;
 
 
 /***/ }),
-/* 165 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23386,7 +23151,7 @@ return nl;
 
 
 /***/ }),
-/* 166 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23451,7 +23216,7 @@ return nn;
 
 
 /***/ }),
-/* 167 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23580,7 +23345,7 @@ return paIn;
 
 
 /***/ }),
-/* 168 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23709,7 +23474,7 @@ return pl;
 
 
 /***/ }),
-/* 169 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23776,7 +23541,7 @@ return ptBr;
 
 
 /***/ }),
-/* 170 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23846,7 +23611,7 @@ return pt;
 
 
 /***/ }),
-/* 171 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -23926,7 +23691,7 @@ return ro;
 
 
 /***/ }),
-/* 172 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24114,7 +23879,7 @@ return ru;
 
 
 /***/ }),
-/* 173 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24217,7 +23982,7 @@ return sd;
 
 
 /***/ }),
-/* 174 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24283,7 +24048,7 @@ return se;
 
 
 /***/ }),
-/* 175 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24359,7 +24124,7 @@ return si;
 
 
 /***/ }),
-/* 176 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24514,7 +24279,7 @@ return sk;
 
 
 /***/ }),
-/* 177 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24681,7 +24446,7 @@ return sl;
 
 
 /***/ }),
-/* 178 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24756,7 +24521,7 @@ return sq;
 
 
 /***/ }),
-/* 179 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24871,7 +24636,7 @@ return srCyrl;
 
 
 /***/ }),
-/* 180 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -24986,7 +24751,7 @@ return sr;
 
 
 /***/ }),
-/* 181 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25080,7 +24845,7 @@ return ss;
 
 
 /***/ }),
-/* 182 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25154,7 +24919,7 @@ return sv;
 
 
 /***/ }),
-/* 183 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25218,7 +24983,7 @@ return sw;
 
 
 /***/ }),
-/* 184 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25353,7 +25118,7 @@ return ta;
 
 
 /***/ }),
-/* 185 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25447,7 +25212,7 @@ return te;
 
 
 /***/ }),
-/* 186 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25520,7 +25285,7 @@ return tet;
 
 
 /***/ }),
-/* 187 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25592,7 +25357,7 @@ return th;
 
 
 /***/ }),
-/* 188 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25659,7 +25424,7 @@ return tlPh;
 
 
 /***/ }),
-/* 189 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25784,7 +25549,7 @@ return tlh;
 
 
 /***/ }),
-/* 190 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25879,7 +25644,7 @@ return tr;
 
 
 /***/ }),
-/* 191 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -25975,7 +25740,7 @@ return tzl;
 
 
 /***/ }),
-/* 192 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26038,7 +25803,7 @@ return tzmLatn;
 
 
 /***/ }),
-/* 193 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26101,7 +25866,7 @@ return tzm;
 
 
 /***/ }),
-/* 194 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26257,7 +26022,7 @@ return uk;
 
 
 /***/ }),
-/* 195 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26361,7 +26126,7 @@ return ur;
 
 
 /***/ }),
-/* 196 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26424,7 +26189,7 @@ return uzLatn;
 
 
 /***/ }),
-/* 197 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26487,7 +26252,7 @@ return uz;
 
 
 /***/ }),
-/* 198 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26571,7 +26336,7 @@ return vi;
 
 
 /***/ }),
-/* 199 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26644,7 +26409,7 @@ return xPseudo;
 
 
 /***/ }),
-/* 200 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26709,7 +26474,7 @@ return yo;
 
 
 /***/ }),
-/* 201 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26825,7 +26590,7 @@ return zhCn;
 
 
 /***/ }),
-/* 202 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -26935,7 +26700,7 @@ return zhHk;
 
 
 /***/ }),
-/* 203 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27044,30 +26809,104 @@ return zhTw;
 
 
 /***/ }),
-/* 204 */,
-/* 205 */,
-/* 206 */,
-/* 207 */,
-/* 208 */,
-/* 209 */,
-/* 210 */,
-/* 211 */,
-/* 212 */,
-/* 213 */
+/* 219 */,
+/* 220 */,
+/* 221 */,
+/* 222 */,
+/* 223 */,
+/* 224 */,
+/* 225 */,
+/* 226 */,
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var apply = Function.prototype.apply;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) {
+  if (timeout) {
+    timeout.close();
+  }
+};
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// setimmediate attaches itself to the global object
+__webpack_require__(341);
+var global = __webpack_require__(327);
+exports.setImmediate = global.setImmediate;
+exports.clearImmediate = global.clearImmediate;
+
+
+/***/ }),
+/* 241 */,
+/* 242 */,
+/* 243 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dropzone_dist_min_dropzone_min_css__ = __webpack_require__(288);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dropzone_dist_min_dropzone_min_css__ = __webpack_require__(319);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_dropzone_dist_min_dropzone_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_dropzone_dist_min_dropzone_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_magnific_popup_dist_magnific_popup_css__ = __webpack_require__(289);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_magnific_popup_dist_magnific_popup_css__ = __webpack_require__(320);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_magnific_popup_dist_magnific_popup_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_magnific_popup_dist_magnific_popup_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scss_theme_scss__ = __webpack_require__(290);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scss_theme_scss__ = __webpack_require__(321);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__scss_theme_scss___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__scss_theme_scss__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nav_bar_js__ = __webpack_require__(237);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__product_page_index__ = __webpack_require__(242);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__translation_page_index__ = __webpack_require__(247);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__header_js__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nav_bar_js__ = __webpack_require__(267);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__product_page_index__ = __webpack_require__(272);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__translation_page_index__ = __webpack_require__(277);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__header_js__ = __webpack_require__(266);
 /**
  * 2007-2017 PrestaShop
  *
@@ -27119,14 +26958,14 @@ new __WEBPACK_IMPORTED_MODULE_6__header_js__["a" /* default */]();
 
 
 /***/ }),
-/* 214 */
+/* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Bloodhound"] = __webpack_require__(309);
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */(function(global) {module.exports = global["Bloodhound"] = __webpack_require__(369);
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 215 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/*** IMPORTS FROM imports-loader ***/
@@ -28162,10 +28001,10 @@ var exports = false;
 }));
 
 }.call(window));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
-/* 216 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(moment) {/*** IMPORTS FROM imports-loader ***/
@@ -28214,7 +28053,7 @@ var exports = false;
         // AMD is used - Register as an anonymous module.
         define(['jquery', 'moment'], factory);
     } else if (typeof exports === 'object') {
-        module.exports = factory(__webpack_require__(16), __webpack_require__(0));
+        module.exports = factory(__webpack_require__(23), __webpack_require__(0));
     } else {
         // Neither AMD nor CommonJS used. Use global variables.
         if (typeof jQuery === 'undefined') {
@@ -30814,7 +30653,7 @@ var exports = false;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 217 */
+/* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*** IMPORTS FROM imports-loader ***/
@@ -30831,7 +30670,7 @@ if (typeof define === 'function' && define.amd) {
  define(['jquery'], factory); 
  } else if (typeof exports === 'object') { 
  // Node/CommonJS 
- factory(__webpack_require__(16)); 
+ factory(__webpack_require__(23)); 
  } else { 
  // Browser globals 
  factory(window.jQuery || window.Zepto); 
@@ -32685,7 +32524,7 @@ $.magnificPopup.registerModule(RETINA_NS, {
 }.call(window));
 
 /***/ }),
-/* 218 */
+/* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {/*** IMPORTS FROM imports-loader ***/
@@ -32705,7 +32544,7 @@ var exports = false;
             return factory(a0);
         });
     } else if (typeof exports === "object") {
-        module.exports = factory(__webpack_require__(16));
+        module.exports = factory(__webpack_require__(23));
     } else {
         factory(jQuery);
     }
@@ -34232,10 +34071,10 @@ var exports = false;
     })();
 });
 }.call(window));
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(240).setImmediate))
 
 /***/ }),
-/* 219 */
+/* 249 */
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
@@ -52951,7 +52790,7 @@ var widgetsTooltip = $.ui.tooltip;
 }.call(window));
 
 /***/ }),
-/* 220 */
+/* 250 */
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
@@ -53427,22 +53266,13 @@ var module = false;
 }.call(window));
 
 /***/ }),
-/* 221 */
+/* 251 */
 /***/ (function(module, exports) {
 
 /*** IMPORTS FROM imports-loader ***/
 (function() {
 var module = null;
 
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
  *
@@ -53470,1264 +53300,631 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  *
  */
 
-// The Emitter class provides the ability to call `.on()` on Dropzone to listen
-// to events.
-// It is strongly based on component's emitter class, and I removed the
-// functionality because of the dependency hell with different frameworks.
-var Emitter = function () {
-  function Emitter() {
-    _classCallCheck(this, Emitter);
-  }
+(function() {
+  var Dropzone, Emitter, ExifRestore, camelize, contentLoaded, detectVerticalSquash, drawImageIOSFix, noop, without,
+    slice = [].slice,
+    extend1 = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    hasProp = {}.hasOwnProperty;
 
-  _createClass(Emitter, [{
-    key: "on",
+  noop = function() {};
 
-    // Add an event listener for given event
-    value: function on(event, fn) {
+  Emitter = (function() {
+    function Emitter() {}
+
+    Emitter.prototype.addEventListener = Emitter.prototype.on;
+
+    Emitter.prototype.on = function(event, fn) {
       this._callbacks = this._callbacks || {};
-      // Create namespace for this event
       if (!this._callbacks[event]) {
         this._callbacks[event] = [];
       }
       this._callbacks[event].push(fn);
       return this;
-    }
-  }, {
-    key: "emit",
-    value: function emit(event) {
+    };
+
+    Emitter.prototype.emit = function() {
+      var args, callback, callbacks, event, j, len;
+      event = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
       this._callbacks = this._callbacks || {};
-      var callbacks = this._callbacks[event];
-
+      callbacks = this._callbacks[event];
       if (callbacks) {
-        for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-          args[_key - 1] = arguments[_key];
-        }
-
-        for (var _iterator = callbacks, _isArray = true, _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-          var _ref;
-
-          if (_isArray) {
-            if (_i >= _iterator.length) break;
-            _ref = _iterator[_i++];
-          } else {
-            _i = _iterator.next();
-            if (_i.done) break;
-            _ref = _i.value;
-          }
-
-          var callback = _ref;
-
+        for (j = 0, len = callbacks.length; j < len; j++) {
+          callback = callbacks[j];
           callback.apply(this, args);
         }
       }
-
       return this;
-    }
+    };
 
-    // Remove event listener for given event. If fn is not provided, all event
-    // listeners for that event will be removed. If neither is provided, all
-    // event listeners will be removed.
+    Emitter.prototype.removeListener = Emitter.prototype.off;
 
-  }, {
-    key: "off",
-    value: function off(event, fn) {
+    Emitter.prototype.removeAllListeners = Emitter.prototype.off;
+
+    Emitter.prototype.removeEventListener = Emitter.prototype.off;
+
+    Emitter.prototype.off = function(event, fn) {
+      var callback, callbacks, i, j, len;
       if (!this._callbacks || arguments.length === 0) {
         this._callbacks = {};
         return this;
       }
-
-      // specific event
-      var callbacks = this._callbacks[event];
+      callbacks = this._callbacks[event];
       if (!callbacks) {
         return this;
       }
-
-      // remove all handlers
       if (arguments.length === 1) {
         delete this._callbacks[event];
         return this;
       }
-
-      // remove specific handler
-      for (var i = 0; i < callbacks.length; i++) {
-        var callback = callbacks[i];
+      for (i = j = 0, len = callbacks.length; j < len; i = ++j) {
+        callback = callbacks[i];
         if (callback === fn) {
           callbacks.splice(i, 1);
           break;
         }
       }
-
       return this;
-    }
-  }]);
+    };
 
-  return Emitter;
-}();
+    return Emitter;
 
-var Dropzone = function (_Emitter) {
-  _inherits(Dropzone, _Emitter);
+  })();
 
-  _createClass(Dropzone, null, [{
-    key: "initClass",
-    value: function initClass() {
+  Dropzone = (function(superClass) {
+    var extend, resolveOption;
 
-      // Exposing the emitter class, mainly for tests
-      this.prototype.Emitter = Emitter;
+    extend1(Dropzone, superClass);
+
+    Dropzone.prototype.Emitter = Emitter;
+
+
+    /*
+    This is a list of all available events you can register on a dropzone object.
+    
+    You can register an event handler like this:
+    
+        dropzone.on("dragEnter", function() { });
+     */
+
+    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
+
+    Dropzone.prototype.defaultOptions = {
+      url: null,
+      method: "post",
+      withCredentials: false,
+      timeout: 30000,
+      parallelUploads: 2,
+      uploadMultiple: false,
+      maxFilesize: 256,
+      paramName: "file",
+      createImageThumbnails: true,
+      maxThumbnailFilesize: 10,
+      thumbnailWidth: 120,
+      thumbnailHeight: 120,
+      thumbnailMethod: 'crop',
+      resizeWidth: null,
+      resizeHeight: null,
+      resizeMimeType: null,
+      resizeQuality: 0.8,
+      resizeMethod: 'contain',
+      filesizeBase: 1000,
+      maxFiles: null,
+      params: {},
+      headers: null,
+      clickable: true,
+      ignoreHiddenFiles: true,
+      acceptedFiles: null,
+      acceptedMimeTypes: null,
+      autoProcessQueue: true,
+      autoQueue: true,
+      addRemoveLinks: false,
+      previewsContainer: null,
+      hiddenInputContainer: "body",
+      capture: null,
+      renameFilename: null,
+      renameFile: null,
+      forceFallback: false,
+      dictDefaultMessage: "Drop files here to upload",
+      dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+      dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+      dictInvalidFileType: "You can't upload files of this type.",
+      dictResponseError: "Server responded with {{statusCode}} code.",
+      dictCancelUpload: "Cancel upload",
+      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+      dictRemoveFile: "Remove file",
+      dictRemoveFileConfirmation: null,
+      dictMaxFilesExceeded: "You can not upload any more files.",
+      dictFileSizeUnits: {
+        tb: "TB",
+        gb: "GB",
+        mb: "MB",
+        kb: "KB",
+        b: "b"
+      },
+      init: function() {
+        return noop;
+      },
+      accept: function(file, done) {
+        return done();
+      },
+      fallback: function() {
+        var child, j, len, messageElement, ref, span;
+        this.element.className = this.element.className + " dz-browser-not-supported";
+        ref = this.element.getElementsByTagName("div");
+        for (j = 0, len = ref.length; j < len; j++) {
+          child = ref[j];
+          if (/(^| )dz-message($| )/.test(child.className)) {
+            messageElement = child;
+            child.className = "dz-message";
+            continue;
+          }
+        }
+        if (!messageElement) {
+          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
+          this.element.appendChild(messageElement);
+        }
+        span = messageElement.getElementsByTagName("span")[0];
+        if (span) {
+          if (span.textContent != null) {
+            span.textContent = this.options.dictFallbackMessage;
+          } else if (span.innerText != null) {
+            span.innerText = this.options.dictFallbackMessage;
+          }
+        }
+        return this.element.appendChild(this.getFallbackForm());
+      },
+      resize: function(file, width, height, resizeMethod) {
+        var info, srcRatio, trgRatio;
+        info = {
+          srcX: 0,
+          srcY: 0,
+          srcWidth: file.width,
+          srcHeight: file.height
+        };
+        srcRatio = file.width / file.height;
+        if ((width == null) && (height == null)) {
+          width = info.srcWidth;
+          height = info.srcHeight;
+        } else if (width == null) {
+          width = height * srcRatio;
+        } else if (height == null) {
+          height = width / srcRatio;
+        }
+        width = Math.min(width, info.srcWidth);
+        height = Math.min(height, info.srcHeight);
+        trgRatio = width / height;
+        if (info.srcWidth > width || info.srcHeight > height) {
+          if (resizeMethod === 'crop') {
+            if (srcRatio > trgRatio) {
+              info.srcHeight = file.height;
+              info.srcWidth = info.srcHeight * trgRatio;
+            } else {
+              info.srcWidth = file.width;
+              info.srcHeight = info.srcWidth / trgRatio;
+            }
+          } else if (resizeMethod === 'contain') {
+            if (srcRatio > trgRatio) {
+              height = width / srcRatio;
+            } else {
+              width = height * srcRatio;
+            }
+          } else {
+            throw new Error("Unknown resizeMethod '" + resizeMethod + "'");
+          }
+        }
+        info.srcX = (file.width - info.srcWidth) / 2;
+        info.srcY = (file.height - info.srcHeight) / 2;
+        info.trgWidth = width;
+        info.trgHeight = height;
+        return info;
+      },
+      transformFile: function(file, done) {
+        if ((this.options.resizeWidth || this.options.resizeHeight) && file.type.match(/image.*/)) {
+          return this.resizeImage(file, this.options.resizeWidth, this.options.resizeHeight, this.options.resizeMethod, done);
+        } else {
+          return done(file);
+        }
+      },
+      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>",
 
       /*
-       This is a list of all available events you can register on a dropzone object.
-        You can register an event handler like this:
-        dropzone.on("dragEnter", function() { });
-        */
-      this.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
-
-      this.prototype.defaultOptions = {
-        /**
-         * Has to be specified on elements other than form (or when the form
-         * doesn't have an `action` attribute). You can also
-         * provide a function that will be called with `files` and
-         * must return the url (since `v3.12.0`)
-         */
-        url: null,
-
-        /**
-         * Can be changed to `"put"` if necessary. You can also provide a function
-         * that will be called with `files` and must return the method (since `v3.12.0`).
-         */
-        method: "post",
-
-        /**
-         * Will be set on the XHRequest.
-         */
-        withCredentials: false,
-
-        /**
-         * The timeout for the XHR requests in milliseconds (since `v4.4.0`).
-         */
-        timeout: 30000,
-
-        /**
-         * How many file uploads to process in parallel (See the
-         * Enqueuing file uploads* documentation section for more info)
-         */
-        parallelUploads: 2,
-
-        /**
-         * Whether to send multiple files in one request. If
-         * this it set to true, then the fallback file input element will
-         * have the `multiple` attribute as well. This option will
-         * also trigger additional events (like `processingmultiple`). See the events
-         * documentation section for more information.
-         */
-        uploadMultiple: false,
-
-        /**
-         * Whether you want files to be uploaded in chunks to your server. This can't be
-         * used in combination with `uploadMultiple`.
-         *
-         * See [chunksUploaded](#config-chunksUploaded) for the callback to finalise an upload.
-         */
-        chunking: false,
-
-        /**
-         * If `chunking` is enabled, this defines whether **every** file should be chunked,
-         * even if the file size is below chunkSize. This means, that the additional chunk
-         * form data will be submitted and the `chunksUploaded` callback will be invoked.
-         */
-        forceChunking: false,
-
-        /**
-         * If `chunking` is `true`, then this defines the chunk size in bytes.
-         */
-        chunkSize: 2000000,
-
-        /**
-         * If `true`, the individual chunks of a file are being uploaded simultaneously.
-         */
-        parallelChunkUploads: false,
-
-        /**
-         * Whether a chunk should be retried if it fails.
-         */
-        retryChunks: false,
-
-        /**
-         * If `retryChunks` is true, how many times should it be retried.
-         */
-        retryChunksLimit: 3,
-
-        /**
-         * If not `null` defines how many files this Dropzone handles. If it exceeds,
-         * the event `maxfilesexceeded` will be called. The dropzone element gets the
-         * class `dz-max-files-reached` accordingly so you can provide visual feedback.
-         */
-        maxFilesize: 256,
-
-        /**
-         * The name of the file param that gets transferred.
-         * **NOTE**: If you have the option  `uploadMultiple` set to `true`, then
-         * Dropzone will append `[]` to the name.
-         */
-        paramName: "file",
-
-        /**
-         * Whether thumbnails for images should be generated
-         */
-        createImageThumbnails: true,
-
-        /**
-         * In MB. When the filename exceeds this limit, the thumbnail will not be generated.
-         */
-        maxThumbnailFilesize: 10,
-
-        /**
-         * If `null`, the ratio of the image will be used to calculate it.
-         */
-        thumbnailWidth: 120,
-
-        /**
-         * The same as `thumbnailWidth`. If both are null, images will not be resized.
-         */
-        thumbnailHeight: 120,
-
-        /**
-         * How the images should be scaled down in case both, `thumbnailWidth` and `thumbnailHeight` are provided.
-         * Can be either `contain` or `crop`.
-         */
-        thumbnailMethod: 'crop',
-
-        /**
-         * If set, images will be resized to these dimensions before being **uploaded**.
-         * If only one, `resizeWidth` **or** `resizeHeight` is provided, the original aspect
-         * ratio of the file will be preserved.
-         *
-         * The `options.transformFile` function uses these options, so if the `transformFile` function
-         * is overridden, these options don't do anything.
-         */
-        resizeWidth: null,
-
-        /**
-         * See `resizeWidth`.
-         */
-        resizeHeight: null,
-
-        /**
-         * The mime type of the resized image (before it gets uploaded to the server).
-         * If `null` the original mime type will be used. To force jpeg, for example, use `image/jpeg`.
-         * See `resizeWidth` for more information.
-         */
-        resizeMimeType: null,
-
-        /**
-         * The quality of the resized images. See `resizeWidth`.
-         */
-        resizeQuality: 0.8,
-
-        /**
-         * How the images should be scaled down in case both, `resizeWidth` and `resizeHeight` are provided.
-         * Can be either `contain` or `crop`.
-         */
-        resizeMethod: 'contain',
-
-        /**
-         * The base that is used to calculate the filesize. You can change this to
-         * 1024 if you would rather display kibibytes, mebibytes, etc...
-         * 1024 is technically incorrect, because `1024 bytes` are `1 kibibyte` not `1 kilobyte`.
-         * You can change this to `1024` if you don't care about validity.
-         */
-        filesizeBase: 1000,
-
-        /**
-         * Can be used to limit the maximum number of files that will be handled by this Dropzone
-         */
-        maxFiles: null,
-
-        /**
-         * An optional object to send additional headers to the server. Eg:
-         * `{ "My-Awesome-Header": "header value" }`
-         */
-        headers: null,
-
-        /**
-         * If `true`, the dropzone element itself will be clickable, if `false`
-         * nothing will be clickable.
-         *
-         * You can also pass an HTML element, a CSS selector (for multiple elements)
-         * or an array of those. In that case, all of those elements will trigger an
-         * upload when clicked.
-         */
-        clickable: true,
-
-        /**
-         * Whether hidden files in directories should be ignored.
-         */
-        ignoreHiddenFiles: true,
-
-        /**
-         * The default implementation of `accept` checks the file's mime type or
-         * extension against this list. This is a comma separated list of mime
-         * types or file extensions.
-         *
-         * Eg.: `image/*,application/pdf,.psd`
-         *
-         * If the Dropzone is `clickable` this option will also be used as
-         * [`accept`](https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept)
-         * parameter on the hidden file input as well.
-         */
-        acceptedFiles: null,
-
-        /**
-         * **Deprecated!**
-         * Use acceptedFiles instead.
-         */
-        acceptedMimeTypes: null,
-
-        /**
-         * If false, files will be added to the queue but the queue will not be
-         * processed automatically.
-         * This can be useful if you need some additional user input before sending
-         * files (or if you want want all files sent at once).
-         * If you're ready to send the file simply call `myDropzone.processQueue()`.
-         *
-         * See the [enqueuing file uploads](#enqueuing-file-uploads) documentation
-         * section for more information.
-         */
-        autoProcessQueue: true,
-
-        /**
-         * If false, files added to the dropzone will not be queued by default.
-         * You'll have to call `enqueueFile(file)` manually.
-         */
-        autoQueue: true,
-
-        /**
-         * If `true`, this will add a link to every file preview to remove or cancel (if
-         * already uploading) the file. The `dictCancelUpload`, `dictCancelUploadConfirmation`
-         * and `dictRemoveFile` options are used for the wording.
-         */
-        addRemoveLinks: false,
-
-        /**
-         * Defines where to display the file previews – if `null` the
-         * Dropzone element itself is used. Can be a plain `HTMLElement` or a CSS
-         * selector. The element should have the `dropzone-previews` class so
-         * the previews are displayed properly.
-         */
-        previewsContainer: null,
-
-        /**
-         * This is the element the hidden input field (which is used when clicking on the
-         * dropzone to trigger file selection) will be appended to. This might
-         * be important in case you use frameworks to switch the content of your page.
-         */
-        hiddenInputContainer: "body",
-
-        /**
-         * If null, no capture type will be specified
-         * If camera, mobile devices will skip the file selection and choose camera
-         * If microphone, mobile devices will skip the file selection and choose the microphone
-         * If camcorder, mobile devices will skip the file selection and choose the camera in video mode
-         * On apple devices multiple must be set to false.  AcceptedFiles may need to
-         * be set to an appropriate mime type (e.g. "image/*", "audio/*", or "video/*").
-         */
-        capture: null,
-
-        /**
-         * **Deprecated**. Use `renameFile` instead.
-         */
-        renameFilename: null,
-
-        /**
-         * A function that is invoked before the file is uploaded to the server and renames the file.
-         * This function gets the `File` as argument and can use the `file.name`. The actual name of the
-         * file that gets used during the upload can be accessed through `file.upload.filename`.
-         */
-        renameFile: null,
-
-        /**
-         * If `true` the fallback will be forced. This is very useful to test your server
-         * implementations first and make sure that everything works as
-         * expected without dropzone if you experience problems, and to test
-         * how your fallbacks will look.
-         */
-        forceFallback: false,
-
-        /**
-         * The text used before any files are dropped.
-         */
-        dictDefaultMessage: "Drop files here to upload",
-
-        /**
-         * The text that replaces the default message text it the browser is not supported.
-         */
-        dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
-
-        /**
-         * The text that will be added before the fallback form.
-         * If you provide a  fallback element yourself, or if this option is `null` this will
-         * be ignored.
-         */
-        dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
-
-        /**
-         * If the filesize is too big.
-         * `{{filesize}}` and `{{maxFilesize}}` will be replaced with the respective configuration values.
-         */
-        dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
-
-        /**
-         * If the file doesn't match the file type.
-         */
-        dictInvalidFileType: "You can't upload files of this type.",
-
-        /**
-         * If the server response was invalid.
-         * `{{statusCode}}` will be replaced with the servers status code.
-         */
-        dictResponseError: "Server responded with {{statusCode}} code.",
-
-        /**
-         * If `addRemoveLinks` is true, the text to be used for the cancel upload link.
-         */
-        dictCancelUpload: "Cancel upload",
-
-        /**
-         * If `addRemoveLinks` is true, the text to be used for confirmation when cancelling upload.
-         */
-        dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
-
-        /**
-         * If `addRemoveLinks` is true, the text to be used to remove a file.
-         */
-        dictRemoveFile: "Remove file",
-
-        /**
-         * If this is not null, then the user will be prompted before removing a file.
-         */
-        dictRemoveFileConfirmation: null,
-
-        /**
-         * Displayed if `maxFiles` is st and exceeded.
-         * The string `{{maxFiles}}` will be replaced by the configuration value.
-         */
-        dictMaxFilesExceeded: "You can not upload any more files.",
-
-        /**
-         * Allows you to translate the different units. Starting with `tb` for terabytes and going down to
-         * `b` for bytes.
-         */
-        dictFileSizeUnits: { tb: "TB", gb: "GB", mb: "MB", kb: "KB", b: "b" },
-
-        /**
-         * Called when dropzone initialized
-         * You can add event listeners here
-         */
-        init: function init() {},
-
-
-        /**
-         * Can be an **object** of additional parameters to transfer to the server, **or** a `Function`
-         * that gets invoked with the `files`, `xhr` and, if it's a chunked upload, `chunk` arguments. In case
-         * of a function, this needs to return a map.
-         *
-         * The default implementation does nothing for normal uploads, but adds relevant information for
-         * chunked uploads.
-         *
-         * This is the same as adding hidden input fields in the form element.
-         */
-        params: function params(files, xhr, chunk) {
-          if (chunk) {
-            return {
-              dzuuid: chunk.file.upload.uuid,
-              dzchunkindex: chunk.index,
-              dztotalfilesize: chunk.file.size,
-              dzchunksize: this.options.chunkSize,
-              dztotalchunkcount: chunk.file.upload.totalChunkCount,
-              dzchunkbyteoffset: chunk.index * this.options.chunkSize
-            };
+      Those functions register themselves to the events on init and handle all
+      the user interface specific stuff. Overwriting them won't break the upload
+      but can break the way it's displayed.
+      You can overwrite them if you don't like the default behavior. If you just
+      want to add an additional event handler, register it on the dropzone object
+      and don't overwrite those options.
+       */
+      drop: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      dragstart: noop,
+      dragend: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      dragenter: function(e) {
+        return this.element.classList.add("dz-drag-hover");
+      },
+      dragover: function(e) {
+        return this.element.classList.add("dz-drag-hover");
+      },
+      dragleave: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      paste: noop,
+      reset: function() {
+        return this.element.classList.remove("dz-started");
+      },
+      addedfile: function(file) {
+        var j, k, l, len, len1, len2, node, ref, ref1, ref2, removeFileEvent, removeLink, results;
+        if (this.element === this.previewsContainer) {
+          this.element.classList.add("dz-started");
+        }
+        if (this.previewsContainer) {
+          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+          file.previewTemplate = file.previewElement;
+          this.previewsContainer.appendChild(file.previewElement);
+          ref = file.previewElement.querySelectorAll("[data-dz-name]");
+          for (j = 0, len = ref.length; j < len; j++) {
+            node = ref[j];
+            node.textContent = file.name;
           }
-        },
-
-
-        /**
-         * A function that gets a [file](https://developer.mozilla.org/en-US/docs/DOM/File)
-         * and a `done` function as parameters.
-         *
-         * If the done function is invoked without arguments, the file is "accepted" and will
-         * be processed. If you pass an error message, the file is rejected, and the error
-         * message will be displayed.
-         * This function will not be called if the file is too big or doesn't match the mime types.
-         */
-        accept: function accept(file, done) {
-          return done();
-        },
-
-
-        /**
-         * The callback that will be invoked when all chunks have been uploaded for a file.
-         * It gets the file for which the chunks have been uploaded as the first parameter,
-         * and the `done` function as second. `done()` needs to be invoked when everything
-         * needed to finish the upload process is done.
-         */
-        chunksUploaded: function chunksUploaded(file, done) {
-          done();
-        },
-
-        /**
-         * Gets called when the browser is not supported.
-         * The default implementation shows the fallback input field and adds
-         * a text.
-         */
-        fallback: function fallback() {
-          // This code should pass in IE7... :(
-          var messageElement = void 0;
-          this.element.className = this.element.className + " dz-browser-not-supported";
-
-          for (var _iterator2 = this.element.getElementsByTagName("div"), _isArray2 = true, _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
-            var _ref2;
-
-            if (_isArray2) {
-              if (_i2 >= _iterator2.length) break;
-              _ref2 = _iterator2[_i2++];
-            } else {
-              _i2 = _iterator2.next();
-              if (_i2.done) break;
-              _ref2 = _i2.value;
-            }
-
-            var child = _ref2;
-
-            if (/(^| )dz-message($| )/.test(child.className)) {
-              messageElement = child;
-              child.className = "dz-message"; // Removes the 'dz-default' class
-              break;
-            }
+          ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
+          for (k = 0, len1 = ref1.length; k < len1; k++) {
+            node = ref1[k];
+            node.innerHTML = this.filesize(file.size);
           }
-          if (!messageElement) {
-            messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
-            this.element.appendChild(messageElement);
+          if (this.options.addRemoveLinks) {
+            file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
+            file.previewElement.appendChild(file._removeLink);
           }
-
-          var span = messageElement.getElementsByTagName("span")[0];
-          if (span) {
-            if (span.textContent != null) {
-              span.textContent = this.options.dictFallbackMessage;
-            } else if (span.innerText != null) {
-              span.innerText = this.options.dictFallbackMessage;
-            }
-          }
-
-          return this.element.appendChild(this.getFallbackForm());
-        },
-
-
-        /**
-         * Gets called to calculate the thumbnail dimensions.
-         *
-         * It gets `file`, `width` and `height` (both may be `null`) as parameters and must return an object containing:
-         *
-         *  - `srcWidth` & `srcHeight` (required)
-         *  - `trgWidth` & `trgHeight` (required)
-         *  - `srcX` & `srcY` (optional, default `0`)
-         *  - `trgX` & `trgY` (optional, default `0`)
-         *
-         * Those values are going to be used by `ctx.drawImage()`.
-         */
-        resize: function resize(file, width, height, resizeMethod) {
-          var info = {
-            srcX: 0,
-            srcY: 0,
-            srcWidth: file.width,
-            srcHeight: file.height
-          };
-
-          var srcRatio = file.width / file.height;
-
-          // Automatically calculate dimensions if not specified
-          if (width == null && height == null) {
-            width = info.srcWidth;
-            height = info.srcHeight;
-          } else if (width == null) {
-            width = height * srcRatio;
-          } else if (height == null) {
-            height = width / srcRatio;
-          }
-
-          // Make sure images aren't upscaled
-          width = Math.min(width, info.srcWidth);
-          height = Math.min(height, info.srcHeight);
-
-          var trgRatio = width / height;
-
-          if (info.srcWidth > width || info.srcHeight > height) {
-            // Image is bigger and needs rescaling
-            if (resizeMethod === 'crop') {
-              if (srcRatio > trgRatio) {
-                info.srcHeight = file.height;
-                info.srcWidth = info.srcHeight * trgRatio;
-              } else {
-                info.srcWidth = file.width;
-                info.srcHeight = info.srcWidth / trgRatio;
-              }
-            } else if (resizeMethod === 'contain') {
-              // Method 'contain'
-              if (srcRatio > trgRatio) {
-                height = width / srcRatio;
-              } else {
-                width = height * srcRatio;
-              }
-            } else {
-              throw new Error("Unknown resizeMethod '" + resizeMethod + "'");
-            }
-          }
-
-          info.srcX = (file.width - info.srcWidth) / 2;
-          info.srcY = (file.height - info.srcHeight) / 2;
-
-          info.trgWidth = width;
-          info.trgHeight = height;
-
-          return info;
-        },
-
-
-        /**
-         * Can be used to transform the file (for example, resize an image if necessary).
-         *
-         * The default implementation uses `resizeWidth` and `resizeHeight` (if provided) and resizes
-         * images according to those dimensions.
-         *
-         * Gets the `file` as the first parameter, and a `done()` function as the second, that needs
-         * to be invoked with the file when the transformation is done.
-         */
-        transformFile: function transformFile(file, done) {
-          if ((this.options.resizeWidth || this.options.resizeHeight) && file.type.match(/image.*/)) {
-            return this.resizeImage(file, this.options.resizeWidth, this.options.resizeHeight, this.options.resizeMethod, done);
-          } else {
-            return done(file);
-          }
-        },
-
-
-        /**
-         * A string that contains the template used for each dropped
-         * file. Change it to fulfill your needs but make sure to properly
-         * provide all elements.
-         *
-         * If you want to use an actual HTML element instead of providing a String
-         * as a config option, you could create a div with the id `tpl`,
-         * put the template inside it and provide the element like this:
-         *
-         *     document
-         *       .querySelector('#tpl')
-         *       .innerHTML
-         *
-         */
-        previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>",
-
-        // END OPTIONS
-        // (Required by the dropzone documentation parser)
-
-
-        /*
-         Those functions register themselves to the events on init and handle all
-         the user interface specific stuff. Overwriting them won't break the upload
-         but can break the way it's displayed.
-         You can overwrite them if you don't like the default behavior. If you just
-         want to add an additional event handler, register it on the dropzone object
-         and don't overwrite those options.
-         */
-
-        // Those are self explanatory and simply concern the DragnDrop.
-        drop: function drop(e) {
-          return this.element.classList.remove("dz-drag-hover");
-        },
-        dragstart: function dragstart(e) {},
-        dragend: function dragend(e) {
-          return this.element.classList.remove("dz-drag-hover");
-        },
-        dragenter: function dragenter(e) {
-          return this.element.classList.add("dz-drag-hover");
-        },
-        dragover: function dragover(e) {
-          return this.element.classList.add("dz-drag-hover");
-        },
-        dragleave: function dragleave(e) {
-          return this.element.classList.remove("dz-drag-hover");
-        },
-        paste: function paste(e) {},
-
-
-        // Called whenever there are no files left in the dropzone anymore, and the
-        // dropzone should be displayed as if in the initial state.
-        reset: function reset() {
-          return this.element.classList.remove("dz-started");
-        },
-
-
-        // Called when a file is added to the queue
-        // Receives `file`
-        addedfile: function addedfile(file) {
-          var _this2 = this;
-
-          if (this.element === this.previewsContainer) {
-            this.element.classList.add("dz-started");
-          }
-
-          if (this.previewsContainer) {
-            file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
-            file.previewTemplate = file.previewElement; // Backwards compatibility
-
-            this.previewsContainer.appendChild(file.previewElement);
-            for (var _iterator3 = file.previewElement.querySelectorAll("[data-dz-name]"), _isArray3 = true, _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
-              var _ref3;
-
-              if (_isArray3) {
-                if (_i3 >= _iterator3.length) break;
-                _ref3 = _iterator3[_i3++];
-              } else {
-                _i3 = _iterator3.next();
-                if (_i3.done) break;
-                _ref3 = _i3.value;
-              }
-
-              var node = _ref3;
-
-              node.textContent = file.name;
-            }
-            for (var _iterator4 = file.previewElement.querySelectorAll("[data-dz-size]"), _isArray4 = true, _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
-              if (_isArray4) {
-                if (_i4 >= _iterator4.length) break;
-                node = _iterator4[_i4++];
-              } else {
-                _i4 = _iterator4.next();
-                if (_i4.done) break;
-                node = _i4.value;
-              }
-
-              node.innerHTML = this.filesize(file.size);
-            }
-
-            if (this.options.addRemoveLinks) {
-              file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
-              file.previewElement.appendChild(file._removeLink);
-            }
-
-            var removeFileEvent = function removeFileEvent(e) {
+          removeFileEvent = (function(_this) {
+            return function(e) {
               e.preventDefault();
               e.stopPropagation();
               if (file.status === Dropzone.UPLOADING) {
-                return Dropzone.confirm(_this2.options.dictCancelUploadConfirmation, function () {
-                  return _this2.removeFile(file);
+                return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function() {
+                  return _this.removeFile(file);
                 });
               } else {
-                if (_this2.options.dictRemoveFileConfirmation) {
-                  return Dropzone.confirm(_this2.options.dictRemoveFileConfirmation, function () {
-                    return _this2.removeFile(file);
+                if (_this.options.dictRemoveFileConfirmation) {
+                  return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function() {
+                    return _this.removeFile(file);
                   });
                 } else {
-                  return _this2.removeFile(file);
+                  return _this.removeFile(file);
                 }
               }
             };
-
-            for (var _iterator5 = file.previewElement.querySelectorAll("[data-dz-remove]"), _isArray5 = true, _i5 = 0, _iterator5 = _isArray5 ? _iterator5 : _iterator5[Symbol.iterator]();;) {
-              var _ref4;
-
-              if (_isArray5) {
-                if (_i5 >= _iterator5.length) break;
-                _ref4 = _iterator5[_i5++];
-              } else {
-                _i5 = _iterator5.next();
-                if (_i5.done) break;
-                _ref4 = _i5.value;
-              }
-
-              var removeLink = _ref4;
-
-              removeLink.addEventListener("click", removeFileEvent);
-            }
+          })(this);
+          ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
+          results = [];
+          for (l = 0, len2 = ref2.length; l < len2; l++) {
+            removeLink = ref2[l];
+            results.push(removeLink.addEventListener("click", removeFileEvent));
           }
-        },
-
-
-        // Called whenever a file is removed.
-        removedfile: function removedfile(file) {
-          if (file.previewElement != null && file.previewElement.parentNode != null) {
-            file.previewElement.parentNode.removeChild(file.previewElement);
-          }
-          return this._updateMaxFilesReachedClass();
-        },
-
-
-        // Called when a thumbnail has been generated
-        // Receives `file` and `dataUrl`
-        thumbnail: function thumbnail(file, dataUrl) {
-          if (file.previewElement) {
-            file.previewElement.classList.remove("dz-file-preview");
-            for (var _iterator6 = file.previewElement.querySelectorAll("[data-dz-thumbnail]"), _isArray6 = true, _i6 = 0, _iterator6 = _isArray6 ? _iterator6 : _iterator6[Symbol.iterator]();;) {
-              var _ref5;
-
-              if (_isArray6) {
-                if (_i6 >= _iterator6.length) break;
-                _ref5 = _iterator6[_i6++];
-              } else {
-                _i6 = _iterator6.next();
-                if (_i6.done) break;
-                _ref5 = _i6.value;
-              }
-
-              var thumbnailElement = _ref5;
-
-              thumbnailElement.alt = file.name;
-              thumbnailElement.src = dataUrl;
-            }
-
-            return setTimeout(function () {
-              return file.previewElement.classList.add("dz-image-preview");
-            }, 1);
-          }
-        },
-
-
-        // Called whenever an error occurs
-        // Receives `file` and `message`
-        error: function error(file, message) {
-          if (file.previewElement) {
-            file.previewElement.classList.add("dz-error");
-            if (typeof message !== "String" && message.error) {
-              message = message.error;
-            }
-            for (var _iterator7 = file.previewElement.querySelectorAll("[data-dz-errormessage]"), _isArray7 = true, _i7 = 0, _iterator7 = _isArray7 ? _iterator7 : _iterator7[Symbol.iterator]();;) {
-              var _ref6;
-
-              if (_isArray7) {
-                if (_i7 >= _iterator7.length) break;
-                _ref6 = _iterator7[_i7++];
-              } else {
-                _i7 = _iterator7.next();
-                if (_i7.done) break;
-                _ref6 = _i7.value;
-              }
-
-              var node = _ref6;
-
-              node.textContent = message;
-            }
-          }
-        },
-        errormultiple: function errormultiple() {},
-
-
-        // Called when a file gets processed. Since there is a cue, not all added
-        // files are processed immediately.
-        // Receives `file`
-        processing: function processing(file) {
-          if (file.previewElement) {
-            file.previewElement.classList.add("dz-processing");
-            if (file._removeLink) {
-              return file._removeLink.textContent = this.options.dictCancelUpload;
-            }
-          }
-        },
-        processingmultiple: function processingmultiple() {},
-
-
-        // Called whenever the upload progress gets updated.
-        // Receives `file`, `progress` (percentage 0-100) and `bytesSent`.
-        // To get the total number of bytes of the file, use `file.size`
-        uploadprogress: function uploadprogress(file, progress, bytesSent) {
-          if (file.previewElement) {
-            for (var _iterator8 = file.previewElement.querySelectorAll("[data-dz-uploadprogress]"), _isArray8 = true, _i8 = 0, _iterator8 = _isArray8 ? _iterator8 : _iterator8[Symbol.iterator]();;) {
-              var _ref7;
-
-              if (_isArray8) {
-                if (_i8 >= _iterator8.length) break;
-                _ref7 = _iterator8[_i8++];
-              } else {
-                _i8 = _iterator8.next();
-                if (_i8.done) break;
-                _ref7 = _i8.value;
-              }
-
-              var node = _ref7;
-
-              node.nodeName === 'PROGRESS' ? node.value = progress : node.style.width = progress + "%";
-            }
-          }
-        },
-
-
-        // Called whenever the total upload progress gets updated.
-        // Called with totalUploadProgress (0-100), totalBytes and totalBytesSent
-        totaluploadprogress: function totaluploadprogress() {},
-
-
-        // Called just before the file is sent. Gets the `xhr` object as second
-        // parameter, so you can modify it (for example to add a CSRF token) and a
-        // `formData` object to add additional information.
-        sending: function sending() {},
-        sendingmultiple: function sendingmultiple() {},
-
-
-        // When the complete upload is finished and successful
-        // Receives `file`
-        success: function success(file) {
-          if (file.previewElement) {
-            return file.previewElement.classList.add("dz-success");
-          }
-        },
-        successmultiple: function successmultiple() {},
-
-
-        // When the upload is canceled.
-        canceled: function canceled(file) {
-          return this.emit("error", file, "Upload canceled.");
-        },
-        canceledmultiple: function canceledmultiple() {},
-
-
-        // When the upload is finished, either with success or an error.
-        // Receives `file`
-        complete: function complete(file) {
-          if (file._removeLink) {
-            file._removeLink.textContent = this.options.dictRemoveFile;
-          }
-          if (file.previewElement) {
-            return file.previewElement.classList.add("dz-complete");
-          }
-        },
-        completemultiple: function completemultiple() {},
-        maxfilesexceeded: function maxfilesexceeded() {},
-        maxfilesreached: function maxfilesreached() {},
-        queuecomplete: function queuecomplete() {},
-        addedfiles: function addedfiles() {}
-      };
-
-      this.prototype._thumbnailQueue = [];
-      this.prototype._processingThumbnail = false;
-    }
-
-    // global utility
-
-  }, {
-    key: "extend",
-    value: function extend(target) {
-      for (var _len2 = arguments.length, objects = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        objects[_key2 - 1] = arguments[_key2];
-      }
-
-      for (var _iterator9 = objects, _isArray9 = true, _i9 = 0, _iterator9 = _isArray9 ? _iterator9 : _iterator9[Symbol.iterator]();;) {
-        var _ref8;
-
-        if (_isArray9) {
-          if (_i9 >= _iterator9.length) break;
-          _ref8 = _iterator9[_i9++];
-        } else {
-          _i9 = _iterator9.next();
-          if (_i9.done) break;
-          _ref8 = _i9.value;
+          return results;
         }
+      },
+      removedfile: function(file) {
+        var ref;
+        if (file.previewElement) {
+          if ((ref = file.previewElement) != null) {
+            ref.parentNode.removeChild(file.previewElement);
+          }
+        }
+        return this._updateMaxFilesReachedClass();
+      },
+      thumbnail: function(file, dataUrl) {
+        var j, len, ref, thumbnailElement;
+        if (file.previewElement) {
+          file.previewElement.classList.remove("dz-file-preview");
+          ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+          for (j = 0, len = ref.length; j < len; j++) {
+            thumbnailElement = ref[j];
+            thumbnailElement.alt = file.name;
+            thumbnailElement.src = dataUrl;
+          }
+          return setTimeout(((function(_this) {
+            return function() {
+              return file.previewElement.classList.add("dz-image-preview");
+            };
+          })(this)), 1);
+        }
+      },
+      error: function(file, message) {
+        var j, len, node, ref, results;
+        if (file.previewElement) {
+          file.previewElement.classList.add("dz-error");
+          if (typeof message !== "String" && message.error) {
+            message = message.error;
+          }
+          ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+          results = [];
+          for (j = 0, len = ref.length; j < len; j++) {
+            node = ref[j];
+            results.push(node.textContent = message);
+          }
+          return results;
+        }
+      },
+      errormultiple: noop,
+      processing: function(file) {
+        if (file.previewElement) {
+          file.previewElement.classList.add("dz-processing");
+          if (file._removeLink) {
+            return file._removeLink.textContent = this.options.dictCancelUpload;
+          }
+        }
+      },
+      processingmultiple: noop,
+      uploadprogress: function(file, progress, bytesSent) {
+        var j, len, node, ref, results;
+        if (file.previewElement) {
+          ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
+          results = [];
+          for (j = 0, len = ref.length; j < len; j++) {
+            node = ref[j];
+            if (node.nodeName === 'PROGRESS') {
+              results.push(node.value = progress);
+            } else {
+              results.push(node.style.width = progress + "%");
+            }
+          }
+          return results;
+        }
+      },
+      totaluploadprogress: noop,
+      sending: noop,
+      sendingmultiple: noop,
+      success: function(file) {
+        if (file.previewElement) {
+          return file.previewElement.classList.add("dz-success");
+        }
+      },
+      successmultiple: noop,
+      canceled: function(file) {
+        return this.emit("error", file, "Upload canceled.");
+      },
+      canceledmultiple: noop,
+      complete: function(file) {
+        if (file._removeLink) {
+          file._removeLink.textContent = this.options.dictRemoveFile;
+        }
+        if (file.previewElement) {
+          return file.previewElement.classList.add("dz-complete");
+        }
+      },
+      completemultiple: noop,
+      maxfilesexceeded: noop,
+      maxfilesreached: noop,
+      queuecomplete: noop,
+      addedfiles: noop
+    };
 
-        var object = _ref8;
-
-        for (var key in object) {
-          var val = object[key];
+    extend = function() {
+      var j, key, len, object, objects, target, val;
+      target = arguments[0], objects = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      for (j = 0, len = objects.length; j < len; j++) {
+        object = objects[j];
+        for (key in object) {
+          val = object[key];
           target[key] = val;
         }
       }
       return target;
-    }
-  }]);
+    };
 
-  function Dropzone(el, options) {
-    _classCallCheck(this, Dropzone);
-
-    var _this = _possibleConstructorReturn(this, (Dropzone.__proto__ || Object.getPrototypeOf(Dropzone)).call(this));
-
-    var fallback = void 0,
-        left = void 0;
-    _this.element = el;
-    // For backwards compatibility since the version was in the prototype previously
-    _this.version = Dropzone.version;
-
-    _this.defaultOptions.previewTemplate = _this.defaultOptions.previewTemplate.replace(/\n*/g, "");
-
-    _this.clickableElements = [];
-    _this.listeners = [];
-    _this.files = []; // All files
-
-    if (typeof _this.element === "string") {
-      _this.element = document.querySelector(_this.element);
-    }
-
-    // Not checking if instance of HTMLElement or Element since IE9 is extremely weird.
-    if (!_this.element || _this.element.nodeType == null) {
-      throw new Error("Invalid dropzone element.");
-    }
-
-    if (_this.element.dropzone) {
-      throw new Error("Dropzone already attached.");
-    }
-
-    // Now add this dropzone to the instances.
-    Dropzone.instances.push(_this);
-
-    // Put the dropzone inside the element itself.
-    _this.element.dropzone = _this;
-
-    var elementOptions = (left = Dropzone.optionsForElement(_this.element)) != null ? left : {};
-
-    _this.options = Dropzone.extend({}, _this.defaultOptions, elementOptions, options != null ? options : {});
-
-    // If the browser failed, just call the fallback and leave
-    if (_this.options.forceFallback || !Dropzone.isBrowserSupported()) {
-      var _ret;
-
-      return _ret = _this.options.fallback.call(_this), _possibleConstructorReturn(_this, _ret);
-    }
-
-    // @options.url = @element.getAttribute "action" unless @options.url?
-    if (_this.options.url == null) {
-      _this.options.url = _this.element.getAttribute("action");
-    }
-
-    if (!_this.options.url) {
-      throw new Error("No URL provided.");
-    }
-
-    if (_this.options.acceptedFiles && _this.options.acceptedMimeTypes) {
-      throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
-    }
-
-    if (_this.options.uploadMultiple && _this.options.chunking) {
-      throw new Error('You cannot set both: uploadMultiple and chunking.');
-    }
-
-    // Backwards compatibility
-    if (_this.options.acceptedMimeTypes) {
-      _this.options.acceptedFiles = _this.options.acceptedMimeTypes;
-      delete _this.options.acceptedMimeTypes;
-    }
-
-    // Backwards compatibility
-    if (_this.options.renameFilename != null) {
-      _this.options.renameFile = function (file) {
-        return _this.options.renameFilename.call(_this, file.name, file);
-      };
-    }
-
-    _this.options.method = _this.options.method.toUpperCase();
-
-    if ((fallback = _this.getExistingFallback()) && fallback.parentNode) {
-      // Remove the fallback
-      fallback.parentNode.removeChild(fallback);
-    }
-
-    // Display previews in the previewsContainer element or the Dropzone element unless explicitly set to false
-    if (_this.options.previewsContainer !== false) {
-      if (_this.options.previewsContainer) {
-        _this.previewsContainer = Dropzone.getElement(_this.options.previewsContainer, "previewsContainer");
-      } else {
-        _this.previewsContainer = _this.element;
+    function Dropzone(element1, options) {
+      var elementOptions, fallback, ref;
+      this.element = element1;
+      this.version = Dropzone.version;
+      this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+      this.clickableElements = [];
+      this.listeners = [];
+      this.files = [];
+      if (typeof this.element === "string") {
+        this.element = document.querySelector(this.element);
       }
-    }
-
-    if (_this.options.clickable) {
-      if (_this.options.clickable === true) {
-        _this.clickableElements = [_this.element];
-      } else {
-        _this.clickableElements = Dropzone.getElements(_this.options.clickable, "clickable");
+      if (!(this.element && (this.element.nodeType != null))) {
+        throw new Error("Invalid dropzone element.");
       }
+      if (this.element.dropzone) {
+        throw new Error("Dropzone already attached.");
+      }
+      Dropzone.instances.push(this);
+      this.element.dropzone = this;
+      elementOptions = (ref = Dropzone.optionsForElement(this.element)) != null ? ref : {};
+      this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
+      if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+        return this.options.fallback.call(this);
+      }
+      if (this.options.url == null) {
+        this.options.url = this.element.getAttribute("action");
+      }
+      if (!this.options.url) {
+        throw new Error("No URL provided.");
+      }
+      if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
+        throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+      }
+      if (this.options.acceptedMimeTypes) {
+        this.options.acceptedFiles = this.options.acceptedMimeTypes;
+        delete this.options.acceptedMimeTypes;
+      }
+      if (this.options.renameFilename != null) {
+        this.options.renameFile = (function(_this) {
+          return function(file) {
+            return _this.options.renameFilename.call(_this, file.name, file);
+          };
+        })(this);
+      }
+      this.options.method = this.options.method.toUpperCase();
+      if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
+        fallback.parentNode.removeChild(fallback);
+      }
+      if (this.options.previewsContainer !== false) {
+        if (this.options.previewsContainer) {
+          this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
+        } else {
+          this.previewsContainer = this.element;
+        }
+      }
+      if (this.options.clickable) {
+        if (this.options.clickable === true) {
+          this.clickableElements = [this.element];
+        } else {
+          this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
+        }
+      }
+      this.init();
     }
 
-    _this.init();
-    return _this;
-  }
+    Dropzone.prototype.getAcceptedFiles = function() {
+      var file, j, len, ref, results;
+      ref = this.files;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
+        if (file.accepted) {
+          results.push(file);
+        }
+      }
+      return results;
+    };
 
-  // Returns all files that have been accepted
+    Dropzone.prototype.getRejectedFiles = function() {
+      var file, j, len, ref, results;
+      ref = this.files;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
+        if (!file.accepted) {
+          results.push(file);
+        }
+      }
+      return results;
+    };
 
+    Dropzone.prototype.getFilesWithStatus = function(status) {
+      var file, j, len, ref, results;
+      ref = this.files;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
+        if (file.status === status) {
+          results.push(file);
+        }
+      }
+      return results;
+    };
 
-  _createClass(Dropzone, [{
-    key: "getAcceptedFiles",
-    value: function getAcceptedFiles() {
-      return this.files.filter(function (file) {
-        return file.accepted;
-      }).map(function (file) {
-        return file;
-      });
-    }
-
-    // Returns all files that have been rejected
-    // Not sure when that's going to be useful, but added for completeness.
-
-  }, {
-    key: "getRejectedFiles",
-    value: function getRejectedFiles() {
-      return this.files.filter(function (file) {
-        return !file.accepted;
-      }).map(function (file) {
-        return file;
-      });
-    }
-  }, {
-    key: "getFilesWithStatus",
-    value: function getFilesWithStatus(status) {
-      return this.files.filter(function (file) {
-        return file.status === status;
-      }).map(function (file) {
-        return file;
-      });
-    }
-
-    // Returns all files that are in the queue
-
-  }, {
-    key: "getQueuedFiles",
-    value: function getQueuedFiles() {
+    Dropzone.prototype.getQueuedFiles = function() {
       return this.getFilesWithStatus(Dropzone.QUEUED);
-    }
-  }, {
-    key: "getUploadingFiles",
-    value: function getUploadingFiles() {
+    };
+
+    Dropzone.prototype.getUploadingFiles = function() {
       return this.getFilesWithStatus(Dropzone.UPLOADING);
-    }
-  }, {
-    key: "getAddedFiles",
-    value: function getAddedFiles() {
+    };
+
+    Dropzone.prototype.getAddedFiles = function() {
       return this.getFilesWithStatus(Dropzone.ADDED);
-    }
+    };
 
-    // Files that are either queued or uploading
+    Dropzone.prototype.getActiveFiles = function() {
+      var file, j, len, ref, results;
+      ref = this.files;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
+        if (file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED) {
+          results.push(file);
+        }
+      }
+      return results;
+    };
 
-  }, {
-    key: "getActiveFiles",
-    value: function getActiveFiles() {
-      return this.files.filter(function (file) {
-        return file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED;
-      }).map(function (file) {
-        return file;
-      });
-    }
-
-    // The function that gets called when Dropzone is initialized. You
-    // can (and should) setup event listeners inside this function.
-
-  }, {
-    key: "init",
-    value: function init() {
-      var _this3 = this;
-
-      // In case it isn't set already
+    Dropzone.prototype.init = function() {
+      var eventName, j, len, noPropagation, ref, ref1, setupHiddenFileInput;
       if (this.element.tagName === "form") {
         this.element.setAttribute("enctype", "multipart/form-data");
       }
-
       if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
         this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
       }
-
       if (this.clickableElements.length) {
-        var setupHiddenFileInput = function setupHiddenFileInput() {
-          if (_this3.hiddenFileInput) {
-            _this3.hiddenFileInput.parentNode.removeChild(_this3.hiddenFileInput);
-          }
-          _this3.hiddenFileInput = document.createElement("input");
-          _this3.hiddenFileInput.setAttribute("type", "file");
-          if (_this3.options.maxFiles === null || _this3.options.maxFiles > 1) {
-            _this3.hiddenFileInput.setAttribute("multiple", "multiple");
-          }
-          _this3.hiddenFileInput.className = "dz-hidden-input";
-
-          if (_this3.options.acceptedFiles !== null) {
-            _this3.hiddenFileInput.setAttribute("accept", _this3.options.acceptedFiles);
-          }
-          if (_this3.options.capture !== null) {
-            _this3.hiddenFileInput.setAttribute("capture", _this3.options.capture);
-          }
-
-          // Not setting `display="none"` because some browsers don't accept clicks
-          // on elements that aren't displayed.
-          _this3.hiddenFileInput.style.visibility = "hidden";
-          _this3.hiddenFileInput.style.position = "absolute";
-          _this3.hiddenFileInput.style.top = "0";
-          _this3.hiddenFileInput.style.left = "0";
-          _this3.hiddenFileInput.style.height = "0";
-          _this3.hiddenFileInput.style.width = "0";
-          document.querySelector(_this3.options.hiddenInputContainer).appendChild(_this3.hiddenFileInput);
-          return _this3.hiddenFileInput.addEventListener("change", function () {
-            var files = _this3.hiddenFileInput.files;
-
-            if (files.length) {
-              for (var _iterator10 = files, _isArray10 = true, _i10 = 0, _iterator10 = _isArray10 ? _iterator10 : _iterator10[Symbol.iterator]();;) {
-                var _ref9;
-
-                if (_isArray10) {
-                  if (_i10 >= _iterator10.length) break;
-                  _ref9 = _iterator10[_i10++];
-                } else {
-                  _i10 = _iterator10.next();
-                  if (_i10.done) break;
-                  _ref9 = _i10.value;
-                }
-
-                var file = _ref9;
-
-                _this3.addFile(file);
-              }
+        setupHiddenFileInput = (function(_this) {
+          return function() {
+            if (_this.hiddenFileInput) {
+              _this.hiddenFileInput.parentNode.removeChild(_this.hiddenFileInput);
             }
-            _this3.emit("addedfiles", files);
-            return setupHiddenFileInput();
-          });
-        };
+            _this.hiddenFileInput = document.createElement("input");
+            _this.hiddenFileInput.setAttribute("type", "file");
+            if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
+              _this.hiddenFileInput.setAttribute("multiple", "multiple");
+            }
+            _this.hiddenFileInput.className = "dz-hidden-input";
+            if (_this.options.acceptedFiles != null) {
+              _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
+            }
+            if (_this.options.capture != null) {
+              _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
+            }
+            _this.hiddenFileInput.style.visibility = "hidden";
+            _this.hiddenFileInput.style.position = "absolute";
+            _this.hiddenFileInput.style.top = "0";
+            _this.hiddenFileInput.style.left = "0";
+            _this.hiddenFileInput.style.height = "0";
+            _this.hiddenFileInput.style.width = "0";
+            document.querySelector(_this.options.hiddenInputContainer).appendChild(_this.hiddenFileInput);
+            return _this.hiddenFileInput.addEventListener("change", function() {
+              var file, files, j, len;
+              files = _this.hiddenFileInput.files;
+              if (files.length) {
+                for (j = 0, len = files.length; j < len; j++) {
+                  file = files[j];
+                  _this.addFile(file);
+                }
+              }
+              _this.emit("addedfiles", files);
+              return setupHiddenFileInput();
+            });
+          };
+        })(this);
         setupHiddenFileInput();
       }
-
-      this.URL = window.URL !== null ? window.URL : window.webkitURL;
-
-      // Setup all event listeners on the Dropzone object itself.
-      // They're not in @setupEventListeners() because they shouldn't be removed
-      // again when the dropzone gets disabled.
-      for (var _iterator11 = this.events, _isArray11 = true, _i11 = 0, _iterator11 = _isArray11 ? _iterator11 : _iterator11[Symbol.iterator]();;) {
-        var _ref10;
-
-        if (_isArray11) {
-          if (_i11 >= _iterator11.length) break;
-          _ref10 = _iterator11[_i11++];
-        } else {
-          _i11 = _iterator11.next();
-          if (_i11.done) break;
-          _ref10 = _i11.value;
-        }
-
-        var eventName = _ref10;
-
+      this.URL = (ref = window.URL) != null ? ref : window.webkitURL;
+      ref1 = this.events;
+      for (j = 0, len = ref1.length; j < len; j++) {
+        eventName = ref1[j];
         this.on(eventName, this.options[eventName]);
       }
-
-      this.on("uploadprogress", function () {
-        return _this3.updateTotalUploadProgress();
-      });
-
-      this.on("removedfile", function () {
-        return _this3.updateTotalUploadProgress();
-      });
-
-      this.on("canceled", function (file) {
-        return _this3.emit("complete", file);
-      });
-
-      // Emit a `queuecomplete` event if all files finished uploading.
-      this.on("complete", function (file) {
-        if (_this3.getAddedFiles().length === 0 && _this3.getUploadingFiles().length === 0 && _this3.getQueuedFiles().length === 0) {
-          // This needs to be deferred so that `queuecomplete` really triggers after `complete`
-          return setTimeout(function () {
-            return _this3.emit("queuecomplete");
-          }, 0);
-        }
-      });
-
-      var noPropagation = function noPropagation(e) {
+      this.on("uploadprogress", (function(_this) {
+        return function() {
+          return _this.updateTotalUploadProgress();
+        };
+      })(this));
+      this.on("removedfile", (function(_this) {
+        return function() {
+          return _this.updateTotalUploadProgress();
+        };
+      })(this));
+      this.on("canceled", (function(_this) {
+        return function(file) {
+          return _this.emit("complete", file);
+        };
+      })(this));
+      this.on("complete", (function(_this) {
+        return function(file) {
+          if (_this.getAddedFiles().length === 0 && _this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
+            return setTimeout((function() {
+              return _this.emit("queuecomplete");
+            }), 0);
+          }
+        };
+      })(this));
+      noPropagation = function(e) {
         e.stopPropagation();
         if (e.preventDefault) {
           return e.preventDefault();
@@ -54735,106 +53932,91 @@ var Dropzone = function (_Emitter) {
           return e.returnValue = false;
         }
       };
-
-      // Create the listeners
-      this.listeners = [{
-        element: this.element,
-        events: {
-          "dragstart": function dragstart(e) {
-            return _this3.emit("dragstart", e);
-          },
-          "dragenter": function dragenter(e) {
-            noPropagation(e);
-            return _this3.emit("dragenter", e);
-          },
-          "dragover": function dragover(e) {
-            // Makes it possible to drag files from chrome's download bar
-            // http://stackoverflow.com/questions/19526430/drag-and-drop-file-uploads-from-chrome-downloads-bar
-            // Try is required to prevent bug in Internet Explorer 11 (SCRIPT65535 exception)
-            var efct = void 0;
-            try {
-              efct = e.dataTransfer.effectAllowed;
-            } catch (error) {}
-            e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
-
-            noPropagation(e);
-            return _this3.emit("dragover", e);
-          },
-          "dragleave": function dragleave(e) {
-            return _this3.emit("dragleave", e);
-          },
-          "drop": function drop(e) {
-            noPropagation(e);
-            return _this3.drop(e);
-          },
-          "dragend": function dragend(e) {
-            return _this3.emit("dragend", e);
-          }
-
-          // This is disabled right now, because the browsers don't implement it properly.
-          // "paste": (e) =>
-          //   noPropagation e
-          //   @paste e
-        } }];
-
-      this.clickableElements.forEach(function (clickableElement) {
-        return _this3.listeners.push({
-          element: clickableElement,
+      this.listeners = [
+        {
+          element: this.element,
           events: {
-            "click": function click(evt) {
-              // Only the actual dropzone or the message element should trigger file selection
-              if (clickableElement !== _this3.element || evt.target === _this3.element || Dropzone.elementInside(evt.target, _this3.element.querySelector(".dz-message"))) {
-                _this3.hiddenFileInput.click(); // Forward the click
-              }
-              return true;
-            }
+            "dragstart": (function(_this) {
+              return function(e) {
+                return _this.emit("dragstart", e);
+              };
+            })(this),
+            "dragenter": (function(_this) {
+              return function(e) {
+                noPropagation(e);
+                return _this.emit("dragenter", e);
+              };
+            })(this),
+            "dragover": (function(_this) {
+              return function(e) {
+                var efct;
+                try {
+                  efct = e.dataTransfer.effectAllowed;
+                } catch (undefined) {}
+                e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+                noPropagation(e);
+                return _this.emit("dragover", e);
+              };
+            })(this),
+            "dragleave": (function(_this) {
+              return function(e) {
+                return _this.emit("dragleave", e);
+              };
+            })(this),
+            "drop": (function(_this) {
+              return function(e) {
+                noPropagation(e);
+                return _this.drop(e);
+              };
+            })(this),
+            "dragend": (function(_this) {
+              return function(e) {
+                return _this.emit("dragend", e);
+              };
+            })(this)
           }
-        });
-      });
-
+        }
+      ];
+      this.clickableElements.forEach((function(_this) {
+        return function(clickableElement) {
+          return _this.listeners.push({
+            element: clickableElement,
+            events: {
+              "click": function(evt) {
+                if ((clickableElement !== _this.element) || (evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message")))) {
+                  _this.hiddenFileInput.click();
+                }
+                return true;
+              }
+            }
+          });
+        };
+      })(this));
       this.enable();
-
       return this.options.init.call(this);
-    }
+    };
 
-    // Not fully tested yet
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
+    Dropzone.prototype.destroy = function() {
+      var ref;
       this.disable();
       this.removeAllFiles(true);
-      if (this.hiddenFileInput != null ? this.hiddenFileInput.parentNode : undefined) {
+      if ((ref = this.hiddenFileInput) != null ? ref.parentNode : void 0) {
         this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
         this.hiddenFileInput = null;
       }
       delete this.element.dropzone;
       return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
-    }
-  }, {
-    key: "updateTotalUploadProgress",
-    value: function updateTotalUploadProgress() {
-      var totalUploadProgress = void 0;
-      var totalBytesSent = 0;
-      var totalBytes = 0;
+    };
 
-      var activeFiles = this.getActiveFiles();
-
+    Dropzone.prototype.updateTotalUploadProgress = function() {
+      var activeFiles, file, j, len, ref, totalBytes, totalBytesSent, totalUploadProgress;
+      totalBytesSent = 0;
+      totalBytes = 0;
+      activeFiles = this.getActiveFiles();
       if (activeFiles.length) {
-        for (var _iterator12 = this.getActiveFiles(), _isArray12 = true, _i12 = 0, _iterator12 = _isArray12 ? _iterator12 : _iterator12[Symbol.iterator]();;) {
-          var _ref11;
-
-          if (_isArray12) {
-            if (_i12 >= _iterator12.length) break;
-            _ref11 = _iterator12[_i12++];
-          } else {
-            _i12 = _iterator12.next();
-            if (_i12.done) break;
-            _ref11 = _i12.value;
-          }
-
-          var file = _ref11;
-
+        ref = this.getActiveFiles();
+        for (j = 0, len = ref.length; j < len; j++) {
+          file = ref[j];
           totalBytesSent += file.upload.bytesSent;
           totalBytes += file.upload.total;
         }
@@ -54842,198 +54024,149 @@ var Dropzone = function (_Emitter) {
       } else {
         totalUploadProgress = 100;
       }
-
       return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
-    }
+    };
 
-    // @options.paramName can be a function taking one parameter rather than a string.
-    // A parameter name for a file is obtained simply by calling this with an index number.
-
-  }, {
-    key: "_getParamName",
-    value: function _getParamName(n) {
+    Dropzone.prototype._getParamName = function(n) {
       if (typeof this.options.paramName === "function") {
         return this.options.paramName(n);
       } else {
         return "" + this.options.paramName + (this.options.uploadMultiple ? "[" + n + "]" : "");
       }
-    }
+    };
 
-    // If @options.renameFile is a function,
-    // the function will be used to rename the file.name before appending it to the formData
-
-  }, {
-    key: "_renameFile",
-    value: function _renameFile(file) {
+    Dropzone.prototype._renameFile = function(file) {
       if (typeof this.options.renameFile !== "function") {
         return file.name;
       }
       return this.options.renameFile(file);
-    }
+    };
 
-    // Returns a form that can be used as fallback if the browser does not support DragnDrop
-    //
-    // If the dropzone is already a form, only the input field and button are returned. Otherwise a complete form element is provided.
-    // This code has to pass in IE7 :(
-
-  }, {
-    key: "getFallbackForm",
-    value: function getFallbackForm() {
-      var existingFallback = void 0,
-          form = void 0;
+    Dropzone.prototype.getFallbackForm = function() {
+      var existingFallback, fields, fieldsString, form;
       if (existingFallback = this.getExistingFallback()) {
         return existingFallback;
       }
-
-      var fieldsString = "<div class=\"dz-fallback\">";
+      fieldsString = "<div class=\"dz-fallback\">";
       if (this.options.dictFallbackText) {
         fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
       }
-      fieldsString += "<input type=\"file\" name=\"" + this._getParamName(0) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : undefined) + " /><input type=\"submit\" value=\"Upload!\"></div>";
-
-      var fields = Dropzone.createElement(fieldsString);
+      fieldsString += "<input type=\"file\" name=\"" + (this._getParamName(0)) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " /><input type=\"submit\" value=\"Upload!\"></div>";
+      fields = Dropzone.createElement(fieldsString);
       if (this.element.tagName !== "FORM") {
         form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
         form.appendChild(fields);
       } else {
-        // Make sure that the enctype and method attributes are set properly
         this.element.setAttribute("enctype", "multipart/form-data");
         this.element.setAttribute("method", this.options.method);
       }
       return form != null ? form : fields;
-    }
+    };
 
-    // Returns the fallback elements if they exist already
-    //
-    // This code has to pass in IE7 :(
-
-  }, {
-    key: "getExistingFallback",
-    value: function getExistingFallback() {
-      var getFallback = function getFallback(elements) {
-        for (var _iterator13 = elements, _isArray13 = true, _i13 = 0, _iterator13 = _isArray13 ? _iterator13 : _iterator13[Symbol.iterator]();;) {
-          var _ref12;
-
-          if (_isArray13) {
-            if (_i13 >= _iterator13.length) break;
-            _ref12 = _iterator13[_i13++];
-          } else {
-            _i13 = _iterator13.next();
-            if (_i13.done) break;
-            _ref12 = _i13.value;
-          }
-
-          var el = _ref12;
-
+    Dropzone.prototype.getExistingFallback = function() {
+      var fallback, getFallback, j, len, ref, tagName;
+      getFallback = function(elements) {
+        var el, j, len;
+        for (j = 0, len = elements.length; j < len; j++) {
+          el = elements[j];
           if (/(^| )fallback($| )/.test(el.className)) {
             return el;
           }
         }
       };
-
-      var _arr = ["div", "form"];
-      for (var _i14 = 0; _i14 < _arr.length; _i14++) {
-        var tagName = _arr[_i14];
-        var fallback;
+      ref = ["div", "form"];
+      for (j = 0, len = ref.length; j < len; j++) {
+        tagName = ref[j];
         if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
           return fallback;
         }
       }
-    }
+    };
 
-    // Activates all listeners stored in @listeners
-
-  }, {
-    key: "setupEventListeners",
-    value: function setupEventListeners() {
-      return this.listeners.map(function (elementListeners) {
-        return function () {
-          var result = [];
-          for (var event in elementListeners.events) {
-            var listener = elementListeners.events[event];
-            result.push(elementListeners.element.addEventListener(event, listener, false));
+    Dropzone.prototype.setupEventListeners = function() {
+      var elementListeners, event, j, len, listener, ref, results;
+      ref = this.listeners;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        elementListeners = ref[j];
+        results.push((function() {
+          var ref1, results1;
+          ref1 = elementListeners.events;
+          results1 = [];
+          for (event in ref1) {
+            listener = ref1[event];
+            results1.push(elementListeners.element.addEventListener(event, listener, false));
           }
-          return result;
-        }();
-      });
-    }
+          return results1;
+        })());
+      }
+      return results;
+    };
 
-    // Deactivates all listeners stored in @listeners
-
-  }, {
-    key: "removeEventListeners",
-    value: function removeEventListeners() {
-      return this.listeners.map(function (elementListeners) {
-        return function () {
-          var result = [];
-          for (var event in elementListeners.events) {
-            var listener = elementListeners.events[event];
-            result.push(elementListeners.element.removeEventListener(event, listener, false));
+    Dropzone.prototype.removeEventListeners = function() {
+      var elementListeners, event, j, len, listener, ref, results;
+      ref = this.listeners;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        elementListeners = ref[j];
+        results.push((function() {
+          var ref1, results1;
+          ref1 = elementListeners.events;
+          results1 = [];
+          for (event in ref1) {
+            listener = ref1[event];
+            results1.push(elementListeners.element.removeEventListener(event, listener, false));
           }
-          return result;
-        }();
-      });
-    }
+          return results1;
+        })());
+      }
+      return results;
+    };
 
-    // Removes all event listeners and cancels all files in the queue or being processed.
-
-  }, {
-    key: "disable",
-    value: function disable() {
-      var _this4 = this;
-
-      this.clickableElements.forEach(function (element) {
+    Dropzone.prototype.disable = function() {
+      var file, j, len, ref, results;
+      this.clickableElements.forEach(function(element) {
         return element.classList.remove("dz-clickable");
       });
       this.removeEventListeners();
+      ref = this.files;
+      results = [];
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
+        results.push(this.cancelUpload(file));
+      }
+      return results;
+    };
 
-      return this.files.map(function (file) {
-        return _this4.cancelUpload(file);
-      });
-    }
-  }, {
-    key: "enable",
-    value: function enable() {
-      this.clickableElements.forEach(function (element) {
+    Dropzone.prototype.enable = function() {
+      this.clickableElements.forEach(function(element) {
         return element.classList.add("dz-clickable");
       });
       return this.setupEventListeners();
-    }
+    };
 
-    // Returns a nicely formatted filesize
-
-  }, {
-    key: "filesize",
-    value: function filesize(size) {
-      var selectedSize = 0;
-      var selectedUnit = "b";
-
+    Dropzone.prototype.filesize = function(size) {
+      var cutoff, i, j, len, selectedSize, selectedUnit, unit, units;
+      selectedSize = 0;
+      selectedUnit = "b";
       if (size > 0) {
-        var units = ['tb', 'gb', 'mb', 'kb', 'b'];
-
-        for (var i = 0; i < units.length; i++) {
-          var unit = units[i];
-          var cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
-
+        units = ['tb', 'gb', 'mb', 'kb', 'b'];
+        for (i = j = 0, len = units.length; j < len; i = ++j) {
+          unit = units[i];
+          cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
           if (size >= cutoff) {
             selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
             selectedUnit = unit;
             break;
           }
         }
-
-        selectedSize = Math.round(10 * selectedSize) / 10; // Cutting of digits
+        selectedSize = Math.round(10 * selectedSize) / 10;
       }
-
       return "<strong>" + selectedSize + "</strong> " + this.options.dictFileSizeUnits[selectedUnit];
-    }
+    };
 
-    // Adds or removes the `dz-max-files-reached` class from the form.
-
-  }, {
-    key: "_updateMaxFilesReachedClass",
-    value: function _updateMaxFilesReachedClass() {
-      if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+    Dropzone.prototype._updateMaxFilesReachedClass = function() {
+      if ((this.options.maxFiles != null) && this.getAcceptedFiles().length >= this.options.maxFiles) {
         if (this.getAcceptedFiles().length === this.options.maxFiles) {
           this.emit('maxfilesreached', this.files);
         }
@@ -55041,1176 +54174,614 @@ var Dropzone = function (_Emitter) {
       } else {
         return this.element.classList.remove("dz-max-files-reached");
       }
-    }
-  }, {
-    key: "drop",
-    value: function drop(e) {
+    };
+
+    Dropzone.prototype.drop = function(e) {
+      var files, items;
       if (!e.dataTransfer) {
         return;
       }
       this.emit("drop", e);
-
-      var files = e.dataTransfer.files;
-
+      files = e.dataTransfer.files;
       this.emit("addedfiles", files);
-
-      // Even if it's a folder, files.length will contain the folders.
       if (files.length) {
-        var items = e.dataTransfer.items;
-
-        if (items && items.length && items[0].webkitGetAsEntry != null) {
-          // The browser supports dropping of folders, so handle items instead of files
+        items = e.dataTransfer.items;
+        if (items && items.length && (items[0].webkitGetAsEntry != null)) {
           this._addFilesFromItems(items);
         } else {
           this.handleFiles(files);
         }
       }
-    }
-  }, {
-    key: "paste",
-    value: function paste(e) {
-      if (__guard__(e != null ? e.clipboardData : undefined, function (x) {
-        return x.items;
-      }) == null) {
+    };
+
+    Dropzone.prototype.paste = function(e) {
+      var items, ref;
+      if ((e != null ? (ref = e.clipboardData) != null ? ref.items : void 0 : void 0) == null) {
         return;
       }
-
       this.emit("paste", e);
-      var items = e.clipboardData.items;
-
-
+      items = e.clipboardData.items;
       if (items.length) {
         return this._addFilesFromItems(items);
       }
-    }
-  }, {
-    key: "handleFiles",
-    value: function handleFiles(files) {
-      var _this5 = this;
+    };
 
-      return files.map(function (file) {
-        return _this5.addFile(file);
-      });
-    }
+    Dropzone.prototype.handleFiles = function(files) {
+      var file, j, len, results;
+      results = [];
+      for (j = 0, len = files.length; j < len; j++) {
+        file = files[j];
+        results.push(this.addFile(file));
+      }
+      return results;
+    };
 
-    // When a folder is dropped (or files are pasted), items must be handled
-    // instead of files.
-
-  }, {
-    key: "_addFilesFromItems",
-    value: function _addFilesFromItems(items) {
-      var _this6 = this;
-
-      return function () {
-        var result = [];
-        for (var _iterator14 = items, _isArray14 = true, _i15 = 0, _iterator14 = _isArray14 ? _iterator14 : _iterator14[Symbol.iterator]();;) {
-          var _ref13;
-
-          if (_isArray14) {
-            if (_i15 >= _iterator14.length) break;
-            _ref13 = _iterator14[_i15++];
+    Dropzone.prototype._addFilesFromItems = function(items) {
+      var entry, item, j, len, results;
+      results = [];
+      for (j = 0, len = items.length; j < len; j++) {
+        item = items[j];
+        if ((item.webkitGetAsEntry != null) && (entry = item.webkitGetAsEntry())) {
+          if (entry.isFile) {
+            results.push(this.addFile(item.getAsFile()));
+          } else if (entry.isDirectory) {
+            results.push(this._addFilesFromDirectory(entry, entry.name));
           } else {
-            _i15 = _iterator14.next();
-            if (_i15.done) break;
-            _ref13 = _i15.value;
+            results.push(void 0);
           }
-
-          var item = _ref13;
-
-          var entry;
-          if (item.webkitGetAsEntry != null && (entry = item.webkitGetAsEntry())) {
-            if (entry.isFile) {
-              result.push(_this6.addFile(item.getAsFile()));
-            } else if (entry.isDirectory) {
-              // Append all files from that directory to files
-              result.push(_this6._addFilesFromDirectory(entry, entry.name));
-            } else {
-              result.push(undefined);
-            }
-          } else if (item.getAsFile != null) {
-            if (item.kind == null || item.kind === "file") {
-              result.push(_this6.addFile(item.getAsFile()));
-            } else {
-              result.push(undefined);
-            }
+        } else if (item.getAsFile != null) {
+          if ((item.kind == null) || item.kind === "file") {
+            results.push(this.addFile(item.getAsFile()));
           } else {
-            result.push(undefined);
+            results.push(void 0);
           }
+        } else {
+          results.push(void 0);
         }
-        return result;
-      }();
-    }
+      }
+      return results;
+    };
 
-    // Goes through the directory, and adds each file it finds recursively
-
-  }, {
-    key: "_addFilesFromDirectory",
-    value: function _addFilesFromDirectory(directory, path) {
-      var _this7 = this;
-
-      var dirReader = directory.createReader();
-
-      var errorHandler = function errorHandler(error) {
-        return __guardMethod__(console, 'log', function (o) {
-          return o.log(error);
-        });
+    Dropzone.prototype._addFilesFromDirectory = function(directory, path) {
+      var dirReader, errorHandler, readEntries;
+      dirReader = directory.createReader();
+      errorHandler = function(error) {
+        return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log(error) : void 0 : void 0;
       };
-
-      var readEntries = function readEntries() {
-        return dirReader.readEntries(function (entries) {
-          if (entries.length > 0) {
-            for (var _iterator15 = entries, _isArray15 = true, _i16 = 0, _iterator15 = _isArray15 ? _iterator15 : _iterator15[Symbol.iterator]();;) {
-              var _ref14;
-
-              if (_isArray15) {
-                if (_i16 >= _iterator15.length) break;
-                _ref14 = _iterator15[_i16++];
-              } else {
-                _i16 = _iterator15.next();
-                if (_i16.done) break;
-                _ref14 = _i16.value;
+      readEntries = (function(_this) {
+        return function() {
+          return dirReader.readEntries(function(entries) {
+            var entry, j, len;
+            if (entries.length > 0) {
+              for (j = 0, len = entries.length; j < len; j++) {
+                entry = entries[j];
+                if (entry.isFile) {
+                  entry.file(function(file) {
+                    if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+                      return;
+                    }
+                    file.fullPath = path + "/" + file.name;
+                    return _this.addFile(file);
+                  });
+                } else if (entry.isDirectory) {
+                  _this._addFilesFromDirectory(entry, path + "/" + entry.name);
+                }
               }
-
-              var entry = _ref14;
-
-              if (entry.isFile) {
-                entry.file(function (file) {
-                  if (_this7.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
-                    return;
-                  }
-                  file.fullPath = path + "/" + file.name;
-                  return _this7.addFile(file);
-                });
-              } else if (entry.isDirectory) {
-                _this7._addFilesFromDirectory(entry, path + "/" + entry.name);
-              }
+              readEntries();
             }
-
-            // Recursively call readEntries() again, since browser only handle
-            // the first 100 entries.
-            // See: https://developer.mozilla.org/en-US/docs/Web/API/DirectoryReader#readEntries
-            readEntries();
-          }
-          return null;
-        }, errorHandler);
-      };
-
+            return null;
+          }, errorHandler);
+        };
+      })(this);
       return readEntries();
-    }
+    };
 
-    // If `done()` is called without argument the file is accepted
-    // If you call it with an error message, the file is rejected
-    // (This allows for asynchronous validation)
-    //
-    // This function checks the filesize, and if the file.type passes the
-    // `acceptedFiles` check.
-
-  }, {
-    key: "accept",
-    value: function accept(file, done) {
+    Dropzone.prototype.accept = function(file, done) {
       if (file.size > this.options.maxFilesize * 1024 * 1024) {
         return done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
       } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
         return done(this.options.dictInvalidFileType);
-      } else if (this.options.maxFiles != null && this.getAcceptedFiles().length >= this.options.maxFiles) {
+      } else if ((this.options.maxFiles != null) && this.getAcceptedFiles().length >= this.options.maxFiles) {
         done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
         return this.emit("maxfilesexceeded", file);
       } else {
         return this.options.accept.call(this, file, done);
       }
-    }
-  }, {
-    key: "addFile",
-    value: function addFile(file) {
-      var _this8 = this;
+    };
 
+    Dropzone.prototype.addFile = function(file) {
       file.upload = {
-        uuid: Dropzone.uuidv4(),
         progress: 0,
-        // Setting the total upload size to file.size for the beginning
-        // It's actual different than the size to be transmitted.
         total: file.size,
         bytesSent: 0,
-        filename: this._renameFile(file),
-        chunked: this.options.chunking && (this.options.forceChunking || file.size > this.options.chunkSize),
-        totalChunkCount: Math.ceil(file.size / this.options.chunkSize)
+        filename: this._renameFile(file)
       };
       this.files.push(file);
-
       file.status = Dropzone.ADDED;
-
       this.emit("addedfile", file);
-
       this._enqueueThumbnail(file);
+      return this.accept(file, (function(_this) {
+        return function(error) {
+          if (error) {
+            file.accepted = false;
+            _this._errorProcessing([file], error);
+          } else {
+            file.accepted = true;
+            if (_this.options.autoQueue) {
+              _this.enqueueFile(file);
+            }
+          }
+          return _this._updateMaxFilesReachedClass();
+        };
+      })(this));
+    };
 
-      return this.accept(file, function (error) {
-        if (error) {
-          file.accepted = false;
-          _this8._errorProcessing([file], error); // Will set the file.status
-        } else {
-          file.accepted = true;
-          if (_this8.options.autoQueue) {
-            _this8.enqueueFile(file);
-          } // Will set .accepted = true
-        }
-        return _this8._updateMaxFilesReachedClass();
-      });
-    }
-
-    // Wrapper for enqueueFile
-
-  }, {
-    key: "enqueueFiles",
-    value: function enqueueFiles(files) {
-      for (var _iterator16 = files, _isArray16 = true, _i17 = 0, _iterator16 = _isArray16 ? _iterator16 : _iterator16[Symbol.iterator]();;) {
-        var _ref15;
-
-        if (_isArray16) {
-          if (_i17 >= _iterator16.length) break;
-          _ref15 = _iterator16[_i17++];
-        } else {
-          _i17 = _iterator16.next();
-          if (_i17.done) break;
-          _ref15 = _i17.value;
-        }
-
-        var file = _ref15;
-
+    Dropzone.prototype.enqueueFiles = function(files) {
+      var file, j, len;
+      for (j = 0, len = files.length; j < len; j++) {
+        file = files[j];
         this.enqueueFile(file);
       }
       return null;
-    }
-  }, {
-    key: "enqueueFile",
-    value: function enqueueFile(file) {
-      var _this9 = this;
+    };
 
+    Dropzone.prototype.enqueueFile = function(file) {
       if (file.status === Dropzone.ADDED && file.accepted === true) {
         file.status = Dropzone.QUEUED;
         if (this.options.autoProcessQueue) {
-          return setTimeout(function () {
-            return _this9.processQueue();
-          }, 0); // Deferring the call
+          return setTimeout(((function(_this) {
+            return function() {
+              return _this.processQueue();
+            };
+          })(this)), 0);
         }
       } else {
         throw new Error("This file can't be queued because it has already been processed or was rejected.");
       }
-    }
-  }, {
-    key: "_enqueueThumbnail",
-    value: function _enqueueThumbnail(file) {
-      var _this10 = this;
+    };
 
+    Dropzone.prototype._thumbnailQueue = [];
+
+    Dropzone.prototype._processingThumbnail = false;
+
+    Dropzone.prototype._enqueueThumbnail = function(file) {
       if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
         this._thumbnailQueue.push(file);
-        return setTimeout(function () {
-          return _this10._processThumbnailQueue();
-        }, 0); // Deferring the call
+        return setTimeout(((function(_this) {
+          return function() {
+            return _this._processThumbnailQueue();
+          };
+        })(this)), 0);
       }
-    }
-  }, {
-    key: "_processThumbnailQueue",
-    value: function _processThumbnailQueue() {
-      var _this11 = this;
+    };
 
+    Dropzone.prototype._processThumbnailQueue = function() {
+      var file;
       if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
         return;
       }
-
       this._processingThumbnail = true;
-      var file = this._thumbnailQueue.shift();
-      return this.createThumbnail(file, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, true, function (dataUrl) {
-        _this11.emit("thumbnail", file, dataUrl);
-        _this11._processingThumbnail = false;
-        return _this11._processThumbnailQueue();
-      });
-    }
+      file = this._thumbnailQueue.shift();
+      return this.createThumbnail(file, this.options.thumbnailWidth, this.options.thumbnailHeight, this.options.thumbnailMethod, true, (function(_this) {
+        return function(dataUrl) {
+          _this.emit("thumbnail", file, dataUrl);
+          _this._processingThumbnail = false;
+          return _this._processThumbnailQueue();
+        };
+      })(this));
+    };
 
-    // Can be called by the user to remove a file
-
-  }, {
-    key: "removeFile",
-    value: function removeFile(file) {
+    Dropzone.prototype.removeFile = function(file) {
       if (file.status === Dropzone.UPLOADING) {
         this.cancelUpload(file);
       }
       this.files = without(this.files, file);
-
       this.emit("removedfile", file);
       if (this.files.length === 0) {
         return this.emit("reset");
       }
-    }
+    };
 
-    // Removes all files that aren't currently processed from the list
-
-  }, {
-    key: "removeAllFiles",
-    value: function removeAllFiles(cancelIfNecessary) {
-      // Create a copy of files since removeFile() changes the @files array.
+    Dropzone.prototype.removeAllFiles = function(cancelIfNecessary) {
+      var file, j, len, ref;
       if (cancelIfNecessary == null) {
         cancelIfNecessary = false;
       }
-      for (var _iterator17 = this.files.slice(), _isArray17 = true, _i18 = 0, _iterator17 = _isArray17 ? _iterator17 : _iterator17[Symbol.iterator]();;) {
-        var _ref16;
-
-        if (_isArray17) {
-          if (_i18 >= _iterator17.length) break;
-          _ref16 = _iterator17[_i18++];
-        } else {
-          _i18 = _iterator17.next();
-          if (_i18.done) break;
-          _ref16 = _i18.value;
-        }
-
-        var file = _ref16;
-
+      ref = this.files.slice();
+      for (j = 0, len = ref.length; j < len; j++) {
+        file = ref[j];
         if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
           this.removeFile(file);
         }
       }
       return null;
-    }
+    };
 
-    // Resizes an image before it gets sent to the server. This function is the default behavior of
-    // `options.transformFile` if `resizeWidth` or `resizeHeight` are set. The callback is invoked with
-    // the resized blob.
-
-  }, {
-    key: "resizeImage",
-    value: function resizeImage(file, width, height, resizeMethod, callback) {
-      var _this12 = this;
-
-      return this.createThumbnail(file, width, height, resizeMethod, false, function (dataUrl, canvas) {
-        if (canvas === null) {
-          // The image has not been resized
-          return callback(file);
-        } else {
-          var resizeMimeType = _this12.options.resizeMimeType;
-
-          if (resizeMimeType == null) {
-            resizeMimeType = file.type;
+    Dropzone.prototype.resizeImage = function(file, width, height, resizeMethod, callback) {
+      return this.createThumbnail(file, width, height, resizeMethod, false, (function(_this) {
+        return function(dataUrl, canvas) {
+          var resizeMimeType, resizedDataURL;
+          if (canvas === null) {
+            return callback(file);
+          } else {
+            resizeMimeType = _this.options.resizeMimeType;
+            if (resizeMimeType == null) {
+              resizeMimeType = file.type;
+            }
+            resizedDataURL = canvas.toDataURL(resizeMimeType, _this.options.resizeQuality);
+            if (resizeMimeType === 'image/jpeg' || resizeMimeType === 'image/jpg') {
+              resizedDataURL = ExifRestore.restore(file.dataURL, resizedDataURL);
+            }
+            return callback(Dropzone.dataURItoBlob(resizedDataURL));
           }
-          var resizedDataURL = canvas.toDataURL(resizeMimeType, _this12.options.resizeQuality);
-          if (resizeMimeType === 'image/jpeg' || resizeMimeType === 'image/jpg') {
-            // Now add the original EXIF information
-            resizedDataURL = ExifRestore.restore(file.dataURL, resizedDataURL);
+        };
+      })(this));
+    };
+
+    Dropzone.prototype.createThumbnail = function(file, width, height, resizeMethod, fixOrientation, callback) {
+      var fileReader;
+      fileReader = new FileReader;
+      fileReader.onload = (function(_this) {
+        return function() {
+          file.dataURL = fileReader.result;
+          if (file.type === "image/svg+xml") {
+            if (callback != null) {
+              callback(fileReader.result);
+            }
+            return;
           }
-          return callback(Dropzone.dataURItoBlob(resizedDataURL));
-        }
-      });
-    }
-  }, {
-    key: "createThumbnail",
-    value: function createThumbnail(file, width, height, resizeMethod, fixOrientation, callback) {
-      var _this13 = this;
-
-      var fileReader = new FileReader();
-
-      fileReader.onload = function () {
-
-        file.dataURL = fileReader.result;
-
-        // Don't bother creating a thumbnail for SVG images since they're vector
-        if (file.type === "image/svg+xml") {
-          if (callback != null) {
-            callback(fileReader.result);
-          }
-          return;
-        }
-
-        return _this13.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
-      };
-
+          return _this.createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback);
+        };
+      })(this);
       return fileReader.readAsDataURL(file);
-    }
-  }, {
-    key: "createThumbnailFromUrl",
-    value: function createThumbnailFromUrl(file, width, height, resizeMethod, fixOrientation, callback, crossOrigin) {
-      var _this14 = this;
+    };
 
-      // Not using `new Image` here because of a bug in latest Chrome versions.
-      // See https://github.com/enyo/dropzone/pull/226
-      var img = document.createElement("img");
-
+    Dropzone.prototype.createThumbnailFromUrl = function(file, width, height, resizeMethod, fixOrientation, callback, crossOrigin) {
+      var img;
+      img = document.createElement("img");
       if (crossOrigin) {
         img.crossOrigin = crossOrigin;
       }
-
-      img.onload = function () {
-        var loadExif = function loadExif(callback) {
-          return callback(1);
-        };
-        if (typeof EXIF !== 'undefined' && EXIF !== null && fixOrientation) {
-          loadExif = function loadExif(callback) {
-            return EXIF.getData(img, function () {
-              return callback(EXIF.getTag(this, 'Orientation'));
-            });
+      img.onload = (function(_this) {
+        return function() {
+          var loadExif;
+          loadExif = function(callback) {
+            return callback(1);
           };
-        }
-
-        return loadExif(function (orientation) {
-          file.width = img.width;
-          file.height = img.height;
-
-          var resizeInfo = _this14.options.resize.call(_this14, file, width, height, resizeMethod);
-
-          var canvas = document.createElement("canvas");
-          var ctx = canvas.getContext("2d");
-
-          canvas.width = resizeInfo.trgWidth;
-          canvas.height = resizeInfo.trgHeight;
-
-          if (orientation > 4) {
-            canvas.width = resizeInfo.trgHeight;
-            canvas.height = resizeInfo.trgWidth;
+          if ((typeof EXIF !== "undefined" && EXIF !== null) && fixOrientation) {
+            loadExif = function(callback) {
+              return EXIF.getData(img, function() {
+                return callback(EXIF.getTag(this, 'Orientation'));
+              });
+            };
           }
-
-          switch (orientation) {
-            case 2:
-              // horizontal flip
-              ctx.translate(canvas.width, 0);
-              ctx.scale(-1, 1);
-              break;
-            case 3:
-              // 180° rotate left
-              ctx.translate(canvas.width, canvas.height);
-              ctx.rotate(Math.PI);
-              break;
-            case 4:
-              // vertical flip
-              ctx.translate(0, canvas.height);
-              ctx.scale(1, -1);
-              break;
-            case 5:
-              // vertical flip + 90 rotate right
-              ctx.rotate(0.5 * Math.PI);
-              ctx.scale(1, -1);
-              break;
-            case 6:
-              // 90° rotate right
-              ctx.rotate(0.5 * Math.PI);
-              ctx.translate(0, -canvas.height);
-              break;
-            case 7:
-              // horizontal flip + 90 rotate right
-              ctx.rotate(0.5 * Math.PI);
-              ctx.translate(canvas.width, -canvas.height);
-              ctx.scale(-1, 1);
-              break;
-            case 8:
-              // 90° rotate left
-              ctx.rotate(-0.5 * Math.PI);
-              ctx.translate(-canvas.width, 0);
-              break;
-          }
-
-          // This is a bugfix for iOS' scaling bug.
-          drawImageIOSFix(ctx, img, resizeInfo.srcX != null ? resizeInfo.srcX : 0, resizeInfo.srcY != null ? resizeInfo.srcY : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, resizeInfo.trgX != null ? resizeInfo.trgX : 0, resizeInfo.trgY != null ? resizeInfo.trgY : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
-
-          var thumbnail = canvas.toDataURL("image/png");
-
-          if (callback != null) {
-            return callback(thumbnail, canvas);
-          }
-        });
-      };
-
+          return loadExif(function(orientation) {
+            var canvas, ctx, ref, ref1, ref2, ref3, resizeInfo, thumbnail;
+            file.width = img.width;
+            file.height = img.height;
+            resizeInfo = _this.options.resize.call(_this, file, width, height, resizeMethod);
+            canvas = document.createElement("canvas");
+            ctx = canvas.getContext("2d");
+            canvas.width = resizeInfo.trgWidth;
+            canvas.height = resizeInfo.trgHeight;
+            if (orientation > 4) {
+              canvas.width = resizeInfo.trgHeight;
+              canvas.height = resizeInfo.trgWidth;
+            }
+            switch (orientation) {
+              case 2:
+                ctx.translate(canvas.width, 0);
+                ctx.scale(-1, 1);
+                break;
+              case 3:
+                ctx.translate(canvas.width, canvas.height);
+                ctx.rotate(Math.PI);
+                break;
+              case 4:
+                ctx.translate(0, canvas.height);
+                ctx.scale(1, -1);
+                break;
+              case 5:
+                ctx.rotate(0.5 * Math.PI);
+                ctx.scale(1, -1);
+                break;
+              case 6:
+                ctx.rotate(0.5 * Math.PI);
+                ctx.translate(0, -canvas.height);
+                break;
+              case 7:
+                ctx.rotate(0.5 * Math.PI);
+                ctx.translate(canvas.width, -canvas.height);
+                ctx.scale(-1, 1);
+                break;
+              case 8:
+                ctx.rotate(-0.5 * Math.PI);
+                ctx.translate(-canvas.width, 0);
+            }
+            drawImageIOSFix(ctx, img, (ref = resizeInfo.srcX) != null ? ref : 0, (ref1 = resizeInfo.srcY) != null ? ref1 : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, (ref2 = resizeInfo.trgX) != null ? ref2 : 0, (ref3 = resizeInfo.trgY) != null ? ref3 : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+            thumbnail = canvas.toDataURL("image/png");
+            if (callback != null) {
+              return callback(thumbnail, canvas);
+            }
+          });
+        };
+      })(this);
       if (callback != null) {
         img.onerror = callback;
       }
-
       return img.src = file.dataURL;
-    }
+    };
 
-    // Goes through the queue and processes files if there aren't too many already.
-
-  }, {
-    key: "processQueue",
-    value: function processQueue() {
-      var parallelUploads = this.options.parallelUploads;
-
-      var processingLength = this.getUploadingFiles().length;
-      var i = processingLength;
-
-      // There are already at least as many files uploading than should be
+    Dropzone.prototype.processQueue = function() {
+      var i, parallelUploads, processingLength, queuedFiles;
+      parallelUploads = this.options.parallelUploads;
+      processingLength = this.getUploadingFiles().length;
+      i = processingLength;
       if (processingLength >= parallelUploads) {
         return;
       }
-
-      var queuedFiles = this.getQueuedFiles();
-
+      queuedFiles = this.getQueuedFiles();
       if (!(queuedFiles.length > 0)) {
         return;
       }
-
       if (this.options.uploadMultiple) {
-        // The files should be uploaded in one request
         return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
       } else {
         while (i < parallelUploads) {
           if (!queuedFiles.length) {
             return;
-          } // Nothing left to process
+          }
           this.processFile(queuedFiles.shift());
           i++;
         }
       }
-    }
+    };
 
-    // Wrapper for `processFiles`
-
-  }, {
-    key: "processFile",
-    value: function processFile(file) {
+    Dropzone.prototype.processFile = function(file) {
       return this.processFiles([file]);
-    }
+    };
 
-    // Loads the file, then calls finishedLoading()
-
-  }, {
-    key: "processFiles",
-    value: function processFiles(files) {
-      for (var _iterator18 = files, _isArray18 = true, _i19 = 0, _iterator18 = _isArray18 ? _iterator18 : _iterator18[Symbol.iterator]();;) {
-        var _ref17;
-
-        if (_isArray18) {
-          if (_i19 >= _iterator18.length) break;
-          _ref17 = _iterator18[_i19++];
-        } else {
-          _i19 = _iterator18.next();
-          if (_i19.done) break;
-          _ref17 = _i19.value;
-        }
-
-        var file = _ref17;
-
-        file.processing = true; // Backwards compatibility
+    Dropzone.prototype.processFiles = function(files) {
+      var file, j, len;
+      for (j = 0, len = files.length; j < len; j++) {
+        file = files[j];
+        file.processing = true;
         file.status = Dropzone.UPLOADING;
-
         this.emit("processing", file);
       }
-
       if (this.options.uploadMultiple) {
         this.emit("processingmultiple", files);
       }
-
       return this.uploadFiles(files);
-    }
-  }, {
-    key: "_getFilesWithXhr",
-    value: function _getFilesWithXhr(xhr) {
-      var files = void 0;
-      return files = this.files.filter(function (file) {
-        return file.xhr === xhr;
-      }).map(function (file) {
-        return file;
-      });
-    }
+    };
 
-    // Cancels the file upload and sets the status to CANCELED
-    // **if** the file is actually being uploaded.
-    // If it's still in the queue, the file is being removed from it and the status
-    // set to CANCELED.
-
-  }, {
-    key: "cancelUpload",
-    value: function cancelUpload(file) {
-      if (file.status === Dropzone.UPLOADING) {
-        var groupedFiles = this._getFilesWithXhr(file.xhr);
-        for (var _iterator19 = groupedFiles, _isArray19 = true, _i20 = 0, _iterator19 = _isArray19 ? _iterator19 : _iterator19[Symbol.iterator]();;) {
-          var _ref18;
-
-          if (_isArray19) {
-            if (_i20 >= _iterator19.length) break;
-            _ref18 = _iterator19[_i20++];
-          } else {
-            _i20 = _iterator19.next();
-            if (_i20.done) break;
-            _ref18 = _i20.value;
+    Dropzone.prototype._getFilesWithXhr = function(xhr) {
+      var file, files;
+      return files = (function() {
+        var j, len, ref, results;
+        ref = this.files;
+        results = [];
+        for (j = 0, len = ref.length; j < len; j++) {
+          file = ref[j];
+          if (file.xhr === xhr) {
+            results.push(file);
           }
+        }
+        return results;
+      }).call(this);
+    };
 
-          var groupedFile = _ref18;
-
+    Dropzone.prototype.cancelUpload = function(file) {
+      var groupedFile, groupedFiles, j, k, len, len1, ref;
+      if (file.status === Dropzone.UPLOADING) {
+        groupedFiles = this._getFilesWithXhr(file.xhr);
+        for (j = 0, len = groupedFiles.length; j < len; j++) {
+          groupedFile = groupedFiles[j];
           groupedFile.status = Dropzone.CANCELED;
         }
-        if (typeof file.xhr !== 'undefined') {
-          file.xhr.abort();
-        }
-        for (var _iterator20 = groupedFiles, _isArray20 = true, _i21 = 0, _iterator20 = _isArray20 ? _iterator20 : _iterator20[Symbol.iterator]();;) {
-          var _ref19;
-
-          if (_isArray20) {
-            if (_i21 >= _iterator20.length) break;
-            _ref19 = _iterator20[_i21++];
-          } else {
-            _i21 = _iterator20.next();
-            if (_i21.done) break;
-            _ref19 = _i21.value;
-          }
-
-          var _groupedFile = _ref19;
-
-          this.emit("canceled", _groupedFile);
+        file.xhr.abort();
+        for (k = 0, len1 = groupedFiles.length; k < len1; k++) {
+          groupedFile = groupedFiles[k];
+          this.emit("canceled", groupedFile);
         }
         if (this.options.uploadMultiple) {
           this.emit("canceledmultiple", groupedFiles);
         }
-      } else if (file.status === Dropzone.ADDED || file.status === Dropzone.QUEUED) {
+      } else if ((ref = file.status) === Dropzone.ADDED || ref === Dropzone.QUEUED) {
         file.status = Dropzone.CANCELED;
         this.emit("canceled", file);
         if (this.options.uploadMultiple) {
           this.emit("canceledmultiple", [file]);
         }
       }
-
       if (this.options.autoProcessQueue) {
         return this.processQueue();
       }
-    }
-  }, {
-    key: "resolveOption",
-    value: function resolveOption(option) {
-      if (typeof option === 'function') {
-        for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-          args[_key3 - 1] = arguments[_key3];
-        }
+    };
 
+    resolveOption = function() {
+      var args, option;
+      option = arguments[0], args = 2 <= arguments.length ? slice.call(arguments, 1) : [];
+      if (typeof option === 'function') {
         return option.apply(this, args);
       }
       return option;
-    }
-  }, {
-    key: "uploadFile",
-    value: function uploadFile(file) {
+    };
+
+    Dropzone.prototype.uploadFile = function(file) {
       return this.uploadFiles([file]);
-    }
-  }, {
-    key: "uploadFiles",
-    value: function uploadFiles(files) {
-      var _this15 = this;
+    };
 
-      this._transformFiles(files, function (transformedFiles) {
-        if (files[0].upload.chunked) {
-          // This file should be sent in chunks!
-
-          // If the chunking option is set, we **know** that there can only be **one** file, since
-          // uploadMultiple is not allowed with this option.
-          var file = files[0];
-          var transformedFile = transformedFiles[0];
-          var startedChunkCount = 0;
-
-          file.upload.chunks = [];
-
-          var handleNextChunk = function handleNextChunk() {
-            var chunkIndex = 0;
-
-            // Find the next item in file.upload.chunks that is not defined yet.
-            while (file.upload.chunks[chunkIndex] !== undefined) {
-              chunkIndex++;
-            }
-
-            // This means, that all chunks have already been started.
-            if (chunkIndex >= file.upload.totalChunkCount) return;
-
-            startedChunkCount++;
-
-            var start = chunkIndex * _this15.options.chunkSize;
-            var end = Math.min(start + _this15.options.chunkSize, file.size);
-
-            var dataBlock = {
-              name: _this15._getParamName(0),
-              data: transformedFile.webkitSlice ? transformedFile.webkitSlice(start, end) : transformedFile.slice(start, end),
-              filename: file.upload.filename,
-              chunkIndex: chunkIndex
-            };
-
-            file.upload.chunks[chunkIndex] = {
-              file: file,
-              index: chunkIndex,
-              dataBlock: dataBlock, // In case we want to retry.
-              status: Dropzone.UPLOADING,
-              progress: 0,
-              retries: 0 // The number of times this block has been retried.
-            };
-
-            _this15._uploadData(files, [dataBlock]);
-          };
-
-          file.upload.finishedChunkUpload = function (chunk) {
-            var allFinished = true;
-            chunk.status = Dropzone.SUCCESS;
-
-            // Clear the data from the chunk
-            chunk.dataBlock = null;
-
-            for (var i = 0; i < file.upload.totalChunkCount; i++) {
-              if (file.upload.chunks[i] === undefined) {
-                return handleNextChunk();
-              }
-              if (file.upload.chunks[i].status !== Dropzone.SUCCESS) {
-                allFinished = false;
-              }
-            }
-
-            if (allFinished) {
-              _this15.options.chunksUploaded(file, function () {
-                _this15._finished(files, '', null);
-              });
-            }
-          };
-
-          if (_this15.options.parallelChunkUploads) {
-            for (var i = 0; i < file.upload.totalChunkCount; i++) {
-              handleNextChunk();
-            }
-          } else {
-            handleNextChunk();
-          }
-        } else {
-          var dataBlocks = [];
-          for (var _i22 = 0; _i22 < files.length; _i22++) {
-            dataBlocks[_i22] = {
-              name: _this15._getParamName(_i22),
-              data: transformedFiles[_i22],
-              filename: files[_i22].upload.filename
-            };
-          }
-          _this15._uploadData(files, dataBlocks);
-        }
-      });
-    }
-
-    /// Returns the right chunk for given file and xhr
-
-  }, {
-    key: "_getChunk",
-    value: function _getChunk(file, xhr) {
-      for (var i = 0; i < file.upload.totalChunkCount; i++) {
-        if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].xhr === xhr) {
-          return file.upload.chunks[i];
-        }
-      }
-    }
-
-    // This function actually uploads the file(s) to the server.
-    // If dataBlocks contains the actual data to upload (meaning, that this could either be transformed
-    // files, or individual chunks for chunked upload).
-
-  }, {
-    key: "_uploadData",
-    value: function _uploadData(files, dataBlocks) {
-      var _this16 = this;
-
-      var xhr = new XMLHttpRequest();
-
-      // Put the xhr object in the file objects to be able to reference it later.
-      for (var _iterator21 = files, _isArray21 = true, _i23 = 0, _iterator21 = _isArray21 ? _iterator21 : _iterator21[Symbol.iterator]();;) {
-        var _ref20;
-
-        if (_isArray21) {
-          if (_i23 >= _iterator21.length) break;
-          _ref20 = _iterator21[_i23++];
-        } else {
-          _i23 = _iterator21.next();
-          if (_i23.done) break;
-          _ref20 = _i23.value;
-        }
-
-        var file = _ref20;
-
+    Dropzone.prototype.uploadFiles = function(files) {
+      var doneCounter, doneFunction, file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, j, k, key, l, len, len1, len2, len3, m, method, o, option, progressObj, ref, ref1, ref2, ref3, ref4, ref5, response, results, updateProgress, url, value, xhr;
+      xhr = new XMLHttpRequest();
+      for (j = 0, len = files.length; j < len; j++) {
+        file = files[j];
         file.xhr = xhr;
       }
-      if (files[0].upload.chunked) {
-        // Put the xhr object in the right chunk object, so it can be associated later, and found with _getChunk
-        files[0].upload.chunks[dataBlocks[0].chunkIndex].xhr = xhr;
-      }
-
-      var method = this.resolveOption(this.options.method, files);
-      var url = this.resolveOption(this.options.url, files);
+      method = resolveOption(this.options.method, files);
+      url = resolveOption(this.options.url, files);
       xhr.open(method, url, true);
-
-      // Setting the timeout after open because of IE11 issue: https://gitlab.com/meno/dropzone/issues/8
-      xhr.timeout = this.resolveOption(this.options.timeout, files);
-
-      // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
+      xhr.timeout = resolveOption(this.options.timeout, files);
       xhr.withCredentials = !!this.options.withCredentials;
-
-      xhr.onload = function (e) {
-        _this16._finishedUploading(files, xhr, e);
-      };
-
-      xhr.onerror = function () {
-        _this16._handleUploadError(files, xhr);
-      };
-
-      // Some browsers do not have the .upload property
-      var progressObj = xhr.upload != null ? xhr.upload : xhr;
-      progressObj.onprogress = function (e) {
-        return _this16._updateFilesUploadProgress(files, xhr, e);
-      };
-
-      var headers = {
+      response = null;
+      handleError = (function(_this) {
+        return function() {
+          var k, len1, results;
+          results = [];
+          for (k = 0, len1 = files.length; k < len1; k++) {
+            file = files[k];
+            results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
+          }
+          return results;
+        };
+      })(this);
+      updateProgress = (function(_this) {
+        return function(e) {
+          var allFilesFinished, k, l, len1, len2, len3, m, progress, results;
+          if (e != null) {
+            progress = 100 * e.loaded / e.total;
+            for (k = 0, len1 = files.length; k < len1; k++) {
+              file = files[k];
+              file.upload.progress = progress;
+              file.upload.total = e.total;
+              file.upload.bytesSent = e.loaded;
+            }
+          } else {
+            allFilesFinished = true;
+            progress = 100;
+            for (l = 0, len2 = files.length; l < len2; l++) {
+              file = files[l];
+              if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
+                allFilesFinished = false;
+              }
+              file.upload.progress = progress;
+              file.upload.bytesSent = file.upload.total;
+            }
+            if (allFilesFinished) {
+              return;
+            }
+          }
+          results = [];
+          for (m = 0, len3 = files.length; m < len3; m++) {
+            file = files[m];
+            results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
+          }
+          return results;
+        };
+      })(this);
+      xhr.onload = (function(_this) {
+        return function(e) {
+          var error1, ref;
+          if (files[0].status === Dropzone.CANCELED) {
+            return;
+          }
+          if (xhr.readyState !== 4) {
+            return;
+          }
+          if (xhr.responseType !== 'arraybuffer' && xhr.responseType !== 'blob') {
+            response = xhr.responseText;
+            if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+              try {
+                response = JSON.parse(response);
+              } catch (error1) {
+                e = error1;
+                response = "Invalid JSON response from server.";
+              }
+            }
+          }
+          updateProgress();
+          if (!((200 <= (ref = xhr.status) && ref < 300))) {
+            return handleError();
+          } else {
+            return _this._finished(files, response, e);
+          }
+        };
+      })(this);
+      xhr.onerror = (function(_this) {
+        return function() {
+          if (files[0].status === Dropzone.CANCELED) {
+            return;
+          }
+          return handleError();
+        };
+      })(this);
+      progressObj = (ref = xhr.upload) != null ? ref : xhr;
+      progressObj.onprogress = updateProgress;
+      headers = {
         "Accept": "application/json",
         "Cache-Control": "no-cache",
         "X-Requested-With": "XMLHttpRequest"
       };
-
       if (this.options.headers) {
-        Dropzone.extend(headers, this.options.headers);
+        extend(headers, this.options.headers);
       }
-
-      for (var headerName in headers) {
-        var headerValue = headers[headerName];
+      for (headerName in headers) {
+        headerValue = headers[headerName];
         if (headerValue) {
           xhr.setRequestHeader(headerName, headerValue);
         }
       }
-
-      var formData = new FormData();
-
-      // Adding all @options parameters
+      formData = new FormData();
       if (this.options.params) {
-        var additionalParams = this.options.params;
-        if (typeof additionalParams === 'function') {
-          additionalParams = additionalParams.call(this, files, xhr, files[0].upload.chunked ? this._getChunk(files[0], xhr) : null);
-        }
-
-        for (var key in additionalParams) {
-          var value = additionalParams[key];
+        ref1 = this.options.params;
+        for (key in ref1) {
+          value = ref1[key];
           formData.append(key, value);
         }
       }
-
-      // Let the user add additional data if necessary
-      for (var _iterator22 = files, _isArray22 = true, _i24 = 0, _iterator22 = _isArray22 ? _iterator22 : _iterator22[Symbol.iterator]();;) {
-        var _ref21;
-
-        if (_isArray22) {
-          if (_i24 >= _iterator22.length) break;
-          _ref21 = _iterator22[_i24++];
-        } else {
-          _i24 = _iterator22.next();
-          if (_i24.done) break;
-          _ref21 = _i24.value;
-        }
-
-        var _file = _ref21;
-
-        this.emit("sending", _file, xhr, formData);
+      for (k = 0, len1 = files.length; k < len1; k++) {
+        file = files[k];
+        this.emit("sending", file, xhr, formData);
       }
       if (this.options.uploadMultiple) {
         this.emit("sendingmultiple", files, xhr, formData);
       }
-
-      this._addFormElementData(formData);
-
-      // Finally add the files
-      // Has to be last because some servers (eg: S3) expect the file to be the last parameter
-      for (var i = 0; i < dataBlocks.length; i++) {
-        var dataBlock = dataBlocks[i];
-        formData.append(dataBlock.name, dataBlock.data, dataBlock.filename);
-      }
-
-      this.submitRequest(xhr, formData, files);
-    }
-
-    // Transforms all files with this.options.transformFile and invokes done with the transformed files when done.
-
-  }, {
-    key: "_transformFiles",
-    value: function _transformFiles(files, done) {
-      var _this17 = this;
-
-      var transformedFiles = [];
-      // Clumsy way of handling asynchronous calls, until I get to add a proper Future library.
-      var doneCounter = 0;
-
-      var _loop = function _loop(i) {
-        _this17.options.transformFile.call(_this17, files[i], function (transformedFile) {
-          transformedFiles[i] = transformedFile;
-          if (++doneCounter === files.length) {
-            done(transformedFiles);
-          }
-        });
-      };
-
-      for (var i = 0; i < files.length; i++) {
-        _loop(i);
-      }
-    }
-
-    // Takes care of adding other input elements of the form to the AJAX request
-
-  }, {
-    key: "_addFormElementData",
-    value: function _addFormElementData(formData) {
-      // Take care of other input elements
       if (this.element.tagName === "FORM") {
-        for (var _iterator23 = this.element.querySelectorAll("input, textarea, select, button"), _isArray23 = true, _i25 = 0, _iterator23 = _isArray23 ? _iterator23 : _iterator23[Symbol.iterator]();;) {
-          var _ref22;
-
-          if (_isArray23) {
-            if (_i25 >= _iterator23.length) break;
-            _ref22 = _iterator23[_i25++];
-          } else {
-            _i25 = _iterator23.next();
-            if (_i25.done) break;
-            _ref22 = _i25.value;
-          }
-
-          var input = _ref22;
-
-          var inputName = input.getAttribute("name");
-          var inputType = input.getAttribute("type");
-          if (inputType) inputType = inputType.toLowerCase();
-
-          // If the input doesn't have a name, we can't use it.
-          if (typeof inputName === 'undefined' || inputName === null) continue;
-
+        ref2 = this.element.querySelectorAll("input, textarea, select, button");
+        for (l = 0, len2 = ref2.length; l < len2; l++) {
+          input = ref2[l];
+          inputName = input.getAttribute("name");
+          inputType = input.getAttribute("type");
           if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
-            // Possibly multiple values
-            for (var _iterator24 = input.options, _isArray24 = true, _i26 = 0, _iterator24 = _isArray24 ? _iterator24 : _iterator24[Symbol.iterator]();;) {
-              var _ref23;
-
-              if (_isArray24) {
-                if (_i26 >= _iterator24.length) break;
-                _ref23 = _iterator24[_i26++];
-              } else {
-                _i26 = _iterator24.next();
-                if (_i26.done) break;
-                _ref23 = _i26.value;
-              }
-
-              var option = _ref23;
-
+            ref3 = input.options;
+            for (m = 0, len3 = ref3.length; m < len3; m++) {
+              option = ref3[m];
               if (option.selected) {
                 formData.append(inputName, option.value);
               }
             }
-          } else if (!inputType || inputType !== "checkbox" && inputType !== "radio" || input.checked) {
+          } else if (!inputType || ((ref4 = inputType.toLowerCase()) !== "checkbox" && ref4 !== "radio") || input.checked) {
             formData.append(inputName, input.value);
           }
         }
       }
-    }
-
-    // Invoked when there is new progress information about given files.
-    // If e is not provided, it is assumed that the upload is finished.
-
-  }, {
-    key: "_updateFilesUploadProgress",
-    value: function _updateFilesUploadProgress(files, xhr, e) {
-      var progress = void 0;
-      if (typeof e !== 'undefined') {
-        progress = 100 * e.loaded / e.total;
-
-        if (files[0].upload.chunked) {
-          var file = files[0];
-          // Since this is a chunked upload, we need to update the appropriate chunk progress.
-          var chunk = this._getChunk(file, xhr);
-          chunk.progress = progress;
-          chunk.total = e.total;
-          chunk.bytesSent = e.loaded;
-          var fileProgress = 0,
-              fileTotal = void 0,
-              fileBytesSent = void 0;
-          file.upload.progress = 0;
-          file.upload.total = 0;
-          file.upload.bytesSent = 0;
-          for (var i = 0; i < file.upload.totalChunkCount; i++) {
-            if (file.upload.chunks[i] !== undefined && file.upload.chunks[i].progress !== undefined) {
-              file.upload.progress += file.upload.chunks[i].progress;
-              file.upload.total += file.upload.chunks[i].total;
-              file.upload.bytesSent += file.upload.chunks[i].bytesSent;
-            }
-          }
-          file.upload.progress = file.upload.progress / file.upload.totalChunkCount;
-        } else {
-          for (var _iterator25 = files, _isArray25 = true, _i27 = 0, _iterator25 = _isArray25 ? _iterator25 : _iterator25[Symbol.iterator]();;) {
-            var _ref24;
-
-            if (_isArray25) {
-              if (_i27 >= _iterator25.length) break;
-              _ref24 = _iterator25[_i27++];
-            } else {
-              _i27 = _iterator25.next();
-              if (_i27.done) break;
-              _ref24 = _i27.value;
-            }
-
-            var _file2 = _ref24;
-
-            _file2.upload.progress = progress;
-            _file2.upload.total = e.total;
-            _file2.upload.bytesSent = e.loaded;
-          }
-        }
-        for (var _iterator26 = files, _isArray26 = true, _i28 = 0, _iterator26 = _isArray26 ? _iterator26 : _iterator26[Symbol.iterator]();;) {
-          var _ref25;
-
-          if (_isArray26) {
-            if (_i28 >= _iterator26.length) break;
-            _ref25 = _iterator26[_i28++];
-          } else {
-            _i28 = _iterator26.next();
-            if (_i28.done) break;
-            _ref25 = _i28.value;
-          }
-
-          var _file3 = _ref25;
-
-          this.emit("uploadprogress", _file3, _file3.upload.progress, _file3.upload.bytesSent);
-        }
-      } else {
-        // Called when the file finished uploading
-
-        var allFilesFinished = true;
-
-        progress = 100;
-
-        for (var _iterator27 = files, _isArray27 = true, _i29 = 0, _iterator27 = _isArray27 ? _iterator27 : _iterator27[Symbol.iterator]();;) {
-          var _ref26;
-
-          if (_isArray27) {
-            if (_i29 >= _iterator27.length) break;
-            _ref26 = _iterator27[_i29++];
-          } else {
-            _i29 = _iterator27.next();
-            if (_i29.done) break;
-            _ref26 = _i29.value;
-          }
-
-          var _file4 = _ref26;
-
-          if (_file4.upload.progress !== 100 || _file4.upload.bytesSent !== _file4.upload.total) {
-            allFilesFinished = false;
-          }
-          _file4.upload.progress = progress;
-          _file4.upload.bytesSent = _file4.upload.total;
-        }
-
-        // Nothing to do, all files already at 100%
-        if (allFilesFinished) {
-          return;
-        }
-
-        for (var _iterator28 = files, _isArray28 = true, _i30 = 0, _iterator28 = _isArray28 ? _iterator28 : _iterator28[Symbol.iterator]();;) {
-          var _ref27;
-
-          if (_isArray28) {
-            if (_i30 >= _iterator28.length) break;
-            _ref27 = _iterator28[_i30++];
-          } else {
-            _i30 = _iterator28.next();
-            if (_i30.done) break;
-            _ref27 = _i30.value;
-          }
-
-          var _file5 = _ref27;
-
-          this.emit("uploadprogress", _file5, progress, _file5.upload.bytesSent);
-        }
+      doneCounter = 0;
+      results = [];
+      for (i = o = 0, ref5 = files.length - 1; 0 <= ref5 ? o <= ref5 : o >= ref5; i = 0 <= ref5 ? ++o : --o) {
+        doneFunction = (function(_this) {
+          return function(file, paramName, fileName) {
+            return function(transformedFile) {
+              formData.append(paramName, transformedFile, fileName);
+              if (++doneCounter === files.length) {
+                return _this.submitRequest(xhr, formData, files);
+              }
+            };
+          };
+        })(this);
+        results.push(this.options.transformFile.call(this, files[i], doneFunction(files[i], this._getParamName(i), files[i].upload.filename)));
       }
-    }
-  }, {
-    key: "_finishedUploading",
-    value: function _finishedUploading(files, xhr, e) {
-      var response = void 0;
+      return results;
+    };
 
-      if (files[0].status === Dropzone.CANCELED) {
-        return;
-      }
+    Dropzone.prototype.submitRequest = function(xhr, formData, files) {
+      return xhr.send(formData);
+    };
 
-      if (xhr.readyState !== 4) {
-        return;
-      }
-
-      if (xhr.responseType !== 'arraybuffer' && xhr.responseType !== 'blob') {
-        response = xhr.responseText;
-
-        if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
-          try {
-            response = JSON.parse(response);
-          } catch (error) {
-            e = error;
-            response = "Invalid JSON response from server.";
-          }
-        }
-      }
-
-      this._updateFilesUploadProgress(files);
-
-      if (!(200 <= xhr.status && xhr.status < 300)) {
-        this._handleUploadError(files, xhr, response);
-      } else {
-        if (files[0].upload.chunked) {
-          files[0].upload.finishedChunkUpload(this._getChunk(files[0], xhr));
-        } else {
-          this._finished(files, response, e);
-        }
-      }
-    }
-  }, {
-    key: "_handleUploadError",
-    value: function _handleUploadError(files, xhr, response) {
-      if (files[0].status === Dropzone.CANCELED) {
-        return;
-      }
-
-      if (files[0].upload.chunked && this.options.retryChunks) {
-        var chunk = this._getChunk(files[0], xhr);
-        if (chunk.retries++ < this.options.retryChunksLimit) {
-          this._uploadData(files, [chunk.dataBlock]);
-          return;
-        } else {
-          console.warn('Retried this chunk too often. Giving up.');
-        }
-      }
-
-      for (var _iterator29 = files, _isArray29 = true, _i31 = 0, _iterator29 = _isArray29 ? _iterator29 : _iterator29[Symbol.iterator]();;) {
-        var _ref28;
-
-        if (_isArray29) {
-          if (_i31 >= _iterator29.length) break;
-          _ref28 = _iterator29[_i31++];
-        } else {
-          _i31 = _iterator29.next();
-          if (_i31.done) break;
-          _ref28 = _i31.value;
-        }
-
-        var file = _ref28;
-
-        this._errorProcessing(files, response || this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr);
-      }
-    }
-  }, {
-    key: "submitRequest",
-    value: function submitRequest(xhr, formData, files) {
-      xhr.send(formData);
-    }
-
-    // Called internally when processing is finished.
-    // Individual callbacks have to be called in the appropriate sections.
-
-  }, {
-    key: "_finished",
-    value: function _finished(files, responseText, e) {
-      for (var _iterator30 = files, _isArray30 = true, _i32 = 0, _iterator30 = _isArray30 ? _iterator30 : _iterator30[Symbol.iterator]();;) {
-        var _ref29;
-
-        if (_isArray30) {
-          if (_i32 >= _iterator30.length) break;
-          _ref29 = _iterator30[_i32++];
-        } else {
-          _i32 = _iterator30.next();
-          if (_i32.done) break;
-          _ref29 = _i32.value;
-        }
-
-        var file = _ref29;
-
+    Dropzone.prototype._finished = function(files, responseText, e) {
+      var file, j, len;
+      for (j = 0, len = files.length; j < len; j++) {
+        file = files[j];
         file.status = Dropzone.SUCCESS;
         this.emit("success", file, responseText, e);
         this.emit("complete", file);
@@ -56219,32 +54790,15 @@ var Dropzone = function (_Emitter) {
         this.emit("successmultiple", files, responseText, e);
         this.emit("completemultiple", files);
       }
-
       if (this.options.autoProcessQueue) {
         return this.processQueue();
       }
-    }
+    };
 
-    // Called internally when processing is finished.
-    // Individual callbacks have to be called in the appropriate sections.
-
-  }, {
-    key: "_errorProcessing",
-    value: function _errorProcessing(files, message, xhr) {
-      for (var _iterator31 = files, _isArray31 = true, _i33 = 0, _iterator31 = _isArray31 ? _iterator31 : _iterator31[Symbol.iterator]();;) {
-        var _ref30;
-
-        if (_isArray31) {
-          if (_i33 >= _iterator31.length) break;
-          _ref30 = _iterator31[_i33++];
-        } else {
-          _i33 = _iterator31.next();
-          if (_i33.done) break;
-          _ref30 = _i33.value;
-        }
-
-        var file = _ref30;
-
+    Dropzone.prototype._errorProcessing = function(files, message, xhr) {
+      var file, j, len;
+      for (j = 0, len = files.length; j < len; j++) {
+        file = files[j];
         file.status = Dropzone.ERROR;
         this.emit("error", file, message, xhr);
         this.emit("complete", file);
@@ -56253,472 +54807,318 @@ var Dropzone = function (_Emitter) {
         this.emit("errormultiple", files, message, xhr);
         this.emit("completemultiple", files);
       }
-
       if (this.options.autoProcessQueue) {
         return this.processQueue();
       }
-    }
-  }], [{
-    key: "uuidv4",
-    value: function uuidv4() {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0,
-            v = c === 'x' ? r : r & 0x3 | 0x8;
-        return v.toString(16);
-      });
-    }
-  }]);
-
-  return Dropzone;
-}(Emitter);
-
-Dropzone.initClass();
-
-Dropzone.version = "5.2.0";
-
-// This is a map of options for your different dropzones. Add configurations
-// to this object for your different dropzone elemens.
-//
-// Example:
-//
-//     Dropzone.options.myDropzoneElementId = { maxFilesize: 1 };
-//
-// To disable autoDiscover for a specific element, you can set `false` as an option:
-//
-//     Dropzone.options.myDisabledElementId = false;
-//
-// And in html:
-//
-//     <form action="/upload" id="my-dropzone-element-id" class="dropzone"></form>
-Dropzone.options = {};
-
-// Returns the options for an element or undefined if none available.
-Dropzone.optionsForElement = function (element) {
-  // Get the `Dropzone.options.elementId` for this element if it exists
-  if (element.getAttribute("id")) {
-    return Dropzone.options[camelize(element.getAttribute("id"))];
-  } else {
-    return undefined;
-  }
-};
-
-// Holds a list of all dropzone instances
-Dropzone.instances = [];
-
-// Returns the dropzone for given element if any
-Dropzone.forElement = function (element) {
-  if (typeof element === "string") {
-    element = document.querySelector(element);
-  }
-  if ((element != null ? element.dropzone : undefined) == null) {
-    throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
-  }
-  return element.dropzone;
-};
-
-// Set to false if you don't want Dropzone to automatically find and attach to .dropzone elements.
-Dropzone.autoDiscover = true;
-
-// Looks for all .dropzone elements and creates a dropzone for them
-Dropzone.discover = function () {
-  var dropzones = void 0;
-  if (document.querySelectorAll) {
-    dropzones = document.querySelectorAll(".dropzone");
-  } else {
-    dropzones = [];
-    // IE :(
-    var checkElements = function checkElements(elements) {
-      return function () {
-        var result = [];
-        for (var _iterator32 = elements, _isArray32 = true, _i34 = 0, _iterator32 = _isArray32 ? _iterator32 : _iterator32[Symbol.iterator]();;) {
-          var _ref31;
-
-          if (_isArray32) {
-            if (_i34 >= _iterator32.length) break;
-            _ref31 = _iterator32[_i34++];
-          } else {
-            _i34 = _iterator32.next();
-            if (_i34.done) break;
-            _ref31 = _i34.value;
-          }
-
-          var el = _ref31;
-
-          if (/(^| )dropzone($| )/.test(el.className)) {
-            result.push(dropzones.push(el));
-          } else {
-            result.push(undefined);
-          }
-        }
-        return result;
-      }();
     };
-    checkElements(document.getElementsByTagName("div"));
-    checkElements(document.getElementsByTagName("form"));
-  }
 
-  return function () {
-    var result = [];
-    for (var _iterator33 = dropzones, _isArray33 = true, _i35 = 0, _iterator33 = _isArray33 ? _iterator33 : _iterator33[Symbol.iterator]();;) {
-      var _ref32;
+    return Dropzone;
 
-      if (_isArray33) {
-        if (_i35 >= _iterator33.length) break;
-        _ref32 = _iterator33[_i35++];
-      } else {
-        _i35 = _iterator33.next();
-        if (_i35.done) break;
-        _ref32 = _i35.value;
-      }
+  })(Emitter);
 
-      var dropzone = _ref32;
+  Dropzone.version = "5.1.1";
 
-      // Create a dropzone unless auto discover has been disabled for specific element
-      if (Dropzone.optionsForElement(dropzone) !== false) {
-        result.push(new Dropzone(dropzone));
-      } else {
-        result.push(undefined);
-      }
-    }
-    return result;
-  }();
-};
+  Dropzone.options = {};
 
-// Since the whole Drag'n'Drop API is pretty new, some browsers implement it,
-// but not correctly.
-// So I created a blacklist of userAgents. Yes, yes. Browser sniffing, I know.
-// But what to do when browsers *theoretically* support an API, but crash
-// when using it.
-//
-// This is a list of regular expressions tested against navigator.userAgent
-//
-// ** It should only be used on browser that *do* support the API, but
-// incorrectly **
-//
-Dropzone.blacklistedBrowsers = [
-// The mac os and windows phone version of opera 12 seems to have a problem with the File drag'n'drop API.
-/opera.*(Macintosh|Windows Phone).*version\/12/i];
-
-// Checks if the browser is supported
-Dropzone.isBrowserSupported = function () {
-  var capableBrowser = true;
-
-  if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
-    if (!("classList" in document.createElement("a"))) {
-      capableBrowser = false;
+  Dropzone.optionsForElement = function(element) {
+    if (element.getAttribute("id")) {
+      return Dropzone.options[camelize(element.getAttribute("id"))];
     } else {
-      // The browser supports the API, but may be blacklisted.
-      for (var _iterator34 = Dropzone.blacklistedBrowsers, _isArray34 = true, _i36 = 0, _iterator34 = _isArray34 ? _iterator34 : _iterator34[Symbol.iterator]();;) {
-        var _ref33;
+      return void 0;
+    }
+  };
 
-        if (_isArray34) {
-          if (_i36 >= _iterator34.length) break;
-          _ref33 = _iterator34[_i36++];
-        } else {
-          _i36 = _iterator34.next();
-          if (_i36.done) break;
-          _ref33 = _i36.value;
+  Dropzone.instances = [];
+
+  Dropzone.forElement = function(element) {
+    if (typeof element === "string") {
+      element = document.querySelector(element);
+    }
+    if ((element != null ? element.dropzone : void 0) == null) {
+      throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+    }
+    return element.dropzone;
+  };
+
+  Dropzone.autoDiscover = true;
+
+  Dropzone.discover = function() {
+    var checkElements, dropzone, dropzones, j, len, results;
+    if (document.querySelectorAll) {
+      dropzones = document.querySelectorAll(".dropzone");
+    } else {
+      dropzones = [];
+      checkElements = function(elements) {
+        var el, j, len, results;
+        results = [];
+        for (j = 0, len = elements.length; j < len; j++) {
+          el = elements[j];
+          if (/(^| )dropzone($| )/.test(el.className)) {
+            results.push(dropzones.push(el));
+          } else {
+            results.push(void 0);
+          }
         }
-
-        var regex = _ref33;
-
-        if (regex.test(navigator.userAgent)) {
-          capableBrowser = false;
-          continue;
-        }
+        return results;
+      };
+      checkElements(document.getElementsByTagName("div"));
+      checkElements(document.getElementsByTagName("form"));
+    }
+    results = [];
+    for (j = 0, len = dropzones.length; j < len; j++) {
+      dropzone = dropzones[j];
+      if (Dropzone.optionsForElement(dropzone) !== false) {
+        results.push(new Dropzone(dropzone));
+      } else {
+        results.push(void 0);
       }
     }
-  } else {
-    capableBrowser = false;
-  }
+    return results;
+  };
 
-  return capableBrowser;
-};
+  Dropzone.blacklistedBrowsers = [/opera.*Macintosh.*version\/12/i];
 
-Dropzone.dataURItoBlob = function (dataURI) {
-  // convert base64 to raw binary data held in a string
-  // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
-  var byteString = atob(dataURI.split(',')[1]);
+  Dropzone.isBrowserSupported = function() {
+    var capableBrowser, j, len, ref, regex;
+    capableBrowser = true;
+    if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+      if (!("classList" in document.createElement("a"))) {
+        capableBrowser = false;
+      } else {
+        ref = Dropzone.blacklistedBrowsers;
+        for (j = 0, len = ref.length; j < len; j++) {
+          regex = ref[j];
+          if (regex.test(navigator.userAgent)) {
+            capableBrowser = false;
+            continue;
+          }
+        }
+      }
+    } else {
+      capableBrowser = false;
+    }
+    return capableBrowser;
+  };
 
-  // separate out the mime component
-  var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+  Dropzone.dataURItoBlob = function(dataURI) {
+    var ab, byteString, i, ia, j, mimeString, ref;
+    byteString = atob(dataURI.split(',')[1]);
+    mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    ab = new ArrayBuffer(byteString.length);
+    ia = new Uint8Array(ab);
+    for (i = j = 0, ref = byteString.length; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], {
+      type: mimeString
+    });
+  };
 
-  // write the bytes of the string to an ArrayBuffer
-  var ab = new ArrayBuffer(byteString.length);
-  var ia = new Uint8Array(ab);
-  for (var i = 0, end = byteString.length, asc = 0 <= end; asc ? i <= end : i >= end; asc ? i++ : i--) {
-    ia[i] = byteString.charCodeAt(i);
-  }
+  without = function(list, rejectedItem) {
+    var item, j, len, results;
+    results = [];
+    for (j = 0, len = list.length; j < len; j++) {
+      item = list[j];
+      if (item !== rejectedItem) {
+        results.push(item);
+      }
+    }
+    return results;
+  };
 
-  // write the ArrayBuffer to a blob
-  return new Blob([ab], { type: mimeString });
-};
+  camelize = function(str) {
+    return str.replace(/[\-_](\w)/g, function(match) {
+      return match.charAt(1).toUpperCase();
+    });
+  };
 
-// Returns an array without the rejected item
-var without = function without(list, rejectedItem) {
-  return list.filter(function (item) {
-    return item !== rejectedItem;
-  }).map(function (item) {
-    return item;
-  });
-};
+  Dropzone.createElement = function(string) {
+    var div;
+    div = document.createElement("div");
+    div.innerHTML = string;
+    return div.childNodes[0];
+  };
 
-// abc-def_ghi -> abcDefGhi
-var camelize = function camelize(str) {
-  return str.replace(/[\-_](\w)/g, function (match) {
-    return match.charAt(1).toUpperCase();
-  });
-};
-
-// Creates an element from string
-Dropzone.createElement = function (string) {
-  var div = document.createElement("div");
-  div.innerHTML = string;
-  return div.childNodes[0];
-};
-
-// Tests if given element is inside (or simply is) the container
-Dropzone.elementInside = function (element, container) {
-  if (element === container) {
-    return true;
-  } // Coffeescript doesn't support do/while loops
-  while (element = element.parentNode) {
+  Dropzone.elementInside = function(element, container) {
     if (element === container) {
       return true;
     }
-  }
-  return false;
-};
-
-Dropzone.getElement = function (el, name) {
-  var element = void 0;
-  if (typeof el === "string") {
-    element = document.querySelector(el);
-  } else if (el.nodeType != null) {
-    element = el;
-  }
-  if (element == null) {
-    throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
-  }
-  return element;
-};
-
-Dropzone.getElements = function (els, name) {
-  var el = void 0,
-      elements = void 0;
-  if (els instanceof Array) {
-    elements = [];
-    try {
-      for (var _iterator35 = els, _isArray35 = true, _i37 = 0, _iterator35 = _isArray35 ? _iterator35 : _iterator35[Symbol.iterator]();;) {
-        if (_isArray35) {
-          if (_i37 >= _iterator35.length) break;
-          el = _iterator35[_i37++];
-        } else {
-          _i37 = _iterator35.next();
-          if (_i37.done) break;
-          el = _i37.value;
-        }
-
-        elements.push(this.getElement(el, name));
-      }
-    } catch (e) {
-      elements = null;
-    }
-  } else if (typeof els === "string") {
-    elements = [];
-    for (var _iterator36 = document.querySelectorAll(els), _isArray36 = true, _i38 = 0, _iterator36 = _isArray36 ? _iterator36 : _iterator36[Symbol.iterator]();;) {
-      if (_isArray36) {
-        if (_i38 >= _iterator36.length) break;
-        el = _iterator36[_i38++];
-      } else {
-        _i38 = _iterator36.next();
-        if (_i38.done) break;
-        el = _i38.value;
-      }
-
-      elements.push(el);
-    }
-  } else if (els.nodeType != null) {
-    elements = [els];
-  }
-
-  if (elements == null || !elements.length) {
-    throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
-  }
-
-  return elements;
-};
-
-// Asks the user the question and calls accepted or rejected accordingly
-//
-// The default implementation just uses `window.confirm` and then calls the
-// appropriate callback.
-Dropzone.confirm = function (question, accepted, rejected) {
-  if (window.confirm(question)) {
-    return accepted();
-  } else if (rejected != null) {
-    return rejected();
-  }
-};
-
-// Validates the mime type like this:
-//
-// https://developer.mozilla.org/en-US/docs/HTML/Element/input#attr-accept
-Dropzone.isValidFile = function (file, acceptedFiles) {
-  if (!acceptedFiles) {
-    return true;
-  } // If there are no accepted mime types, it's OK
-  acceptedFiles = acceptedFiles.split(",");
-
-  var mimeType = file.type;
-  var baseMimeType = mimeType.replace(/\/.*$/, "");
-
-  for (var _iterator37 = acceptedFiles, _isArray37 = true, _i39 = 0, _iterator37 = _isArray37 ? _iterator37 : _iterator37[Symbol.iterator]();;) {
-    var _ref34;
-
-    if (_isArray37) {
-      if (_i39 >= _iterator37.length) break;
-      _ref34 = _iterator37[_i39++];
-    } else {
-      _i39 = _iterator37.next();
-      if (_i39.done) break;
-      _ref34 = _i39.value;
-    }
-
-    var validType = _ref34;
-
-    validType = validType.trim();
-    if (validType.charAt(0) === ".") {
-      if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
-        return true;
-      }
-    } else if (/\/\*$/.test(validType)) {
-      // This is something like a image/* mime type
-      if (baseMimeType === validType.replace(/\/.*$/, "")) {
-        return true;
-      }
-    } else {
-      if (mimeType === validType) {
+    while (element = element.parentNode) {
+      if (element === container) {
         return true;
       }
     }
-  }
-
-  return false;
-};
-
-// Augment jQuery
-if (typeof jQuery !== 'undefined' && jQuery !== null) {
-  jQuery.fn.dropzone = function (options) {
-    return this.each(function () {
-      return new Dropzone(this, options);
-    });
+    return false;
   };
-}
 
-if (typeof module !== 'undefined' && module !== null) {
-  module.exports = Dropzone;
-} else {
-  window.Dropzone = Dropzone;
-}
-
-// Dropzone file status codes
-Dropzone.ADDED = "added";
-
-Dropzone.QUEUED = "queued";
-// For backwards compatibility. Now, if a file is accepted, it's either queued
-// or uploading.
-Dropzone.ACCEPTED = Dropzone.QUEUED;
-
-Dropzone.UPLOADING = "uploading";
-Dropzone.PROCESSING = Dropzone.UPLOADING; // alias
-
-Dropzone.CANCELED = "canceled";
-Dropzone.ERROR = "error";
-Dropzone.SUCCESS = "success";
-
-/*
-
- Bugfix for iOS 6 and 7
- Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
- based on the work of https://github.com/stomita/ios-imagefile-megapixel
-
- */
-
-// Detecting vertical squash in loaded image.
-// Fixes a bug which squash image vertically while drawing into canvas for some images.
-// This is a bug in iOS6 devices. This function from https://github.com/stomita/ios-imagefile-megapixel
-var detectVerticalSquash = function detectVerticalSquash(img) {
-  var iw = img.naturalWidth;
-  var ih = img.naturalHeight;
-  var canvas = document.createElement("canvas");
-  canvas.width = 1;
-  canvas.height = ih;
-  var ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
-
-  var _ctx$getImageData = ctx.getImageData(1, 0, 1, ih),
-      data = _ctx$getImageData.data;
-
-  // search image edge pixel position in case it is squashed vertically.
-
-
-  var sy = 0;
-  var ey = ih;
-  var py = ih;
-  while (py > sy) {
-    var alpha = data[(py - 1) * 4 + 3];
-
-    if (alpha === 0) {
-      ey = py;
-    } else {
-      sy = py;
+  Dropzone.getElement = function(el, name) {
+    var element;
+    if (typeof el === "string") {
+      element = document.querySelector(el);
+    } else if (el.nodeType != null) {
+      element = el;
     }
+    if (element == null) {
+      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
+    }
+    return element;
+  };
 
-    py = ey + sy >> 1;
+  Dropzone.getElements = function(els, name) {
+    var e, el, elements, error1, j, k, len, len1, ref;
+    if (els instanceof Array) {
+      elements = [];
+      try {
+        for (j = 0, len = els.length; j < len; j++) {
+          el = els[j];
+          elements.push(this.getElement(el, name));
+        }
+      } catch (error1) {
+        e = error1;
+        elements = null;
+      }
+    } else if (typeof els === "string") {
+      elements = [];
+      ref = document.querySelectorAll(els);
+      for (k = 0, len1 = ref.length; k < len1; k++) {
+        el = ref[k];
+        elements.push(el);
+      }
+    } else if (els.nodeType != null) {
+      elements = [els];
+    }
+    if (!((elements != null) && elements.length)) {
+      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
+    }
+    return elements;
+  };
+
+  Dropzone.confirm = function(question, accepted, rejected) {
+    if (window.confirm(question)) {
+      return accepted();
+    } else if (rejected != null) {
+      return rejected();
+    }
+  };
+
+  Dropzone.isValidFile = function(file, acceptedFiles) {
+    var baseMimeType, j, len, mimeType, validType;
+    if (!acceptedFiles) {
+      return true;
+    }
+    acceptedFiles = acceptedFiles.split(",");
+    mimeType = file.type;
+    baseMimeType = mimeType.replace(/\/.*$/, "");
+    for (j = 0, len = acceptedFiles.length; j < len; j++) {
+      validType = acceptedFiles[j];
+      validType = validType.trim();
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  if (typeof jQuery !== "undefined" && jQuery !== null) {
+    jQuery.fn.dropzone = function(options) {
+      return this.each(function() {
+        return new Dropzone(this, options);
+      });
+    };
   }
-  var ratio = py / ih;
 
-  if (ratio === 0) {
-    return 1;
+  if (typeof module !== "undefined" && module !== null) {
+    module.exports = Dropzone;
   } else {
-    return ratio;
-  }
-};
-
-// A replacement for context.drawImage
-// (args are for source and destination).
-var drawImageIOSFix = function drawImageIOSFix(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
-  var vertSquashRatio = detectVerticalSquash(img);
-  return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
-};
-
-// Based on MinifyJpeg
-// Source: http://www.perry.cz/files/ExifRestorer.js
-// http://elicon.blog57.fc2.com/blog-entry-206.html
-
-var ExifRestore = function () {
-  function ExifRestore() {
-    _classCallCheck(this, ExifRestore);
+    window.Dropzone = Dropzone;
   }
 
-  _createClass(ExifRestore, null, [{
-    key: "initClass",
-    value: function initClass() {
-      this.KEY_STR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  Dropzone.ADDED = "added";
+
+  Dropzone.QUEUED = "queued";
+
+  Dropzone.ACCEPTED = Dropzone.QUEUED;
+
+  Dropzone.UPLOADING = "uploading";
+
+  Dropzone.PROCESSING = Dropzone.UPLOADING;
+
+  Dropzone.CANCELED = "canceled";
+
+  Dropzone.ERROR = "error";
+
+  Dropzone.SUCCESS = "success";
+
+
+  /*
+  
+  Bugfix for iOS 6 and 7
+  Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+  based on the work of https://github.com/stomita/ios-imagefile-megapixel
+   */
+
+  detectVerticalSquash = function(img) {
+    var alpha, canvas, ctx, data, ey, ih, iw, py, ratio, sy;
+    iw = img.naturalWidth;
+    ih = img.naturalHeight;
+    canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = ih;
+    ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    data = ctx.getImageData(1, 0, 1, ih).data;
+    sy = 0;
+    ey = ih;
+    py = ih;
+    while (py > sy) {
+      alpha = data[(py - 1) * 4 + 3];
+      if (alpha === 0) {
+        ey = py;
+      } else {
+        sy = py;
+      }
+      py = (ey + sy) >> 1;
     }
-  }, {
-    key: "encode64",
-    value: function encode64(input) {
-      var output = '';
-      var chr1 = undefined;
-      var chr2 = undefined;
-      var chr3 = '';
-      var enc1 = undefined;
-      var enc2 = undefined;
-      var enc3 = undefined;
-      var enc4 = '';
-      var i = 0;
+    ratio = py / ih;
+    if (ratio === 0) {
+      return 1;
+    } else {
+      return ratio;
+    }
+  };
+
+  drawImageIOSFix = function(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    var vertSquashRatio;
+    vertSquashRatio = detectVerticalSquash(img);
+    return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+  };
+
+  ExifRestore = (function() {
+    function ExifRestore() {}
+
+    ExifRestore.KEY_STR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+
+    ExifRestore.encode64 = function(input) {
+      var chr1, chr2, chr3, enc1, enc2, enc3, enc4, i, output;
+      output = '';
+      chr1 = void 0;
+      chr2 = void 0;
+      chr3 = '';
+      enc1 = void 0;
+      enc2 = void 0;
+      enc3 = void 0;
+      enc4 = '';
+      i = 0;
       while (true) {
         chr1 = input[i++];
         chr2 = input[i++];
@@ -56740,31 +55140,31 @@ var ExifRestore = function () {
         }
       }
       return output;
-    }
-  }, {
-    key: "restore",
-    value: function restore(origFileBase64, resizedFileBase64) {
+    };
+
+    ExifRestore.restore = function(origFileBase64, resizedFileBase64) {
+      var image, rawImage, segments;
       if (!origFileBase64.match('data:image/jpeg;base64,')) {
         return resizedFileBase64;
       }
-      var rawImage = this.decode64(origFileBase64.replace('data:image/jpeg;base64,', ''));
-      var segments = this.slice2Segments(rawImage);
-      var image = this.exifManipulation(resizedFileBase64, segments);
-      return "data:image/jpeg;base64," + this.encode64(image);
-    }
-  }, {
-    key: "exifManipulation",
-    value: function exifManipulation(resizedFileBase64, segments) {
-      var exifArray = this.getExifArray(segments);
-      var newImageArray = this.insertExif(resizedFileBase64, exifArray);
-      var aBuffer = new Uint8Array(newImageArray);
+      rawImage = this.decode64(origFileBase64.replace('data:image/jpeg;base64,', ''));
+      segments = this.slice2Segments(rawImage);
+      image = this.exifManipulation(resizedFileBase64, segments);
+      return 'data:image/jpeg;base64,' + this.encode64(image);
+    };
+
+    ExifRestore.exifManipulation = function(resizedFileBase64, segments) {
+      var aBuffer, exifArray, newImageArray;
+      exifArray = this.getExifArray(segments);
+      newImageArray = this.insertExif(resizedFileBase64, exifArray);
+      aBuffer = new Uint8Array(newImageArray);
       return aBuffer;
-    }
-  }, {
-    key: "getExifArray",
-    value: function getExifArray(segments) {
-      var seg = undefined;
-      var x = 0;
+    };
+
+    ExifRestore.getExifArray = function(segments) {
+      var seg, x;
+      seg = void 0;
+      x = 0;
       while (x < segments.length) {
         seg = segments[x];
         if (seg[0] === 255 & seg[1] === 225) {
@@ -56773,27 +55173,26 @@ var ExifRestore = function () {
         x++;
       }
       return [];
-    }
-  }, {
-    key: "insertExif",
-    value: function insertExif(resizedFileBase64, exifArray) {
-      var imageData = resizedFileBase64.replace('data:image/jpeg;base64,', '');
-      var buf = this.decode64(imageData);
-      var separatePoint = buf.indexOf(255, 3);
-      var mae = buf.slice(0, separatePoint);
-      var ato = buf.slice(separatePoint);
-      var array = mae;
+    };
+
+    ExifRestore.insertExif = function(resizedFileBase64, exifArray) {
+      var array, ato, buf, imageData, mae, separatePoint;
+      imageData = resizedFileBase64.replace('data:image/jpeg;base64,', '');
+      buf = this.decode64(imageData);
+      separatePoint = buf.indexOf(255, 3);
+      mae = buf.slice(0, separatePoint);
+      ato = buf.slice(separatePoint);
+      array = mae;
       array = array.concat(exifArray);
       array = array.concat(ato);
       return array;
-    }
-  }, {
-    key: "slice2Segments",
-    value: function slice2Segments(rawImageArray) {
-      var head = 0;
-      var segments = [];
+    };
+
+    ExifRestore.slice2Segments = function(rawImageArray) {
+      var endPoint, head, length, seg, segments;
+      head = 0;
+      segments = [];
       while (true) {
-        var length;
         if (rawImageArray[head] === 255 & rawImageArray[head + 1] === 218) {
           break;
         }
@@ -56801,8 +55200,8 @@ var ExifRestore = function () {
           head += 2;
         } else {
           length = rawImageArray[head + 2] * 256 + rawImageArray[head + 3];
-          var endPoint = head + length + 2;
-          var seg = rawImageArray.slice(head, endPoint);
+          endPoint = head + length + 2;
+          seg = rawImageArray.slice(head, endPoint);
           segments.push(seg);
           head = endPoint;
         }
@@ -56811,24 +55210,23 @@ var ExifRestore = function () {
         }
       }
       return segments;
-    }
-  }, {
-    key: "decode64",
-    value: function decode64(input) {
-      var output = '';
-      var chr1 = undefined;
-      var chr2 = undefined;
-      var chr3 = '';
-      var enc1 = undefined;
-      var enc2 = undefined;
-      var enc3 = undefined;
-      var enc4 = '';
-      var i = 0;
-      var buf = [];
-      // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-      var base64test = /[^A-Za-z0-9\+\/\=]/g;
+    };
+
+    ExifRestore.decode64 = function(input) {
+      var base64test, buf, chr1, chr2, chr3, enc1, enc2, enc3, enc4, i, output;
+      output = '';
+      chr1 = void 0;
+      chr2 = void 0;
+      chr3 = '';
+      enc1 = void 0;
+      enc2 = void 0;
+      enc3 = void 0;
+      enc4 = '';
+      i = 0;
+      buf = [];
+      base64test = /[^A-Za-z0-9\+\/\=]/g;
       if (base64test.exec(input)) {
-        console.warn('There were invalid base64 characters in the input text.\nValid base64 characters are A-Z, a-z, 0-9, \'+\', \'/\',and \'=\'\nExpect errors in decoding.');
+        console.warning('There were invalid base64 characters in the input text.\n' + 'Valid base64 characters are A-Z, a-z, 0-9, \'+\', \'/\',and \'=\'\n' + 'Expect errors in decoding.');
       }
       input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
       while (true) {
@@ -56853,103 +55251,92 @@ var ExifRestore = function () {
         }
       }
       return buf;
-    }
-  }]);
+    };
 
-  return ExifRestore;
-}();
+    return ExifRestore;
 
-ExifRestore.initClass();
+  })();
 
-/*
- * contentloaded.js
- *
- * Author: Diego Perini (diego.perini at gmail.com)
- * Summary: cross-browser wrapper for DOMContentLoaded
- * Updated: 20101020
- * License: MIT
- * Version: 1.2
- *
- * URL:
- * http://javascript.nwbox.com/ContentLoaded/
- * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
- */
 
-// @win window reference
-// @fn function reference
-var contentLoaded = function contentLoaded(win, fn) {
-  var done = false;
-  var top = true;
-  var doc = win.document;
-  var root = doc.documentElement;
-  var add = doc.addEventListener ? "addEventListener" : "attachEvent";
-  var rem = doc.addEventListener ? "removeEventListener" : "detachEvent";
-  var pre = doc.addEventListener ? "" : "on";
-  var init = function init(e) {
-    if (e.type === "readystatechange" && doc.readyState !== "complete") {
-      return;
-    }
-    (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
-    if (!done && (done = true)) {
-      return fn.call(win, e.type || e);
-    }
-  };
+  /*
+   * contentloaded.js
+   *
+   * Author: Diego Perini (diego.perini at gmail.com)
+   * Summary: cross-browser wrapper for DOMContentLoaded
+   * Updated: 20101020
+   * License: MIT
+   * Version: 1.2
+   *
+   * URL:
+   * http://javascript.nwbox.com/ContentLoaded/
+   * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+   */
 
-  var poll = function poll() {
-    try {
-      root.doScroll("left");
-    } catch (e) {
-      setTimeout(poll, 50);
-      return;
-    }
-    return init("poll");
-  };
-
-  if (doc.readyState !== "complete") {
-    if (doc.createEventObject && root.doScroll) {
-      try {
-        top = !win.frameElement;
-      } catch (error) {}
-      if (top) {
-        poll();
+  contentLoaded = function(win, fn) {
+    var add, doc, done, init, poll, pre, rem, root, top;
+    done = false;
+    top = true;
+    doc = win.document;
+    root = doc.documentElement;
+    add = (doc.addEventListener ? "addEventListener" : "attachEvent");
+    rem = (doc.addEventListener ? "removeEventListener" : "detachEvent");
+    pre = (doc.addEventListener ? "" : "on");
+    init = function(e) {
+      if (e.type === "readystatechange" && doc.readyState !== "complete") {
+        return;
       }
+      (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+      if (!done && (done = true)) {
+        return fn.call(win, e.type || e);
+      }
+    };
+    poll = function() {
+      var e, error1;
+      try {
+        root.doScroll("left");
+      } catch (error1) {
+        e = error1;
+        setTimeout(poll, 50);
+        return;
+      }
+      return init("poll");
+    };
+    if (doc.readyState !== "complete") {
+      if (doc.createEventObject && root.doScroll) {
+        try {
+          top = !win.frameElement;
+        } catch (undefined) {}
+        if (top) {
+          poll();
+        }
+      }
+      doc[add](pre + "DOMContentLoaded", init, false);
+      doc[add](pre + "readystatechange", init, false);
+      return win[add](pre + "load", init, false);
     }
-    doc[add](pre + "DOMContentLoaded", init, false);
-    doc[add](pre + "readystatechange", init, false);
-    return win[add](pre + "load", init, false);
-  }
-};
+  };
 
-// As a single function to be able to write tests.
-Dropzone._autoDiscoverFunction = function () {
-  if (Dropzone.autoDiscover) {
-    return Dropzone.discover();
-  }
-};
-contentLoaded(window, Dropzone._autoDiscoverFunction);
+  Dropzone._autoDiscoverFunction = function() {
+    if (Dropzone.autoDiscover) {
+      return Dropzone.discover();
+    }
+  };
 
-function __guard__(value, transform) {
-  return typeof value !== 'undefined' && value !== null ? transform(value) : undefined;
-}
-function __guardMethod__(obj, methodName, transform) {
-  if (typeof obj !== 'undefined' && obj !== null && typeof obj[methodName] === 'function') {
-    return transform(obj, methodName);
-  } else {
-    return undefined;
-  }
-}
+  contentLoaded(window, Dropzone._autoDiscoverFunction);
+
+}).call(this);
 
 }.call(window));
 
 /***/ }),
-/* 222 */
+/* 252 */
 /***/ (function(module, exports) {
 
 !function(t){function e(i){if(n[i])return n[i].exports;var r=n[i]={i:i,l:!1,exports:{}};return t[i].call(r.exports,r,r.exports,e),r.l=!0,r.exports}var n={};e.m=t,e.c=n,e.i=function(t){return t},e.d=function(t,n,i){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:i})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=14)}([function(t,e,n){(function(e){t.exports=e.jQuery=n(10)}).call(e,n(1))},function(t,e){var n;n=function(){return this}();try{n=n||Function("return this")()||(0,eval)("this")}catch(t){"object"==typeof window&&(n=window)}t.exports=n},function(module,__webpack_exports__,__webpack_require__){"use strict";Object.defineProperty(__webpack_exports__,"__esModule",{value:!0}),function($){var __WEBPACK_IMPORTED_MODULE_0_tether__=__webpack_require__(5),__WEBPACK_IMPORTED_MODULE_0_tether___default=__webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_tether__),__WEBPACK_IMPORTED_MODULE_1_bootstrap__=__webpack_require__(4),__WEBPACK_IMPORTED_MODULE_1_bootstrap___default=__webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_bootstrap__),__WEBPACK_IMPORTED_MODULE_2_select2__=__webpack_require__(9),__WEBPACK_IMPORTED_MODULE_2_select2___default=__webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_select2__),__WEBPACK_IMPORTED_MODULE_3_jquery_growl__=__webpack_require__(6),__WEBPACK_IMPORTED_MODULE_3_jquery_growl___default=__webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_jquery_growl__),__WEBPACK_IMPORTED_MODULE_4_pstagger__=__webpack_require__(8),__WEBPACK_IMPORTED_MODULE_4_pstagger___default=__webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_pstagger__);$.fn.pstooltip=$.fn.tooltip,function(global,jQuery){void 0===global&&"undefined"!=typeof window&&(global=window);var initSelect2=function(){jQuery('[data-toggle="select2"]').each(function(){var newObj={minimumResultsForSearch:-1};for(var attr in $(this).data())attr.localeCompare("templateresult")?attr.localeCompare("templateselection")?attr.localeCompare("minimumresultsforsearch")?attr.localeCompare("toggle")&&(newObj[attr]=$(this).data()[attr]):newObj.minimumResultsForSearch=$(this).data()[attr]:newObj.templateSelection=eval($(this).data()[attr]):newObj.templateResult=eval($(this).data()[attr]);jQuery(this).select2(newObj)})},initToggleButtons=function(){jQuery('[data-toggle="switch"]').each(function(){var t=jQuery(this);if(void 0==t.data("activated")){t.data("activated",!0);var e=t.prop("checked")?"-checked":"";t.wrap('<div class="switch-input '+e+'"></div>');var n=t.parent();n.addClass(t.attr("class")),t.on("change",function(){n.toggleClass("-checked",t.prop("checked"))}),n.click(function(e){if(e.srcElement==n[0]||void 0==e.srcElement)return t.prop("checked",!t.prop("checked")),!1})}})},initAlerts=function(){jQuery(".alert-text").each(function(){var t=jQuery(this),e=t.height(),n=parseFloat(t.css("lineHeight")),i=e/n;if(Math.ceil(i)>5){var r=t.html(),o=t.parent().attr("class");t.parent().addClass("alert-drop"),void 0!==t.data("title")&&""!==t.data("title")?t.html("<b>"+t.data("title")+"</b>"):t.html("<b>Read More</b>"),t.css("cursor","pointer"),t.parent().after('<div class="'+o+' alert-down" role="alert"><p class="alert-down-text"></p></div>'),jQuery(".alert-down-text").html(r)}}),$(".alert-drop").each(function(){var t=jQuery(this);t.click(function(){var e=t.css("border-radius");t.next("div").is(":hidden")?(t.css("border-radius","0"),t.css("border-bottom","none")):(t.css("border-radius",e),t.css("border-bottom","")),t.next("div").slideToggle(400)})})},initToolTips=function(){jQuery(".tooltip-error").pstooltip({template:'<div class="pstooltip"><div class="tooltip-error"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div></div>'}),jQuery('[data-toggle="pstooltip"]').pstooltip(),jQuery('[data-toggle="popover"]').popover()},initSearchBar=function(){$(".js-form-search").on("focusin",function(){$(".js-dropdown-form").hasClass("expanded")||$(".js-dropdown-form").addClass("expanded")})};global.prestaShopUiKit={init:function(){jQuery(function(){jQuery.propHooks.checked={set:function(t,e,n){var i=t[n]=e;return $(t).trigger("change"),i}},jQuery.fn.select2.defaults.set("theme","bootstrap"),jQuery.fn.select2.defaults.set("width","auto"),initSelect2(),initToggleButtons(),initAlerts(),initToolTips(),initSearchBar()})},initSelects:function(){initSelect2()},initToolTips:function(){initToolTips()}},global.prestaShopUiKit.init()}("undefined"!=typeof window?window:this,$),$(function(){var t=function(t,e){var n={};for(var i in e)t.hasOwnProperty(i)?n[i]=t[i]:n[i]=e[i];return n};$.fn.psdwl=function(e){var n=null,i={hover:"install",validate:'<i class="material-icons">check</i>',text:"default",time:3e3,default:!0},r=this;if(n=t(e,i),n.default){var o=r.attr("class").replace(/(btn-\w+)/,"$1-reverse");r.attr("class",o)}void 0!==$(r.selector).html()&&""!==$(r.selector).html()&&(n.text=$(r.selector).text()),r.html(n.hover);var s=this.css("width");r.html(n.text);var a=this.css("width"),l=parseInt(a,10)<parseInt(s,10)?s:a;l=parseInt(l,10)<95?"95px":l,r.css("width",l),r.hover(function(){r.html(n.hover)},function(){r.html(n.text)}),r.click(function(){r.css("border-left-color",r.css("border-color")),r.addClass("onclick"),r.unbind("mouseenter").unbind("mouseleave").unbind("click");var t=parseInt(l,10);r.css({width:"","margin-left":t/4,"margin-right":t/4}),setTimeout(function(){if(r.removeClass("onclick"),r.css({"margin-left":"","margin-right":"",width:l,"border-left-color":""}),r.html(n.validate),n.default){var t=r.attr("class").replace("-reverse","");r.attr("class",t)}},n.time)})}})}.call(__webpack_exports__,__webpack_require__(0))},function(t,e){},function(t,e,n){(function(t,e){var n="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(t){return typeof t}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t};if(void 0===t)throw new Error("Bootstrap's JavaScript requires jQuery. jQuery must be included before Bootstrap's JavaScript.");!function(t){var e=t.fn.jquery.split(" ")[0].split(".");if(e[0]<2&&e[1]<9||1==e[0]&&9==e[1]&&e[2]<1||e[0]>=4)throw new Error("Bootstrap's JavaScript requires at least jQuery v1.9.1 but less than v4.0.0")}(t),function(){function i(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return!e||"object"!==(void 0===e?"undefined":n(e))&&"function"!=typeof e?t:e}function r(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+(void 0===e?"undefined":n(e)));t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function o(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}var s="function"==typeof Symbol&&"symbol"===n(Symbol.iterator)?function(t){return void 0===t?"undefined":n(t)}:function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":void 0===t?"undefined":n(t)},a=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}(),l=function(t){function e(t){return{}.toString.call(t).match(/\s([a-zA-Z]+)/)[1].toLowerCase()}function n(t){return(t[0]||t).nodeType}function i(){return{bindType:s.end,delegateType:s.end,handle:function(e){if(t(e.target).is(this))return e.handleObj.handler.apply(this,arguments)}}}function r(){if(window.QUnit)return!1;var t=document.createElement("bootstrap");for(var e in a)if(void 0!==t.style[e])return{end:a[e]};return!1}function o(e){var n=this,i=!1;return t(this).one(l.TRANSITION_END,function(){i=!0}),setTimeout(function(){i||l.triggerTransitionEnd(n)},e),this}var s=!1,a={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"},l={TRANSITION_END:"bsTransitionEnd",getUID:function(t){do{t+=~~(1e6*Math.random())}while(document.getElementById(t));return t},getSelectorFromElement:function(e){var n=e.getAttribute("data-target");n&&"#"!==n||(n=e.getAttribute("href")||"");try{return t(n).length>0?n:null}catch(t){return null}},reflow:function(t){return t.offsetHeight},triggerTransitionEnd:function(e){t(e).trigger(s.end)},supportsTransitionEnd:function(){return Boolean(s)},typeCheckConfig:function(t,i,r){for(var o in r)if(r.hasOwnProperty(o)){var s=r[o],a=i[o],l=a&&n(a)?"element":e(a);if(!new RegExp(s).test(l))throw new Error(t.toUpperCase()+': Option "'+o+'" provided type "'+l+'" but expected type "'+s+'".')}}};return function(){s=r(),t.fn.emulateTransitionEnd=o,l.supportsTransitionEnd()&&(t.event.special[l.TRANSITION_END]=i())}(),l}(t),c=(function(t){var e="alert",n=t.fn[e],i={DISMISS:'[data-dismiss="alert"]'},r={CLOSE:"close.bs.alert",CLOSED:"closed.bs.alert",CLICK_DATA_API:"click.bs.alert.data-api"},s={ALERT:"alert",FADE:"fade",SHOW:"show"},c=function(){function e(t){o(this,e),this._element=t}return e.prototype.close=function(t){t=t||this._element;var e=this._getRootElement(t);this._triggerCloseEvent(e).isDefaultPrevented()||this._removeElement(e)},e.prototype.dispose=function(){t.removeData(this._element,"bs.alert"),this._element=null},e.prototype._getRootElement=function(e){var n=l.getSelectorFromElement(e),i=!1;return n&&(i=t(n)[0]),i||(i=t(e).closest("."+s.ALERT)[0]),i},e.prototype._triggerCloseEvent=function(e){var n=t.Event(r.CLOSE);return t(e).trigger(n),n},e.prototype._removeElement=function(e){var n=this;if(t(e).removeClass(s.SHOW),!l.supportsTransitionEnd()||!t(e).hasClass(s.FADE))return void this._destroyElement(e);t(e).one(l.TRANSITION_END,function(t){return n._destroyElement(e,t)}).emulateTransitionEnd(150)},e.prototype._destroyElement=function(e){t(e).detach().trigger(r.CLOSED).remove()},e._jQueryInterface=function(n){return this.each(function(){var i=t(this),r=i.data("bs.alert");r||(r=new e(this),i.data("bs.alert",r)),"close"===n&&r[n](this)})},e._handleDismiss=function(t){return function(e){e&&e.preventDefault(),t.close(this)}},a(e,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}}]),e}();t(document).on(r.CLICK_DATA_API,i.DISMISS,c._handleDismiss(new c)),t.fn[e]=c._jQueryInterface,t.fn[e].Constructor=c,t.fn[e].noConflict=function(){return t.fn[e]=n,c._jQueryInterface}}(t),function(t){var e="button",n=t.fn[e],i={ACTIVE:"active",BUTTON:"btn",FOCUS:"focus"},r={DATA_TOGGLE_CARROT:'[data-toggle^="button"]',DATA_TOGGLE:'[data-toggle="buttons"]',INPUT:"input",ACTIVE:".active",BUTTON:".btn"},s={CLICK_DATA_API:"click.bs.button.data-api",FOCUS_BLUR_DATA_API:"focus.bs.button.data-api blur.bs.button.data-api"},l=function(){function e(t){o(this,e),this._element=t}return e.prototype.toggle=function(){var e=!0,n=!0,o=t(this._element).closest(r.DATA_TOGGLE)[0];if(o){var s=t(this._element).find(r.INPUT)[0];if(s){if("radio"===s.type)if(s.checked&&t(this._element).hasClass(i.ACTIVE))e=!1;else{var a=t(o).find(r.ACTIVE)[0];a&&t(a).removeClass(i.ACTIVE)}if(e){if(s.hasAttribute("disabled")||o.hasAttribute("disabled")||s.classList.contains("disabled")||o.classList.contains("disabled"))return;s.checked=!t(this._element).hasClass(i.ACTIVE),t(s).trigger("change")}s.focus(),n=!1}}n&&this._element.setAttribute("aria-pressed",!t(this._element).hasClass(i.ACTIVE)),e&&t(this._element).toggleClass(i.ACTIVE)},e.prototype.dispose=function(){t.removeData(this._element,"bs.button"),this._element=null},e._jQueryInterface=function(n){return this.each(function(){var i=t(this).data("bs.button");i||(i=new e(this),t(this).data("bs.button",i)),"toggle"===n&&i[n]()})},a(e,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}}]),e}();t(document).on(s.CLICK_DATA_API,r.DATA_TOGGLE_CARROT,function(e){e.preventDefault();var n=e.target;t(n).hasClass(i.BUTTON)||(n=t(n).closest(r.BUTTON)),l._jQueryInterface.call(t(n),"toggle")}).on(s.FOCUS_BLUR_DATA_API,r.DATA_TOGGLE_CARROT,function(e){var n=t(e.target).closest(r.BUTTON)[0];t(n).toggleClass(i.FOCUS,/^focus(in)?$/.test(e.type))}),t.fn[e]=l._jQueryInterface,t.fn[e].Constructor=l,t.fn[e].noConflict=function(){return t.fn[e]=n,l._jQueryInterface}}(t),function(t){var e="carousel",n="bs.carousel",i="."+n,r=t.fn[e],c={interval:5e3,keyboard:!0,slide:!1,pause:"hover",wrap:!0},u={interval:"(number|boolean)",keyboard:"boolean",slide:"(boolean|string)",pause:"(string|boolean)",wrap:"boolean"},d={NEXT:"next",PREV:"prev",LEFT:"left",RIGHT:"right"},p={SLIDE:"slide"+i,SLID:"slid"+i,KEYDOWN:"keydown"+i,MOUSEENTER:"mouseenter"+i,MOUSELEAVE:"mouseleave"+i,TOUCHEND:"touchend"+i,LOAD_DATA_API:"load.bs.carousel.data-api",CLICK_DATA_API:"click.bs.carousel.data-api"},h={CAROUSEL:"carousel",ACTIVE:"active",SLIDE:"slide",RIGHT:"carousel-item-right",LEFT:"carousel-item-left",NEXT:"carousel-item-next",PREV:"carousel-item-prev",ITEM:"carousel-item"},f={ACTIVE:".active",ACTIVE_ITEM:".active.carousel-item",ITEM:".carousel-item",NEXT_PREV:".carousel-item-next, .carousel-item-prev",INDICATORS:".carousel-indicators",DATA_SLIDE:"[data-slide], [data-slide-to]",DATA_RIDE:'[data-ride="carousel"]'},g=function(){function r(e,n){o(this,r),this._items=null,this._interval=null,this._activeElement=null,this._isPaused=!1,this._isSliding=!1,this.touchTimeout=null,this._config=this._getConfig(n),this._element=t(e)[0],this._indicatorsElement=t(this._element).find(f.INDICATORS)[0],this._addEventListeners()}return r.prototype.next=function(){this._isSliding||this._slide(d.NEXT)},r.prototype.nextWhenVisible=function(){document.hidden||this.next()},r.prototype.prev=function(){this._isSliding||this._slide(d.PREV)},r.prototype.pause=function(e){e||(this._isPaused=!0),t(this._element).find(f.NEXT_PREV)[0]&&l.supportsTransitionEnd()&&(l.triggerTransitionEnd(this._element),this.cycle(!0)),clearInterval(this._interval),this._interval=null},r.prototype.cycle=function(t){t||(this._isPaused=!1),this._interval&&(clearInterval(this._interval),this._interval=null),this._config.interval&&!this._isPaused&&(this._interval=setInterval((document.visibilityState?this.nextWhenVisible:this.next).bind(this),this._config.interval))},r.prototype.to=function(e){var n=this;this._activeElement=t(this._element).find(f.ACTIVE_ITEM)[0];var i=this._getItemIndex(this._activeElement);if(!(e>this._items.length-1||e<0)){if(this._isSliding)return void t(this._element).one(p.SLID,function(){return n.to(e)});if(i===e)return this.pause(),void this.cycle();var r=e>i?d.NEXT:d.PREV;this._slide(r,this._items[e])}},r.prototype.dispose=function(){t(this._element).off(i),t.removeData(this._element,n),this._items=null,this._config=null,this._element=null,this._interval=null,this._isPaused=null,this._isSliding=null,this._activeElement=null,this._indicatorsElement=null},r.prototype._getConfig=function(n){return n=t.extend({},c,n),l.typeCheckConfig(e,n,u),n},r.prototype._addEventListeners=function(){var e=this;this._config.keyboard&&t(this._element).on(p.KEYDOWN,function(t){return e._keydown(t)}),"hover"===this._config.pause&&(t(this._element).on(p.MOUSEENTER,function(t){return e.pause(t)}).on(p.MOUSELEAVE,function(t){return e.cycle(t)}),"ontouchstart"in document.documentElement&&t(this._element).on(p.TOUCHEND,function(){e.pause(),e.touchTimeout&&clearTimeout(e.touchTimeout),e.touchTimeout=setTimeout(function(t){return e.cycle(t)},500+e._config.interval)}))},r.prototype._keydown=function(t){if(!/input|textarea/i.test(t.target.tagName))switch(t.which){case 37:t.preventDefault(),this.prev();break;case 39:t.preventDefault(),this.next();break;default:return}},r.prototype._getItemIndex=function(e){return this._items=t.makeArray(t(e).parent().find(f.ITEM)),this._items.indexOf(e)},r.prototype._getItemByDirection=function(t,e){var n=t===d.NEXT,i=t===d.PREV,r=this._getItemIndex(e),o=this._items.length-1;if((i&&0===r||n&&r===o)&&!this._config.wrap)return e;var s=t===d.PREV?-1:1,a=(r+s)%this._items.length;return-1===a?this._items[this._items.length-1]:this._items[a]},r.prototype._triggerSlideEvent=function(e,n){var i=this._getItemIndex(e),r=this._getItemIndex(t(this._element).find(f.ACTIVE_ITEM)[0]),o=t.Event(p.SLIDE,{relatedTarget:e,direction:n,from:r,to:i});return t(this._element).trigger(o),o},r.prototype._setActiveIndicatorElement=function(e){if(this._indicatorsElement){t(this._indicatorsElement).find(f.ACTIVE).removeClass(h.ACTIVE);var n=this._indicatorsElement.children[this._getItemIndex(e)];n&&t(n).addClass(h.ACTIVE)}},r.prototype._slide=function(e,n){var i=this,r=t(this._element).find(f.ACTIVE_ITEM)[0],o=this._getItemIndex(r),s=n||r&&this._getItemByDirection(e,r),a=this._getItemIndex(s),c=Boolean(this._interval),u=void 0,g=void 0,m=void 0;if(e===d.NEXT?(u=h.LEFT,g=h.NEXT,m=d.LEFT):(u=h.RIGHT,g=h.PREV,m=d.RIGHT),s&&t(s).hasClass(h.ACTIVE))return void(this._isSliding=!1);if(!this._triggerSlideEvent(s,m).isDefaultPrevented()&&r&&s){this._isSliding=!0,c&&this.pause(),this._setActiveIndicatorElement(s);var v=t.Event(p.SLID,{relatedTarget:s,direction:m,from:o,to:a});l.supportsTransitionEnd()&&t(this._element).hasClass(h.SLIDE)?(t(s).addClass(g),l.reflow(s),t(r).addClass(u),t(s).addClass(u),t(r).one(l.TRANSITION_END,function(){t(s).removeClass(u+" "+g).addClass(h.ACTIVE),t(r).removeClass(h.ACTIVE+" "+g+" "+u),i._isSliding=!1,setTimeout(function(){return t(i._element).trigger(v)},0)}).emulateTransitionEnd(600)):(t(r).removeClass(h.ACTIVE),t(s).addClass(h.ACTIVE),this._isSliding=!1,t(this._element).trigger(v)),c&&this.cycle()}},r._jQueryInterface=function(e){return this.each(function(){var i=t(this).data(n),o=t.extend({},c,t(this).data());"object"===(void 0===e?"undefined":s(e))&&t.extend(o,e);var a="string"==typeof e?e:o.slide;if(i||(i=new r(this,o),t(this).data(n,i)),"number"==typeof e)i.to(e);else if("string"==typeof a){if(void 0===i[a])throw new Error('No method named "'+a+'"');i[a]()}else o.interval&&(i.pause(),i.cycle())})},r._dataApiClickHandler=function(e){var i=l.getSelectorFromElement(this);if(i){var o=t(i)[0];if(o&&t(o).hasClass(h.CAROUSEL)){var s=t.extend({},t(o).data(),t(this).data()),a=this.getAttribute("data-slide-to");a&&(s.interval=!1),r._jQueryInterface.call(t(o),s),a&&t(o).data(n).to(a),e.preventDefault()}}},a(r,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return c}}]),r}();t(document).on(p.CLICK_DATA_API,f.DATA_SLIDE,g._dataApiClickHandler),t(window).on(p.LOAD_DATA_API,function(){t(f.DATA_RIDE).each(function(){var e=t(this);g._jQueryInterface.call(e,e.data())})}),t.fn[e]=g._jQueryInterface,t.fn[e].Constructor=g,t.fn[e].noConflict=function(){return t.fn[e]=r,g._jQueryInterface}}(t),function(t){var e="collapse",n="bs.collapse",i=t.fn[e],r={toggle:!0,parent:""},c={toggle:"boolean",parent:"string"},u={SHOW:"show.bs.collapse",SHOWN:"shown.bs.collapse",HIDE:"hide.bs.collapse",HIDDEN:"hidden.bs.collapse",CLICK_DATA_API:"click.bs.collapse.data-api"},d={SHOW:"show",COLLAPSE:"collapse",COLLAPSING:"collapsing",COLLAPSED:"collapsed"},p={WIDTH:"width",HEIGHT:"height"},h={ACTIVES:".show, .collapsing",DATA_TOGGLE:'[data-toggle="collapse"]'},f=function(){function i(e,n){o(this,i),this._isTransitioning=!1,this._element=e,this._config=this._getConfig(n),this._triggerArray=t.makeArray(t('[data-toggle="collapse"][href="#'+e.id+'"],[data-toggle="collapse"][data-target="#'+e.id+'"]'));for(var r=t(h.DATA_TOGGLE),s=0;s<r.length;s++){var a=r[s],c=l.getSelectorFromElement(a);null!==c&&t(c).filter(e).length>0&&this._triggerArray.push(a)}this._parent=this._config.parent?this._getParent():null,this._config.parent||this._addAriaAndCollapsedClass(this._element,this._triggerArray),this._config.toggle&&this.toggle()}return i.prototype.toggle=function(){t(this._element).hasClass(d.SHOW)?this.hide():this.show()},i.prototype.show=function(){var e=this;if(!this._isTransitioning&&!t(this._element).hasClass(d.SHOW)){var r=void 0,o=void 0;if(this._parent&&(r=t.makeArray(t(this._parent).children().children(h.ACTIVES)),r.length||(r=null)),!(r&&(o=t(r).data(n))&&o._isTransitioning)){var s=t.Event(u.SHOW);if(t(this._element).trigger(s),!s.isDefaultPrevented()){r&&(i._jQueryInterface.call(t(r),"hide"),o||t(r).data(n,null));var a=this._getDimension();t(this._element).removeClass(d.COLLAPSE).addClass(d.COLLAPSING),this._element.style[a]=0,this._triggerArray.length&&t(this._triggerArray).removeClass(d.COLLAPSED).attr("aria-expanded",!0),this.setTransitioning(!0);var c=function(){t(e._element).removeClass(d.COLLAPSING).addClass(d.COLLAPSE).addClass(d.SHOW),e._element.style[a]="",e.setTransitioning(!1),t(e._element).trigger(u.SHOWN)};if(!l.supportsTransitionEnd())return void c();var p=a[0].toUpperCase()+a.slice(1),f="scroll"+p;t(this._element).one(l.TRANSITION_END,c).emulateTransitionEnd(600),this._element.style[a]=this._element[f]+"px"}}}},i.prototype.hide=function(){var e=this;if(!this._isTransitioning&&t(this._element).hasClass(d.SHOW)){var n=t.Event(u.HIDE);if(t(this._element).trigger(n),!n.isDefaultPrevented()){var i=this._getDimension();if(this._element.style[i]=this._element.getBoundingClientRect()[i]+"px",l.reflow(this._element),t(this._element).addClass(d.COLLAPSING).removeClass(d.COLLAPSE).removeClass(d.SHOW),this._triggerArray.length)for(var r=0;r<this._triggerArray.length;r++){var o=this._triggerArray[r],s=l.getSelectorFromElement(o);if(null!==s){var a=t(s);a.hasClass(d.SHOW)||t(o).addClass(d.COLLAPSED).attr("aria-expanded",!1)}}this.setTransitioning(!0);var c=function(){e.setTransitioning(!1),t(e._element).removeClass(d.COLLAPSING).addClass(d.COLLAPSE).trigger(u.HIDDEN)};if(this._element.style[i]="",!l.supportsTransitionEnd())return void c();t(this._element).one(l.TRANSITION_END,c).emulateTransitionEnd(600)}}},i.prototype.setTransitioning=function(t){this._isTransitioning=t},i.prototype.dispose=function(){t.removeData(this._element,n),this._config=null,this._parent=null,this._element=null,this._triggerArray=null,this._isTransitioning=null},i.prototype._getConfig=function(n){return n=t.extend({},r,n),n.toggle=Boolean(n.toggle),l.typeCheckConfig(e,n,c),n},i.prototype._getDimension=function(){return t(this._element).hasClass(p.WIDTH)?p.WIDTH:p.HEIGHT},i.prototype._getParent=function(){var e=this,n=t(this._config.parent)[0],r='[data-toggle="collapse"][data-parent="'+this._config.parent+'"]';return t(n).find(r).each(function(t,n){e._addAriaAndCollapsedClass(i._getTargetFromElement(n),[n])}),n},i.prototype._addAriaAndCollapsedClass=function(e,n){if(e){var i=t(e).hasClass(d.SHOW);n.length&&t(n).toggleClass(d.COLLAPSED,!i).attr("aria-expanded",i)}},i._getTargetFromElement=function(e){var n=l.getSelectorFromElement(e);return n?t(n)[0]:null},i._jQueryInterface=function(e){return this.each(function(){var o=t(this),a=o.data(n),l=t.extend({},r,o.data(),"object"===(void 0===e?"undefined":s(e))&&e);if(!a&&l.toggle&&/show|hide/.test(e)&&(l.toggle=!1),a||(a=new i(this,l),o.data(n,a)),"string"==typeof e){if(void 0===a[e])throw new Error('No method named "'+e+'"');a[e]()}})},a(i,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return r}}]),i}();t(document).on(u.CLICK_DATA_API,h.DATA_TOGGLE,function(e){/input|textarea/i.test(e.target.tagName)||e.preventDefault();var i=t(this),r=l.getSelectorFromElement(this);t(r).each(function(){var e=t(this),r=e.data(n),o=r?"toggle":i.data();f._jQueryInterface.call(e,o)})}),t.fn[e]=f._jQueryInterface,t.fn[e].Constructor=f,t.fn[e].noConflict=function(){return t.fn[e]=i,f._jQueryInterface}}(t),function(t){if(void 0===e)throw new Error("Bootstrap dropdown require Popper.js (https://popper.js.org)");var n="dropdown",i="bs.dropdown",r="."+i,c=t.fn[n],u=new RegExp("38|40|27"),d={HIDE:"hide"+r,HIDDEN:"hidden"+r,SHOW:"show"+r,SHOWN:"shown"+r,CLICK:"click"+r,CLICK_DATA_API:"click.bs.dropdown.data-api",KEYDOWN_DATA_API:"keydown.bs.dropdown.data-api",KEYUP_DATA_API:"keyup.bs.dropdown.data-api"},p={DISABLED:"disabled",SHOW:"show",DROPUP:"dropup",MENURIGHT:"dropdown-menu-right",MENULEFT:"dropdown-menu-left"},h={DATA_TOGGLE:'[data-toggle="dropdown"]',FORM_CHILD:".dropdown form",MENU:".dropdown-menu",NAVBAR_NAV:".navbar-nav",VISIBLE_ITEMS:".dropdown-menu .dropdown-item:not(.disabled)"},f={TOP:"top-start",TOPEND:"top-end",BOTTOM:"bottom-start",BOTTOMEND:"bottom-end"},g={placement:f.BOTTOM,offset:0,flip:!0},m={placement:"string",offset:"(number|string)",flip:"boolean"},v=function(){function c(t,e){o(this,c),this._element=t,this._popper=null,this._config=this._getConfig(e),this._menu=this._getMenuElement(),this._inNavbar=this._detectNavbar(),this._addEventListeners()}return c.prototype.toggle=function(){if(!this._element.disabled&&!t(this._element).hasClass(p.DISABLED)){var n=c._getParentFromElement(this._element),i=t(this._menu).hasClass(p.SHOW);if(c._clearMenus(),!i){var r={relatedTarget:this._element},o=t.Event(d.SHOW,r);if(t(n).trigger(o),!o.isDefaultPrevented()){var s=this._element;t(n).hasClass(p.DROPUP)&&(t(this._menu).hasClass(p.MENULEFT)||t(this._menu).hasClass(p.MENURIGHT))&&(s=n),this._popper=new e(s,this._menu,this._getPopperConfig()),"ontouchstart"in document.documentElement&&!t(n).closest(h.NAVBAR_NAV).length&&t("body").children().on("mouseover",null,t.noop),this._element.focus(),this._element.setAttribute("aria-expanded",!0),t(this._menu).toggleClass(p.SHOW),t(n).toggleClass(p.SHOW).trigger(t.Event(d.SHOWN,r))}}}},c.prototype.dispose=function(){t.removeData(this._element,i),t(this._element).off(r),this._element=null,this._menu=null,null!==this._popper&&this._popper.destroy(),this._popper=null},c.prototype.update=function(){this._inNavbar=this._detectNavbar(),null!==this._popper&&this._popper.scheduleUpdate()},c.prototype._addEventListeners=function(){var e=this;t(this._element).on(d.CLICK,function(t){t.preventDefault(),t.stopPropagation(),e.toggle()})},c.prototype._getConfig=function(e){var i=t(this._element).data();return void 0!==i.placement&&(i.placement=f[i.placement.toUpperCase()]),e=t.extend({},this.constructor.Default,t(this._element).data(),e),l.typeCheckConfig(n,e,this.constructor.DefaultType),e},c.prototype._getMenuElement=function(){if(!this._menu){var e=c._getParentFromElement(this._element);this._menu=t(e).find(h.MENU)[0]}return this._menu},c.prototype._getPlacement=function(){var e=t(this._element).parent(),n=this._config.placement;return e.hasClass(p.DROPUP)||this._config.placement===f.TOP?(n=f.TOP,t(this._menu).hasClass(p.MENURIGHT)&&(n=f.TOPEND)):t(this._menu).hasClass(p.MENURIGHT)&&(n=f.BOTTOMEND),n},c.prototype._detectNavbar=function(){return t(this._element).closest(".navbar").length>0},c.prototype._getPopperConfig=function(){var t={placement:this._getPlacement(),modifiers:{offset:{offset:this._config.offset},flip:{enabled:this._config.flip}}};return this._inNavbar&&(t.modifiers.applyStyle={enabled:!this._inNavbar}),t},c._jQueryInterface=function(e){return this.each(function(){var n=t(this).data(i),r="object"===(void 0===e?"undefined":s(e))?e:null;if(n||(n=new c(this,r),t(this).data(i,n)),"string"==typeof e){if(void 0===n[e])throw new Error('No method named "'+e+'"');n[e]()}})},c._clearMenus=function(e){if(!e||3!==e.which&&("keyup"!==e.type||9===e.which))for(var n=t.makeArray(t(h.DATA_TOGGLE)),r=0;r<n.length;r++){var o=c._getParentFromElement(n[r]),s=t(n[r]).data(i),a={relatedTarget:n[r]};if(s){var l=s._menu;if(t(o).hasClass(p.SHOW)&&!(e&&("click"===e.type&&/input|textarea/i.test(e.target.tagName)||"keyup"===e.type&&9===e.which)&&t.contains(o,e.target))){var u=t.Event(d.HIDE,a);t(o).trigger(u),u.isDefaultPrevented()||("ontouchstart"in document.documentElement&&t("body").children().off("mouseover",null,t.noop),n[r].setAttribute("aria-expanded","false"),t(l).removeClass(p.SHOW),t(o).removeClass(p.SHOW).trigger(t.Event(d.HIDDEN,a)))}}}},c._getParentFromElement=function(e){var n=void 0,i=l.getSelectorFromElement(e);return i&&(n=t(i)[0]),n||e.parentNode},c._dataApiKeydownHandler=function(e){if(!(!u.test(e.which)||/button/i.test(e.target.tagName)&&32===e.which||/input|textarea/i.test(e.target.tagName)||(e.preventDefault(),e.stopPropagation(),this.disabled||t(this).hasClass(p.DISABLED)))){var n=c._getParentFromElement(this),i=t(n).hasClass(p.SHOW);if(!i&&(27!==e.which||32!==e.which)||i&&(27===e.which||32===e.which)){if(27===e.which){var r=t(n).find(h.DATA_TOGGLE)[0];t(r).trigger("focus")}return void t(this).trigger("click")}var o=t(n).find(h.VISIBLE_ITEMS).get();if(o.length){var s=o.indexOf(e.target);38===e.which&&s>0&&s--,40===e.which&&s<o.length-1&&s++,s<0&&(s=0),o[s].focus()}}},a(c,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return g}},{key:"DefaultType",get:function(){return m}}]),c}();t(document).on(d.KEYDOWN_DATA_API,h.DATA_TOGGLE,v._dataApiKeydownHandler).on(d.KEYDOWN_DATA_API,h.MENU,v._dataApiKeydownHandler).on(d.CLICK_DATA_API+" "+d.KEYUP_DATA_API,v._clearMenus).on(d.CLICK_DATA_API,h.DATA_TOGGLE,function(e){e.preventDefault(),e.stopPropagation(),v._jQueryInterface.call(t(this),"toggle")}).on(d.CLICK_DATA_API,h.FORM_CHILD,function(t){t.stopPropagation()}),t.fn[n]=v._jQueryInterface,t.fn[n].Constructor=v,t.fn[n].noConflict=function(){return t.fn[n]=c,v._jQueryInterface}}(t),function(t){var e="modal",n=".bs.modal",i=t.fn[e],r={backdrop:!0,keyboard:!0,focus:!0,show:!0},c={backdrop:"(boolean|string)",keyboard:"boolean",focus:"boolean",show:"boolean"},u={HIDE:"hide.bs.modal",HIDDEN:"hidden.bs.modal",SHOW:"show.bs.modal",SHOWN:"shown.bs.modal",FOCUSIN:"focusin.bs.modal",RESIZE:"resize.bs.modal",CLICK_DISMISS:"click.dismiss.bs.modal",KEYDOWN_DISMISS:"keydown.dismiss.bs.modal",MOUSEUP_DISMISS:"mouseup.dismiss.bs.modal",MOUSEDOWN_DISMISS:"mousedown.dismiss.bs.modal",CLICK_DATA_API:"click.bs.modal.data-api"},d={SCROLLBAR_MEASURER:"modal-scrollbar-measure",BACKDROP:"modal-backdrop",OPEN:"modal-open",FADE:"fade",SHOW:"show"},p={DIALOG:".modal-dialog",DATA_TOGGLE:'[data-toggle="modal"]',DATA_DISMISS:'[data-dismiss="modal"]',FIXED_CONTENT:".fixed-top, .fixed-bottom, .is-fixed, .sticky-top",NAVBAR_TOGGLER:".navbar-toggler"},h=function(){function i(e,n){o(this,i),this._config=this._getConfig(n),this._element=e,this._dialog=t(e).find(p.DIALOG)[0],this._backdrop=null,this._isShown=!1,this._isBodyOverflowing=!1,this._ignoreBackdropClick=!1,this._originalBodyPadding=0,this._scrollbarWidth=0}return i.prototype.toggle=function(t){return this._isShown?this.hide():this.show(t)},i.prototype.show=function(e){var n=this;if(!this._isTransitioning){l.supportsTransitionEnd()&&t(this._element).hasClass(d.FADE)&&(this._isTransitioning=!0);var i=t.Event(u.SHOW,{relatedTarget:e});t(this._element).trigger(i),this._isShown||i.isDefaultPrevented()||(this._isShown=!0,this._checkScrollbar(),this._setScrollbar(),t(document.body).addClass(d.OPEN),this._setEscapeEvent(),this._setResizeEvent(),t(this._element).on(u.CLICK_DISMISS,p.DATA_DISMISS,function(t){return n.hide(t)}),t(this._dialog).on(u.MOUSEDOWN_DISMISS,function(){t(n._element).one(u.MOUSEUP_DISMISS,function(e){t(e.target).is(n._element)&&(n._ignoreBackdropClick=!0)})}),this._showBackdrop(function(){return n._showElement(e)}))}},i.prototype.hide=function(e){var n=this;if(e&&e.preventDefault(),!this._isTransitioning&&this._isShown){var i=l.supportsTransitionEnd()&&t(this._element).hasClass(d.FADE);i&&(this._isTransitioning=!0);var r=t.Event(u.HIDE);t(this._element).trigger(r),this._isShown&&!r.isDefaultPrevented()&&(this._isShown=!1,this._setEscapeEvent(),this._setResizeEvent(),t(document).off(u.FOCUSIN),t(this._element).removeClass(d.SHOW),t(this._element).off(u.CLICK_DISMISS),t(this._dialog).off(u.MOUSEDOWN_DISMISS),i?t(this._element).one(l.TRANSITION_END,function(t){return n._hideModal(t)}).emulateTransitionEnd(300):this._hideModal())}},i.prototype.dispose=function(){t.removeData(this._element,"bs.modal"),t(window,document,this._element,this._backdrop).off(n),this._config=null,this._element=null,this._dialog=null,this._backdrop=null,this._isShown=null,this._isBodyOverflowing=null,this._ignoreBackdropClick=null,this._scrollbarWidth=null},i.prototype.handleUpdate=function(){this._adjustDialog()},i.prototype._getConfig=function(n){return n=t.extend({},r,n),l.typeCheckConfig(e,n,c),n},i.prototype._showElement=function(e){var n=this,i=l.supportsTransitionEnd()&&t(this._element).hasClass(d.FADE);this._element.parentNode&&this._element.parentNode.nodeType===Node.ELEMENT_NODE||document.body.appendChild(this._element),this._element.style.display="block",this._element.removeAttribute("aria-hidden"),this._element.scrollTop=0,i&&l.reflow(this._element),t(this._element).addClass(d.SHOW),this._config.focus&&this._enforceFocus();var r=t.Event(u.SHOWN,{relatedTarget:e}),o=function(){n._config.focus&&n._element.focus(),n._isTransitioning=!1,t(n._element).trigger(r)};i?t(this._dialog).one(l.TRANSITION_END,o).emulateTransitionEnd(300):o()},i.prototype._enforceFocus=function(){var e=this;t(document).off(u.FOCUSIN).on(u.FOCUSIN,function(n){document===n.target||e._element===n.target||t(e._element).has(n.target).length||e._element.focus()})},i.prototype._setEscapeEvent=function(){var e=this;this._isShown&&this._config.keyboard?t(this._element).on(u.KEYDOWN_DISMISS,function(t){27===t.which&&(t.preventDefault(),e.hide())}):this._isShown||t(this._element).off(u.KEYDOWN_DISMISS)},i.prototype._setResizeEvent=function(){var e=this;this._isShown?t(window).on(u.RESIZE,function(t){return e.handleUpdate(t)}):t(window).off(u.RESIZE)},i.prototype._hideModal=function(){var e=this;this._element.style.display="none",this._element.setAttribute("aria-hidden",!0),this._isTransitioning=!1,this._showBackdrop(function(){t(document.body).removeClass(d.OPEN),e._resetAdjustments(),e._resetScrollbar(),t(e._element).trigger(u.HIDDEN)})},i.prototype._removeBackdrop=function(){this._backdrop&&(t(this._backdrop).remove(),this._backdrop=null)},i.prototype._showBackdrop=function(e){var n=this,i=t(this._element).hasClass(d.FADE)?d.FADE:"";if(this._isShown&&this._config.backdrop){var r=l.supportsTransitionEnd()&&i;if(this._backdrop=document.createElement("div"),this._backdrop.className=d.BACKDROP,i&&t(this._backdrop).addClass(i),t(this._backdrop).appendTo(document.body),t(this._element).on(u.CLICK_DISMISS,function(t){if(n._ignoreBackdropClick)return void(n._ignoreBackdropClick=!1);t.target===t.currentTarget&&("static"===n._config.backdrop?n._element.focus():n.hide())}),r&&l.reflow(this._backdrop),t(this._backdrop).addClass(d.SHOW),!e)return;if(!r)return void e();t(this._backdrop).one(l.TRANSITION_END,e).emulateTransitionEnd(150)}else if(!this._isShown&&this._backdrop){t(this._backdrop).removeClass(d.SHOW);var o=function(){n._removeBackdrop(),e&&e()};l.supportsTransitionEnd()&&t(this._element).hasClass(d.FADE)?t(this._backdrop).one(l.TRANSITION_END,o).emulateTransitionEnd(150):o()}else e&&e()},i.prototype._adjustDialog=function(){var t=this._element.scrollHeight>document.documentElement.clientHeight;!this._isBodyOverflowing&&t&&(this._element.style.paddingLeft=this._scrollbarWidth+"px"),this._isBodyOverflowing&&!t&&(this._element.style.paddingRight=this._scrollbarWidth+"px")},i.prototype._resetAdjustments=function(){this._element.style.paddingLeft="",this._element.style.paddingRight=""},i.prototype._checkScrollbar=function(){this._isBodyOverflowing=document.body.clientWidth<window.innerWidth,this._scrollbarWidth=this._getScrollbarWidth()},i.prototype._setScrollbar=function(){var e=this;if(this._isBodyOverflowing){t(p.FIXED_CONTENT).each(function(n,i){var r=t(i)[0].style.paddingRight,o=t(i).css("padding-right");t(i).data("padding-right",r).css("padding-right",parseFloat(o)+e._scrollbarWidth+"px")}),t(p.NAVBAR_TOGGLER).each(function(n,i){var r=t(i)[0].style.marginRight,o=t(i).css("margin-right");t(i).data("margin-right",r).css("margin-right",parseFloat(o)+e._scrollbarWidth+"px")});var n=document.body.style.paddingRight,i=t("body").css("padding-right");t("body").data("padding-right",n).css("padding-right",parseFloat(i)+this._scrollbarWidth+"px")}},i.prototype._resetScrollbar=function(){t(p.FIXED_CONTENT).each(function(e,n){var i=t(n).data("padding-right");void 0!==i&&t(n).css("padding-right",i).removeData("padding-right")}),t(p.NAVBAR_TOGGLER).each(function(e,n){var i=t(n).data("margin-right");void 0!==i&&t(n).css("margin-right",i).removeData("margin-right")});var e=t("body").data("padding-right");void 0!==e&&t("body").css("padding-right",e).removeData("padding-right")},i.prototype._getScrollbarWidth=function(){var t=document.createElement("div");t.className=d.SCROLLBAR_MEASURER,document.body.appendChild(t);var e=t.getBoundingClientRect().width-t.clientWidth;return document.body.removeChild(t),e},i._jQueryInterface=function(e,n){return this.each(function(){var r=t(this).data("bs.modal"),o=t.extend({},i.Default,t(this).data(),"object"===(void 0===e?"undefined":s(e))&&e);if(r||(r=new i(this,o),t(this).data("bs.modal",r)),"string"==typeof e){if(void 0===r[e])throw new Error('No method named "'+e+'"');r[e](n)}else o.show&&r.show(n)})},a(i,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return r}}]),i}();t(document).on(u.CLICK_DATA_API,p.DATA_TOGGLE,function(e){var n=this,i=void 0,r=l.getSelectorFromElement(this);r&&(i=t(r)[0]);var o=t(i).data("bs.modal")?"toggle":t.extend({},t(i).data(),t(this).data());"A"!==this.tagName&&"AREA"!==this.tagName||e.preventDefault();var s=t(i).one(u.SHOW,function(e){e.isDefaultPrevented()||s.one(u.HIDDEN,function(){t(n).is(":visible")&&n.focus()})});h._jQueryInterface.call(t(i),o,this)}),t.fn[e]=h._jQueryInterface,t.fn[e].Constructor=h,t.fn[e].noConflict=function(){return t.fn[e]=i,h._jQueryInterface}}(t),function(t){var e="scrollspy",n=t.fn[e],i={offset:10,method:"auto",target:""},r={offset:"number",method:"string",target:"(string|element)"},c={ACTIVATE:"activate.bs.scrollspy",SCROLL:"scroll.bs.scrollspy",LOAD_DATA_API:"load.bs.scrollspy.data-api"},u={DROPDOWN_ITEM:"dropdown-item",DROPDOWN_MENU:"dropdown-menu",ACTIVE:"active"},d={DATA_SPY:'[data-spy="scroll"]',ACTIVE:".active",NAV_LIST_GROUP:".nav, .list-group",NAV_LINKS:".nav-link",LIST_ITEMS:".list-group-item",DROPDOWN:".dropdown",DROPDOWN_ITEMS:".dropdown-item",DROPDOWN_TOGGLE:".dropdown-toggle"},p={OFFSET:"offset",POSITION:"position"},h=function(){function n(e,i){var r=this;o(this,n),this._element=e,this._scrollElement="BODY"===e.tagName?window:e,this._config=this._getConfig(i),this._selector=this._config.target+" "+d.NAV_LINKS+","+this._config.target+" "+d.LIST_ITEMS+","+this._config.target+" "+d.DROPDOWN_ITEMS,this._offsets=[],this._targets=[],this._activeTarget=null,this._scrollHeight=0,t(this._scrollElement).on(c.SCROLL,function(t){return r._process(t)}),this.refresh(),this._process()}return n.prototype.refresh=function(){var e=this,n=this._scrollElement!==this._scrollElement.window?p.POSITION:p.OFFSET,i="auto"===this._config.method?n:this._config.method,r=i===p.POSITION?this._getScrollTop():0;this._offsets=[],this._targets=[],this._scrollHeight=this._getScrollHeight(),t.makeArray(t(this._selector)).map(function(e){var n=void 0,o=l.getSelectorFromElement(e);if(o&&(n=t(o)[0]),n){var s=n.getBoundingClientRect();if(s.width||s.height)return[t(n)[i]().top+r,o]}return null}).filter(function(t){return t}).sort(function(t,e){return t[0]-e[0]}).forEach(function(t){e._offsets.push(t[0]),e._targets.push(t[1])})},n.prototype.dispose=function(){t.removeData(this._element,"bs.scrollspy"),t(this._scrollElement).off(".bs.scrollspy"),this._element=null,this._scrollElement=null,this._config=null,this._selector=null,this._offsets=null,this._targets=null,this._activeTarget=null,this._scrollHeight=null},n.prototype._getConfig=function(n){if(n=t.extend({},i,n),"string"!=typeof n.target){var o=t(n.target).attr("id");o||(o=l.getUID(e),t(n.target).attr("id",o)),n.target="#"+o}return l.typeCheckConfig(e,n,r),n},n.prototype._getScrollTop=function(){return this._scrollElement===window?this._scrollElement.pageYOffset:this._scrollElement.scrollTop},n.prototype._getScrollHeight=function(){return this._scrollElement.scrollHeight||Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},n.prototype._getOffsetHeight=function(){return this._scrollElement===window?window.innerHeight:this._scrollElement.getBoundingClientRect().height},n.prototype._process=function(){var t=this._getScrollTop()+this._config.offset,e=this._getScrollHeight(),n=this._config.offset+e-this._getOffsetHeight();if(this._scrollHeight!==e&&this.refresh(),t>=n){var i=this._targets[this._targets.length-1];return void(this._activeTarget!==i&&this._activate(i))}if(this._activeTarget&&t<this._offsets[0]&&this._offsets[0]>0)return this._activeTarget=null,void this._clear();for(var r=this._offsets.length;r--;){this._activeTarget!==this._targets[r]&&t>=this._offsets[r]&&(void 0===this._offsets[r+1]||t<this._offsets[r+1])&&this._activate(this._targets[r])}},n.prototype._activate=function(e){this._activeTarget=e,this._clear();var n=this._selector.split(",");n=n.map(function(t){return t+'[data-target="'+e+'"],'+t+'[href="'+e+'"]'});var i=t(n.join(","));i.hasClass(u.DROPDOWN_ITEM)?(i.closest(d.DROPDOWN).find(d.DROPDOWN_TOGGLE).addClass(u.ACTIVE),i.addClass(u.ACTIVE)):(i.addClass(u.ACTIVE),i.parents(d.NAV_LIST_GROUP).prev(d.NAV_LINKS+", "+d.LIST_ITEMS).addClass(u.ACTIVE)),t(this._scrollElement).trigger(c.ACTIVATE,{relatedTarget:e})},n.prototype._clear=function(){t(this._selector).filter(d.ACTIVE).removeClass(u.ACTIVE)},n._jQueryInterface=function(e){return this.each(function(){var i=t(this).data("bs.scrollspy"),r="object"===(void 0===e?"undefined":s(e))&&e;if(i||(i=new n(this,r),t(this).data("bs.scrollspy",i)),"string"==typeof e){if(void 0===i[e])throw new Error('No method named "'+e+'"');i[e]()}})},a(n,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return i}}]),n}();t(window).on(c.LOAD_DATA_API,function(){for(var e=t.makeArray(t(d.DATA_SPY)),n=e.length;n--;){var i=t(e[n]);h._jQueryInterface.call(i,i.data())}}),t.fn[e]=h._jQueryInterface,t.fn[e].Constructor=h,t.fn[e].noConflict=function(){return t.fn[e]=n,h._jQueryInterface}}(t),function(t){var e=t.fn.tab,n={HIDE:"hide.bs.tab",HIDDEN:"hidden.bs.tab",SHOW:"show.bs.tab",SHOWN:"shown.bs.tab",CLICK_DATA_API:"click.bs.tab.data-api"},i={DROPDOWN_MENU:"dropdown-menu",ACTIVE:"active",DISABLED:"disabled",FADE:"fade",SHOW:"show"},r={DROPDOWN:".dropdown",NAV_LIST_GROUP:".nav, .list-group",ACTIVE:".active",DATA_TOGGLE:'[data-toggle="tab"], [data-toggle="pill"], [data-toggle="list"]',DROPDOWN_TOGGLE:".dropdown-toggle",DROPDOWN_ACTIVE_CHILD:"> .dropdown-menu .active"},s=function(){function e(t){o(this,e),this._element=t}return e.prototype.show=function(){var e=this;if(!(this._element.parentNode&&this._element.parentNode.nodeType===Node.ELEMENT_NODE&&t(this._element).hasClass(i.ACTIVE)||t(this._element).hasClass(i.DISABLED))){var o=void 0,s=void 0,a=t(this._element).closest(r.NAV_LIST_GROUP)[0],c=l.getSelectorFromElement(this._element);a&&(s=t.makeArray(t(a).find(r.ACTIVE)),s=s[s.length-1]);var u=t.Event(n.HIDE,{relatedTarget:this._element}),d=t.Event(n.SHOW,{relatedTarget:s});if(s&&t(s).trigger(u),t(this._element).trigger(d),!d.isDefaultPrevented()&&!u.isDefaultPrevented()){c&&(o=t(c)[0]),this._activate(this._element,a);var p=function(){var i=t.Event(n.HIDDEN,{relatedTarget:e._element}),r=t.Event(n.SHOWN,{relatedTarget:s});t(s).trigger(i),t(e._element).trigger(r)};o?this._activate(o,o.parentNode,p):p()}}},e.prototype.dispose=function(){t.removeData(this._element,"bs.tab"),this._element=null},e.prototype._activate=function(e,n,o){var s=this,a=t(n).find(r.ACTIVE)[0],c=o&&l.supportsTransitionEnd()&&a&&t(a).hasClass(i.FADE),u=function(){return s._transitionComplete(e,a,c,o)};a&&c?t(a).one(l.TRANSITION_END,u).emulateTransitionEnd(150):u(),a&&t(a).removeClass(i.SHOW)},e.prototype._transitionComplete=function(e,n,o,s){if(n){t(n).removeClass(i.ACTIVE);var a=t(n.parentNode).find(r.DROPDOWN_ACTIVE_CHILD)[0];a&&t(a).removeClass(i.ACTIVE),n.setAttribute("aria-expanded",!1)}if(t(e).addClass(i.ACTIVE),e.setAttribute("aria-expanded",!0),o?(l.reflow(e),t(e).addClass(i.SHOW)):t(e).removeClass(i.FADE),e.parentNode&&t(e.parentNode).hasClass(i.DROPDOWN_MENU)){var c=t(e).closest(r.DROPDOWN)[0];c&&t(c).find(r.DROPDOWN_TOGGLE).addClass(i.ACTIVE),e.setAttribute("aria-expanded",!0)}s&&s()},e._jQueryInterface=function(n){return this.each(function(){var i=t(this),r=i.data("bs.tab");if(r||(r=new e(this),i.data("bs.tab",r)),"string"==typeof n){if(void 0===r[n])throw new Error('No method named "'+n+'"');r[n]()}})},a(e,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}}]),e}();t(document).on(n.CLICK_DATA_API,r.DATA_TOGGLE,function(e){e.preventDefault(),s._jQueryInterface.call(t(this),"show")}),t.fn.tab=s._jQueryInterface,t.fn.tab.Constructor=s,t.fn.tab.noConflict=function(){return t.fn.tab=e,s._jQueryInterface}}(t),function(t){if(void 0===e)throw new Error("Bootstrap tooltips require Popper.js (https://popper.js.org)");var n="tooltip",i=".bs.tooltip",r=t.fn[n],c=new RegExp("(^|\\s)bs-tooltip\\S+","g"),u={animation:"boolean",template:"string",title:"(string|element|function)",trigger:"string",delay:"(number|object)",html:"boolean",selector:"(string|boolean)",placement:"(string|function)",offset:"(number|string)",container:"(string|element|boolean)",fallbackPlacement:"(string|array)"},d={AUTO:"auto",TOP:"top",RIGHT:"right",BOTTOM:"bottom",LEFT:"left"},p={animation:!0,template:'<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,selector:!1,placement:"top",offset:0,container:!1,fallbackPlacement:"flip"},h={SHOW:"show",OUT:"out"},f={HIDE:"hide"+i,HIDDEN:"hidden"+i,SHOW:"show"+i,SHOWN:"shown"+i,INSERTED:"inserted"+i,CLICK:"click"+i,FOCUSIN:"focusin"+i,FOCUSOUT:"focusout"+i,MOUSEENTER:"mouseenter"+i,MOUSELEAVE:"mouseleave"+i},g={FADE:"fade",SHOW:"show"},m={TOOLTIP:".tooltip",TOOLTIP_INNER:".tooltip-inner",ARROW:".arrow"},v={HOVER:"hover",FOCUS:"focus",CLICK:"click",MANUAL:"manual"},y=function(){function r(t,e){o(this,r),this._isEnabled=!0,this._timeout=0,this._hoverState="",this._activeTrigger={},this._popper=null,this.element=t,this.config=this._getConfig(e),this.tip=null,this._setListeners()}return r.prototype.enable=function(){this._isEnabled=!0},r.prototype.disable=function(){this._isEnabled=!1},r.prototype.toggleEnabled=function(){this._isEnabled=!this._isEnabled},r.prototype.toggle=function(e){if(e){var n=this.constructor.DATA_KEY,i=t(e.currentTarget).data(n);i||(i=new this.constructor(e.currentTarget,this._getDelegateConfig()),t(e.currentTarget).data(n,i)),i._activeTrigger.click=!i._activeTrigger.click,i._isWithActiveTrigger()?i._enter(null,i):i._leave(null,i)}else{if(t(this.getTipElement()).hasClass(g.SHOW))return void this._leave(null,this);this._enter(null,this)}},r.prototype.dispose=function(){clearTimeout(this._timeout),t.removeData(this.element,this.constructor.DATA_KEY),t(this.element).off(this.constructor.EVENT_KEY),t(this.element).closest(".modal").off("hide.bs.modal"),this.tip&&t(this.tip).remove(),this._isEnabled=null,this._timeout=null,this._hoverState=null,this._activeTrigger=null,null!==this._popper&&this._popper.destroy(),this._popper=null,this.element=null,this.config=null,this.tip=null},r.prototype.show=function(){var n=this;if("none"===t(this.element).css("display"))throw new Error("Please use show on visible elements");var i=t.Event(this.constructor.Event.SHOW);if(this.isWithContent()&&this._isEnabled){t(this.element).trigger(i);var o=t.contains(this.element.ownerDocument.documentElement,this.element);if(i.isDefaultPrevented()||!o)return;var s=this.getTipElement(),a=l.getUID(this.constructor.NAME);s.setAttribute("id",a),this.element.setAttribute("aria-describedby",a),this.setContent(),this.config.animation&&t(s).addClass(g.FADE);var c="function"==typeof this.config.placement?this.config.placement.call(this,s,this.element):this.config.placement,u=this._getAttachment(c);this.addAttachmentClass(u);var d=!1===this.config.container?document.body:t(this.config.container);t(s).data(this.constructor.DATA_KEY,this),t.contains(this.element.ownerDocument.documentElement,this.tip)||t(s).appendTo(d),t(this.element).trigger(this.constructor.Event.INSERTED),this._popper=new e(this.element,s,{placement:u,modifiers:{offset:{offset:this.config.offset},flip:{behavior:this.config.fallbackPlacement},arrow:{element:m.ARROW}},onCreate:function(t){t.originalPlacement!==t.placement&&n._handlePopperPlacementChange(t)},onUpdate:function(t){n._handlePopperPlacementChange(t)}}),t(s).addClass(g.SHOW),"ontouchstart"in document.documentElement&&t("body").children().on("mouseover",null,t.noop);var p=function(){n.config.animation&&n._fixTransition();var e=n._hoverState;n._hoverState=null,t(n.element).trigger(n.constructor.Event.SHOWN),e===h.OUT&&n._leave(null,n)};l.supportsTransitionEnd()&&t(this.tip).hasClass(g.FADE)?t(this.tip).one(l.TRANSITION_END,p).emulateTransitionEnd(r._TRANSITION_DURATION):p()}},r.prototype.hide=function(e){var n=this,i=this.getTipElement(),r=t.Event(this.constructor.Event.HIDE),o=function(){n._hoverState!==h.SHOW&&i.parentNode&&i.parentNode.removeChild(i),n._cleanTipClass(),n.element.removeAttribute("aria-describedby"),t(n.element).trigger(n.constructor.Event.HIDDEN),null!==n._popper&&n._popper.destroy(),e&&e()};t(this.element).trigger(r),r.isDefaultPrevented()||(t(i).removeClass(g.SHOW),"ontouchstart"in document.documentElement&&t("body").children().off("mouseover",null,t.noop),this._activeTrigger[v.CLICK]=!1,this._activeTrigger[v.FOCUS]=!1,this._activeTrigger[v.HOVER]=!1,l.supportsTransitionEnd()&&t(this.tip).hasClass(g.FADE)?t(i).one(l.TRANSITION_END,o).emulateTransitionEnd(150):o(),this._hoverState="")},r.prototype.update=function(){null!==this._popper&&this._popper.scheduleUpdate()},r.prototype.isWithContent=function(){return Boolean(this.getTitle())},r.prototype.addAttachmentClass=function(e){t(this.getTipElement()).addClass("bs-tooltip-"+e)},r.prototype.getTipElement=function(){return this.tip=this.tip||t(this.config.template)[0]},r.prototype.setContent=function(){var e=t(this.getTipElement());this.setElementContent(e.find(m.TOOLTIP_INNER),this.getTitle()),e.removeClass(g.FADE+" "+g.SHOW)},r.prototype.setElementContent=function(e,n){var i=this.config.html;"object"===(void 0===n?"undefined":s(n))&&(n.nodeType||n.jquery)?i?t(n).parent().is(e)||e.empty().append(n):e.text(t(n).text()):e[i?"html":"text"](n)},r.prototype.getTitle=function(){var t=this.element.getAttribute("data-original-title");return t||(t="function"==typeof this.config.title?this.config.title.call(this.element):this.config.title),t},r.prototype._getAttachment=function(t){return d[t.toUpperCase()]},r.prototype._setListeners=function(){var e=this;this.config.trigger.split(" ").forEach(function(n){if("click"===n)t(e.element).on(e.constructor.Event.CLICK,e.config.selector,function(t){return e.toggle(t)});else if(n!==v.MANUAL){var i=n===v.HOVER?e.constructor.Event.MOUSEENTER:e.constructor.Event.FOCUSIN,r=n===v.HOVER?e.constructor.Event.MOUSELEAVE:e.constructor.Event.FOCUSOUT;t(e.element).on(i,e.config.selector,function(t){return e._enter(t)}).on(r,e.config.selector,function(t){return e._leave(t)})}t(e.element).closest(".modal").on("hide.bs.modal",function(){return e.hide()})}),this.config.selector?this.config=t.extend({},this.config,{trigger:"manual",selector:""}):this._fixTitle()},r.prototype._fixTitle=function(){var t=s(this.element.getAttribute("data-original-title"));(this.element.getAttribute("title")||"string"!==t)&&(this.element.setAttribute("data-original-title",this.element.getAttribute("title")||""),this.element.setAttribute("title",""))},r.prototype._enter=function(e,n){var i=this.constructor.DATA_KEY;return n=n||t(e.currentTarget).data(i),n||(n=new this.constructor(e.currentTarget,this._getDelegateConfig()),t(e.currentTarget).data(i,n)),e&&(n._activeTrigger["focusin"===e.type?v.FOCUS:v.HOVER]=!0),t(n.getTipElement()).hasClass(g.SHOW)||n._hoverState===h.SHOW?void(n._hoverState=h.SHOW):(clearTimeout(n._timeout),n._hoverState=h.SHOW,n.config.delay&&n.config.delay.show?void(n._timeout=setTimeout(function(){n._hoverState===h.SHOW&&n.show()},n.config.delay.show)):void n.show())},r.prototype._leave=function(e,n){var i=this.constructor.DATA_KEY;if(n=n||t(e.currentTarget).data(i),n||(n=new this.constructor(e.currentTarget,this._getDelegateConfig()),t(e.currentTarget).data(i,n)),e&&(n._activeTrigger["focusout"===e.type?v.FOCUS:v.HOVER]=!1),!n._isWithActiveTrigger()){if(clearTimeout(n._timeout),n._hoverState=h.OUT,!n.config.delay||!n.config.delay.hide)return void n.hide();n._timeout=setTimeout(function(){n._hoverState===h.OUT&&n.hide()},n.config.delay.hide)}},r.prototype._isWithActiveTrigger=function(){for(var t in this._activeTrigger)if(this._activeTrigger[t])return!0;return!1},r.prototype._getConfig=function(e){return e=t.extend({},this.constructor.Default,t(this.element).data(),e),e.delay&&"number"==typeof e.delay&&(e.delay={show:e.delay,hide:e.delay}),e.title&&"number"==typeof e.title&&(e.title=e.title.toString()),e.content&&"number"==typeof e.content&&(e.content=e.content.toString()),l.typeCheckConfig(n,e,this.constructor.DefaultType),e},r.prototype._getDelegateConfig=function(){var t={};if(this.config)for(var e in this.config)this.constructor.Default[e]!==this.config[e]&&(t[e]=this.config[e]);return t},r.prototype._cleanTipClass=function(){var e=t(this.getTipElement()),n=e.attr("class").match(c);null!==n&&n.length>0&&e.removeClass(n.join(""))},r.prototype._handlePopperPlacementChange=function(t){this._cleanTipClass(),this.addAttachmentClass(this._getAttachment(t.placement))},r.prototype._fixTransition=function(){var e=this.getTipElement(),n=this.config.animation;null===e.getAttribute("x-placement")&&(t(e).removeClass(g.FADE),this.config.animation=!1,this.hide(),this.show(),this.config.animation=n)},r._jQueryInterface=function(e){return this.each(function(){var n=t(this).data("bs.tooltip"),i="object"===(void 0===e?"undefined":s(e))&&e;if((n||!/dispose|hide/.test(e))&&(n||(n=new r(this,i),t(this).data("bs.tooltip",n)),"string"==typeof e)){if(void 0===n[e])throw new Error('No method named "'+e+'"');n[e]()}})},a(r,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return p}},{key:"NAME",get:function(){return n}},{key:"DATA_KEY",get:function(){return"bs.tooltip"}},{key:"Event",get:function(){return f}},{key:"EVENT_KEY",get:function(){return i}},{key:"DefaultType",get:function(){return u}}]),r}();return t.fn[n]=y._jQueryInterface,t.fn[n].Constructor=y,t.fn[n].noConflict=function(){return t.fn[n]=r,y._jQueryInterface},y}(t));!function(t){var e="popover",n=".bs.popover",l=t.fn[e],u=new RegExp("(^|\\s)bs-popover\\S+","g"),d=t.extend({},c.Default,{placement:"right",trigger:"click",content:"",template:'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>'}),p=t.extend({},c.DefaultType,{content:"(string|element|function)"}),h={FADE:"fade",SHOW:"show"},f={TITLE:".popover-header",CONTENT:".popover-body"},g={HIDE:"hide"+n,HIDDEN:"hidden"+n,SHOW:"show"+n,SHOWN:"shown"+n,INSERTED:"inserted"+n,CLICK:"click"+n,FOCUSIN:"focusin"+n,FOCUSOUT:"focusout"+n,MOUSEENTER:"mouseenter"+n,MOUSELEAVE:"mouseleave"+n},m=function(l){function c(){return o(this,c),i(this,l.apply(this,arguments))}return r(c,l),c.prototype.isWithContent=function(){return this.getTitle()||this._getContent()},c.prototype.addAttachmentClass=function(e){t(this.getTipElement()).addClass("bs-popover-"+e)},c.prototype.getTipElement=function(){return this.tip=this.tip||t(this.config.template)[0]},c.prototype.setContent=function(){var e=t(this.getTipElement());this.setElementContent(e.find(f.TITLE),this.getTitle()),this.setElementContent(e.find(f.CONTENT),this._getContent()),e.removeClass(h.FADE+" "+h.SHOW)},c.prototype._getContent=function(){return this.element.getAttribute("data-content")||("function"==typeof this.config.content?this.config.content.call(this.element):this.config.content)},c.prototype._cleanTipClass=function(){var e=t(this.getTipElement()),n=e.attr("class").match(u);null!==n&&n.length>0&&e.removeClass(n.join(""))},c._jQueryInterface=function(e){return this.each(function(){var n=t(this).data("bs.popover"),i="object"===(void 0===e?"undefined":s(e))?e:null;if((n||!/destroy|hide/.test(e))&&(n||(n=new c(this,i),t(this).data("bs.popover",n)),"string"==typeof e)){if(void 0===n[e])throw new Error('No method named "'+e+'"');n[e]()}})},a(c,null,[{key:"VERSION",get:function(){return"4.0.0-beta"}},{key:"Default",get:function(){return d}},{key:"NAME",get:function(){return e}},{key:"DATA_KEY",get:function(){return"bs.popover"}},{key:"Event",get:function(){return g}},{key:"EVENT_KEY",get:function(){return n}},{key:"DefaultType",get:function(){return p}}]),c}(c);t.fn[e]=m._jQueryInterface,t.fn[e].Constructor=m,t.fn[e].noConflict=function(){return t.fn[e]=l,m._jQueryInterface}}(t)}()}).call(e,n(0),n(7).default)},function(t,e,n){(function(e){t.exports=e.tether=n(11)}).call(e,n(1))},function(t,e,n){(function(t){(function(){"use strict";var e,n,i,r=function(t,e){return function(){return t.apply(e,arguments)}};e=t,n=function(){function t(){}return t.transitions={webkitTransition:"webkitTransitionEnd",mozTransition:"mozTransitionEnd",oTransition:"oTransitionEnd",transition:"transitionend"},t.transition=function(t){var e,n,i,r;e=t[0],n=this.transitions;for(r in n)if(i=n[r],null!=e.style[r])return i},t}(),i=function(){function t(n){null==n&&(n={}),this.container=r(this.container,this),this.content=r(this.content,this),this.html=r(this.html,this),this.$growl=r(this.$growl,this),this.$growls=r(this.$growls,this),this.animate=r(this.animate,this),this.remove=r(this.remove,this),this.dismiss=r(this.dismiss,this),this.present=r(this.present,this),this.waitAndDismiss=r(this.waitAndDismiss,this),this.cycle=r(this.cycle,this),this.close=r(this.close,this),this.click=r(this.click,this),this.mouseLeave=r(this.mouseLeave,this),this.mouseEnter=r(this.mouseEnter,this),this.unbind=r(this.unbind,this),this.bind=r(this.bind,this),this.render=r(this.render,this),this.settings=e.extend({},t.settings,n),this.$growls().attr("class",this.settings.location),this.render()}return t.settings={namespace:"growl",duration:3200,close:"&#215;",location:"default",style:"default",size:"medium",delayOnHover:!0},t.growl=function(e){return null==e&&(e={}),this.initialize(),new t(e)},t.initialize=function(){return e("body:not(:has(#growls))").append('<div id="growls" />')},t.prototype.render=function(){var t;t=this.$growl(),this.$growls().append(t),this.settings.fixed?this.present():this.cycle()},t.prototype.bind=function(t){return null==t&&(t=this.$growl()),t.on("click",this.click),this.settings.delayOnHover&&(t.on("mouseenter",this.mouseEnter),t.on("mouseleave",this.mouseLeave)),t.on("contextmenu",this.close).find("."+this.settings.namespace+"-close").on("click",this.close)},t.prototype.unbind=function(t){return null==t&&(t=this.$growl()),t.off("click",this.click),this.settings.delayOnHover&&(t.off("mouseenter",this.mouseEnter),t.off("mouseleave",this.mouseLeave)),t.off("contextmenu",this.close).find("."+this.settings.namespace+"-close").off("click",this.close)},t.prototype.mouseEnter=function(t){var e;return e=this.$growl(),e.stop(!0,!0)},t.prototype.mouseLeave=function(t){return this.waitAndDismiss()},t.prototype.click=function(t){if(null!=this.settings.url)return t.preventDefault(),t.stopPropagation(),window.open(this.settings.url)},t.prototype.close=function(t){var e;return t.preventDefault(),t.stopPropagation(),e=this.$growl(),e.stop().queue(this.dismiss).queue(this.remove)},t.prototype.cycle=function(){var t;return t=this.$growl(),t.queue(this.present).queue(this.waitAndDismiss())},t.prototype.waitAndDismiss=function(){var t;return t=this.$growl(),t.delay(this.settings.duration).queue(this.dismiss).queue(this.remove)},t.prototype.present=function(t){var e;return e=this.$growl(),this.bind(e),this.animate(e,this.settings.namespace+"-incoming","out",t)},t.prototype.dismiss=function(t){var e;return e=this.$growl(),this.unbind(e),this.animate(e,this.settings.namespace+"-outgoing","in",t)},t.prototype.remove=function(t){return this.$growl().remove(),t()},t.prototype.animate=function(t,e,i,r){var o;null==i&&(i="in"),o=n.transition(t),t["in"===i?"removeClass":"addClass"](e),t.offset().position,t["in"===i?"addClass":"removeClass"](e),null!=r&&(null!=o?t.one(o,r):r())},t.prototype.$growls=function(){return null!=this.$_growls?this.$_growls:this.$_growls=e("#growls")},t.prototype.$growl=function(){return null!=this.$_growl?this.$_growl:this.$_growl=e(this.html())},t.prototype.html=function(){return this.container(this.content())},t.prototype.content=function(){return"<div class='"+this.settings.namespace+"-close'>"+this.settings.close+"</div>\n<div class='"+this.settings.namespace+"-title'>"+this.settings.title+"</div>\n<div class='"+this.settings.namespace+"-message'>"+this.settings.message+"</div>"},t.prototype.container=function(t){return"<div class='"+this.settings.namespace+" "+this.settings.namespace+"-"+this.settings.style+" "+this.settings.namespace+"-"+this.settings.size+"'>\n  "+t+"\n</div>"},t}(),this.Growl=i,e.growl=function(t){return null==t&&(t={}),i.growl(t)},e.growl.error=function(t){var n;return null==t&&(t={}),n={title:"Error!",style:"error"},e.growl(e.extend(n,t))},e.growl.notice=function(t){var n;return null==t&&(t={}),n={title:"Notice!",style:"notice"},e.growl(e.extend(n,t))},e.growl.warning=function(t){var n;return null==t&&(t={}),n={title:"Warning!",style:"warning"},e.growl(e.extend(n,t))}}).call(this)}).call(e,n(0))},function(t,e,n){"use strict";Object.defineProperty(e,"__esModule",{value:!0}),function(t){function n(t){var e=!1,n=0,i=document.createElement("span");return new MutationObserver(function(){t(),e=!1}).observe(i,{attributes:!0}),function(){e||(e=!0,i.setAttribute("x-index",n),n+=1)}}function i(t){var e=!1;return function(){e||(e=!0,setTimeout(function(){e=!1,t()},ct))}}function r(t){var e={};return t&&"[object Function]"===e.toString.call(t)}function o(t,e){if(1!==t.nodeType)return[];var n=window.getComputedStyle(t,null);return e?n[e]:n}function s(t){return"HTML"===t.nodeName?t:t.parentNode||t.host}function a(t){if(!t||-1!==["HTML","BODY","#document"].indexOf(t.nodeName))return window.document.body;var e=o(t),n=e.overflow,i=e.overflowX;return/(auto|scroll)/.test(n+e.overflowY+i)?t:a(s(t))}function l(t){var e=t&&t.offsetParent,n=e&&e.nodeName;return n&&"BODY"!==n&&"HTML"!==n?-1!==["TD","TABLE"].indexOf(e.nodeName)&&"static"===o(e,"position")?l(e):e:window.document.documentElement}function c(t){var e=t.nodeName;return"BODY"!==e&&("HTML"===e||l(t.firstElementChild)===t)}function u(t){return null!==t.parentNode?u(t.parentNode):t}function d(t,e){if(!(t&&t.nodeType&&e&&e.nodeType))return window.document.documentElement;var n=t.compareDocumentPosition(e)&Node.DOCUMENT_POSITION_FOLLOWING,i=n?t:e,r=n?e:t,o=document.createRange();o.setStart(i,0),o.setEnd(r,0);var s=o.commonAncestorContainer;if(t!==s&&e!==s||i.contains(r))return c(s)?s:l(s);var a=u(t);return a.host?d(a.host,e):d(t,u(e).host)}function p(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"top",n="top"===e?"scrollTop":"scrollLeft",i=t.nodeName;if("BODY"===i||"HTML"===i){var r=window.document.documentElement;return(window.document.scrollingElement||r)[n]}return t[n]}function h(t,e){var n=arguments.length>2&&void 0!==arguments[2]&&arguments[2],i=p(e,"top"),r=p(e,"left"),o=n?-1:1;return t.top+=i*o,t.bottom+=i*o,t.left+=r*o,t.right+=r*o,t}function f(t,e){var n="x"===e?"Left":"Top",i="Left"===n?"Right":"Bottom";return+t["border"+n+"Width"].split("px")[0]+ +t["border"+i+"Width"].split("px")[0]}function g(t,e,n,i){return Math.max(e["offset"+t],e["scroll"+t],n["client"+t],n["offset"+t],n["scroll"+t],ft()?n["offset"+t]+i["margin"+("Height"===t?"Top":"Left")]+i["margin"+("Height"===t?"Bottom":"Right")]:0)}function m(){var t=window.document.body,e=window.document.documentElement,n=ft()&&window.getComputedStyle(e);return{height:g("Height",t,e,n),width:g("Width",t,e,n)}}function v(t){return yt({},t,{right:t.left+t.width,bottom:t.top+t.height})}function y(t){var e={};if(ft())try{e=t.getBoundingClientRect();var n=p(t,"top"),i=p(t,"left");e.top+=n,e.left+=i,e.bottom+=n,e.right+=i}catch(t){}else e=t.getBoundingClientRect();var r={left:e.left,top:e.top,width:e.right-e.left,height:e.bottom-e.top},s="HTML"===t.nodeName?m():{},a=s.width||t.clientWidth||r.right-r.left,l=s.height||t.clientHeight||r.bottom-r.top,c=t.offsetWidth-a,u=t.offsetHeight-l;if(c||u){var d=o(t);c-=f(d,"x"),u-=f(d,"y"),r.width-=c,r.height-=u}return v(r)}function _(t,e){var n=ft(),i="HTML"===e.nodeName,r=y(t),s=y(e),l=a(t),c=o(e),u=+c.borderTopWidth.split("px")[0],d=+c.borderLeftWidth.split("px")[0],p=v({top:r.top-s.top-u,left:r.left-s.left-d,width:r.width,height:r.height});if(p.marginTop=0,p.marginLeft=0,!n&&i){var f=+c.marginTop.split("px")[0],g=+c.marginLeft.split("px")[0];p.top-=u-f,p.bottom-=u-f,p.left-=d-g,p.right-=d-g,p.marginTop=f,p.marginLeft=g}return(n?e.contains(l):e===l&&"BODY"!==l.nodeName)&&(p=h(p,e)),p}function b(t){var e=window.document.documentElement,n=_(t,e),i=Math.max(e.clientWidth,window.innerWidth||0),r=Math.max(e.clientHeight,window.innerHeight||0),o=p(e),s=p(e,"left");return v({top:o-n.top+n.marginTop,left:s-n.left+n.marginLeft,width:i,height:r})}function w(t){var e=t.nodeName;return"BODY"!==e&&"HTML"!==e&&("fixed"===o(t,"position")||w(s(t)))}function E(t,e,n,i){var r={top:0,left:0},o=d(t,e);if("viewport"===i)r=b(o);else{var l=void 0;"scrollParent"===i?(l=a(s(t)),"BODY"===l.nodeName&&(l=window.document.documentElement)):l="window"===i?window.document.documentElement:i;var c=_(l,o);if("HTML"!==l.nodeName||w(o))r=c;else{var u=m(),p=u.height,h=u.width;r.top+=c.top-c.marginTop,r.bottom=p+c.top,r.left+=c.left-c.marginLeft,r.right=h+c.left}}return r.left+=n,r.top+=n,r.right-=n,r.bottom-=n,r}function C(t){return t.width*t.height}function T(t,e,n,i,r){var o=arguments.length>5&&void 0!==arguments[5]?arguments[5]:0;if(-1===t.indexOf("auto"))return t;var s=E(n,i,o,r),a={top:{width:s.width,height:e.top-s.top},right:{width:s.right-e.right,height:s.height},bottom:{width:s.width,height:s.bottom-e.bottom},left:{width:e.left-s.left,height:s.height}},l=Object.keys(a).map(function(t){return yt({key:t},a[t],{area:C(a[t])})}).sort(function(t,e){return e.area-t.area}),c=l.filter(function(t){var e=t.width,i=t.height;return e>=n.clientWidth&&i>=n.clientHeight}),u=c.length>0?c[0].key:l[0].key,d=t.split("-")[1];return u+(d?"-"+d:"")}function x(t,e,n){return _(n,d(e,n))}function A(t){var e=window.getComputedStyle(t),n=parseFloat(e.marginTop)+parseFloat(e.marginBottom),i=parseFloat(e.marginLeft)+parseFloat(e.marginRight);return{width:t.offsetWidth+i,height:t.offsetHeight+n}}function O(t){var e={left:"right",right:"left",bottom:"top",top:"bottom"};return t.replace(/left|right|bottom|top/g,function(t){return e[t]})}function S(t,e,n){n=n.split("-")[0];var i=A(t),r={width:i.width,height:i.height},o=-1!==["right","left"].indexOf(n),s=o?"top":"left",a=o?"left":"top",l=o?"height":"width",c=o?"width":"height";return r[s]=e[s]+e[l]/2-i[l]/2,r[a]=n===a?e[a]-i[c]:e[O(a)],r}function D(t,e){return Array.prototype.find?t.find(e):t.filter(e)[0]}function I(t,e,n){if(Array.prototype.findIndex)return t.findIndex(function(t){return t[e]===n});var i=D(t,function(t){return t[e]===n});return t.indexOf(i)}function N(t,e,n){return(void 0===n?t:t.slice(0,I(t,"name",n))).forEach(function(t){t.function;var n=t.function||t.fn;t.enabled&&r(n)&&(e.offsets.popper=v(e.offsets.popper),e.offsets.reference=v(e.offsets.reference),e=n(e,t))}),e}function k(){if(!this.state.isDestroyed){var t={instance:this,styles:{},arrowStyles:{},attributes:{},flipped:!1,offsets:{}};t.offsets.reference=x(this.state,this.popper,this.reference),t.placement=T(this.options.placement,t.offsets.reference,this.popper,this.reference,this.options.modifiers.flip.boundariesElement,this.options.modifiers.flip.padding),t.originalPlacement=t.placement,t.offsets.popper=S(this.popper,t.offsets.reference,t.placement),t.offsets.popper.position="absolute",t=N(this.modifiers,t),this.state.isCreated?this.options.onUpdate(t):(this.state.isCreated=!0,this.options.onCreate(t))}}function L(t,e){return t.some(function(t){var n=t.name;return t.enabled&&n===e})}function P(t){for(var e=[!1,"ms","Webkit","Moz","O"],n=t.charAt(0).toUpperCase()+t.slice(1),i=0;i<e.length-1;i++){var r=e[i],o=r?""+r+n:t;if(void 0!==window.document.body.style[o])return o}return null}function $(){return this.state.isDestroyed=!0,L(this.modifiers,"applyStyle")&&(this.popper.removeAttribute("x-placement"),this.popper.style.left="",this.popper.style.position="",this.popper.style.top="",this.popper.style[P("transform")]=""),this.disableEventListeners(),this.options.removeOnDestroy&&this.popper.parentNode.removeChild(this.popper),this}function j(t,e,n,i){var r="BODY"===t.nodeName,o=r?window:t;o.addEventListener(e,n,{passive:!0}),r||j(a(o.parentNode),e,n,i),i.push(o)}function H(t,e,n,i){n.updateBound=i,window.addEventListener("resize",n.updateBound,{passive:!0});var r=a(t);return j(r,"scroll",n.updateBound,n.scrollParents),n.scrollElement=r,n.eventsEnabled=!0,n}function R(){this.state.eventsEnabled||(this.state=H(this.reference,this.options,this.state,this.scheduleUpdate))}function M(t,e){return window.removeEventListener("resize",e.updateBound),e.scrollParents.forEach(function(t){t.removeEventListener("scroll",e.updateBound)}),e.updateBound=null,e.scrollParents=[],e.scrollElement=null,e.eventsEnabled=!1,e}function W(){this.state.eventsEnabled&&(window.cancelAnimationFrame(this.scheduleUpdate),this.state=M(this.reference,this.state))}function q(t){return""!==t&&!isNaN(parseFloat(t))&&isFinite(t)}function F(t,e){Object.keys(e).forEach(function(n){var i="";-1!==["width","height","top","right","bottom","left"].indexOf(n)&&q(e[n])&&(i="px"),t.style[n]=e[n]+i})}function U(t,e){Object.keys(e).forEach(function(n){!1!==e[n]?t.setAttribute(n,e[n]):t.removeAttribute(n)})}function B(t){return F(t.instance.popper,t.styles),U(t.instance.popper,t.attributes),t.arrowElement&&Object.keys(t.arrowStyles).length&&F(t.arrowElement,t.arrowStyles),t}function V(t,e,n,i,r){var o=x(r,e,t),s=T(n.placement,o,e,t,n.modifiers.flip.boundariesElement,n.modifiers.flip.padding);return e.setAttribute("x-placement",s),F(e,{position:"absolute"}),n}function z(t,e){var n=e.x,i=e.y,r=t.offsets.popper,o=D(t.instance.modifiers,function(t){return"applyStyle"===t.name}).gpuAcceleration,s=void 0!==o?o:e.gpuAcceleration,a=l(t.instance.popper),c=y(a),u={position:r.position},d={left:Math.floor(r.left),top:Math.floor(r.top),bottom:Math.floor(r.bottom),right:Math.floor(r.right)},p="bottom"===n?"top":"bottom",h="right"===i?"left":"right",f=P("transform"),g=void 0,m=void 0;if(m="bottom"===p?-c.height+d.bottom:d.top,g="right"===h?-c.width+d.right:d.left,s&&f)u[f]="translate3d("+g+"px, "+m+"px, 0)",u[p]=0,u[h]=0,u.willChange="transform";else{var v="bottom"===p?-1:1,_="right"===h?-1:1;u[p]=m*v,u[h]=g*_,u.willChange=p+", "+h}var b={"x-placement":t.placement};return t.attributes=yt({},b,t.attributes),t.styles=yt({},u,t.styles),t.arrowStyles=yt({},t.offsets.arrow,t.arrowStyles),t}function K(t,e,n){var i=D(t,function(t){return t.name===e}),r=!!i&&t.some(function(t){return t.name===n&&t.enabled&&t.order<i.order});if(!r);return r}function G(t,e){if(!K(t.instance.modifiers,"arrow","keepTogether"))return t;var n=e.element;if("string"==typeof n){if(!(n=t.instance.popper.querySelector(n)))return t}else if(!t.instance.popper.contains(n))return t;var i=t.placement.split("-")[0],r=t.offsets,s=r.popper,a=r.reference,l=-1!==["left","right"].indexOf(i),c=l?"height":"width",u=l?"Top":"Left",d=u.toLowerCase(),p=l?"left":"top",h=l?"bottom":"right",f=A(n)[c];a[h]-f<s[d]&&(t.offsets.popper[d]-=s[d]-(a[h]-f)),a[d]+f>s[h]&&(t.offsets.popper[d]+=a[d]+f-s[h]);var g=a[d]+a[c]/2-f/2,m=o(t.instance.popper,"margin"+u).replace("px",""),y=g-v(t.offsets.popper)[d]-m;return y=Math.max(Math.min(s[c]-f,y),0),t.arrowElement=n,t.offsets.arrow={},t.offsets.arrow[d]=Math.round(y),t.offsets.arrow[p]="",t}function Y(t){return"end"===t?"start":"start"===t?"end":t}function Q(t){var e=arguments.length>1&&void 0!==arguments[1]&&arguments[1],n=bt.indexOf(t),i=bt.slice(n+1).concat(bt.slice(0,n));return e?i.reverse():i}function X(t,e){if(L(t.instance.modifiers,"inner"))return t;if(t.flipped&&t.placement===t.originalPlacement)return t;var n=E(t.instance.popper,t.instance.reference,e.padding,e.boundariesElement),i=t.placement.split("-")[0],r=O(i),o=t.placement.split("-")[1]||"",s=[];switch(e.behavior){case wt.FLIP:s=[i,r];break;case wt.CLOCKWISE:s=Q(i);break;case wt.COUNTERCLOCKWISE:s=Q(i,!0);break;default:s=e.behavior}return s.forEach(function(a,l){if(i!==a||s.length===l+1)return t;i=t.placement.split("-")[0],r=O(i);var c=t.offsets.popper,u=t.offsets.reference,d=Math.floor,p="left"===i&&d(c.right)>d(u.left)||"right"===i&&d(c.left)<d(u.right)||"top"===i&&d(c.bottom)>d(u.top)||"bottom"===i&&d(c.top)<d(u.bottom),h=d(c.left)<d(n.left),f=d(c.right)>d(n.right),g=d(c.top)<d(n.top),m=d(c.bottom)>d(n.bottom),v="left"===i&&h||"right"===i&&f||"top"===i&&g||"bottom"===i&&m,y=-1!==["top","bottom"].indexOf(i),_=!!e.flipVariations&&(y&&"start"===o&&h||y&&"end"===o&&f||!y&&"start"===o&&g||!y&&"end"===o&&m);(p||v||_)&&(t.flipped=!0,(p||v)&&(i=s[l+1]),_&&(o=Y(o)),t.placement=i+(o?"-"+o:""),t.offsets.popper=yt({},t.offsets.popper,S(t.instance.popper,t.offsets.reference,t.placement)),t=N(t.instance.modifiers,t,"flip"))}),t}function Z(t){var e=t.offsets,n=e.popper,i=e.reference,r=t.placement.split("-")[0],o=Math.floor,s=-1!==["top","bottom"].indexOf(r),a=s?"right":"bottom",l=s?"left":"top",c=s?"width":"height";return n[a]<o(i[l])&&(t.offsets.popper[l]=o(i[l])-n[c]),n[l]>o(i[a])&&(t.offsets.popper[l]=o(i[a])),t}function J(t,e,n,i){var r=t.match(/((?:\-|\+)?\d*\.?\d*)(.*)/),o=+r[1],s=r[2];if(!o)return t;if(0===s.indexOf("%")){var a=void 0;switch(s){case"%p":a=n;break;case"%":case"%r":default:a=i}return v(a)[e]/100*o}if("vh"===s||"vw"===s){return("vh"===s?Math.max(document.documentElement.clientHeight,window.innerHeight||0):Math.max(document.documentElement.clientWidth,window.innerWidth||0))/100*o}return o}function tt(t,e,n,i){var r=[0,0],o=-1!==["right","left"].indexOf(i),s=t.split(/(\+|\-)/).map(function(t){return t.trim()}),a=s.indexOf(D(s,function(t){return-1!==t.search(/,|\s/)}));s[a]&&s[a].indexOf(",");var l=/\s*,\s*|\s+/,c=-1!==a?[s.slice(0,a).concat([s[a].split(l)[0]]),[s[a].split(l)[1]].concat(s.slice(a+1))]:[s];return c=c.map(function(t,i){var r=(1===i?!o:o)?"height":"width",s=!1;return t.reduce(function(t,e){return""===t[t.length-1]&&-1!==["+","-"].indexOf(e)?(t[t.length-1]=e,s=!0,t):s?(t[t.length-1]+=e,s=!1,t):t.concat(e)},[]).map(function(t){return J(t,r,e,n)})}),c.forEach(function(t,e){t.forEach(function(n,i){q(n)&&(r[e]+=n*("-"===t[i-1]?-1:1))})}),r}function et(t,e){var n=e.offset,i=t.placement,r=t.offsets,o=r.popper,s=r.reference,a=i.split("-")[0],l=void 0;return l=q(+n)?[+n,0]:tt(n,o,s,a),"left"===a?(o.top+=l[0],o.left-=l[1]):"right"===a?(o.top+=l[0],o.left+=l[1]):"top"===a?(o.left+=l[0],o.top-=l[1]):"bottom"===a&&(o.left+=l[0],o.top+=l[1]),t.popper=o,t}function nt(t,e){var n=e.boundariesElement||l(t.instance.popper);t.instance.reference===n&&(n=l(n));var i=E(t.instance.popper,t.instance.reference,e.padding,n);e.boundaries=i;var r=e.priority,o=t.offsets.popper,s={primary:function(t){var n=o[t];return o[t]<i[t]&&!e.escapeWithReference&&(n=Math.max(o[t],i[t])),vt({},t,n)},secondary:function(t){var n="right"===t?"left":"top",r=o[n];return o[t]>i[t]&&!e.escapeWithReference&&(r=Math.min(o[n],i[t]-("right"===t?o.width:o.height))),vt({},n,r)}};return r.forEach(function(t){var e=-1!==["left","top"].indexOf(t)?"primary":"secondary";o=yt({},o,s[e](t))}),t.offsets.popper=o,t}function it(t){var e=t.placement,n=e.split("-")[0],i=e.split("-")[1];if(i){var r=t.offsets,o=r.reference,s=r.popper,a=-1!==["bottom","top"].indexOf(n),l=a?"left":"top",c=a?"width":"height",u={start:vt({},l,o[l]),end:vt({},l,o[l]+o[c]-s[c])};t.offsets.popper=yt({},s,u[i])}return t}function rt(t){if(!K(t.instance.modifiers,"hide","preventOverflow"))return t;var e=t.offsets.reference,n=D(t.instance.modifiers,function(t){return"preventOverflow"===t.name}).boundaries;if(e.bottom<n.top||e.left>n.right||e.top>n.bottom||e.right<n.left){if(!0===t.hide)return t;t.hide=!0,t.attributes["x-out-of-boundaries"]=""}else{if(!1===t.hide)return t;t.hide=!1,t.attributes["x-out-of-boundaries"]=!1}return t}function ot(t){var e=t.placement,n=e.split("-")[0],i=t.offsets,r=i.popper,o=i.reference,s=-1!==["left","right"].indexOf(n),a=-1===["top","left"].indexOf(n);return r[s?"left":"top"]=o[n]-(a?r[s?"width":"height"]:0),t.placement=O(e),t.offsets.popper=v(r),t}for(var st=["native code","[object MutationObserverConstructor]"],at="undefined"!=typeof window,lt=["Edge","Trident","Firefox"],ct=0,ut=0;ut<lt.length;ut+=1)if(at&&navigator.userAgent.indexOf(lt[ut])>=0){ct=1;break}var dt=at&&function(t){return st.some(function(e){return(t||"").toString().indexOf(e)>-1})}(window.MutationObserver),pt=dt?n:i,ht=void 0,ft=function(){return void 0===ht&&(ht=-1!==navigator.appVersion.indexOf("MSIE 10")),ht},gt=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")},mt=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}(),vt=function(t,e,n){return e in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t},yt=Object.assign||function(t){for(var e=1;e<arguments.length;e++){var n=arguments[e];for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(t[i]=n[i])}return t},_t=["auto-start","auto","auto-end","top-start","top","top-end","right-start","right","right-end","bottom-end","bottom","bottom-start","left-end","left","left-start"],bt=_t.slice(3),wt={FLIP:"flip",CLOCKWISE:"clockwise",COUNTERCLOCKWISE:"counterclockwise"},Et={shift:{order:100,enabled:!0,fn:it},offset:{order:200,enabled:!0,fn:et,offset:0},preventOverflow:{order:300,enabled:!0,fn:nt,priority:["left","right","top","bottom"],padding:5,boundariesElement:"scrollParent"},keepTogether:{order:400,enabled:!0,fn:Z},arrow:{order:500,enabled:!0,fn:G,element:"[x-arrow]"},flip:{order:600,enabled:!0,fn:X,behavior:"flip",padding:5,boundariesElement:"viewport"},inner:{order:700,enabled:!1,fn:ot},hide:{order:800,enabled:!0,fn:rt},computeStyle:{order:850,enabled:!0,fn:z,gpuAcceleration:!0,x:"bottom",y:"right"},applyStyle:{order:900,enabled:!0,fn:B,onLoad:V,gpuAcceleration:void 0}},Ct={placement:"bottom",eventsEnabled:!0,removeOnDestroy:!1,onCreate:function(){},onUpdate:function(){},modifiers:Et},Tt=function(){function t(e,n){var i=this,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};gt(this,t),this.scheduleUpdate=function(){return requestAnimationFrame(i.update)},this.update=pt(this.update.bind(this)),this.options=yt({},t.Defaults,o),this.state={isDestroyed:!1,isCreated:!1,scrollParents:[]},this.reference=e.jquery?e[0]:e,this.popper=n.jquery?n[0]:n,this.options.modifiers={},Object.keys(yt({},t.Defaults.modifiers,o.modifiers)).forEach(function(e){i.options.modifiers[e]=yt({},t.Defaults.modifiers[e]||{},o.modifiers?o.modifiers[e]:{})}),this.modifiers=Object.keys(this.options.modifiers).map(function(t){return yt({name:t},i.options.modifiers[t])}).sort(function(t,e){return t.order-e.order}),this.modifiers.forEach(function(t){t.enabled&&r(t.onLoad)&&t.onLoad(i.reference,i.popper,i.options,t,i.state)}),this.update();var s=this.options.eventsEnabled;s&&this.enableEventListeners(),this.state.eventsEnabled=s}return mt(t,[{key:"update",value:function(){return k.call(this)}},{key:"destroy",value:function(){return $.call(this)}},{key:"enableEventListeners",value:function(){return R.call(this)}},{key:"disableEventListeners",value:function(){return W.call(this)}}]),t}();Tt.Utils=("undefined"!=typeof window?window:t).PopperUtils,Tt.placements=_t,Tt.Defaults=Ct,e.default=Tt}.call(e,n(1))},function(t,e,n){(function(t){!function(t){var e=null,n=[],i=null,r={wrapperClassAdditional:"",tagsWrapperClassAdditional:"",tagClassAdditional:"",closingCrossClassAdditionnal:"",tagInputWrapperClassAdditional:"",tagInputClassAdditional:"",delimiter:" ",inputPlaceholder:"Add tag ...",closingCross:!0,context:null,clearAllBtn:!1,clearAllIconClassAdditional:"",clearAllSpanClassAdditional:"",onTagsChanged:null,onResetTags:null},o={wrapperClass:"pstaggerWrapper",tagsWrapperClass:"pstaggerTagsWrapper",tagClass:"pstaggerTag",tagInputWrapperClass:"pstaggerAddTagWrapper",tagInputClass:"pstaggerAddTagInput",clearAllIconClass:"",clearAllSpanClass:"pstaggerResetTagsBtn",closingCrossClass:"pstaggerClosingCross"},s=function(){i.keypress(function(t){13==t.keyCode&&(n=[],a())}),i.focusout(function(e){if(t("."+o.clearAllSpanClass+":hover").length)return!1;i.val().length&&(n=[],a())})},a=function(){var r=i.val(),s=r.split(e.delimiter);if(r.length){for(var a in s){var c=s[a];""!==c&&n.push(c)}var u="";for(a in n){var d=n[a];u+=l(d)}t("."+o.tagsWrapperClass).empty().prepend(u).css("display","block"),t("."+o.tagInputWrapperClass).css("display","none")}else t("."+o.tagsWrapperClass).css("display","none"),t("."+o.tagInputWrapperClass).css("display","block"),i.focus();null!==e.onTagsChanged&&e.onTagsChanged.call(e.context,n)},l=function(n){var i='<span class="'+o.tagClass+" "+e.tagClassAdditional+'"><span>'+t("<div/>").text(n).html()+"</span>";return!0===e.closingCross&&(i+='<a class="'+o.closingCrossClass+" "+e.closingCrossClassAdditionnal+'" href="#">x</a>'),i+="</span>"},c=function(){e.originalInput.css("display","none");var n="";!0===e.clearAllBtn&&(n+='<span class="'+o.clearAllSpanClass+" "+e.clearAllSpanClassAdditional+'"><i class="'+o.clearAllIconClass+" "+e.clearAllIconClassAdditional+'"></i></span>',d());var r='<div class="'+o.wrapperClass+" "+e.wrapperClassAdditional+'">'+n+'<div class="'+o.tagsWrapperClass+" "+e.tagsWrapperClassAdditional+'"></div><div class="'+o.tagInputWrapperClass+" "+e.tagInputWrapperClassAdditional+'"><input class="'+o.tagInputClass+" "+e.tagInputClassAdditional+'"></div></div>';return e.originalInput.after(r),i=t("."+o.tagInputClass),i.attr("placeholder",e.inputPlaceholder),!0},u=function(){t("."+o.tagsWrapperClass).on("click",function(e){var n=e.target.className,r=new RegExp(o.closingCrossClass,"g"),s=n.match(r);t("."+o.tagInputWrapperClass).is(":hidden")&&null===s&&(t("."+o.tagsWrapperClass).css("display","none"),t("."+o.tagInputWrapperClass).css("display","block"),i.focus())})},d=function(){t(document).delegate("."+o.clearAllSpanClass,"click",function(){p(!0)})},p=function(r){n=[],i.val(""),t("."+o.tagsWrapperClass).css("display","none"),t("."+o.tagInputWrapperClass).css("display","block"),i.focus(),t("."+o.tagClass).remove(),null!==e.onResetTags&&!0===r&&e.onResetTags.call(e.context)},h=function(){t(document).delegate("."+o.closingCrossClass,"click",function(e){var r=t(this).parent(),o=r.index(),s=f(o);i.val(s),r.remove(),n=[],a()})},f=function(e){var n="";return t("."+o.tagClass).each(function(i,r){if(e==t(this).index())return!0;n+=" "+t(this).children().first().text()}),n},g=function(t,e){var n={};for(var i in r)t.hasOwnProperty(i)?n[i]=t[i]:n[i]=r[i];return n.originalInput=e,n};t.fn.pstagger=function(t){return e=g(t,this),c(),s(),u(),h(),{resetTags:p}}}(t)}).call(e,n(0))},function(t,e,n){(function(i){var r,o,s;!function(i){o=[n(0)],r=i,void 0!==(s="function"==typeof r?r.apply(e,o):r)&&(t.exports=s)}(function(t){var e=function(){if(t&&t.fn&&t.fn.select2&&t.fn.select2.amd)var e=t.fn.select2.amd;var e;return function(){if(!e||!e.requirejs){e?n=e:e={};var t,n,i;!function(e){function r(t,e){return w.call(t,e)}function o(t,e){var n,i,r,o,s,a,l,c,u,d,p,h,f=e&&e.split("/"),g=_.map,m=g&&g["*"]||{};if(t){for(t=t.split("/"),s=t.length-1,_.nodeIdCompat&&C.test(t[s])&&(t[s]=t[s].replace(C,"")),"."===t[0].charAt(0)&&f&&(h=f.slice(0,f.length-1),t=h.concat(t)),u=0;u<t.length;u++)if("."===(p=t[u]))t.splice(u,1),u-=1;else if(".."===p){if(0===u||1===u&&".."===t[2]||".."===t[u-1])continue;u>0&&(t.splice(u-1,2),u-=2)}t=t.join("/")}if((f||m)&&g){for(n=t.split("/"),u=n.length;u>0;u-=1){if(i=n.slice(0,u).join("/"),f)for(d=f.length;d>0;d-=1)if((r=g[f.slice(0,d).join("/")])&&(r=r[i])){o=r,a=u;break}if(o)break;!l&&m&&m[i]&&(l=m[i],c=u)}!o&&l&&(o=l,a=c),o&&(n.splice(0,a,o),t=n.join("/"))}return t}function s(t,n){return function(){var i=E.call(arguments,0);return"string"!=typeof i[0]&&1===i.length&&i.push(null),f.apply(e,i.concat([t,n]))}}function a(t){return function(e){return o(e,t)}}function l(t){return function(e){v[t]=e}}function c(t){if(r(y,t)){var n=y[t];delete y[t],b[t]=!0,h.apply(e,n)}if(!r(v,t)&&!r(b,t))throw new Error("No "+t);return v[t]}function u(t){var e,n=t?t.indexOf("!"):-1;return n>-1&&(e=t.substring(0,n),t=t.substring(n+1,t.length)),[e,t]}function d(t){return t?u(t):[]}function p(t){return function(){return _&&_.config&&_.config[t]||{}}}var h,f,g,m,v={},y={},_={},b={},w=Object.prototype.hasOwnProperty,E=[].slice,C=/\.js$/;g=function(t,e){var n,i=u(t),r=i[0],s=e[1];return t=i[1],r&&(r=o(r,s),n=c(r)),r?t=n&&n.normalize?n.normalize(t,a(s)):o(t,s):(t=o(t,s),i=u(t),r=i[0],t=i[1],r&&(n=c(r))),{f:r?r+"!"+t:t,n:t,pr:r,p:n}},m={require:function(t){return s(t)},exports:function(t){var e=v[t];return void 0!==e?e:v[t]={}},module:function(t){return{id:t,uri:"",exports:v[t],config:p(t)}}},h=function(t,n,i,o){var a,u,p,h,f,_,w,E=[],C=typeof i;if(o=o||t,_=d(o),"undefined"===C||"function"===C){for(n=!n.length&&i.length?["require","exports","module"]:n,f=0;f<n.length;f+=1)if(h=g(n[f],_),"require"===(u=h.f))E[f]=m.require(t);else if("exports"===u)E[f]=m.exports(t),w=!0;else if("module"===u)a=E[f]=m.module(t);else if(r(v,u)||r(y,u)||r(b,u))E[f]=c(u);else{if(!h.p)throw new Error(t+" missing "+u);h.p.load(h.n,s(o,!0),l(u),{}),E[f]=v[u]}p=i?i.apply(v[t],E):void 0,t&&(a&&a.exports!==e&&a.exports!==v[t]?v[t]=a.exports:p===e&&w||(v[t]=p))}else t&&(v[t]=i)},t=n=f=function(t,n,i,r,o){if("string"==typeof t)return m[t]?m[t](n):c(g(t,d(n)).f);if(!t.splice){if(_=t,_.deps&&f(_.deps,_.callback),!n)return;n.splice?(t=n,n=i,i=null):t=e}return n=n||function(){},"function"==typeof i&&(i=r,r=o),r?h(e,t,n,i):setTimeout(function(){h(e,t,n,i)},4),f},f.config=function(t){return f(t)},t._defined=v,i=function(t,e,n){if("string"!=typeof t)throw new Error("See almond README: incorrect module build, no module name");e.splice||(n=e,e=[]),r(v,t)||r(y,t)||(y[t]=[t,e,n])},i.amd={jQuery:!0}}(),e.requirejs=t,e.require=n,e.define=i}}(),e.define("almond",function(){}),e.define("jquery",[],function(){var e=t||i;return null==e&&console&&console.error,e}),e.define("select2/utils",["jquery"],function(t){function e(t){var e=t.prototype,n=[];for(var i in e){"function"==typeof e[i]&&("constructor"!==i&&n.push(i))}return n}var n={};n.Extend=function(t,e){function n(){this.constructor=t}var i={}.hasOwnProperty;for(var r in e)i.call(e,r)&&(t[r]=e[r]);return n.prototype=e.prototype,t.prototype=new n,t.__super__=e.prototype,t},n.Decorate=function(t,n){function i(){var e=Array.prototype.unshift,i=n.prototype.constructor.length,r=t.prototype.constructor;i>0&&(e.call(arguments,t.prototype.constructor),r=n.prototype.constructor),r.apply(this,arguments)}function r(){this.constructor=i}var o=e(n),s=e(t);n.displayName=t.displayName,i.prototype=new r;for(var a=0;a<s.length;a++){var l=s[a];i.prototype[l]=t.prototype[l]}for(var c=0;c<o.length;c++){var u=o[c];i.prototype[u]=function(t){var e=function(){};t in i.prototype&&(e=i.prototype[t]);var r=n.prototype[t];return function(){return Array.prototype.unshift.call(arguments,e),r.apply(this,arguments)}}(u)}return i};var i=function(){this.listeners={}};return i.prototype.on=function(t,e){this.listeners=this.listeners||{},t in this.listeners?this.listeners[t].push(e):this.listeners[t]=[e]},i.prototype.trigger=function(t){var e=Array.prototype.slice,n=e.call(arguments,1);this.listeners=this.listeners||{},null==n&&(n=[]),0===n.length&&n.push({}),n[0]._type=t,t in this.listeners&&this.invoke(this.listeners[t],e.call(arguments,1)),"*"in this.listeners&&this.invoke(this.listeners["*"],arguments)},i.prototype.invoke=function(t,e){for(var n=0,i=t.length;n<i;n++)t[n].apply(this,e)},n.Observable=i,n.generateChars=function(t){for(var e="",n=0;n<t;n++){e+=Math.floor(36*Math.random()).toString(36)}return e},n.bind=function(t,e){return function(){t.apply(e,arguments)}},n._convertData=function(t){for(var e in t){var n=e.split("-"),i=t;if(1!==n.length){for(var r=0;r<n.length;r++){var o=n[r];o=o.substring(0,1).toLowerCase()+o.substring(1),o in i||(i[o]={}),r==n.length-1&&(i[o]=t[e]),i=i[o]}delete t[e]}}return t},n.hasScroll=function(e,n){var i=t(n),r=n.style.overflowX,o=n.style.overflowY;return(r!==o||"hidden"!==o&&"visible"!==o)&&("scroll"===r||"scroll"===o||(i.innerHeight()<n.scrollHeight||i.innerWidth()<n.scrollWidth))},n.escapeMarkup=function(t){var e={"\\":"&#92;","&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#47;"};return"string"!=typeof t?t:String(t).replace(/[&<>"'\/\\]/g,function(t){return e[t]})},n.appendMany=function(e,n){if("1.7"===t.fn.jquery.substr(0,3)){var i=t();t.map(n,function(t){i=i.add(t)}),n=i}e.append(n)},n}),e.define("select2/results",["jquery","./utils"],function(t,e){function n(t,e,i){this.$element=t,this.data=i,this.options=e,n.__super__.constructor.call(this)}return e.Extend(n,e.Observable),n.prototype.render=function(){var e=t('<ul class="select2-results__options" role="tree"></ul>');return this.options.get("multiple")&&e.attr("aria-multiselectable","true"),this.$results=e,e},n.prototype.clear=function(){this.$results.empty()},n.prototype.displayMessage=function(e){var n=this.options.get("escapeMarkup");this.clear(),this.hideLoading();var i=t('<li role="treeitem" aria-live="assertive" class="select2-results__option"></li>'),r=this.options.get("translations").get(e.message);i.append(n(r(e.args))),i[0].className+=" select2-results__message",this.$results.append(i)},n.prototype.hideMessages=function(){this.$results.find(".select2-results__message").remove()},n.prototype.append=function(t){this.hideLoading();var e=[];if(null==t.results||0===t.results.length)return void(0===this.$results.children().length&&this.trigger("results:message",{message:"noResults"}));t.results=this.sort(t.results);for(var n=0;n<t.results.length;n++){var i=t.results[n],r=this.option(i);e.push(r)}this.$results.append(e)},n.prototype.position=function(t,e){e.find(".select2-results").append(t)},n.prototype.sort=function(t){return this.options.get("sorter")(t)},n.prototype.highlightFirstItem=function(){var t=this.$results.find(".select2-results__option[aria-selected]"),e=t.filter("[aria-selected=true]");e.length>0?e.first().trigger("mouseenter"):t.first().trigger("mouseenter"),this.ensureHighlightVisible()},n.prototype.setClasses=function(){var e=this;this.data.current(function(n){var i=t.map(n,function(t){return t.id.toString()});e.$results.find(".select2-results__option[aria-selected]").each(function(){var e=t(this),n=t.data(this,"data"),r=""+n.id;null!=n.element&&n.element.selected||null==n.element&&t.inArray(r,i)>-1?e.attr("aria-selected","true"):e.attr("aria-selected","false")})})},n.prototype.showLoading=function(t){this.hideLoading();var e=this.options.get("translations").get("searching"),n={disabled:!0,loading:!0,text:e(t)},i=this.option(n);i.className+=" loading-results",this.$results.prepend(i)},n.prototype.hideLoading=function(){this.$results.find(".loading-results").remove()},n.prototype.option=function(e){var n=document.createElement("li");n.className="select2-results__option";var i={role:"treeitem","aria-selected":"false"};e.disabled&&(delete i["aria-selected"],i["aria-disabled"]="true"),null==e.id&&delete i["aria-selected"],null!=e._resultId&&(n.id=e._resultId),e.title&&(n.title=e.title),e.children&&(i.role="group",i["aria-label"]=e.text,delete i["aria-selected"]);for(var r in i){var o=i[r];n.setAttribute(r,o)}if(e.children){var s=t(n),a=document.createElement("strong");a.className="select2-results__group";t(a);this.template(e,a);for(var l=[],c=0;c<e.children.length;c++){var u=e.children[c],d=this.option(u);l.push(d)}var p=t("<ul></ul>",{class:"select2-results__options select2-results__options--nested"});p.append(l),s.append(a),s.append(p)}else this.template(e,n);return t.data(n,"data",e),n},n.prototype.bind=function(e,n){var i=this,r=e.id+"-results";this.$results.attr("id",r),e.on("results:all",function(t){i.clear(),i.append(t.data),e.isOpen()&&(i.setClasses(),i.highlightFirstItem())}),e.on("results:append",function(t){i.append(t.data),e.isOpen()&&i.setClasses()}),e.on("query",function(t){i.hideMessages(),i.showLoading(t)}),e.on("select",function(){e.isOpen()&&(i.setClasses(),i.highlightFirstItem())}),e.on("unselect",function(){e.isOpen()&&(i.setClasses(),i.highlightFirstItem())}),e.on("open",function(){i.$results.attr("aria-expanded","true"),i.$results.attr("aria-hidden","false"),i.setClasses(),i.ensureHighlightVisible()}),e.on("close",function(){i.$results.attr("aria-expanded","false"),i.$results.attr("aria-hidden","true"),i.$results.removeAttr("aria-activedescendant")}),e.on("results:toggle",function(){var t=i.getHighlightedResults();0!==t.length&&t.trigger("mouseup")}),e.on("results:select",function(){var t=i.getHighlightedResults();if(0!==t.length){var e=t.data("data");"true"==t.attr("aria-selected")?i.trigger("close",{}):i.trigger("select",{data:e})}}),e.on("results:previous",function(){var t=i.getHighlightedResults(),e=i.$results.find("[aria-selected]"),n=e.index(t);if(0!==n){var r=n-1;0===t.length&&(r=0);var o=e.eq(r);o.trigger("mouseenter");var s=i.$results.offset().top,a=o.offset().top,l=i.$results.scrollTop()+(a-s);0===r?i.$results.scrollTop(0):a-s<0&&i.$results.scrollTop(l)}}),e.on("results:next",function(){var t=i.getHighlightedResults(),e=i.$results.find("[aria-selected]"),n=e.index(t),r=n+1;if(!(r>=e.length)){var o=e.eq(r);o.trigger("mouseenter");var s=i.$results.offset().top+i.$results.outerHeight(!1),a=o.offset().top+o.outerHeight(!1),l=i.$results.scrollTop()+a-s;0===r?i.$results.scrollTop(0):a>s&&i.$results.scrollTop(l)}}),e.on("results:focus",function(t){t.element.addClass("select2-results__option--highlighted")}),e.on("results:message",function(t){i.displayMessage(t)}),t.fn.mousewheel&&this.$results.on("mousewheel",function(t){var e=i.$results.scrollTop(),n=i.$results.get(0).scrollHeight-e+t.deltaY,r=t.deltaY>0&&e-t.deltaY<=0,o=t.deltaY<0&&n<=i.$results.height();r?(i.$results.scrollTop(0),t.preventDefault(),t.stopPropagation()):o&&(i.$results.scrollTop(i.$results.get(0).scrollHeight-i.$results.height()),t.preventDefault(),t.stopPropagation())}),this.$results.on("mouseup",".select2-results__option[aria-selected]",function(e){var n=t(this),r=n.data("data");if("true"===n.attr("aria-selected"))return void(i.options.get("multiple")?i.trigger("unselect",{originalEvent:e,data:r}):i.trigger("close",{}));i.trigger("select",{originalEvent:e,data:r})}),this.$results.on("mouseenter",".select2-results__option[aria-selected]",function(e){var n=t(this).data("data");i.getHighlightedResults().removeClass("select2-results__option--highlighted"),i.trigger("results:focus",{data:n,element:t(this)})})},n.prototype.getHighlightedResults=function(){return this.$results.find(".select2-results__option--highlighted")},n.prototype.destroy=function(){this.$results.remove()},n.prototype.ensureHighlightVisible=function(){var t=this.getHighlightedResults();if(0!==t.length){var e=this.$results.find("[aria-selected]"),n=e.index(t),i=this.$results.offset().top,r=t.offset().top,o=this.$results.scrollTop()+(r-i),s=r-i;o-=2*t.outerHeight(!1),n<=2?this.$results.scrollTop(0):(s>this.$results.outerHeight()||s<0)&&this.$results.scrollTop(o)}},n.prototype.template=function(e,n){var i=this.options.get("templateResult"),r=this.options.get("escapeMarkup"),o=i(e,n);null==o?n.style.display="none":"string"==typeof o?n.innerHTML=r(o):t(n).append(o)},n}),e.define("select2/keys",[],function(){return{BACKSPACE:8,TAB:9,ENTER:13,SHIFT:16,CTRL:17,ALT:18,ESC:27,SPACE:32,PAGE_UP:33,PAGE_DOWN:34,END:35,HOME:36,LEFT:37,UP:38,RIGHT:39,DOWN:40,DELETE:46}}),e.define("select2/selection/base",["jquery","../utils","../keys"],function(t,e,n){function i(t,e){this.$element=t,this.options=e,i.__super__.constructor.call(this)}return e.Extend(i,e.Observable),i.prototype.render=function(){var e=t('<span class="select2-selection" role="combobox"  aria-haspopup="true" aria-expanded="false"></span>');return this._tabindex=0,null!=this.$element.data("old-tabindex")?this._tabindex=this.$element.data("old-tabindex"):null!=this.$element.attr("tabindex")&&(this._tabindex=this.$element.attr("tabindex")),e.attr("title",this.$element.attr("title")),e.attr("tabindex",this._tabindex),this.$selection=e,e},i.prototype.bind=function(t,e){var i=this,r=(t.id,t.id+"-results");this.container=t,this.$selection.on("focus",function(t){i.trigger("focus",t)}),this.$selection.on("blur",function(t){i._handleBlur(t)}),this.$selection.on("keydown",function(t){i.trigger("keypress",t),t.which===n.SPACE&&t.preventDefault()}),t.on("results:focus",function(t){i.$selection.attr("aria-activedescendant",t.data._resultId)}),t.on("selection:update",function(t){i.update(t.data)}),t.on("open",function(){i.$selection.attr("aria-expanded","true"),i.$selection.attr("aria-owns",r),i._attachCloseHandler(t)}),t.on("close",function(){i.$selection.attr("aria-expanded","false"),i.$selection.removeAttr("aria-activedescendant"),i.$selection.removeAttr("aria-owns"),i.$selection.focus(),i._detachCloseHandler(t)}),t.on("enable",function(){i.$selection.attr("tabindex",i._tabindex)}),t.on("disable",function(){i.$selection.attr("tabindex","-1")})},i.prototype._handleBlur=function(e){var n=this;window.setTimeout(function(){document.activeElement==n.$selection[0]||t.contains(n.$selection[0],document.activeElement)||n.trigger("blur",e)},1)},i.prototype._attachCloseHandler=function(e){t(document.body).on("mousedown.select2."+e.id,function(e){var n=t(e.target),i=n.closest(".select2");t(".select2.select2-container--open").each(function(){var e=t(this);this!=i[0]&&e.data("element").select2("close")})})},i.prototype._detachCloseHandler=function(e){t(document.body).off("mousedown.select2."+e.id)},i.prototype.position=function(t,e){e.find(".selection").append(t)},i.prototype.destroy=function(){this._detachCloseHandler(this.container)},i.prototype.update=function(t){throw new Error("The `update` method must be defined in child classes.")},i}),e.define("select2/selection/single",["jquery","./base","../utils","../keys"],function(t,e,n,i){function r(){r.__super__.constructor.apply(this,arguments)}return n.Extend(r,e),r.prototype.render=function(){var t=r.__super__.render.call(this);return t.addClass("select2-selection--single"),t.html('<span class="select2-selection__rendered"></span><span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>'),t},r.prototype.bind=function(t,e){var n=this;r.__super__.bind.apply(this,arguments);var i=t.id+"-container";this.$selection.find(".select2-selection__rendered").attr("id",i),this.$selection.attr("aria-labelledby",i),this.$selection.on("mousedown",function(t){1===t.which&&n.trigger("toggle",{originalEvent:t})}),this.$selection.on("focus",function(t){}),this.$selection.on("blur",function(t){}),t.on("focus",function(e){t.isOpen()||n.$selection.focus()}),t.on("selection:update",function(t){n.update(t.data)})},r.prototype.clear=function(){this.$selection.find(".select2-selection__rendered").empty()},r.prototype.display=function(t,e){var n=this.options.get("templateSelection");return this.options.get("escapeMarkup")(n(t,e))},r.prototype.selectionContainer=function(){return t("<span></span>")},r.prototype.update=function(t){if(0===t.length)return void this.clear();var e=t[0],n=this.$selection.find(".select2-selection__rendered"),i=this.display(e,n);n.empty().append(i),n.prop("title",e.title||e.text)},r}),e.define("select2/selection/multiple",["jquery","./base","../utils"],function(t,e,n){function i(t,e){i.__super__.constructor.apply(this,arguments)}return n.Extend(i,e),i.prototype.render=function(){var t=i.__super__.render.call(this);return t.addClass("select2-selection--multiple"),t.html('<ul class="select2-selection__rendered"></ul>'),t},i.prototype.bind=function(e,n){var r=this;i.__super__.bind.apply(this,arguments),this.$selection.on("click",function(t){r.trigger("toggle",{originalEvent:t})}),this.$selection.on("click",".select2-selection__choice__remove",function(e){if(!r.options.get("disabled")){var n=t(this),i=n.parent(),o=i.data("data");r.trigger("unselect",{originalEvent:e,data:o})}})},i.prototype.clear=function(){this.$selection.find(".select2-selection__rendered").empty()},i.prototype.display=function(t,e){var n=this.options.get("templateSelection");return this.options.get("escapeMarkup")(n(t,e))},i.prototype.selectionContainer=function(){return t('<li class="select2-selection__choice"><span class="select2-selection__choice__remove" role="presentation">&times;</span></li>')},i.prototype.update=function(t){if(this.clear(),0!==t.length){for(var e=[],i=0;i<t.length;i++){var r=t[i],o=this.selectionContainer(),s=this.display(r,o);o.append(s),o.prop("title",r.title||r.text),o.data("data",r),e.push(o)}var a=this.$selection.find(".select2-selection__rendered");n.appendMany(a,e)}},i}),e.define("select2/selection/placeholder",["../utils"],function(t){function e(t,e,n){this.placeholder=this.normalizePlaceholder(n.get("placeholder")),t.call(this,e,n)}return e.prototype.normalizePlaceholder=function(t,e){return"string"==typeof e&&(e={id:"",text:e}),e},e.prototype.createPlaceholder=function(t,e){var n=this.selectionContainer();return n.html(this.display(e)),n.addClass("select2-selection__placeholder").removeClass("select2-selection__choice"),n},e.prototype.update=function(t,e){var n=1==e.length&&e[0].id!=this.placeholder.id;if(e.length>1||n)return t.call(this,e);this.clear();var i=this.createPlaceholder(this.placeholder);this.$selection.find(".select2-selection__rendered").append(i)},e}),e.define("select2/selection/allowClear",["jquery","../keys"],function(t,e){function n(){}return n.prototype.bind=function(t,e,n){var i=this;t.call(this,e,n),null==this.placeholder&&this.options.get("debug")&&window.console&&console.error,this.$selection.on("mousedown",".select2-selection__clear",function(t){i._handleClear(t)}),e.on("keypress",function(t){i._handleKeyboardClear(t,e)})},n.prototype._handleClear=function(t,e){if(!this.options.get("disabled")){var n=this.$selection.find(".select2-selection__clear");if(0!==n.length){e.stopPropagation();for(var i=n.data("data"),r=0;r<i.length;r++){var o={data:i[r]};if(this.trigger("unselect",o),o.prevented)return}this.$element.val(this.placeholder.id).trigger("change"),this.trigger("toggle",{})}}},n.prototype._handleKeyboardClear=function(t,n,i){i.isOpen()||n.which!=e.DELETE&&n.which!=e.BACKSPACE||this._handleClear(n)},n.prototype.update=function(e,n){if(e.call(this,n),!(this.$selection.find(".select2-selection__placeholder").length>0||0===n.length)){var i=t('<span class="select2-selection__clear">&times;</span>');i.data("data",n),this.$selection.find(".select2-selection__rendered").prepend(i)}},n}),e.define("select2/selection/search",["jquery","../utils","../keys"],function(t,e,n){function i(t,e,n){t.call(this,e,n)}return i.prototype.render=function(e){var n=t('<li class="select2-search select2-search--inline"><input class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" /></li>');this.$searchContainer=n,this.$search=n.find("input");var i=e.call(this);return this._transferTabIndex(),i},i.prototype.bind=function(t,e,i){var r=this;t.call(this,e,i),e.on("open",function(){r.$search.trigger("focus")}),e.on("close",function(){r.$search.val(""),r.$search.removeAttr("aria-activedescendant"),r.$search.trigger("focus")}),e.on("enable",function(){r.$search.prop("disabled",!1),r._transferTabIndex()}),e.on("disable",function(){r.$search.prop("disabled",!0)}),e.on("focus",function(t){r.$search.trigger("focus")}),e.on("results:focus",function(t){r.$search.attr("aria-activedescendant",t.id)}),this.$selection.on("focusin",".select2-search--inline",function(t){r.trigger("focus",t)}),this.$selection.on("focusout",".select2-search--inline",function(t){r._handleBlur(t)}),this.$selection.on("keydown",".select2-search--inline",function(t){if(t.stopPropagation(),r.trigger("keypress",t),r._keyUpPrevented=t.isDefaultPrevented(),t.which===n.BACKSPACE&&""===r.$search.val()){var e=r.$searchContainer.prev(".select2-selection__choice");if(e.length>0){var i=e.data("data");r.searchRemoveChoice(i),t.preventDefault()}}});var o=document.documentMode,s=o&&o<=11;this.$selection.on("input.searchcheck",".select2-search--inline",function(t){if(s)return void r.$selection.off("input.search input.searchcheck");r.$selection.off("keyup.search")}),this.$selection.on("keyup.search input.search",".select2-search--inline",function(t){if(s&&"input"===t.type)return void r.$selection.off("input.search input.searchcheck");var e=t.which;e!=n.SHIFT&&e!=n.CTRL&&e!=n.ALT&&e!=n.TAB&&r.handleSearch(t)})},i.prototype._transferTabIndex=function(t){this.$search.attr("tabindex",this.$selection.attr("tabindex")),this.$selection.attr("tabindex","-1")},i.prototype.createPlaceholder=function(t,e){this.$search.attr("placeholder",e.text)},i.prototype.update=function(t,e){var n=this.$search[0]==document.activeElement;this.$search.attr("placeholder",""),t.call(this,e),this.$selection.find(".select2-selection__rendered").append(this.$searchContainer),this.resizeSearch(),n&&this.$search.focus()},i.prototype.handleSearch=function(){if(this.resizeSearch(),!this._keyUpPrevented){var t=this.$search.val();this.trigger("query",{term:t})}this._keyUpPrevented=!1},i.prototype.searchRemoveChoice=function(t,e){this.trigger("unselect",{data:e}),this.$search.val(e.text),this.handleSearch()},i.prototype.resizeSearch=function(){this.$search.css("width","25px");var t="";if(""!==this.$search.attr("placeholder"))t=this.$selection.find(".select2-selection__rendered").innerWidth();else{t=.75*(this.$search.val().length+1)+"em"}this.$search.css("width",t)},i}),e.define("select2/selection/eventRelay",["jquery"],function(t){function e(){}return e.prototype.bind=function(e,n,i){var r=this,o=["open","opening","close","closing","select","selecting","unselect","unselecting"],s=["opening","closing","selecting","unselecting"];e.call(this,n,i),n.on("*",function(e,n){if(-1!==t.inArray(e,o)){n=n||{};var i=t.Event("select2:"+e,{params:n});r.$element.trigger(i),-1!==t.inArray(e,s)&&(n.prevented=i.isDefaultPrevented())}})},e}),e.define("select2/translation",["jquery","require"],function(t,e){function n(t){this.dict=t||{}}return n.prototype.all=function(){return this.dict},n.prototype.get=function(t){return this.dict[t]},n.prototype.extend=function(e){this.dict=t.extend({},e.all(),this.dict)},n._cache={},n.loadPath=function(t){if(!(t in n._cache)){var i=e(t);n._cache[t]=i}return new n(n._cache[t])},n}),e.define("select2/diacritics",[],function(){return{"Ⓐ":"A","Ａ":"A","À":"A","Á":"A","Â":"A","Ầ":"A","Ấ":"A","Ẫ":"A","Ẩ":"A","Ã":"A","Ā":"A","Ă":"A","Ằ":"A","Ắ":"A","Ẵ":"A","Ẳ":"A","Ȧ":"A","Ǡ":"A","Ä":"A","Ǟ":"A","Ả":"A","Å":"A","Ǻ":"A","Ǎ":"A","Ȁ":"A","Ȃ":"A","Ạ":"A","Ậ":"A","Ặ":"A","Ḁ":"A","Ą":"A","Ⱥ":"A","Ɐ":"A","Ꜳ":"AA","Æ":"AE","Ǽ":"AE","Ǣ":"AE","Ꜵ":"AO","Ꜷ":"AU","Ꜹ":"AV","Ꜻ":"AV","Ꜽ":"AY","Ⓑ":"B","Ｂ":"B","Ḃ":"B","Ḅ":"B","Ḇ":"B","Ƀ":"B","Ƃ":"B","Ɓ":"B","Ⓒ":"C","Ｃ":"C","Ć":"C","Ĉ":"C","Ċ":"C","Č":"C","Ç":"C","Ḉ":"C","Ƈ":"C","Ȼ":"C","Ꜿ":"C","Ⓓ":"D","Ｄ":"D","Ḋ":"D","Ď":"D","Ḍ":"D","Ḑ":"D","Ḓ":"D","Ḏ":"D","Đ":"D","Ƌ":"D","Ɗ":"D","Ɖ":"D","Ꝺ":"D","Ǳ":"DZ","Ǆ":"DZ","ǲ":"Dz","ǅ":"Dz","Ⓔ":"E","Ｅ":"E","È":"E","É":"E","Ê":"E","Ề":"E","Ế":"E","Ễ":"E","Ể":"E","Ẽ":"E","Ē":"E","Ḕ":"E","Ḗ":"E","Ĕ":"E","Ė":"E","Ë":"E","Ẻ":"E","Ě":"E","Ȅ":"E","Ȇ":"E","Ẹ":"E","Ệ":"E","Ȩ":"E","Ḝ":"E","Ę":"E","Ḙ":"E","Ḛ":"E","Ɛ":"E","Ǝ":"E","Ⓕ":"F","Ｆ":"F","Ḟ":"F","Ƒ":"F","Ꝼ":"F","Ⓖ":"G","Ｇ":"G","Ǵ":"G","Ĝ":"G","Ḡ":"G","Ğ":"G","Ġ":"G","Ǧ":"G","Ģ":"G","Ǥ":"G","Ɠ":"G","Ꞡ":"G","Ᵹ":"G","Ꝿ":"G","Ⓗ":"H","Ｈ":"H","Ĥ":"H","Ḣ":"H","Ḧ":"H","Ȟ":"H","Ḥ":"H","Ḩ":"H","Ḫ":"H","Ħ":"H","Ⱨ":"H","Ⱶ":"H","Ɥ":"H","Ⓘ":"I","Ｉ":"I","Ì":"I","Í":"I","Î":"I","Ĩ":"I","Ī":"I","Ĭ":"I","İ":"I","Ï":"I","Ḯ":"I","Ỉ":"I","Ǐ":"I","Ȉ":"I","Ȋ":"I","Ị":"I","Į":"I","Ḭ":"I","Ɨ":"I","Ⓙ":"J","Ｊ":"J","Ĵ":"J","Ɉ":"J","Ⓚ":"K","Ｋ":"K","Ḱ":"K","Ǩ":"K","Ḳ":"K","Ķ":"K","Ḵ":"K","Ƙ":"K","Ⱪ":"K","Ꝁ":"K","Ꝃ":"K","Ꝅ":"K","Ꞣ":"K","Ⓛ":"L","Ｌ":"L","Ŀ":"L","Ĺ":"L","Ľ":"L","Ḷ":"L","Ḹ":"L","Ļ":"L","Ḽ":"L","Ḻ":"L","Ł":"L","Ƚ":"L","Ɫ":"L","Ⱡ":"L","Ꝉ":"L","Ꝇ":"L","Ꞁ":"L","Ǉ":"LJ","ǈ":"Lj","Ⓜ":"M","Ｍ":"M","Ḿ":"M","Ṁ":"M","Ṃ":"M","Ɱ":"M","Ɯ":"M","Ⓝ":"N","Ｎ":"N","Ǹ":"N","Ń":"N","Ñ":"N","Ṅ":"N","Ň":"N","Ṇ":"N","Ņ":"N","Ṋ":"N","Ṉ":"N","Ƞ":"N","Ɲ":"N","Ꞑ":"N","Ꞥ":"N","Ǌ":"NJ","ǋ":"Nj","Ⓞ":"O","Ｏ":"O","Ò":"O","Ó":"O","Ô":"O","Ồ":"O","Ố":"O","Ỗ":"O","Ổ":"O","Õ":"O","Ṍ":"O","Ȭ":"O","Ṏ":"O","Ō":"O","Ṑ":"O","Ṓ":"O","Ŏ":"O","Ȯ":"O","Ȱ":"O","Ö":"O","Ȫ":"O","Ỏ":"O","Ő":"O","Ǒ":"O","Ȍ":"O","Ȏ":"O","Ơ":"O","Ờ":"O","Ớ":"O","Ỡ":"O","Ở":"O","Ợ":"O","Ọ":"O","Ộ":"O","Ǫ":"O","Ǭ":"O","Ø":"O","Ǿ":"O","Ɔ":"O","Ɵ":"O","Ꝋ":"O","Ꝍ":"O","Ƣ":"OI","Ꝏ":"OO","Ȣ":"OU","Ⓟ":"P","Ｐ":"P","Ṕ":"P","Ṗ":"P","Ƥ":"P","Ᵽ":"P","Ꝑ":"P","Ꝓ":"P","Ꝕ":"P","Ⓠ":"Q","Ｑ":"Q","Ꝗ":"Q","Ꝙ":"Q","Ɋ":"Q","Ⓡ":"R","Ｒ":"R","Ŕ":"R","Ṙ":"R","Ř":"R","Ȑ":"R","Ȓ":"R","Ṛ":"R","Ṝ":"R","Ŗ":"R","Ṟ":"R","Ɍ":"R","Ɽ":"R","Ꝛ":"R","Ꞧ":"R","Ꞃ":"R","Ⓢ":"S","Ｓ":"S","ẞ":"S","Ś":"S","Ṥ":"S","Ŝ":"S","Ṡ":"S","Š":"S","Ṧ":"S","Ṣ":"S","Ṩ":"S","Ș":"S","Ş":"S","Ȿ":"S","Ꞩ":"S","Ꞅ":"S","Ⓣ":"T","Ｔ":"T","Ṫ":"T","Ť":"T","Ṭ":"T","Ț":"T","Ţ":"T","Ṱ":"T","Ṯ":"T","Ŧ":"T","Ƭ":"T","Ʈ":"T","Ⱦ":"T","Ꞇ":"T","Ꜩ":"TZ","Ⓤ":"U","Ｕ":"U","Ù":"U","Ú":"U","Û":"U","Ũ":"U","Ṹ":"U","Ū":"U","Ṻ":"U","Ŭ":"U","Ü":"U","Ǜ":"U","Ǘ":"U","Ǖ":"U","Ǚ":"U","Ủ":"U","Ů":"U","Ű":"U","Ǔ":"U","Ȕ":"U","Ȗ":"U","Ư":"U","Ừ":"U","Ứ":"U","Ữ":"U","Ử":"U","Ự":"U","Ụ":"U","Ṳ":"U","Ų":"U","Ṷ":"U","Ṵ":"U","Ʉ":"U","Ⓥ":"V","Ｖ":"V","Ṽ":"V","Ṿ":"V","Ʋ":"V","Ꝟ":"V","Ʌ":"V","Ꝡ":"VY","Ⓦ":"W","Ｗ":"W","Ẁ":"W","Ẃ":"W","Ŵ":"W","Ẇ":"W","Ẅ":"W","Ẉ":"W","Ⱳ":"W","Ⓧ":"X","Ｘ":"X","Ẋ":"X","Ẍ":"X","Ⓨ":"Y","Ｙ":"Y","Ỳ":"Y","Ý":"Y","Ŷ":"Y","Ỹ":"Y","Ȳ":"Y","Ẏ":"Y","Ÿ":"Y","Ỷ":"Y","Ỵ":"Y","Ƴ":"Y","Ɏ":"Y","Ỿ":"Y","Ⓩ":"Z","Ｚ":"Z","Ź":"Z","Ẑ":"Z","Ż":"Z","Ž":"Z","Ẓ":"Z","Ẕ":"Z","Ƶ":"Z","Ȥ":"Z","Ɀ":"Z","Ⱬ":"Z","Ꝣ":"Z","ⓐ":"a","ａ":"a","ẚ":"a","à":"a","á":"a","â":"a","ầ":"a","ấ":"a","ẫ":"a","ẩ":"a","ã":"a","ā":"a","ă":"a","ằ":"a","ắ":"a","ẵ":"a","ẳ":"a","ȧ":"a","ǡ":"a","ä":"a","ǟ":"a","ả":"a","å":"a","ǻ":"a","ǎ":"a","ȁ":"a","ȃ":"a","ạ":"a","ậ":"a","ặ":"a","ḁ":"a","ą":"a","ⱥ":"a","ɐ":"a","ꜳ":"aa","æ":"ae","ǽ":"ae","ǣ":"ae","ꜵ":"ao","ꜷ":"au","ꜹ":"av","ꜻ":"av","ꜽ":"ay","ⓑ":"b","ｂ":"b","ḃ":"b","ḅ":"b","ḇ":"b","ƀ":"b","ƃ":"b","ɓ":"b","ⓒ":"c","ｃ":"c","ć":"c","ĉ":"c","ċ":"c","č":"c","ç":"c","ḉ":"c","ƈ":"c","ȼ":"c","ꜿ":"c","ↄ":"c","ⓓ":"d","ｄ":"d","ḋ":"d","ď":"d","ḍ":"d","ḑ":"d","ḓ":"d","ḏ":"d","đ":"d","ƌ":"d","ɖ":"d","ɗ":"d","ꝺ":"d","ǳ":"dz","ǆ":"dz","ⓔ":"e","ｅ":"e","è":"e","é":"e","ê":"e","ề":"e","ế":"e","ễ":"e","ể":"e","ẽ":"e","ē":"e","ḕ":"e","ḗ":"e","ĕ":"e","ė":"e","ë":"e","ẻ":"e","ě":"e","ȅ":"e","ȇ":"e","ẹ":"e","ệ":"e","ȩ":"e","ḝ":"e","ę":"e","ḙ":"e","ḛ":"e","ɇ":"e","ɛ":"e","ǝ":"e","ⓕ":"f","ｆ":"f","ḟ":"f","ƒ":"f","ꝼ":"f","ⓖ":"g","ｇ":"g","ǵ":"g","ĝ":"g","ḡ":"g","ğ":"g","ġ":"g","ǧ":"g","ģ":"g","ǥ":"g","ɠ":"g","ꞡ":"g","ᵹ":"g","ꝿ":"g","ⓗ":"h","ｈ":"h","ĥ":"h","ḣ":"h","ḧ":"h","ȟ":"h","ḥ":"h","ḩ":"h","ḫ":"h","ẖ":"h","ħ":"h","ⱨ":"h","ⱶ":"h","ɥ":"h","ƕ":"hv","ⓘ":"i","ｉ":"i","ì":"i","í":"i","î":"i","ĩ":"i","ī":"i","ĭ":"i","ï":"i","ḯ":"i","ỉ":"i","ǐ":"i","ȉ":"i","ȋ":"i","ị":"i","į":"i","ḭ":"i","ɨ":"i","ı":"i","ⓙ":"j","ｊ":"j","ĵ":"j","ǰ":"j","ɉ":"j","ⓚ":"k","ｋ":"k","ḱ":"k","ǩ":"k","ḳ":"k","ķ":"k","ḵ":"k","ƙ":"k","ⱪ":"k","ꝁ":"k","ꝃ":"k","ꝅ":"k","ꞣ":"k","ⓛ":"l","ｌ":"l","ŀ":"l","ĺ":"l","ľ":"l","ḷ":"l","ḹ":"l","ļ":"l","ḽ":"l","ḻ":"l","ſ":"l","ł":"l","ƚ":"l","ɫ":"l","ⱡ":"l","ꝉ":"l","ꞁ":"l","ꝇ":"l","ǉ":"lj","ⓜ":"m","ｍ":"m","ḿ":"m","ṁ":"m","ṃ":"m","ɱ":"m","ɯ":"m","ⓝ":"n","ｎ":"n","ǹ":"n","ń":"n","ñ":"n","ṅ":"n","ň":"n","ṇ":"n","ņ":"n","ṋ":"n","ṉ":"n","ƞ":"n","ɲ":"n","ŉ":"n","ꞑ":"n","ꞥ":"n","ǌ":"nj","ⓞ":"o","ｏ":"o","ò":"o","ó":"o","ô":"o","ồ":"o","ố":"o","ỗ":"o","ổ":"o","õ":"o","ṍ":"o","ȭ":"o","ṏ":"o","ō":"o","ṑ":"o","ṓ":"o","ŏ":"o","ȯ":"o","ȱ":"o","ö":"o","ȫ":"o","ỏ":"o","ő":"o","ǒ":"o","ȍ":"o","ȏ":"o","ơ":"o","ờ":"o","ớ":"o","ỡ":"o","ở":"o","ợ":"o","ọ":"o","ộ":"o","ǫ":"o","ǭ":"o","ø":"o","ǿ":"o","ɔ":"o","ꝋ":"o","ꝍ":"o","ɵ":"o","ƣ":"oi","ȣ":"ou","ꝏ":"oo","ⓟ":"p","ｐ":"p","ṕ":"p","ṗ":"p","ƥ":"p","ᵽ":"p","ꝑ":"p","ꝓ":"p","ꝕ":"p","ⓠ":"q","ｑ":"q","ɋ":"q","ꝗ":"q","ꝙ":"q","ⓡ":"r","ｒ":"r","ŕ":"r","ṙ":"r","ř":"r","ȑ":"r","ȓ":"r","ṛ":"r","ṝ":"r","ŗ":"r","ṟ":"r","ɍ":"r","ɽ":"r","ꝛ":"r","ꞧ":"r","ꞃ":"r","ⓢ":"s","ｓ":"s","ß":"s","ś":"s","ṥ":"s","ŝ":"s","ṡ":"s","š":"s","ṧ":"s","ṣ":"s","ṩ":"s","ș":"s","ş":"s","ȿ":"s","ꞩ":"s","ꞅ":"s","ẛ":"s","ⓣ":"t","ｔ":"t","ṫ":"t","ẗ":"t","ť":"t","ṭ":"t","ț":"t","ţ":"t","ṱ":"t","ṯ":"t","ŧ":"t","ƭ":"t","ʈ":"t","ⱦ":"t","ꞇ":"t","ꜩ":"tz","ⓤ":"u","ｕ":"u","ù":"u","ú":"u","û":"u","ũ":"u","ṹ":"u","ū":"u","ṻ":"u","ŭ":"u","ü":"u","ǜ":"u","ǘ":"u","ǖ":"u","ǚ":"u","ủ":"u","ů":"u","ű":"u","ǔ":"u","ȕ":"u","ȗ":"u","ư":"u","ừ":"u","ứ":"u","ữ":"u","ử":"u","ự":"u","ụ":"u","ṳ":"u","ų":"u","ṷ":"u","ṵ":"u","ʉ":"u","ⓥ":"v","ｖ":"v","ṽ":"v","ṿ":"v","ʋ":"v","ꝟ":"v","ʌ":"v","ꝡ":"vy","ⓦ":"w","ｗ":"w","ẁ":"w","ẃ":"w","ŵ":"w","ẇ":"w","ẅ":"w","ẘ":"w","ẉ":"w","ⱳ":"w","ⓧ":"x","ｘ":"x","ẋ":"x","ẍ":"x","ⓨ":"y","ｙ":"y","ỳ":"y","ý":"y","ŷ":"y","ỹ":"y","ȳ":"y","ẏ":"y","ÿ":"y","ỷ":"y","ẙ":"y","ỵ":"y","ƴ":"y","ɏ":"y","ỿ":"y","ⓩ":"z","ｚ":"z","ź":"z","ẑ":"z","ż":"z","ž":"z","ẓ":"z","ẕ":"z","ƶ":"z","ȥ":"z","ɀ":"z","ⱬ":"z","ꝣ":"z","Ά":"Α","Έ":"Ε","Ή":"Η","Ί":"Ι","Ϊ":"Ι","Ό":"Ο","Ύ":"Υ","Ϋ":"Υ","Ώ":"Ω","ά":"α","έ":"ε","ή":"η","ί":"ι","ϊ":"ι","ΐ":"ι","ό":"ο","ύ":"υ","ϋ":"υ","ΰ":"υ","ω":"ω","ς":"σ"}}),e.define("select2/data/base",["../utils"],function(t){function e(t,n){e.__super__.constructor.call(this)}return t.Extend(e,t.Observable),e.prototype.current=function(t){throw new Error("The `current` method must be defined in child classes.")},e.prototype.query=function(t,e){throw new Error("The `query` method must be defined in child classes.")},e.prototype.bind=function(t,e){},e.prototype.destroy=function(){},e.prototype.generateResultId=function(e,n){var i=e.id+"-result-";return i+=t.generateChars(4),null!=n.id?i+="-"+n.id.toString():i+="-"+t.generateChars(4),i},e}),e.define("select2/data/select",["./base","../utils","jquery"],function(t,e,n){function i(t,e){this.$element=t,this.options=e,i.__super__.constructor.call(this)}return e.Extend(i,t),i.prototype.current=function(t){var e=[],i=this;this.$element.find(":selected").each(function(){var t=n(this),r=i.item(t);e.push(r)}),t(e)},i.prototype.select=function(t){var e=this;if(t.selected=!0,n(t.element).is("option"))return t.element.selected=!0,void this.$element.trigger("change");if(this.$element.prop("multiple"))this.current(function(i){var r=[];t=[t],t.push.apply(t,i);for(var o=0;o<t.length;o++){var s=t[o].id;-1===n.inArray(s,r)&&r.push(s)}e.$element.val(r),e.$element.trigger("change")});else{var i=t.id;this.$element.val(i),this.$element.trigger("change")}},i.prototype.unselect=function(t){var e=this;if(this.$element.prop("multiple")){if(t.selected=!1,n(t.element).is("option"))return t.element.selected=!1,void this.$element.trigger("change");this.current(function(i){for(var r=[],o=0;o<i.length;o++){var s=i[o].id;s!==t.id&&-1===n.inArray(s,r)&&r.push(s)}e.$element.val(r),e.$element.trigger("change")})}},i.prototype.bind=function(t,e){var n=this;this.container=t,t.on("select",function(t){n.select(t.data)}),t.on("unselect",function(t){n.unselect(t.data)})},i.prototype.destroy=function(){this.$element.find("*").each(function(){n.removeData(this,"data")})},i.prototype.query=function(t,e){var i=[],r=this;this.$element.children().each(function(){var e=n(this);if(e.is("option")||e.is("optgroup")){var o=r.item(e),s=r.matches(t,o);null!==s&&i.push(s)}}),e({results:i})},i.prototype.addOptions=function(t){e.appendMany(this.$element,t)},i.prototype.option=function(t){var e;t.children?(e=document.createElement("optgroup"),e.label=t.text):(e=document.createElement("option"),void 0!==e.textContent?e.textContent=t.text:e.innerText=t.text),void 0!==t.id&&(e.value=t.id),t.disabled&&(e.disabled=!0),t.selected&&(e.selected=!0),t.title&&(e.title=t.title);var i=n(e),r=this._normalizeItem(t);return r.element=e,n.data(e,"data",r),i},i.prototype.item=function(t){var e={};if(null!=(e=n.data(t[0],"data")))return e;if(t.is("option"))e={id:t.val(),text:t.text(),disabled:t.prop("disabled"),selected:t.prop("selected"),title:t.prop("title")};else if(t.is("optgroup")){e={text:t.prop("label"),children:[],title:t.prop("title")};for(var i=t.children("option"),r=[],o=0;o<i.length;o++){var s=n(i[o]),a=this.item(s);r.push(a)}e.children=r}return e=this._normalizeItem(e),e.element=t[0],n.data(t[0],"data",e),e},i.prototype._normalizeItem=function(t){n.isPlainObject(t)||(t={id:t,text:t}),t=n.extend({},{text:""},t);var e={selected:!1,disabled:!1};return null!=t.id&&(t.id=t.id.toString()),null!=t.text&&(t.text=t.text.toString()),null==t._resultId&&t.id&&null!=this.container&&(t._resultId=this.generateResultId(this.container,t)),n.extend({},e,t)},i.prototype.matches=function(t,e){return this.options.get("matcher")(t,e)},i}),e.define("select2/data/array",["./select","../utils","jquery"],function(t,e,n){function i(t,e){var n=e.get("data")||[];i.__super__.constructor.call(this,t,e),this.addOptions(this.convertToOptions(n))}return e.Extend(i,t),i.prototype.select=function(t){var e=this.$element.find("option").filter(function(e,n){return n.value==t.id.toString()});0===e.length&&(e=this.option(t),this.addOptions(e)),i.__super__.select.call(this,t)},i.prototype.convertToOptions=function(t){for(var i=this,r=this.$element.find("option"),o=r.map(function(){return i.item(n(this)).id}).get(),s=[],a=0;a<t.length;a++){var l=this._normalizeItem(t[a]);if(n.inArray(l.id,o)>=0){var c=r.filter(function(t){return function(){return n(this).val()==t.id}}(l)),u=this.item(c),d=n.extend(!0,{},l,u),p=this.option(d);c.replaceWith(p)}else{var h=this.option(l);if(l.children){var f=this.convertToOptions(l.children);e.appendMany(h,f)}s.push(h)}}return s},i}),e.define("select2/data/ajax",["./array","../utils","jquery"],function(t,e,n){function i(t,e){this.ajaxOptions=this._applyDefaults(e.get("ajax")),null!=this.ajaxOptions.processResults&&(this.processResults=this.ajaxOptions.processResults),i.__super__.constructor.call(this,t,e)}return e.Extend(i,t),i.prototype._applyDefaults=function(t){var e={data:function(t){return n.extend({},t,{q:t.term})},transport:function(t,e,i){var r=n.ajax(t);return r.then(e),r.fail(i),r}};return n.extend({},e,t,!0)},i.prototype.processResults=function(t){return t},i.prototype.query=function(t,e){function i(){var i=o.transport(o,function(i){var o=r.processResults(i,t);r.options.get("debug")&&window.console&&console.error&&(!o||!o.results||n.isArray(o.results)),e(o)},function(){i.status&&"0"===i.status||r.trigger("results:message",{message:"errorLoading"})});r._request=i}var r=this;null!=this._request&&(n.isFunction(this._request.abort)&&this._request.abort(),this._request=null);var o=n.extend({type:"GET"},this.ajaxOptions);"function"==typeof o.url&&(o.url=o.url.call(this.$element,t)),"function"==typeof o.data&&(o.data=o.data.call(this.$element,t)),this.ajaxOptions.delay&&null!=t.term?(this._queryTimeout&&window.clearTimeout(this._queryTimeout),this._queryTimeout=window.setTimeout(i,this.ajaxOptions.delay)):i()},i}),e.define("select2/data/tags",["jquery"],function(t){function e(e,n,i){var r=i.get("tags"),o=i.get("createTag");void 0!==o&&(this.createTag=o);var s=i.get("insertTag");if(void 0!==s&&(this.insertTag=s),e.call(this,n,i),t.isArray(r))for(var a=0;a<r.length;a++){var l=r[a],c=this._normalizeItem(l),u=this.option(c);this.$element.append(u)}}return e.prototype.query=function(t,e,n){function i(t,o){for(var s=t.results,a=0;a<s.length;a++){var l=s[a],c=null!=l.children&&!i({results:l.children},!0);if((l.text||"").toUpperCase()===(e.term||"").toUpperCase()||c)return!o&&(t.data=s,void n(t))}if(o)return!0;var u=r.createTag(e);if(null!=u){var d=r.option(u);d.attr("data-select2-tag",!0),r.addOptions([d]),r.insertTag(s,u)}t.results=s,n(t)}var r=this;if(this._removeOldTags(),null==e.term||null!=e.page)return void t.call(this,e,n);t.call(this,e,i)},e.prototype.createTag=function(e,n){var i=t.trim(n.term);return""===i?null:{id:i,text:i}},e.prototype.insertTag=function(t,e,n){e.unshift(n)},e.prototype._removeOldTags=function(e){this._lastTag;this.$element.find("option[data-select2-tag]").each(function(){this.selected||t(this).remove()})},e}),e.define("select2/data/tokenizer",["jquery"],function(t){function e(t,e,n){var i=n.get("tokenizer");void 0!==i&&(this.tokenizer=i),t.call(this,e,n)}return e.prototype.bind=function(t,e,n){t.call(this,e,n),this.$search=e.dropdown.$search||e.selection.$search||n.find(".select2-search__field")},e.prototype.query=function(e,n,i){function r(e){var n=s._normalizeItem(e);if(!s.$element.find("option").filter(function(){return t(this).val()===n.id}).length){var i=s.option(n);i.attr("data-select2-tag",!0),s._removeOldTags(),s.addOptions([i])}o(n)}function o(t){s.trigger("select",{data:t})}var s=this;n.term=n.term||"";var a=this.tokenizer(n,this.options,r);a.term!==n.term&&(this.$search.length&&(this.$search.val(a.term),this.$search.focus()),n.term=a.term),e.call(this,n,i)},e.prototype.tokenizer=function(e,n,i,r){for(var o=i.get("tokenSeparators")||[],s=n.term,a=0,l=this.createTag||function(t){return{id:t.term,text:t.term}};a<s.length;){var c=s[a];if(-1!==t.inArray(c,o)){var u=s.substr(0,a),d=t.extend({},n,{term:u}),p=l(d);null!=p?(r(p),s=s.substr(a+1)||"",a=0):a++}else a++}return{term:s}},e}),e.define("select2/data/minimumInputLength",[],function(){function t(t,e,n){this.minimumInputLength=n.get("minimumInputLength"),t.call(this,e,n)}return t.prototype.query=function(t,e,n){if(e.term=e.term||"",e.term.length<this.minimumInputLength)return void this.trigger("results:message",{message:"inputTooShort",args:{minimum:this.minimumInputLength,input:e.term,params:e}});t.call(this,e,n)},t}),e.define("select2/data/maximumInputLength",[],function(){function t(t,e,n){this.maximumInputLength=n.get("maximumInputLength"),t.call(this,e,n)}return t.prototype.query=function(t,e,n){if(e.term=e.term||"",this.maximumInputLength>0&&e.term.length>this.maximumInputLength)return void this.trigger("results:message",{message:"inputTooLong",args:{maximum:this.maximumInputLength,input:e.term,params:e}});t.call(this,e,n)},t}),e.define("select2/data/maximumSelectionLength",[],function(){function t(t,e,n){this.maximumSelectionLength=n.get("maximumSelectionLength"),t.call(this,e,n)}return t.prototype.query=function(t,e,n){var i=this;this.current(function(r){var o=null!=r?r.length:0;if(i.maximumSelectionLength>0&&o>=i.maximumSelectionLength)return void i.trigger("results:message",{message:"maximumSelected",args:{maximum:i.maximumSelectionLength}});t.call(i,e,n)})},t}),e.define("select2/dropdown",["jquery","./utils"],function(t,e){function n(t,e){this.$element=t,this.options=e,n.__super__.constructor.call(this)}return e.Extend(n,e.Observable),n.prototype.render=function(){var e=t('<span class="select2-dropdown"><span class="select2-results"></span></span>');return e.attr("dir",this.options.get("dir")),this.$dropdown=e,e},n.prototype.bind=function(){},n.prototype.position=function(t,e){},n.prototype.destroy=function(){this.$dropdown.remove()},n}),e.define("select2/dropdown/search",["jquery","../utils"],function(t,e){function n(){}return n.prototype.render=function(e){var n=e.call(this),i=t('<span class="select2-search select2-search--dropdown"><input class="select2-search__field" type="search" tabindex="-1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" /></span>');return this.$searchContainer=i,this.$search=i.find("input"),n.prepend(i),n},n.prototype.bind=function(e,n,i){var r=this;e.call(this,n,i),this.$search.on("keydown",function(t){r.trigger("keypress",t),r._keyUpPrevented=t.isDefaultPrevented()}),this.$search.on("input",function(e){t(this).off("keyup")}),this.$search.on("keyup input",function(t){r.handleSearch(t)}),n.on("open",function(){r.$search.attr("tabindex",0),r.$search.focus(),window.setTimeout(function(){r.$search.focus()},0)}),n.on("close",function(){r.$search.attr("tabindex",-1),r.$search.val("")}),n.on("focus",function(){n.isOpen()||r.$search.focus()}),n.on("results:all",function(t){if(null==t.query.term||""===t.query.term){r.showSearch(t)?r.$searchContainer.removeClass("select2-search--hide"):r.$searchContainer.addClass("select2-search--hide")}})},n.prototype.handleSearch=function(t){if(!this._keyUpPrevented){var e=this.$search.val();this.trigger("query",{term:e})}this._keyUpPrevented=!1},n.prototype.showSearch=function(t,e){return!0},n}),e.define("select2/dropdown/hidePlaceholder",[],function(){function t(t,e,n,i){this.placeholder=this.normalizePlaceholder(n.get("placeholder")),t.call(this,e,n,i)}return t.prototype.append=function(t,e){e.results=this.removePlaceholder(e.results),t.call(this,e)},t.prototype.normalizePlaceholder=function(t,e){return"string"==typeof e&&(e={id:"",text:e}),e},t.prototype.removePlaceholder=function(t,e){for(var n=e.slice(0),i=e.length-1;i>=0;i--){var r=e[i];this.placeholder.id===r.id&&n.splice(i,1)}return n},t}),e.define("select2/dropdown/infiniteScroll",["jquery"],function(t){function e(t,e,n,i){this.lastParams={},t.call(this,e,n,i),this.$loadingMore=this.createLoadingMore(),this.loading=!1}return e.prototype.append=function(t,e){this.$loadingMore.remove(),this.loading=!1,t.call(this,e),this.showLoadingMore(e)&&this.$results.append(this.$loadingMore)},e.prototype.bind=function(e,n,i){var r=this;e.call(this,n,i),n.on("query",function(t){r.lastParams=t,r.loading=!0}),n.on("query:append",function(t){r.lastParams=t,r.loading=!0}),this.$results.on("scroll",function(){var e=t.contains(document.documentElement,r.$loadingMore[0]);if(!r.loading&&e){r.$results.offset().top+r.$results.outerHeight(!1)+50>=r.$loadingMore.offset().top+r.$loadingMore.outerHeight(!1)&&r.loadMore()}})},e.prototype.loadMore=function(){this.loading=!0;var e=t.extend({},{page:1},this.lastParams);e.page++,this.trigger("query:append",e)},e.prototype.showLoadingMore=function(t,e){return e.pagination&&e.pagination.more},e.prototype.createLoadingMore=function(){var e=t('<li class="select2-results__option select2-results__option--load-more"role="treeitem" aria-disabled="true"></li>'),n=this.options.get("translations").get("loadingMore");return e.html(n(this.lastParams)),e},e}),e.define("select2/dropdown/attachBody",["jquery","../utils"],function(t,e){function n(e,n,i){this.$dropdownParent=i.get("dropdownParent")||t(document.body),e.call(this,n,i)}return n.prototype.bind=function(t,e,n){var i=this,r=!1;t.call(this,e,n),e.on("open",function(){i._showDropdown(),i._attachPositioningHandler(e),r||(r=!0,e.on("results:all",function(){i._positionDropdown(),i._resizeDropdown()}),e.on("results:append",function(){i._positionDropdown(),i._resizeDropdown()}))}),e.on("close",function(){i._hideDropdown(),i._detachPositioningHandler(e)}),this.$dropdownContainer.on("mousedown",function(t){t.stopPropagation()})},n.prototype.destroy=function(t){t.call(this),this.$dropdownContainer.remove()},n.prototype.position=function(t,e,n){e.attr("class",n.attr("class")),e.removeClass("select2"),e.addClass("select2-container--open"),e.css({position:"absolute",top:-999999}),this.$container=n},n.prototype.render=function(e){var n=t("<span></span>"),i=e.call(this);return n.append(i),this.$dropdownContainer=n,n},n.prototype._hideDropdown=function(t){this.$dropdownContainer.detach()},n.prototype._attachPositioningHandler=function(n,i){var r=this,o="scroll.select2."+i.id,s="resize.select2."+i.id,a="orientationchange.select2."+i.id,l=this.$container.parents().filter(e.hasScroll);l.each(function(){t(this).data("select2-scroll-position",{x:t(this).scrollLeft(),y:t(this).scrollTop()})}),l.on(o,function(e){var n=t(this).data("select2-scroll-position");t(this).scrollTop(n.y)}),t(window).on(o+" "+s+" "+a,function(t){r._positionDropdown(),r._resizeDropdown()})},n.prototype._detachPositioningHandler=function(n,i){var r="scroll.select2."+i.id,o="resize.select2."+i.id,s="orientationchange.select2."+i.id;this.$container.parents().filter(e.hasScroll).off(r),t(window).off(r+" "+o+" "+s)},n.prototype._positionDropdown=function(){var e=t(window),n=this.$dropdown.hasClass("select2-dropdown--above"),i=this.$dropdown.hasClass("select2-dropdown--below"),r=null,o=this.$container.offset();o.bottom=o.top+this.$container.outerHeight(!1);var s={height:this.$container.outerHeight(!1)};s.top=o.top,s.bottom=o.top+s.height;var a={height:this.$dropdown.outerHeight(!1)},l={top:e.scrollTop(),bottom:e.scrollTop()+e.height()},c=l.top<o.top-a.height,u=l.bottom>o.bottom+a.height,d={left:o.left,top:s.bottom},p=this.$dropdownParent;"static"===p.css("position")&&(p=p.offsetParent());var h=p.offset();d.top-=h.top,d.left-=h.left,n||i||(r="below"),u||!c||n?!c&&u&&n&&(r="below"):r="above",("above"==r||n&&"below"!==r)&&(d.top=s.top-h.top-a.height),null!=r&&(this.$dropdown.removeClass("select2-dropdown--below select2-dropdown--above").addClass("select2-dropdown--"+r),this.$container.removeClass("select2-container--below select2-container--above").addClass("select2-container--"+r)),this.$dropdownContainer.css(d)},n.prototype._resizeDropdown=function(){var t={width:this.$container.outerWidth(!1)+"px"};this.options.get("dropdownAutoWidth")&&(t.minWidth=t.width,t.position="relative",t.width="auto"),this.$dropdown.css(t)},n.prototype._showDropdown=function(t){this.$dropdownContainer.appendTo(this.$dropdownParent),this._positionDropdown(),this._resizeDropdown()},n}),e.define("select2/dropdown/minimumResultsForSearch",[],function(){function t(e){for(var n=0,i=0;i<e.length;i++){var r=e[i];r.children?n+=t(r.children):n++}return n}function e(t,e,n,i){this.minimumResultsForSearch=n.get("minimumResultsForSearch"),this.minimumResultsForSearch<0&&(this.minimumResultsForSearch=1/0),t.call(this,e,n,i)}return e.prototype.showSearch=function(e,n){return!(t(n.data.results)<this.minimumResultsForSearch)&&e.call(this,n)},e}),e.define("select2/dropdown/selectOnClose",[],function(){function t(){}return t.prototype.bind=function(t,e,n){var i=this;t.call(this,e,n),e.on("close",function(t){i._handleSelectOnClose(t)})},t.prototype._handleSelectOnClose=function(t,e){if(e&&null!=e.originalSelect2Event){var n=e.originalSelect2Event;if("select"===n._type||"unselect"===n._type)return}var i=this.getHighlightedResults();if(!(i.length<1)){var r=i.data("data");null!=r.element&&r.element.selected||null==r.element&&r.selected||this.trigger("select",{data:r})}},t}),e.define("select2/dropdown/closeOnSelect",[],function(){function t(){}return t.prototype.bind=function(t,e,n){var i=this;t.call(this,e,n),e.on("select",function(t){i._selectTriggered(t)}),e.on("unselect",function(t){i._selectTriggered(t)})},t.prototype._selectTriggered=function(t,e){var n=e.originalEvent;n&&n.ctrlKey||this.trigger("close",{originalEvent:n,originalSelect2Event:e})},t}),e.define("select2/i18n/en",[],function(){return{errorLoading:function(){return"The results could not be loaded."},inputTooLong:function(t){var e=t.input.length-t.maximum,n="Please delete "+e+" character";return 1!=e&&(n+="s"),n},inputTooShort:function(t){return"Please enter "+(t.minimum-t.input.length)+" or more characters"},loadingMore:function(){return"Loading more results…"},maximumSelected:function(t){var e="You can only select "+t.maximum+" item";return 1!=t.maximum&&(e+="s"),e},noResults:function(){return"No results found"},searching:function(){return"Searching…"}}}),e.define("select2/defaults",["jquery","require","./results","./selection/single","./selection/multiple","./selection/placeholder","./selection/allowClear","./selection/search","./selection/eventRelay","./utils","./translation","./diacritics","./data/select","./data/array","./data/ajax","./data/tags","./data/tokenizer","./data/minimumInputLength","./data/maximumInputLength","./data/maximumSelectionLength","./dropdown","./dropdown/search","./dropdown/hidePlaceholder","./dropdown/infiniteScroll","./dropdown/attachBody","./dropdown/minimumResultsForSearch","./dropdown/selectOnClose","./dropdown/closeOnSelect","./i18n/en"],function(t,e,n,i,r,o,s,a,l,c,u,d,p,h,f,g,m,v,y,_,b,w,E,C,T,x,A,O,S){function D(){this.reset()}return D.prototype.apply=function(d){if(d=t.extend(!0,{},this.defaults,d),null==d.dataAdapter){if(null!=d.ajax?d.dataAdapter=f:null!=d.data?d.dataAdapter=h:d.dataAdapter=p,d.minimumInputLength>0&&(d.dataAdapter=c.Decorate(d.dataAdapter,v)),d.maximumInputLength>0&&(d.dataAdapter=c.Decorate(d.dataAdapter,y)),d.maximumSelectionLength>0&&(d.dataAdapter=c.Decorate(d.dataAdapter,_)),d.tags&&(d.dataAdapter=c.Decorate(d.dataAdapter,g)),null==d.tokenSeparators&&null==d.tokenizer||(d.dataAdapter=c.Decorate(d.dataAdapter,m)),null!=d.query){var S=e(d.amdBase+"compat/query");d.dataAdapter=c.Decorate(d.dataAdapter,S)}if(null!=d.initSelection){var D=e(d.amdBase+"compat/initSelection");d.dataAdapter=c.Decorate(d.dataAdapter,D)}}if(null==d.resultsAdapter&&(d.resultsAdapter=n,null!=d.ajax&&(d.resultsAdapter=c.Decorate(d.resultsAdapter,C)),null!=d.placeholder&&(d.resultsAdapter=c.Decorate(d.resultsAdapter,E)),d.selectOnClose&&(d.resultsAdapter=c.Decorate(d.resultsAdapter,A))),null==d.dropdownAdapter){if(d.multiple)d.dropdownAdapter=b;else{var I=c.Decorate(b,w);d.dropdownAdapter=I}if(0!==d.minimumResultsForSearch&&(d.dropdownAdapter=c.Decorate(d.dropdownAdapter,x)),d.closeOnSelect&&(d.dropdownAdapter=c.Decorate(d.dropdownAdapter,O)),null!=d.dropdownCssClass||null!=d.dropdownCss||null!=d.adaptDropdownCssClass){var N=e(d.amdBase+"compat/dropdownCss");d.dropdownAdapter=c.Decorate(d.dropdownAdapter,N)}d.dropdownAdapter=c.Decorate(d.dropdownAdapter,T)}if(null==d.selectionAdapter){if(d.multiple?d.selectionAdapter=r:d.selectionAdapter=i,null!=d.placeholder&&(d.selectionAdapter=c.Decorate(d.selectionAdapter,o)),d.allowClear&&(d.selectionAdapter=c.Decorate(d.selectionAdapter,s)),d.multiple&&(d.selectionAdapter=c.Decorate(d.selectionAdapter,a)),null!=d.containerCssClass||null!=d.containerCss||null!=d.adaptContainerCssClass){var k=e(d.amdBase+"compat/containerCss");d.selectionAdapter=c.Decorate(d.selectionAdapter,k)}d.selectionAdapter=c.Decorate(d.selectionAdapter,l)}if("string"==typeof d.language)if(d.language.indexOf("-")>0){var L=d.language.split("-"),P=L[0];d.language=[d.language,P]}else d.language=[d.language];if(t.isArray(d.language)){var $=new u;d.language.push("en");for(var j=d.language,H=0;H<j.length;H++){var R=j[H],M={};try{M=u.loadPath(R)}catch(t){try{R=this.defaults.amdLanguageBase+R,M=u.loadPath(R)}catch(t){d.debug&&window.console&&console.warn;continue}}$.extend(M)}d.translations=$}else{var W=u.loadPath(this.defaults.amdLanguageBase+"en"),q=new u(d.language);q.extend(W),d.translations=q}return d},D.prototype.reset=function(){function e(t){function e(t){return d[t]||t}return t.replace(/[^\u0000-\u007E]/g,e)}function n(i,r){if(""===t.trim(i.term))return r;if(r.children&&r.children.length>0){for(var o=t.extend(!0,{},r),s=r.children.length-1;s>=0;s--){null==n(i,r.children[s])&&o.children.splice(s,1)}return o.children.length>0?o:n(i,o)}var a=e(r.text).toUpperCase(),l=e(i.term).toUpperCase();return a.indexOf(l)>-1?r:null}this.defaults={amdBase:"./",amdLanguageBase:"./i18n/",closeOnSelect:!0,debug:!1,dropdownAutoWidth:!1,escapeMarkup:c.escapeMarkup,language:S,matcher:n,minimumInputLength:0,maximumInputLength:0,maximumSelectionLength:0,minimumResultsForSearch:0,selectOnClose:!1,sorter:function(t){return t},templateResult:function(t){return t.text},templateSelection:function(t){return t.text},theme:"default",width:"resolve"}},D.prototype.set=function(e,n){var i=t.camelCase(e),r={};r[i]=n;var o=c._convertData(r);t.extend(this.defaults,o)},new D}),e.define("select2/options",["require","jquery","./defaults","./utils"],function(t,e,n,i){function r(e,r){if(this.options=e,null!=r&&this.fromElement(r),this.options=n.apply(this.options),r&&r.is("input")){var o=t(this.get("amdBase")+"compat/inputData");this.options.dataAdapter=i.Decorate(this.options.dataAdapter,o)}}return r.prototype.fromElement=function(t){var n=["select2"];null==this.options.multiple&&(this.options.multiple=t.prop("multiple")),null==this.options.disabled&&(this.options.disabled=t.prop("disabled")),null==this.options.language&&(t.prop("lang")?this.options.language=t.prop("lang").toLowerCase():t.closest("[lang]").prop("lang")&&(this.options.language=t.closest("[lang]").prop("lang"))),null==this.options.dir&&(t.prop("dir")?this.options.dir=t.prop("dir"):t.closest("[dir]").prop("dir")?this.options.dir=t.closest("[dir]").prop("dir"):this.options.dir="ltr"),t.prop("disabled",this.options.disabled),t.prop("multiple",this.options.multiple),t.data("select2Tags")&&(this.options.debug&&window.console&&console.warn,t.data("data",t.data("select2Tags")),t.data("tags",!0)),t.data("ajaxUrl")&&(this.options.debug&&window.console&&console.warn,t.attr("ajax--url",t.data("ajaxUrl")),t.data("ajax--url",t.data("ajaxUrl")));var r={};r=e.fn.jquery&&"1."==e.fn.jquery.substr(0,2)&&t[0].dataset?e.extend(!0,{},t[0].dataset,t.data()):t.data();var o=e.extend(!0,{},r);o=i._convertData(o);for(var s in o)e.inArray(s,n)>-1||(e.isPlainObject(this.options[s])?e.extend(this.options[s],o[s]):this.options[s]=o[s]);return this},r.prototype.get=function(t){return this.options[t]},r.prototype.set=function(t,e){this.options[t]=e},r}),e.define("select2/core",["jquery","./options","./utils","./keys"],function(t,e,n,i){var r=function(t,n){null!=t.data("select2")&&t.data("select2").destroy(),this.$element=t,this.id=this._generateId(t),n=n||{},this.options=new e(n,t),r.__super__.constructor.call(this);var i=t.attr("tabindex")||0;t.data("old-tabindex",i),t.attr("tabindex","-1");var o=this.options.get("dataAdapter");this.dataAdapter=new o(t,this.options);var s=this.render();this._placeContainer(s);var a=this.options.get("selectionAdapter");this.selection=new a(t,this.options),this.$selection=this.selection.render(),this.selection.position(this.$selection,s);var l=this.options.get("dropdownAdapter");this.dropdown=new l(t,this.options),this.$dropdown=this.dropdown.render(),this.dropdown.position(this.$dropdown,s);var c=this.options.get("resultsAdapter");this.results=new c(t,this.options,this.dataAdapter),this.$results=this.results.render(),this.results.position(this.$results,this.$dropdown);var u=this;this._bindAdapters(),this._registerDomEvents(),this._registerDataEvents(),this._registerSelectionEvents(),this._registerDropdownEvents(),this._registerResultsEvents(),this._registerEvents(),this.dataAdapter.current(function(t){u.trigger("selection:update",{data:t})}),t.addClass("select2-hidden-accessible"),t.attr("aria-hidden","true"),this._syncAttributes(),t.data("select2",this)};return n.Extend(r,n.Observable),r.prototype._generateId=function(t){var e="";return e=null!=t.attr("id")?t.attr("id"):null!=t.attr("name")?t.attr("name")+"-"+n.generateChars(2):n.generateChars(4),e=e.replace(/(:|\.|\[|\]|,)/g,""),e="select2-"+e},r.prototype._placeContainer=function(t){t.insertAfter(this.$element);var e=this._resolveWidth(this.$element,this.options.get("width"));null!=e&&t.css("width",e)},r.prototype._resolveWidth=function(t,e){var n=/^width:(([-+]?([0-9]*\.)?[0-9]+)(px|em|ex|%|in|cm|mm|pt|pc))/i;if("resolve"==e){var i=this._resolveWidth(t,"style");return null!=i?i:this._resolveWidth(t,"element")}if("element"==e){var r=t.outerWidth(!1);return r<=0?"auto":r+"px"}if("style"==e){var o=t.attr("style");if("string"!=typeof o)return null;for(var s=o.split(";"),a=0,l=s.length;a<l;a+=1){var c=s[a].replace(/\s/g,""),u=c.match(n);if(null!==u&&u.length>=1)return u[1]}return null}return e},r.prototype._bindAdapters=function(){this.dataAdapter.bind(this,this.$container),this.selection.bind(this,this.$container),this.dropdown.bind(this,this.$container),this.results.bind(this,this.$container)},r.prototype._registerDomEvents=function(){var e=this;this.$element.on("change.select2",function(){e.dataAdapter.current(function(t){e.trigger("selection:update",{data:t})})}),this.$element.on("focus.select2",function(t){e.trigger("focus",t)}),this._syncA=n.bind(this._syncAttributes,this),this._syncS=n.bind(this._syncSubtree,this),this.$element[0].attachEvent&&this.$element[0].attachEvent("onpropertychange",this._syncA);var i=window.MutationObserver||window.WebKitMutationObserver||window.MozMutationObserver;null!=i?(this._observer=new i(function(n){t.each(n,e._syncA),t.each(n,e._syncS)}),this._observer.observe(this.$element[0],{attributes:!0,childList:!0,subtree:!1})):this.$element[0].addEventListener&&(this.$element[0].addEventListener("DOMAttrModified",e._syncA,!1),this.$element[0].addEventListener("DOMNodeInserted",e._syncS,!1),this.$element[0].addEventListener("DOMNodeRemoved",e._syncS,!1))},r.prototype._registerDataEvents=function(){var t=this;this.dataAdapter.on("*",function(e,n){t.trigger(e,n)})},r.prototype._registerSelectionEvents=function(){var e=this,n=["toggle","focus"];this.selection.on("toggle",function(){e.toggleDropdown()}),this.selection.on("focus",function(t){e.focus(t)}),this.selection.on("*",function(i,r){-1===t.inArray(i,n)&&e.trigger(i,r)})},r.prototype._registerDropdownEvents=function(){var t=this;this.dropdown.on("*",function(e,n){t.trigger(e,n)})},r.prototype._registerResultsEvents=function(){var t=this;this.results.on("*",function(e,n){t.trigger(e,n)})},r.prototype._registerEvents=function(){var t=this;this.on("open",function(){t.$container.addClass("select2-container--open")}),this.on("close",function(){t.$container.removeClass("select2-container--open")}),this.on("enable",function(){t.$container.removeClass("select2-container--disabled")}),this.on("disable",function(){t.$container.addClass("select2-container--disabled")}),this.on("blur",function(){t.$container.removeClass("select2-container--focus")}),this.on("query",function(e){t.isOpen()||t.trigger("open",{}),this.dataAdapter.query(e,function(n){t.trigger("results:all",{data:n,query:e})})}),this.on("query:append",function(e){this.dataAdapter.query(e,function(n){t.trigger("results:append",{data:n,query:e})})}),this.on("keypress",function(e){var n=e.which;t.isOpen()?n===i.ESC||n===i.TAB||n===i.UP&&e.altKey?(t.close(),e.preventDefault()):n===i.ENTER?(t.trigger("results:select",{}),e.preventDefault()):n===i.SPACE&&e.ctrlKey?(t.trigger("results:toggle",{}),e.preventDefault()):n===i.UP?(t.trigger("results:previous",{}),e.preventDefault()):n===i.DOWN&&(t.trigger("results:next",{}),e.preventDefault()):(n===i.ENTER||n===i.SPACE||n===i.DOWN&&e.altKey)&&(t.open(),e.preventDefault())})},r.prototype._syncAttributes=function(){this.options.set("disabled",this.$element.prop("disabled")),this.options.get("disabled")?(this.isOpen()&&this.close(),this.trigger("disable",{})):this.trigger("enable",{})},r.prototype._syncSubtree=function(t,e){var n=!1,i=this;if(!t||!t.target||"OPTION"===t.target.nodeName||"OPTGROUP"===t.target.nodeName){if(e)if(e.addedNodes&&e.addedNodes.length>0)for(var r=0;r<e.addedNodes.length;r++){var o=e.addedNodes[r];o.selected&&(n=!0)}else e.removedNodes&&e.removedNodes.length>0&&(n=!0);else n=!0;n&&this.dataAdapter.current(function(t){i.trigger("selection:update",{data:t})})}},r.prototype.trigger=function(t,e){var n=r.__super__.trigger,i={open:"opening",close:"closing",select:"selecting",unselect:"unselecting"};if(void 0===e&&(e={}),t in i){var o=i[t],s={prevented:!1,name:t,args:e};if(n.call(this,o,s),s.prevented)return void(e.prevented=!0)}n.call(this,t,e)},r.prototype.toggleDropdown=function(){this.options.get("disabled")||(this.isOpen()?this.close():this.open())},r.prototype.open=function(){this.isOpen()||this.trigger("query",{})},r.prototype.close=function(){this.isOpen()&&this.trigger("close",{})},r.prototype.isOpen=function(){return this.$container.hasClass("select2-container--open")},r.prototype.hasFocus=function(){return this.$container.hasClass("select2-container--focus")},r.prototype.focus=function(t){this.hasFocus()||(this.$container.addClass("select2-container--focus"),this.trigger("focus",{}))},r.prototype.enable=function(t){this.options.get("debug")&&window.console&&console.warn,null!=t&&0!==t.length||(t=[!0]);var e=!t[0];this.$element.prop("disabled",e)},r.prototype.data=function(){this.options.get("debug")&&arguments.length>0&&window.console&&console.warn;var t=[];return this.dataAdapter.current(function(e){t=e}),t},r.prototype.val=function(e){if(this.options.get("debug")&&window.console&&console.warn,null==e||0===e.length)return this.$element.val();var n=e[0];t.isArray(n)&&(n=t.map(n,function(t){return t.toString()})),this.$element.val(n).trigger("change")},r.prototype.destroy=function(){this.$container.remove(),this.$element[0].detachEvent&&this.$element[0].detachEvent("onpropertychange",this._syncA),null!=this._observer?(this._observer.disconnect(),this._observer=null):this.$element[0].removeEventListener&&(this.$element[0].removeEventListener("DOMAttrModified",this._syncA,!1),this.$element[0].removeEventListener("DOMNodeInserted",this._syncS,!1),this.$element[0].removeEventListener("DOMNodeRemoved",this._syncS,!1)),this._syncA=null,this._syncS=null,this.$element.off(".select2"),this.$element.attr("tabindex",this.$element.data("old-tabindex")),this.$element.removeClass("select2-hidden-accessible"),this.$element.attr("aria-hidden","false"),this.$element.removeData("select2"),this.dataAdapter.destroy(),this.selection.destroy(),this.dropdown.destroy(),this.results.destroy(),this.dataAdapter=null,this.selection=null,this.dropdown=null,this.results=null},r.prototype.render=function(){var e=t('<span class="select2 select2-container"><span class="selection"></span><span class="dropdown-wrapper" aria-hidden="true"></span></span>');return e.attr("dir",this.options.get("dir")),this.$container=e,this.$container.addClass("select2-container--"+this.options.get("theme")),e.data("element",this.$element),e},r}),e.define("jquery-mousewheel",["jquery"],function(t){return t}),e.define("jquery.select2",["jquery","jquery-mousewheel","./select2/core","./select2/defaults"],function(t,e,n,i){if(null==t.fn.select2){var r=["open","close","destroy"];t.fn.select2=function(e){if("object"==typeof(e=e||{}))return this.each(function(){var i=t.extend(!0,{},e);new n(t(this),i)}),this;if("string"==typeof e){var i,o=Array.prototype.slice.call(arguments,1);return this.each(function(){var n=t(this).data("select2");null==n&&window.console&&console.error,i=n[e].apply(n,o)}),t.inArray(e,r)>-1?this:i}throw new Error("Invalid arguments for Select2: "+e)}}return null==t.fn.select2.defaults&&(t.fn.select2.defaults=i),n}),{define:e.define,require:e.require}}(),n=e.require("jquery.select2");return t.fn.select2.amd=e,n})}).call(e,n(0))},function(t,e,n){(function(e){t.exports=e.$=n(12)}).call(e,n(1))},function(t,e,n){(function(e){t.exports=e.Tether=n(13)}).call(e,n(1))},function(t,e,n){var i,r;!function(e,n){"use strict";"object"==typeof t&&"object"==typeof t.exports?t.exports=e.document?n(e,!0):function(t){if(!t.document)throw new Error("jQuery requires a window with a document");return n(t)}:n(e)}("undefined"!=typeof window?window:this,function(n,o){"use strict";function s(t,e){e=e||st;var n=e.createElement("script");n.text=t,e.head.appendChild(n).parentNode.removeChild(n)}function a(t){var e=!!t&&"length"in t&&t.length,n=yt.type(t);return"function"!==n&&!yt.isWindow(t)&&("array"===n||0===e||"number"==typeof e&&e>0&&e-1 in t)}function l(t,e){return t.nodeName&&t.nodeName.toLowerCase()===e.toLowerCase()}function c(t,e,n){return yt.isFunction(e)?yt.grep(t,function(t,i){return!!e.call(t,i,t)!==n}):e.nodeType?yt.grep(t,function(t){return t===e!==n}):"string"!=typeof e?yt.grep(t,function(t){return dt.call(e,t)>-1!==n}):St.test(e)?yt.filter(e,t,n):(e=yt.filter(e,t),yt.grep(t,function(t){return dt.call(e,t)>-1!==n&&1===t.nodeType}))}function u(t,e){for(;(t=t[e])&&1!==t.nodeType;);return t}function d(t){var e={};return yt.each(t.match(Lt)||[],function(t,n){e[n]=!0}),e}function p(t){return t}function h(t){throw t}function f(t,e,n,i){var r;try{t&&yt.isFunction(r=t.promise)?r.call(t).done(e).fail(n):t&&yt.isFunction(r=t.then)?r.call(t,e,n):e.apply(void 0,[t].slice(i))}catch(t){n.apply(void 0,[t])}}function g(){st.removeEventListener("DOMContentLoaded",g),n.removeEventListener("load",g),yt.ready()}function m(){this.expando=yt.expando+m.uid++}function v(t){return"true"===t||"false"!==t&&("null"===t?null:t===+t+""?+t:Wt.test(t)?JSON.parse(t):t)}function y(t,e,n){var i;if(void 0===n&&1===t.nodeType)if(i="data-"+e.replace(qt,"-$&").toLowerCase(),"string"==typeof(n=t.getAttribute(i))){try{n=v(n)}catch(t){}Mt.set(t,e,n)}else n=void 0;return n}function _(t,e,n,i){var r,o=1,s=20,a=i?function(){return i.cur()}:function(){return yt.css(t,e,"")},l=a(),c=n&&n[3]||(yt.cssNumber[e]?"":"px"),u=(yt.cssNumber[e]||"px"!==c&&+l)&&Ut.exec(yt.css(t,e));if(u&&u[3]!==c){c=c||u[3],n=n||[],u=+l||1;do{o=o||".5",u/=o,yt.style(t,e,u+c)}while(o!==(o=a()/l)&&1!==o&&--s)}return n&&(u=+u||+l||0,r=n[1]?u+(n[1]+1)*n[2]:+n[2],i&&(i.unit=c,i.start=u,i.end=r)),r}function b(t){var e,n=t.ownerDocument,i=t.nodeName,r=Kt[i];return r||(e=n.body.appendChild(n.createElement(i)),r=yt.css(e,"display"),e.parentNode.removeChild(e),"none"===r&&(r="block"),Kt[i]=r,r)}function w(t,e){for(var n,i,r=[],o=0,s=t.length;o<s;o++)i=t[o],i.style&&(n=i.style.display,e?("none"===n&&(r[o]=Rt.get(i,"display")||null,r[o]||(i.style.display="")),""===i.style.display&&Vt(i)&&(r[o]=b(i))):"none"!==n&&(r[o]="none",Rt.set(i,"display",n)));for(o=0;o<s;o++)null!=r[o]&&(t[o].style.display=r[o]);return t}function E(t,e){var n;return n=void 0!==t.getElementsByTagName?t.getElementsByTagName(e||"*"):void 0!==t.querySelectorAll?t.querySelectorAll(e||"*"):[],void 0===e||e&&l(t,e)?yt.merge([t],n):n}function C(t,e){for(var n=0,i=t.length;n<i;n++)Rt.set(t[n],"globalEval",!e||Rt.get(e[n],"globalEval"))}function T(t,e,n,i,r){for(var o,s,a,l,c,u,d=e.createDocumentFragment(),p=[],h=0,f=t.length;h<f;h++)if((o=t[h])||0===o)if("object"===yt.type(o))yt.merge(p,o.nodeType?[o]:o);else if(Zt.test(o)){for(s=s||d.appendChild(e.createElement("div")),a=(Yt.exec(o)||["",""])[1].toLowerCase(),l=Xt[a]||Xt._default,s.innerHTML=l[1]+yt.htmlPrefilter(o)+l[2],u=l[0];u--;)s=s.lastChild;yt.merge(p,s.childNodes),s=d.firstChild,s.textContent=""}else p.push(e.createTextNode(o));for(d.textContent="",h=0;o=p[h++];)if(i&&yt.inArray(o,i)>-1)r&&r.push(o);else if(c=yt.contains(o.ownerDocument,o),s=E(d.appendChild(o),"script"),c&&C(s),n)for(u=0;o=s[u++];)Qt.test(o.type||"")&&n.push(o);return d}function x(){return!0}function A(){return!1}function O(){try{return st.activeElement}catch(t){}}function S(t,e,n,i,r,o){var s,a;if("object"==typeof e){"string"!=typeof n&&(i=i||n,n=void 0);for(a in e)S(t,a,n,i,e[a],o);return t}if(null==i&&null==r?(r=n,i=n=void 0):null==r&&("string"==typeof n?(r=i,i=void 0):(r=i,i=n,n=void 0)),!1===r)r=A;else if(!r)return t;return 1===o&&(s=r,r=function(t){return yt().off(t),s.apply(this,arguments)},r.guid=s.guid||(s.guid=yt.guid++)),t.each(function(){yt.event.add(this,e,r,i,n)})}function D(t,e){return l(t,"table")&&l(11!==e.nodeType?e:e.firstChild,"tr")?yt(">tbody",t)[0]||t:t}function I(t){return t.type=(null!==t.getAttribute("type"))+"/"+t.type,t}function N(t){var e=se.exec(t.type);return e?t.type=e[1]:t.removeAttribute("type"),t}function k(t,e){var n,i,r,o,s,a,l,c;if(1===e.nodeType){if(Rt.hasData(t)&&(o=Rt.access(t),s=Rt.set(e,o),c=o.events)){delete s.handle,s.events={};for(r in c)for(n=0,i=c[r].length;n<i;n++)yt.event.add(e,r,c[r][n])}Mt.hasData(t)&&(a=Mt.access(t),l=yt.extend({},a),Mt.set(e,l))}}function L(t,e){var n=e.nodeName.toLowerCase();"input"===n&&Gt.test(t.type)?e.checked=t.checked:"input"!==n&&"textarea"!==n||(e.defaultValue=t.defaultValue)}function P(t,e,n,i){e=ct.apply([],e);var r,o,a,l,c,u,d=0,p=t.length,h=p-1,f=e[0],g=yt.isFunction(f);if(g||p>1&&"string"==typeof f&&!vt.checkClone&&oe.test(f))return t.each(function(r){var o=t.eq(r);g&&(e[0]=f.call(this,r,o.html())),P(o,e,n,i)});if(p&&(r=T(e,t[0].ownerDocument,!1,t,i),o=r.firstChild,1===r.childNodes.length&&(r=o),o||i)){for(a=yt.map(E(r,"script"),I),l=a.length;d<p;d++)c=r,d!==h&&(c=yt.clone(c,!0,!0),l&&yt.merge(a,E(c,"script"))),n.call(t[d],c,d);if(l)for(u=a[a.length-1].ownerDocument,yt.map(a,N),d=0;d<l;d++)c=a[d],Qt.test(c.type||"")&&!Rt.access(c,"globalEval")&&yt.contains(u,c)&&(c.src?yt._evalUrl&&yt._evalUrl(c.src):s(c.textContent.replace(ae,""),u))}return t}function $(t,e,n){for(var i,r=e?yt.filter(e,t):t,o=0;null!=(i=r[o]);o++)n||1!==i.nodeType||yt.cleanData(E(i)),i.parentNode&&(n&&yt.contains(i.ownerDocument,i)&&C(E(i,"script")),i.parentNode.removeChild(i));return t}function j(t,e,n){var i,r,o,s,a=t.style;return n=n||ue(t),n&&(s=n.getPropertyValue(e)||n[e],""!==s||yt.contains(t.ownerDocument,t)||(s=yt.style(t,e)),!vt.pixelMarginRight()&&ce.test(s)&&le.test(e)&&(i=a.width,r=a.minWidth,o=a.maxWidth,a.minWidth=a.maxWidth=a.width=s,s=n.width,a.width=i,a.minWidth=r,a.maxWidth=o)),void 0!==s?s+"":s}function H(t,e){return{get:function(){return t()?void delete this.get:(this.get=e).apply(this,arguments)}}}function R(t){if(t in me)return t;for(var e=t[0].toUpperCase()+t.slice(1),n=ge.length;n--;)if((t=ge[n]+e)in me)return t}function M(t){var e=yt.cssProps[t];return e||(e=yt.cssProps[t]=R(t)||t),e}function W(t,e,n){var i=Ut.exec(e);return i?Math.max(0,i[2]-(n||0))+(i[3]||"px"):e}function q(t,e,n,i,r){var o,s=0;for(o=n===(i?"border":"content")?4:"width"===e?1:0;o<4;o+=2)"margin"===n&&(s+=yt.css(t,n+Bt[o],!0,r)),i?("content"===n&&(s-=yt.css(t,"padding"+Bt[o],!0,r)),"margin"!==n&&(s-=yt.css(t,"border"+Bt[o]+"Width",!0,r))):(s+=yt.css(t,"padding"+Bt[o],!0,r),"padding"!==n&&(s+=yt.css(t,"border"+Bt[o]+"Width",!0,r)));return s}function F(t,e,n){var i,r=ue(t),o=j(t,e,r),s="border-box"===yt.css(t,"boxSizing",!1,r);return ce.test(o)?o:(i=s&&(vt.boxSizingReliable()||o===t.style[e]),"auto"===o&&(o=t["offset"+e[0].toUpperCase()+e.slice(1)]),(o=parseFloat(o)||0)+q(t,e,n||(s?"border":"content"),i,r)+"px")}function U(t,e,n,i,r){return new U.prototype.init(t,e,n,i,r)}function B(){ye&&(!1===st.hidden&&n.requestAnimationFrame?n.requestAnimationFrame(B):n.setTimeout(B,yt.fx.interval),yt.fx.tick())}function V(){return n.setTimeout(function(){ve=void 0}),ve=yt.now()}function z(t,e){var n,i=0,r={height:t};for(e=e?1:0;i<4;i+=2-e)n=Bt[i],r["margin"+n]=r["padding"+n]=t;return e&&(r.opacity=r.width=t),r}function K(t,e,n){for(var i,r=(Q.tweeners[e]||[]).concat(Q.tweeners["*"]),o=0,s=r.length;o<s;o++)if(i=r[o].call(n,e,t))return i}function G(t,e,n){var i,r,o,s,a,l,c,u,d="width"in e||"height"in e,p=this,h={},f=t.style,g=t.nodeType&&Vt(t),m=Rt.get(t,"fxshow");n.queue||(s=yt._queueHooks(t,"fx"),null==s.unqueued&&(s.unqueued=0,a=s.empty.fire,s.empty.fire=function(){s.unqueued||a()}),s.unqueued++,p.always(function(){p.always(function(){s.unqueued--,yt.queue(t,"fx").length||s.empty.fire()})}));for(i in e)if(r=e[i],_e.test(r)){if(delete e[i],o=o||"toggle"===r,r===(g?"hide":"show")){if("show"!==r||!m||void 0===m[i])continue;g=!0}h[i]=m&&m[i]||yt.style(t,i)}if((l=!yt.isEmptyObject(e))||!yt.isEmptyObject(h)){d&&1===t.nodeType&&(n.overflow=[f.overflow,f.overflowX,f.overflowY],c=m&&m.display,null==c&&(c=Rt.get(t,"display")),u=yt.css(t,"display"),"none"===u&&(c?u=c:(w([t],!0),c=t.style.display||c,u=yt.css(t,"display"),w([t]))),("inline"===u||"inline-block"===u&&null!=c)&&"none"===yt.css(t,"float")&&(l||(p.done(function(){f.display=c}),null==c&&(u=f.display,c="none"===u?"":u)),f.display="inline-block")),n.overflow&&(f.overflow="hidden",p.always(function(){f.overflow=n.overflow[0],f.overflowX=n.overflow[1],f.overflowY=n.overflow[2]})),l=!1;for(i in h)l||(m?"hidden"in m&&(g=m.hidden):m=Rt.access(t,"fxshow",{display:c}),o&&(m.hidden=!g),g&&w([t],!0),p.done(function(){g||w([t]),Rt.remove(t,"fxshow");for(i in h)yt.style(t,i,h[i])})),l=K(g?m[i]:0,i,p),i in m||(m[i]=l.start,g&&(l.end=l.start,l.start=0))}}function Y(t,e){var n,i,r,o,s;for(n in t)if(i=yt.camelCase(n),r=e[i],o=t[n],Array.isArray(o)&&(r=o[1],o=t[n]=o[0]),n!==i&&(t[i]=o,delete t[n]),(s=yt.cssHooks[i])&&"expand"in s){o=s.expand(o),delete t[i];for(n in o)n in t||(t[n]=o[n],e[n]=r)}else e[i]=r}function Q(t,e,n){var i,r,o=0,s=Q.prefilters.length,a=yt.Deferred().always(function(){delete l.elem}),l=function(){if(r)return!1;for(var e=ve||V(),n=Math.max(0,c.startTime+c.duration-e),i=n/c.duration||0,o=1-i,s=0,l=c.tweens.length;s<l;s++)c.tweens[s].run(o);return a.notifyWith(t,[c,o,n]),o<1&&l?n:(l||a.notifyWith(t,[c,1,0]),a.resolveWith(t,[c]),!1)},c=a.promise({elem:t,props:yt.extend({},e),opts:yt.extend(!0,{specialEasing:{},easing:yt.easing._default},n),originalProperties:e,originalOptions:n,startTime:ve||V(),duration:n.duration,tweens:[],createTween:function(e,n){var i=yt.Tween(t,c.opts,e,n,c.opts.specialEasing[e]||c.opts.easing);return c.tweens.push(i),i},stop:function(e){var n=0,i=e?c.tweens.length:0;if(r)return this;for(r=!0;n<i;n++)c.tweens[n].run(1);return e?(a.notifyWith(t,[c,1,0]),a.resolveWith(t,[c,e])):a.rejectWith(t,[c,e]),this}}),u=c.props;for(Y(u,c.opts.specialEasing);o<s;o++)if(i=Q.prefilters[o].call(c,t,u,c.opts))return yt.isFunction(i.stop)&&(yt._queueHooks(c.elem,c.opts.queue).stop=yt.proxy(i.stop,i)),i;return yt.map(u,K,c),yt.isFunction(c.opts.start)&&c.opts.start.call(t,c),c.progress(c.opts.progress).done(c.opts.done,c.opts.complete).fail(c.opts.fail).always(c.opts.always),yt.fx.timer(yt.extend(l,{elem:t,anim:c,queue:c.opts.queue})),c}function X(t){return(t.match(Lt)||[]).join(" ")}function Z(t){return t.getAttribute&&t.getAttribute("class")||""}function J(t,e,n,i){var r;if(Array.isArray(e))yt.each(e,function(e,r){n||Ie.test(t)?i(t,r):J(t+"["+("object"==typeof r&&null!=r?e:"")+"]",r,n,i)});else if(n||"object"!==yt.type(e))i(t,e);else for(r in e)J(t+"["+r+"]",e[r],n,i)}function tt(t){return function(e,n){"string"!=typeof e&&(n=e,e="*");var i,r=0,o=e.toLowerCase().match(Lt)||[];if(yt.isFunction(n))for(;i=o[r++];)"+"===i[0]?(i=i.slice(1)||"*",(t[i]=t[i]||[]).unshift(n)):(t[i]=t[i]||[]).push(n)}}function et(t,e,n,i){function r(a){var l;return o[a]=!0,yt.each(t[a]||[],function(t,a){var c=a(e,n,i);return"string"!=typeof c||s||o[c]?s?!(l=c):void 0:(e.dataTypes.unshift(c),r(c),!1)}),l}var o={},s=t===Fe;return r(e.dataTypes[0])||!o["*"]&&r("*")}function nt(t,e){var n,i,r=yt.ajaxSettings.flatOptions||{};for(n in e)void 0!==e[n]&&((r[n]?t:i||(i={}))[n]=e[n]);return i&&yt.extend(!0,t,i),t}function it(t,e,n){for(var i,r,o,s,a=t.contents,l=t.dataTypes;"*"===l[0];)l.shift(),void 0===i&&(i=t.mimeType||e.getResponseHeader("Content-Type"));if(i)for(r in a)if(a[r]&&a[r].test(i)){l.unshift(r);break}if(l[0]in n)o=l[0];else{for(r in n){if(!l[0]||t.converters[r+" "+l[0]]){o=r;break}s||(s=r)}o=o||s}if(o)return o!==l[0]&&l.unshift(o),n[o]}function rt(t,e,n,i){var r,o,s,a,l,c={},u=t.dataTypes.slice();if(u[1])for(s in t.converters)c[s.toLowerCase()]=t.converters[s];for(o=u.shift();o;)if(t.responseFields[o]&&(n[t.responseFields[o]]=e),!l&&i&&t.dataFilter&&(e=t.dataFilter(e,t.dataType)),l=o,o=u.shift())if("*"===o)o=l;else if("*"!==l&&l!==o){if(!(s=c[l+" "+o]||c["* "+o]))for(r in c)if(a=r.split(" "),a[1]===o&&(s=c[l+" "+a[0]]||c["* "+a[0]])){!0===s?s=c[r]:!0!==c[r]&&(o=a[0],u.unshift(a[1]));break}if(!0!==s)if(s&&t.throws)e=s(e);else try{e=s(e)}catch(t){return{state:"parsererror",error:s?t:"No conversion from "+l+" to "+o}}}return{state:"success",data:e}}var ot=[],st=n.document,at=Object.getPrototypeOf,lt=ot.slice,ct=ot.concat,ut=ot.push,dt=ot.indexOf,pt={},ht=pt.toString,ft=pt.hasOwnProperty,gt=ft.toString,mt=gt.call(Object),vt={},yt=function(t,e){return new yt.fn.init(t,e)},_t=/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,bt=/^-ms-/,wt=/-([a-z])/g,Et=function(t,e){return e.toUpperCase()};yt.fn=yt.prototype={jquery:"3.2.1",constructor:yt,length:0,toArray:function(){return lt.call(this)},get:function(t){return null==t?lt.call(this):t<0?this[t+this.length]:this[t]},pushStack:function(t){var e=yt.merge(this.constructor(),t);return e.prevObject=this,e},each:function(t){return yt.each(this,t)},map:function(t){return this.pushStack(yt.map(this,function(e,n){return t.call(e,n,e)}))},slice:function(){return this.pushStack(lt.apply(this,arguments))},first:function(){return this.eq(0)},last:function(){return this.eq(-1)},eq:function(t){var e=this.length,n=+t+(t<0?e:0);return this.pushStack(n>=0&&n<e?[this[n]]:[])},end:function(){return this.prevObject||this.constructor()},push:ut,sort:ot.sort,splice:ot.splice},yt.extend=yt.fn.extend=function(){var t,e,n,i,r,o,s=arguments[0]||{},a=1,l=arguments.length,c=!1;for("boolean"==typeof s&&(c=s,s=arguments[a]||{},a++),"object"==typeof s||yt.isFunction(s)||(s={}),a===l&&(s=this,a--);a<l;a++)if(null!=(t=arguments[a]))for(e in t)n=s[e],i=t[e],s!==i&&(c&&i&&(yt.isPlainObject(i)||(r=Array.isArray(i)))?(r?(r=!1,o=n&&Array.isArray(n)?n:[]):o=n&&yt.isPlainObject(n)?n:{},s[e]=yt.extend(c,o,i)):void 0!==i&&(s[e]=i));return s},yt.extend({expando:"jQuery"+("3.2.1"+Math.random()).replace(/\D/g,""),isReady:!0,error:function(t){throw new Error(t)},noop:function(){},isFunction:function(t){return"function"===yt.type(t)},isWindow:function(t){return null!=t&&t===t.window},isNumeric:function(t){var e=yt.type(t);return("number"===e||"string"===e)&&!isNaN(t-parseFloat(t))},isPlainObject:function(t){var e,n;return!(!t||"[object Object]"!==ht.call(t))&&(!(e=at(t))||"function"==typeof(n=ft.call(e,"constructor")&&e.constructor)&&gt.call(n)===mt)},isEmptyObject:function(t){var e;for(e in t)return!1;return!0},type:function(t){return null==t?t+"":"object"==typeof t||"function"==typeof t?pt[ht.call(t)]||"object":typeof t},globalEval:function(t){s(t)},camelCase:function(t){return t.replace(bt,"ms-").replace(wt,Et)},each:function(t,e){var n,i=0;if(a(t))for(n=t.length;i<n&&!1!==e.call(t[i],i,t[i]);i++);else for(i in t)if(!1===e.call(t[i],i,t[i]))break;return t},trim:function(t){return null==t?"":(t+"").replace(_t,"")},makeArray:function(t,e){var n=e||[];return null!=t&&(a(Object(t))?yt.merge(n,"string"==typeof t?[t]:t):ut.call(n,t)),n},inArray:function(t,e,n){return null==e?-1:dt.call(e,t,n)},merge:function(t,e){for(var n=+e.length,i=0,r=t.length;i<n;i++)t[r++]=e[i];return t.length=r,t},grep:function(t,e,n){for(var i=[],r=0,o=t.length,s=!n;r<o;r++)!e(t[r],r)!==s&&i.push(t[r]);return i},map:function(t,e,n){var i,r,o=0,s=[];if(a(t))for(i=t.length;o<i;o++)null!=(r=e(t[o],o,n))&&s.push(r);else for(o in t)null!=(r=e(t[o],o,n))&&s.push(r);return ct.apply([],s)},guid:1,proxy:function(t,e){var n,i,r;if("string"==typeof e&&(n=t[e],e=t,t=n),yt.isFunction(t))return i=lt.call(arguments,2),r=function(){return t.apply(e||this,i.concat(lt.call(arguments)))},r.guid=t.guid=t.guid||yt.guid++,r},now:Date.now,support:vt}),"function"==typeof Symbol&&(yt.fn[Symbol.iterator]=ot[Symbol.iterator]),yt.each("Boolean Number String Function Array Date RegExp Object Error Symbol".split(" "),function(t,e){pt["[object "+e+"]"]=e.toLowerCase()});var Ct=function(t){function e(t,e,n,i){var r,o,s,a,l,u,p,h=e&&e.ownerDocument,f=e?e.nodeType:9;if(n=n||[],"string"!=typeof t||!t||1!==f&&9!==f&&11!==f)return n;if(!i&&((e?e.ownerDocument||e:M)!==N&&I(e),e=e||N,L)){if(11!==f&&(l=gt.exec(t)))if(r=l[1]){if(9===f){if(!(s=e.getElementById(r)))return n;if(s.id===r)return n.push(s),n}else if(h&&(s=h.getElementById(r))&&H(e,s)&&s.id===r)return n.push(s),n}else{if(l[2])return Q.apply(n,e.getElementsByTagName(t)),n;if((r=l[3])&&b.getElementsByClassName&&e.getElementsByClassName)return Q.apply(n,e.getElementsByClassName(r)),n}if(b.qsa&&!B[t+" "]&&(!P||!P.test(t))){if(1!==f)h=e,p=t;else if("object"!==e.nodeName.toLowerCase()){for((a=e.getAttribute("id"))?a=a.replace(_t,bt):e.setAttribute("id",a=R),u=T(t),o=u.length;o--;)u[o]="#"+a+" "+d(u[o]);p=u.join(","),h=mt.test(t)&&c(e.parentNode)||e}if(p)try{return Q.apply(n,h.querySelectorAll(p)),n}catch(t){}finally{a===R&&e.removeAttribute("id")}}}return A(t.replace(ot,"$1"),e,n,i)}function n(){function t(n,i){return e.push(n+" ")>w.cacheLength&&delete t[e.shift()],t[n+" "]=i}var e=[];return t}function i(t){return t[R]=!0,t}function r(t){var e=N.createElement("fieldset");try{return!!t(e)}catch(t){return!1}finally{e.parentNode&&e.parentNode.removeChild(e),e=null}}function o(t,e){for(var n=t.split("|"),i=n.length;i--;)w.attrHandle[n[i]]=e}function s(t,e){var n=e&&t,i=n&&1===t.nodeType&&1===e.nodeType&&t.sourceIndex-e.sourceIndex;if(i)return i;if(n)for(;n=n.nextSibling;)if(n===e)return-1;return t?1:-1}function a(t){return function(e){return"form"in e?e.parentNode&&!1===e.disabled?"label"in e?"label"in e.parentNode?e.parentNode.disabled===t:e.disabled===t:e.isDisabled===t||e.isDisabled!==!t&&Et(e)===t:e.disabled===t:"label"in e&&e.disabled===t}}function l(t){return i(function(e){return e=+e,i(function(n,i){for(var r,o=t([],n.length,e),s=o.length;s--;)n[r=o[s]]&&(n[r]=!(i[r]=n[r]))})})}function c(t){return t&&void 0!==t.getElementsByTagName&&t}function u(){}function d(t){for(var e=0,n=t.length,i="";e<n;e++)i+=t[e].value;return i}function p(t,e,n){var i=e.dir,r=e.next,o=r||i,s=n&&"parentNode"===o,a=q++;return e.first?function(e,n,r){for(;e=e[i];)if(1===e.nodeType||s)return t(e,n,r);return!1}:function(e,n,l){var c,u,d,p=[W,a];if(l){for(;e=e[i];)if((1===e.nodeType||s)&&t(e,n,l))return!0}else for(;e=e[i];)if(1===e.nodeType||s)if(d=e[R]||(e[R]={}),u=d[e.uniqueID]||(d[e.uniqueID]={}),r&&r===e.nodeName.toLowerCase())e=e[i]||e;else{if((c=u[o])&&c[0]===W&&c[1]===a)return p[2]=c[2];if(u[o]=p,p[2]=t(e,n,l))return!0}return!1}}function h(t){return t.length>1?function(e,n,i){for(var r=t.length;r--;)if(!t[r](e,n,i))return!1;return!0}:t[0]}function f(t,n,i){for(var r=0,o=n.length;r<o;r++)e(t,n[r],i);return i}function g(t,e,n,i,r){for(var o,s=[],a=0,l=t.length,c=null!=e;a<l;a++)(o=t[a])&&(n&&!n(o,i,r)||(s.push(o),c&&e.push(a)));return s}function m(t,e,n,r,o,s){return r&&!r[R]&&(r=m(r)),o&&!o[R]&&(o=m(o,s)),i(function(i,s,a,l){var c,u,d,p=[],h=[],m=s.length,v=i||f(e||"*",a.nodeType?[a]:a,[]),y=!t||!i&&e?v:g(v,p,t,a,l),_=n?o||(i?t:m||r)?[]:s:y;if(n&&n(y,_,a,l),r)for(c=g(_,h),r(c,[],a,l),u=c.length;u--;)(d=c[u])&&(_[h[u]]=!(y[h[u]]=d));if(i){if(o||t){if(o){for(c=[],u=_.length;u--;)(d=_[u])&&c.push(y[u]=d);o(null,_=[],c,l)}for(u=_.length;u--;)(d=_[u])&&(c=o?Z(i,d):p[u])>-1&&(i[c]=!(s[c]=d))}}else _=g(_===s?_.splice(m,_.length):_),o?o(null,s,_,l):Q.apply(s,_)})}function v(t){for(var e,n,i,r=t.length,o=w.relative[t[0].type],s=o||w.relative[" "],a=o?1:0,l=p(function(t){return t===e},s,!0),c=p(function(t){return Z(e,t)>-1},s,!0),u=[function(t,n,i){var r=!o&&(i||n!==O)||((e=n).nodeType?l(t,n,i):c(t,n,i));return e=null,r}];a<r;a++)if(n=w.relative[t[a].type])u=[p(h(u),n)];else{if(n=w.filter[t[a].type].apply(null,t[a].matches),n[R]){for(i=++a;i<r&&!w.relative[t[i].type];i++);return m(a>1&&h(u),a>1&&d(t.slice(0,a-1).concat({value:" "===t[a-2].type?"*":""})).replace(ot,"$1"),n,a<i&&v(t.slice(a,i)),i<r&&v(t=t.slice(i)),i<r&&d(t))}u.push(n)}return h(u)}function y(t,n){var r=n.length>0,o=t.length>0,s=function(i,s,a,l,c){var u,d,p,h=0,f="0",m=i&&[],v=[],y=O,_=i||o&&w.find.TAG("*",c),b=W+=null==y?1:Math.random()||.1,E=_.length;for(c&&(O=s===N||s||c);f!==E&&null!=(u=_[f]);f++){if(o&&u){for(d=0,s||u.ownerDocument===N||(I(u),a=!L);p=t[d++];)if(p(u,s||N,a)){l.push(u);break}c&&(W=b)}r&&((u=!p&&u)&&h--,i&&m.push(u))}if(h+=f,r&&f!==h){for(d=0;p=n[d++];)p(m,v,s,a);if(i){if(h>0)for(;f--;)m[f]||v[f]||(v[f]=G.call(l));v=g(v)}Q.apply(l,v),c&&!i&&v.length>0&&h+n.length>1&&e.uniqueSort(l)}return c&&(W=b,O=y),m};return r?i(s):s}var _,b,w,E,C,T,x,A,O,S,D,I,N,k,L,P,$,j,H,R="sizzle"+1*new Date,M=t.document,W=0,q=0,F=n(),U=n(),B=n(),V=function(t,e){return t===e&&(D=!0),0},z={}.hasOwnProperty,K=[],G=K.pop,Y=K.push,Q=K.push,X=K.slice,Z=function(t,e){for(var n=0,i=t.length;n<i;n++)if(t[n]===e)return n;return-1},J="checked|selected|async|autofocus|autoplay|controls|defer|disabled|hidden|ismap|loop|multiple|open|readonly|required|scoped",tt="[\\x20\\t\\r\\n\\f]",et="(?:\\\\.|[\\w-]|[^\0-\\xa0])+",nt="\\["+tt+"*("+et+")(?:"+tt+"*([*^$|!~]?=)"+tt+"*(?:'((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\"|("+et+"))|)"+tt+"*\\]",it=":("+et+")(?:\\((('((?:\\\\.|[^\\\\'])*)'|\"((?:\\\\.|[^\\\\\"])*)\")|((?:\\\\.|[^\\\\()[\\]]|"+nt+")*)|.*)\\)|)",rt=new RegExp(tt+"+","g"),ot=new RegExp("^"+tt+"+|((?:^|[^\\\\])(?:\\\\.)*)"+tt+"+$","g"),st=new RegExp("^"+tt+"*,"+tt+"*"),at=new RegExp("^"+tt+"*([>+~]|"+tt+")"+tt+"*"),lt=new RegExp("="+tt+"*([^\\]'\"]*?)"+tt+"*\\]","g"),ct=new RegExp(it),ut=new RegExp("^"+et+"$"),dt={ID:new RegExp("^#("+et+")"),CLASS:new RegExp("^\\.("+et+")"),TAG:new RegExp("^("+et+"|[*])"),ATTR:new RegExp("^"+nt),PSEUDO:new RegExp("^"+it),CHILD:new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\("+tt+"*(even|odd|(([+-]|)(\\d*)n|)"+tt+"*(?:([+-]|)"+tt+"*(\\d+)|))"+tt+"*\\)|)","i"),bool:new RegExp("^(?:"+J+")$","i"),needsContext:new RegExp("^"+tt+"*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\("+tt+"*((?:-\\d)?\\d*)"+tt+"*\\)|)(?=[^-]|$)","i")},pt=/^(?:input|select|textarea|button)$/i,ht=/^h\d$/i,ft=/^[^{]+\{\s*\[native \w/,gt=/^(?:#([\w-]+)|(\w+)|\.([\w-]+))$/,mt=/[+~]/,vt=new RegExp("\\\\([\\da-f]{1,6}"+tt+"?|("+tt+")|.)","ig"),yt=function(t,e,n){var i="0x"+e-65536;return i!==i||n?e:i<0?String.fromCharCode(i+65536):String.fromCharCode(i>>10|55296,1023&i|56320)},_t=/([\0-\x1f\x7f]|^-?\d)|^-$|[^\0-\x1f\x7f-\uFFFF\w-]/g,bt=function(t,e){return e?"\0"===t?"�":t.slice(0,-1)+"\\"+t.charCodeAt(t.length-1).toString(16)+" ":"\\"+t},wt=function(){I()},Et=p(function(t){return!0===t.disabled&&("form"in t||"label"in t)},{dir:"parentNode",next:"legend"});try{Q.apply(K=X.call(M.childNodes),M.childNodes),K[M.childNodes.length].nodeType}catch(t){Q={apply:K.length?function(t,e){Y.apply(t,X.call(e))}:function(t,e){for(var n=t.length,i=0;t[n++]=e[i++];);t.length=n-1}}}b=e.support={},C=e.isXML=function(t){var e=t&&(t.ownerDocument||t).documentElement;return!!e&&"HTML"!==e.nodeName},I=e.setDocument=function(t){var e,n,i=t?t.ownerDocument||t:M;return i!==N&&9===i.nodeType&&i.documentElement?(N=i,k=N.documentElement,L=!C(N),M!==N&&(n=N.defaultView)&&n.top!==n&&(n.addEventListener?n.addEventListener("unload",wt,!1):n.attachEvent&&n.attachEvent("onunload",wt)),b.attributes=r(function(t){return t.className="i",!t.getAttribute("className")}),b.getElementsByTagName=r(function(t){return t.appendChild(N.createComment("")),!t.getElementsByTagName("*").length}),b.getElementsByClassName=ft.test(N.getElementsByClassName),b.getById=r(function(t){return k.appendChild(t).id=R,!N.getElementsByName||!N.getElementsByName(R).length}),b.getById?(w.filter.ID=function(t){var e=t.replace(vt,yt);return function(t){return t.getAttribute("id")===e}},w.find.ID=function(t,e){if(void 0!==e.getElementById&&L){var n=e.getElementById(t);return n?[n]:[]}}):(w.filter.ID=function(t){var e=t.replace(vt,yt);return function(t){var n=void 0!==t.getAttributeNode&&t.getAttributeNode("id");return n&&n.value===e}},w.find.ID=function(t,e){if(void 0!==e.getElementById&&L){var n,i,r,o=e.getElementById(t);if(o){if((n=o.getAttributeNode("id"))&&n.value===t)return[o];for(r=e.getElementsByName(t),i=0;o=r[i++];)if((n=o.getAttributeNode("id"))&&n.value===t)return[o]}return[]}}),w.find.TAG=b.getElementsByTagName?function(t,e){return void 0!==e.getElementsByTagName?e.getElementsByTagName(t):b.qsa?e.querySelectorAll(t):void 0}:function(t,e){var n,i=[],r=0,o=e.getElementsByTagName(t);if("*"===t){for(;n=o[r++];)1===n.nodeType&&i.push(n);return i}return o},w.find.CLASS=b.getElementsByClassName&&function(t,e){if(void 0!==e.getElementsByClassName&&L)return e.getElementsByClassName(t)},$=[],P=[],(b.qsa=ft.test(N.querySelectorAll))&&(r(function(t){k.appendChild(t).innerHTML="<a id='"+R+"'></a><select id='"+R+"-\r\\' msallowcapture=''><option selected=''></option></select>",t.querySelectorAll("[msallowcapture^='']").length&&P.push("[*^$]="+tt+"*(?:''|\"\")"),t.querySelectorAll("[selected]").length||P.push("\\["+tt+"*(?:value|"+J+")"),t.querySelectorAll("[id~="+R+"-]").length||P.push("~="),t.querySelectorAll(":checked").length||P.push(":checked"),t.querySelectorAll("a#"+R+"+*").length||P.push(".#.+[+~]")}),r(function(t){t.innerHTML="<a href='' disabled='disabled'></a><select disabled='disabled'><option/></select>";var e=N.createElement("input");e.setAttribute("type","hidden"),t.appendChild(e).setAttribute("name","D"),t.querySelectorAll("[name=d]").length&&P.push("name"+tt+"*[*^$|!~]?="),2!==t.querySelectorAll(":enabled").length&&P.push(":enabled",":disabled"),k.appendChild(t).disabled=!0,2!==t.querySelectorAll(":disabled").length&&P.push(":enabled",":disabled"),t.querySelectorAll("*,:x"),P.push(",.*:")})),(b.matchesSelector=ft.test(j=k.matches||k.webkitMatchesSelector||k.mozMatchesSelector||k.oMatchesSelector||k.msMatchesSelector))&&r(function(t){b.disconnectedMatch=j.call(t,"*"),j.call(t,"[s!='']:x"),$.push("!=",it)}),P=P.length&&new RegExp(P.join("|")),$=$.length&&new RegExp($.join("|")),e=ft.test(k.compareDocumentPosition),H=e||ft.test(k.contains)?function(t,e){var n=9===t.nodeType?t.documentElement:t,i=e&&e.parentNode;return t===i||!(!i||1!==i.nodeType||!(n.contains?n.contains(i):t.compareDocumentPosition&&16&t.compareDocumentPosition(i)))}:function(t,e){if(e)for(;e=e.parentNode;)if(e===t)return!0;return!1},V=e?function(t,e){if(t===e)return D=!0,0;var n=!t.compareDocumentPosition-!e.compareDocumentPosition;return n||(n=(t.ownerDocument||t)===(e.ownerDocument||e)?t.compareDocumentPosition(e):1,1&n||!b.sortDetached&&e.compareDocumentPosition(t)===n?t===N||t.ownerDocument===M&&H(M,t)?-1:e===N||e.ownerDocument===M&&H(M,e)?1:S?Z(S,t)-Z(S,e):0:4&n?-1:1)}:function(t,e){if(t===e)return D=!0,0;var n,i=0,r=t.parentNode,o=e.parentNode,a=[t],l=[e];if(!r||!o)return t===N?-1:e===N?1:r?-1:o?1:S?Z(S,t)-Z(S,e):0;if(r===o)return s(t,e);for(n=t;n=n.parentNode;)a.unshift(n);for(n=e;n=n.parentNode;)l.unshift(n);for(;a[i]===l[i];)i++;return i?s(a[i],l[i]):a[i]===M?-1:l[i]===M?1:0},N):N},e.matches=function(t,n){return e(t,null,null,n)},e.matchesSelector=function(t,n){if((t.ownerDocument||t)!==N&&I(t),n=n.replace(lt,"='$1']"),b.matchesSelector&&L&&!B[n+" "]&&(!$||!$.test(n))&&(!P||!P.test(n)))try{var i=j.call(t,n);if(i||b.disconnectedMatch||t.document&&11!==t.document.nodeType)return i}catch(t){}return e(n,N,null,[t]).length>0},e.contains=function(t,e){return(t.ownerDocument||t)!==N&&I(t),H(t,e)},e.attr=function(t,e){(t.ownerDocument||t)!==N&&I(t);var n=w.attrHandle[e.toLowerCase()],i=n&&z.call(w.attrHandle,e.toLowerCase())?n(t,e,!L):void 0;return void 0!==i?i:b.attributes||!L?t.getAttribute(e):(i=t.getAttributeNode(e))&&i.specified?i.value:null},e.escape=function(t){return(t+"").replace(_t,bt)},e.error=function(t){throw new Error("Syntax error, unrecognized expression: "+t)},e.uniqueSort=function(t){var e,n=[],i=0,r=0;if(D=!b.detectDuplicates,S=!b.sortStable&&t.slice(0),t.sort(V),D){for(;e=t[r++];)e===t[r]&&(i=n.push(r));for(;i--;)t.splice(n[i],1)}return S=null,t},E=e.getText=function(t){var e,n="",i=0,r=t.nodeType;if(r){if(1===r||9===r||11===r){if("string"==typeof t.textContent)return t.textContent;for(t=t.firstChild;t;t=t.nextSibling)n+=E(t)}else if(3===r||4===r)return t.nodeValue}else for(;e=t[i++];)n+=E(e);return n},w=e.selectors={cacheLength:50,createPseudo:i,match:dt,attrHandle:{},find:{},relative:{">":{dir:"parentNode",first:!0}," ":{dir:"parentNode"},"+":{dir:"previousSibling",first:!0},"~":{dir:"previousSibling"}},preFilter:{ATTR:function(t){return t[1]=t[1].replace(vt,yt),t[3]=(t[3]||t[4]||t[5]||"").replace(vt,yt),"~="===t[2]&&(t[3]=" "+t[3]+" "),t.slice(0,4)},CHILD:function(t){return t[1]=t[1].toLowerCase(),"nth"===t[1].slice(0,3)?(t[3]||e.error(t[0]),t[4]=+(t[4]?t[5]+(t[6]||1):2*("even"===t[3]||"odd"===t[3])),t[5]=+(t[7]+t[8]||"odd"===t[3])):t[3]&&e.error(t[0]),t},PSEUDO:function(t){var e,n=!t[6]&&t[2];return dt.CHILD.test(t[0])?null:(t[3]?t[2]=t[4]||t[5]||"":n&&ct.test(n)&&(e=T(n,!0))&&(e=n.indexOf(")",n.length-e)-n.length)&&(t[0]=t[0].slice(0,e),t[2]=n.slice(0,e)),t.slice(0,3))}},filter:{TAG:function(t){var e=t.replace(vt,yt).toLowerCase();return"*"===t?function(){return!0}:function(t){return t.nodeName&&t.nodeName.toLowerCase()===e}},CLASS:function(t){var e=F[t+" "];return e||(e=new RegExp("(^|"+tt+")"+t+"("+tt+"|$)"))&&F(t,function(t){return e.test("string"==typeof t.className&&t.className||void 0!==t.getAttribute&&t.getAttribute("class")||"")})},ATTR:function(t,n,i){return function(r){var o=e.attr(r,t);return null==o?"!="===n:!n||(o+="","="===n?o===i:"!="===n?o!==i:"^="===n?i&&0===o.indexOf(i):"*="===n?i&&o.indexOf(i)>-1:"$="===n?i&&o.slice(-i.length)===i:"~="===n?(" "+o.replace(rt," ")+" ").indexOf(i)>-1:"|="===n&&(o===i||o.slice(0,i.length+1)===i+"-"))}},CHILD:function(t,e,n,i,r){var o="nth"!==t.slice(0,3),s="last"!==t.slice(-4),a="of-type"===e;return 1===i&&0===r?function(t){return!!t.parentNode}:function(e,n,l){var c,u,d,p,h,f,g=o!==s?"nextSibling":"previousSibling",m=e.parentNode,v=a&&e.nodeName.toLowerCase(),y=!l&&!a,_=!1;if(m){if(o){for(;g;){for(p=e;p=p[g];)if(a?p.nodeName.toLowerCase()===v:1===p.nodeType)return!1;f=g="only"===t&&!f&&"nextSibling"}return!0}if(f=[s?m.firstChild:m.lastChild],s&&y){for(p=m,d=p[R]||(p[R]={}),u=d[p.uniqueID]||(d[p.uniqueID]={}),c=u[t]||[],h=c[0]===W&&c[1],_=h&&c[2],p=h&&m.childNodes[h];p=++h&&p&&p[g]||(_=h=0)||f.pop();)if(1===p.nodeType&&++_&&p===e){u[t]=[W,h,_];break}}else if(y&&(p=e,d=p[R]||(p[R]={}),u=d[p.uniqueID]||(d[p.uniqueID]={}),c=u[t]||[],h=c[0]===W&&c[1],_=h),!1===_)for(;(p=++h&&p&&p[g]||(_=h=0)||f.pop())&&((a?p.nodeName.toLowerCase()!==v:1!==p.nodeType)||!++_||(y&&(d=p[R]||(p[R]={}),u=d[p.uniqueID]||(d[p.uniqueID]={}),u[t]=[W,_]),p!==e)););return(_-=r)===i||_%i==0&&_/i>=0}}},PSEUDO:function(t,n){var r,o=w.pseudos[t]||w.setFilters[t.toLowerCase()]||e.error("unsupported pseudo: "+t);return o[R]?o(n):o.length>1?(r=[t,t,"",n],w.setFilters.hasOwnProperty(t.toLowerCase())?i(function(t,e){for(var i,r=o(t,n),s=r.length;s--;)i=Z(t,r[s]),t[i]=!(e[i]=r[s])}):function(t){return o(t,0,r)}):o}},pseudos:{not:i(function(t){var e=[],n=[],r=x(t.replace(ot,"$1"));return r[R]?i(function(t,e,n,i){for(var o,s=r(t,null,i,[]),a=t.length;a--;)(o=s[a])&&(t[a]=!(e[a]=o))}):function(t,i,o){return e[0]=t,r(e,null,o,n),e[0]=null,!n.pop()}}),has:i(function(t){return function(n){return e(t,n).length>0}}),contains:i(function(t){return t=t.replace(vt,yt),function(e){return(e.textContent||e.innerText||E(e)).indexOf(t)>-1}}),lang:i(function(t){return ut.test(t||"")||e.error("unsupported lang: "+t),t=t.replace(vt,yt).toLowerCase(),function(e){var n;do{if(n=L?e.lang:e.getAttribute("xml:lang")||e.getAttribute("lang"))return(n=n.toLowerCase())===t||0===n.indexOf(t+"-")}while((e=e.parentNode)&&1===e.nodeType);return!1}}),target:function(e){var n=t.location&&t.location.hash;return n&&n.slice(1)===e.id},root:function(t){return t===k},focus:function(t){return t===N.activeElement&&(!N.hasFocus||N.hasFocus())&&!!(t.type||t.href||~t.tabIndex)},enabled:a(!1),disabled:a(!0),checked:function(t){var e=t.nodeName.toLowerCase();return"input"===e&&!!t.checked||"option"===e&&!!t.selected},selected:function(t){return t.parentNode&&t.parentNode.selectedIndex,!0===t.selected},empty:function(t){for(t=t.firstChild;t;t=t.nextSibling)if(t.nodeType<6)return!1;return!0},parent:function(t){return!w.pseudos.empty(t)},header:function(t){return ht.test(t.nodeName)},input:function(t){return pt.test(t.nodeName)},button:function(t){var e=t.nodeName.toLowerCase();return"input"===e&&"button"===t.type||"button"===e},text:function(t){var e;return"input"===t.nodeName.toLowerCase()&&"text"===t.type&&(null==(e=t.getAttribute("type"))||"text"===e.toLowerCase())},first:l(function(){return[0]}),last:l(function(t,e){return[e-1]}),eq:l(function(t,e,n){return[n<0?n+e:n]}),even:l(function(t,e){for(var n=0;n<e;n+=2)t.push(n);return t}),odd:l(function(t,e){for(var n=1;n<e;n+=2)t.push(n);return t}),lt:l(function(t,e,n){for(var i=n<0?n+e:n;--i>=0;)t.push(i);return t}),gt:l(function(t,e,n){for(var i=n<0?n+e:n;++i<e;)t.push(i);return t})}},w.pseudos.nth=w.pseudos.eq;for(_ in{radio:!0,checkbox:!0,file:!0,password:!0,image:!0})w.pseudos[_]=function(t){return function(e){return"input"===e.nodeName.toLowerCase()&&e.type===t}}(_);for(_ in{submit:!0,reset:!0})w.pseudos[_]=function(t){return function(e){var n=e.nodeName.toLowerCase();return("input"===n||"button"===n)&&e.type===t}}(_);return u.prototype=w.filters=w.pseudos,w.setFilters=new u,T=e.tokenize=function(t,n){var i,r,o,s,a,l,c,u=U[t+" "];if(u)return n?0:u.slice(0);for(a=t,l=[],c=w.preFilter;a;){i&&!(r=st.exec(a))||(r&&(a=a.slice(r[0].length)||a),l.push(o=[])),i=!1,(r=at.exec(a))&&(i=r.shift(),o.push({value:i,type:r[0].replace(ot," ")}),a=a.slice(i.length));for(s in w.filter)!(r=dt[s].exec(a))||c[s]&&!(r=c[s](r))||(i=r.shift(),o.push({value:i,type:s,matches:r}),a=a.slice(i.length));if(!i)break}return n?a.length:a?e.error(t):U(t,l).slice(0)},x=e.compile=function(t,e){var n,i=[],r=[],o=B[t+" "];if(!o){for(e||(e=T(t)),n=e.length;n--;)o=v(e[n]),o[R]?i.push(o):r.push(o);o=B(t,y(r,i)),o.selector=t}return o},A=e.select=function(t,e,n,i){var r,o,s,a,l,u="function"==typeof t&&t,p=!i&&T(t=u.selector||t);if(n=n||[],1===p.length){if(o=p[0]=p[0].slice(0),o.length>2&&"ID"===(s=o[0]).type&&9===e.nodeType&&L&&w.relative[o[1].type]){if(!(e=(w.find.ID(s.matches[0].replace(vt,yt),e)||[])[0]))return n;u&&(e=e.parentNode),t=t.slice(o.shift().value.length)}for(r=dt.needsContext.test(t)?0:o.length;r--&&(s=o[r],!w.relative[a=s.type]);)if((l=w.find[a])&&(i=l(s.matches[0].replace(vt,yt),mt.test(o[0].type)&&c(e.parentNode)||e))){if(o.splice(r,1),!(t=i.length&&d(o)))return Q.apply(n,i),n;break}}return(u||x(t,p))(i,e,!L,n,!e||mt.test(t)&&c(e.parentNode)||e),n},b.sortStable=R.split("").sort(V).join("")===R,b.detectDuplicates=!!D,I(),b.sortDetached=r(function(t){return 1&t.compareDocumentPosition(N.createElement("fieldset"))}),r(function(t){return t.innerHTML="<a href='#'></a>","#"===t.firstChild.getAttribute("href")})||o("type|href|height|width",function(t,e,n){if(!n)return t.getAttribute(e,"type"===e.toLowerCase()?1:2)}),b.attributes&&r(function(t){return t.innerHTML="<input/>",t.firstChild.setAttribute("value",""),""===t.firstChild.getAttribute("value")})||o("value",function(t,e,n){if(!n&&"input"===t.nodeName.toLowerCase())return t.defaultValue}),r(function(t){return null==t.getAttribute("disabled")})||o(J,function(t,e,n){var i;if(!n)return!0===t[e]?e.toLowerCase():(i=t.getAttributeNode(e))&&i.specified?i.value:null}),e}(n);yt.find=Ct,yt.expr=Ct.selectors,yt.expr[":"]=yt.expr.pseudos,yt.uniqueSort=yt.unique=Ct.uniqueSort,yt.text=Ct.getText,yt.isXMLDoc=Ct.isXML,yt.contains=Ct.contains,yt.escapeSelector=Ct.escape;var Tt=function(t,e,n){for(var i=[],r=void 0!==n;(t=t[e])&&9!==t.nodeType;)if(1===t.nodeType){if(r&&yt(t).is(n))break;i.push(t)}return i},xt=function(t,e){for(var n=[];t;t=t.nextSibling)1===t.nodeType&&t!==e&&n.push(t);return n},At=yt.expr.match.needsContext,Ot=/^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i,St=/^.[^:#\[\.,]*$/;yt.filter=function(t,e,n){var i=e[0];return n&&(t=":not("+t+")"),1===e.length&&1===i.nodeType?yt.find.matchesSelector(i,t)?[i]:[]:yt.find.matches(t,yt.grep(e,function(t){return 1===t.nodeType}))},yt.fn.extend({find:function(t){var e,n,i=this.length,r=this;if("string"!=typeof t)return this.pushStack(yt(t).filter(function(){for(e=0;e<i;e++)if(yt.contains(r[e],this))return!0}));for(n=this.pushStack([]),e=0;e<i;e++)yt.find(t,r[e],n);return i>1?yt.uniqueSort(n):n},filter:function(t){return this.pushStack(c(this,t||[],!1))},not:function(t){return this.pushStack(c(this,t||[],!0))},is:function(t){return!!c(this,"string"==typeof t&&At.test(t)?yt(t):t||[],!1).length}});var Dt,It=/^(?:\s*(<[\w\W]+>)[^>]*|#([\w-]+))$/;(yt.fn.init=function(t,e,n){var i,r;if(!t)return this;if(n=n||Dt,"string"==typeof t){if(!(i="<"===t[0]&&">"===t[t.length-1]&&t.length>=3?[null,t,null]:It.exec(t))||!i[1]&&e)return!e||e.jquery?(e||n).find(t):this.constructor(e).find(t);if(i[1]){if(e=e instanceof yt?e[0]:e,yt.merge(this,yt.parseHTML(i[1],e&&e.nodeType?e.ownerDocument||e:st,!0)),Ot.test(i[1])&&yt.isPlainObject(e))for(i in e)yt.isFunction(this[i])?this[i](e[i]):this.attr(i,e[i]);return this}return r=st.getElementById(i[2]),r&&(this[0]=r,this.length=1),this}return t.nodeType?(this[0]=t,this.length=1,this):yt.isFunction(t)?void 0!==n.ready?n.ready(t):t(yt):yt.makeArray(t,this)}).prototype=yt.fn,Dt=yt(st);var Nt=/^(?:parents|prev(?:Until|All))/,kt={children:!0,contents:!0,next:!0,prev:!0};yt.fn.extend({has:function(t){var e=yt(t,this),n=e.length;return this.filter(function(){for(var t=0;t<n;t++)if(yt.contains(this,e[t]))return!0})},closest:function(t,e){var n,i=0,r=this.length,o=[],s="string"!=typeof t&&yt(t);if(!At.test(t))for(;i<r;i++)for(n=this[i];n&&n!==e;n=n.parentNode)if(n.nodeType<11&&(s?s.index(n)>-1:1===n.nodeType&&yt.find.matchesSelector(n,t))){o.push(n);break}return this.pushStack(o.length>1?yt.uniqueSort(o):o)},index:function(t){return t?"string"==typeof t?dt.call(yt(t),this[0]):dt.call(this,t.jquery?t[0]:t):this[0]&&this[0].parentNode?this.first().prevAll().length:-1},add:function(t,e){return this.pushStack(yt.uniqueSort(yt.merge(this.get(),yt(t,e))))},addBack:function(t){return this.add(null==t?this.prevObject:this.prevObject.filter(t))}}),yt.each({parent:function(t){var e=t.parentNode;return e&&11!==e.nodeType?e:null},parents:function(t){return Tt(t,"parentNode")},parentsUntil:function(t,e,n){return Tt(t,"parentNode",n)},next:function(t){return u(t,"nextSibling")},prev:function(t){return u(t,"previousSibling")},nextAll:function(t){return Tt(t,"nextSibling")},prevAll:function(t){return Tt(t,"previousSibling")},nextUntil:function(t,e,n){return Tt(t,"nextSibling",n)},prevUntil:function(t,e,n){return Tt(t,"previousSibling",n)},siblings:function(t){return xt((t.parentNode||{}).firstChild,t)},children:function(t){return xt(t.firstChild)},contents:function(t){return l(t,"iframe")?t.contentDocument:(l(t,"template")&&(t=t.content||t),yt.merge([],t.childNodes))}},function(t,e){yt.fn[t]=function(n,i){var r=yt.map(this,e,n);return"Until"!==t.slice(-5)&&(i=n),i&&"string"==typeof i&&(r=yt.filter(i,r)),this.length>1&&(kt[t]||yt.uniqueSort(r),Nt.test(t)&&r.reverse()),this.pushStack(r)}});var Lt=/[^\x20\t\r\n\f]+/g;yt.Callbacks=function(t){t="string"==typeof t?d(t):yt.extend({},t);var e,n,i,r,o=[],s=[],a=-1,l=function(){for(r=r||t.once,i=e=!0;s.length;a=-1)for(n=s.shift();++a<o.length;)!1===o[a].apply(n[0],n[1])&&t.stopOnFalse&&(a=o.length,n=!1);t.memory||(n=!1),e=!1,r&&(o=n?[]:"")},c={add:function(){return o&&(n&&!e&&(a=o.length-1,s.push(n)),function e(n){yt.each(n,function(n,i){yt.isFunction(i)?t.unique&&c.has(i)||o.push(i):i&&i.length&&"string"!==yt.type(i)&&e(i)})}(arguments),n&&!e&&l()),this},remove:function(){return yt.each(arguments,function(t,e){for(var n;(n=yt.inArray(e,o,n))>-1;)o.splice(n,1),n<=a&&a--}),this},has:function(t){return t?yt.inArray(t,o)>-1:o.length>0},empty:function(){return o&&(o=[]),this},disable:function(){return r=s=[],o=n="",this},disabled:function(){return!o},lock:function(){return r=s=[],n||e||(o=n=""),this},locked:function(){return!!r},fireWith:function(t,n){return r||(n=n||[],n=[t,n.slice?n.slice():n],s.push(n),e||l()),this},fire:function(){return c.fireWith(this,arguments),this},fired:function(){return!!i}};return c},yt.extend({Deferred:function(t){var e=[["notify","progress",yt.Callbacks("memory"),yt.Callbacks("memory"),2],["resolve","done",yt.Callbacks("once memory"),yt.Callbacks("once memory"),0,"resolved"],["reject","fail",yt.Callbacks("once memory"),yt.Callbacks("once memory"),1,"rejected"]],i="pending",r={state:function(){return i},always:function(){return o.done(arguments).fail(arguments),this},catch:function(t){return r.then(null,t)},pipe:function(){var t=arguments;return yt.Deferred(function(n){yt.each(e,function(e,i){var r=yt.isFunction(t[i[4]])&&t[i[4]];o[i[1]](function(){var t=r&&r.apply(this,arguments);t&&yt.isFunction(t.promise)?t.promise().progress(n.notify).done(n.resolve).fail(n.reject):n[i[0]+"With"](this,r?[t]:arguments)})}),t=null}).promise()},then:function(t,i,r){function o(t,e,i,r){return function(){var a=this,l=arguments,c=function(){var n,c;if(!(t<s)){if((n=i.apply(a,l))===e.promise())throw new TypeError("Thenable self-resolution");c=n&&("object"==typeof n||"function"==typeof n)&&n.then,yt.isFunction(c)?r?c.call(n,o(s,e,p,r),o(s,e,h,r)):(s++,c.call(n,o(s,e,p,r),o(s,e,h,r),o(s,e,p,e.notifyWith))):(i!==p&&(a=void 0,l=[n]),(r||e.resolveWith)(a,l))}},u=r?c:function(){try{c()}catch(n){yt.Deferred.exceptionHook&&yt.Deferred.exceptionHook(n,u.stackTrace),t+1>=s&&(i!==h&&(a=void 0,l=[n]),e.rejectWith(a,l))}};t?u():(yt.Deferred.getStackHook&&(u.stackTrace=yt.Deferred.getStackHook()),n.setTimeout(u))}}var s=0;return yt.Deferred(function(n){e[0][3].add(o(0,n,yt.isFunction(r)?r:p,n.notifyWith)),e[1][3].add(o(0,n,yt.isFunction(t)?t:p)),e[2][3].add(o(0,n,yt.isFunction(i)?i:h))}).promise()},promise:function(t){return null!=t?yt.extend(t,r):r}},o={};return yt.each(e,function(t,n){var s=n[2],a=n[5];r[n[1]]=s.add,a&&s.add(function(){i=a},e[3-t][2].disable,e[0][2].lock),s.add(n[3].fire),o[n[0]]=function(){return o[n[0]+"With"](this===o?void 0:this,arguments),this},o[n[0]+"With"]=s.fireWith}),r.promise(o),t&&t.call(o,o),o},when:function(t){var e=arguments.length,n=e,i=Array(n),r=lt.call(arguments),o=yt.Deferred(),s=function(t){return function(n){i[t]=this,r[t]=arguments.length>1?lt.call(arguments):n,--e||o.resolveWith(i,r)}};if(e<=1&&(f(t,o.done(s(n)).resolve,o.reject,!e),"pending"===o.state()||yt.isFunction(r[n]&&r[n].then)))return o.then();for(;n--;)f(r[n],s(n),o.reject);return o.promise()}});var Pt=/^(Eval|Internal|Range|Reference|Syntax|Type|URI)Error$/;yt.Deferred.exceptionHook=function(t,e){n.console&&n.console.warn&&t&&Pt.test(t.name)&&n.console.warn("jQuery.Deferred exception: "+t.message,t.stack,e)},yt.readyException=function(t){n.setTimeout(function(){throw t})};var $t=yt.Deferred();yt.fn.ready=function(t){return $t.then(t).catch(function(t){yt.readyException(t)}),this},yt.extend({isReady:!1,readyWait:1,ready:function(t){(!0===t?--yt.readyWait:yt.isReady)||(yt.isReady=!0,!0!==t&&--yt.readyWait>0||$t.resolveWith(st,[yt]))}}),yt.ready.then=$t.then,"complete"===st.readyState||"loading"!==st.readyState&&!st.documentElement.doScroll?n.setTimeout(yt.ready):(st.addEventListener("DOMContentLoaded",g),n.addEventListener("load",g));var jt=function(t,e,n,i,r,o,s){var a=0,l=t.length,c=null==n;if("object"===yt.type(n)){r=!0;for(a in n)jt(t,e,a,n[a],!0,o,s)}else if(void 0!==i&&(r=!0,yt.isFunction(i)||(s=!0),c&&(s?(e.call(t,i),e=null):(c=e,e=function(t,e,n){return c.call(yt(t),n)})),e))for(;a<l;a++)e(t[a],n,s?i:i.call(t[a],a,e(t[a],n)));return r?t:c?e.call(t):l?e(t[0],n):o},Ht=function(t){return 1===t.nodeType||9===t.nodeType||!+t.nodeType};m.uid=1,m.prototype={cache:function(t){var e=t[this.expando];return e||(e={},Ht(t)&&(t.nodeType?t[this.expando]=e:Object.defineProperty(t,this.expando,{value:e,configurable:!0}))),e},set:function(t,e,n){var i,r=this.cache(t);if("string"==typeof e)r[yt.camelCase(e)]=n;else for(i in e)r[yt.camelCase(i)]=e[i];return r},get:function(t,e){return void 0===e?this.cache(t):t[this.expando]&&t[this.expando][yt.camelCase(e)]},access:function(t,e,n){return void 0===e||e&&"string"==typeof e&&void 0===n?this.get(t,e):(this.set(t,e,n),void 0!==n?n:e)},remove:function(t,e){var n,i=t[this.expando];if(void 0!==i){if(void 0!==e){Array.isArray(e)?e=e.map(yt.camelCase):(e=yt.camelCase(e),e=e in i?[e]:e.match(Lt)||[]),n=e.length;for(;n--;)delete i[e[n]]}(void 0===e||yt.isEmptyObject(i))&&(t.nodeType?t[this.expando]=void 0:delete t[this.expando])}},hasData:function(t){var e=t[this.expando];return void 0!==e&&!yt.isEmptyObject(e)}};var Rt=new m,Mt=new m,Wt=/^(?:\{[\w\W]*\}|\[[\w\W]*\])$/,qt=/[A-Z]/g;yt.extend({hasData:function(t){return Mt.hasData(t)||Rt.hasData(t)},data:function(t,e,n){return Mt.access(t,e,n)},removeData:function(t,e){Mt.remove(t,e)},_data:function(t,e,n){return Rt.access(t,e,n)},_removeData:function(t,e){Rt.remove(t,e)}}),yt.fn.extend({data:function(t,e){var n,i,r,o=this[0],s=o&&o.attributes;if(void 0===t){if(this.length&&(r=Mt.get(o),1===o.nodeType&&!Rt.get(o,"hasDataAttrs"))){for(n=s.length;n--;)s[n]&&(i=s[n].name,0===i.indexOf("data-")&&(i=yt.camelCase(i.slice(5)),y(o,i,r[i])));Rt.set(o,"hasDataAttrs",!0)}return r}return"object"==typeof t?this.each(function(){Mt.set(this,t)}):jt(this,function(e){var n;if(o&&void 0===e){if(void 0!==(n=Mt.get(o,t)))return n;if(void 0!==(n=y(o,t)))return n}else this.each(function(){Mt.set(this,t,e)})},null,e,arguments.length>1,null,!0)},removeData:function(t){return this.each(function(){Mt.remove(this,t)})}}),yt.extend({queue:function(t,e,n){var i;if(t)return e=(e||"fx")+"queue",i=Rt.get(t,e),n&&(!i||Array.isArray(n)?i=Rt.access(t,e,yt.makeArray(n)):i.push(n)),i||[]},dequeue:function(t,e){e=e||"fx";var n=yt.queue(t,e),i=n.length,r=n.shift(),o=yt._queueHooks(t,e),s=function(){yt.dequeue(t,e)};"inprogress"===r&&(r=n.shift(),i--),r&&("fx"===e&&n.unshift("inprogress"),delete o.stop,r.call(t,s,o)),!i&&o&&o.empty.fire()},_queueHooks:function(t,e){var n=e+"queueHooks";return Rt.get(t,n)||Rt.access(t,n,{empty:yt.Callbacks("once memory").add(function(){Rt.remove(t,[e+"queue",n])})})}}),yt.fn.extend({queue:function(t,e){var n=2;return"string"!=typeof t&&(e=t,t="fx",n--),arguments.length<n?yt.queue(this[0],t):void 0===e?this:this.each(function(){var n=yt.queue(this,t,e);yt._queueHooks(this,t),"fx"===t&&"inprogress"!==n[0]&&yt.dequeue(this,t)})},dequeue:function(t){return this.each(function(){yt.dequeue(this,t)})},clearQueue:function(t){return this.queue(t||"fx",[])},promise:function(t,e){var n,i=1,r=yt.Deferred(),o=this,s=this.length,a=function(){--i||r.resolveWith(o,[o])};for("string"!=typeof t&&(e=t,t=void 0),t=t||"fx";s--;)(n=Rt.get(o[s],t+"queueHooks"))&&n.empty&&(i++,n.empty.add(a));return a(),r.promise(e)}});var Ft=/[+-]?(?:\d*\.|)\d+(?:[eE][+-]?\d+|)/.source,Ut=new RegExp("^(?:([+-])=|)("+Ft+")([a-z%]*)$","i"),Bt=["Top","Right","Bottom","Left"],Vt=function(t,e){return t=e||t,"none"===t.style.display||""===t.style.display&&yt.contains(t.ownerDocument,t)&&"none"===yt.css(t,"display")},zt=function(t,e,n,i){var r,o,s={};for(o in e)s[o]=t.style[o],t.style[o]=e[o];r=n.apply(t,i||[]);for(o in e)t.style[o]=s[o];return r},Kt={};yt.fn.extend({show:function(){return w(this,!0)},hide:function(){return w(this)},toggle:function(t){return"boolean"==typeof t?t?this.show():this.hide():this.each(function(){Vt(this)?yt(this).show():yt(this).hide()})}});var Gt=/^(?:checkbox|radio)$/i,Yt=/<([a-z][^\/\0>\x20\t\r\n\f]+)/i,Qt=/^$|\/(?:java|ecma)script/i,Xt={option:[1,"<select multiple='multiple'>","</select>"],thead:[1,"<table>","</table>"],col:[2,"<table><colgroup>","</colgroup></table>"],tr:[2,"<table><tbody>","</tbody></table>"],td:[3,"<table><tbody><tr>","</tr></tbody></table>"],_default:[0,"",""]};Xt.optgroup=Xt.option,Xt.tbody=Xt.tfoot=Xt.colgroup=Xt.caption=Xt.thead,Xt.th=Xt.td;var Zt=/<|&#?\w+;/;!function(){var t=st.createDocumentFragment(),e=t.appendChild(st.createElement("div")),n=st.createElement("input");n.setAttribute("type","radio"),n.setAttribute("checked","checked"),n.setAttribute("name","t"),e.appendChild(n),vt.checkClone=e.cloneNode(!0).cloneNode(!0).lastChild.checked,e.innerHTML="<textarea>x</textarea>",vt.noCloneChecked=!!e.cloneNode(!0).lastChild.defaultValue}();var Jt=st.documentElement,te=/^key/,ee=/^(?:mouse|pointer|contextmenu|drag|drop)|click/,ne=/^([^.]*)(?:\.(.+)|)/;yt.event={global:{},add:function(t,e,n,i,r){var o,s,a,l,c,u,d,p,h,f,g,m=Rt.get(t);if(m)for(n.handler&&(o=n,n=o.handler,r=o.selector),r&&yt.find.matchesSelector(Jt,r),n.guid||(n.guid=yt.guid++),(l=m.events)||(l=m.events={}),(s=m.handle)||(s=m.handle=function(e){return void 0!==yt&&yt.event.triggered!==e.type?yt.event.dispatch.apply(t,arguments):void 0}),e=(e||"").match(Lt)||[""],c=e.length;c--;)a=ne.exec(e[c])||[],h=g=a[1],f=(a[2]||"").split(".").sort(),h&&(d=yt.event.special[h]||{},h=(r?d.delegateType:d.bindType)||h,d=yt.event.special[h]||{},u=yt.extend({type:h,origType:g,data:i,handler:n,guid:n.guid,selector:r,needsContext:r&&yt.expr.match.needsContext.test(r),namespace:f.join(".")},o),(p=l[h])||(p=l[h]=[],p.delegateCount=0,d.setup&&!1!==d.setup.call(t,i,f,s)||t.addEventListener&&t.addEventListener(h,s)),d.add&&(d.add.call(t,u),u.handler.guid||(u.handler.guid=n.guid)),r?p.splice(p.delegateCount++,0,u):p.push(u),yt.event.global[h]=!0)},remove:function(t,e,n,i,r){var o,s,a,l,c,u,d,p,h,f,g,m=Rt.hasData(t)&&Rt.get(t);if(m&&(l=m.events)){for(e=(e||"").match(Lt)||[""],c=e.length;c--;)if(a=ne.exec(e[c])||[],h=g=a[1],f=(a[2]||"").split(".").sort(),h){for(d=yt.event.special[h]||{},h=(i?d.delegateType:d.bindType)||h,p=l[h]||[],a=a[2]&&new RegExp("(^|\\.)"+f.join("\\.(?:.*\\.|)")+"(\\.|$)"),s=o=p.length;o--;)u=p[o],!r&&g!==u.origType||n&&n.guid!==u.guid||a&&!a.test(u.namespace)||i&&i!==u.selector&&("**"!==i||!u.selector)||(p.splice(o,1),u.selector&&p.delegateCount--,d.remove&&d.remove.call(t,u));s&&!p.length&&(d.teardown&&!1!==d.teardown.call(t,f,m.handle)||yt.removeEvent(t,h,m.handle),delete l[h])}else for(h in l)yt.event.remove(t,h+e[c],n,i,!0);yt.isEmptyObject(l)&&Rt.remove(t,"handle events")}},dispatch:function(t){var e,n,i,r,o,s,a=yt.event.fix(t),l=new Array(arguments.length),c=(Rt.get(this,"events")||{})[a.type]||[],u=yt.event.special[a.type]||{};for(l[0]=a,e=1;e<arguments.length;e++)l[e]=arguments[e];if(a.delegateTarget=this,!u.preDispatch||!1!==u.preDispatch.call(this,a)){for(s=yt.event.handlers.call(this,a,c),e=0;(r=s[e++])&&!a.isPropagationStopped();)for(a.currentTarget=r.elem,n=0;(o=r.handlers[n++])&&!a.isImmediatePropagationStopped();)a.rnamespace&&!a.rnamespace.test(o.namespace)||(a.handleObj=o,a.data=o.data,void 0!==(i=((yt.event.special[o.origType]||{}).handle||o.handler).apply(r.elem,l))&&!1===(a.result=i)&&(a.preventDefault(),a.stopPropagation()));return u.postDispatch&&u.postDispatch.call(this,a),a.result}},handlers:function(t,e){var n,i,r,o,s,a=[],l=e.delegateCount,c=t.target;if(l&&c.nodeType&&!("click"===t.type&&t.button>=1))for(;c!==this;c=c.parentNode||this)if(1===c.nodeType&&("click"!==t.type||!0!==c.disabled)){for(o=[],s={},n=0;n<l;n++)i=e[n],r=i.selector+" ",void 0===s[r]&&(s[r]=i.needsContext?yt(r,this).index(c)>-1:yt.find(r,this,null,[c]).length),s[r]&&o.push(i);o.length&&a.push({elem:c,handlers:o})}return c=this,l<e.length&&a.push({elem:c,handlers:e.slice(l)}),a},addProp:function(t,e){Object.defineProperty(yt.Event.prototype,t,{enumerable:!0,configurable:!0,get:yt.isFunction(e)?function(){if(this.originalEvent)return e(this.originalEvent)}:function(){if(this.originalEvent)return this.originalEvent[t]},set:function(e){Object.defineProperty(this,t,{enumerable:!0,configurable:!0,writable:!0,value:e})}})},fix:function(t){return t[yt.expando]?t:new yt.Event(t)},special:{load:{noBubble:!0},focus:{trigger:function(){if(this!==O()&&this.focus)return this.focus(),!1},delegateType:"focusin"},blur:{trigger:function(){if(this===O()&&this.blur)return this.blur(),!1},delegateType:"focusout"},click:{trigger:function(){if("checkbox"===this.type&&this.click&&l(this,"input"))return this.click(),!1},_default:function(t){return l(t.target,"a")}},beforeunload:{postDispatch:function(t){void 0!==t.result&&t.originalEvent&&(t.originalEvent.returnValue=t.result)}}}},yt.removeEvent=function(t,e,n){t.removeEventListener&&t.removeEventListener(e,n)},yt.Event=function(t,e){if(!(this instanceof yt.Event))return new yt.Event(t,e);t&&t.type?(this.originalEvent=t,this.type=t.type,this.isDefaultPrevented=t.defaultPrevented||void 0===t.defaultPrevented&&!1===t.returnValue?x:A,this.target=t.target&&3===t.target.nodeType?t.target.parentNode:t.target,this.currentTarget=t.currentTarget,this.relatedTarget=t.relatedTarget):this.type=t,e&&yt.extend(this,e),this.timeStamp=t&&t.timeStamp||yt.now(),this[yt.expando]=!0},yt.Event.prototype={constructor:yt.Event,isDefaultPrevented:A,isPropagationStopped:A,isImmediatePropagationStopped:A,isSimulated:!1,preventDefault:function(){var t=this.originalEvent;this.isDefaultPrevented=x,t&&!this.isSimulated&&t.preventDefault()},stopPropagation:function(){var t=this.originalEvent;this.isPropagationStopped=x,t&&!this.isSimulated&&t.stopPropagation()},stopImmediatePropagation:function(){var t=this.originalEvent;this.isImmediatePropagationStopped=x,t&&!this.isSimulated&&t.stopImmediatePropagation(),this.stopPropagation()}},yt.each({altKey:!0,bubbles:!0,cancelable:!0,changedTouches:!0,ctrlKey:!0,detail:!0,eventPhase:!0,metaKey:!0,pageX:!0,pageY:!0,shiftKey:!0,view:!0,char:!0,charCode:!0,key:!0,keyCode:!0,button:!0,buttons:!0,clientX:!0,clientY:!0,offsetX:!0,offsetY:!0,pointerId:!0,pointerType:!0,screenX:!0,screenY:!0,targetTouches:!0,toElement:!0,touches:!0,which:function(t){var e=t.button;return null==t.which&&te.test(t.type)?null!=t.charCode?t.charCode:t.keyCode:!t.which&&void 0!==e&&ee.test(t.type)?1&e?1:2&e?3:4&e?2:0:t.which}},yt.event.addProp),yt.each({mouseenter:"mouseover",mouseleave:"mouseout",pointerenter:"pointerover",pointerleave:"pointerout"},function(t,e){yt.event.special[t]={delegateType:e,bindType:e,handle:function(t){var n,i=this,r=t.relatedTarget,o=t.handleObj;return r&&(r===i||yt.contains(i,r))||(t.type=o.origType,n=o.handler.apply(this,arguments),t.type=e),n}}}),yt.fn.extend({on:function(t,e,n,i){return S(this,t,e,n,i)},one:function(t,e,n,i){return S(this,t,e,n,i,1)},off:function(t,e,n){var i,r;if(t&&t.preventDefault&&t.handleObj)return i=t.handleObj,yt(t.delegateTarget).off(i.namespace?i.origType+"."+i.namespace:i.origType,i.selector,i.handler),this;if("object"==typeof t){for(r in t)this.off(r,e,t[r]);return this}return!1!==e&&"function"!=typeof e||(n=e,e=void 0),!1===n&&(n=A),this.each(function(){yt.event.remove(this,t,n,e)})}});var ie=/<(?!area|br|col|embed|hr|img|input|link|meta|param)(([a-z][^\/\0>\x20\t\r\n\f]*)[^>]*)\/>/gi,re=/<script|<style|<link/i,oe=/checked\s*(?:[^=]|=\s*.checked.)/i,se=/^true\/(.*)/,ae=/^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;yt.extend({htmlPrefilter:function(t){return t.replace(ie,"<$1></$2>")},clone:function(t,e,n){var i,r,o,s,a=t.cloneNode(!0),l=yt.contains(t.ownerDocument,t);if(!(vt.noCloneChecked||1!==t.nodeType&&11!==t.nodeType||yt.isXMLDoc(t)))for(s=E(a),o=E(t),i=0,r=o.length;i<r;i++)L(o[i],s[i]);if(e)if(n)for(o=o||E(t),s=s||E(a),i=0,r=o.length;i<r;i++)k(o[i],s[i]);else k(t,a);return s=E(a,"script"),s.length>0&&C(s,!l&&E(t,"script")),a},cleanData:function(t){for(var e,n,i,r=yt.event.special,o=0;void 0!==(n=t[o]);o++)if(Ht(n)){if(e=n[Rt.expando]){if(e.events)for(i in e.events)r[i]?yt.event.remove(n,i):yt.removeEvent(n,i,e.handle);n[Rt.expando]=void 0}n[Mt.expando]&&(n[Mt.expando]=void 0)}}}),yt.fn.extend({detach:function(t){return $(this,t,!0)},remove:function(t){return $(this,t)},text:function(t){return jt(this,function(t){return void 0===t?yt.text(this):this.empty().each(function(){1!==this.nodeType&&11!==this.nodeType&&9!==this.nodeType||(this.textContent=t)})},null,t,arguments.length)},append:function(){return P(this,arguments,function(t){if(1===this.nodeType||11===this.nodeType||9===this.nodeType){D(this,t).appendChild(t)}})},prepend:function(){return P(this,arguments,function(t){if(1===this.nodeType||11===this.nodeType||9===this.nodeType){var e=D(this,t);e.insertBefore(t,e.firstChild)}})},before:function(){return P(this,arguments,function(t){this.parentNode&&this.parentNode.insertBefore(t,this)})},after:function(){return P(this,arguments,function(t){this.parentNode&&this.parentNode.insertBefore(t,this.nextSibling)})},empty:function(){for(var t,e=0;null!=(t=this[e]);e++)1===t.nodeType&&(yt.cleanData(E(t,!1)),t.textContent="");return this},clone:function(t,e){return t=null!=t&&t,e=null==e?t:e,this.map(function(){return yt.clone(this,t,e)})},html:function(t){return jt(this,function(t){var e=this[0]||{},n=0,i=this.length;if(void 0===t&&1===e.nodeType)return e.innerHTML;if("string"==typeof t&&!re.test(t)&&!Xt[(Yt.exec(t)||["",""])[1].toLowerCase()]){t=yt.htmlPrefilter(t);try{for(;n<i;n++)e=this[n]||{},1===e.nodeType&&(yt.cleanData(E(e,!1)),e.innerHTML=t);e=0}catch(t){}}e&&this.empty().append(t)},null,t,arguments.length)},replaceWith:function(){var t=[];return P(this,arguments,function(e){var n=this.parentNode;yt.inArray(this,t)<0&&(yt.cleanData(E(this)),n&&n.replaceChild(e,this))},t)}}),yt.each({appendTo:"append",prependTo:"prepend",insertBefore:"before",insertAfter:"after",replaceAll:"replaceWith"},function(t,e){yt.fn[t]=function(t){for(var n,i=[],r=yt(t),o=r.length-1,s=0;s<=o;s++)n=s===o?this:this.clone(!0),yt(r[s])[e](n),ut.apply(i,n.get());return this.pushStack(i)}});var le=/^margin/,ce=new RegExp("^("+Ft+")(?!px)[a-z%]+$","i"),ue=function(t){var e=t.ownerDocument.defaultView;return e&&e.opener||(e=n),e.getComputedStyle(t)};!function(){function t(){if(a){a.style.cssText="box-sizing:border-box;position:relative;display:block;margin:auto;border:1px;padding:1px;top:1%;width:50%",a.innerHTML="",Jt.appendChild(s);var t=n.getComputedStyle(a);e="1%"!==t.top,o="2px"===t.marginLeft,i="4px"===t.width,a.style.marginRight="50%",r="4px"===t.marginRight,Jt.removeChild(s),a=null}}var e,i,r,o,s=st.createElement("div"),a=st.createElement("div");a.style&&(a.style.backgroundClip="content-box",a.cloneNode(!0).style.backgroundClip="",vt.clearCloneStyle="content-box"===a.style.backgroundClip,s.style.cssText="border:0;width:8px;height:0;top:0;left:-9999px;padding:0;margin-top:1px;position:absolute",s.appendChild(a),yt.extend(vt,{pixelPosition:function(){return t(),e},boxSizingReliable:function(){return t(),i},pixelMarginRight:function(){return t(),r},reliableMarginLeft:function(){return t(),o}}))}();var de=/^(none|table(?!-c[ea]).+)/,pe=/^--/,he={position:"absolute",visibility:"hidden",display:"block"},fe={letterSpacing:"0",fontWeight:"400"},ge=["Webkit","Moz","ms"],me=st.createElement("div").style;yt.extend({cssHooks:{opacity:{get:function(t,e){if(e){var n=j(t,"opacity");return""===n?"1":n}}}},cssNumber:{animationIterationCount:!0,columnCount:!0,fillOpacity:!0,flexGrow:!0,flexShrink:!0,fontWeight:!0,lineHeight:!0,opacity:!0,order:!0,orphans:!0,widows:!0,zIndex:!0,zoom:!0},cssProps:{float:"cssFloat"},style:function(t,e,n,i){if(t&&3!==t.nodeType&&8!==t.nodeType&&t.style){var r,o,s,a=yt.camelCase(e),l=pe.test(e),c=t.style;if(l||(e=M(a)),s=yt.cssHooks[e]||yt.cssHooks[a],void 0===n)return s&&"get"in s&&void 0!==(r=s.get(t,!1,i))?r:c[e];o=typeof n,"string"===o&&(r=Ut.exec(n))&&r[1]&&(n=_(t,e,r),o="number"),null!=n&&n===n&&("number"===o&&(n+=r&&r[3]||(yt.cssNumber[a]?"":"px")),vt.clearCloneStyle||""!==n||0!==e.indexOf("background")||(c[e]="inherit"),s&&"set"in s&&void 0===(n=s.set(t,n,i))||(l?c.setProperty(e,n):c[e]=n))}},css:function(t,e,n,i){var r,o,s,a=yt.camelCase(e);return pe.test(e)||(e=M(a)),s=yt.cssHooks[e]||yt.cssHooks[a],s&&"get"in s&&(r=s.get(t,!0,n)),void 0===r&&(r=j(t,e,i)),"normal"===r&&e in fe&&(r=fe[e]),""===n||n?(o=parseFloat(r),!0===n||isFinite(o)?o||0:r):r}}),yt.each(["height","width"],function(t,e){yt.cssHooks[e]={get:function(t,n,i){if(n)return!de.test(yt.css(t,"display"))||t.getClientRects().length&&t.getBoundingClientRect().width?F(t,e,i):zt(t,he,function(){return F(t,e,i)})},set:function(t,n,i){var r,o=i&&ue(t),s=i&&q(t,e,i,"border-box"===yt.css(t,"boxSizing",!1,o),o);return s&&(r=Ut.exec(n))&&"px"!==(r[3]||"px")&&(t.style[e]=n,n=yt.css(t,e)),W(t,n,s)}}}),yt.cssHooks.marginLeft=H(vt.reliableMarginLeft,function(t,e){if(e)return(parseFloat(j(t,"marginLeft"))||t.getBoundingClientRect().left-zt(t,{marginLeft:0},function(){return t.getBoundingClientRect().left}))+"px"}),yt.each({margin:"",padding:"",border:"Width"},function(t,e){yt.cssHooks[t+e]={expand:function(n){for(var i=0,r={},o="string"==typeof n?n.split(" "):[n];i<4;i++)r[t+Bt[i]+e]=o[i]||o[i-2]||o[0];return r}},le.test(t)||(yt.cssHooks[t+e].set=W)}),yt.fn.extend({css:function(t,e){return jt(this,function(t,e,n){var i,r,o={},s=0;if(Array.isArray(e)){for(i=ue(t),r=e.length;s<r;s++)o[e[s]]=yt.css(t,e[s],!1,i);return o}return void 0!==n?yt.style(t,e,n):yt.css(t,e)},t,e,arguments.length>1)}}),yt.Tween=U,U.prototype={constructor:U,init:function(t,e,n,i,r,o){this.elem=t,this.prop=n,this.easing=r||yt.easing._default,this.options=e,this.start=this.now=this.cur(),this.end=i,this.unit=o||(yt.cssNumber[n]?"":"px")},cur:function(){var t=U.propHooks[this.prop];return t&&t.get?t.get(this):U.propHooks._default.get(this)},run:function(t){var e,n=U.propHooks[this.prop];return this.options.duration?this.pos=e=yt.easing[this.easing](t,this.options.duration*t,0,1,this.options.duration):this.pos=e=t,this.now=(this.end-this.start)*e+this.start,this.options.step&&this.options.step.call(this.elem,this.now,this),n&&n.set?n.set(this):U.propHooks._default.set(this),this}},U.prototype.init.prototype=U.prototype,U.propHooks={_default:{get:function(t){var e;return 1!==t.elem.nodeType||null!=t.elem[t.prop]&&null==t.elem.style[t.prop]?t.elem[t.prop]:(e=yt.css(t.elem,t.prop,""),e&&"auto"!==e?e:0)},set:function(t){yt.fx.step[t.prop]?yt.fx.step[t.prop](t):1!==t.elem.nodeType||null==t.elem.style[yt.cssProps[t.prop]]&&!yt.cssHooks[t.prop]?t.elem[t.prop]=t.now:yt.style(t.elem,t.prop,t.now+t.unit)}}},U.propHooks.scrollTop=U.propHooks.scrollLeft={set:function(t){t.elem.nodeType&&t.elem.parentNode&&(t.elem[t.prop]=t.now)}},yt.easing={linear:function(t){return t},swing:function(t){return.5-Math.cos(t*Math.PI)/2},_default:"swing"},yt.fx=U.prototype.init,yt.fx.step={};var ve,ye,_e=/^(?:toggle|show|hide)$/,be=/queueHooks$/;yt.Animation=yt.extend(Q,{tweeners:{"*":[function(t,e){var n=this.createTween(t,e);return _(n.elem,t,Ut.exec(e),n),n}]},tweener:function(t,e){yt.isFunction(t)?(e=t,t=["*"]):t=t.match(Lt);for(var n,i=0,r=t.length;i<r;i++)n=t[i],Q.tweeners[n]=Q.tweeners[n]||[],Q.tweeners[n].unshift(e)},prefilters:[G],prefilter:function(t,e){e?Q.prefilters.unshift(t):Q.prefilters.push(t)}}),yt.speed=function(t,e,n){var i=t&&"object"==typeof t?yt.extend({},t):{complete:n||!n&&e||yt.isFunction(t)&&t,duration:t,easing:n&&e||e&&!yt.isFunction(e)&&e};return yt.fx.off?i.duration=0:"number"!=typeof i.duration&&(i.duration in yt.fx.speeds?i.duration=yt.fx.speeds[i.duration]:i.duration=yt.fx.speeds._default),null!=i.queue&&!0!==i.queue||(i.queue="fx"),i.old=i.complete,i.complete=function(){yt.isFunction(i.old)&&i.old.call(this),i.queue&&yt.dequeue(this,i.queue)},i},yt.fn.extend({fadeTo:function(t,e,n,i){return this.filter(Vt).css("opacity",0).show().end().animate({opacity:e},t,n,i)},animate:function(t,e,n,i){var r=yt.isEmptyObject(t),o=yt.speed(e,n,i),s=function(){var e=Q(this,yt.extend({},t),o);(r||Rt.get(this,"finish"))&&e.stop(!0)};return s.finish=s,r||!1===o.queue?this.each(s):this.queue(o.queue,s)},stop:function(t,e,n){var i=function(t){var e=t.stop;delete t.stop,e(n)};return"string"!=typeof t&&(n=e,e=t,t=void 0),e&&!1!==t&&this.queue(t||"fx",[]),this.each(function(){var e=!0,r=null!=t&&t+"queueHooks",o=yt.timers,s=Rt.get(this);if(r)s[r]&&s[r].stop&&i(s[r]);else for(r in s)s[r]&&s[r].stop&&be.test(r)&&i(s[r]);for(r=o.length;r--;)o[r].elem!==this||null!=t&&o[r].queue!==t||(o[r].anim.stop(n),e=!1,o.splice(r,1));!e&&n||yt.dequeue(this,t)})},finish:function(t){return!1!==t&&(t=t||"fx"),this.each(function(){var e,n=Rt.get(this),i=n[t+"queue"],r=n[t+"queueHooks"],o=yt.timers,s=i?i.length:0;for(n.finish=!0,yt.queue(this,t,[]),r&&r.stop&&r.stop.call(this,!0),e=o.length;e--;)o[e].elem===this&&o[e].queue===t&&(o[e].anim.stop(!0),o.splice(e,1));for(e=0;e<s;e++)i[e]&&i[e].finish&&i[e].finish.call(this);delete n.finish})}}),yt.each(["toggle","show","hide"],function(t,e){var n=yt.fn[e];yt.fn[e]=function(t,i,r){return null==t||"boolean"==typeof t?n.apply(this,arguments):this.animate(z(e,!0),t,i,r)}}),yt.each({slideDown:z("show"),slideUp:z("hide"),slideToggle:z("toggle"),fadeIn:{opacity:"show"},fadeOut:{opacity:"hide"},fadeToggle:{opacity:"toggle"}},function(t,e){yt.fn[t]=function(t,n,i){return this.animate(e,t,n,i)}}),yt.timers=[],yt.fx.tick=function(){var t,e=0,n=yt.timers;for(ve=yt.now();e<n.length;e++)(t=n[e])()||n[e]!==t||n.splice(e--,1);n.length||yt.fx.stop(),ve=void 0},yt.fx.timer=function(t){yt.timers.push(t),yt.fx.start()},yt.fx.interval=13,yt.fx.start=function(){ye||(ye=!0,B())},yt.fx.stop=function(){ye=null},yt.fx.speeds={slow:600,fast:200,_default:400},yt.fn.delay=function(t,e){return t=yt.fx?yt.fx.speeds[t]||t:t,e=e||"fx",this.queue(e,function(e,i){var r=n.setTimeout(e,t);i.stop=function(){n.clearTimeout(r)}})},function(){var t=st.createElement("input"),e=st.createElement("select"),n=e.appendChild(st.createElement("option"));t.type="checkbox",vt.checkOn=""!==t.value,vt.optSelected=n.selected,t=st.createElement("input"),t.value="t",t.type="radio",vt.radioValue="t"===t.value}();var we,Ee=yt.expr.attrHandle;yt.fn.extend({attr:function(t,e){return jt(this,yt.attr,t,e,arguments.length>1)},removeAttr:function(t){return this.each(function(){yt.removeAttr(this,t)})}}),yt.extend({attr:function(t,e,n){var i,r,o=t.nodeType;if(3!==o&&8!==o&&2!==o)return void 0===t.getAttribute?yt.prop(t,e,n):(1===o&&yt.isXMLDoc(t)||(r=yt.attrHooks[e.toLowerCase()]||(yt.expr.match.bool.test(e)?we:void 0)),void 0!==n?null===n?void yt.removeAttr(t,e):r&&"set"in r&&void 0!==(i=r.set(t,n,e))?i:(t.setAttribute(e,n+""),n):r&&"get"in r&&null!==(i=r.get(t,e))?i:(i=yt.find.attr(t,e),null==i?void 0:i))},attrHooks:{type:{set:function(t,e){if(!vt.radioValue&&"radio"===e&&l(t,"input")){var n=t.value;return t.setAttribute("type",e),n&&(t.value=n),e}}}},removeAttr:function(t,e){var n,i=0,r=e&&e.match(Lt);if(r&&1===t.nodeType)for(;n=r[i++];)t.removeAttribute(n)}}),we={set:function(t,e,n){return!1===e?yt.removeAttr(t,n):t.setAttribute(n,n),n}},yt.each(yt.expr.match.bool.source.match(/\w+/g),function(t,e){var n=Ee[e]||yt.find.attr;Ee[e]=function(t,e,i){var r,o,s=e.toLowerCase();return i||(o=Ee[s],Ee[s]=r,r=null!=n(t,e,i)?s:null,Ee[s]=o),r}});var Ce=/^(?:input|select|textarea|button)$/i,Te=/^(?:a|area)$/i;yt.fn.extend({prop:function(t,e){return jt(this,yt.prop,t,e,arguments.length>1)},removeProp:function(t){return this.each(function(){delete this[yt.propFix[t]||t]})}}),yt.extend({prop:function(t,e,n){var i,r,o=t.nodeType;if(3!==o&&8!==o&&2!==o)return 1===o&&yt.isXMLDoc(t)||(e=yt.propFix[e]||e,r=yt.propHooks[e]),void 0!==n?r&&"set"in r&&void 0!==(i=r.set(t,n,e))?i:t[e]=n:r&&"get"in r&&null!==(i=r.get(t,e))?i:t[e]},propHooks:{tabIndex:{get:function(t){var e=yt.find.attr(t,"tabindex");return e?parseInt(e,10):Ce.test(t.nodeName)||Te.test(t.nodeName)&&t.href?0:-1}}},propFix:{for:"htmlFor",class:"className"}}),vt.optSelected||(yt.propHooks.selected={get:function(t){var e=t.parentNode;return e&&e.parentNode&&e.parentNode.selectedIndex,null},set:function(t){var e=t.parentNode;e&&(e.selectedIndex,e.parentNode&&e.parentNode.selectedIndex)}}),yt.each(["tabIndex","readOnly","maxLength","cellSpacing","cellPadding","rowSpan","colSpan","useMap","frameBorder","contentEditable"],function(){yt.propFix[this.toLowerCase()]=this}),yt.fn.extend({addClass:function(t){var e,n,i,r,o,s,a,l=0;if(yt.isFunction(t))return this.each(function(e){yt(this).addClass(t.call(this,e,Z(this)))});if("string"==typeof t&&t)for(e=t.match(Lt)||[];n=this[l++];)if(r=Z(n),i=1===n.nodeType&&" "+X(r)+" "){for(s=0;o=e[s++];)i.indexOf(" "+o+" ")<0&&(i+=o+" ");a=X(i),r!==a&&n.setAttribute("class",a)}return this},removeClass:function(t){var e,n,i,r,o,s,a,l=0;if(yt.isFunction(t))return this.each(function(e){yt(this).removeClass(t.call(this,e,Z(this)))});if(!arguments.length)return this.attr("class","");if("string"==typeof t&&t)for(e=t.match(Lt)||[];n=this[l++];)if(r=Z(n),i=1===n.nodeType&&" "+X(r)+" "){for(s=0;o=e[s++];)for(;i.indexOf(" "+o+" ")>-1;)i=i.replace(" "+o+" "," ");a=X(i),r!==a&&n.setAttribute("class",a)}return this},toggleClass:function(t,e){var n=typeof t;return"boolean"==typeof e&&"string"===n?e?this.addClass(t):this.removeClass(t):yt.isFunction(t)?this.each(function(n){yt(this).toggleClass(t.call(this,n,Z(this),e),e)}):this.each(function(){var e,i,r,o;if("string"===n)for(i=0,r=yt(this),o=t.match(Lt)||[];e=o[i++];)r.hasClass(e)?r.removeClass(e):r.addClass(e);else void 0!==t&&"boolean"!==n||(e=Z(this),e&&Rt.set(this,"__className__",e),this.setAttribute&&this.setAttribute("class",e||!1===t?"":Rt.get(this,"__className__")||""))})},hasClass:function(t){var e,n,i=0;for(e=" "+t+" ";n=this[i++];)if(1===n.nodeType&&(" "+X(Z(n))+" ").indexOf(e)>-1)return!0;return!1}});var xe=/\r/g;yt.fn.extend({val:function(t){var e,n,i,r=this[0];{if(arguments.length)return i=yt.isFunction(t),this.each(function(n){var r;1===this.nodeType&&(r=i?t.call(this,n,yt(this).val()):t,null==r?r="":"number"==typeof r?r+="":Array.isArray(r)&&(r=yt.map(r,function(t){return null==t?"":t+""})),(e=yt.valHooks[this.type]||yt.valHooks[this.nodeName.toLowerCase()])&&"set"in e&&void 0!==e.set(this,r,"value")||(this.value=r))});if(r)return(e=yt.valHooks[r.type]||yt.valHooks[r.nodeName.toLowerCase()])&&"get"in e&&void 0!==(n=e.get(r,"value"))?n:(n=r.value,"string"==typeof n?n.replace(xe,""):null==n?"":n)}}}),yt.extend({valHooks:{option:{get:function(t){var e=yt.find.attr(t,"value");return null!=e?e:X(yt.text(t))}},select:{get:function(t){var e,n,i,r=t.options,o=t.selectedIndex,s="select-one"===t.type,a=s?null:[],c=s?o+1:r.length;for(i=o<0?c:s?o:0;i<c;i++)if(n=r[i],(n.selected||i===o)&&!n.disabled&&(!n.parentNode.disabled||!l(n.parentNode,"optgroup"))){if(e=yt(n).val(),s)return e;a.push(e)}return a},set:function(t,e){for(var n,i,r=t.options,o=yt.makeArray(e),s=r.length;s--;)i=r[s],(i.selected=yt.inArray(yt.valHooks.option.get(i),o)>-1)&&(n=!0);return n||(t.selectedIndex=-1),o}}}}),yt.each(["radio","checkbox"],function(){yt.valHooks[this]={set:function(t,e){if(Array.isArray(e))return t.checked=yt.inArray(yt(t).val(),e)>-1}},vt.checkOn||(yt.valHooks[this].get=function(t){return null===t.getAttribute("value")?"on":t.value})});var Ae=/^(?:focusinfocus|focusoutblur)$/;yt.extend(yt.event,{trigger:function(t,e,i,r){var o,s,a,l,c,u,d,p=[i||st],h=ft.call(t,"type")?t.type:t,f=ft.call(t,"namespace")?t.namespace.split("."):[];if(s=a=i=i||st,3!==i.nodeType&&8!==i.nodeType&&!Ae.test(h+yt.event.triggered)&&(h.indexOf(".")>-1&&(f=h.split("."),h=f.shift(),f.sort()),c=h.indexOf(":")<0&&"on"+h,t=t[yt.expando]?t:new yt.Event(h,"object"==typeof t&&t),t.isTrigger=r?2:3,t.namespace=f.join("."),t.rnamespace=t.namespace?new RegExp("(^|\\.)"+f.join("\\.(?:.*\\.|)")+"(\\.|$)"):null,t.result=void 0,t.target||(t.target=i),e=null==e?[t]:yt.makeArray(e,[t]),d=yt.event.special[h]||{},r||!d.trigger||!1!==d.trigger.apply(i,e))){if(!r&&!d.noBubble&&!yt.isWindow(i)){for(l=d.delegateType||h,Ae.test(l+h)||(s=s.parentNode);s;s=s.parentNode)p.push(s),a=s;a===(i.ownerDocument||st)&&p.push(a.defaultView||a.parentWindow||n)}for(o=0;(s=p[o++])&&!t.isPropagationStopped();)t.type=o>1?l:d.bindType||h,u=(Rt.get(s,"events")||{})[t.type]&&Rt.get(s,"handle"),u&&u.apply(s,e),(u=c&&s[c])&&u.apply&&Ht(s)&&(t.result=u.apply(s,e),!1===t.result&&t.preventDefault());return t.type=h,r||t.isDefaultPrevented()||d._default&&!1!==d._default.apply(p.pop(),e)||!Ht(i)||c&&yt.isFunction(i[h])&&!yt.isWindow(i)&&(a=i[c],a&&(i[c]=null),yt.event.triggered=h,i[h](),yt.event.triggered=void 0,a&&(i[c]=a)),t.result}},simulate:function(t,e,n){var i=yt.extend(new yt.Event,n,{type:t,isSimulated:!0});yt.event.trigger(i,null,e)}}),yt.fn.extend({trigger:function(t,e){return this.each(function(){yt.event.trigger(t,e,this)})},triggerHandler:function(t,e){var n=this[0];if(n)return yt.event.trigger(t,e,n,!0)}}),yt.each("blur focus focusin focusout resize scroll click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup contextmenu".split(" "),function(t,e){yt.fn[e]=function(t,n){return arguments.length>0?this.on(e,null,t,n):this.trigger(e)}}),yt.fn.extend({hover:function(t,e){return this.mouseenter(t).mouseleave(e||t)}}),vt.focusin="onfocusin"in n,vt.focusin||yt.each({focus:"focusin",blur:"focusout"},function(t,e){var n=function(t){yt.event.simulate(e,t.target,yt.event.fix(t))};yt.event.special[e]={setup:function(){var i=this.ownerDocument||this,r=Rt.access(i,e);r||i.addEventListener(t,n,!0),Rt.access(i,e,(r||0)+1)},teardown:function(){var i=this.ownerDocument||this,r=Rt.access(i,e)-1;r?Rt.access(i,e,r):(i.removeEventListener(t,n,!0),Rt.remove(i,e))}}});var Oe=n.location,Se=yt.now(),De=/\?/;yt.parseXML=function(t){var e;if(!t||"string"!=typeof t)return null;try{e=(new n.DOMParser).parseFromString(t,"text/xml")}catch(t){e=void 0}return e&&!e.getElementsByTagName("parsererror").length||yt.error("Invalid XML: "+t),e};var Ie=/\[\]$/,Ne=/\r?\n/g,ke=/^(?:submit|button|image|reset|file)$/i,Le=/^(?:input|select|textarea|keygen)/i;yt.param=function(t,e){var n,i=[],r=function(t,e){var n=yt.isFunction(e)?e():e;i[i.length]=encodeURIComponent(t)+"="+encodeURIComponent(null==n?"":n)};if(Array.isArray(t)||t.jquery&&!yt.isPlainObject(t))yt.each(t,function(){r(this.name,this.value)});else for(n in t)J(n,t[n],e,r);return i.join("&")},yt.fn.extend({serialize:function(){return yt.param(this.serializeArray())},serializeArray:function(){return this.map(function(){var t=yt.prop(this,"elements");return t?yt.makeArray(t):this}).filter(function(){var t=this.type;return this.name&&!yt(this).is(":disabled")&&Le.test(this.nodeName)&&!ke.test(t)&&(this.checked||!Gt.test(t))}).map(function(t,e){var n=yt(this).val();return null==n?null:Array.isArray(n)?yt.map(n,function(t){return{name:e.name,value:t.replace(Ne,"\r\n")}}):{name:e.name,value:n.replace(Ne,"\r\n")}}).get()}});var Pe=/%20/g,$e=/#.*$/,je=/([?&])_=[^&]*/,He=/^(.*?):[ \t]*([^\r\n]*)$/gm,Re=/^(?:about|app|app-storage|.+-extension|file|res|widget):$/,Me=/^(?:GET|HEAD)$/,We=/^\/\//,qe={},Fe={},Ue="*/".concat("*"),Be=st.createElement("a");Be.href=Oe.href,yt.extend({active:0,lastModified:{},etag:{},ajaxSettings:{url:Oe.href,type:"GET",isLocal:Re.test(Oe.protocol),global:!0,processData:!0,async:!0,contentType:"application/x-www-form-urlencoded; charset=UTF-8",accepts:{"*":Ue,text:"text/plain",html:"text/html",xml:"application/xml, text/xml",json:"application/json, text/javascript"},contents:{xml:/\bxml\b/,html:/\bhtml/,json:/\bjson\b/},responseFields:{xml:"responseXML",text:"responseText",json:"responseJSON"},converters:{"* text":String,"text html":!0,"text json":JSON.parse,"text xml":yt.parseXML},flatOptions:{url:!0,context:!0}},ajaxSetup:function(t,e){return e?nt(nt(t,yt.ajaxSettings),e):nt(yt.ajaxSettings,t)},ajaxPrefilter:tt(qe),ajaxTransport:tt(Fe),ajax:function(t,e){function i(t,e,i,a){var c,p,h,b,w,E=e;u||(u=!0,l&&n.clearTimeout(l),r=void 0,s=a||"",C.readyState=t>0?4:0,c=t>=200&&t<300||304===t,i&&(b=it(f,C,i)),b=rt(f,b,C,c),c?(f.ifModified&&(w=C.getResponseHeader("Last-Modified"),w&&(yt.lastModified[o]=w),(w=C.getResponseHeader("etag"))&&(yt.etag[o]=w)),204===t||"HEAD"===f.type?E="nocontent":304===t?E="notmodified":(E=b.state,p=b.data,h=b.error,c=!h)):(h=E,!t&&E||(E="error",t<0&&(t=0))),C.status=t,C.statusText=(e||E)+"",c?v.resolveWith(g,[p,E,C]):v.rejectWith(g,[C,E,h]),C.statusCode(_),_=void 0,d&&m.trigger(c?"ajaxSuccess":"ajaxError",[C,f,c?p:h]),y.fireWith(g,[C,E]),d&&(m.trigger("ajaxComplete",[C,f]),--yt.active||yt.event.trigger("ajaxStop")))}"object"==typeof t&&(e=t,t=void 0),e=e||{};var r,o,s,a,l,c,u,d,p,h,f=yt.ajaxSetup({},e),g=f.context||f,m=f.context&&(g.nodeType||g.jquery)?yt(g):yt.event,v=yt.Deferred(),y=yt.Callbacks("once memory"),_=f.statusCode||{},b={},w={},E="canceled",C={readyState:0,getResponseHeader:function(t){var e;if(u){if(!a)for(a={};e=He.exec(s);)a[e[1].toLowerCase()]=e[2];e=a[t.toLowerCase()]}return null==e?null:e},getAllResponseHeaders:function(){return u?s:null},setRequestHeader:function(t,e){return null==u&&(t=w[t.toLowerCase()]=w[t.toLowerCase()]||t,b[t]=e),this},overrideMimeType:function(t){return null==u&&(f.mimeType=t),this},statusCode:function(t){var e;if(t)if(u)C.always(t[C.status]);else for(e in t)_[e]=[_[e],t[e]];return this},abort:function(t){var e=t||E;return r&&r.abort(e),i(0,e),this}};if(v.promise(C),f.url=((t||f.url||Oe.href)+"").replace(We,Oe.protocol+"//"),f.type=e.method||e.type||f.method||f.type,f.dataTypes=(f.dataType||"*").toLowerCase().match(Lt)||[""],null==f.crossDomain){c=st.createElement("a");try{c.href=f.url,c.href=c.href,f.crossDomain=Be.protocol+"//"+Be.host!=c.protocol+"//"+c.host}catch(t){f.crossDomain=!0}}if(f.data&&f.processData&&"string"!=typeof f.data&&(f.data=yt.param(f.data,f.traditional)),et(qe,f,e,C),u)return C;d=yt.event&&f.global,d&&0==yt.active++&&yt.event.trigger("ajaxStart"),f.type=f.type.toUpperCase(),f.hasContent=!Me.test(f.type),o=f.url.replace($e,""),f.hasContent?f.data&&f.processData&&0===(f.contentType||"").indexOf("application/x-www-form-urlencoded")&&(f.data=f.data.replace(Pe,"+")):(h=f.url.slice(o.length),f.data&&(o+=(De.test(o)?"&":"?")+f.data,delete f.data),!1===f.cache&&(o=o.replace(je,"$1"),h=(De.test(o)?"&":"?")+"_="+Se+++h),f.url=o+h),f.ifModified&&(yt.lastModified[o]&&C.setRequestHeader("If-Modified-Since",yt.lastModified[o]),yt.etag[o]&&C.setRequestHeader("If-None-Match",yt.etag[o])),(f.data&&f.hasContent&&!1!==f.contentType||e.contentType)&&C.setRequestHeader("Content-Type",f.contentType),C.setRequestHeader("Accept",f.dataTypes[0]&&f.accepts[f.dataTypes[0]]?f.accepts[f.dataTypes[0]]+("*"!==f.dataTypes[0]?", "+Ue+"; q=0.01":""):f.accepts["*"]);for(p in f.headers)C.setRequestHeader(p,f.headers[p]);if(f.beforeSend&&(!1===f.beforeSend.call(g,C,f)||u))return C.abort();if(E="abort",y.add(f.complete),C.done(f.success),C.fail(f.error),r=et(Fe,f,e,C)){if(C.readyState=1,d&&m.trigger("ajaxSend",[C,f]),u)return C;f.async&&f.timeout>0&&(l=n.setTimeout(function(){C.abort("timeout")},f.timeout));try{u=!1,r.send(b,i)}catch(t){if(u)throw t;i(-1,t)}}else i(-1,"No Transport");return C},getJSON:function(t,e,n){return yt.get(t,e,n,"json")},getScript:function(t,e){return yt.get(t,void 0,e,"script")}}),yt.each(["get","post"],function(t,e){yt[e]=function(t,n,i,r){return yt.isFunction(n)&&(r=r||i,i=n,n=void 0),yt.ajax(yt.extend({url:t,type:e,dataType:r,data:n,success:i},yt.isPlainObject(t)&&t))}}),yt._evalUrl=function(t){return yt.ajax({url:t,type:"GET",dataType:"script",cache:!0,async:!1,global:!1,throws:!0})},yt.fn.extend({wrapAll:function(t){var e;return this[0]&&(yt.isFunction(t)&&(t=t.call(this[0])),e=yt(t,this[0].ownerDocument).eq(0).clone(!0),this[0].parentNode&&e.insertBefore(this[0]),e.map(function(){for(var t=this;t.firstElementChild;)t=t.firstElementChild;return t}).append(this)),this},wrapInner:function(t){return yt.isFunction(t)?this.each(function(e){yt(this).wrapInner(t.call(this,e))}):this.each(function(){var e=yt(this),n=e.contents();n.length?n.wrapAll(t):e.append(t)})},wrap:function(t){var e=yt.isFunction(t);return this.each(function(n){yt(this).wrapAll(e?t.call(this,n):t)})},unwrap:function(t){return this.parent(t).not("body").each(function(){yt(this).replaceWith(this.childNodes)}),this}}),yt.expr.pseudos.hidden=function(t){return!yt.expr.pseudos.visible(t)},yt.expr.pseudos.visible=function(t){return!!(t.offsetWidth||t.offsetHeight||t.getClientRects().length)},yt.ajaxSettings.xhr=function(){try{return new n.XMLHttpRequest}catch(t){}};var Ve={0:200,1223:204},ze=yt.ajaxSettings.xhr();vt.cors=!!ze&&"withCredentials"in ze,vt.ajax=ze=!!ze,yt.ajaxTransport(function(t){var e,i;if(vt.cors||ze&&!t.crossDomain)return{send:function(r,o){var s,a=t.xhr();if(a.open(t.type,t.url,t.async,t.username,t.password),t.xhrFields)for(s in t.xhrFields)a[s]=t.xhrFields[s];t.mimeType&&a.overrideMimeType&&a.overrideMimeType(t.mimeType),t.crossDomain||r["X-Requested-With"]||(r["X-Requested-With"]="XMLHttpRequest");for(s in r)a.setRequestHeader(s,r[s]);e=function(t){return function(){e&&(e=i=a.onload=a.onerror=a.onabort=a.onreadystatechange=null,"abort"===t?a.abort():"error"===t?"number"!=typeof a.status?o(0,"error"):o(a.status,a.statusText):o(Ve[a.status]||a.status,a.statusText,"text"!==(a.responseType||"text")||"string"!=typeof a.responseText?{binary:a.response}:{text:a.responseText},a.getAllResponseHeaders()))}},a.onload=e(),i=a.onerror=e("error"),void 0!==a.onabort?a.onabort=i:a.onreadystatechange=function(){4===a.readyState&&n.setTimeout(function(){e&&i()})},e=e("abort");try{a.send(t.hasContent&&t.data||null)}catch(t){if(e)throw t}},abort:function(){e&&e()}}}),yt.ajaxPrefilter(function(t){t.crossDomain&&(t.contents.script=!1)}),yt.ajaxSetup({accepts:{script:"text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"},contents:{script:/\b(?:java|ecma)script\b/},converters:{"text script":function(t){return yt.globalEval(t),t}}}),yt.ajaxPrefilter("script",function(t){void 0===t.cache&&(t.cache=!1),t.crossDomain&&(t.type="GET")}),yt.ajaxTransport("script",function(t){if(t.crossDomain){var e,n;return{send:function(i,r){e=yt("<script>").prop({charset:t.scriptCharset,src:t.url}).on("load error",n=function(t){e.remove(),n=null,t&&r("error"===t.type?404:200,t.type)}),st.head.appendChild(e[0])},abort:function(){n&&n()}}}});var Ke=[],Ge=/(=)\?(?=&|$)|\?\?/;yt.ajaxSetup({jsonp:"callback",jsonpCallback:function(){var t=Ke.pop()||yt.expando+"_"+Se++;return this[t]=!0,t}}),yt.ajaxPrefilter("json jsonp",function(t,e,i){var r,o,s,a=!1!==t.jsonp&&(Ge.test(t.url)?"url":"string"==typeof t.data&&0===(t.contentType||"").indexOf("application/x-www-form-urlencoded")&&Ge.test(t.data)&&"data");if(a||"jsonp"===t.dataTypes[0])return r=t.jsonpCallback=yt.isFunction(t.jsonpCallback)?t.jsonpCallback():t.jsonpCallback,a?t[a]=t[a].replace(Ge,"$1"+r):!1!==t.jsonp&&(t.url+=(De.test(t.url)?"&":"?")+t.jsonp+"="+r),t.converters["script json"]=function(){return s||yt.error(r+" was not called"),s[0]},t.dataTypes[0]="json",o=n[r],n[r]=function(){s=arguments},i.always(function(){void 0===o?yt(n).removeProp(r):n[r]=o,t[r]&&(t.jsonpCallback=e.jsonpCallback,Ke.push(r)),s&&yt.isFunction(o)&&o(s[0]),s=o=void 0}),"script"}),vt.createHTMLDocument=function(){var t=st.implementation.createHTMLDocument("").body;return t.innerHTML="<form></form><form></form>",2===t.childNodes.length}(),yt.parseHTML=function(t,e,n){if("string"!=typeof t)return[];"boolean"==typeof e&&(n=e,e=!1);var i,r,o;return e||(vt.createHTMLDocument?(e=st.implementation.createHTMLDocument(""),i=e.createElement("base"),i.href=st.location.href,e.head.appendChild(i)):e=st),r=Ot.exec(t),o=!n&&[],r?[e.createElement(r[1])]:(r=T([t],e,o),o&&o.length&&yt(o).remove(),yt.merge([],r.childNodes))},yt.fn.load=function(t,e,n){var i,r,o,s=this,a=t.indexOf(" ");return a>-1&&(i=X(t.slice(a)),t=t.slice(0,a)),yt.isFunction(e)?(n=e,e=void 0):e&&"object"==typeof e&&(r="POST"),s.length>0&&yt.ajax({url:t,type:r||"GET",dataType:"html",data:e}).done(function(t){o=arguments,s.html(i?yt("<div>").append(yt.parseHTML(t)).find(i):t)}).always(n&&function(t,e){s.each(function(){n.apply(this,o||[t.responseText,e,t])})}),this},yt.each(["ajaxStart","ajaxStop","ajaxComplete","ajaxError","ajaxSuccess","ajaxSend"],function(t,e){yt.fn[e]=function(t){return this.on(e,t)}}),yt.expr.pseudos.animated=function(t){return yt.grep(yt.timers,function(e){return t===e.elem}).length},yt.offset={setOffset:function(t,e,n){var i,r,o,s,a,l,c,u=yt.css(t,"position"),d=yt(t),p={};"static"===u&&(t.style.position="relative"),a=d.offset(),o=yt.css(t,"top"),l=yt.css(t,"left"),c=("absolute"===u||"fixed"===u)&&(o+l).indexOf("auto")>-1,c?(i=d.position(),s=i.top,r=i.left):(s=parseFloat(o)||0,r=parseFloat(l)||0),yt.isFunction(e)&&(e=e.call(t,n,yt.extend({},a))),null!=e.top&&(p.top=e.top-a.top+s),null!=e.left&&(p.left=e.left-a.left+r),"using"in e?e.using.call(t,p):d.css(p)}},yt.fn.extend({offset:function(t){if(arguments.length)return void 0===t?this:this.each(function(e){yt.offset.setOffset(this,t,e)});var e,n,i,r,o=this[0];if(o)return o.getClientRects().length?(i=o.getBoundingClientRect(),e=o.ownerDocument,n=e.documentElement,r=e.defaultView,{top:i.top+r.pageYOffset-n.clientTop,left:i.left+r.pageXOffset-n.clientLeft}):{top:0,left:0}},position:function(){if(this[0]){var t,e,n=this[0],i={top:0,left:0};return"fixed"===yt.css(n,"position")?e=n.getBoundingClientRect():(t=this.offsetParent(),e=this.offset(),l(t[0],"html")||(i=t.offset()),i={top:i.top+yt.css(t[0],"borderTopWidth",!0),left:i.left+yt.css(t[0],"borderLeftWidth",!0)}),{top:e.top-i.top-yt.css(n,"marginTop",!0),left:e.left-i.left-yt.css(n,"marginLeft",!0)}}},offsetParent:function(){return this.map(function(){for(var t=this.offsetParent;t&&"static"===yt.css(t,"position");)t=t.offsetParent;return t||Jt})}}),yt.each({scrollLeft:"pageXOffset",scrollTop:"pageYOffset"},function(t,e){var n="pageYOffset"===e;yt.fn[t]=function(i){return jt(this,function(t,i,r){var o;if(yt.isWindow(t)?o=t:9===t.nodeType&&(o=t.defaultView),void 0===r)return o?o[e]:t[i];o?o.scrollTo(n?o.pageXOffset:r,n?r:o.pageYOffset):t[i]=r},t,i,arguments.length)}}),yt.each(["top","left"],function(t,e){yt.cssHooks[e]=H(vt.pixelPosition,function(t,n){if(n)return n=j(t,e),ce.test(n)?yt(t).position()[e]+"px":n})}),yt.each({Height:"height",Width:"width"},function(t,e){yt.each({padding:"inner"+t,content:e,"":"outer"+t},function(n,i){yt.fn[i]=function(r,o){var s=arguments.length&&(n||"boolean"!=typeof r),a=n||(!0===r||!0===o?"margin":"border");return jt(this,function(e,n,r){var o;return yt.isWindow(e)?0===i.indexOf("outer")?e["inner"+t]:e.document.documentElement["client"+t]:9===e.nodeType?(o=e.documentElement,Math.max(e.body["scroll"+t],o["scroll"+t],e.body["offset"+t],o["offset"+t],o["client"+t])):void 0===r?yt.css(e,n,a):yt.style(e,n,r,a)},e,s?r:void 0,s)}})}),yt.fn.extend({bind:function(t,e,n){return this.on(t,null,e,n)},unbind:function(t,e){return this.off(t,null,e)},delegate:function(t,e,n,i){return this.on(e,t,n,i)},undelegate:function(t,e,n){return 1===arguments.length?this.off(t,"**"):this.off(e,t||"**",n)}}),yt.holdReady=function(t){t?yt.readyWait++:yt.ready(!0)},yt.isArray=Array.isArray,yt.parseJSON=JSON.parse,yt.nodeName=l,i=[],void 0!==(r=function(){return yt}.apply(e,i))&&(t.exports=r);var Ye=n.jQuery,Qe=n.$;return yt.noConflict=function(t){return n.$===yt&&(n.$=Qe),t&&n.jQuery===yt&&(n.jQuery=Ye),yt},o||(n.jQuery=n.$=yt),yt})},function(t,e,n){var i,r;!function(o,s){i=s,void 0!==(r="function"==typeof i?i.call(e,n,e,t):i)&&(t.exports=r)}(0,function(t,e,n){"use strict";function i(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function r(t){var e=t.getBoundingClientRect(),n={};for(var i in e)n[i]=e[i];if(t.ownerDocument!==document){var o=t.ownerDocument.defaultView.frameElement;if(o){var s=r(o);n.top+=s.top,n.bottom+=s.top,n.left+=s.left,n.right+=s.left}}return n}function o(t){var e=getComputedStyle(t)||{},n=e.position,i=[];if("fixed"===n)return[t];for(var r=t;(r=r.parentNode)&&r&&1===r.nodeType;){var o=void 0;try{o=getComputedStyle(r)}catch(t){}if(void 0===o||null===o)return i.push(r),i;var s=o,a=s.overflow,l=s.overflowX;/(auto|scroll)/.test(a+s.overflowY+l)&&("absolute"!==n||["relative","absolute","fixed"].indexOf(o.position)>=0)&&i.push(r)}return i.push(t.ownerDocument.body),t.ownerDocument!==document&&i.push(t.ownerDocument.defaultView),i}function s(){x&&document.body.removeChild(x),x=null}function a(t){var e=void 0;t===document?(e=document,t=document.documentElement):e=t.ownerDocument;var n=e.documentElement,i=r(t),o=S();return i.top-=o.top,i.left-=o.left,void 0===i.width&&(i.width=document.body.scrollWidth-i.left-i.right),void 0===i.height&&(i.height=document.body.scrollHeight-i.top-i.bottom),i.top=i.top-n.clientTop,i.left=i.left-n.clientLeft,i.right=e.body.clientWidth-i.width-i.left,i.bottom=e.body.clientHeight-i.height-i.top,i}function l(t){return t.offsetParent||document.documentElement}function c(){if(D)return D;var t=document.createElement("div");t.style.width="100%",t.style.height="200px";var e=document.createElement("div");u(e.style,{position:"absolute",top:0,left:0,pointerEvents:"none",visibility:"hidden",width:"200px",height:"150px",overflow:"hidden"}),e.appendChild(t),document.body.appendChild(e);var n=t.offsetWidth;e.style.overflow="scroll";var i=t.offsetWidth;n===i&&(i=e.clientWidth),document.body.removeChild(e);var r=n-i;return D={width:r,height:r}}function u(){var t=arguments.length<=0||void 0===arguments[0]?{}:arguments[0],e=[];return Array.prototype.push.apply(e,arguments),e.slice(1).forEach(function(e){if(e)for(var n in e)({}).hasOwnProperty.call(e,n)&&(t[n]=e[n])}),t}function d(t,e){if(void 0!==t.classList)e.split(" ").forEach(function(e){e.trim()&&t.classList.remove(e)});else{var n=new RegExp("(^| )"+e.split(" ").join("|")+"( |$)","gi"),i=f(t).replace(n," ");g(t,i)}}function p(t,e){if(void 0!==t.classList)e.split(" ").forEach(function(e){e.trim()&&t.classList.add(e)});else{d(t,e);var n=f(t)+" "+e;g(t,n)}}function h(t,e){if(void 0!==t.classList)return t.classList.contains(e);var n=f(t);return new RegExp("(^| )"+e+"( |$)","gi").test(n)}function f(t){return t.className instanceof t.ownerDocument.defaultView.SVGAnimatedString?t.className.baseVal:t.className}function g(t,e){t.setAttribute("class",e)}function m(t,e,n){n.forEach(function(n){-1===e.indexOf(n)&&h(t,n)&&d(t,n)}),e.forEach(function(e){h(t,e)||p(t,e)})}function i(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}function v(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)}function y(t,e){var n=arguments.length<=2||void 0===arguments[2]?1:arguments[2];return t+n>=e&&e>=t-n}function _(){return"undefined"!=typeof performance&&void 0!==performance.now?performance.now():+new Date}function b(){for(var t={top:0,left:0},e=arguments.length,n=Array(e),i=0;i<e;i++)n[i]=arguments[i];return n.forEach(function(e){var n=e.top,i=e.left;"string"==typeof n&&(n=parseFloat(n,10)),"string"==typeof i&&(i=parseFloat(i,10)),t.top+=n,t.left+=i}),t}function w(t,e){return"string"==typeof t.left&&-1!==t.left.indexOf("%")&&(t.left=parseFloat(t.left,10)/100*e.width),"string"==typeof t.top&&-1!==t.top.indexOf("%")&&(t.top=parseFloat(t.top,10)/100*e.height),t}function E(t,e){return"scrollParent"===e?e=t.scrollParents[0]:"window"===e&&(e=[pageXOffset,pageYOffset,innerWidth+pageXOffset,innerHeight+pageYOffset]),e===document&&(e=e.documentElement),void 0!==e.nodeType&&function(){var t=e,n=a(e),i=n,r=getComputedStyle(e);if(e=[i.left,i.top,n.width+i.left,n.height+i.top],t.ownerDocument!==document){var o=t.ownerDocument.defaultView;e[0]+=o.pageXOffset,e[1]+=o.pageYOffset,e[2]+=o.pageXOffset,e[3]+=o.pageYOffset}Y.forEach(function(t,n){t=t[0].toUpperCase()+t.substr(1),"Top"===t||"Left"===t?e[n]+=parseFloat(r["border"+t+"Width"]):e[n]-=parseFloat(r["border"+t+"Width"])})}(),e}var C=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}(),T=void 0;void 0===T&&(T={modules:[]});var x=null,A=function(){var t=0;return function(){return++t}}(),O={},S=function(){var t=x;t&&document.body.contains(t)||(t=document.createElement("div"),t.setAttribute("data-tether-id",A()),u(t.style,{top:0,left:0,position:"absolute"}),document.body.appendChild(t),x=t);var e=t.getAttribute("data-tether-id");return void 0===O[e]&&(O[e]=r(t),N(function(){delete O[e]})),O[e]},D=null,I=[],N=function(t){I.push(t)},k=function(){for(var t=void 0;t=I.pop();)t()},L=function(){function t(){i(this,t)}return C(t,[{key:"on",value:function(t,e,n){var i=!(arguments.length<=3||void 0===arguments[3])&&arguments[3];void 0===this.bindings&&(this.bindings={}),void 0===this.bindings[t]&&(this.bindings[t]=[]),this.bindings[t].push({handler:e,ctx:n,once:i})}},{key:"once",value:function(t,e,n){this.on(t,e,n,!0)}},{key:"off",value:function(t,e){if(void 0!==this.bindings&&void 0!==this.bindings[t])if(void 0===e)delete this.bindings[t];else for(var n=0;n<this.bindings[t].length;)this.bindings[t][n].handler===e?this.bindings[t].splice(n,1):++n}},{key:"trigger",value:function(t){if(void 0!==this.bindings&&this.bindings[t]){for(var e=0,n=arguments.length,i=Array(n>1?n-1:0),r=1;r<n;r++)i[r-1]=arguments[r];for(;e<this.bindings[t].length;){var o=this.bindings[t][e],s=o.handler,a=o.ctx,l=o.once,c=a;void 0===c&&(c=this),s.apply(c,i),l?this.bindings[t].splice(e,1):++e}}}}]),t}();T.Utils={getActualBoundingClientRect:r,getScrollParents:o,getBounds:a,getOffsetParent:l,extend:u,addClass:p,removeClass:d,hasClass:h,updateClasses:m,defer:N,flush:k,uniqueId:A,Evented:L,getScrollBarSize:c,removeUtilElements:s};var P=function(){function t(t,e){var n=[],i=!0,r=!1,o=void 0;try{for(var s,a=t[Symbol.iterator]();!(i=(s=a.next()).done)&&(n.push(s.value),!e||n.length!==e);i=!0);}catch(t){r=!0,o=t}finally{try{!i&&a.return&&a.return()}finally{if(r)throw o}}return n}return function(e,n){if(Array.isArray(e))return e;if(Symbol.iterator in Object(e))return t(e,n);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),C=function(){function t(t,e){for(var n=0;n<e.length;n++){var i=e[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(t,i.key,i)}}return function(e,n,i){return n&&t(e.prototype,n),i&&t(e,i),e}}(),$=function(t,e,n){for(var i=!0;i;){var r=t,o=e,s=n;i=!1,null===r&&(r=Function.prototype);var a=Object.getOwnPropertyDescriptor(r,o);if(void 0!==a){if("value"in a)return a.value;var l=a.get;if(void 0===l)return;return l.call(s)}var c=Object.getPrototypeOf(r);if(null===c)return;t=c,e=o,n=s,i=!0,a=c=void 0}};if(void 0===T)throw new Error("You must include the utils.js file before tether.js");var j=T.Utils,o=j.getScrollParents,a=j.getBounds,l=j.getOffsetParent,u=j.extend,p=j.addClass,d=j.removeClass,m=j.updateClasses,N=j.defer,k=j.flush,c=j.getScrollBarSize,s=j.removeUtilElements,H=function(){if("undefined"==typeof document)return"";for(var t=document.createElement("div"),e=["transform","WebkitTransform","OTransform","MozTransform","msTransform"],n=0;n<e.length;++n){var i=e[n];if(void 0!==t.style[i])return i}}(),R=[],M=function(){R.forEach(function(t){t.position(!1)}),k()};!function(){var t=null,e=null,n=null,i=function i(){if(void 0!==e&&e>16)return e=Math.min(e-16,250),void(n=setTimeout(i,250));void 0!==t&&_()-t<10||(null!=n&&(clearTimeout(n),n=null),t=_(),M(),e=_()-t)};"undefined"!=typeof window&&void 0!==window.addEventListener&&["resize","scroll","touchmove"].forEach(function(t){window.addEventListener(t,i)})}();var W={center:"center",left:"right",right:"left"},q={middle:"middle",top:"bottom",bottom:"top"},F={top:0,left:0,middle:"50%",center:"50%",bottom:"100%",right:"100%"},U=function(t,e){var n=t.left,i=t.top;return"auto"===n&&(n=W[e.left]),"auto"===i&&(i=q[e.top]),{left:n,top:i}},B=function(t){var e=t.left,n=t.top;return void 0!==F[t.left]&&(e=F[t.left]),void 0!==F[t.top]&&(n=F[t.top]),{left:e,top:n}},V=function(t){var e=t.split(" "),n=P(e,2);return{top:n[0],left:n[1]}},z=V,K=function(t){function e(t){var n=this;i(this,e),$(Object.getPrototypeOf(e.prototype),"constructor",this).call(this),this.position=this.position.bind(this),R.push(this),this.history=[],this.setOptions(t,!1),T.modules.forEach(function(t){void 0!==t.initialize&&t.initialize.call(n)}),this.position()}return v(e,t),C(e,[{key:"getClass",value:function(){var t=arguments.length<=0||void 0===arguments[0]?"":arguments[0],e=this.options.classes;return void 0!==e&&e[t]?this.options.classes[t]:this.options.classPrefix?this.options.classPrefix+"-"+t:t}},{key:"setOptions",value:function(t){var e=this,n=arguments.length<=1||void 0===arguments[1]||arguments[1],i={offset:"0 0",targetOffset:"0 0",targetAttachment:"auto auto",classPrefix:"tether"};this.options=u(i,t);var r=this.options,s=r.element,a=r.target,l=r.targetModifier;if(this.element=s,this.target=a,this.targetModifier=l,"viewport"===this.target?(this.target=document.body,this.targetModifier="visible"):"scroll-handle"===this.target&&(this.target=document.body,this.targetModifier="scroll-handle"),["element","target"].forEach(function(t){if(void 0===e[t])throw new Error("Tether Error: Both element and target must be defined");void 0!==e[t].jquery?e[t]=e[t][0]:"string"==typeof e[t]&&(e[t]=document.querySelector(e[t]))}),p(this.element,this.getClass("element")),!1!==this.options.addTargetClasses&&p(this.target,this.getClass("target")),!this.options.attachment)throw new Error("Tether Error: You must provide an attachment");this.targetAttachment=z(this.options.targetAttachment),this.attachment=z(this.options.attachment),this.offset=V(this.options.offset),this.targetOffset=V(this.options.targetOffset),void 0!==this.scrollParents&&this.disable(),"scroll-handle"===this.targetModifier?this.scrollParents=[this.target]:this.scrollParents=o(this.target),!1!==this.options.enabled&&this.enable(n)}},{key:"getTargetBounds",value:function(){if(void 0===this.targetModifier)return a(this.target);if("visible"===this.targetModifier){if(this.target===document.body)return{top:pageYOffset,left:pageXOffset,height:innerHeight,width:innerWidth};var t=a(this.target),e={height:t.height,width:t.width,top:t.top,left:t.left};return e.height=Math.min(e.height,t.height-(pageYOffset-t.top)),e.height=Math.min(e.height,t.height-(t.top+t.height-(pageYOffset+innerHeight))),e.height=Math.min(innerHeight,e.height),e.height-=2,e.width=Math.min(e.width,t.width-(pageXOffset-t.left)),e.width=Math.min(e.width,t.width-(t.left+t.width-(pageXOffset+innerWidth))),e.width=Math.min(innerWidth,e.width),e.width-=2,e.top<pageYOffset&&(e.top=pageYOffset),e.left<pageXOffset&&(e.left=pageXOffset),e}if("scroll-handle"===this.targetModifier){var t=void 0,n=this.target;n===document.body?(n=document.documentElement,t={left:pageXOffset,top:pageYOffset,height:innerHeight,width:innerWidth}):t=a(n);var i=getComputedStyle(n),r=n.scrollWidth>n.clientWidth||[i.overflow,i.overflowX].indexOf("scroll")>=0||this.target!==document.body,o=0;r&&(o=15);var s=t.height-parseFloat(i.borderTopWidth)-parseFloat(i.borderBottomWidth)-o,e={width:15,height:.975*s*(s/n.scrollHeight),left:t.left+t.width-parseFloat(i.borderLeftWidth)-15},l=0;s<408&&this.target===document.body&&(l=-11e-5*Math.pow(s,2)-.00727*s+22.58),this.target!==document.body&&(e.height=Math.max(e.height,24));var c=this.target.scrollTop/(n.scrollHeight-s);return e.top=c*(s-e.height-l)+t.top+parseFloat(i.borderTopWidth),this.target===document.body&&(e.height=Math.max(e.height,24)),e}}},{key:"clearCache",value:function(){this._cache={}}},{key:"cache",value:function(t,e){return void 0===this._cache&&(this._cache={}),void 0===this._cache[t]&&(this._cache[t]=e.call(this)),this._cache[t]}},{key:"enable",value:function(){var t=this,e=arguments.length<=0||void 0===arguments[0]||arguments[0];!1!==this.options.addTargetClasses&&p(this.target,this.getClass("enabled")),p(this.element,this.getClass("enabled")),this.enabled=!0,this.scrollParents.forEach(function(e){e!==t.target.ownerDocument&&e.addEventListener("scroll",t.position)}),e&&this.position()}},{key:"disable",value:function(){var t=this;d(this.target,this.getClass("enabled")),d(this.element,this.getClass("enabled")),this.enabled=!1,void 0!==this.scrollParents&&this.scrollParents.forEach(function(e){e.removeEventListener("scroll",t.position)})}},{key:"destroy",value:function(){var t=this;this.disable(),R.forEach(function(e,n){e===t&&R.splice(n,1)}),0===R.length&&s()}},{key:"updateAttachClasses",value:function(t,e){var n=this;t=t||this.attachment,e=e||this.targetAttachment;var i=["left","top","bottom","right","middle","center"];void 0!==this._addAttachClasses&&this._addAttachClasses.length&&this._addAttachClasses.splice(0,this._addAttachClasses.length),void 0===this._addAttachClasses&&(this._addAttachClasses=[]);var r=this._addAttachClasses;t.top&&r.push(this.getClass("element-attached")+"-"+t.top),t.left&&r.push(this.getClass("element-attached")+"-"+t.left),e.top&&r.push(this.getClass("target-attached")+"-"+e.top),e.left&&r.push(this.getClass("target-attached")+"-"+e.left);var o=[];i.forEach(function(t){o.push(n.getClass("element-attached")+"-"+t),o.push(n.getClass("target-attached")+"-"+t)}),N(function(){void 0!==n._addAttachClasses&&(m(n.element,n._addAttachClasses,o),!1!==n.options.addTargetClasses&&m(n.target,n._addAttachClasses,o),delete n._addAttachClasses)})}},{key:"position",value:function(){var t=this,e=arguments.length<=0||void 0===arguments[0]||arguments[0];if(this.enabled){this.clearCache();var n=U(this.targetAttachment,this.attachment);this.updateAttachClasses(this.attachment,n);var i=this.cache("element-bounds",function(){return a(t.element)}),r=i.width,o=i.height;if(0===r&&0===o&&void 0!==this.lastSize){var s=this.lastSize;r=s.width,o=s.height}else this.lastSize={width:r,height:o};var u=this.cache("target-bounds",function(){return t.getTargetBounds()}),d=u,p=w(B(this.attachment),{width:r,height:o}),h=w(B(n),d),f=w(this.offset,{width:r,height:o}),g=w(this.targetOffset,d);p=b(p,f),h=b(h,g);for(var m=u.left+h.left-p.left,v=u.top+h.top-p.top,y=0;y<T.modules.length;++y){var _=T.modules[y],E=_.position.call(this,{left:m,top:v,targetAttachment:n,targetPos:u,elementPos:i,offset:p,targetOffset:h,manualOffset:f,manualTargetOffset:g,scrollbarSize:O,attachment:this.attachment});if(!1===E)return!1;void 0!==E&&"object"==typeof E&&(v=E.top,m=E.left)}var C={page:{top:v,left:m},viewport:{top:v-pageYOffset,bottom:pageYOffset-v-o+innerHeight,left:m-pageXOffset,right:pageXOffset-m-r+innerWidth}},x=this.target.ownerDocument,A=x.defaultView,O=void 0;return A.innerHeight>x.documentElement.clientHeight&&(O=this.cache("scrollbar-size",c),C.viewport.bottom-=O.height),A.innerWidth>x.documentElement.clientWidth&&(O=this.cache("scrollbar-size",c),C.viewport.right-=O.width),-1!==["","static"].indexOf(x.body.style.position)&&-1!==["","static"].indexOf(x.body.parentElement.style.position)||(C.page.bottom=x.body.scrollHeight-v-o,C.page.right=x.body.scrollWidth-m-r),void 0!==this.options.optimizations&&!1!==this.options.optimizations.moveElement&&void 0===this.targetModifier&&function(){var e=t.cache("target-offsetparent",function(){return l(t.target)}),n=t.cache("target-offsetparent-bounds",function(){return a(e)}),i=getComputedStyle(e),r=n,o={};if(["Top","Left","Bottom","Right"].forEach(function(t){o[t.toLowerCase()]=parseFloat(i["border"+t+"Width"])}),n.right=x.body.scrollWidth-n.left-r.width+o.right,n.bottom=x.body.scrollHeight-n.top-r.height+o.bottom,C.page.top>=n.top+o.top&&C.page.bottom>=n.bottom&&C.page.left>=n.left+o.left&&C.page.right>=n.right){var s=e.scrollTop,c=e.scrollLeft;C.offset={top:C.page.top-n.top+s-o.top,left:C.page.left-n.left+c-o.left}}}(),this.move(C),this.history.unshift(C),this.history.length>3&&this.history.pop(),e&&k(),!0}}},{key:"move",value:function(t){var e=this;if(void 0!==this.element.parentNode){var n={};for(var i in t){n[i]={};for(var r in t[i]){for(var o=!1,s=0;s<this.history.length;++s){var a=this.history[s];if(void 0!==a[i]&&!y(a[i][r],t[i][r])){o=!0;break}}o||(n[i][r]=!0)}}var c={top:"",left:"",right:"",bottom:""},d=function(t,n){if(!1!==(void 0!==e.options.optimizations?e.options.optimizations.gpu:null)){var i=void 0,r=void 0;t.top?(c.top=0,i=n.top):(c.bottom=0,i=-n.bottom),t.left?(c.left=0,r=n.left):(c.right=0,r=-n.right),window.matchMedia&&(window.matchMedia("only screen and (min-resolution: 1.3dppx)").matches||window.matchMedia("only screen and (-webkit-min-device-pixel-ratio: 1.3)").matches||(r=Math.round(r),i=Math.round(i))),c[H]="translateX("+r+"px) translateY("+i+"px)","msTransform"!==H&&(c[H]+=" translateZ(0)")}else t.top?c.top=n.top+"px":c.bottom=n.bottom+"px",t.left?c.left=n.left+"px":c.right=n.right+"px"},p=!1;if((n.page.top||n.page.bottom)&&(n.page.left||n.page.right)?(c.position="absolute",d(n.page,t.page)):(n.viewport.top||n.viewport.bottom)&&(n.viewport.left||n.viewport.right)?(c.position="fixed",d(n.viewport,t.viewport)):void 0!==n.offset&&n.offset.top&&n.offset.left?function(){c.position="absolute";var i=e.cache("target-offsetparent",function(){return l(e.target)});l(e.element)!==i&&N(function(){e.element.parentNode.removeChild(e.element),i.appendChild(e.element)}),d(n.offset,t.offset),p=!0}():(c.position="absolute",d({top:!0,left:!0},t.page)),!p)if(this.options.bodyElement)this.options.bodyElement.appendChild(this.element);else{for(var h=!0,f=this.element.parentNode;f&&1===f.nodeType&&"BODY"!==f.tagName;){if("static"!==getComputedStyle(f).position){h=!1;break}f=f.parentNode}h||(this.element.parentNode.removeChild(this.element),this.element.ownerDocument.body.appendChild(this.element))}var g={},m=!1;for(var r in c){var v=c[r];this.element.style[r]!==v&&(m=!0,g[r]=v)}m&&N(function(){u(e.element.style,g),e.trigger("repositioned")})}}}]),e}(L);K.modules=[],T.position=M;var G=u(K,T),P=function(){function t(t,e){var n=[],i=!0,r=!1,o=void 0;try{for(var s,a=t[Symbol.iterator]();!(i=(s=a.next()).done)&&(n.push(s.value),!e||n.length!==e);i=!0);}catch(t){r=!0,o=t}finally{try{!i&&a.return&&a.return()}finally{if(r)throw o}}return n}return function(e,n){if(Array.isArray(e))return e;if(Symbol.iterator in Object(e))return t(e,n);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),j=T.Utils,a=j.getBounds,u=j.extend,m=j.updateClasses,N=j.defer,Y=["left","top","right","bottom"];T.modules.push({position:function(t){var e=this,n=t.top,i=t.left,r=t.targetAttachment;if(!this.options.constraints)return!0;var o=this.cache("element-bounds",function(){return a(e.element)}),s=o.height,l=o.width;if(0===l&&0===s&&void 0!==this.lastSize){var c=this.lastSize;l=c.width,s=c.height}var d=this.cache("target-bounds",function(){return e.getTargetBounds()}),p=d.height,h=d.width,f=[this.getClass("pinned"),this.getClass("out-of-bounds")];this.options.constraints.forEach(function(t){var e=t.outOfBoundsClass,n=t.pinnedClass;e&&f.push(e),n&&f.push(n)}),f.forEach(function(t){["left","top","right","bottom"].forEach(function(e){f.push(t+"-"+e)})});var g=[],v=u({},r),y=u({},this.attachment);return this.options.constraints.forEach(function(t){var o=t.to,a=t.attachment,c=t.pin;void 0===a&&(a="");var u=void 0,d=void 0;if(a.indexOf(" ")>=0){var f=a.split(" "),m=P(f,2);d=m[0],u=m[1]}else u=d=a;var _=E(e,o);"target"!==d&&"both"!==d||(n<_[1]&&"top"===v.top&&(n+=p,v.top="bottom"),n+s>_[3]&&"bottom"===v.top&&(n-=p,v.top="top")),"together"===d&&("top"===v.top&&("bottom"===y.top&&n<_[1]?(n+=p,v.top="bottom",n+=s,y.top="top"):"top"===y.top&&n+s>_[3]&&n-(s-p)>=_[1]&&(n-=s-p,v.top="bottom",y.top="bottom")),"bottom"===v.top&&("top"===y.top&&n+s>_[3]?(n-=p,v.top="top",n-=s,y.top="bottom"):"bottom"===y.top&&n<_[1]&&n+(2*s-p)<=_[3]&&(n+=s-p,v.top="top",y.top="top")),"middle"===v.top&&(n+s>_[3]&&"top"===y.top?(n-=s,y.top="bottom"):n<_[1]&&"bottom"===y.top&&(n+=s,y.top="top"))),"target"!==u&&"both"!==u||(i<_[0]&&"left"===v.left&&(i+=h,v.left="right"),i+l>_[2]&&"right"===v.left&&(i-=h,v.left="left")),"together"===u&&(i<_[0]&&"left"===v.left?"right"===y.left?(i+=h,v.left="right",i+=l,y.left="left"):"left"===y.left&&(i+=h,v.left="right",i-=l,y.left="right"):i+l>_[2]&&"right"===v.left?"left"===y.left?(i-=h,v.left="left",i-=l,y.left="right"):"right"===y.left&&(i-=h,v.left="left",i+=l,y.left="left"):"center"===v.left&&(i+l>_[2]&&"left"===y.left?(i-=l,y.left="right"):i<_[0]&&"right"===y.left&&(i+=l,y.left="left"))),"element"!==d&&"both"!==d||(n<_[1]&&"bottom"===y.top&&(n+=s,y.top="top"),n+s>_[3]&&"top"===y.top&&(n-=s,y.top="bottom")),"element"!==u&&"both"!==u||(i<_[0]&&("right"===y.left?(i+=l,y.left="left"):"center"===y.left&&(i+=l/2,y.left="left")),i+l>_[2]&&("left"===y.left?(i-=l,y.left="right"):"center"===y.left&&(i-=l/2,y.left="right"))),"string"==typeof c?c=c.split(",").map(function(t){return t.trim()}):!0===c&&(c=["top","left","right","bottom"]),c=c||[];var b=[],w=[];n<_[1]&&(c.indexOf("top")>=0?(n=_[1],b.push("top")):w.push("top")),n+s>_[3]&&(c.indexOf("bottom")>=0?(n=_[3]-s,b.push("bottom")):w.push("bottom")),i<_[0]&&(c.indexOf("left")>=0?(i=_[0],b.push("left")):w.push("left")),i+l>_[2]&&(c.indexOf("right")>=0?(i=_[2]-l,b.push("right")):w.push("right")),b.length&&function(){var t=void 0;t=void 0!==e.options.pinnedClass?e.options.pinnedClass:e.getClass("pinned"),g.push(t),b.forEach(function(e){g.push(t+"-"+e)})}(),w.length&&function(){var t=void 0;t=void 0!==e.options.outOfBoundsClass?e.options.outOfBoundsClass:e.getClass("out-of-bounds"),g.push(t),w.forEach(function(e){g.push(t+"-"+e)})}(),(b.indexOf("left")>=0||b.indexOf("right")>=0)&&(y.left=v.left=!1),(b.indexOf("top")>=0||b.indexOf("bottom")>=0)&&(y.top=v.top=!1),v.top===r.top&&v.left===r.left&&y.top===e.attachment.top&&y.left===e.attachment.left||(e.updateAttachClasses(y,v),e.trigger("update",{attachment:y,targetAttachment:v}))}),N(function(){!1!==e.options.addTargetClasses&&m(e.target,g,f),m(e.element,g,f)}),{top:n,left:i}}});var j=T.Utils,a=j.getBounds,m=j.updateClasses,N=j.defer;T.modules.push({position:function(t){var e=this,n=t.top,i=t.left,r=this.cache("element-bounds",function(){return a(e.element)}),o=r.height,s=r.width,l=this.getTargetBounds(),c=n+o,u=i+s,d=[];n<=l.bottom&&c>=l.top&&["left","right"].forEach(function(t){var e=l[t];e!==i&&e!==u||d.push(t)}),i<=l.right&&u>=l.left&&["top","bottom"].forEach(function(t){var e=l[t];e!==n&&e!==c||d.push(t)});var p=[],h=[],f=["left","top","right","bottom"];return p.push(this.getClass("abutted")),f.forEach(function(t){p.push(e.getClass("abutted")+"-"+t)}),d.length&&h.push(this.getClass("abutted")),d.forEach(function(t){h.push(e.getClass("abutted")+"-"+t)}),N(function(){!1!==e.options.addTargetClasses&&m(e.target,h,p),m(e.element,h,p)}),!0}});var P=function(){function t(t,e){var n=[],i=!0,r=!1,o=void 0;try{for(var s,a=t[Symbol.iterator]();!(i=(s=a.next()).done)&&(n.push(s.value),!e||n.length!==e);i=!0);}catch(t){r=!0,o=t}finally{try{!i&&a.return&&a.return()}finally{if(r)throw o}}return n}return function(e,n){if(Array.isArray(e))return e;if(Symbol.iterator in Object(e))return t(e,n);throw new TypeError("Invalid attempt to destructure non-iterable instance")}}();return T.modules.push({position:function(t){var e=t.top,n=t.left;if(this.options.shift){var i=this.options.shift;"function"==typeof this.options.shift&&(i=this.options.shift.call(this,{top:e,left:n}));var r=void 0,o=void 0;if("string"==typeof i){i=i.split(" "),i[1]=i[1]||i[0];var s=i,a=P(s,2);r=a[0],o=a[1],r=parseFloat(r,10),o=parseFloat(o,10)}else r=i.top,o=i.left;return e+=r,n+=o,{top:e,left:n}}}}),G})},function(t,e,n){n(2),t.exports=n(3)}]);
 //# sourceMappingURL=prestashop-ui-kit.js.map
 
 /***/ }),
-/* 223 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
@@ -57174,23 +55561,23 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/* global window, exports, define */
 
 
 /***/ }),
-/* 224 */,
-/* 225 */,
-/* 226 */,
-/* 227 */,
-/* 228 */,
-/* 229 */,
-/* 230 */,
-/* 231 */,
-/* 232 */,
-/* 233 */,
-/* 234 */,
-/* 235 */,
-/* 236 */
+/* 254 */,
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */,
+/* 260 */,
+/* 261 */,
+/* 262 */,
+/* 263 */,
+/* 264 */,
+/* 265 */,
+/* 266 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__notifications_js__ = __webpack_require__(238);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__notifications_js__ = __webpack_require__(268);
 /**
  * 2007-2017 PrestaShop
  *
@@ -57344,11 +55731,11 @@ class Header {
 
 
 /***/ }),
-/* 237 */
+/* 267 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobile_detect__ = __webpack_require__(301);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobile_detect__ = __webpack_require__(333);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_mobile_detect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_mobile_detect__);
 /**
  * 2007-2017 PrestaShop
@@ -57490,7 +55877,7 @@ class NavBar {
 
 
 /***/ }),
-/* 238 */
+/* 268 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57598,7 +55985,7 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 239 */
+/* 269 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57684,7 +56071,7 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 240 */
+/* 270 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57735,7 +56122,7 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 241 */
+/* 271 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57925,17 +56312,17 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 242 */
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__product_header__ = __webpack_require__(245);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__product_search_autocomplete__ = __webpack_require__(246);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__category_tree__ = __webpack_require__(240);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__attributes__ = __webpack_require__(239);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__product_bulk_combinations__ = __webpack_require__(244);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nested_categories__ = __webpack_require__(243);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__combination__ = __webpack_require__(241);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__product_header__ = __webpack_require__(275);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__product_search_autocomplete__ = __webpack_require__(276);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__category_tree__ = __webpack_require__(270);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__attributes__ = __webpack_require__(269);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__product_bulk_combinations__ = __webpack_require__(274);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nested_categories__ = __webpack_require__(273);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__combination__ = __webpack_require__(271);
 /**
  * 2007-2017 PrestaShop
  *
@@ -57992,7 +56379,7 @@ $(() => {
 
 
 /***/ }),
-/* 243 */
+/* 273 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58062,7 +56449,7 @@ $(() => {
 
 
 /***/ }),
-/* 244 */
+/* 274 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58356,7 +56743,7 @@ class Combination {
 
 
 /***/ }),
-/* 245 */
+/* 275 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58426,11 +56813,11 @@ class Combination {
 
 
 /***/ }),
-/* 246 */
+/* 276 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_typeahead_js__ = __webpack_require__(310);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_typeahead_js__ = __webpack_require__(370);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_typeahead_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_typeahead_js__);
 /**
  * 2007-2017 PrestaShop
@@ -58565,15 +56952,15 @@ class Combination {
 
 
 /***/ }),
-/* 247 */
+/* 277 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__messages_visibility__ = __webpack_require__(252);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__messages_edition__ = __webpack_require__(248);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__messages_pagination__ = __webpack_require__(249);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__messages_tree__ = __webpack_require__(251);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__messages_search__ = __webpack_require__(250);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__messages_visibility__ = __webpack_require__(282);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__messages_edition__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__messages_pagination__ = __webpack_require__(279);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__messages_tree__ = __webpack_require__(281);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__messages_search__ = __webpack_require__(280);
 /**
  * 2007-2017 PrestaShop
  *
@@ -58613,7 +57000,7 @@ $(() => {
 
 
 /***/ }),
-/* 248 */
+/* 278 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58696,11 +57083,11 @@ $(() => {
 
 
 /***/ }),
-/* 249 */
+/* 279 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__multi_pagination__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__multi_pagination__ = __webpack_require__(283);
 /**
  * 2007-2017 PrestaShop
  *
@@ -58828,11 +57215,11 @@ $(() => {
 
 
 /***/ }),
-/* 250 */
+/* 280 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jets_jets__ = __webpack_require__(299);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jets_jets__ = __webpack_require__(331);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_jets_jets___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_jets_jets__);
 /**
  * 2007-2017 PrestaShop
@@ -58913,7 +57300,7 @@ $(() => {
 
 
 /***/ }),
-/* 251 */
+/* 281 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59062,7 +57449,7 @@ $(() => {
 
 
 /***/ }),
-/* 252 */
+/* 282 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59218,7 +57605,7 @@ $(() => {
 
 
 /***/ }),
-/* 253 */
+/* 283 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -59352,58 +57739,13 @@ function checkCurrentPage(current) {
 
 
 /***/ }),
-/* 254 */,
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */,
-/* 260 */,
-/* 261 */,
-/* 262 */,
-/* 263 */,
-/* 264 */,
-/* 265 */,
-/* 266 */,
-/* 267 */,
-/* 268 */,
-/* 269 */,
-/* 270 */,
-/* 271 */,
-/* 272 */,
-/* 273 */,
-/* 274 */,
-/* 275 */,
-/* 276 */,
-/* 277 */,
-/* 278 */,
-/* 279 */,
-/* 280 */,
-/* 281 */,
-/* 282 */,
-/* 283 */,
 /* 284 */,
 /* 285 */,
 /* 286 */,
 /* 287 */,
-/* 288 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 289 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 290 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
+/* 288 */,
+/* 289 */,
+/* 290 */,
 /* 291 */,
 /* 292 */,
 /* 293 */,
@@ -59412,7 +57754,73 @@ function checkCurrentPage(current) {
 /* 296 */,
 /* 297 */,
 /* 298 */,
-/* 299 */
+/* 299 */,
+/* 300 */,
+/* 301 */,
+/* 302 */,
+/* 303 */,
+/* 304 */,
+/* 305 */,
+/* 306 */,
+/* 307 */,
+/* 308 */,
+/* 309 */,
+/* 310 */,
+/* 311 */,
+/* 312 */,
+/* 313 */,
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */,
+/* 319 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 320 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 321 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 322 */,
+/* 323 */,
+/* 324 */,
+/* 325 */,
+/* 326 */,
+/* 327 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {var win;
+
+if (typeof window !== "undefined") {
+    win = window;
+} else if (typeof global !== "undefined") {
+    win = global;
+} else if (typeof self !== "undefined"){
+    win = self;
+} else {
+    win = {};
+}
+
+module.exports = win;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ }),
+/* 328 */,
+/* 329 */,
+/* 330 */,
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*! Jets.js - v0.11.0 - 2016-07-30
@@ -59579,12 +57987,12 @@ function checkCurrentPage(current) {
 
 
 /***/ }),
-/* 300 */,
-/* 301 */
+/* 332 */,
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // THIS FILE IS GENERATED - DO NOT EDIT!
-/*!mobile-detect v1.3.7 2017-09-06*/
+/*!mobile-detect v1.3.6 2017-04-05*/
 /*global module:false, define:false*/
 /*jshint latedef:false*/
 /*!@license Copyright 2013, Heinrich Goebl, License: MIT, see https://github.com/hgoebl/mobile-detect.js*/
@@ -59625,11 +58033,11 @@ define(function () {
     "tablets": {
         "iPad": "iPad|iPad.*Mobile",
         "NexusTablet": "Android.*Nexus[\\s]+(7|9|10)",
-        "SamsungTablet": "SAMSUNG.*Tablet|Galaxy.*Tab|SC-01C|GT-P1000|GT-P1003|GT-P1010|GT-P3105|GT-P6210|GT-P6800|GT-P6810|GT-P7100|GT-P7300|GT-P7310|GT-P7500|GT-P7510|SCH-I800|SCH-I815|SCH-I905|SGH-I957|SGH-I987|SGH-T849|SGH-T859|SGH-T869|SPH-P100|GT-P3100|GT-P3108|GT-P3110|GT-P5100|GT-P5110|GT-P6200|GT-P7320|GT-P7511|GT-N8000|GT-P8510|SGH-I497|SPH-P500|SGH-T779|SCH-I705|SCH-I915|GT-N8013|GT-P3113|GT-P5113|GT-P8110|GT-N8010|GT-N8005|GT-N8020|GT-P1013|GT-P6201|GT-P7501|GT-N5100|GT-N5105|GT-N5110|SHV-E140K|SHV-E140L|SHV-E140S|SHV-E150S|SHV-E230K|SHV-E230L|SHV-E230S|SHW-M180K|SHW-M180L|SHW-M180S|SHW-M180W|SHW-M300W|SHW-M305W|SHW-M380K|SHW-M380S|SHW-M380W|SHW-M430W|SHW-M480K|SHW-M480S|SHW-M480W|SHW-M485W|SHW-M486W|SHW-M500W|GT-I9228|SCH-P739|SCH-I925|GT-I9200|GT-P5200|GT-P5210|GT-P5210X|SM-T311|SM-T310|SM-T310X|SM-T210|SM-T210R|SM-T211|SM-P600|SM-P601|SM-P605|SM-P900|SM-P901|SM-T217|SM-T217A|SM-T217S|SM-P6000|SM-T3100|SGH-I467|XE500|SM-T110|GT-P5220|GT-I9200X|GT-N5110X|GT-N5120|SM-P905|SM-T111|SM-T2105|SM-T315|SM-T320|SM-T320X|SM-T321|SM-T520|SM-T525|SM-T530NU|SM-T230NU|SM-T330NU|SM-T900|XE500T1C|SM-P605V|SM-P905V|SM-T337V|SM-T537V|SM-T707V|SM-T807V|SM-P600X|SM-P900X|SM-T210X|SM-T230|SM-T230X|SM-T325|GT-P7503|SM-T531|SM-T330|SM-T530|SM-T705|SM-T705C|SM-T535|SM-T331|SM-T800|SM-T700|SM-T537|SM-T807|SM-P907A|SM-T337A|SM-T537A|SM-T707A|SM-T807A|SM-T237|SM-T807P|SM-P607T|SM-T217T|SM-T337T|SM-T807T|SM-T116NQ|SM-T116BU|SM-P550|SM-T350|SM-T550|SM-T9000|SM-P9000|SM-T705Y|SM-T805|GT-P3113|SM-T710|SM-T810|SM-T815|SM-T360|SM-T533|SM-T113|SM-T335|SM-T715|SM-T560|SM-T670|SM-T677|SM-T377|SM-T567|SM-T357T|SM-T555|SM-T561|SM-T713|SM-T719|SM-T813|SM-T819|SM-T580|SM-T355Y|SM-T280|SM-T817A|SM-T820|SM-W700|SM-P580|SM-T587|SM-P350|SM-P555M|SM-P355M|SM-T113NU|SM-T815Y",
+        "SamsungTablet": "SAMSUNG.*Tablet|Galaxy.*Tab|SC-01C|GT-P1000|GT-P1003|GT-P1010|GT-P3105|GT-P6210|GT-P6800|GT-P6810|GT-P7100|GT-P7300|GT-P7310|GT-P7500|GT-P7510|SCH-I800|SCH-I815|SCH-I905|SGH-I957|SGH-I987|SGH-T849|SGH-T859|SGH-T869|SPH-P100|GT-P3100|GT-P3108|GT-P3110|GT-P5100|GT-P5110|GT-P6200|GT-P7320|GT-P7511|GT-N8000|GT-P8510|SGH-I497|SPH-P500|SGH-T779|SCH-I705|SCH-I915|GT-N8013|GT-P3113|GT-P5113|GT-P8110|GT-N8010|GT-N8005|GT-N8020|GT-P1013|GT-P6201|GT-P7501|GT-N5100|GT-N5105|GT-N5110|SHV-E140K|SHV-E140L|SHV-E140S|SHV-E150S|SHV-E230K|SHV-E230L|SHV-E230S|SHW-M180K|SHW-M180L|SHW-M180S|SHW-M180W|SHW-M300W|SHW-M305W|SHW-M380K|SHW-M380S|SHW-M380W|SHW-M430W|SHW-M480K|SHW-M480S|SHW-M480W|SHW-M485W|SHW-M486W|SHW-M500W|GT-I9228|SCH-P739|SCH-I925|GT-I9200|GT-P5200|GT-P5210|GT-P5210X|SM-T311|SM-T310|SM-T310X|SM-T210|SM-T210R|SM-T211|SM-P600|SM-P601|SM-P605|SM-P900|SM-P901|SM-T217|SM-T217A|SM-T217S|SM-P6000|SM-T3100|SGH-I467|XE500|SM-T110|GT-P5220|GT-I9200X|GT-N5110X|GT-N5120|SM-P905|SM-T111|SM-T2105|SM-T315|SM-T320|SM-T320X|SM-T321|SM-T520|SM-T525|SM-T530NU|SM-T230NU|SM-T330NU|SM-T900|XE500T1C|SM-P605V|SM-P905V|SM-T337V|SM-T537V|SM-T707V|SM-T807V|SM-P600X|SM-P900X|SM-T210X|SM-T230|SM-T230X|SM-T325|GT-P7503|SM-T531|SM-T330|SM-T530|SM-T705|SM-T705C|SM-T535|SM-T331|SM-T800|SM-T700|SM-T537|SM-T807|SM-P907A|SM-T337A|SM-T537A|SM-T707A|SM-T807A|SM-T237|SM-T807P|SM-P607T|SM-T217T|SM-T337T|SM-T807T|SM-T116NQ|SM-P550|SM-T350|SM-T550|SM-T9000|SM-P9000|SM-T705Y|SM-T805|GT-P3113|SM-T710|SM-T810|SM-T815|SM-T360|SM-T533|SM-T113|SM-T335|SM-T715|SM-T560|SM-T670|SM-T677|SM-T377|SM-T567|SM-T357T|SM-T555|SM-T561|SM-T713|SM-T719|SM-T813|SM-T819|SM-T580|SM-T355Y|SM-T280|SM-T817A|SM-T820|SM-W700|SM-P580|SM-T587",
         "Kindle": "Kindle|Silk.*Accelerated|Android.*\\b(KFOT|KFTT|KFJWI|KFJWA|KFOTE|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|WFJWAE|KFSAWA|KFSAWI|KFASWI|KFARWI|KFFOWI|KFGIWI|KFMEWI)\\b|Android.*Silk\/[0-9.]+ like Chrome\/[0-9.]+ (?!Mobile)",
         "SurfaceTablet": "Windows NT [0-9.]+; ARM;.*(Tablet|ARMBJS)",
         "HPTablet": "HP Slate (7|8|10)|HP ElitePad 900|hp-tablet|EliteBook.*Touch|HP 8|Slate 21|HP SlateBook 10",
-        "AsusTablet": "^.*PadFone((?!Mobile).)*$|Transformer|TF101|TF101G|TF300T|TF300TG|TF300TL|TF700T|TF700KL|TF701T|TF810C|ME171|ME301T|ME302C|ME371MG|ME370T|ME372MG|ME172V|ME173X|ME400C|Slider SL101|\\bK00F\\b|\\bK00C\\b|\\bK00E\\b|\\bK00L\\b|TX201LA|ME176C|ME102A|\\bM80TA\\b|ME372CL|ME560CG|ME372CG|ME302KL| K010 | K011 | K017 | K01E |ME572C|ME103K|ME170C|ME171C|\\bME70C\\b|ME581C|ME581CL|ME8510C|ME181C|P01Y|PO1MA|P01Z|\\bP027\\b",
+        "AsusTablet": "^.*PadFone((?!Mobile).)*$|Transformer|TF101|TF101G|TF300T|TF300TG|TF300TL|TF700T|TF700KL|TF701T|TF810C|ME171|ME301T|ME302C|ME371MG|ME370T|ME372MG|ME172V|ME173X|ME400C|Slider SL101|\\bK00F\\b|\\bK00C\\b|\\bK00E\\b|\\bK00L\\b|TX201LA|ME176C|ME102A|\\bM80TA\\b|ME372CL|ME560CG|ME372CG|ME302KL| K010 | K011 | K017 | K01E |ME572C|ME103K|ME170C|ME171C|\\bME70C\\b|ME581C|ME581CL|ME8510C|ME181C|P01Y|PO1MA|P01Z",
         "BlackBerryTablet": "PlayBook|RIM Tablet",
         "HTCtablet": "HTC_Flyer_P512|HTC Flyer|HTC Jetstream|HTC-P715a|HTC EVO View 4G|PG41200|PG09410",
         "MotorolaTablet": "xoom|sholest|MZ615|MZ605|MZ505|MZ601|MZ602|MZ603|MZ604|MZ606|MZ607|MZ608|MZ609|MZ615|MZ616|MZ617",
@@ -59639,7 +58047,7 @@ define(function () {
         "LGTablet": "\\bL-06C|LG-V909|LG-V900|LG-V700|LG-V510|LG-V500|LG-V410|LG-V400|LG-VK810\\b",
         "FujitsuTablet": "Android.*\\b(F-01D|F-02F|F-05E|F-10D|M532|Q572)\\b",
         "PrestigioTablet": "PMP3170B|PMP3270B|PMP3470B|PMP7170B|PMP3370B|PMP3570C|PMP5870C|PMP3670B|PMP5570C|PMP5770D|PMP3970B|PMP3870C|PMP5580C|PMP5880D|PMP5780D|PMP5588C|PMP7280C|PMP7280C3G|PMP7280|PMP7880D|PMP5597D|PMP5597|PMP7100D|PER3464|PER3274|PER3574|PER3884|PER5274|PER5474|PMP5097CPRO|PMP5097|PMP7380D|PMP5297C|PMP5297C_QUAD|PMP812E|PMP812E3G|PMP812F|PMP810E|PMP880TD|PMT3017|PMT3037|PMT3047|PMT3057|PMT7008|PMT5887|PMT5001|PMT5002",
-        "LenovoTablet": "Lenovo TAB|Idea(Tab|Pad)( A1|A10| K1|)|ThinkPad([ ]+)?Tablet|YT3-850M|YT3-X90L|YT3-X90F|YT3-X90X|Lenovo.*(S2109|S2110|S5000|S6000|K3011|A3000|A3500|A1000|A2107|A2109|A1107|A5500|A7600|B6000|B8000|B8080)(-|)(FL|F|HV|H|)",
+        "LenovoTablet": "Lenovo TAB|Idea(Tab|Pad)( A1|A10| K1|)|ThinkPad([ ]+)?Tablet|YT3-X90L|YT3-X90F|YT3-X90X|Lenovo.*(S2109|S2110|S5000|S6000|K3011|A3000|A3500|A1000|A2107|A2109|A1107|A5500|A7600|B6000|B8000|B8080)(-|)(FL|F|HV|H|)",
         "DellTablet": "Venue 11|Venue 8|Venue 7|Dell Streak 10|Dell Streak 7",
         "YarvikTablet": "Android.*\\b(TAB210|TAB211|TAB224|TAB250|TAB260|TAB264|TAB310|TAB360|TAB364|TAB410|TAB411|TAB420|TAB424|TAB450|TAB460|TAB461|TAB464|TAB465|TAB467|TAB468|TAB07-100|TAB07-101|TAB07-150|TAB07-151|TAB07-152|TAB07-200|TAB07-201-3G|TAB07-210|TAB07-211|TAB07-212|TAB07-214|TAB07-220|TAB07-400|TAB07-485|TAB08-150|TAB08-200|TAB08-201-3G|TAB08-201-30|TAB09-100|TAB09-211|TAB09-410|TAB10-150|TAB10-201|TAB10-211|TAB10-400|TAB10-410|TAB13-201|TAB274EUK|TAB275EUK|TAB374EUK|TAB462EUK|TAB474EUK|TAB9-200)\\b",
         "MedionTablet": "Android.*\\bOYO\\b|LIFE.*(P9212|P9514|P9516|S9512)|LIFETAB",
@@ -59737,7 +58145,7 @@ define(function () {
         "HisenseTablet": "\\b(F5281|E2371)\\b",
         "Hudl": "Hudl HT7S3|Hudl 2",
         "TelstraTablet": "T-Hub2",
-        "GenericTablet": "Android.*\\b97D\\b|Tablet(?!.*PC)|BNTV250A|MID-WCDMA|LogicPD Zoom2|\\bA7EB\\b|CatNova8|A1_07|CT704|CT1002|\\bM721\\b|rk30sdk|\\bEVOTAB\\b|M758A|ET904|ALUMIUM10|Smartfren Tab|Endeavour 1010|Tablet-PC-4|Tagi Tab|\\bM6pro\\b|CT1020W|arc 10HD|\\bTP750\\b|\\bQTAQZ3\\b"
+        "GenericTablet": "Android.*\\b97D\\b|Tablet(?!.*PC)|BNTV250A|MID-WCDMA|LogicPD Zoom2|\\bA7EB\\b|CatNova8|A1_07|CT704|CT1002|\\bM721\\b|rk30sdk|\\bEVOTAB\\b|M758A|ET904|ALUMIUM10|Smartfren Tab|Endeavour 1010|Tablet-PC-4|Tagi Tab|\\bM6pro\\b|CT1020W|arc 10HD|\\bTP750\\b"
     },
     "oss": {
         "AndroidOS": "Android",
@@ -60558,7 +58966,7 @@ define(function () {
     // should not be replaced by a completely new object - just overwrite existing methods
     MobileDetect._impl = impl;
     
-    MobileDetect.version = '1.3.7 2017-09-06';
+    MobileDetect.version = '1.3.6 2017-04-05';
 
     return MobileDetect;
 }); // end of call of define()
@@ -60566,7 +58974,7 @@ define(function () {
     if (typeof module !== 'undefined' && module.exports) {
         return function (factory) { module.exports = factory(); };
     } else if (true) {
-        return __webpack_require__(399);
+        return __webpack_require__(460);
     } else if (typeof window !== 'undefined') {
         return function (factory) { window.MobileDetect = factory(); };
     } else {
@@ -60576,246 +58984,246 @@ define(function () {
 })());
 
 /***/ }),
-/* 302 */
+/* 334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 86,
-	"./af.js": 86,
-	"./ar": 93,
-	"./ar-dz": 87,
-	"./ar-dz.js": 87,
-	"./ar-kw": 88,
-	"./ar-kw.js": 88,
-	"./ar-ly": 89,
-	"./ar-ly.js": 89,
-	"./ar-ma": 90,
-	"./ar-ma.js": 90,
-	"./ar-sa": 91,
-	"./ar-sa.js": 91,
-	"./ar-tn": 92,
-	"./ar-tn.js": 92,
-	"./ar.js": 93,
-	"./az": 94,
-	"./az.js": 94,
-	"./be": 95,
-	"./be.js": 95,
-	"./bg": 96,
-	"./bg.js": 96,
-	"./bm": 97,
-	"./bm.js": 97,
-	"./bn": 98,
-	"./bn.js": 98,
-	"./bo": 99,
-	"./bo.js": 99,
-	"./br": 100,
-	"./br.js": 100,
-	"./bs": 101,
-	"./bs.js": 101,
-	"./ca": 102,
-	"./ca.js": 102,
-	"./cs": 103,
-	"./cs.js": 103,
-	"./cv": 104,
-	"./cv.js": 104,
-	"./cy": 105,
-	"./cy.js": 105,
-	"./da": 106,
-	"./da.js": 106,
-	"./de": 109,
-	"./de-at": 107,
-	"./de-at.js": 107,
-	"./de-ch": 108,
-	"./de-ch.js": 108,
-	"./de.js": 109,
-	"./dv": 110,
-	"./dv.js": 110,
-	"./el": 111,
-	"./el.js": 111,
-	"./en-au": 112,
-	"./en-au.js": 112,
-	"./en-ca": 113,
-	"./en-ca.js": 113,
-	"./en-gb": 114,
-	"./en-gb.js": 114,
-	"./en-ie": 115,
-	"./en-ie.js": 115,
-	"./en-nz": 116,
-	"./en-nz.js": 116,
-	"./eo": 117,
-	"./eo.js": 117,
-	"./es": 120,
-	"./es-do": 118,
-	"./es-do.js": 118,
-	"./es-us": 119,
-	"./es-us.js": 119,
-	"./es.js": 120,
-	"./et": 121,
-	"./et.js": 121,
-	"./eu": 122,
-	"./eu.js": 122,
-	"./fa": 123,
-	"./fa.js": 123,
-	"./fi": 124,
-	"./fi.js": 124,
-	"./fo": 125,
-	"./fo.js": 125,
-	"./fr": 128,
-	"./fr-ca": 126,
-	"./fr-ca.js": 126,
-	"./fr-ch": 127,
-	"./fr-ch.js": 127,
-	"./fr.js": 128,
-	"./fy": 129,
-	"./fy.js": 129,
-	"./gd": 130,
-	"./gd.js": 130,
-	"./gl": 131,
-	"./gl.js": 131,
-	"./gom-latn": 132,
-	"./gom-latn.js": 132,
-	"./gu": 133,
-	"./gu.js": 133,
-	"./he": 134,
-	"./he.js": 134,
-	"./hi": 135,
-	"./hi.js": 135,
-	"./hr": 136,
-	"./hr.js": 136,
-	"./hu": 137,
-	"./hu.js": 137,
-	"./hy-am": 138,
-	"./hy-am.js": 138,
-	"./id": 139,
-	"./id.js": 139,
-	"./is": 140,
-	"./is.js": 140,
-	"./it": 141,
-	"./it.js": 141,
-	"./ja": 142,
-	"./ja.js": 142,
-	"./jv": 143,
-	"./jv.js": 143,
-	"./ka": 144,
-	"./ka.js": 144,
-	"./kk": 145,
-	"./kk.js": 145,
-	"./km": 146,
-	"./km.js": 146,
-	"./kn": 147,
-	"./kn.js": 147,
-	"./ko": 148,
-	"./ko.js": 148,
-	"./ky": 149,
-	"./ky.js": 149,
-	"./lb": 150,
-	"./lb.js": 150,
-	"./lo": 151,
-	"./lo.js": 151,
-	"./lt": 152,
-	"./lt.js": 152,
-	"./lv": 153,
-	"./lv.js": 153,
-	"./me": 154,
-	"./me.js": 154,
-	"./mi": 155,
-	"./mi.js": 155,
-	"./mk": 156,
-	"./mk.js": 156,
-	"./ml": 157,
-	"./ml.js": 157,
-	"./mr": 158,
-	"./mr.js": 158,
-	"./ms": 160,
-	"./ms-my": 159,
-	"./ms-my.js": 159,
-	"./ms.js": 160,
-	"./my": 161,
-	"./my.js": 161,
-	"./nb": 162,
-	"./nb.js": 162,
-	"./ne": 163,
-	"./ne.js": 163,
-	"./nl": 165,
-	"./nl-be": 164,
-	"./nl-be.js": 164,
-	"./nl.js": 165,
-	"./nn": 166,
-	"./nn.js": 166,
-	"./pa-in": 167,
-	"./pa-in.js": 167,
-	"./pl": 168,
-	"./pl.js": 168,
-	"./pt": 170,
-	"./pt-br": 169,
-	"./pt-br.js": 169,
-	"./pt.js": 170,
-	"./ro": 171,
-	"./ro.js": 171,
-	"./ru": 172,
-	"./ru.js": 172,
-	"./sd": 173,
-	"./sd.js": 173,
-	"./se": 174,
-	"./se.js": 174,
-	"./si": 175,
-	"./si.js": 175,
-	"./sk": 176,
-	"./sk.js": 176,
-	"./sl": 177,
-	"./sl.js": 177,
-	"./sq": 178,
-	"./sq.js": 178,
-	"./sr": 180,
-	"./sr-cyrl": 179,
-	"./sr-cyrl.js": 179,
-	"./sr.js": 180,
-	"./ss": 181,
-	"./ss.js": 181,
-	"./sv": 182,
-	"./sv.js": 182,
-	"./sw": 183,
-	"./sw.js": 183,
-	"./ta": 184,
-	"./ta.js": 184,
-	"./te": 185,
-	"./te.js": 185,
-	"./tet": 186,
-	"./tet.js": 186,
-	"./th": 187,
-	"./th.js": 187,
-	"./tl-ph": 188,
-	"./tl-ph.js": 188,
-	"./tlh": 189,
-	"./tlh.js": 189,
-	"./tr": 190,
-	"./tr.js": 190,
-	"./tzl": 191,
-	"./tzl.js": 191,
-	"./tzm": 193,
-	"./tzm-latn": 192,
-	"./tzm-latn.js": 192,
-	"./tzm.js": 193,
-	"./uk": 194,
-	"./uk.js": 194,
-	"./ur": 195,
-	"./ur.js": 195,
-	"./uz": 197,
-	"./uz-latn": 196,
-	"./uz-latn.js": 196,
-	"./uz.js": 197,
-	"./vi": 198,
-	"./vi.js": 198,
-	"./x-pseudo": 199,
-	"./x-pseudo.js": 199,
-	"./yo": 200,
-	"./yo.js": 200,
-	"./zh-cn": 201,
-	"./zh-cn.js": 201,
-	"./zh-hk": 202,
-	"./zh-hk.js": 202,
-	"./zh-tw": 203,
-	"./zh-tw.js": 203
+	"./af": 101,
+	"./af.js": 101,
+	"./ar": 108,
+	"./ar-dz": 102,
+	"./ar-dz.js": 102,
+	"./ar-kw": 103,
+	"./ar-kw.js": 103,
+	"./ar-ly": 104,
+	"./ar-ly.js": 104,
+	"./ar-ma": 105,
+	"./ar-ma.js": 105,
+	"./ar-sa": 106,
+	"./ar-sa.js": 106,
+	"./ar-tn": 107,
+	"./ar-tn.js": 107,
+	"./ar.js": 108,
+	"./az": 109,
+	"./az.js": 109,
+	"./be": 110,
+	"./be.js": 110,
+	"./bg": 111,
+	"./bg.js": 111,
+	"./bm": 112,
+	"./bm.js": 112,
+	"./bn": 113,
+	"./bn.js": 113,
+	"./bo": 114,
+	"./bo.js": 114,
+	"./br": 115,
+	"./br.js": 115,
+	"./bs": 116,
+	"./bs.js": 116,
+	"./ca": 117,
+	"./ca.js": 117,
+	"./cs": 118,
+	"./cs.js": 118,
+	"./cv": 119,
+	"./cv.js": 119,
+	"./cy": 120,
+	"./cy.js": 120,
+	"./da": 121,
+	"./da.js": 121,
+	"./de": 124,
+	"./de-at": 122,
+	"./de-at.js": 122,
+	"./de-ch": 123,
+	"./de-ch.js": 123,
+	"./de.js": 124,
+	"./dv": 125,
+	"./dv.js": 125,
+	"./el": 126,
+	"./el.js": 126,
+	"./en-au": 127,
+	"./en-au.js": 127,
+	"./en-ca": 128,
+	"./en-ca.js": 128,
+	"./en-gb": 129,
+	"./en-gb.js": 129,
+	"./en-ie": 130,
+	"./en-ie.js": 130,
+	"./en-nz": 131,
+	"./en-nz.js": 131,
+	"./eo": 132,
+	"./eo.js": 132,
+	"./es": 135,
+	"./es-do": 133,
+	"./es-do.js": 133,
+	"./es-us": 134,
+	"./es-us.js": 134,
+	"./es.js": 135,
+	"./et": 136,
+	"./et.js": 136,
+	"./eu": 137,
+	"./eu.js": 137,
+	"./fa": 138,
+	"./fa.js": 138,
+	"./fi": 139,
+	"./fi.js": 139,
+	"./fo": 140,
+	"./fo.js": 140,
+	"./fr": 143,
+	"./fr-ca": 141,
+	"./fr-ca.js": 141,
+	"./fr-ch": 142,
+	"./fr-ch.js": 142,
+	"./fr.js": 143,
+	"./fy": 144,
+	"./fy.js": 144,
+	"./gd": 145,
+	"./gd.js": 145,
+	"./gl": 146,
+	"./gl.js": 146,
+	"./gom-latn": 147,
+	"./gom-latn.js": 147,
+	"./gu": 148,
+	"./gu.js": 148,
+	"./he": 149,
+	"./he.js": 149,
+	"./hi": 150,
+	"./hi.js": 150,
+	"./hr": 151,
+	"./hr.js": 151,
+	"./hu": 152,
+	"./hu.js": 152,
+	"./hy-am": 153,
+	"./hy-am.js": 153,
+	"./id": 154,
+	"./id.js": 154,
+	"./is": 155,
+	"./is.js": 155,
+	"./it": 156,
+	"./it.js": 156,
+	"./ja": 157,
+	"./ja.js": 157,
+	"./jv": 158,
+	"./jv.js": 158,
+	"./ka": 159,
+	"./ka.js": 159,
+	"./kk": 160,
+	"./kk.js": 160,
+	"./km": 161,
+	"./km.js": 161,
+	"./kn": 162,
+	"./kn.js": 162,
+	"./ko": 163,
+	"./ko.js": 163,
+	"./ky": 164,
+	"./ky.js": 164,
+	"./lb": 165,
+	"./lb.js": 165,
+	"./lo": 166,
+	"./lo.js": 166,
+	"./lt": 167,
+	"./lt.js": 167,
+	"./lv": 168,
+	"./lv.js": 168,
+	"./me": 169,
+	"./me.js": 169,
+	"./mi": 170,
+	"./mi.js": 170,
+	"./mk": 171,
+	"./mk.js": 171,
+	"./ml": 172,
+	"./ml.js": 172,
+	"./mr": 173,
+	"./mr.js": 173,
+	"./ms": 175,
+	"./ms-my": 174,
+	"./ms-my.js": 174,
+	"./ms.js": 175,
+	"./my": 176,
+	"./my.js": 176,
+	"./nb": 177,
+	"./nb.js": 177,
+	"./ne": 178,
+	"./ne.js": 178,
+	"./nl": 180,
+	"./nl-be": 179,
+	"./nl-be.js": 179,
+	"./nl.js": 180,
+	"./nn": 181,
+	"./nn.js": 181,
+	"./pa-in": 182,
+	"./pa-in.js": 182,
+	"./pl": 183,
+	"./pl.js": 183,
+	"./pt": 185,
+	"./pt-br": 184,
+	"./pt-br.js": 184,
+	"./pt.js": 185,
+	"./ro": 186,
+	"./ro.js": 186,
+	"./ru": 187,
+	"./ru.js": 187,
+	"./sd": 188,
+	"./sd.js": 188,
+	"./se": 189,
+	"./se.js": 189,
+	"./si": 190,
+	"./si.js": 190,
+	"./sk": 191,
+	"./sk.js": 191,
+	"./sl": 192,
+	"./sl.js": 192,
+	"./sq": 193,
+	"./sq.js": 193,
+	"./sr": 195,
+	"./sr-cyrl": 194,
+	"./sr-cyrl.js": 194,
+	"./sr.js": 195,
+	"./ss": 196,
+	"./ss.js": 196,
+	"./sv": 197,
+	"./sv.js": 197,
+	"./sw": 198,
+	"./sw.js": 198,
+	"./ta": 199,
+	"./ta.js": 199,
+	"./te": 200,
+	"./te.js": 200,
+	"./tet": 201,
+	"./tet.js": 201,
+	"./th": 202,
+	"./th.js": 202,
+	"./tl-ph": 203,
+	"./tl-ph.js": 203,
+	"./tlh": 204,
+	"./tlh.js": 204,
+	"./tr": 205,
+	"./tr.js": 205,
+	"./tzl": 206,
+	"./tzl.js": 206,
+	"./tzm": 208,
+	"./tzm-latn": 207,
+	"./tzm-latn.js": 207,
+	"./tzm.js": 208,
+	"./uk": 209,
+	"./uk.js": 209,
+	"./ur": 210,
+	"./ur.js": 210,
+	"./uz": 212,
+	"./uz-latn": 211,
+	"./uz-latn.js": 211,
+	"./uz.js": 212,
+	"./vi": 213,
+	"./vi.js": 213,
+	"./x-pseudo": 214,
+	"./x-pseudo.js": 214,
+	"./yo": 215,
+	"./yo.js": 215,
+	"./zh-cn": 216,
+	"./zh-cn.js": 216,
+	"./zh-hk": 217,
+	"./zh-hk.js": 217,
+	"./zh-tw": 218,
+	"./zh-tw.js": 218
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -60831,16 +59239,236 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 302;
+webpackContext.id = 334;
 
 /***/ }),
-/* 303 */,
-/* 304 */,
-/* 305 */,
-/* 306 */,
-/* 307 */,
-/* 308 */,
-/* 309 */
+/* 335 */,
+/* 336 */,
+/* 337 */,
+/* 338 */,
+/* 339 */,
+/* 340 */,
+/* 341 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
+    "use strict";
+
+    if (global.setImmediate) {
+        return;
+    }
+
+    var nextHandle = 1; // Spec says greater than zero
+    var tasksByHandle = {};
+    var currentlyRunningATask = false;
+    var doc = global.document;
+    var registerImmediate;
+
+    function setImmediate(callback) {
+      // Callback can either be a function or a string
+      if (typeof callback !== "function") {
+        callback = new Function("" + callback);
+      }
+      // Copy function arguments
+      var args = new Array(arguments.length - 1);
+      for (var i = 0; i < args.length; i++) {
+          args[i] = arguments[i + 1];
+      }
+      // Store and register the task
+      var task = { callback: callback, args: args };
+      tasksByHandle[nextHandle] = task;
+      registerImmediate(nextHandle);
+      return nextHandle++;
+    }
+
+    function clearImmediate(handle) {
+        delete tasksByHandle[handle];
+    }
+
+    function run(task) {
+        var callback = task.callback;
+        var args = task.args;
+        switch (args.length) {
+        case 0:
+            callback();
+            break;
+        case 1:
+            callback(args[0]);
+            break;
+        case 2:
+            callback(args[0], args[1]);
+            break;
+        case 3:
+            callback(args[0], args[1], args[2]);
+            break;
+        default:
+            callback.apply(undefined, args);
+            break;
+        }
+    }
+
+    function runIfPresent(handle) {
+        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
+        // So if we're currently running a task, we'll need to delay this invocation.
+        if (currentlyRunningATask) {
+            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
+            // "too much recursion" error.
+            setTimeout(runIfPresent, 0, handle);
+        } else {
+            var task = tasksByHandle[handle];
+            if (task) {
+                currentlyRunningATask = true;
+                try {
+                    run(task);
+                } finally {
+                    clearImmediate(handle);
+                    currentlyRunningATask = false;
+                }
+            }
+        }
+    }
+
+    function installNextTickImplementation() {
+        registerImmediate = function(handle) {
+            process.nextTick(function () { runIfPresent(handle); });
+        };
+    }
+
+    function canUsePostMessage() {
+        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
+        // where `global.postMessage` means something completely different and can't be used for this purpose.
+        if (global.postMessage && !global.importScripts) {
+            var postMessageIsAsynchronous = true;
+            var oldOnMessage = global.onmessage;
+            global.onmessage = function() {
+                postMessageIsAsynchronous = false;
+            };
+            global.postMessage("", "*");
+            global.onmessage = oldOnMessage;
+            return postMessageIsAsynchronous;
+        }
+    }
+
+    function installPostMessageImplementation() {
+        // Installs an event handler on `global` for the `message` event: see
+        // * https://developer.mozilla.org/en/DOM/window.postMessage
+        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
+
+        var messagePrefix = "setImmediate$" + Math.random() + "$";
+        var onGlobalMessage = function(event) {
+            if (event.source === global &&
+                typeof event.data === "string" &&
+                event.data.indexOf(messagePrefix) === 0) {
+                runIfPresent(+event.data.slice(messagePrefix.length));
+            }
+        };
+
+        if (global.addEventListener) {
+            global.addEventListener("message", onGlobalMessage, false);
+        } else {
+            global.attachEvent("onmessage", onGlobalMessage);
+        }
+
+        registerImmediate = function(handle) {
+            global.postMessage(messagePrefix + handle, "*");
+        };
+    }
+
+    function installMessageChannelImplementation() {
+        var channel = new MessageChannel();
+        channel.port1.onmessage = function(event) {
+            var handle = event.data;
+            runIfPresent(handle);
+        };
+
+        registerImmediate = function(handle) {
+            channel.port2.postMessage(handle);
+        };
+    }
+
+    function installReadyStateChangeImplementation() {
+        var html = doc.documentElement;
+        registerImmediate = function(handle) {
+            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
+            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
+            var script = doc.createElement("script");
+            script.onreadystatechange = function () {
+                runIfPresent(handle);
+                script.onreadystatechange = null;
+                html.removeChild(script);
+                script = null;
+            };
+            html.appendChild(script);
+        };
+    }
+
+    function installSetTimeoutImplementation() {
+        registerImmediate = function(handle) {
+            setTimeout(runIfPresent, 0, handle);
+        };
+    }
+
+    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
+    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
+    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
+
+    // Don't get fooled by e.g. browserify environments.
+    if ({}.toString.call(global.process) === "[object process]") {
+        // For Node.js before 0.9
+        installNextTickImplementation();
+
+    } else if (canUsePostMessage()) {
+        // For non-IE10 modern browsers
+        installPostMessageImplementation();
+
+    } else if (global.MessageChannel) {
+        // For web workers, where supported
+        installMessageChannelImplementation();
+
+    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
+        // For IE 6–8
+        installReadyStateChangeImplementation();
+
+    } else {
+        // For older browsers
+        installSetTimeoutImplementation();
+    }
+
+    attachTo.setImmediate = setImmediate;
+    attachTo.clearImmediate = clearImmediate;
+}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(8)))
+
+/***/ }),
+/* 342 */,
+/* 343 */,
+/* 344 */,
+/* 345 */,
+/* 346 */,
+/* 347 */,
+/* 348 */,
+/* 349 */,
+/* 350 */,
+/* 351 */,
+/* 352 */,
+/* 353 */,
+/* 354 */,
+/* 355 */,
+/* 356 */,
+/* 357 */,
+/* 358 */,
+/* 359 */,
+/* 360 */,
+/* 361 */,
+/* 362 */,
+/* 363 */,
+/* 364 */,
+/* 365 */,
+/* 366 */,
+/* 367 */,
+/* 368 */,
+/* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -60849,11 +59477,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * Copyright 2013-2015 Twitter, Inc. and other contributors; Licensed MIT
  */
 
-!function(a,b){ true?!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(16)], __WEBPACK_AMD_DEFINE_RESULT__ = function(c){return a.Bloodhound=b(c)}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+!function(a,b){ true?!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(23)], __WEBPACK_AMD_DEFINE_RESULT__ = function(c){return a.Bloodhound=b(c)}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__)):"object"==typeof exports?module.exports=b(require("jquery")):a.Bloodhound=b(jQuery)}(this,function(a){var b=function(){"use strict";return{isMsie:function(){return/(msie|trident)/i.test(navigator.userAgent)?navigator.userAgent.match(/(msie |rv:)(\d+(.\d+)?)/i)[2]:!1},isBlankString:function(a){return!a||/^\s*$/.test(a)},escapeRegExChars:function(a){return a.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&")},isString:function(a){return"string"==typeof a},isNumber:function(a){return"number"==typeof a},isArray:a.isArray,isFunction:a.isFunction,isObject:a.isPlainObject,isUndefined:function(a){return"undefined"==typeof a},isElement:function(a){return!(!a||1!==a.nodeType)},isJQuery:function(b){return b instanceof a},toStr:function(a){return b.isUndefined(a)||null===a?"":a+""},bind:a.proxy,each:function(b,c){function d(a,b){return c(b,a)}a.each(b,d)},map:a.map,filter:a.grep,every:function(b,c){var d=!0;return b?(a.each(b,function(a,e){return(d=c.call(null,e,a,b))?void 0:!1}),!!d):d},some:function(b,c){var d=!1;return b?(a.each(b,function(a,e){return(d=c.call(null,e,a,b))?!1:void 0}),!!d):d},mixin:a.extend,identity:function(a){return a},clone:function(b){return a.extend(!0,{},b)},getIdGenerator:function(){var a=0;return function(){return a++}},templatify:function(b){function c(){return String(b)}return a.isFunction(b)?b:c},defer:function(a){setTimeout(a,0)},debounce:function(a,b,c){var d,e;return function(){var f,g,h=this,i=arguments;return f=function(){d=null,c||(e=a.apply(h,i))},g=c&&!d,clearTimeout(d),d=setTimeout(f,b),g&&(e=a.apply(h,i)),e}},throttle:function(a,b){var c,d,e,f,g,h;return g=0,h=function(){g=new Date,e=null,f=a.apply(c,d)},function(){var i=new Date,j=b-(i-g);return c=this,d=arguments,0>=j?(clearTimeout(e),e=null,g=i,f=a.apply(c,d)):e||(e=setTimeout(h,j)),f}},stringify:function(a){return b.isString(a)?a:JSON.stringify(a)},noop:function(){}}}(),c="0.11.1",d=function(){"use strict";function a(a){return a=b.toStr(a),a?a.split(/\s+/):[]}function c(a){return a=b.toStr(a),a?a.split(/\W+/):[]}function d(a){return function(c){return c=b.isArray(c)?c:[].slice.call(arguments,0),function(d){var e=[];return b.each(c,function(c){e=e.concat(a(b.toStr(d[c])))}),e}}}return{nonword:c,whitespace:a,obj:{nonword:d(c),whitespace:d(a)}}}(),e=function(){"use strict";function c(c){this.maxSize=b.isNumber(c)?c:100,this.reset(),this.maxSize<=0&&(this.set=this.get=a.noop)}function d(){this.head=this.tail=null}function e(a,b){this.key=a,this.val=b,this.prev=this.next=null}return b.mixin(c.prototype,{set:function(a,b){var c,d=this.list.tail;this.size>=this.maxSize&&(this.list.remove(d),delete this.hash[d.key],this.size--),(c=this.hash[a])?(c.val=b,this.list.moveToFront(c)):(c=new e(a,b),this.list.add(c),this.hash[a]=c,this.size++)},get:function(a){var b=this.hash[a];return b?(this.list.moveToFront(b),b.val):void 0},reset:function(){this.size=0,this.hash={},this.list=new d}}),b.mixin(d.prototype,{add:function(a){this.head&&(a.next=this.head,this.head.prev=a),this.head=a,this.tail=this.tail||a},remove:function(a){a.prev?a.prev.next=a.next:this.head=a.next,a.next?a.next.prev=a.prev:this.tail=a.prev},moveToFront:function(a){this.remove(a),this.add(a)}}),c}(),f=function(){"use strict";function c(a,c){this.prefix=["__",a,"__"].join(""),this.ttlKey="__ttl__",this.keyMatcher=new RegExp("^"+b.escapeRegExChars(this.prefix)),this.ls=c||h,!this.ls&&this._noop()}function d(){return(new Date).getTime()}function e(a){return JSON.stringify(b.isUndefined(a)?null:a)}function f(b){return a.parseJSON(b)}function g(a){var b,c,d=[],e=h.length;for(b=0;e>b;b++)(c=h.key(b)).match(a)&&d.push(c.replace(a,""));return d}var h;try{h=window.localStorage,h.setItem("~~~","!"),h.removeItem("~~~")}catch(i){h=null}return b.mixin(c.prototype,{_prefix:function(a){return this.prefix+a},_ttlKey:function(a){return this._prefix(a)+this.ttlKey},_noop:function(){this.get=this.set=this.remove=this.clear=this.isExpired=b.noop},_safeSet:function(a,b){try{this.ls.setItem(a,b)}catch(c){"QuotaExceededError"===c.name&&(this.clear(),this._noop())}},get:function(a){return this.isExpired(a)&&this.remove(a),f(this.ls.getItem(this._prefix(a)))},set:function(a,c,f){return b.isNumber(f)?this._safeSet(this._ttlKey(a),e(d()+f)):this.ls.removeItem(this._ttlKey(a)),this._safeSet(this._prefix(a),e(c))},remove:function(a){return this.ls.removeItem(this._ttlKey(a)),this.ls.removeItem(this._prefix(a)),this},clear:function(){var a,b=g(this.keyMatcher);for(a=b.length;a--;)this.remove(b[a]);return this},isExpired:function(a){var c=f(this.ls.getItem(this._ttlKey(a)));return b.isNumber(c)&&d()>c?!0:!1}}),c}(),g=function(){"use strict";function c(a){a=a||{},this.cancelled=!1,this.lastReq=null,this._send=a.transport,this._get=a.limiter?a.limiter(this._get):this._get,this._cache=a.cache===!1?new e(0):h}var d=0,f={},g=6,h=new e(10);return c.setMaxPendingRequests=function(a){g=a},c.resetCache=function(){h.reset()},b.mixin(c.prototype,{_fingerprint:function(b){return b=b||{},b.url+b.type+a.param(b.data||{})},_get:function(a,b){function c(a){b(null,a),k._cache.set(i,a)}function e(){b(!0)}function h(){d--,delete f[i],k.onDeckRequestArgs&&(k._get.apply(k,k.onDeckRequestArgs),k.onDeckRequestArgs=null)}var i,j,k=this;i=this._fingerprint(a),this.cancelled||i!==this.lastReq||((j=f[i])?j.done(c).fail(e):g>d?(d++,f[i]=this._send(a).done(c).fail(e).always(h)):this.onDeckRequestArgs=[].slice.call(arguments,0))},get:function(c,d){var e,f;d=d||a.noop,c=b.isString(c)?{url:c}:c||{},f=this._fingerprint(c),this.cancelled=!1,this.lastReq=f,(e=this._cache.get(f))?d(null,e):this._get(c,d)},cancel:function(){this.cancelled=!0}}),c}(),h=window.SearchIndex=function(){"use strict";function c(c){c=c||{},c.datumTokenizer&&c.queryTokenizer||a.error("datumTokenizer and queryTokenizer are both required"),this.identify=c.identify||b.stringify,this.datumTokenizer=c.datumTokenizer,this.queryTokenizer=c.queryTokenizer,this.reset()}function d(a){return a=b.filter(a,function(a){return!!a}),a=b.map(a,function(a){return a.toLowerCase()})}function e(){var a={};return a[i]=[],a[h]={},a}function f(a){for(var b={},c=[],d=0,e=a.length;e>d;d++)b[a[d]]||(b[a[d]]=!0,c.push(a[d]));return c}function g(a,b){var c=0,d=0,e=[];a=a.sort(),b=b.sort();for(var f=a.length,g=b.length;f>c&&g>d;)a[c]<b[d]?c++:a[c]>b[d]?d++:(e.push(a[c]),c++,d++);return e}var h="c",i="i";return b.mixin(c.prototype,{bootstrap:function(a){this.datums=a.datums,this.trie=a.trie},add:function(a){var c=this;a=b.isArray(a)?a:[a],b.each(a,function(a){var f,g;c.datums[f=c.identify(a)]=a,g=d(c.datumTokenizer(a)),b.each(g,function(a){var b,d,g;for(b=c.trie,d=a.split("");g=d.shift();)b=b[h][g]||(b[h][g]=e()),b[i].push(f)})})},get:function(a){var c=this;return b.map(a,function(a){return c.datums[a]})},search:function(a){var c,e,j=this;return c=d(this.queryTokenizer(a)),b.each(c,function(a){var b,c,d,f;if(e&&0===e.length)return!1;for(b=j.trie,c=a.split("");b&&(d=c.shift());)b=b[h][d];return b&&0===c.length?(f=b[i].slice(0),void(e=e?g(e,f):f)):(e=[],!1)}),e?b.map(f(e),function(a){return j.datums[a]}):[]},all:function(){var a=[];for(var b in this.datums)a.push(this.datums[b]);return a},reset:function(){this.datums={},this.trie=e()},serialize:function(){return{datums:this.datums,trie:this.trie}}}),c}(),i=function(){"use strict";function a(a){this.url=a.url,this.ttl=a.ttl,this.cache=a.cache,this.prepare=a.prepare,this.transform=a.transform,this.transport=a.transport,this.thumbprint=a.thumbprint,this.storage=new f(a.cacheKey)}var c;return c={data:"data",protocol:"protocol",thumbprint:"thumbprint"},b.mixin(a.prototype,{_settings:function(){return{url:this.url,type:"GET",dataType:"json"}},store:function(a){this.cache&&(this.storage.set(c.data,a,this.ttl),this.storage.set(c.protocol,location.protocol,this.ttl),this.storage.set(c.thumbprint,this.thumbprint,this.ttl))},fromCache:function(){var a,b={};return this.cache?(b.data=this.storage.get(c.data),b.protocol=this.storage.get(c.protocol),b.thumbprint=this.storage.get(c.thumbprint),a=b.thumbprint!==this.thumbprint||b.protocol!==location.protocol,b.data&&!a?b.data:null):null},fromNetwork:function(a){function b(){a(!0)}function c(b){a(null,e.transform(b))}var d,e=this;a&&(d=this.prepare(this._settings()),this.transport(d).fail(b).done(c))},clear:function(){return this.storage.clear(),this}}),a}(),j=function(){"use strict";function a(a){this.url=a.url,this.prepare=a.prepare,this.transform=a.transform,this.transport=new g({cache:a.cache,limiter:a.limiter,transport:a.transport})}return b.mixin(a.prototype,{_settings:function(){return{url:this.url,type:"GET",dataType:"json"}},get:function(a,b){function c(a,c){b(a?[]:e.transform(c))}var d,e=this;if(b)return a=a||"",d=this.prepare(a,this._settings()),this.transport.get(d,c)},cancelLastRequest:function(){this.transport.cancel()}}),a}(),k=function(){"use strict";function d(d){var e;return d?(e={url:null,ttl:864e5,cache:!0,cacheKey:null,thumbprint:"",prepare:b.identity,transform:b.identity,transport:null},d=b.isString(d)?{url:d}:d,d=b.mixin(e,d),!d.url&&a.error("prefetch requires url to be set"),d.transform=d.filter||d.transform,d.cacheKey=d.cacheKey||d.url,d.thumbprint=c+d.thumbprint,d.transport=d.transport?h(d.transport):a.ajax,d):null}function e(c){var d;if(c)return d={url:null,cache:!0,prepare:null,replace:null,wildcard:null,limiter:null,rateLimitBy:"debounce",rateLimitWait:300,transform:b.identity,transport:null},c=b.isString(c)?{url:c}:c,c=b.mixin(d,c),!c.url&&a.error("remote requires url to be set"),c.transform=c.filter||c.transform,c.prepare=f(c),c.limiter=g(c),c.transport=c.transport?h(c.transport):a.ajax,delete c.replace,delete c.wildcard,delete c.rateLimitBy,delete c.rateLimitWait,c}function f(a){function b(a,b){return b.url=f(b.url,a),b}function c(a,b){return b.url=b.url.replace(g,encodeURIComponent(a)),b}function d(a,b){return b}var e,f,g;return e=a.prepare,f=a.replace,g=a.wildcard,e?e:e=f?b:a.wildcard?c:d}function g(a){function c(a){return function(c){return b.debounce(c,a)}}function d(a){return function(c){return b.throttle(c,a)}}var e,f,g;return e=a.limiter,f=a.rateLimitBy,g=a.rateLimitWait,e||(e=/^throttle$/i.test(f)?d(g):c(g)),e}function h(c){return function(d){function e(a){b.defer(function(){g.resolve(a)})}function f(a){b.defer(function(){g.reject(a)})}var g=a.Deferred();return c(d,e,f),g}}return function(c){var f,g;return f={initialize:!0,identify:b.stringify,datumTokenizer:null,queryTokenizer:null,sufficient:5,sorter:null,local:[],prefetch:null,remote:null},c=b.mixin(f,c||{}),!c.datumTokenizer&&a.error("datumTokenizer is required"),!c.queryTokenizer&&a.error("queryTokenizer is required"),g=c.sorter,c.sorter=g?function(a){return a.sort(g)}:b.identity,c.local=b.isFunction(c.local)?c.local():c.local,c.prefetch=d(c.prefetch),c.remote=e(c.remote),c}}(),l=function(){"use strict";function c(a){a=k(a),this.sorter=a.sorter,this.identify=a.identify,this.sufficient=a.sufficient,this.local=a.local,this.remote=a.remote?new j(a.remote):null,this.prefetch=a.prefetch?new i(a.prefetch):null,this.index=new h({identify:this.identify,datumTokenizer:a.datumTokenizer,queryTokenizer:a.queryTokenizer}),a.initialize!==!1&&this.initialize()}var e;return e=window&&window.Bloodhound,c.noConflict=function(){return window&&(window.Bloodhound=e),c},c.tokenizers=d,b.mixin(c.prototype,{__ttAdapter:function(){function a(a,b,d){return c.search(a,b,d)}function b(a,b){return c.search(a,b)}var c=this;return this.remote?a:b},_loadPrefetch:function(){function b(a,b){return a?c.reject():(e.add(b),e.prefetch.store(e.index.serialize()),void c.resolve())}var c,d,e=this;return c=a.Deferred(),this.prefetch?(d=this.prefetch.fromCache())?(this.index.bootstrap(d),c.resolve()):this.prefetch.fromNetwork(b):c.resolve(),c.promise()},_initialize:function(){function a(){b.add(b.local)}var b=this;return this.clear(),(this.initPromise=this._loadPrefetch()).done(a),this.initPromise},initialize:function(a){return!this.initPromise||a?this._initialize():this.initPromise},add:function(a){return this.index.add(a),this},get:function(a){return a=b.isArray(a)?a:[].slice.call(arguments),this.index.get(a)},search:function(a,c,d){function e(a){var c=[];b.each(a,function(a){!b.some(f,function(b){return g.identify(a)===g.identify(b)})&&c.push(a)}),d&&d(c)}var f,g=this;return f=this.sorter(this.index.search(a)),c(this.remote?f.slice():f),this.remote&&f.length<this.sufficient?this.remote.get(a,e):this.remote&&this.remote.cancelLastRequest(),this},all:function(){return this.index.all()},clear:function(){return this.index.reset(),this},clearPrefetchCache:function(){return this.prefetch&&this.prefetch.clear(),this},clearRemoteCache:function(){return g.resetCache(),this},ttAdapter:function(){return this.__ttAdapter()}}),c}();return l});
 
 /***/ }),
-/* 310 */
+/* 370 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(setImmediate) {var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -60864,7 +59492,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 (function(root, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(16) ], __WEBPACK_AMD_DEFINE_RESULT__ = function(a0) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(23) ], __WEBPACK_AMD_DEFINE_RESULT__ = function(a0) {
             return root["Bloodhound"] = factory(a0);
         }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -61778,7 +60406,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 (function(root, factory) {
     if (true) {
-        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(16) ], __WEBPACK_AMD_DEFINE_RESULT__ = function(a0) {
+        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(23) ], __WEBPACK_AMD_DEFINE_RESULT__ = function(a0) {
             return factory(a0);
         }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -63309,69 +61937,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
         }
     })();
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(240).setImmediate))
 
 /***/ }),
-/* 311 */,
-/* 312 */,
-/* 313 */,
-/* 314 */,
-/* 315 */,
-/* 316 */,
-/* 317 */,
-/* 318 */,
-/* 319 */,
-/* 320 */,
-/* 321 */,
-/* 322 */,
-/* 323 */,
-/* 324 */,
-/* 325 */,
-/* 326 */,
-/* 327 */,
-/* 328 */,
-/* 329 */,
-/* 330 */,
-/* 331 */,
-/* 332 */,
-/* 333 */,
-/* 334 */,
-/* 335 */,
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */,
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */,
-/* 350 */,
-/* 351 */,
-/* 352 */,
-/* 353 */,
-/* 354 */,
-/* 355 */,
-/* 356 */,
-/* 357 */,
-/* 358 */,
-/* 359 */,
-/* 360 */,
-/* 361 */,
-/* 362 */,
-/* 363 */,
-/* 364 */,
-/* 365 */,
-/* 366 */,
-/* 367 */,
-/* 368 */,
-/* 369 */,
-/* 370 */,
 /* 371 */,
 /* 372 */,
 /* 373 */,
@@ -63400,7 +61968,68 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /* 396 */,
 /* 397 */,
 /* 398 */,
-/* 399 */
+/* 399 */,
+/* 400 */,
+/* 401 */,
+/* 402 */,
+/* 403 */,
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
+/* 420 */,
+/* 421 */,
+/* 422 */,
+/* 423 */,
+/* 424 */,
+/* 425 */,
+/* 426 */,
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */,
+/* 441 */,
+/* 442 */,
+/* 443 */,
+/* 444 */,
+/* 445 */,
+/* 446 */,
+/* 447 */,
+/* 448 */,
+/* 449 */,
+/* 450 */,
+/* 451 */,
+/* 452 */,
+/* 453 */,
+/* 454 */,
+/* 455 */,
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -63409,24 +62038,25 @@ module.exports = function() {
 
 
 /***/ }),
-/* 400 */,
-/* 401 */,
-/* 402 */,
-/* 403 */,
-/* 404 */
+/* 461 */,
+/* 462 */,
+/* 463 */,
+/* 464 */,
+/* 465 */,
+/* 466 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(222);
-__webpack_require__(219);
-__webpack_require__(215);
-__webpack_require__(216);
-__webpack_require__(220);
-__webpack_require__(217);
-__webpack_require__(221);
-__webpack_require__(218);
-__webpack_require__(214);
-__webpack_require__(223);
-module.exports = __webpack_require__(213);
+__webpack_require__(252);
+__webpack_require__(249);
+__webpack_require__(245);
+__webpack_require__(246);
+__webpack_require__(250);
+__webpack_require__(247);
+__webpack_require__(251);
+__webpack_require__(248);
+__webpack_require__(244);
+__webpack_require__(253);
+module.exports = __webpack_require__(243);
 
 
 /***/ })
