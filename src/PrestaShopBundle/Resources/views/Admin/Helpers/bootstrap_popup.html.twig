@@ -28,8 +28,8 @@
             {% block header %}
                 {% if title is defined %}
                     <div class="modal-header">
-                        {% if closable is defined and closable == true %}<button type="button" class="close" data-dismiss="modal">&times;</button>{% endif %}
                         <h4 class="modal-title">{{ title }}</h4>
+                        {% if closable is defined and closable == true %}<button type="button" class="close" data-dismiss="modal">&times;</button>{% endif %}
                     </div>
                 {% endif %}
             {% endblock %}
