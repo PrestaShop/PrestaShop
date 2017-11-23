@@ -331,8 +331,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         ));
 
         $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
-        $products = \Db::getInstance()->executeS($sql, true, false);
-        $total = \Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
+        $products = Db::getInstance()->executeS($sql, true, false);
+        $total = Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
