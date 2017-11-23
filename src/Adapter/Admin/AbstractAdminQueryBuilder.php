@@ -169,7 +169,7 @@ abstract class AbstractAdminQueryBuilder
 
         // GROUP BY
         if (!empty($groupBy)) {
-            $sql[] = 'GROUP BY '. implode(', ', $groupBy) . PHP_EOL;
+            $sql[] = 'GROUP BY '. implode(', ', array_map('pSQL', $groupBy)) . PHP_EOL;
         }
 
         // ORDER
