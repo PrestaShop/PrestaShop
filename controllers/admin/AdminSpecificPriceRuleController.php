@@ -332,7 +332,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
         }
 
         $this->tpl_form_vars = array(
-            'manufacturers' => Manufacturer::getManufacturers(),
+            'manufacturers' => Manufacturer::getManufacturers(false, (int)$this->context->language->id, true, false, false, false, true),
             'suppliers' => Supplier::getSuppliers(),
             'attributes_group' => $attribute_groups,
             'features' => $features,
