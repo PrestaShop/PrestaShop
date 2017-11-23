@@ -247,16 +247,16 @@ class AdminControllerCore extends Controller
     /** @var HelperList */
     protected $helper;
 
-    /** @var array Cache for translations */
+    /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
 
-    /** @var array Cache for translations */
-    const LEVEL_EDIT = 2;
-
-    /** @var array Cache for translations */
+    /** @var int ADD access level */
     const LEVEL_ADD = 3;
 
-    /** @var array Cache for translations */
+    /** @var int EDIT access level */
+    const LEVEL_EDIT = 2;
+
+    /** @var int VIEW access level */
     const LEVEL_VIEW = 1;
 
     /**
