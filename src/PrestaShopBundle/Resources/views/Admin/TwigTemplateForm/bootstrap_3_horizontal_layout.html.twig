@@ -93,3 +93,12 @@
 {% block form_group_class -%}
     col-sm-10
 {%- endblock form_group_class %}
+
+{% block text_with_unit_widget %}
+<div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {% if form.vars.unit is defined %}
+        <span class="input-group-addon">{{ form.vars.unit }}</span>
+    {% endif %}
+</div>
+{% endblock text_with_unit_widget %}

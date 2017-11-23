@@ -23,34 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class UploadQuotaType extends TranslatorAwareType
+class TextWithUnitType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function getParent()
     {
-        $builder
-            ->add('max_size_attached_files', TextWithUnitType::class, array(
-                'required' => true,
-                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-            ))
-            ->add('max_size_downloadable_product', TextWithUnitType::class, array(
-                'required' => true,
-                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-            ))
-            ->add('max_size_product_image', TextWithUnitType::class, array(
-                'required' => true,
-                'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-            ))
-        ;
+        return TextType::class;
     }
 
     /**
@@ -59,15 +47,28 @@ class UploadQuotaType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'Admin.Advparameters.Feature',
+            'widget' => 'single_text',
+            'unit' => 'unit'
         ));
     }
 
     /**
-     * {@inheritdoc}
+     * @{inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        $view->vars = array_merge($view->vars, array(
+            'unit' => $options['unit']
+        ));
+    }
+
+    /**
+     * @{inheritdoc}
      */
     public function getBlockPrefix()
     {
-        return 'administration_upload_quota_block';
+        return 'text_with_unit';
     }
 }
