@@ -346,7 +346,10 @@ class ProductControllerCore extends FrontController
                     $quantity_discount['attributes'] = $attribute['name'].' - ';
                 }
                 $quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
+            } else {
+                $quantity_discount['base_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC);
             }
+
             if ((int)$quantity_discount['id_currency'] == 0 && $quantity_discount['reduction_type'] == 'amount') {
                 $quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
             }
