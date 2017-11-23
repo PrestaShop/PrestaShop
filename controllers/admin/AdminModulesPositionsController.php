@@ -66,10 +66,8 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        // Add new module in hook
-        elseif (Tools::isSubmit('submitAddToHook')) {
+        } elseif (Tools::isSubmit('submitAddToHook')) {
+            // Add new module in hook
             if ($this->access('add')) {
                 // Getting vars...
                 $id_module = (int)Tools::getValue('id_module');
@@ -85,9 +83,8 @@ class AdminModulesPositionsControllerCore extends AdminController
                     $this->errors[] = $this->trans('This module has already been transplanted to this hook.', array(), 'Admin.Modules.Notification');
                 } elseif (!$module->isHookableOn($hook->name)) {
                     $this->errors[] = $this->trans('This module cannot be transplanted to this hook.', array(), 'Admin.Modules.Notification');
-                }
-                // Adding vars...
-                else {
+                } else {
+                    // Adding vars...
                     if (!$module->registerHook($hook->name, Shop::getContextListShopID())) {
                         $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', array(), 'Admin.Modules.Notification');
                     } else {
@@ -114,10 +111,8 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        // Edit module from hook
-        elseif (Tools::isSubmit('submitEditGraft')) {
+        } elseif (Tools::isSubmit('submitEditGraft')) {
+            // Edit module from hook
             if ($this->access('add')) {
                 // Getting vars...
                 $id_module = (int)Tools::getValue('id_module');
@@ -188,10 +183,8 @@ class AdminModulesPositionsControllerCore extends AdminController
             } else {
                 $this->errors[] = $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error');
             }
-        }
-
-        // Delete module from hook
-        elseif (array_key_exists('deleteGraft', $_GET)) {
+        } elseif (array_key_exists('deleteGraft', $_GET)) {
+            // Delete module from hook
             if ($this->access('delete')) {
                 $id_module = (int)Tools::getValue('id_module');
                 $module = Module::getInstanceById($id_module);
@@ -438,7 +431,9 @@ class AdminModulesPositionsControllerCore extends AdminController
 
         $content .= '<p>
 					<select size="25" id="em_list_'.$shop_id.'" multiple="multiple">
-					<option disabled="disabled">'.$this->trans('___________ CUSTOM ___________', array(),'Admin.Design.Feature').'</option>';
+					<option disabled="disabled">'
+                    .$this->trans('___________ CUSTOM ___________', array(), 'Admin.Design.Feature')
+                    .'</option>';
 
         // @todo do something better with controllers
         $controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);

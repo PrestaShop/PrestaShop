@@ -89,24 +89,27 @@ class StoreCore extends ObjectModel
     public static $definition = array(
         'table' => 'store',
         'primary' => 'id_store',
+        'multilang' => true,
         'fields' => array(
             'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
             'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isNullOrUnsignedId'),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
-            'address1' => array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'required' => true, 'size' => 128),
-            'address2' => array('type' => self::TYPE_STRING, 'validate' => 'isAddress', 'size' => 128),
             'postcode' => array('type' => self::TYPE_STRING, 'size' => 12),
             'city' => array('type' => self::TYPE_STRING, 'validate' => 'isCityName', 'required' => true, 'size' => 64),
             'latitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
             'longitude' => array('type' => self::TYPE_FLOAT, 'validate' => 'isCoordinate', 'size' => 13),
-            'hours' => array('type' => self::TYPE_STRING, 'validate' => 'isJson', 'size' => 65000),
             'phone' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
             'fax' => array('type' => self::TYPE_STRING, 'validate' => 'isPhoneNumber', 'size' => 16),
-            'note' => array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
             'email' => array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
             'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
             'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
             'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+
+            /* Lang fields */
+            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
+            'address1' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'required' => true, 'size' => 255),
+            'address2' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isAddress', 'size' => 255),
+            'hours' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isJson', 'size' => 65000),
+            'note' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'size' => 65000),
         ),
     );
 
@@ -132,16 +135,21 @@ class StoreCore extends ObjectModel
     }
 
     /**
-     * Get Stores
+     * Get Stores by language
      *
+     * @param $idLang
      * @return array|false|mysqli_result|null|PDOStatement|resource
      */
-    public static function getStores()
+    public static function getStores($idLang)
     {
         $stores = Db::getInstance()->executeS('
-            SELECT s.id_store AS `id`, s.*
+            SELECT s.id_store AS `id`, s.*, sl.*
             FROM '._DB_PREFIX_.'store s
             '.Shop::addSqlAssociation('store', 's').'
+            LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (
+            sl.id_store = s.id_store
+            AND sl.id_lang = ' . (int)$idLang . '
+            )
             WHERE s.active = 1'
         );
 

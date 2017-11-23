@@ -43,7 +43,7 @@
               </strong>
             </div>
             {if $order.details.reorder_url}
-              <div class="col-xs-3 text-xsright">
+              <div class="col-xs-3 text-xs-right">
                 <a href="{$order.details.reorder_url}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
               </div>
             {/if}
@@ -175,7 +175,7 @@
                 <td>{$line.carrier_name}</td>
                 <td>{$line.shipping_weight}</td>
                 <td>{$line.shipping_cost}</td>
-                <td>{$line.tracking}</td>
+                <td>{$line.tracking nofilter}</td>
               </tr>
             {/foreach}
           </tbody>
@@ -197,7 +197,7 @@
                   <strong>{l s='Shipping cost' d='Shop.Theme.Checkout'}</strong> {$line.shipping_cost}
                 </li>
                 <li>
-                  <strong>{l s='Tracking number' d='Shop.Theme.Checkout'}</strong> {$line.tracking}
+                  <strong>{l s='Tracking number' d='Shop.Theme.Checkout'}</strong> {$line.tracking nofilter}
                 </li>
               </ul>
             </div>

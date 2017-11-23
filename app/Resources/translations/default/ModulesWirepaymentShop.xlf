@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/controllers/front/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
+        <source>This payment method is not available.</source>
+        <target>This payment method is not available.</target>
+        <note>Context:
+File: modules/ps_wirepayment/controllers/front/validation.php:50</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_wirepayment/views/templates/hook/payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="5e1695822fc5af98f6b749ea3cbc9b4c">
@@ -23,16 +33,6 @@ File: modules/ps_wirepayment/views/templates/hook/payment.tpl:29</note>
         <target>%1$s (tax incl.)</target>
         <note>Context:
 File: modules/ps_wirepayment/controllers/front/payment.php:46</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_wirepayment/validation.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
-        <source>This payment method is not available.</source>
-        <target>This payment method is not available.</target>
-        <note>Context:
-File: modules/ps_wirepayment/validation.php:51</note>
       </trans-unit>
     </body>
   </file>

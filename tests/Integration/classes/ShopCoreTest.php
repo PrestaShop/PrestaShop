@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+namespace Tests\Unit\Classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use Configuration;
 use Context;
 
@@ -36,6 +36,7 @@ class ShopCoreTest extends IntegrationTestCase
 
     protected function setUp()
     {
+        parent::setUp();
         $this->context = Context::getContext();
     }
 

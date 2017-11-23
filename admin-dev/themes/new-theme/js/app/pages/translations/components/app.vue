@@ -26,12 +26,12 @@
   <div v-if="isReady" id="app" class="translations-app">
     <TranslationsHeader />
     <div class="container-fluid">
-      <div class="row">
-        <div class="translations-summary pull-xs-right">
+      <div class="row justify-content-between align-items-center">
+        <Search @search="onSearch" />
+        <div class="translations-summary">
           <span>{{ totalTranslations }}</span>
           <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
         </div>
-        <Search @search="onSearch" />
       </div>
 
       <div class="row">
@@ -135,7 +135,7 @@
 </script>
 
 <style lang="sass?outputStyle=expanded">
-  @import "~PrestaKit/scss/custom/_variables.scss";
+  @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
     z-index: 0;
     height: 128px;

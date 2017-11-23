@@ -34,6 +34,9 @@ exports.config = {
     //
     capabilities: [{
         browserName: require('./settings').browserName,
+        chromeOptions: {
+          args: ['--headless', '--disable-gpu', '--window-size=1600,1200'],
+        },
         tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
         screenResolution: "1600x1200",
         platform: "Windows 7",
@@ -129,7 +132,7 @@ exports.config = {
         chai.should();
         // this hook allows to define custom functions on the global browser object
         require('./commands/init')(browser);
-        return browser.windowHandleMaximize();
+        return browser.windowHandleSize({width: 1600, height: 1200});
     },
     //
     // Gets executed after all tests are done. You still have access to all global variables from

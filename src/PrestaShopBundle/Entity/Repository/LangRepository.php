@@ -36,7 +36,12 @@ class LangRepository extends EntityRepository
      */
     public function getLocaleByIsoCode($isoCode)
     {
-        return $this->findOneBy(array('isoCode' => $isoCode))
-            ->getLocale();
+        static $isoCodes = array();
+
+        if (!array_key_exists($isoCode, $isoCodes)) {
+            return $isoCodes[$isoCode] = $this->findOneBy(array('isoCode' => $isoCode))
+                ->getLocale();
+        }
+        return $isoCodes[$isoCode];
     }
 }

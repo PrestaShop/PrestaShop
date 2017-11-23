@@ -86,16 +86,6 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl:27</
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="59a297091dace235b4bce5af7b86ead6">
-        <source>My shopping cart</source>
-        <target>My shopping cart</target>
-        <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl:26</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ded564687a6602917eb07c460577f456">
@@ -122,13 +112,13 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.
       </trans-unit>
     </body>
   </file>
-  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
-        <source>(Under conditions)</source>
-        <target>(Under conditions)</target>
+      <trans-unit id="59a297091dace235b4bce5af7b86ead6">
+        <source>My shopping cart</source>
+        <target>My shopping cart</target>
         <note>Context:
-File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl:26</note>
       </trans-unit>
     </body>
   </file>
@@ -163,6 +153,16 @@ File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooterAfter.tpl
         <target>shipping excluded</target>
         <note>Context:
 File: modules/ps_legalcompliance/views/templates/hook/hookDisplayFooterAfter.tpl:41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
+        <source>(Under conditions)</source>
+        <target>(Under conditions)</target>
+        <note>Context:
+File: modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl:27</note>
       </trans-unit>
     </body>
   </file>

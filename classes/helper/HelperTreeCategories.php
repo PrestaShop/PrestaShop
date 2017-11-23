@@ -80,7 +80,7 @@ class HelperTreeCategoriesCore extends TreeCore
                     $this->getShop()->id
                 );
 
-                foreach ($categoryChildren as $index => $child) {
+                foreach ($categoryChildren as $child) {
                     $childId = (int) $child['id_category'];
 
                     if (!array_key_exists('children', $tree[$categoryId])) {

@@ -193,10 +193,18 @@ abstract class PaymentModuleCore extends Module
      * @return bool
      * @throws PrestaShopException
      */
-    public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown',
-        $message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
-        $secure_key = false, Shop $shop = null)
-    {
+    public function validateOrder(
+        $id_cart,
+        $id_order_state,
+        $amount_paid,
+        $payment_method = 'Unknown',
+        $message = null,
+        $extra_vars = array(),
+        $currency_special = null,
+        $dont_touch_amount = false,
+        $secure_key = false,
+        Shop $shop = null
+    ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
         }
@@ -607,7 +615,6 @@ abstract class PaymentModuleCore extends Module
                             $voucher->quantity = 1;
                             $voucher->reduction_currency = $order->id_currency;
                             $voucher->quantity_per_user = 1;
-                            $voucher->free_shipping = 0;
                             if ($voucher->add()) {
                                 // If the voucher has conditions, they are now copied to the new voucher
                                 CartRule::copyConditions($cart_rule['obj']->id, $voucher->id);
@@ -639,6 +646,10 @@ abstract class PaymentModuleCore extends Module
 
                             $values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
                             $values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
+                            if (1 == $voucher->free_shipping) {
+                                 $values['tax_incl'] += $order->total_shipping_tax_incl;
+                                 $values['tax_excl'] += $order->total_shipping_tax_excl;  
+                            }
                         }
                         $total_reduction_value_ti += $values['tax_incl'];
                         $total_reduction_value_tex += $values['tax_excl'];
@@ -857,9 +868,11 @@ abstract class PaymentModuleCore extends Module
 
                     // sync all stock
                     (new StockManager())->updatePhysicalProductQuantity(
-                        $order->id_shop,
+                        (int)$order->id_shop,
                         (int)Configuration::get('PS_OS_ERROR'),
-                        (int)Configuration::get('PS_OS_CANCELED')
+                        (int)Configuration::get('PS_OS_CANCELED'),
+                        null,
+                        (int)$order->id
                     );
                 } else {
                     $error = $this->trans('Order creation failed', array(), 'Admin.Payment.Notification');

@@ -4,6 +4,7 @@ GitHub contributors:
 - 0kph
 - 123monsite-regis
 - 1RV34
+- Abdelaziz JRIBI
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
@@ -48,7 +49,9 @@ GitHub contributors:
 - axi
 - Axome
 - Aylab
+- Azouz-Jribi
 - Balestrino
+- Bastien Bieri
 - bbsimon
 - bellini13
 - Benjamin PONGY
@@ -77,6 +80,7 @@ GitHub contributors:
 - Chen.Zhidong
 - Chris
 - Chris Gurk
+- Christian Verardi
 - christianverardi
 - ChristopheBoucaut
 - CINS
@@ -91,6 +95,7 @@ GitHub contributors:
 - Conner Burnett
 - Corentin Delcourt
 - Cosmin Hutanu
+- Cristiano Verardi
 - Cyril Dussert
 - Cedric Mouleyre
 - damien
@@ -115,7 +120,6 @@ GitHub contributors:
 - de saint leger
 - Debusschere Alexandre
 - Denis Yurevich
-- Denver Prophit Jr
 - Denver Prophit Jr.
 - Desbouche Christophe
 - DevNet
@@ -180,7 +184,6 @@ GitHub contributors:
 - fram
 - Francois Gaillard
 - Francois-Marie de Jouvencel
-- François Gaillard
 - Frederic BENOIST
 - Gabriel Arama
 - Gabriel Schwardy
@@ -308,6 +311,7 @@ GitHub contributors:
 - Mainmich
 - makk1ntosh
 - makoso
+- Manfredi Petruso
 - manuelbcd
 - marcinsz101
 - Marco Cervellin
@@ -351,6 +355,7 @@ GitHub contributors:
 - minic studio
 - Mirko Esposito
 - misthero
+- Molka DJEMAL
 - moncef102
 - montes
 - mplh
@@ -362,6 +367,7 @@ GitHub contributors:
 - Nicolas LÅ“uillet
 - Nicolas Martin
 - Nicolas Sorosac
+- Nicolas Giacconi
 - Niels Wouda
 - nihco2
 - Niklas Ekman
@@ -501,6 +507,7 @@ GitHub contributors:
 - Thomas
 - Thomas Blanc
 - Thomas Ferney
+- Thomas LEVIANDIER
 - Thomas N
 - Thomas Nabord
 - thomas-aw

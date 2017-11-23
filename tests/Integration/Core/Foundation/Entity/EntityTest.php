@@ -24,13 +24,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
+namespace Tests\Integration\Core\Foundation\Entity;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
+use Tests\Unit\ContextMocker;
 use Product;
 
 class EntityTest extends IntegrationTestCase
 {
+
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
     public function test_save_activeRecord_style()
     {
         $product = new Product(null, false, 1);

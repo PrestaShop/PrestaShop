@@ -23,15 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter\Module\Configuration;
+namespace Tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
-use PrestaShop\PrestaShop\tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends UnitTestCase
@@ -43,8 +42,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
     private $moduleRepository;
 
     public $defaultDir;
-    
-    public function setup()
+
+    public function setUp()
     {
         $this->configuration = new ConfigurationMock();
         $this->connection = new ConnectionMock(array(), new Driver);
@@ -52,7 +51,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->moduleSelfConfigurator = new ModuleSelfConfigurator($this->moduleRepository, $this->configuration, $this->connection);
 
         $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
-        parent::setup();
+        parent::setUp();
     }
 
     public function testSuccessfulConfiguration()
@@ -261,7 +260,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 class ConfigurationMock extends Configuration
 {
     private $configurationData = array();
-    
+
     public function set($key, $value)
     {
         $this->configurationData[$key] = $value;
@@ -284,7 +283,7 @@ class ConnectionMock extends Connection
 {
     public $sql = array();
     public $executedSql = array();
-    
+
     public function connect()
     {
         return true;

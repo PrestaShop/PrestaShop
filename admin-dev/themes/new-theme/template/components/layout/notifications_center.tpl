@@ -121,7 +121,7 @@
     <a class="notif" href='order_url'>
       #_id_order_ -
       {l s='from' d='Admin.Navigation.Notification'} <strong>_customer_name_</strong> (_iso_code_)_carrier_
-      <strong class="pull-xs-right">_total_paid_</strong>
+      <strong class="float-sm-right">_total_paid_</strong>
     </a>
   </script>
 {/if}

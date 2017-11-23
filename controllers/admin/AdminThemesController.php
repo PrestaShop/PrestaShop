@@ -25,8 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
  * @property Theme $object
@@ -230,8 +230,6 @@ class AdminThemesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        global $kernel;
-
         if (isset($_GET['error'])) {
             $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
         }
@@ -246,7 +244,7 @@ class AdminThemesControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
                 return false;
             }
-            $exporter = $kernel->getContainer()->get('prestashop.core.addon.theme.exporter');
+            $exporter = SymfonyContainer::getInstance()->get('prestashop.core.addon.theme.exporter');
             $path = $exporter->export($this->context->shop->theme);
             $this->confirmations[] = $this->trans(
                 'Your theme has been correctly exported: %path%',
@@ -259,9 +257,10 @@ class AdminThemesControllerCore extends AdminController
                     !$this->isEditGranted()
                     || _PS_MODE_DEMO_
                 ) {
-                    Throw new Exception ($this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error'));
-                }
-                else {
+                    throw new Exception (
+                        $this->trans('You do not have permission to add this.', array(), 'Admin.Notifications.Error')
+                    );
+                } else {
                     if ($filename = Tools::getValue('theme_archive_server')) {
                         $path = _PS_ALL_THEMES_DIR_.$filename;
                         $this->theme_manager->install($path);
@@ -326,6 +325,13 @@ class AdminThemesControllerCore extends AdminController
                 $this->theme_manager->uninstall(Tools::getValue('theme_name'));
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
+        } elseif (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('PS_GENERATE_RTL')) {
+            Language::installRtlStylesheets(false, true, Tools::getValue('PS_THEMES_LIST'));
+            $this->confirmations[] = $this->trans(
+                'Your RTL stylesheets has been generated successfully',
+                array(),
+                'Admin.Design.Notification'
+            );
         } elseif (Tools::getValue('action') == 'resetToDefaults') {
             if (
                 !in_array(
@@ -534,11 +540,43 @@ class AdminThemesControllerCore extends AdminController
                 )
             ),
         );
+		
+        if (in_array("1", array_column($this->_languages, 'is_rtl'))) {
+            $themes_list = array();
+            $allThemes = $this->theme_repository->getList();
+            foreach ($allThemes as $theme) {
+                $themeName = $theme->getName();
+                $themes_list[] = array('theme' => $themeName, 'name' => $themeName);
+            }
+            $this->fields_options['RTL'] = array(
+                'title' => $this->trans('Adaptation to Right-to-Left languages', array(), 'Admin.Design.Feature'),
+                'description' => $this->trans('Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.', array(), 'Admin.Design.Help'),
+                'fields' => array(
+                    'PS_THEMES_LIST' => array(
+                        'title' => $this->trans('Theme to adapt', array(), 'Admin.Design.Feature'),
+                        'type' => 'select',
+                        'identifier' => 'theme',
+                        'list' => $themes_list,
+                    ),
+                    'PS_GENERATE_RTL' => array(
+                        'title' => $this->trans('Generate RTL stylesheet', array(), 'Admin.Design.Feature'),
+                        'validation' => 'isBool',
+                        'cast' => 'intval',
+                        'type' => 'bool',
+                        'default' => 0,
+                    ),
+                ),
+                'submit' => array(
+                    'title' => $this->trans('Save', array(), 'Admin.Actions'),
+                    'name' => 'submitGenerateRTL',
+                ),
+            );
+        }
 
         $other_themes = $this->theme_repository->getListExcluding([$this->context->shop->theme->getName()]);
         if (!empty($other_themes)) {
             $this->fields_options['theme'] = array(
-                'title' => sprintf($this->trans('Select a theme for the "%s" shop', array(), 'Admin.Design.Feature'), $this->context->shop->name),
+                'title' => $this->trans('Select a theme for the "%name%" shop', array('%name%' => $this->context->shop->name), 'Admin.Design.Feature'),
                 'description' => (!$this->can_display_themes) ? $this->trans('You must select a shop from the above list if you wish to choose a theme.', array(), 'Admin.Design.Help') : '',
                 'fields' => array(
                     'theme_for_shop' => array(
@@ -758,8 +796,7 @@ class AdminThemesControllerCore extends AdminController
             || _PS_MODE_DEMO_
         ) {
             Tools::clearCache();
-        }
-        else {
+        } else {
             $this->context->shop->theme->setPageLayouts(Tools::getValue('layouts'));
             $this->theme_manager->saveTheme($this->context->shop->theme);
             Tools::clearCache();

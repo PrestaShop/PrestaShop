@@ -23,12 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Tests\Core\Addon\Module;
+
+namespace Tests\Core\Addon\Module;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
+use PHPUnit\Framework\TestCase;
 
-class ModuleManagerTest extends \PHPUnit_Framework_TestCase
+class ModuleManagerTest extends TestCase
 {
     const UNINSTALLED_MODULE = "uninstalled-module";
     const INSTALLED_MODULE = "installed-module";
@@ -143,8 +145,8 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
 
     private function initMocks()
     {
-        $this->mockAdminModuleProvider();
         $this->mockModuleProvider();
+        $this->mockAdminModuleProvider();
         $this->mockModuleUpdater();
         $this->mockModuleRepository();
         $this->mockModuleZipManager();
@@ -159,27 +161,9 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $installedModule = [
-            self::INSTALLED_MODULE, [
-                'installed' => 1,
-                'active' => true
-            ]
-        ];
-
-        $nonInstalledModule = [
-            self::UNINSTALLED_MODULE, [
-                'installed' => 0,
-                'active' => false
-            ]
-        ];
-
-        $findByNameReturnValues = [
-            $installedModule,
-            $nonInstalledModule
-        ];
         $this->adminModuleProviderS
-            ->method('findByName')
-            ->will($this->returnValueMap($findByNameReturnValues));
+            ->method('isAllowedAccess')
+            ->willReturn(true);
     }
 
     private function mockModuleProvider()
@@ -242,18 +226,12 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
         $this->moduleUpdaterS
             ->method('upgrade')
             ->willReturn(true);
-        $this->moduleUpdaterS
-            ->method('installTabs')
-            ->willReturn(true);
-        $this->moduleUpdaterS
-            ->method('uninstallTabs')
-            ->willReturn(true);
     }
 
     private function mockModuleRepository()
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->disableOriginalConstructor()
+            ->setConstructorArgs(array(array(), array(), array()))
             ->getMock();
         $moduleS
             ->method('onInstall')
@@ -310,7 +288,7 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->method('trans')
             ->will($this->returnArgument(0));
     }
-    
+
     private function mockDispatcher()
     {
         $this->dispatcherS = new NullDispatcher();

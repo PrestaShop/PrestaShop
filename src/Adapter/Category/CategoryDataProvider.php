@@ -30,6 +30,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Category;
 use Context;
+use Shop;
 
 /**
  * This class will provide data from DB / ORM about Category
@@ -129,7 +130,7 @@ class CategoryDataProvider
 
         $results = [];
         foreach ($allCategories as $category) {
-            foreach($productCategories as $productCategory) {
+            foreach ($productCategories as $productCategory) {
                 if ($productCategory == $category['id_category']) {
                     $results[] = [
                         'id' => $category['id_category'],
@@ -139,7 +140,6 @@ class CategoryDataProvider
                 }
                 $productCategories[$category['name']] = $category['id_category'];
             }
-
         }
 
         return $results;
@@ -179,7 +179,7 @@ class CategoryDataProvider
         $categories = array_reverse($categories, true);
         $breadCrumb = '';
 
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $breadCrumb .= ' > '.$category['name'];
         }
 
@@ -209,13 +209,13 @@ class CategoryDataProvider
         }
 
         $searchCategories = Category::getAllCategoriesName(
-            $root_category = null,
-            $id_lang = Context::getContext()->language->id,
-            $active = true,
-            $groups = null,
-            $use_shop_restriction = true,
-            $sql_filter = $query,
-            $sql_sort = '',
+            null,
+            Context::getContext()->language->id,
+            true,
+            null,
+            true,
+            $query,
+            '',
             $limit
         );
 

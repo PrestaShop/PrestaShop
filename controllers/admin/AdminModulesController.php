@@ -92,7 +92,6 @@ class AdminModulesControllerCore extends AdminController
         $this->list_modules_categories['content_management']['name'] = $this->l('Content Management');
         $this->list_modules_categories['customer_reviews']['name'] = $this->l('Customer Reviews');
         $this->list_modules_categories['export']['name'] = $this->trans('Export', array(), 'Admin.Actions');
-        $this->list_modules_categories['emailing']['name'] = $this->l('Emailing');
         $this->list_modules_categories['front_office_features']['name'] = $this->l('Front office Features');
         $this->list_modules_categories['i18n_localization']['name'] = $this->l('Internationalization and Localization');
         $this->list_modules_categories['merchandizing']['name'] = $this->l('Merchandising');
@@ -286,7 +285,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         $installed = $uninstalled = array();
-        foreach ($tab_modules_list as $key => $value) {
+        foreach ($tab_modules_list as $value) {
             $continue = 0;
             foreach ($modules_list_unsort['installed'] as $mod_in) {
                 if ($mod_in->name == $value) {
@@ -585,16 +584,16 @@ class AdminModulesControllerCore extends AdminController
                     case UPLOAD_ERR_INI_SIZE:
                     case UPLOAD_ERR_FORM_SIZE:
                         $this->errors[] = $this->trans('File too large (limit of %s bytes).', array(Tools::getMaxUploadSize()), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     case UPLOAD_ERR_PARTIAL:
                         $this->errors[] = $this->trans('File upload was not completed.', array(), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     case UPLOAD_ERR_NO_FILE:
                         $this->errors[] = $this->trans('No file was uploaded.', array(), 'Admin.Notifications.Error');
-                    break;
+                        break;
                     default:
                         $this->errors[] = $this->trans('Internal error #%s', array($_FILES['newfile']['error']), 'Admin.Notifications.Error');
-                    break;
+                        break;
                 }
             } elseif (!isset($_FILES['file']['tmp_name']) || empty($_FILES['file']['tmp_name'])) {
                 $this->errors[] = $this->trans('No file has been selected', array(), 'Admin.Notifications.Error');
@@ -760,7 +759,7 @@ class AdminModulesControllerCore extends AdminController
                 }
 
                 $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
-                $upgradeAvailable = 0;
+
                 $modules = array();
 
                 foreach ($allModules as $km => $moduleToUpdate) {
@@ -1395,10 +1394,36 @@ class AdminModulesControllerCore extends AdminController
     {
         parent::initModal();
 
+        $languages = Language::getLanguages(false);
+        $translateLinks = array();
+        
+        if (Tools::getIsset('configure')) {
+            $module = Module::getInstanceByName(Tools::getValue('configure'));
+            $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
+            $link = Context::getContext()->link;
+            foreach ($languages as $lang) {
+                if ($isNewTranslateSystem) {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslationSf', true, array(
+                        'lang' => $lang['iso_code'],
+                        'type' => 'modules',
+                        'selected' => $module->name,
+                        'locale' => $lang['locale'],
+                    ));
+                } else {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslations', true, array(), array(
+                        'type' => 'modules',
+                        'module' => $module->name,
+                        'lang' => $lang['iso_code'],
+                    ));
+                }
+            }
+        }
+
         $this->context->smarty->assign(array(
             'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&module='.Tools::getValue('configure').'&lang=',
-            'module_languages' => Language::getLanguages(false),
-            'module_name' => Tools::getValue('module_name'),
+            'module_languages' => $languages,
+            'module_name' => Tools::getValue('configure'),
+            'translateLinks' => $translateLinks,
         ));
 
         $modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');

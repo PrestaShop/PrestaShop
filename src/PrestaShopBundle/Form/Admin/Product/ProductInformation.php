@@ -119,6 +119,9 @@ class ProductInformation extends CommonAbstractType
                 $this->translator->trans('Pack of products', [], 'Admin.Catalog.Feature') => 1,
                 $this->translator->trans('Virtual product', [], 'Admin.Catalog.Feature') => 2,
             ),
+            'attr' => array(
+                'class' => 'custom-select',
+            ),
             'choices_as_values' => true,
             'label' =>  $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'required' => true,
@@ -158,11 +161,11 @@ class ProductInformation extends CommonAbstractType
             'options' => [
                 'attr' => array(
                     'class' => 'autoload_rte',
-                    'counter' => 6000,
+                    'counter' => 21844
                 ),
                 'constraints' => array(
                     new TinyMceMaxLength(array(
-                        'max' => 6000
+                        'max' => 21844
                     ))
                 ),
                 'required' => false
@@ -232,7 +235,7 @@ class ProductInformation extends CommonAbstractType
             'mapped' => false,
             'currency' => $this->currency->iso_code,
         ));
-        if ($is_stock_management){
+        if ($is_stock_management) {
             $builder->add('qty_0_shortcut', 'Symfony\Component\Form\Extension\Core\Type\NumberType', array(
                 'required' => false,
                 'label' => $this->translator->trans('Quantity', [], 'Admin.Catalog.Feature'),

@@ -36,7 +36,8 @@ class ClassLang
      * ClassLang constructor.
      * @param $locale
      */
-    public function __construct($locale) {
+    public function __construct($locale)
+    {
         $this->locale = $locale;
     }
 
@@ -44,7 +45,8 @@ class ClassLang
      * @param $className
      * @return bool
      */
-    public function getClassLang($className) {
+    public function getClassLang($className)
+    {
         if (!class_exists($className)) {
             return false;
         }

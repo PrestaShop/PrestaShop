@@ -152,7 +152,7 @@ class ThemeExporter
     protected function ensureFileBelongsToExportDirectory($filePath)
     {
         $validFileLocation = substr(realpath($filePath), 0, strlen(realpath($this->exportDir))) === realpath($this->exportDir);
-        
+
         if (!$validFileLocation) {
             throw new \Exception('Invalid file location. This file should belong to the export directory');
         }
@@ -297,8 +297,7 @@ class ThemeExporter
         MessageCatalogue $catalogue,
         $messages,
         $domain
-    )
-    {
+    ) {
         foreach ($messages as $id => $translation) {
             $metadata = $catalogue->getMetadata($id, $domain);
             if ($this->shouldAddFileMetadata($metadata)) {

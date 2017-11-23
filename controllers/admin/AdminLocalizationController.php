@@ -239,7 +239,7 @@ class AdminLocalizationControllerCore extends AdminController
 
         $i = 0;
         if ($xml_localization) {
-            foreach ($xml_localization->pack as $key => $pack) {
+            foreach ($xml_localization->pack as $pack) {
                 $remote_isos[(string)$pack->iso] = true;
                 $localizations_pack[$i]['iso_localization_pack'] = (string)$pack->iso;
                 $localizations_pack[$i]['name'] = (string)$pack->name;
@@ -261,7 +261,9 @@ class AdminLocalizationControllerCore extends AdminController
 
                     $xml_pack = @simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
                     if (!$xml_pack) {
-                        return $this->displayWarning($this->trans('%language% could not be loaded', array('%language%' => $entry),  'Admin.International.Notification'));
+                        return $this->displayWarning(
+                            $this->trans('%language% could not be loaded', array('%language%' => $entry), 'Admin.International.Notification')
+                        );
                     }
                     $localizations_pack[$i]['iso_localization_pack'] = $iso;
                     $localizations_pack[$i]['name'] = $this->trans('%s (local)', array((string)$xml_pack['name']), 'Admin.International.Feature');

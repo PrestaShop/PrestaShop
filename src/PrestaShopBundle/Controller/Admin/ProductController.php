@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
+use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
@@ -74,7 +75,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/catalog.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -239,7 +240,8 @@ class ProductController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-                'permission_error' => $permissionError
+                'permission_error' => $permissionError,
+                'layoutTitle' => $this->trans('Products', 'Admin.Global'),
             )
         );
     }
@@ -249,7 +251,7 @@ class ProductController extends FrameworkBundleAdminController
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/list.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -373,7 +375,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form
      *
-     * @Template
+     * @Template("@PrestaShop/Admin/Product/form.html.twig")
      * @param int $id The product ID
      * @param Request $request
      * @return array|Response Template vars
@@ -614,6 +616,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
             'editable' => $this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_'),
             'drawerModules' => $drawerModules,
+            'layoutTitle' => $this->trans('Product', 'Admin.Global'),
         );
     }
 
@@ -868,22 +871,10 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirect($urlGenerator->generate('admin_product_catalog'));
     }
 
-    /**
-     * Export product list (like the catalog should list, taking into account the filters, but not the pagination)
-     * in CSV format (or else for later if needed).
-     *
-     * This action does not finish correctly: a die is done to stop the stream that is downloaded by the browser.
-     * So Symfony router cannot take back the hand of the process for the last event listeners (terminate events).
-     *
-     * @param string $_format The format of the output
-     */
-    public function exportAction($_format)
+    public function exportAction()
     {
-        // init vars
+
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-        /* @var $productProvider ProductInterfaceProvider */
-        $csvTools = $this->get('prestashop.csv');
-        /* @var $csvTools Csv */
 
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         $orderBy = $persistedFilterParameters['last_orderBy'];
@@ -894,26 +885,27 @@ class ProductController extends FrameworkBundleAdminController
             return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
         };
 
-        // export CSV
-        $csvTools->exportData(
-            $dataCallback,
-            ['id_product' => 'Product ID',
-                'image_link' => 'Image',
-                'name' => 'Name',
-                'reference' => 'Reference',
-                'name_category' => 'Category',
-                'price' => 'Base price',
-                'price_final' => 'Final price',
-                'sav_quantity' => 'Quantity',
-                'badge_danger' => 'Status',
-                'position' => 'Position',
-            ],
-            100,
-            'product_' . date('Y-m-d_His') . '.csv',
-            30 * 60, // 30 minutes of download max!
-            true // TODO: windows CRLF, to make dynamic or always ON?
+        $translator = $this->get('translator');
+
+        $headersData = array(
+            'id_product' => 'Product ID',
+            'image_link' => $translator->trans('Image', array(), 'Admin.Global'),
+            'name' => $translator->trans('Name', array(), 'Admin.Global'),
+            'reference' => $translator->trans('Reference', array(), 'Admin.Global'),
+            'name_category' => $translator->trans('Category', array(), 'Admin.Global'),
+            'price' => $translator->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
+            'price_final' => $translator->trans('Price (tax incl.)', array(), 'Admin.Catalog.Feature'),
+            'sav_quantity' => $translator->trans('Quantity', array(), 'Admin.Global'),
+            'badge_danger' => $translator->trans('Status', array(), 'Admin.Global'),
+            'position' => $translator->trans('Position', array(), 'Admin.Global'),
         );
-        // exportData will "die" at the end of its process.
+
+        return (new CsvResponse())
+            ->setData($dataCallback)
+            ->setHeadersData($headersData)
+            ->setModeType(CsvResponse::MODE_OFFSET)
+            ->setLimit(5000)
+            ->setFileName('product_' . date('Y-m-d_His') . '.csv');
     }
 
     /**

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace Tests\TestCase;
 
 define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
 
@@ -51,8 +51,8 @@ class Module
      */
     public static function removeModule($module_dir_name)
     {
-        if (is_dir(_PS_MODULE_DIR_.$module_dir_name)) {
-            File::recurseDelete(_PS_MODULE_DIR_.$module_dir_name);
+        if (is_dir(_PS_MODULE_DIR_.'/'.$module_dir_name)) {
+            File::recurseDelete(_PS_MODULE_DIR_.'/'.$module_dir_name);
             return true;
         }
         return false;

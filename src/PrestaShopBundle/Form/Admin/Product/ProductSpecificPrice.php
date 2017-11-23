@@ -196,11 +196,11 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Apply', array(), 'Admin.Actions'),
-            'attr' => array('class' => 'btn-primary-outline js-save'),
+            'attr' => array('class' => 'btn-outline-primary js-save'),
         ))
         ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' => $this->translator->trans('Cancel', array(), 'Admin.Actions'),
-            'attr' => array('class' => 'btn-tertiary-outline js-cancel'),
+            'attr' => array('class' => 'btn-outline-secondary js-cancel'),
         ));
         //
         // ResetType can't be used because the product page is wrapped

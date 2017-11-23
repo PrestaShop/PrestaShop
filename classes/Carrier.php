@@ -193,6 +193,15 @@ class CarrierCore extends ObjectModel
         $this->image_dir = _PS_SHIP_IMG_DIR_;
     }
 
+    public static function resetStaticCache()
+    {
+        static::$price_by_weight  = array();
+        static::$price_by_weight2 = array();
+        static::$price_by_price   = array();
+        static::$price_by_price2  = array();
+        static::$cache_tax_rule   = array();
+    }
+
     /**
      * Adds current Carrier as a new Object to the database.
      *

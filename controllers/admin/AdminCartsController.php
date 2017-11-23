@@ -242,7 +242,7 @@ class AdminCartsControllerCore extends AdminController
             $total_price = $summary['total_price'];
             $total_shipping = $summary['total_shipping'];
         }
-        foreach ($products as $k => &$product) {
+        foreach ($products as &$product) {
             if ($tax_calculation_method == PS_TAX_EXC) {
                 $product['product_price'] = $product['price'];
                 $product['product_total'] = $product['total'];
@@ -743,7 +743,6 @@ class AdminCartsControllerCore extends AdminController
         $id_customer = (int)Tools::getValue('id_customer');
         $carts = Cart::getCustomerCarts((int)$id_customer);
         $orders = Order::getCustomerOrders((int)$id_customer);
-        $customer = new Customer((int)$id_customer);
 
         if (count($carts)) {
             foreach ($carts as $key => &$cart) {
@@ -762,9 +761,12 @@ class AdminCartsControllerCore extends AdminController
         }
         if ($orders || $carts) {
             $to_return = array_merge($this->ajaxReturnVars(),
-                                            array('carts' => $carts,
-                                                     'orders' => $orders,
-                                                     'found' => true));
+                array(
+                    'carts' => $carts,
+                    'orders' => $orders,
+                    'found' => true
+                )
+            );
         } else {
             $to_return = array_merge($this->ajaxReturnVars(), array('found' => false));
         }
@@ -865,7 +867,7 @@ class AdminCartsControllerCore extends AdminController
         return ($echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo);
     }
 
-    public function displayDeleteLink($token = null, $id, $name = null)
+    public function displayDeleteLink($token, $id, $name = null)
     {
         // don't display ordered carts
         foreach ($this->_list as $row) {

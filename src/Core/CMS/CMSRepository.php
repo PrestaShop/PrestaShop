@@ -28,15 +28,6 @@ namespace PrestaShop\PrestaShop\Core\CMS;
 class CMSRepository extends \PrestaShop\PrestaShop\Core\Foundation\Database\EntityRepository
 {
     /**
-     * Return CMSRepository lang associative table name
-     * @return string
-     */
-    private function getLanguageTableNameWithPrefix()
-    {
-        return $this->getTableNameWithPrefix() . '_lang';
-    }
-
-    /**
      * Return all CMSRepositories depending on $id_lang/$id_shop tuple
      * @param $id_lang
      * @param $id_shop

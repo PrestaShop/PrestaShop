@@ -505,7 +505,7 @@
                     </div>
                   </td>
                   <td>
-                    <input name="payment_method" list="payment_method" class="payment_method">
+                    <input name="payment_method" list="payment_method" class="payment_method form-control fixed-width-sm">
                     <datalist id="payment_method">
                     {foreach from=$payment_methods item=payment_method}
                       <option value="{$payment_method}">

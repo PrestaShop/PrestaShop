@@ -24,13 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\Core\Foundation\Entity;
+namespace Tests\Integration\Core\Foundation\Entity;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
 use CMSRole;
 use CMSRoleRepository;
 use Db;
+use Tests\Unit\ContextMocker;
 use Product;
 
 class EntityManagerTest extends IntegrationTestCase
@@ -38,11 +39,25 @@ class EntityManagerTest extends IntegrationTestCase
     private $container;
     private $entityManager;
 
-    public function setup()
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setUp()
     {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
         $containerBuilder = new ContainerBuilder();
         $this->container = $containerBuilder->build();
         $this->entityManager = $this->container->make('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager');
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
     }
 
     public function test_explicitly_defined_repository_is_found_by_entitymanager()

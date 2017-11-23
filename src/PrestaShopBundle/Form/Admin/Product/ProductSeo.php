@@ -83,6 +83,7 @@ class ProductSeo extends CommonAbstractType
             'label_attr' => [
                 'popover' => $this->translator->trans('Public title for the product\'s page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', [], 'Admin.Catalog.Help'),
                 'popover_placement' => 'right',
+                'class' => 'px-0',
             ],
             'required' => false
         ))
@@ -102,6 +103,7 @@ class ProductSeo extends CommonAbstractType
             'label_attr' => [
                 'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
                 'popover_placement' => 'right',
+                'class' => 'px-0',
             ],
             'required' => false
         ))
@@ -120,8 +122,8 @@ class ProductSeo extends CommonAbstractType
                 $this->translator->trans('Permanent redirection to a category (301)', [], 'Admin.Catalog.Feature') => '301-category',
                 $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => '302-category',
             ),
-            'choice_attr' => function($val, $key, $index) use ($remoteUrls) {
-                if(array_key_exists($index, $remoteUrls)) {
+            'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
+                if (array_key_exists($index, $remoteUrls)) {
                     return ['data-remoteurl' => $remoteUrls[$index]];
                 }
                 return [];
@@ -137,6 +139,7 @@ class ProductSeo extends CommonAbstractType
             ),
         ))
         ->add('id_type_redirected', 'PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType', array(
+            'remote_url' => $this->context->getAdminLink('', false).'ajax_products_list.php?forceJson=1&disableCombination=1&exclude_packs=0&excludeVirtuals=0&limit=20&q=%QUERY',
             'mapping_value' => 'id',
             'mapping_name' => 'name',
             'mapping_type' => $options['mapping_type'],

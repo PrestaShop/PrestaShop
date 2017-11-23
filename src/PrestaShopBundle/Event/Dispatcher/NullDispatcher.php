@@ -59,4 +59,7 @@ class NullDispatcher implements EventDispatcherInterface
     {
     }
 
+    public function getListenerPriority($eventName, $listener)
+    {
+    }
 }

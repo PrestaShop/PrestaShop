@@ -10,97 +10,37 @@ File: controllers/front/OrderConfirmationController.php:154</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/lang/RiskLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/OrderReturnStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
-        <source>None</source>
-        <target>None</target>
+      <trans-unit id="015c603172846437ee7a569dc2c36273">
+        <source>Waiting for confirmation</source>
+        <target>Waiting for confirmation</target>
         <note>Context:
-File: classes/lang/RiskLang.php:40</note>
+File: classes/lang/OrderReturnStateLang.php:40</note>
       </trans-unit>
-      <trans-unit id="28d0edd045e05cf5af64e35ae0c4c6ef">
-        <source>Low</source>
-        <target>Low</target>
+      <trans-unit id="7d42f56ce1d82d68f6545242ef4384a4">
+        <source>Waiting for package</source>
+        <target>Waiting for package</target>
         <note>Context:
-File: classes/lang/RiskLang.php:41</note>
+File: classes/lang/OrderReturnStateLang.php:41</note>
       </trans-unit>
-      <trans-unit id="87f8a6ab85c9ced3702b4ea641ad4bb5">
-        <source>Medium</source>
-        <target>Medium</target>
+      <trans-unit id="b383cc6d0e4ab5bfab94b4452a916ee5">
+        <source>Package received</source>
+        <target>Package received</target>
         <note>Context:
-File: classes/lang/RiskLang.php:42</note>
+File: classes/lang/OrderReturnStateLang.php:42</note>
       </trans-unit>
-      <trans-unit id="655d20c1ca69519ca647684edbb2db35">
-        <source>High</source>
-        <target>High</target>
+      <trans-unit id="03bd13f6762c099741f4934beb32b95d">
+        <source>Return denied</source>
+        <target>Return denied</target>
         <note>Context:
-File: classes/lang/RiskLang.php:43</note>
+File: classes/lang/OrderReturnStateLang.php:43</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="classes/lang/OrderMessageLang.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
-        <source>Delay</source>
-        <target>Delay</target>
+      <trans-unit id="4bb0dcdb92397d6b646711d623504058">
+        <source>Return completed</source>
+        <target>Return completed</target>
         <note>Context:
-File: classes/lang/OrderMessageLang.php:40</note>
-      </trans-unit>
-      <trans-unit id="2a442c1a811c488f4aad5d970f1047c5">
-        <source>Hi,
-
-Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
-Please accept our apologies and rest assured that we are working hard to rectify this.
-
-Best regards,</source>
-        <target>Hi,
-
-Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
-Please accept our apologies and rest assured that we are working hard to rectify this.
-
-Best regards,</target>
-        <note>Context:
-File: classes/lang/OrderMessageLang.php:44</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="classes/lang/SupplyOrderStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="78e25fccba5eb87a2fe929e6cfa27b26">
-        <source>1 - Creation in progress</source>
-        <target>1 - Creation in progress</target>
-        <note>Context:
-File: classes/lang/SupplyOrderStateLang.php:41</note>
-      </trans-unit>
-      <trans-unit id="aa92ea2c14150feacd8a38cabaf59c4b">
-        <source>2 - Order validated</source>
-        <target>2 - Order validated</target>
-        <note>Context:
-File: classes/lang/SupplyOrderStateLang.php:44</note>
-      </trans-unit>
-      <trans-unit id="efca1ad6911feea6ec4f5172f28ff135">
-        <source>3 - Pending receipt</source>
-        <target>3 - Pending receipt</target>
-        <note>Context:
-File: classes/lang/SupplyOrderStateLang.php:47</note>
-      </trans-unit>
-      <trans-unit id="0e547a2250b0531cf58a26995ba31801">
-        <source>4 - Order received in part</source>
-        <target>4 - Order received in part</target>
-        <note>Context:
-File: classes/lang/SupplyOrderStateLang.php:50</note>
-      </trans-unit>
-      <trans-unit id="589760755f6f33549fb31e5ab03f2676">
-        <source>5 - Order received completely</source>
-        <target>5 - Order received completely</target>
-        <note>Context:
-File: classes/lang/SupplyOrderStateLang.php:53</note>
-      </trans-unit>
-      <trans-unit id="817bedb8bd68b944c3fa6e231b53147d">
-        <source>6 - Order canceled</source>
-        <target>6 - Order canceled</target>
-        <note>Context:
-File: classes/lang/SupplyOrderStateLang.php:56</note>
+File: classes/lang/OrderReturnStateLang.php:44</note>
       </trans-unit>
     </body>
   </file>
@@ -186,574 +126,378 @@ File: classes/lang/OrderStateLang.php:77</note>
       </trans-unit>
     </body>
   </file>
-  <file original="classes/lang/OrderReturnStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/OrderMessageLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="015c603172846437ee7a569dc2c36273">
-        <source>Waiting for confirmation</source>
-        <target>Waiting for confirmation</target>
+      <trans-unit id="8f497c1a3d15af9e0c215019f26b887d">
+        <source>Delay</source>
+        <target>Delay</target>
         <note>Context:
-File: classes/lang/OrderReturnStateLang.php:40</note>
+File: classes/lang/OrderMessageLang.php:40</note>
       </trans-unit>
-      <trans-unit id="7d42f56ce1d82d68f6545242ef4384a4">
-        <source>Waiting for package</source>
-        <target>Waiting for package</target>
+      <trans-unit id="2a442c1a811c488f4aad5d970f1047c5">
+        <source>Hi,
+
+Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
+Please accept our apologies and rest assured that we are working hard to rectify this.
+
+Best regards,</source>
+        <target>Hi,
+
+Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.
+Please accept our apologies and rest assured that we are working hard to rectify this.
+
+Best regards,</target>
         <note>Context:
-File: classes/lang/OrderReturnStateLang.php:41</note>
-      </trans-unit>
-      <trans-unit id="b383cc6d0e4ab5bfab94b4452a916ee5">
-        <source>Package received</source>
-        <target>Package received</target>
-        <note>Context:
-File: classes/lang/OrderReturnStateLang.php:42</note>
-      </trans-unit>
-      <trans-unit id="03bd13f6762c099741f4934beb32b95d">
-        <source>Return denied</source>
-        <target>Return denied</target>
-        <note>Context:
-File: classes/lang/OrderReturnStateLang.php:43</note>
-      </trans-unit>
-      <trans-unit id="4bb0dcdb92397d6b646711d623504058">
-        <source>Return completed</source>
-        <target>Return completed</target>
-        <note>Context:
-File: classes/lang/OrderReturnStateLang.php:44</note>
+File: classes/lang/OrderMessageLang.php:44</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/SupplyOrderStateLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="36358a9d4d77cc110761aec78f98c945">
-        <source>Partner offers</source>
-        <target>Partner offers</target>
+      <trans-unit id="78e25fccba5eb87a2fe929e6cfa27b26">
+        <source>1 - Creation in progress</source>
+        <target>1 - Creation in progress</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:133</note>
+File: classes/lang/SupplyOrderStateLang.php:41</note>
       </trans-unit>
-      <trans-unit id="a82868319826fb092b73968e661b5b38">
-        <source>Vouchers</source>
-        <target>Vouchers</target>
+      <trans-unit id="aa92ea2c14150feacd8a38cabaf59c4b">
+        <source>2 - Order validated</source>
+        <target>2 - Order validated</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:413</note>
+File: classes/lang/SupplyOrderStateLang.php:44</note>
       </trans-unit>
-      <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
-        <source>Unknown</source>
-        <target>Unknown</target>
+      <trans-unit id="efca1ad6911feea6ec4f5172f28ff135">
+        <source>3 - Pending receipt</source>
+        <target>3 - Pending receipt</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:104</note>
+File: classes/lang/SupplyOrderStateLang.php:47</note>
       </trans-unit>
-      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
-        <source>Age</source>
-        <target>Age</target>
+      <trans-unit id="0e547a2250b0531cf58a26995ba31801">
+        <source>4 - Order received in part</source>
+        <target>4 - Order received in part</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:58</note>
+File: classes/lang/SupplyOrderStateLang.php:50</note>
       </trans-unit>
-      <trans-unit id="56b80d8cc0afeaff5a2e624583b976ab">
-        <source>%1$d years old (birth date: %2$s)</source>
-        <target>%1$d years old (birth date: %2$s)</target>
+      <trans-unit id="589760755f6f33549fb31e5ab03f2676">
+        <source>5 - Order received completely</source>
+        <target>5 - Order received completely</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:62</note>
+File: classes/lang/SupplyOrderStateLang.php:53</note>
       </trans-unit>
-      <trans-unit id="97ce2ccb5de5849fd94203a375054378">
-        <source>Registration Date</source>
-        <target>Registration Date</target>
+      <trans-unit id="817bedb8bd68b944c3fa6e231b53147d">
+        <source>6 - Order canceled</source>
+        <target>6 - Order canceled</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:70</note>
-      </trans-unit>
-      <trans-unit id="123cdf3e99e5daa563ac54af55a158be">
-        <source>Last Visit</source>
-        <target>Last Visit</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:76</note>
-      </trans-unit>
-      <trans-unit id="eee7a325a979babb04b46b3114c005f6">
-        <source>Best Customer Rank</source>
-        <target>Best Customer Rank</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:83</note>
-      </trans-unit>
-      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
-        <source>Registrations</source>
-        <target>Registrations</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:110</note>
-      </trans-unit>
-      <trans-unit id="a39ee61626da77cb9644fa972a8ac5b5">
-        <source>Latest Update</source>
-        <target>Latest Update</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:140</note>
-      </trans-unit>
-      <trans-unit id="1f8895b98efdf9e96766d39f24ec352c">
-        <source>This customer is registered as a Guest.</source>
-        <target>This customer is registered as a Guest.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:165</note>
-      </trans-unit>
-      <trans-unit id="832c2f75a0029f82a281704661b07542">
-        <source>Transform to a customer account</source>
-        <target>Transform to a customer account</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:170</note>
-      </trans-unit>
-      <trans-unit id="33c1f4de9458d31b6df40fb7fb52a180">
-        <source>for a total amount of %s</source>
-        <target>for a total amount of %s</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:194</note>
-      </trans-unit>
-      <trans-unit id="a9c74a800ed9f3d504e76d8c59acc497">
-        <source>Invalid orders:</source>
-        <target>Invalid orders:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:198</note>
-      </trans-unit>
-      <trans-unit id="25326db0dcb2cf342b3477fbdad373dc">
-        <source>Total spent</source>
-        <target>Total spent</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:246</note>
-      </trans-unit>
-      <trans-unit id="665305fedb3adcae303f3b974bc9ce08">
-        <source>%firstname% %lastname% has not placed any orders yet</source>
-        <target>%firstname% %lastname% has not placed any orders yet</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:265</note>
-      </trans-unit>
-      <trans-unit id="698e0d3e044a7ebe56308e190b82b326">
-        <source>Purchased products</source>
-        <target>Purchased products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:308</note>
-      </trans-unit>
-      <trans-unit id="43560641f91e63dc83682bc598892fa1">
-        <source>Viewed products</source>
-        <target>Viewed products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:337</note>
-      </trans-unit>
-      <trans-unit id="a7136d956fbff49c3912e44722dbf000">
-        <source>Add a private note</source>
-        <target>Add a private note</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:362</note>
-      </trans-unit>
-      <trans-unit id="abce3ef910cfc047f0721654cb71f2db">
-        <source>Sent on</source>
-        <target>Sent on</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:391</note>
-      </trans-unit>
-      <trans-unit id="e1835dc45bbdc7f7d3ca94f4ab002f84">
-        <source>%firstname% %lastname% has never contacted you</source>
-        <target>%firstname% %lastname% has never contacted you</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:407</note>
-      </trans-unit>
-      <trans-unit id="907d7000b3555d1a1b12f1fed29a9ec4">
-        <source>Qty available</source>
-        <target>Qty available</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:423</note>
-      </trans-unit>
-      <trans-unit id="c8b4c13e6ad3227e192c118261c0e179">
-        <source>%firstname% %lastname% has no discount vouchers</source>
-        <target>%firstname% %lastname% has no discount vouchers</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:455</note>
-      </trans-unit>
-      <trans-unit id="b70a3b711156c78fa558c596980b2e30">
-        <source>Last emails</source>
-        <target>Last emails</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:463</note>
-      </trans-unit>
-      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
-        <source>Last connections</source>
-        <target>Last connections</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:491</note>
-      </trans-unit>
-      <trans-unit id="d3139f39f1ad6324c80a9ddd50cc7867">
-        <source>Pages viewed</source>
-        <target>Pages viewed</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:498</note>
-      </trans-unit>
-      <trans-unit id="c22d30084d8ddc9a571512ddee6a83e9">
-        <source>Total time</source>
-        <target>Total time</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:499</note>
-      </trans-unit>
-      <trans-unit id="3edf8ca26a1ec14dd6e91dd277ae1de6">
-        <source>Origin</source>
-        <target>Origin</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:500</note>
-      </trans-unit>
-      <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
-        <source>IP Address</source>
-        <target>IP Address</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:501</note>
-      </trans-unit>
-      <trans-unit id="ff398a1c3434e160c655aa1613e0eace">
-        <source>Referrers</source>
-        <target>Referrers</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:563</note>
-      </trans-unit>
-      <trans-unit id="e174c1b711f254d538c689a90c5842a5">
-        <source>Phone number(s)</source>
-        <target>Phone number(s)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:610</note>
+File: classes/lang/SupplyOrderStateLang.php:56</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="classes/lang/RiskLang.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0f98b7f230f3c91292f0de4c99e263f2">
-        <source>Registration</source>
-        <target>Registration</target>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:143</note>
+File: classes/lang/RiskLang.php:40</note>
       </trans-unit>
-      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
-        <source>Last visit</source>
-        <target>Last visit</target>
+      <trans-unit id="28d0edd045e05cf5af64e35ae0c4c6ef">
+        <source>Low</source>
+        <target>Low</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:148</note>
+File: classes/lang/RiskLang.php:41</note>
       </trans-unit>
-      <trans-unit id="888d7e26fb1b4271a83269c91134ed67">
-        <source>Manage your Customers</source>
-        <target>Manage your Customers</target>
+      <trans-unit id="87f8a6ab85c9ced3702b4ea641ad4bb5">
+        <source>Medium</source>
+        <target>Medium</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:246</note>
+File: classes/lang/RiskLang.php:42</note>
       </trans-unit>
-      <trans-unit id="e761bdaf03f138ff434c1cd3116814db">
-        <source>Information about customer %s</source>
-        <target>Information about customer %s</target>
+      <trans-unit id="655d20c1ca69519ca647684edbb2db35">
+        <source>High</source>
+        <target>High</target>
         <note>Context:
-File: controllers/admin/AdminCustomersController.php:252</note>
-      </trans-unit>
-      <trans-unit id="05e081ecd84fdd0ee85c8dfd0f215cdf">
-        <source>Editing customer %s</source>
-        <target>Editing customer %s</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:260</note>
-      </trans-unit>
-      <trans-unit id="601bcb96f0fb98dadc4dda90d98ef24d">
-        <source>Creating a new Customer</source>
-        <target>Creating a new Customer</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:262</note>
-      </trans-unit>
-      <trans-unit id="aac772216aecbeca0e86d06671fe985a">
-        <source>Birthday</source>
-        <target>Birthday</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:404</note>
-      </trans-unit>
-      <trans-unit id="920bd1fb6d54c93fca528ce941464225">
-        <source>Group access</source>
-        <target>Group access</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:474</note>
-      </trans-unit>
-      <trans-unit id="a3858e268ef19d7ec44b4e849a189a69">
-        <source>Default customer group</source>
-        <target>Default customer group</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:483</note>
-      </trans-unit>
-      <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
-        <source>Website</source>
-        <target>Website</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:535</note>
-      </trans-unit>
-      <trans-unit id="6e55ad8db6699476d8901b3d439963cb">
-        <source>Allowed outstanding amount</source>
-        <target>Allowed outstanding amount</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:540</note>
-      </trans-unit>
-      <trans-unit id="a7f50f36de1e47026a07b40670b50e1a">
-        <source>Maximum number of payment days</source>
-        <target>Maximum number of payment days</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:547</note>
-      </trans-unit>
-      <trans-unit id="b5228365ac1cae42b64aa5aecee6cf25">
-        <source>Risk rating</source>
-        <target>Risk rating</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:553</note>
-      </trans-unit>
-      <trans-unit id="06b7d2fbf61e5118bb87d7f561d3fa01">
-        <source>Average Age</source>
-        <target>Average Age</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:633</note>
-      </trans-unit>
-      <trans-unit id="d8f847a1f651aee93ecb6a22207e77b2">
-        <source>Orders per Customer</source>
-        <target>Orders per Customer</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:646</note>
-      </trans-unit>
-      <trans-unit id="d7eb752a5f38ab96a8dcf110aeb9f8b3">
-        <source>Newsletter Registrations</source>
-        <target>Newsletter Registrations</target>
-        <note>Context:
-File: controllers/admin/AdminCustomersController.php:659</note>
+File: classes/lang/RiskLang.php:43</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="c3bf447eabe632720a3aa1a7ce401274">
-        <source>Open</source>
-        <target>Open</target>
+      <trans-unit id="d79cf3f429596f77db95c65074663a54">
+        <source>Order ID</source>
+        <target>Order ID</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:67</note>
+File: controllers/admin/AdminCartsController.php:68</note>
       </trans-unit>
-      <trans-unit id="03f4a47830f97377a35321051685071e">
-        <source>Closed</source>
-        <target>Closed</target>
+      <trans-unit id="272c853e39b8c65c81afd3661a8fd17f">
+        <source>%amount% tax excl.</source>
+        <target>%amount% tax excl.</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:68</note>
+File: controllers/admin/AdminCartsController.php:180</note>
       </trans-unit>
-      <trans-unit id="70e7ab74282fb27b8c100e017b037135">
-        <source>Pending 1</source>
-        <target>Pending 1</target>
+      <trans-unit id="90855df1b2d1240c62d81bd35d4cfb06">
+        <source>Non ordered</source>
+        <target>Non ordered</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:69</note>
+File: controllers/admin/AdminCartsController.php:48</note>
       </trans-unit>
-      <trans-unit id="1033cc268ed0919b5d4e76ea6053ed25">
-        <source>Pending 2</source>
-        <target>Pending 2</target>
+      <trans-unit id="121401ccf0e3e23bcefe6a454f0f0601">
+        <source>Abandoned cart</source>
+        <target>Abandoned cart</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:70</note>
+File: controllers/admin/AdminCartsController.php:56</note>
       </trans-unit>
-      <trans-unit id="6d88865acb8658a92b188e47ba03906d">
-        <source>No new messages</source>
-        <target>No new messages</target>
+      <trans-unit id="f9b01554c32cc580b7380302f22613de">
+        <source>Export carts</source>
+        <target>Export carts</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:51</note>
+File: controllers/admin/AdminCartsController.php:126</note>
       </trans-unit>
-      <trans-unit id="f08d50397194b8e1679b11fd16f60ebc">
-        <source>New messages</source>
-        <target>New messages</target>
+      <trans-unit id="54e85d70ea67acdcc86963b14d6223a8">
+        <source>Abandoned Carts</source>
+        <target>Abandoned Carts</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:55</note>
+File: controllers/admin/AdminCartsController.php:161</note>
       </trans-unit>
-      <trans-unit id="b55a2d6e1009d3881156a3495dd26de5">
-        <source>New message</source>
-        <target>New message</target>
+      <trans-unit id="edeb0ec4f968653bb56eb2d7c50dab35">
+        <source>From %date1% to %date2%</source>
+        <target>From %date1% to %date2%</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:55</note>
+File: controllers/admin/AdminCartsController.php:164</note>
       </trans-unit>
-      <trans-unit id="95923cff2ad4637372adcdf25e4581f8">
-        <source>Meaning of status</source>
-        <target>Meaning of status</target>
+      <trans-unit id="ffbb5322a3702b0d8d9c7f506209c540">
+        <source>Average Order Value</source>
+        <target>Average Order Value</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:64</note>
+File: controllers/admin/AdminCartsController.php:177</note>
       </trans-unit>
-      <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
-        <source>Statistics</source>
-        <target>Statistics</target>
+      <trans-unit id="4d9e1e12ad8a61ea2a5554407488d91a">
+        <source>Net Profit per Visitor</source>
+        <target>Net Profit per Visitor</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:77</note>
+File: controllers/admin/AdminCartsController.php:191</note>
+      </trans-unit>
+      <trans-unit id="50cc07e9963519545552b1ac2c5f7a1e">
+        <source>Cart #%ID%</source>
+        <target>Cart #%ID%</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:278</note>
+      </trans-unit>
+      <trans-unit id="0b91ef9198a761459c595de4b12ca109">
+        <source>Total Cart</source>
+        <target>Total Cart</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:277</note>
+      </trans-unit>
+      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
+        <source>Free Shipping</source>
+        <target>Free Shipping</target>
+        <note>Context:
+File: controllers/admin/AdminCartsController.php:593</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="257630448a4acd9cfc1ce6c7a5ce05f3">
-        <source>Add new customer</source>
-        <target>Add new customer</target>
+      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
+        <source>Date issued</source>
+        <target>Date issued</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1125</note>
+File: controllers/admin/AdminSlipController.php:56</note>
       </trans-unit>
-      <trans-unit id="1a747e98fba823d6be62189cbac46dcb">
-        <source>Recycled packaging</source>
-        <target>Recycled packaging</target>
+      <trans-unit id="91ee5169ce4265b5ace262d703edbb5c">
+        <source>Generate PDF</source>
+        <target>Generate PDF</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1450</note>
+File: controllers/admin/AdminSlipController.php:182</note>
       </trans-unit>
-      <trans-unit id="449fae749af1f675c63510eecb0b88c4">
-        <source>View this cart</source>
-        <target>View this cart</target>
+      <trans-unit id="c95ed58f8c9573f7d58667e6847758d9">
+        <source>Slip</source>
+        <target>Slip</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:561</note>
+File: controllers/admin/AdminSlipController.php:72</note>
       </trans-unit>
-      <trans-unit id="0aed4e816d2ab18361bbfe990b4fdcde">
-        <source>Use this cart</source>
-        <target>Use this cart</target>
+      <trans-unit id="44180a771d7f3bf534550199c3293441">
+        <source>Credit slip options</source>
+        <target>Credit slip options</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:562</note>
+File: controllers/admin/AdminSlipController.php:76</note>
       </trans-unit>
-      <trans-unit id="ad8783089f828b927473fb61d51940ec">
-        <source>Use</source>
-        <target>Use</target>
+      <trans-unit id="d3174688da67b4530a7c8e774a7f31d5">
+        <source>Credit slip prefix</source>
+        <target>Credit slip prefix</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:572</note>
+File: controllers/admin/AdminSlipController.php:79</note>
       </trans-unit>
-      <trans-unit id="c112bd7d596888979be02bd780e6a94f">
-        <source>View this order</source>
-        <target>View this order</target>
+      <trans-unit id="9a0e3730cac2d4abdda4cfa04483318e">
+        <source>Print a PDF</source>
+        <target>Print a PDF</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:571</note>
+File: controllers/admin/AdminSlipController.php:107</note>
       </trans-unit>
-      <trans-unit id="90bf4568676d012fc21b3556fbd0303b">
-        <source>Duplicate this order</source>
-        <target>Duplicate this order</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9442975514755961788cc54bf8b43ddf">
+        <source>Merchandise return (RMA) options</source>
+        <target>Merchandise return (RMA) options</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:572</note>
+File: controllers/admin/AdminReturnController.php:55</note>
       </trans-unit>
-      <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
-        <source>Gift</source>
-        <target>Gift</target>
+      <trans-unit id="f374280fc7cab62785714cfca79b85a1">
+        <source>Enable returns</source>
+        <target>Enable returns</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1461</note>
+File: controllers/admin/AdminReturnController.php:58</note>
       </trans-unit>
-      <trans-unit id="eeddc7284795f5c71b12156c06e9e821">
-        <source>Search for a customer</source>
-        <target>Search for a customer</target>
+      <trans-unit id="587398fde24739a1b7ecdb632e6855dd">
+        <source>Time limit of validity</source>
+        <target>Time limit of validity</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1108</note>
+File: controllers/admin/AdminReturnController.php:62</note>
       </trans-unit>
-      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
-        <source>Total paid</source>
-        <target>Total paid</target>
+      <trans-unit id="942fb8edc78a4c5be5b86cc4ad009538">
+        <source>Returns prefix</source>
+        <target>Returns prefix</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1175</note>
+File: controllers/admin/AdminReturnController.php:68</note>
       </trans-unit>
-      <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
-        <source>Cart</source>
-        <target>Cart</target>
+      <trans-unit id="bfc23574a242be4531bcb29877ac1d8a">
+        <source>Return Merchandise Authorization (RMA)</source>
+        <target>Return Merchandise Authorization (RMA)</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1194</note>
+File: controllers/admin/AdminReturnController.php:86</note>
       </trans-unit>
-      <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
-        <source>Search for a product</source>
-        <target>Search for a product</target>
+      <trans-unit id="f504da64aae2dcfd85ce565121248f93">
+        <source>Customer explanation</source>
+        <target>Customer explanation</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1199</note>
+File: controllers/admin/AdminReturnController.php:114</note>
       </trans-unit>
-      <trans-unit id="fcebe56087b9373f15514831184fa572">
-        <source>In stock</source>
-        <target>In stock</target>
+      <trans-unit id="6d72e074fdface4ae892543d39434175">
+        <source>Returns form</source>
+        <target>Returns form</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1239</note>
+File: controllers/admin/AdminReturnController.php:141</note>
       </trans-unit>
-      <trans-unit id="2d0f6b8300be19cf35e89e66f0677f95">
-        <source>Add to cart</source>
-        <target>Add to cart</target>
+      <trans-unit id="4f3bf7771a1ecc368092d952d698c12c">
+        <source>Order #%id% from %date%</source>
+        <target>Order #%id% from %date%</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1247</note>
+File: controllers/admin/AdminReturnController.php:172</note>
       </trans-unit>
-      <trans-unit id="c89db248919294ef0291a6586f6e9a5b">
-        <source>Search for a voucher</source>
-        <target>Search for a voucher</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="38d6bc03067212bb0c2633f8a57d5881">
+        <source>Order messages</source>
+        <target>Order messages</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1319</note>
+File: controllers/admin/AdminOrderMessageController.php:74</note>
       </trans-unit>
-      <trans-unit id="11599f38f7ac080ae579f1bf32f08561">
-        <source>Add new voucher</source>
-        <target>Add new voucher</target>
+      <trans-unit id="80c05dda6b88c30a777e8777e23be8d7">
+        <source>Add new order message</source>
+        <target>Add new order message</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1335</note>
+File: controllers/admin/AdminOrderMessageController.php:105</note>
       </trans-unit>
-      <trans-unit id="b15e1100a6196acba01ef7aaa5b2a9e5">
-        <source>Add a new address</source>
-        <target>Add a new address</target>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_select_payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="267806034cfac4481cabe7b81c81f91d">
+        <source>Back office order</source>
+        <target>Back office order</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1397</note>
+File: admin-dev/themes/default/template/controllers/orders/_select_payment.tpl:31</note>
       </trans-unit>
-      <trans-unit id="19dfe063714422004b75043eaf74c9b8">
-        <source>Delivery option</source>
-        <target>Delivery option</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="94003250a2187a9f51b227b490e5ab6b">
+        <source>New client</source>
+        <target>New client</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1411</note>
+File: controllers/admin/AdminOrdersController.php:87</note>
       </trans-unit>
-      <trans-unit id="4c15f9bb0c76e90180c701b2d39994d8">
-        <source>Shipping price (Tax incl.)</source>
-        <target>Shipping price (Tax incl.)</target>
+      <trans-unit id="e13004b81566bfc42daa48372c15111b">
+        <source>Change Order Status</source>
+        <target>Change Order Status</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1420</note>
+File: controllers/admin/AdminOrdersController.php:184</note>
       </trans-unit>
-      <trans-unit id="0fe067d5d05655a4c80602c1d6e7d0c5">
-        <source>Gift message</source>
-        <target>Gift message</target>
+      <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
+        <source>Add new order</source>
+        <target>Add new order</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1466</note>
+File: controllers/admin/AdminOrdersController.php:201</note>
       </trans-unit>
-      <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
-        <source>Total products</source>
-        <target>Total products</target>
+      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
+        <source>Orders</source>
+        <target>Orders</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1486</note>
+File: controllers/admin/AdminOrdersController.php:260</note>
       </trans-unit>
-      <trans-unit id="58a13b9a4e13f53cf70a60bf583321e1">
-        <source>Total vouchers (Tax excl.)</source>
-        <target>Total vouchers (Tax excl.)</target>
+      <trans-unit id="0262a3dc4fae9adc8cb46e788806ccbf">
+        <source>Create order</source>
+        <target>Create order</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1492</note>
+File: controllers/admin/AdminOrdersController.php:260</note>
       </trans-unit>
-      <trans-unit id="96a2d6388d5c73e22a1edbe506f86b17">
-        <source>Total shipping (Tax excl.)</source>
-        <target>Total shipping (Tax excl.)</target>
+      <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
+        <source>Order %reference% from %firstname% %lastname%</source>
+        <target>Order %reference% from %firstname% %lastname%</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1498</note>
+File: controllers/admin/AdminOrdersController.php:278</note>
       </trans-unit>
-      <trans-unit id="7bf753e0cbb2d38818ba2a3ee3b36f4d">
-        <source>Total taxes</source>
-        <target>Total taxes</target>
+      <trans-unit id="d201284604b35aa9392cb9c1acc434a6">
+        <source>Credit slip for order #%d</source>
+        <target>Credit slip for order #%d</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1504</note>
+File: controllers/admin/AdminOrdersController.php:792</note>
       </trans-unit>
-      <trans-unit id="b94cb106eaa958b2ab473da305e57977">
-        <source>Total (Tax excl.)</source>
-        <target>Total (Tax excl.)</target>
+      <trans-unit id="bbee72681d2c075d95355d3d9ccefb4e">
+        <source>Credit card slip for order #%d</source>
+        <target>Credit card slip for order #%d</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1510</note>
+File: controllers/admin/AdminOrdersController.php:1061</note>
       </trans-unit>
-      <trans-unit id="eed1808b8206c5a62cc6407f85cf95bc">
-        <source>Total (Tax incl.)</source>
-        <target>Total (Tax incl.)</target>
+      <trans-unit id="e49701f123af735cf327227e8ab09bac">
+        <source>Manual order -- Employee:</source>
+        <target>Manual order -- Employee:</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1516</note>
+File: controllers/admin/AdminOrdersController.php:1230</note>
       </trans-unit>
-      <trans-unit id="f13673c7e261fd8d00915c9cb768ad95">
-        <source>Order message</source>
-        <target>Order message</target>
+      <trans-unit id="1f065062cdb50b501c5cb5160cf21ab0">
+        <source>Net Profit per Visit</source>
+        <target>Net Profit per Visit</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1526</note>
+File: controllers/admin/AdminOrdersController.php:1657</note>
       </trans-unit>
-      <trans-unit id="034d2690db87b737dd810afccbe41b7a">
-        <source>Create the order</source>
-        <target>Create the order</target>
+      <trans-unit id="947d8520f04473da621f2718138f3bc6">
+        <source>30 days</source>
+        <target>30 days</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/form.tpl:1573</note>
+File: controllers/admin/AdminOrdersController.php:1658</note>
+      </trans-unit>
+      <trans-unit id="52ec3221b595bb84def222e275d0152b">
+        <source>Order #%id% (%ref%) - %firstname% %lastname%</source>
+        <target>Order #%id% (%ref%) - %firstname% %lastname%</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:1710</note>
+      </trans-unit>
+      <trans-unit id="95abd3be6297996994738f735a369d4a">
+        <source>Shop: %shop_name%</source>
+        <target>Shop: %shop_name%</target>
+        <note>Context:
+File: controllers/admin/AdminOrdersController.php:1721</note>
       </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="4f68183551e5dbd7c341347ffe308682">
-        <source>SIRET</source>
-        <target>SIRET</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:613</note>
-      </trans-unit>
-      <trans-unit id="85fb93a8ee9440499692da24a1621769">
-        <source>APE</source>
-        <target>APE</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:615</note>
-      </trans-unit>
       <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
         <source>Return products</source>
         <target>Return products</target>
@@ -783,6 +527,18 @@ File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl
         <target>Partial refund</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1237</note>
+      </trans-unit>
+      <trans-unit id="4f68183551e5dbd7c341347ffe308682">
+        <source>SIRET</source>
+        <target>SIRET</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:613</note>
+      </trans-unit>
+      <trans-unit id="85fb93a8ee9440499692da24a1621769">
+        <source>APE</source>
+        <target>APE</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:615</note>
       </trans-unit>
       <trans-unit id="01abfc750a0c942167651c40d088531d">
         <source>#</source>
@@ -1152,50 +908,6 @@ File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminAddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="bed08e8af70a98c1a8361f13ec477be0">
-        <source>Add new address</source>
-        <target>Add new address</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:104</note>
-      </trans-unit>
-      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
-        <source>Addresses</source>
-        <target>Addresses</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:116</note>
-      </trans-unit>
-      <trans-unit id="e03982ee543fe69d4954d587f1f2a338">
-        <source>The national ID card number of this person, or a unique tax identification number.</source>
-        <target>The national ID card number of this person, or a unique tax identification number.</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:132</note>
-      </trans-unit>
-      <trans-unit id="baa31a65f29121c32b637bb845d41acf">
-        <source>Address alias</source>
-        <target>Address alias</target>
-        <note>Context:
-File: controllers/admin/AdminAddressesController.php:136</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
-        <source>Identification number</source>
-        <target>Identification number</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:403</note>
-      </trans-unit>
-      <trans-unit id="7cb32e708d6b961d476baced73d362bb">
-        <source>VAT number</source>
-        <target>VAT number</target>
-        <note>Context:
-File: controllers/admin/AdminImportController.php:402</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminDeliverySlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="947c66d55a8038fd0c16fef605186573">
@@ -1354,43 +1066,567 @@ File: controllers/admin/AdminInvoicesController.php:197</note>
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="controllers/admin/AdminAddressesController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="91ee5169ce4265b5ace262d703edbb5c">
-        <source>Generate PDF</source>
-        <target>Generate PDF</target>
+      <trans-unit id="bed08e8af70a98c1a8361f13ec477be0">
+        <source>Add new address</source>
+        <target>Add new address</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:182</note>
+File: controllers/admin/AdminAddressesController.php:104</note>
       </trans-unit>
-      <trans-unit id="446faa7da2d42ba4ffeda73cb119dd91">
-        <source>Date issued</source>
-        <target>Date issued</target>
+      <trans-unit id="284b47b0bb63ae2df3b29f0e691d6fcf">
+        <source>Addresses</source>
+        <target>Addresses</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:56</note>
+File: controllers/admin/AdminAddressesController.php:116</note>
       </trans-unit>
-      <trans-unit id="c95ed58f8c9573f7d58667e6847758d9">
-        <source>Slip</source>
-        <target>Slip</target>
+      <trans-unit id="e03982ee543fe69d4954d587f1f2a338">
+        <source>The national ID card number of this person, or a unique tax identification number.</source>
+        <target>The national ID card number of this person, or a unique tax identification number.</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:72</note>
+File: controllers/admin/AdminAddressesController.php:132</note>
       </trans-unit>
-      <trans-unit id="44180a771d7f3bf534550199c3293441">
-        <source>Credit slip options</source>
-        <target>Credit slip options</target>
+      <trans-unit id="baa31a65f29121c32b637bb845d41acf">
+        <source>Address alias</source>
+        <target>Address alias</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:76</note>
+File: controllers/admin/AdminAddressesController.php:136</note>
       </trans-unit>
-      <trans-unit id="d3174688da67b4530a7c8e774a7f31d5">
-        <source>Credit slip prefix</source>
-        <target>Credit slip prefix</target>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b60bb13a87fe3ae5463aeb0980a5a8a1">
+        <source>Identification number</source>
+        <target>Identification number</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:79</note>
+File: controllers/admin/AdminImportController.php:427</note>
       </trans-unit>
-      <trans-unit id="9a0e3730cac2d4abdda4cfa04483318e">
-        <source>Print a PDF</source>
-        <target>Print a PDF</target>
+      <trans-unit id="7cb32e708d6b961d476baced73d362bb">
+        <source>VAT number</source>
+        <target>VAT number</target>
         <note>Context:
-File: controllers/admin/AdminSlipController.php:107</note>
+File: controllers/admin/AdminImportController.php:426</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="36358a9d4d77cc110761aec78f98c945">
+        <source>Partner offers</source>
+        <target>Partner offers</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:133</note>
+      </trans-unit>
+      <trans-unit id="a82868319826fb092b73968e661b5b38">
+        <source>Vouchers</source>
+        <target>Vouchers</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:413</note>
+      </trans-unit>
+      <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
+        <source>Unknown</source>
+        <target>Unknown</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:104</note>
+      </trans-unit>
+      <trans-unit id="9d8d2d5ab12b515182a505f54db7f538">
+        <source>Age</source>
+        <target>Age</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:58</note>
+      </trans-unit>
+      <trans-unit id="56b80d8cc0afeaff5a2e624583b976ab">
+        <source>%1$d years old (birth date: %2$s)</source>
+        <target>%1$d years old (birth date: %2$s)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:62</note>
+      </trans-unit>
+      <trans-unit id="97ce2ccb5de5849fd94203a375054378">
+        <source>Registration Date</source>
+        <target>Registration Date</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="123cdf3e99e5daa563ac54af55a158be">
+        <source>Last Visit</source>
+        <target>Last Visit</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="eee7a325a979babb04b46b3114c005f6">
+        <source>Best Customer Rank</source>
+        <target>Best Customer Rank</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:83</note>
+      </trans-unit>
+      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
+        <source>Registrations</source>
+        <target>Registrations</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:110</note>
+      </trans-unit>
+      <trans-unit id="a39ee61626da77cb9644fa972a8ac5b5">
+        <source>Latest Update</source>
+        <target>Latest Update</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:140</note>
+      </trans-unit>
+      <trans-unit id="1f8895b98efdf9e96766d39f24ec352c">
+        <source>This customer is registered as a Guest.</source>
+        <target>This customer is registered as a Guest.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:165</note>
+      </trans-unit>
+      <trans-unit id="832c2f75a0029f82a281704661b07542">
+        <source>Transform to a customer account</source>
+        <target>Transform to a customer account</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:170</note>
+      </trans-unit>
+      <trans-unit id="33c1f4de9458d31b6df40fb7fb52a180">
+        <source>for a total amount of %s</source>
+        <target>for a total amount of %s</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:194</note>
+      </trans-unit>
+      <trans-unit id="a9c74a800ed9f3d504e76d8c59acc497">
+        <source>Invalid orders:</source>
+        <target>Invalid orders:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:198</note>
+      </trans-unit>
+      <trans-unit id="25326db0dcb2cf342b3477fbdad373dc">
+        <source>Total spent</source>
+        <target>Total spent</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:246</note>
+      </trans-unit>
+      <trans-unit id="665305fedb3adcae303f3b974bc9ce08">
+        <source>%firstname% %lastname% has not placed any orders yet</source>
+        <target>%firstname% %lastname% has not placed any orders yet</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:265</note>
+      </trans-unit>
+      <trans-unit id="698e0d3e044a7ebe56308e190b82b326">
+        <source>Purchased products</source>
+        <target>Purchased products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:308</note>
+      </trans-unit>
+      <trans-unit id="43560641f91e63dc83682bc598892fa1">
+        <source>Viewed products</source>
+        <target>Viewed products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:337</note>
+      </trans-unit>
+      <trans-unit id="a7136d956fbff49c3912e44722dbf000">
+        <source>Add a private note</source>
+        <target>Add a private note</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:362</note>
+      </trans-unit>
+      <trans-unit id="abce3ef910cfc047f0721654cb71f2db">
+        <source>Sent on</source>
+        <target>Sent on</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:391</note>
+      </trans-unit>
+      <trans-unit id="e1835dc45bbdc7f7d3ca94f4ab002f84">
+        <source>%firstname% %lastname% has never contacted you</source>
+        <target>%firstname% %lastname% has never contacted you</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:407</note>
+      </trans-unit>
+      <trans-unit id="907d7000b3555d1a1b12f1fed29a9ec4">
+        <source>Qty available</source>
+        <target>Qty available</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:423</note>
+      </trans-unit>
+      <trans-unit id="c8b4c13e6ad3227e192c118261c0e179">
+        <source>%firstname% %lastname% has no discount vouchers</source>
+        <target>%firstname% %lastname% has no discount vouchers</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:455</note>
+      </trans-unit>
+      <trans-unit id="b70a3b711156c78fa558c596980b2e30">
+        <source>Last emails</source>
+        <target>Last emails</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:463</note>
+      </trans-unit>
+      <trans-unit id="93bd48ecb9c4d5c4eec7fefffbb2070f">
+        <source>Last connections</source>
+        <target>Last connections</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:491</note>
+      </trans-unit>
+      <trans-unit id="d3139f39f1ad6324c80a9ddd50cc7867">
+        <source>Pages viewed</source>
+        <target>Pages viewed</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:498</note>
+      </trans-unit>
+      <trans-unit id="c22d30084d8ddc9a571512ddee6a83e9">
+        <source>Total time</source>
+        <target>Total time</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:499</note>
+      </trans-unit>
+      <trans-unit id="3edf8ca26a1ec14dd6e91dd277ae1de6">
+        <source>Origin</source>
+        <target>Origin</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:500</note>
+      </trans-unit>
+      <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
+        <source>IP Address</source>
+        <target>IP Address</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:501</note>
+      </trans-unit>
+      <trans-unit id="ff398a1c3434e160c655aa1613e0eace">
+        <source>Referrers</source>
+        <target>Referrers</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:563</note>
+      </trans-unit>
+      <trans-unit id="e174c1b711f254d538c689a90c5842a5">
+        <source>Phone number(s)</source>
+        <target>Phone number(s)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customers/helpers/view/view.tpl:610</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0f98b7f230f3c91292f0de4c99e263f2">
+        <source>Registration</source>
+        <target>Registration</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:143</note>
+      </trans-unit>
+      <trans-unit id="5e5914912e8d2f2765525840acf98bea">
+        <source>Last visit</source>
+        <target>Last visit</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:148</note>
+      </trans-unit>
+      <trans-unit id="888d7e26fb1b4271a83269c91134ed67">
+        <source>Manage your Customers</source>
+        <target>Manage your Customers</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:246</note>
+      </trans-unit>
+      <trans-unit id="cd338983b119cf1b564b00a655751e36">
+        <source>Information about customer %name%</source>
+        <target>Information about customer %name%</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:252</note>
+      </trans-unit>
+      <trans-unit id="69ebc35efeb4f755ec3e9c44b4da635c">
+        <source>Editing customer %name%</source>
+        <target>Editing customer %name%</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:260</note>
+      </trans-unit>
+      <trans-unit id="601bcb96f0fb98dadc4dda90d98ef24d">
+        <source>Creating a new Customer</source>
+        <target>Creating a new Customer</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:262</note>
+      </trans-unit>
+      <trans-unit id="aac772216aecbeca0e86d06671fe985a">
+        <source>Birthday</source>
+        <target>Birthday</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:404</note>
+      </trans-unit>
+      <trans-unit id="920bd1fb6d54c93fca528ce941464225">
+        <source>Group access</source>
+        <target>Group access</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:474</note>
+      </trans-unit>
+      <trans-unit id="a3858e268ef19d7ec44b4e849a189a69">
+        <source>Default customer group</source>
+        <target>Default customer group</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:483</note>
+      </trans-unit>
+      <trans-unit id="15bbb9d0bbf25e8d2978de1168c749dc">
+        <source>Website</source>
+        <target>Website</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:535</note>
+      </trans-unit>
+      <trans-unit id="6e55ad8db6699476d8901b3d439963cb">
+        <source>Allowed outstanding amount</source>
+        <target>Allowed outstanding amount</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:540</note>
+      </trans-unit>
+      <trans-unit id="a7f50f36de1e47026a07b40670b50e1a">
+        <source>Maximum number of payment days</source>
+        <target>Maximum number of payment days</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:547</note>
+      </trans-unit>
+      <trans-unit id="b5228365ac1cae42b64aa5aecee6cf25">
+        <source>Risk rating</source>
+        <target>Risk rating</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:553</note>
+      </trans-unit>
+      <trans-unit id="06b7d2fbf61e5118bb87d7f561d3fa01">
+        <source>Average Age</source>
+        <target>Average Age</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:633</note>
+      </trans-unit>
+      <trans-unit id="d8f847a1f651aee93ecb6a22207e77b2">
+        <source>Orders per Customer</source>
+        <target>Orders per Customer</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:646</note>
+      </trans-unit>
+      <trans-unit id="d7eb752a5f38ab96a8dcf110aeb9f8b3">
+        <source>Newsletter Registrations</source>
+        <target>Newsletter Registrations</target>
+        <note>Context:
+File: controllers/admin/AdminCustomersController.php:659</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c3bf447eabe632720a3aa1a7ce401274">
+        <source>Open</source>
+        <target>Open</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:67</note>
+      </trans-unit>
+      <trans-unit id="03f4a47830f97377a35321051685071e">
+        <source>Closed</source>
+        <target>Closed</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="70e7ab74282fb27b8c100e017b037135">
+        <source>Pending 1</source>
+        <target>Pending 1</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:69</note>
+      </trans-unit>
+      <trans-unit id="1033cc268ed0919b5d4e76ea6053ed25">
+        <source>Pending 2</source>
+        <target>Pending 2</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:70</note>
+      </trans-unit>
+      <trans-unit id="6d88865acb8658a92b188e47ba03906d">
+        <source>No new messages</source>
+        <target>No new messages</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:51</note>
+      </trans-unit>
+      <trans-unit id="f08d50397194b8e1679b11fd16f60ebc">
+        <source>New messages</source>
+        <target>New messages</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="b55a2d6e1009d3881156a3495dd26de5">
+        <source>New message</source>
+        <target>New message</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="95923cff2ad4637372adcdf25e4581f8">
+        <source>Meaning of status</source>
+        <target>Meaning of status</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:64</note>
+      </trans-unit>
+      <trans-unit id="c33e404a441c6ba9648f88af3c68a1ca">
+        <source>Statistics</source>
+        <target>Statistics</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/list/list_header.tpl:77</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="257630448a4acd9cfc1ce6c7a5ce05f3">
+        <source>Add new customer</source>
+        <target>Add new customer</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1125</note>
+      </trans-unit>
+      <trans-unit id="c112bd7d596888979be02bd780e6a94f">
+        <source>View this order</source>
+        <target>View this order</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:571</note>
+      </trans-unit>
+      <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
+        <source>Search for a product</source>
+        <target>Search for a product</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1199</note>
+      </trans-unit>
+      <trans-unit id="1a747e98fba823d6be62189cbac46dcb">
+        <source>Recycled packaging</source>
+        <target>Recycled packaging</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1450</note>
+      </trans-unit>
+      <trans-unit id="449fae749af1f675c63510eecb0b88c4">
+        <source>View this cart</source>
+        <target>View this cart</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:561</note>
+      </trans-unit>
+      <trans-unit id="0aed4e816d2ab18361bbfe990b4fdcde">
+        <source>Use this cart</source>
+        <target>Use this cart</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:562</note>
+      </trans-unit>
+      <trans-unit id="ad8783089f828b927473fb61d51940ec">
+        <source>Use</source>
+        <target>Use</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:572</note>
+      </trans-unit>
+      <trans-unit id="90bf4568676d012fc21b3556fbd0303b">
+        <source>Duplicate this order</source>
+        <target>Duplicate this order</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:572</note>
+      </trans-unit>
+      <trans-unit id="0d9175fe89fb80d815e7d03698b6e83a">
+        <source>Gift</source>
+        <target>Gift</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1461</note>
+      </trans-unit>
+      <trans-unit id="eeddc7284795f5c71b12156c06e9e821">
+        <source>Search for a customer</source>
+        <target>Search for a customer</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1108</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601">
+        <source>Total paid</source>
+        <target>Total paid</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1175</note>
+      </trans-unit>
+      <trans-unit id="a85eba4c6c699122b2bb1387ea4813ad">
+        <source>Cart</source>
+        <target>Cart</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1194</note>
+      </trans-unit>
+      <trans-unit id="fcebe56087b9373f15514831184fa572">
+        <source>In stock</source>
+        <target>In stock</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1239</note>
+      </trans-unit>
+      <trans-unit id="2d0f6b8300be19cf35e89e66f0677f95">
+        <source>Add to cart</source>
+        <target>Add to cart</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1247</note>
+      </trans-unit>
+      <trans-unit id="c89db248919294ef0291a6586f6e9a5b">
+        <source>Search for a voucher</source>
+        <target>Search for a voucher</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1319</note>
+      </trans-unit>
+      <trans-unit id="11599f38f7ac080ae579f1bf32f08561">
+        <source>Add new voucher</source>
+        <target>Add new voucher</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1335</note>
+      </trans-unit>
+      <trans-unit id="b15e1100a6196acba01ef7aaa5b2a9e5">
+        <source>Add a new address</source>
+        <target>Add a new address</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1397</note>
+      </trans-unit>
+      <trans-unit id="19dfe063714422004b75043eaf74c9b8">
+        <source>Delivery option</source>
+        <target>Delivery option</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1411</note>
+      </trans-unit>
+      <trans-unit id="4c15f9bb0c76e90180c701b2d39994d8">
+        <source>Shipping price (Tax incl.)</source>
+        <target>Shipping price (Tax incl.)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1420</note>
+      </trans-unit>
+      <trans-unit id="0fe067d5d05655a4c80602c1d6e7d0c5">
+        <source>Gift message</source>
+        <target>Gift message</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1466</note>
+      </trans-unit>
+      <trans-unit id="db205f01b4fd580fb5daa9072d96849d">
+        <source>Total products</source>
+        <target>Total products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1486</note>
+      </trans-unit>
+      <trans-unit id="58a13b9a4e13f53cf70a60bf583321e1">
+        <source>Total vouchers (Tax excl.)</source>
+        <target>Total vouchers (Tax excl.)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1492</note>
+      </trans-unit>
+      <trans-unit id="96a2d6388d5c73e22a1edbe506f86b17">
+        <source>Total shipping (Tax excl.)</source>
+        <target>Total shipping (Tax excl.)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1498</note>
+      </trans-unit>
+      <trans-unit id="7bf753e0cbb2d38818ba2a3ee3b36f4d">
+        <source>Total taxes</source>
+        <target>Total taxes</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1504</note>
+      </trans-unit>
+      <trans-unit id="b94cb106eaa958b2ab473da305e57977">
+        <source>Total (Tax excl.)</source>
+        <target>Total (Tax excl.)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1510</note>
+      </trans-unit>
+      <trans-unit id="eed1808b8206c5a62cc6407f85cf95bc">
+        <source>Total (Tax incl.)</source>
+        <target>Total (Tax incl.)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1516</note>
+      </trans-unit>
+      <trans-unit id="f13673c7e261fd8d00915c9cb768ad95">
+        <source>Order message</source>
+        <target>Order message</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1526</note>
+      </trans-unit>
+      <trans-unit id="034d2690db87b737dd810afccbe41b7a">
+        <source>Create the order</source>
+        <target>Create the order</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/form.tpl:1573</note>
       </trans-unit>
     </body>
   </file>
@@ -1413,274 +1649,6 @@ File: controllers/admin/AdminOutstandingController.php:90</note>
         <target>Current Outstanding</target>
         <note>Context:
 File: controllers/admin/AdminOutstandingController.php:97</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_select_payment.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="267806034cfac4481cabe7b81c81f91d">
-        <source>Back office order</source>
-        <target>Back office order</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_select_payment.tpl:31</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="94003250a2187a9f51b227b490e5ab6b">
-        <source>New client</source>
-        <target>New client</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:98</note>
-      </trans-unit>
-      <trans-unit id="e13004b81566bfc42daa48372c15111b">
-        <source>Change Order Status</source>
-        <target>Change Order Status</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:195</note>
-      </trans-unit>
-      <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
-        <source>Add new order</source>
-        <target>Add new order</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:212</note>
-      </trans-unit>
-      <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
-        <source>Orders</source>
-        <target>Orders</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:271</note>
-      </trans-unit>
-      <trans-unit id="0262a3dc4fae9adc8cb46e788806ccbf">
-        <source>Create order</source>
-        <target>Create order</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:271</note>
-      </trans-unit>
-      <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
-        <source>Order %reference% from %firstname% %lastname%</source>
-        <target>Order %reference% from %firstname% %lastname%</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:289</note>
-      </trans-unit>
-      <trans-unit id="d201284604b35aa9392cb9c1acc434a6">
-        <source>Credit slip for order #%d</source>
-        <target>Credit slip for order #%d</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:808</note>
-      </trans-unit>
-      <trans-unit id="bbee72681d2c075d95355d3d9ccefb4e">
-        <source>Credit card slip for order #%d</source>
-        <target>Credit card slip for order #%d</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:1079</note>
-      </trans-unit>
-      <trans-unit id="e49701f123af735cf327227e8ab09bac">
-        <source>Manual order -- Employee:</source>
-        <target>Manual order -- Employee:</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:1248</note>
-      </trans-unit>
-      <trans-unit id="1f065062cdb50b501c5cb5160cf21ab0">
-        <source>Net Profit per Visit</source>
-        <target>Net Profit per Visit</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:1675</note>
-      </trans-unit>
-      <trans-unit id="947d8520f04473da621f2718138f3bc6">
-        <source>30 days</source>
-        <target>30 days</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:1676</note>
-      </trans-unit>
-      <trans-unit id="52ec3221b595bb84def222e275d0152b">
-        <source>Order #%id% (%ref%) - %firstname% %lastname%</source>
-        <target>Order #%id% (%ref%) - %firstname% %lastname%</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:1728</note>
-      </trans-unit>
-      <trans-unit id="e0a1695cc8d58eae2745b55059687db6">
-        <source>Shop: %s</source>
-        <target>Shop: %s</target>
-        <note>Context:
-File: controllers/admin/AdminOrdersController.php:1739</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="272c853e39b8c65c81afd3661a8fd17f">
-        <source>%amount% tax excl.</source>
-        <target>%amount% tax excl.</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:180</note>
-      </trans-unit>
-      <trans-unit id="d79cf3f429596f77db95c65074663a54">
-        <source>Order ID</source>
-        <target>Order ID</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:68</note>
-      </trans-unit>
-      <trans-unit id="90855df1b2d1240c62d81bd35d4cfb06">
-        <source>Non ordered</source>
-        <target>Non ordered</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:48</note>
-      </trans-unit>
-      <trans-unit id="121401ccf0e3e23bcefe6a454f0f0601">
-        <source>Abandoned cart</source>
-        <target>Abandoned cart</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:56</note>
-      </trans-unit>
-      <trans-unit id="f9b01554c32cc580b7380302f22613de">
-        <source>Export carts</source>
-        <target>Export carts</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:126</note>
-      </trans-unit>
-      <trans-unit id="54e85d70ea67acdcc86963b14d6223a8">
-        <source>Abandoned Carts</source>
-        <target>Abandoned Carts</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:161</note>
-      </trans-unit>
-      <trans-unit id="edeb0ec4f968653bb56eb2d7c50dab35">
-        <source>From %date1% to %date2%</source>
-        <target>From %date1% to %date2%</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:164</note>
-      </trans-unit>
-      <trans-unit id="ffbb5322a3702b0d8d9c7f506209c540">
-        <source>Average Order Value</source>
-        <target>Average Order Value</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:177</note>
-      </trans-unit>
-      <trans-unit id="4d9e1e12ad8a61ea2a5554407488d91a">
-        <source>Net Profit per Visitor</source>
-        <target>Net Profit per Visitor</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:191</note>
-      </trans-unit>
-      <trans-unit id="50cc07e9963519545552b1ac2c5f7a1e">
-        <source>Cart #%ID%</source>
-        <target>Cart #%ID%</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:278</note>
-      </trans-unit>
-      <trans-unit id="0b91ef9198a761459c595de4b12ca109">
-        <source>Total Cart</source>
-        <target>Total Cart</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:277</note>
-      </trans-unit>
-      <trans-unit id="b00b85425e74ed2c85dc3119b78ff2c3">
-        <source>Free Shipping</source>
-        <target>Free Shipping</target>
-        <note>Context:
-File: controllers/admin/AdminCartsController.php:593</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="9442975514755961788cc54bf8b43ddf">
-        <source>Merchandise return (RMA) options</source>
-        <target>Merchandise return (RMA) options</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:55</note>
-      </trans-unit>
-      <trans-unit id="f374280fc7cab62785714cfca79b85a1">
-        <source>Enable returns</source>
-        <target>Enable returns</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:58</note>
-      </trans-unit>
-      <trans-unit id="587398fde24739a1b7ecdb632e6855dd">
-        <source>Time limit of validity</source>
-        <target>Time limit of validity</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:62</note>
-      </trans-unit>
-      <trans-unit id="942fb8edc78a4c5be5b86cc4ad009538">
-        <source>Returns prefix</source>
-        <target>Returns prefix</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:68</note>
-      </trans-unit>
-      <trans-unit id="bfc23574a242be4531bcb29877ac1d8a">
-        <source>Return Merchandise Authorization (RMA)</source>
-        <target>Return Merchandise Authorization (RMA)</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:86</note>
-      </trans-unit>
-      <trans-unit id="f504da64aae2dcfd85ce565121248f93">
-        <source>Customer explanation</source>
-        <target>Customer explanation</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:114</note>
-      </trans-unit>
-      <trans-unit id="6d72e074fdface4ae892543d39434175">
-        <source>Returns form</source>
-        <target>Returns form</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:141</note>
-      </trans-unit>
-      <trans-unit id="4f3bf7771a1ecc368092d952d698c12c">
-        <source>Order #%id% from %date%</source>
-        <target>Order #%id% from %date%</target>
-        <note>Context:
-File: controllers/admin/AdminReturnController.php:172</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminOrderMessageController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="38d6bc03067212bb0c2633f8a57d5881">
-        <source>Order messages</source>
-        <target>Order messages</target>
-        <note>Context:
-File: controllers/admin/AdminOrderMessageController.php:74</note>
-      </trans-unit>
-      <trans-unit id="80c05dda6b88c30a777e8777e23be8d7">
-        <source>Add new order message</source>
-        <target>Add new order message</target>
-        <note>Context:
-File: controllers/admin/AdminOrderMessageController.php:105</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/addresses/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="03361eda68f746619c2ae3341eaa2f07">
-        <source>Customer email</source>
-        <target>Customer email</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/addresses/helpers/form/form.tpl:34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_new_product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="200e62e510bab9b03c912e10a5363a7a">
-        <source>Create a new invoice</source>
-        <target>Create a new invoice</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:85</note>
-      </trans-unit>
-      <trans-unit id="4800d00deaa0a28a18151d76feb858cb">
-        <source>New invoice information</source>
-        <target>New invoice information</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:104</note>
-      </trans-unit>
-      <trans-unit id="f54bdce4ab4d26c259216da67b9d6431">
-        <source>Shipping Costs</source>
-        <target>Shipping Costs</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:113</note>
       </trans-unit>
     </body>
   </file>
@@ -1713,6 +1681,24 @@ File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:249
         <target>Available quantity</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:250</note>
+      </trans-unit>
+      <trans-unit id="5e1ce9eb796081fea13e0d0dd3c3d76f">
+        <source>Reference number:</source>
+        <target>Reference number:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:39</note>
+      </trans-unit>
+      <trans-unit id="a9971a36ea6236b1577b27dba46775ed">
+        <source>Supplier reference:</source>
+        <target>Supplier reference:</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:40</note>
+      </trans-unit>
+      <trans-unit id="967ad092fca7b99aa4f170ed73a6a8e1">
+        <source>%quantity_refunded% (%amount_refunded% refund)</source>
+        <target>%quantity_refunded% (%amount_refunded% refund)</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:95</note>
       </trans-unit>
       <trans-unit id="4fdfd561c540aa5e20a9b2b9c06054bb">
         <source>Package content</source>
@@ -1759,12 +1745,6 @@ File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:263
         <target>View order</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/customer_threads/message.tpl:85</note>
-      </trans-unit>
-      <trans-unit id="d1228f5476d15142b1358ae4b5fa2454">
-        <source>Order #</source>
-        <target>Order #</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/message.tpl:77</note>
       </trans-unit>
       <trans-unit id="9788af9fa097020a285afc0651a0721c">
         <source>View customer</source>
@@ -1864,36 +1844,40 @@ File: admin-dev/themes/default/template/controllers/customer_threads/message.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/_new_product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="74b9e5d9e68f0fcc9326fab959a8ed4b">
-        <source>Edit shipping details</source>
-        <target>Edit shipping details</target>
+      <trans-unit id="200e62e510bab9b03c912e10a5363a7a">
+        <source>Create a new invoice</source>
+        <target>Create a new invoice</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:95</note>
+File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:85</note>
+      </trans-unit>
+      <trans-unit id="4800d00deaa0a28a18151d76feb858cb">
+        <source>New invoice information</source>
+        <target>New invoice information</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:104</note>
+      </trans-unit>
+      <trans-unit id="f54bdce4ab4d26c259216da67b9d6431">
+        <source>Shipping Costs</source>
+        <target>Shipping Costs</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_new_product.tpl:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="41953cbf836297b3c96b137a2b789ccb">
+        <source>Apply on all invoices</source>
+        <target>Apply on all invoices</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_discount_form.tpl:88</note>
       </trans-unit>
     </body>
   </file>
   <file original="admin-dev/themes/default/template/controllers/orders/_customized_data.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5e1ce9eb796081fea13e0d0dd3c3d76f">
-        <source>Reference number:</source>
-        <target>Reference number:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:40</note>
-      </trans-unit>
-      <trans-unit id="a9971a36ea6236b1577b27dba46775ed">
-        <source>Supplier reference:</source>
-        <target>Supplier reference:</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="967ad092fca7b99aa4f170ed73a6a8e1">
-        <source>%quantity_refunded% (%amount_refunded% refund)</source>
-        <target>%quantity_refunded% (%amount_refunded% refund)</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:162</note>
-      </trans-unit>
       <trans-unit id="c2808546f3e14d267d798f4e0e6f102e">
         <source>Customized</source>
         <target>Customized</target>
@@ -1923,6 +1907,70 @@ File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:
         <target>Amount:</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/orders/_customized_data.tpl:213</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/_documents.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0945359809dad1fbf3dea1c95a0da951">
+        <source>Document</source>
+        <target>Document</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="b2ee912b91d69b435159c7c3f6df7f5f">
+        <source>Number</source>
+        <target>Number</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:36</note>
+      </trans-unit>
+      <trans-unit id="ee7197503a8a3820850df76fb406c224">
+        <source>Delivery slip</source>
+        <target>Delivery slip</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:61</note>
+      </trans-unit>
+      <trans-unit id="f53e8d0e97c47ce70ca9c5eaa08a00d0">
+        <source>Credit Slip</source>
+        <target>Credit Slip</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:66</note>
+      </trans-unit>
+      <trans-unit id="c12a553ab6ad810580afa3f07aa9f51f">
+        <source>not paid</source>
+        <target>not paid</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:99</note>
+      </trans-unit>
+      <trans-unit id="8d4ac0e8c6f5900930ddfccd45d10abf">
+        <source>overpaid</source>
+        <target>overpaid</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:101</note>
+      </trans-unit>
+      <trans-unit id="7fb46048bafd1294fab5c1675ef4f849">
+        <source>Enter payment</source>
+        <target>Enter payment</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:117</note>
+      </trans-unit>
+      <trans-unit id="50cd1871f950375eef4e2efce35366c6">
+        <source>Add note</source>
+        <target>Add note</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:124</note>
+      </trans-unit>
+      <trans-unit id="71e2851d86b252a44c658b896c486921">
+        <source>Edit note</source>
+        <target>Edit note</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:127</note>
+      </trans-unit>
+      <trans-unit id="80cb34a90bc2178e9219ccc4ab106867">
+        <source>Generate invoice</source>
+        <target>Generate invoice</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:170</note>
       </trans-unit>
     </body>
   </file>
@@ -2032,119 +2080,57 @@ File: admin-dev/themes/default/template/controllers/carts/helpers/view/view.tpl:
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/orders/_shipping.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="41953cbf836297b3c96b137a2b789ccb">
-        <source>Apply on all invoices</source>
-        <target>Apply on all invoices</target>
+      <trans-unit id="74b9e5d9e68f0fcc9326fab959a8ed4b">
+        <source>Edit shipping details</source>
+        <target>Edit shipping details</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_discount_form.tpl:88</note>
+File: admin-dev/themes/default/template/controllers/orders/_shipping.tpl:95</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_documents.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/timeline_item.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0945359809dad1fbf3dea1c95a0da951">
-        <source>Document</source>
-        <target>Document</target>
+      <trans-unit id="d1228f5476d15142b1358ae4b5fa2454">
+        <source>Order #</source>
+        <target>Order #</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:33</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/timeline_item.tpl:32</note>
       </trans-unit>
-      <trans-unit id="b2ee912b91d69b435159c7c3f6df7f5f">
-        <source>Number</source>
-        <target>Number</target>
+      <trans-unit id="891ad007e2e9f2d55be6669cd9abc7a0">
+        <source>See more</source>
+        <target>See more</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:36</note>
-      </trans-unit>
-      <trans-unit id="ee7197503a8a3820850df76fb406c224">
-        <source>Delivery slip</source>
-        <target>Delivery slip</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:61</note>
-      </trans-unit>
-      <trans-unit id="f53e8d0e97c47ce70ca9c5eaa08a00d0">
-        <source>Credit Slip</source>
-        <target>Credit Slip</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:66</note>
-      </trans-unit>
-      <trans-unit id="c12a553ab6ad810580afa3f07aa9f51f">
-        <source>not paid</source>
-        <target>not paid</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:99</note>
-      </trans-unit>
-      <trans-unit id="8d4ac0e8c6f5900930ddfccd45d10abf">
-        <source>overpaid</source>
-        <target>overpaid</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:101</note>
-      </trans-unit>
-      <trans-unit id="7fb46048bafd1294fab5c1675ef4f849">
-        <source>Enter payment</source>
-        <target>Enter payment</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:117</note>
-      </trans-unit>
-      <trans-unit id="50cd1871f950375eef4e2efce35366c6">
-        <source>Add note</source>
-        <target>Add note</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:124</note>
-      </trans-unit>
-      <trans-unit id="71e2851d86b252a44c658b896c486921">
-        <source>Edit note</source>
-        <target>Edit note</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:127</note>
-      </trans-unit>
-      <trans-unit id="80cb34a90bc2178e9219ccc4ab106867">
-        <source>Generate invoice</source>
-        <target>Generate invoice</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/_documents.tpl:170</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/timeline_item.tpl:35</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="a8658715e6b0e879cbcbc4728a423b36">
-        <source>Text #%d</source>
-        <target>Text #%d</target>
+      <trans-unit id="d8e87c0927539672f54462c837be0b7f">
+        <source>Sync</source>
+        <target>Sync</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:92</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:29</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/slip/_print_pdf_icon.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a4c0c09247c3e56ff08971ff5558c596">
-        <source>Download credit slip</source>
-        <target>Download credit slip</target>
+      <trans-unit id="2b8fa6c46485d50e476591942fc9d7ee">
+        <source>Run sync:</source>
+        <target>Run sync:</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/slip/_print_pdf_icon.tpl:30</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:30</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="0470d45929f27e1161330164c423b415">
-        <source>Set required fields for this section</source>
-        <target>Set required fields for this section</target>
+      <trans-unit id="a19330a6fc36ebae6683cc023e295687">
+        <source>Run sync</source>
+        <target>Run sync</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:26</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:32</note>
       </trans-unit>
-      <trans-unit id="e54b38290c8bdd95e8bc10412c9cc096">
-        <source>Required Fields</source>
-        <target>Required Fields</target>
+      <trans-unit id="22009610f18142abea939bc2f1836a81">
+        <source>Click to synchronize mail automatically</source>
+        <target>Click to synchronize mail automatically</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:30</note>
-      </trans-unit>
-      <trans-unit id="ee9b2f3cf31c23c944b15fb0b33d6a77">
-        <source>Field Name</source>
-        <target>Field Name</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:44</note>
+File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:33</note>
       </trans-unit>
     </body>
   </file>
@@ -2194,16 +2180,6 @@ File: admin-dev/themes/default/template/controllers/customer_threads/helpers/vie
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/timeline_item.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="891ad007e2e9f2d55be6669cd9abc7a0">
-        <source>See more</source>
-        <target>See more</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/view/timeline_item.tpl:35</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/view/modal.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="548abe251b033d863417979998dba612">
@@ -2238,31 +2214,55 @@ File: admin-dev/themes/default/template/controllers/customer_threads/helpers/vie
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="admin-dev/themes/default/template/controllers/addresses/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d8e87c0927539672f54462c837be0b7f">
-        <source>Sync</source>
-        <target>Sync</target>
+      <trans-unit id="03361eda68f746619c2ae3341eaa2f07">
+        <source>Customer email</source>
+        <target>Customer email</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:29</note>
+File: admin-dev/themes/default/template/controllers/addresses/helpers/form/form.tpl:34</note>
       </trans-unit>
-      <trans-unit id="2b8fa6c46485d50e476591942fc9d7ee">
-        <source>Run sync:</source>
-        <target>Run sync:</target>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0470d45929f27e1161330164c423b415">
+        <source>Set required fields for this section</source>
+        <target>Set required fields for this section</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:30</note>
+File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:26</note>
       </trans-unit>
-      <trans-unit id="a19330a6fc36ebae6683cc023e295687">
-        <source>Run sync</source>
-        <target>Run sync</target>
+      <trans-unit id="e54b38290c8bdd95e8bc10412c9cc096">
+        <source>Required Fields</source>
+        <target>Required Fields</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:32</note>
+File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:30</note>
       </trans-unit>
-      <trans-unit id="22009610f18142abea939bc2f1836a81">
-        <source>Click to synchronize mail automatically</source>
-        <target>Click to synchronize mail automatically</target>
+      <trans-unit id="ee9b2f3cf31c23c944b15fb0b33d6a77">
+        <source>Field Name</source>
+        <target>Field Name</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/customer_threads/helpers/options/options.tpl:33</note>
+File: admin-dev/themes/default/template/controllers/customers/helpers/required_fields.tpl:44</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/slip/_print_pdf_icon.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a4c0c09247c3e56ff08971ff5558c596">
+        <source>Download credit slip</source>
+        <target>Download credit slip</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/slip/_print_pdf_icon.tpl:30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a8658715e6b0e879cbcbc4728a423b36">
+        <source>Text #%d</source>
+        <target>Text #%d</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl:92</note>
       </trans-unit>
     </body>
   </file>

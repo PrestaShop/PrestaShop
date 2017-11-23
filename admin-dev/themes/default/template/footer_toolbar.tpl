@@ -61,7 +61,7 @@
 
 				//override save and stay link label with submit button value
 				if (btn_submit.html().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
-					lbl_save_and_stay.find('span').html(btn_submit.html() + " {l s='and stay'} ");
+					lbl_save_and_stay.find('span').html(btn_submit.html() + " {l s='and stay' d='Admin.Actions'} ");
 			}
 
 			//hide standard submit button

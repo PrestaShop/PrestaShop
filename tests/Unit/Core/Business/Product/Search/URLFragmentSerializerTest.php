@@ -24,17 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace Tests\Unit\Core\Product\Search;
 
-namespace PrestaShop\PrestaShop\tests\Unit\Core\Product\Search;
-
-use PHPUnit_Framework_Testcase;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\URLFragmentSerializer;
 
-class URLFragmentSerializerTest extends PHPUnit_Framework_Testcase
+class URLFragmentSerializerTest extends Testcase
 {
     private $serializer;
 
-    public function setup()
+    public function setUp()
     {
         $this->serializer = new URLFragmentSerializer;
     }

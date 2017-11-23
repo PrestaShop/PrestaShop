@@ -131,10 +131,13 @@ class ModuleDataProvider
      */
     public function can($action, $name)
     {
-        return LegacyModule::getPermissionStatic(
-            LegacyModule::getModuleIdByName($name),
-            $action
-        );
+        $module_id = LegacyModule::getModuleIdByName($name);
+
+        if (empty($module_id)) {
+            return false;
+        }
+        
+        return LegacyModule::getPermissionStatic($module_id, $action);
     }
 
     /**

@@ -375,7 +375,7 @@ class InstallControllerHttp
     public function getTutorialLink()
     {
         /* Link to localized video tutorial (if available) */
-        return $this->translator->trans('https://www.youtube.com/watch?v=psz4aIPZZuk', array(), 'Install');
+        return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', array(), 'Install');
     }
 
     /**

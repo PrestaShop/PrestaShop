@@ -35,6 +35,5 @@ class DynamicRoleHierarchy implements RoleHierarchyInterface
 {
     public function getReachableRoles(array $roles)
     {
-
     }
 }

@@ -33,42 +33,42 @@
 				</button>
 				<ul id="header_search_options" class="dropdown-menu">
 					<li class="search-all search-option active">
-						<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?'}" data-icon="icon-search">
-							<i class="icon-search"></i> {l s='Everywhere'}</a>
+						<a href="#" data-value="0" data-placeholder="{l s='What are you looking for?' d='Admin.Navigation.Header'}" data-icon="icon-search">
+							<i class="icon-search"></i> {l s='Everywhere' d='Admin.Navigation.Header'}</a>
 					</li>
 					<li class="divider"></li>
 					<li class="search-book search-option">
-						<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...'}" data-icon="icon-book">
-							<i class="icon-book"></i> {l s='Catalog'}
+						<a href="#" data-value="1" data-placeholder="{l s='Product name, SKU, reference...' d='Admin.Navigation.Header'}" data-icon="icon-book">
+							<i class="icon-book"></i> {l s='Catalog' d='Admin.Navigation.Menu'}
 						</a>
 					</li>
 					<li class="search-customers-name search-option">
-						<a href="#" data-value="2" data-placeholder="{l s='Email, name...'}" data-icon="icon-group">
-							<i class="icon-group"></i> {l s='Customers'} {l s='by name'}
+						<a href="#" data-value="2" data-placeholder="{l s='Email, name...' d='Admin.Navigation.Header'}" data-icon="icon-group">
+							<i class="icon-group"></i> {l s='Customers by name' d='Admin.Navigation.Header'}
 						</a>
 					</li>
 					<li class="search-customers-addresses search-option">
 						<a href="#" data-value="6" data-placeholder="{l s='123.45.67.89'}" data-icon="icon-desktop">
-							<i class="icon-desktop"></i> {l s='Customers'} {l s='by ip address'}</a>
+							<i class="icon-desktop"></i> {l s='Customers by IP address' d='Admin.Navigation.Header'}</a>
 					</li>
 					<li class="search-orders search-option">
-						<a href="#" data-value="3" data-placeholder="{l s='Order ID'}" data-icon="icon-credit-card">
-							<i class="icon-credit-card"></i> {l s='Orders'}
+						<a href="#" data-value="3" data-placeholder="{l s='Order ID' d='Admin.Navigation.Header'}" data-icon="icon-credit-card">
+							<i class="icon-credit-card"></i> {l s='Orders' d='Admin.Global'}
 						</a>
 					</li>
 					<li class="search-invoices search-option">
-						<a href="#" data-value="4" data-placeholder="{l s='Invoice Number'}" data-icon="icon-book">
-							<i class="icon-book"></i> {l s='Invoices'}
+						<a href="#" data-value="4" data-placeholder="{l s='Invoice Number' d='Admin.Navigation.Header'}" data-icon="icon-book">
+							<i class="icon-book"></i> {l s='Invoices' d='Admin.Navigation.Menu'}
 						</a>
 					</li>
 					<li class="search-carts search-option">
-						<a href="#" data-value="5" data-placeholder="{l s='Cart ID'}" data-icon="icon-shopping-cart">
-							<i class="icon-shopping-cart"></i> {l s='Carts'}
+						<a href="#" data-value="5" data-placeholder="{l s='Cart ID' d='Admin.Navigation.Header'}" data-icon="icon-shopping-cart">
+							<i class="icon-shopping-cart"></i> {l s='Carts' d='Admin.Global'}
 						</a>
 					</li>
 					<li class="search-modules search-option">
-						<a href="#" data-value="7" data-placeholder="{l s='Module name'}" data-icon="icon-puzzle-piece">
-							<i class="icon-puzzle-piece"></i> {l s='Modules'}
+						<a href="#" data-value="7" data-placeholder="{l s='Module name' d='Admin.Navigation.Header'}" data-icon="icon-puzzle-piece">
+							<i class="icon-puzzle-piece"></i> {l s='Modules' d='Admin.Global'}
 						</a>
 					</li>
 				</ul>

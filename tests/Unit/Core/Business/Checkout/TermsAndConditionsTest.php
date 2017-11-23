@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Core\Checkout;
+namespace Tests\Core\Checkout;
 
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 
 class TermsAndConditionsTest extends UnitTestCase
 {
     private $terms;
 
-    public function setup()
+    public function setUp()
     {
         $this->terms = new TermsAndConditions;
     }

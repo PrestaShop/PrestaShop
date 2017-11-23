@@ -62,15 +62,40 @@
 
 {block name="other_input"}
 	{if $key == 'hours'}
-			<div class="form-group">
-				<label class="control-label col-lg-3">{l s='Hours:' d='Admin.Shopparameters.Feature'}</label>
-				<div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM' d='Admin.Shopparameters.Help'}</p></div>
-			</div>
-			{foreach $fields_value.days as $k => $value}
-			<div class="form-group">
-				<label class="control-label col-lg-3">{$value}</label>
-				<div class="col-lg-9"><input type="text" size="25" name="hours_{$k}" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'html':'UTF-8'}{/if}" /></div>
-			</div>
-			{/foreach}
-	{/if}
+    <div class="form-group">
+      <label class="control-label col-lg-3">{l s='Hours:' d='Admin.Shopparameters.Feature'}</label>
+      <div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM' d='Admin.Shopparameters.Help'}</p></div>
+    </div>
+    {foreach $fields_value.days as $k => $value}
+    <div class="form-group">
+      <label class="control-label col-lg-3">{$value}</label>
+      {if $languages|count > 1}
+        {foreach $languages as $language}
+          <div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
+            <div class="col-lg-7">
+              <input type="text" size="25"
+                     name="hours[{$k}][{$language.id_lang}]"
+                     value="{if isset($fields_value.hours[$language.id_lang][$k-1])}{$fields_value.hours[$language.id_lang][$k-1]|escape:'html':'UTF-8'}{/if}"/>
+            </div>
+            <div class="col-lg-2">
+              <button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+                {$language.iso_code}
+                <i class="icon-caret-down"></i>
+              </button>
+              <ul class="dropdown-menu">
+                {foreach from=$languages item=language}
+                  <li><a href="javascript:hideOtherLanguage({$language.id_lang});"
+                         tabindex="-1">{$language.name}</a></li>
+                {/foreach}
+              </ul>
+            </div>
+          </div>
+        {/foreach}
+      {else}
+        <div class="col-lg-9"><input type="text" size="25" name="hours[{$k}]" value="{if isset($fields_value.hours[$k-1])}{$fields_value.hours[$k-1]|escape:'html':'UTF-8'}{/if}"/>
+        </div>
+      {/if}
+    </div>
+    {/foreach}
+  {/if}
 {/block}

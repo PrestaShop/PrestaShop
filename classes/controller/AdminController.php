@@ -436,7 +436,9 @@ class AdminControllerCore extends Controller
         $this->bo_css = ((Validate::isLoadedObject($this->context->employee)
             && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
 
-        if (!@filemtime(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css)) {
+        $adminThemeCSSFile = _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css;
+
+        if (file_exists($adminThemeCSSFile)) {
             $this->bo_css = 'admin-theme.css';
         }
 
@@ -452,9 +454,9 @@ class AdminControllerCore extends Controller
 
         $this->_conf = array(
             1 => $this->trans('Successful deletion.', array(), 'Admin.Notifications.Success'),
-            2 => $this->trans('The selection has been successfully deleted.',  array(), 'Admin.Notifications.Success'),
-            3 => $this->trans('Successful creation.',  array(), 'Admin.Notifications.Success'),
-            4 => $this->trans('Successful update.',  array(), 'Admin.Notifications.Success'),
+            2 => $this->trans('The selection has been successfully deleted.', array(), 'Admin.Notifications.Success'),
+            3 => $this->trans('Successful creation.', array(), 'Admin.Notifications.Success'),
+            4 => $this->trans('Successful update.', array(), 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', array(), 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', array(), 'Admin.Notifications.Success'),
             7 => $this->trans('The image was successfully deleted.', array(), 'Admin.Notifications.Success'),
@@ -517,8 +519,6 @@ class AdminControllerCore extends Controller
         $this->tpl_folder = Tools::toUnderscoreCase(substr($this->controller_name, 5)).'/';
 
         $this->initShopContext();
-
-        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
         if (defined('_PS_ADMIN_DIR_')) {
             $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
@@ -1910,6 +1910,7 @@ class AdminControllerCore extends Controller
             'iso' => $this->context->language->iso_code,
             'class_name' => $this->className,
             'iso_user' => $this->context->language->iso_code,
+            'lang_is_rtl' => $this->context->language->is_rtl,
             'country_iso_code' => $this->context->country->iso_code,
             'version' => _PS_VERSION_,
             'lang_iso' => $this->context->language->iso_code,
@@ -2542,7 +2543,7 @@ class AdminControllerCore extends Controller
             $helper->tpl_vars = $this->getTemplateFormVars();
             $helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
-            $back = Tools::safeOutput(Tools::getValue('back', ''));
+            $back = urldecode(Tools::getValue('back', ''));
             if (empty($back)) {
                 $back = self::$currentIndex.'&token='.$this->token;
             }
@@ -2861,7 +2862,7 @@ class AdminControllerCore extends Controller
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
             'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
         );
-        
+
         $this->context->smarty->assign($notificationsSettings);
 
         Media::addJsDef($notificationsSettings);
@@ -2932,6 +2933,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
     }
 
     /**
@@ -3159,8 +3161,9 @@ class AdminControllerCore extends Controller
         if ((int)Tools::getValue('submitFilter'.$this->list_id)) {
             $start = ((int)Tools::getValue('submitFilter'.$this->list_id) - 1) * $limit;
         } elseif (
-            empty($start) && isset($this->context->cookie->{$this->list_id.'_start'}) &&
-            Tools::isSubmit('export'.$this->table)
+            empty($start)
+            && isset($this->context->cookie->{$this->list_id.'_start'})
+            && Tools::isSubmit('export'.$this->table)
         ) {
             $start = $this->context->cookie->{$this->list_id.'_start'};
         }
@@ -3675,11 +3678,9 @@ class AdminControllerCore extends Controller
                     $value = Tools::getValue($field.'_'.$default_language->id);
                     // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
                     if (!isset($value) || "" == $value) {
-                        $this->errors[$field.'_'.$default_language->id] = sprintf(
-                            $this->trans('The field %1$s is required at least in %2$s.', array(), 'Admin.Notifications.Error'),
-                            $object->displayFieldName($field, $class_name),
-                            $default_language->name
-                        );
+                        $this->errors[$field.'_'.$default_language->id] = $this->trans('The field %field_name% is required at least in %lang%.',
+                            array('%field_name%' => $object->displayFieldName($field, $class_name), '%lang%' => $default_language->name),
+                            'Admin.Notifications.Error');
                     }
                 }
 
@@ -3710,11 +3711,9 @@ class AdminControllerCore extends Controller
                             $res = Validate::$function($value);
                         }
                         if (!$res) {
-                            $this->errors[$field_lang.'_'.$language['id_lang']] = sprintf(
-                                $this->trans('The %1$s field (%2$s) is invalid.', array(), 'Admin.Notifications.Error'),
-                                call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name),
-                                $language['name']
-                            );
+                            $this->errors[$field_lang.'_'.$language['id_lang']] = $this->trans('The %field_name% field (%lang%) is invalid.',
+                                array('%field_name%' => call_user_func(array($class_name, 'displayFieldName'), $field_lang, $class_name), '%lang%' => $language['name']),
+                                'Admin.Notifications.Error');
                         }
                     }
                 }
@@ -4038,7 +4037,7 @@ class AdminControllerCore extends Controller
                     if ($delete_ok) {
                         PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$to_delete->id, true, (int)$this->context->employee->id);
                     } else {
-                        $this->errors[] = sprintf($this->trans('Can\'t delete #%d', array(), 'Admin.Notifications.Error'), $id);
+                        $this->errors[] = $this->trans('Can\'t delete #%id%', array('%id%' => $id), 'Admin.Notifications.Error');
                     }
                 }
                 if ($result) {
@@ -4692,28 +4691,28 @@ class AdminControllerCore extends Controller
      */
     public function authorizationLevel()
     {
-        if(
+        if (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
-        } elseif(
+        } elseif (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
-        } elseif(
+        } elseif (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
-        } elseif(
+        } elseif (
             Access::isGranted(
                 'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ',
                 $this->context->employee->id_profile

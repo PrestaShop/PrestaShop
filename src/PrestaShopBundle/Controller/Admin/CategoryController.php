@@ -72,7 +72,7 @@ class CategoryController extends FrameworkBundleAdminController
                 $response->setData(['category' => $category]);
             }
 
-            if($request->query->has('id_product')) {
+            if ($request->query->has('id_product')) {
                 $productAdapter = $this->get('prestashop.adapter.data_provider.product');
                 $product = $productAdapter->getProduct($request->query->get('id_product'));
                 $product->addToCategories($category->id);

@@ -53,11 +53,18 @@ class StylesheetManagerCore extends AbstractAssetManager
         $media = self::DEFAULT_MEDIA,
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
-        $server = 'local'
+        $server = 'local',
+        $needRtl = true
     ) {
+        $fullPath = $this->getFullPath($relativePath);
+        $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
+        $context = Context::getContext();
+        $isRTL = is_object($context->language) && $context->language->is_rtl;
         if ('remote' === $server) {
             $this->add($id, $relativePath, $media, $priority, $inline, $server);
-        } else if ($fullPath = $this->getFullPath($relativePath)) {
+        } else if ($needRtl && $isRTL && $rtlFullPath) {
+            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server);
+        } else if ($fullPath) {
             $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }
@@ -112,7 +119,7 @@ class StylesheetManagerCore extends AbstractAssetManager
 
     private function sortList()
     {
-        foreach ($this->list as $type => &$items) {
+        foreach ($this->list as &$items) {
             Tools::uasort(
                 $items,
                 function ($a, $b) {

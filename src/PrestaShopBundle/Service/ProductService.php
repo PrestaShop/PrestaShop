@@ -29,11 +29,13 @@ namespace PrestaShopBundle\Service;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
 use Product;
 
-class ProductService {
+class ProductService
+{
     /** @var ProductDataProvider */
     protected $dataProvider;
 
-    public function __construct(ProductDataProvider $dataProvider) {
+    public function __construct(ProductDataProvider $dataProvider)
+    {
         $this->dataProvider = $dataProvider;
     }
 
@@ -49,5 +51,4 @@ class ProductService {
             }
         }
     }
-
 }

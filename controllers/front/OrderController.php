@@ -31,8 +31,17 @@ class OrderControllerCore extends FrontController
     public $ssl = true;
     public $php_self = 'order';
     public $page_name = 'checkout';
+    public $checkoutWarning = false;
 
+    /**
+     * @var CheckoutProcess
+     */
     protected $checkoutProcess;
+
+    /**
+     * @var CartChecksum
+     */
+    protected $cartChecksum;
 
     /**
      * Initialize order controller
@@ -147,28 +156,80 @@ class OrderControllerCore extends FrontController
         ;
     }
 
+    /**
+     * Persists cart-related data in checkout session
+     *
+     * @param CheckoutProcess $process
+     */
     protected function saveDataToPersist(CheckoutProcess $process)
     {
-        $data = $process->getDataToPersist();
-        $data['checksum'] = $this->cartChecksum->generateChecksum($this->context->cart);
+        $data             = $process->getDataToPersist();
+        $addressValidator = new AddressValidator($this->context);
+        $customer         = $this->context->customer;
+        $cart             = $this->context->cart;
+
+        $shouldGenerateChecksum = false;
+
+        if ($customer->isGuest()) {
+            $shouldGenerateChecksum = true;
+        } else {
+            $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
+            if (empty($invalidAddressIds)) {
+                $shouldGenerateChecksum = true;
+            }
+        }
+
+        $data['checksum'] = $shouldGenerateChecksum
+            ? $this->cartChecksum->generateChecksum($cart)
+            : null;
 
         Db::getInstance()->execute(
-            'UPDATE '._DB_PREFIX_.'cart SET checkout_session_data = "'.pSQL(json_encode($data)).'"
-                WHERE id_cart = '.(int) $this->context->cart->id
+            'UPDATE ' . _DB_PREFIX_ . 'cart SET checkout_session_data = "' . pSQL(json_encode($data)) . '"
+                WHERE id_cart = ' . (int)$cart->id
         );
     }
 
+    /**
+     * Restores from checkout session some previously persisted cart-related data
+     *
+     * @param CheckoutProcess $process
+     */
     protected function restorePersistedData(CheckoutProcess $process)
     {
-        $rawData = Db::getInstance()->getValue(
-            'SELECT checkout_session_data FROM '._DB_PREFIX_.'cart WHERE id_cart = '.(int) $this->context->cart->id
+        $cart     = $this->context->cart;
+        $customer = $this->context->customer;
+        $rawData  = Db::getInstance()->getValue(
+            'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int)$cart->id
         );
-        $data = json_decode($rawData, true);
+        $data     = json_decode($rawData, true);
         if (!is_array($data)) {
-            $data = [];
+            $data = array();
         }
 
-        $checksum = $this->cartChecksum->generateChecksum($this->context->cart);
+        $addressValidator  = new AddressValidator();
+        $invalidAddressIds = $addressValidator->validateCartAddresses($cart);
+
+        // Build the currently selected address' warning message (if relevant)
+        if (!$customer->isGuest() && !empty($invalidAddressIds)) {
+            $this->checkoutWarning['address'] = array(
+                'id_address' => (int)reset($invalidAddressIds),
+                'exception'  => $this->trans(
+                    'Your address is incomplete, please update it.',
+                    array(),
+                    'Shop.Notifications.Error'
+                ),
+            );
+
+            $checksum = null;
+        } else {
+            $checksum = $this->cartChecksum->generateChecksum($cart);
+        }
+
+        // Prepare all other addresses' warning messages (if relevant).
+        // These messages are displayed when changing the selected address.
+        $allInvalidAddressIds = $addressValidator->validateCustomerAddresses($customer, $this->context->language);
+        $this->checkoutWarning['invalid_addresses'] = $allInvalidAddressIds;
+
         if (isset($data['checksum']) && $data['checksum'] === $checksum) {
             $process->restorePersistedData($data);
         }
@@ -243,6 +304,7 @@ class OrderControllerCore extends FrontController
             $addressForm->fillWith(array('id_country' => Tools::getValue('id_country')));
         }
 
+        $stepTemplateParameters = array();
         foreach ($this->checkoutProcess->getSteps() as $step) {
             if ($step instanceof CheckoutAddressesStep) {
                 $stepTemplateParameters = $step->getTemplateParameters();
@@ -252,9 +314,8 @@ class OrderControllerCore extends FrontController
         $templateParams = array_merge(
             $addressForm->getTemplateVariables(),
             $stepTemplateParameters,
-            array(
-                'type' => 'delivery',
-        ));
+            array('type' => 'delivery')
+        );
 
         ob_end_clean();
         header('Content-Type: application/json');

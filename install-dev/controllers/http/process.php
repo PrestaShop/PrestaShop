@@ -24,7 +24,6 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Core\Cldr\Update;
 use PrestaShopBundle\Install\Install;
 use PrestaShopBundle\Install\XmlLoader;
 
@@ -94,6 +93,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             // download and install language pack
             Language::downloadAndInstallLanguagePack($this->session->lang);
         } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
+            Language::installRtlStylesheets(false, true, 'classic', $this->session->lang, true);
             $this->processConfigureShop();
         } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop'])) {
             $this->processInstallFixtures();
@@ -160,7 +160,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         // @todo remove true in populateDatabase for 1.5.0 RC version
         $result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
 
-        $this->installCldrDatas();
+        $this->model_install->installCldrDatas();
 
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
@@ -267,28 +267,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->session->process_validated = array_merge($this->session->process_validated, array('installFixtures' => true));
 
         $this->ajaxJsonAnswer(true);
-    }
-
-    /**
-     * Install Cldr Datas
-     */
-    public function installCldrDatas()
-    {
-        $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
-        $cldrUpdate->init();
-
-        //get each defined languages and fetch cldr datas
-        $langs = \DbCore::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'lang');
-
-        foreach ($langs as $lang) {
-            $cldrRepository = \Tools::getCldr(null, $lang['locale']);
-            $language_code = explode('-', $cldrRepository->getCulture());
-            if (count($language_code) == 1) {
-                $cldrUpdate->fetchLocale($language_code['0']);
-            } else {
-                $cldrUpdate->fetchLocale($language_code['0'].'-'.Tools::strtoupper($language_code[1]));
-            }
-        }
     }
 
     /**

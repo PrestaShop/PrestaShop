@@ -25,16 +25,17 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace Tests\Integration;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 
 class SmartySettingsTest extends IntegrationTestCase
 {
     private $smarty;
 
-    public function setup()
+    public function setUp()
     {
+        parent::setUp();
         global $smarty;
         $this->smarty = $smarty;
         $this->smarty->force_compile = true;

@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
+namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 /**
  * @group api
@@ -38,10 +38,10 @@ class SupplierControllerTest extends ApiTestCase
     public function it_should_return_ok_response_when_requesting_suppliers()
     {
         $route = $this->router->generate('api_stock_list_suppliers');
-        $this->client->request('GET', $route);
+        self::$client->request('GET', $route);
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
-        $response = $this->client->getResponse();
+        $response = self::$client->getResponse();
         $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 }

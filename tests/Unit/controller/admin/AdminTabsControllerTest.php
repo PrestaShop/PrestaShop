@@ -24,10 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace Tests\Unit\Controller\Admin;
 
-namespace Prestashop\Prestashop\Tests\Unit\Controller\Admin;
-
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use Phake;
 use Tools;
 use Tab;
@@ -38,7 +37,7 @@ class AdminTabsControllerTest extends UnitTestCase
 {
     private $controller;
 
-    public function setup()
+    public function setUp()
     {
         parent::setUp();
 
@@ -115,6 +114,8 @@ class AdminTabsControllerTest extends UnitTestCase
                 return strpos($subject, 'tab') !== false ||
                     // It should select authorization
                     strpos($subject, 'authorization') !== false ||
+                    strpos($subject, 'ps_configuration') !== false ||
+                    strpos($subject, 'ps_shop') !== false ||
                     // It should select hook alias
                     strpos($subject, 'hook_alias') !== false;
 
@@ -128,5 +129,9 @@ class AdminTabsControllerTest extends UnitTestCase
             }));
 
         parent::setupDatabaseMock($dbMock);
+    }
+
+    public static function tearDownAfterClass() {
+        Tools::resetRequest();
     }
 }

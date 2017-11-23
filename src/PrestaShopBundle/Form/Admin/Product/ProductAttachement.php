@@ -83,11 +83,11 @@ class ProductAttachement extends CommonAbstractType
         ))
         ->add('add', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' =>  $this->translator->trans('Add', [], 'Admin.Actions'),
-            'attr' =>  ['class' => 'btn-primary-outline pull-right']
+            'attr' =>  ['class' => 'btn-outline-primary pull-right']
         ))
         ->add('cancel', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
             'label' =>  $this->translator->trans('Cancel', [], 'Admin.Actions'),
-            'attr' =>  ['class' => 'btn-tertiary-outline pull-right m-r-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
+            'attr' =>  ['class' => 'btn-outline-secondary pull-right mr-2', 'data-toggle' => 'collapse', 'data-target' => '#collapsedForm']
         ));
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {

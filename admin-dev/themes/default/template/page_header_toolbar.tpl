@@ -76,7 +76,7 @@
         <div class="btn-toolbar">
           <a href="#" class="toolbar_btn dropdown-toolbar navbar-toggle" data-toggle="collapse"
              data-target="#toolbar-nav"><i class="process-icon-dropdown"></i>
-            <div>{l s='Menu'}</div>
+            <div>{l s='Menu' d='Admin.Navigation.Menu'}</div>
           </a>
           <ul id="toolbar-nav" class="nav nav-pills pull-right collapse navbar-collapse">
             {foreach from=$toolbar_btn item=btn key=k}
@@ -107,9 +107,9 @@
             {/if}
             {if isset($help_link)}
               <li>
-                <a class="toolbar_btn btn-help" href="{$help_link|escape}" title="{l s='Help'}">
+                <a class="toolbar_btn btn-help" href="{$help_link|escape}" title="{l s='Help' d='Admin.Global'}">
                   <i class="process-icon-help"></i>
-                  <div>{l s='Help'}</div>
+                  <div>{l s='Help' d='Admin.Global'}</div>
                 </a>
               </li>
             {/if}

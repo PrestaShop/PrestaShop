@@ -42,5 +42,8 @@ if (!array_key_exists('parameters', $parameters)) {
 }
 
 foreach ($parameters['parameters'] as $key => $value) {
+    if (defined('_PS_IN_TEST_') && $key === 'database_name') {
+        $value = 'test_'.$value;
+    }
     $container->setParameter($key, $value);
 }

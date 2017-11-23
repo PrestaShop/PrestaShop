@@ -25,9 +25,9 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace Tests\Integration;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use Context;
 use Dispatcher;
 use ReflectionClass;
@@ -37,9 +37,9 @@ class ProductURLsTest extends IntegrationTestCase
     private $link;
     private $language;
 
-    public function setup()
+    protected function setUp()
     {
-        parent::setup();
+        parent::setUp();
         $context = Context::getContext();
         $this->link = $context->link;
         $this->language = $context->language;

@@ -264,7 +264,7 @@ class AdminMetaControllerCore extends AdminController
 
         $this->fields_options['routes']['fields']['PS_ROUTE_'.$route_id] = array(
             'title' =>    $title,
-            'desc' => sprintf($this->trans('Keywords: %s', array(), 'Admin.Shopparameters.Feature'), implode(', ', $keywords)),
+            'desc' => $this->trans('Keywords: %keywords%', array('%keywords%' => implode(', ', $keywords)), 'Admin.Shopparameters.Feature'),
             'validation' => 'isString',
             'type' => 'text',
             'size' => 70,

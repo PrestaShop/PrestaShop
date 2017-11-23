@@ -24,16 +24,16 @@
  *}
 <div id="non-responsive" class="js-non-responsive">
   <h1>{l s='Oh no!'}</h1>
-  <p class="m-t-3">
+  <p class="mt-3">
     {l s='The mobile version of this page is not available yet.'}
   </p>
-  <p class="m-t-2">
+  <p class="mt-2">
     {l s='Please use a desktop computer to access this page, until is adapted to mobile.'}
   </p>
-  <p class="m-t-2">
+  <p class="mt-2">
     {l s='Thank you.'}
   </p>
-  <a href="{$default_tab_link|escape:'html':'UTF-8'}" class="btn btn-primary p-y-1 m-t-3">
+  <a href="{$default_tab_link|escape:'html':'UTF-8'}" class="btn btn-primary py-1 mt-3">
     <i class="material-icons">arrow_back</i>
     {l s='Back'}
   </a>

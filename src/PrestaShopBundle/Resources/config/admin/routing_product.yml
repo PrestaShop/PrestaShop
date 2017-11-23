@@ -7,7 +7,7 @@ admin_product_catalog:
         limit: last
         offset: 0
         orderBy: last
-        sortOrder: desc
+        sortOrder: last
     requirements:
         limit: _limit|last|\d+
         orderBy: last|id_product|name|reference|name_category|price|sav_quantity|position|active|position_ordering

@@ -348,32 +348,35 @@ class ContextCore
         }
 
         $cacheDir = _PS_CACHE_DIR_.'translations';
-        $this->translator = new Translator($this->language->locale, null, $cacheDir, false);
+        $translator = new Translator($this->language->locale, null, $cacheDir, false);
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if (count($this->translator->getCatalogue($this->language->locale)->all())) {
-            return $this->translator;
+        if (count($translator->getCatalogue($this->language->locale)->all())) {
+            $this->translator = $translator;
+            return $translator;
         }
 
         // However, in some case, even empty catalog were stored in the cache and then used as-is.
         // For this one, we drop the cache and try to regenerate it.
-        $cache_file = Finder::create()
-            ->files()
-            ->in($cacheDir)
-            ->depth('==0')
-            ->name('*.'.$this->language->locale.'.*');
-        (new Filesystem())->remove($cache_file);
+        if (is_dir($cacheDir)) {
+            $cache_file = Finder::create()
+                ->files()
+                ->in($cacheDir)
+                ->depth('==0')
+                ->name('*.'.$this->language->locale.'.*');
+            (new Filesystem())->remove($cache_file);
+        }
 
         $adminContext = defined('_PS_ADMIN_DIR_');
-        $this->translator->addLoader('xlf', new XliffFileLoader());
+        $translator->addLoader('xlf', new XliffFileLoader());
 
         $sqlTranslationLoader = new SqlTranslationLoader();
         if (!is_null($this->shop)) {
             $sqlTranslationLoader->setTheme($this->shop->theme);
         }
 
-        $this->translator->addLoader('db', $sqlTranslationLoader);
+        $translator->addLoader('db', $sqlTranslationLoader);
         $notName = $adminContext ? '^Shop*' : '^Admin*';
 
         $finder = Finder::create()
@@ -386,13 +389,18 @@ class ContextCore
         foreach ($finder as $file) {
             list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
 
-            $this->translator->addResource($format, $file, $locale, $domain);
+            $translator->addResource($format, $file, $locale, $domain);
             if (!is_a($this->language, 'PrestashopBundle\Install\Language')) {
-                $this->translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
+                $translator->addResource('db', $domain.'.'.$locale.'.db', $locale, $domain);
             }
         }
 
-        return $this->translator;
+        // In case we have at least 1 translated message, we return the current translator.
+        if (count($translator->getCatalogue($this->language->locale)->all())) {
+            $this->translator = $translator;
+        }
+
+        return $translator;
     }
 
     /**

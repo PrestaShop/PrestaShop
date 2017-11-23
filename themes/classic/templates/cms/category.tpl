@@ -42,7 +42,7 @@
 
   {block name='cms_sub_pages'}
     {if $cms_pages}
-      <p>{l s='List of pages in %name%:' d='Shop.Theme.Global' sprintf=['%name%' => $cms_category.name]}</p>
+      <p>{l s='List of pages in %category_name%:' d='Shop.Theme.Global' sprintf=['%category_name%' => $cms_category.name]}</p>
       <ul>
         {foreach from=$cms_pages item=cms_page}
           <li><a href="{$cms_page.link}">{$cms_page.meta_title}</a></li>

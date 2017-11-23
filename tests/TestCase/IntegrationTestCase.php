@@ -24,13 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
-use PHPUnit_Framework_TestCase;
+namespace Tests\TestCase;
 
-class IntegrationTestCase extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use Tests\Unit\ContextMocker;
+use Tests\PrestaShopBundle\Utils\Database;
+
+class IntegrationTestCase extends TestCase
 {
+
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
     public static function setUpBeforeClass()
     {
+        Database::restoreTestDB();
         require_once(__DIR__ . '/../../config/config.inc.php');
     }
 }

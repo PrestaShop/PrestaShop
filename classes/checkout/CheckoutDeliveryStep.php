@@ -109,15 +109,13 @@ class CheckoutDeliveryStepCore extends AbstractCheckoutStep
                 $taxLabel .= ' tax excl.';
             }
 
-            return sprintf(
-                $this->getTranslator()->trans(
-                    ' (additional cost of %giftcost% %taxlabel%)',
-                    array(
-                        '%giftcost%' => $priceFormatter->convertAndFormat($this->getGiftCost()),
-                        '%taxlabel%' => $taxLabel,
-                    ),
-                    'Shop.Theme.Checkout'
-                )
+            return $this->getTranslator()->trans(
+                ' (additional cost of %giftcost% %taxlabel%)',
+                array(
+                    '%giftcost%' => $priceFormatter->convertAndFormat($this->getGiftCost()),
+                    '%taxlabel%' => $taxLabel,
+                ),
+                'Shop.Theme.Checkout'
             );
         }
 

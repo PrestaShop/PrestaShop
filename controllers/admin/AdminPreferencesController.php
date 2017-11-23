@@ -246,7 +246,9 @@ class AdminPreferencesControllerCore extends AdminController
         Configuration::updateValue('PS_MULTISHOP_FEATURE_ACTIVE', $value);
 
         $tab = Tab::getInstanceFromClassName('AdminShopGroup');
-        $tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
-        $tab->update();
+        if (Validate::isLoadedObject($tab)) {
+            $tab->active = (bool)Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE');
+            $tab->update();
+        }
     }
 }

@@ -24,15 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\tests\Integration\Adapter;
+namespace Tests\Integration\Adapter;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Database;
 
 class AdapterDatabaseTest extends IntegrationTestCase
 {
-    public function setup()
+    public function setUp()
     {
+        parent::setUp();
         $this->db = new Database;
     }
 

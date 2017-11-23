@@ -105,7 +105,8 @@ class LanguageCore extends ObjectModel
         parent::__construct($id);
     }
 
-    static public function resetCache() {
+    public static function resetCache()
+    {
         self::$_checkedLangs = null;
         self::$_LANGUAGES = null;
         self::$countActiveLanguages = null;
@@ -184,6 +185,10 @@ class LanguageCore extends ObjectModel
         if (!parent::add($autodate, $nullValues)) {
             return false;
         }
+        
+        if ($this->is_rtl) {
+            self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false));
+        }
 
         if ($only_add) {
             return true;
@@ -192,6 +197,19 @@ class LanguageCore extends ObjectModel
         // @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
         $this->loadUpdateSQL();
 
+        return true;
+    }
+    
+    public function update($nullValues = false)
+    {
+        if (!parent::update($nullValues)) {
+            return false;
+        }
+        
+        if ($this->is_rtl) {
+             self::installRtlStylesheets(true, false);
+        }
+ 
         return true;
     }
 
@@ -697,23 +715,47 @@ class LanguageCore extends ObjectModel
     }
 
     /**
+     * Returns locale with iso parameter
+     *
      * @param string $isoCode
      *
-     * @return string|false|null
+     * @return string|false
      *
      * @throws Exception
      */
     public static function getLocaleByIso($isoCode)
     {
         if (!Validate::isLanguageIsoCode($isoCode)) {
-            throw new Exception(sprintf('The ISO code %s is invalid'));
+            throw new Exception('The ISO code ' . $isoCode . ' is invalid');
         }
 
         if ($details = self::getLangDetails($isoCode)) {
             return $details['locale'];
-        } else {
-            return false;
         }
+
+        return false;
+    }
+
+    /**
+     * Returns iso with locale parameter
+     *
+     * @param string $locale
+     *
+     * @return string|false
+     *
+     * @throws Exception
+     */
+    public static function getIsoByLocale($locale)
+    {
+        if (!Validate::isLanguageCode($locale)) {
+            throw new Exception('The locale ' . $locale . ' is invalid');
+        }
+
+        if ($details = self::getJsonLanguageDetails($locale)) {
+            return $details['iso_code'];
+        }
+
+        return false;
     }
 
     public static function getLanguageCodeByIso($iso_code)
@@ -1291,6 +1333,39 @@ class LanguageCore extends ObjectModel
                     }
                 }
             }
+        }
+    }
+    
+    /**
+     * Language::installRtlStylesheets()
+     * @param bool $bo_theme
+     * @param bool $fo_theme
+     * @param null $theme_name
+     * @param null $iso
+     * @param bool $install
+     * @param null $path
+     */
+    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false, $theme_name = null, $iso = null, $install = false, $path = null)
+    {
+        $admin_dir = ($install) ? _PS_ROOT_DIR_.'/admin/' : _PS_ADMIN_DIR_.'/';
+        $front_dir = _PS_ROOT_DIR_.'/themes/';
+        if ($iso) {
+            $lang_pack = Language::getLangDetails($iso);
+            if (!$lang_pack['is_rtl']) {
+                return;
+            }
+        }
+        
+        if ($bo_theme) {
+            \RTLGenerator::generate($admin_dir.'themes');
+        }
+        
+        if ($fo_theme) {
+            \RTLGenerator::generate($front_dir.($theme_name?$theme_name:'classic'));
+        }
+        
+        if ($path && is_dir($path)) {
+            \RTLGenerator::generate($path);
         }
     }
 }

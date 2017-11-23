@@ -58,20 +58,16 @@ class ValidateConstraintTranslatorCore
             return $this->translator->trans(
                 'Format should be %s.', array(Tools::formatDateStr('31 May 1970')), 'Shop.Forms.Errors'
             );
-        }
-        elseif ($validator === 'required') {
+        } elseif ($validator === 'required') {
             return $this->translator->trans(
                 'Required field', array(), 'Shop.Forms.Errors'
             );
         }
 
-        return sprintf(
-            $this->translator->trans(
-                'Invalid format.',
-                array(),
-                'Shop.Forms.Errors'
-            ),
-            $validator
+        return $this->translator->trans(
+            'Invalid format.',
+            array(),
+            'Shop.Forms.Errors'
         );
     }
 }

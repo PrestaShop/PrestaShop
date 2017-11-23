@@ -83,11 +83,14 @@ class OrderPresenter implements PresenterInterface
             throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
+        $products = $this->getProducts($order);
+        $amounts = $this->getAmounts($order);
+
         return array(
-            'products' => $this->getProducts($order),
-            'products_count' => count($this->getProducts($order)),
-            'totals' => $this->getAmounts($order)['totals'],
-            'subtotals' => $this->getAmounts($order)['subtotals'],
+            'products' => $products,
+            'products_count' => count($products),
+            'totals' => $amounts['totals'],
+            'subtotals' => $amounts['subtotals'],
             'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
             'messages' => $this->getMessages($order),
@@ -131,7 +134,7 @@ class OrderPresenter implements PresenterInterface
             }
 
             foreach ($cartProducts['products'] as $cartProduct) {
-                if ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute']) {
+                if (($cartProduct['id_product'] === $orderProduct['id_product']) && ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute'])) {
                     if (isset($cartProduct['attributes'])) {
                         $orderProduct['attributes'] = $cartProduct['attributes'];
                     } else {
@@ -261,6 +264,7 @@ class OrderPresenter implements PresenterInterface
             'is_returnable' => (int) $order->isReturnable(),
             'is_virtual' => $cart->isVirtualCart(),
             'payment' => $order->payment,
+            'module' => $order->module,
             'recyclable' => (bool) $order->recyclable,
             'shipping' => $this->getShipping($order),
             'is_valid' => $order->valid,
@@ -344,7 +348,7 @@ class OrderPresenter implements PresenterInterface
                 $tracking_line = '-';
                 if ($shipping['tracking_number']) {
                     if ($shipping['url'] && $shipping['tracking_number']) {
-                        $tracking_line = '<a href="'.str_replace('@', $shipping['tracking_number'], $shipping['url']).'">'.$shipping['tracking_number'].'</a>';
+                        $tracking_line = '<a href="'.str_replace('@', $shipping['tracking_number'], $shipping['url']).'" target="_blank">'.$shipping['tracking_number'].'</a>';
                     } else {
                         $tracking_line = $shipping['tracking_number'];
                     }

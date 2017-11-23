@@ -24,6 +24,7 @@
  */
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import {psGetRequestParameter} from './common';
 
 $(document).ready(function () {
   $('body').on('change', '.product-variants [data-product-attribute]', function () {
@@ -42,7 +43,14 @@ $(document).ready(function () {
         eventType = extraParameters.eventType;
       }
 
-      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh';
+      var preview = psGetRequestParameter('preview');
+      if (preview !== null) {
+        preview = '&preview=' + preview;
+      } else {
+        preview = '';
+      }
+
+      var query = $(event.target.form).serialize() + '&ajax=1&action=productrefresh' + preview;
       var actionURL = $(event.target.form).attr('action');
 
       $.post(actionURL, query, null, 'json').then(function(resp) {
@@ -140,3 +148,4 @@ $(document).ready(function () {
     });
   });
 });
+
