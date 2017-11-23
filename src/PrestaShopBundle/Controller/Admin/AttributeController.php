@@ -99,7 +99,7 @@ class AttributeController extends FrameworkBundleAdminController
             return $response;
         }
 
-        //store exisiting product combinations
+        //store existing product combinations
         $existingCombinationsIds = array_map(function ($o) {
             return $o['id_product_attribute'];
         }, $product->getAttributeCombinations(1, false));

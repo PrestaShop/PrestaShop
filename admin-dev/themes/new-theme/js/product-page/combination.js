@@ -98,7 +98,7 @@ export default function() {
       $.each(combinationsImages[value], function(key, image) {
         html += `<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
-          <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
+          <img src="${image.base_image_url}-small_default.${image.format}" alt="${image.legend}" title="${image.legend}" />
         </div>`;
       });
       $imagesElem.html(html);

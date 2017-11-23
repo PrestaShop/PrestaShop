@@ -119,8 +119,9 @@ class ProductDataProvider
     public function getImages($id_product, $id_lang)
     {
         $data = [];
+
         foreach (Image::getImages($id_lang, $id_product) as $image) {
-            $data[] = $this->getImage($image['id_image']);
+            $data[] = $this->getImage($image['id_image'], $id_lang);
         }
 
         return $data;
@@ -130,10 +131,11 @@ class ProductDataProvider
      * Get an image
      *
      * @param int $id_image
+     * @param int $id_lang
      *
      * @return array()
      */
-    public function getImage($id_image)
+    public function getImage($id_image, $id_lang)
     {
         $imageData = new Image((int)$id_image);
 
@@ -142,7 +144,7 @@ class ProductDataProvider
             'id_product' => $imageData->id_product,
             'position' => $imageData->position,
             'cover' => $imageData->cover ? true : false,
-            'legend' => $imageData->legend,
+            'legend' => $imageData->legend[$id_lang],
             'format' => $imageData->image_format,
             'base_image_url' => _THEME_PROD_DIR_.$imageData->getImgPath(),
         ];
