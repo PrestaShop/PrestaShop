@@ -1647,7 +1647,8 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0,
   `available_date` date DEFAULT NULL,
   PRIMARY KEY (`id_product_attribute`, `id_shop`),
-  UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`)
+  UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`),
+  INDEX (`default_on`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 /* association between attribute and combination */
