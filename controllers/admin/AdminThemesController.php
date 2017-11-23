@@ -24,7 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
 use PrestaShop\PrestaShop\Core\Shop\LogoUploader;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
@@ -38,10 +40,14 @@ class AdminThemesControllerCore extends AdminController
     const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
     /**
-    * @var object ThemeManager
+    * @var ThemeManager
     */
     public $theme_manager;
 
+    /**
+     * @var ThemeRepository
+     */
+    protected $theme_repository;
     protected $toolbar_scroll = false;
     protected $authAccesses = array();
     private $img_error;
@@ -79,6 +85,10 @@ class AdminThemesControllerCore extends AdminController
 
     public function downloadAddonsThemes()
     {
+        if (!$this->logged_on_addons) {
+            return false;
+        }
+
         try {
             $this->validateAddAuthorization();
         } catch (Exception $e) {
@@ -249,7 +259,7 @@ class AdminThemesControllerCore extends AdminController
 
         if ('exporttheme' === Tools::getValue('action')) {
             try {
-                $this->validateAddAuthorization();
+                $this->validateAddAuthorization(true);
             } catch (Exception $e) {
                 $this->errors[] = $this->trans(
                     'You do not have permission to edit this.',
