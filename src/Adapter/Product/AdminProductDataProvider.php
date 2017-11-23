@@ -286,7 +286,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $sqlOrder = array('id_product ASC');
         }
 
-        $sqlGroupBy = [];
+        $sqlGroupBy = array();
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingFieldsModifier', array(
