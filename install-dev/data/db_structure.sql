@@ -1565,7 +1565,7 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`, `id_shop`),
   UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`),
-  INDEX (`default_on`),
+  INDEX (`default_on`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_attribute_combination` (
