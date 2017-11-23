@@ -9,8 +9,8 @@
 {if $collapse_menu} page-sidebar-closed{/if}
 *}
 
-<header>
-  <nav class="main-header">
+<header id="header">
+  <nav id="header_infos" class="main-header">
 
     <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
 
