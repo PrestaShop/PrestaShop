@@ -110,7 +110,6 @@ class ReleaseCreator
         echo "\e[32m--- Script started at {$startTime} \e[m\n\n";
         $this->setFilesConstants()
             ->generateLicensesFile()
-            ->updateComposerJsonFile()
             ->runComposerInstall()
             ->createPackages();
         $endTime = date('H:i:s');
@@ -225,29 +224,6 @@ class ReleaseCreator
 
         if (!file_put_contents($this->projectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
-        }
-        echo "\e[32m DONE\e[m\n";
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws BuildException
-     */
-    protected function updateComposerJsonFile()
-    {
-        echo "\e[33mUpdating composer.json...\e[m";
-        $replacement = '"PrestaShop\\\\\\PrestaShop\\\\\\Core\\\\\\Cldr\\\\\\Composer\\\\\\Hook::init",
-            "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::buildBootstrap",
-            "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::installRequirementsFile",
-            "Sensio\\\\\\Bundle\\\\\\DistributionBundle\\\\\\Composer\\\\\\ScriptHandler::prepareDeploymentTarget"';
-        $content = file_get_contents($this->projectPath . '/composer.json');
-        $content = preg_replace('/("post-install-cmd": \\[)(.*)("post-update-cmd": \\[)/s', "$1
-            ".$replacement."],\r\n    $3", $content);
-
-        if (!file_put_contents($this->projectPath . '/composer.json', $content)) {
-            throw new BuildException('Unable to update composer.json');
         }
         echo "\e[32m DONE\e[m\n";
 
