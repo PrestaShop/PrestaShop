@@ -87,11 +87,13 @@ class OrderOpcControllerCore extends ParentOrderController
                             break;
 
                         case 'updateTOSStatusAndGetPayments':
+                            $this->validatePackItemsAvailability(true);
                             if (Tools::isSubmit('checked')) {
                                 $this->context->cookie->checkedTOS = (int)Tools::getValue('checked');
                                 $this->ajaxDie(Tools::jsonEncode(array(
                                     'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
-                                    'HOOK_PAYMENT' => $this->_getPaymentMethods()
+                                    'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+                                    'hasError' => false,
                                 )));
                             }
                             break;
@@ -317,6 +319,10 @@ class OrderOpcControllerCore extends ParentOrderController
                 } else {
                     throw new PrestaShopException('Method is not defined');
                 }
+            }
+
+            if (empty($this->errors)) {
+                $this->validatePackItemsAvailability();
             }
         } elseif (Tools::isSubmit('ajax')) {
             $this->errors[] = Tools::displayError('There is no product in your cart.');
@@ -759,5 +765,26 @@ class OrderOpcControllerCore extends ParentOrderController
             Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
         }
         return $result;
+    }
+
+    /**
+     * Check if the packs items in the cart are available
+     *
+     * @param bool $ajaxDie - If true we use the ajaxDie function
+     */
+    private function validatePackItemsAvailability($ajaxDie = false)
+    {
+        $packProduct = $this->context->cart->checkPacksItemsQuantities();
+        if (true !== $packProduct) {
+            $this->step = 0;
+            $this->errors[] = sprintf(
+                Tools::displayError('An item (%1s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'),
+                $packProduct['name']
+            );
+
+            if ($ajaxDie) {
+                $this->ajaxDie('{"hasError" : true, "errors" : ["' . implode('\',\'', $this->errors) . '"]}');
+            }
+        }
     }
 }
