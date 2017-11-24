@@ -23,15 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
-namespace PrestaShop\PrestaShop\tests\Unit\Adapter;
+namespace Tests\Unit\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PHPUnit\Framework\TestCase;
 
-class ToolsTest extends \PHPUnit_Framework_TestCase
+class ToolsTest extends TestCase
 {
-
     /**
      * Given two numbers with arbitrary precision
      * When calling Tools:bcAdd with those numbers and a specific precision

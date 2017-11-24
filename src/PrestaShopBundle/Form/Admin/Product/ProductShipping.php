@@ -127,7 +127,6 @@ class ProductShipping extends CommonAbstractType
             'expanded' =>  true,
             'multiple' =>  false,
             'required' =>  false,
-            'empty_value' => false,
             'preferred_choices' => array('default'),
             'label' => $this->translator->trans('Delivery Time', array(), 'Admin.Catalog.Feature')
         ))

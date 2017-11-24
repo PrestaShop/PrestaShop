@@ -24,10 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace Tests\Integration;
 
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
+
 use Module;
 use Cache;
 use PrestaShopAutoload;

@@ -55,8 +55,8 @@ class ConfigurationTestCore
     {
         $tests = array(
             'upload' => false,
-            'cache_dir' => 'app/cache',
-            'log_dir' => 'app/logs',
+            'cache_dir' => 'var/cache',
+            'log_dir' => 'var/logs',
             'img_dir' => 'img',
             'module_dir' => 'modules',
             'theme_lang_dir' => 'themes/'._THEME_NAME_.'/lang/',

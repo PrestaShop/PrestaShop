@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle;
+namespace Tests\Unit\PrestaShopBundle;
 
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Tests\TestCase\UnitTestCase;
+use Tests\Unit\ContextMocker;
 use PrestaShopBundle\EventListener\MultishopCommandListener;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use Shop;
@@ -73,6 +73,7 @@ class MultishopCommandListenerTest extends UnitTestCase
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
+
 
     public function testDefaultMultishopContext()
     {

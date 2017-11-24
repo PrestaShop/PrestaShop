@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Database\EntityManager;
+namespace Tests\Unit\Core\Foundation\Database\EntityManager;
 
-use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
+use Tests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Foundation\Database\EntityManager\QueryBuilder;
 use Phake;
 

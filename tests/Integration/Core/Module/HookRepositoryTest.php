@@ -25,14 +25,14 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Tests\Integration\Core\Module;
+namespace Tests\Integration\Core\Module;
 
 use Context;
 use Db;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
-use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
+use Tests\Unit\ContextMocker;
 
 class HookRepositoryTest extends IntegrationTestCase
 {

@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Hook;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class HookManager
 {
@@ -54,10 +55,16 @@ class HookManager
         $id_shop = null
     ) {
         $sfContainer = SymfonyContainer::getInstance();
-        if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
-            $hook_args = array_merge(array('request' => $sfContainer->get('request')), $hook_args);
+        $request = null;
 
-            // If the Symfony kernel is instanciated, we use it for the event fonctionnality
+        if ($sfContainer instanceof ContainerInterface) {
+            $request = $sfContainer->get('request_stack')->getCurrentRequest();
+        }
+
+        if (!is_null($request)) {
+            $hook_args = array_merge(array('request' => $request), $hook_args);
+
+            // If Symfony application is booted, we use it to dispatch Hooks
             $hookDispatcher = $sfContainer->get('prestashop.hook.dispatcher');
 
             return $hookDispatcher->renderForParameters($hook_name, $hook_args)->getContent();

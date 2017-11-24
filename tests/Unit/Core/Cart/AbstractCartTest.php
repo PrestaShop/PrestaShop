@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart;
+namespace Tests\Unit\Core\Cart;
 
 use Cart;
 use CartCore;
 use CartRule;
 use Configuration;
 use Context;
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 use Product;
 use StockAvailable;
 

@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle\Utils;
+namespace Tests\Unit\PrestaShopBundle\Utils;
 
 use PrestaShopBundle\Utils\FloatParser;
+use PHPUnit\Framework\TestCase;
 
-class FloatParserTest extends \PHPUnit_Framework_TestCase
+class FloatParserTest extends TestCase
 {
 
     /**
