@@ -60,7 +60,7 @@ class Order extends PrestashopClient {
     return this.client
       .waitForExist(selector.BO.Orders.CreateOrder.basic_price_value, 90000)
       .then(() => this.client.getValue(selector.BO.Orders.CreateOrder.basic_price_value))
-      .then((price) => global.basic_price = price)
+      .then((price) => global.basic_price = price);
   }
 
   selectDelivery() {
@@ -73,7 +73,7 @@ class Order extends PrestashopClient {
   addOrderMessage() {
     return this.client
       .waitForVisible(selector.BO.Orders.CreateOrder.order_message_textarea, 90000)
-      .setValue(selector.BO.Orders.CreateOrder.order_message_textarea,'Order message test')
+      .setValue(selector.BO.Orders.CreateOrder.order_message_textarea, 'Order message test')
 
   }
 
@@ -158,7 +158,7 @@ class Order extends PrestashopClient {
 
   checkBasicPrice() {
     return this.client
-      .scroll(0, 600)
+      .scroll(0, 1000)
       .waitForExist(selector.BO.Orders.Order.edit_product_button, 90000)
       .click(selector.BO.Orders.Order.edit_product_button)
       .waitForExist(selector.BO.Orders.Order.product_basic_price, 90000)
@@ -184,6 +184,30 @@ class Order extends PrestashopClient {
       .click(selector.BO.Orders.Order.update_order_status_button)
   }
 
+  goToDocuments() {
+    return this.client
+      .scroll(0, 0)
+      .waitForVisible(selector.BO.Orders.Order.document_submenu, 90000)
+      .click(selector.BO.Orders.Order.document_submenu)
+  }
+
+  downloadDocument() {
+    return this.client
+      .waitForExist(selector.BO.Orders.Order.download_button, 90000)
+      .click(selector.BO.Orders.Order.download_button)
+      .then(() => this.client.getText(selector.BO.Orders.Order.download_button))
+      .then((name) => global.invoiceFileName = name.replace('#', ''))
+      .then(() => this.client.pause(2000));
+  }
+
+  downloadDeliveryDocument() {
+    return this.client
+      .waitForExist(selector.BO.Orders.Order.download_delivery_button, 90000)
+      .click(selector.BO.Orders.Order.download_delivery_button)
+      .then(() => this.client.getText(selector.BO.Orders.Order.download_delivery_button))
+      .then((name) => global.invoiceFileName = name.replace('#', ''))
+      .then(() => this.client.pause(2000));
+  }
 }
 
 module.exports = Order;
