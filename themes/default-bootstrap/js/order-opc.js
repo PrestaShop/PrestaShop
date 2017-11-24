@@ -324,29 +324,56 @@ function updateDisplayPrice(json) {
 
 function updatePaymentMethodsDisplay()
 {
-	var checked = '';
-	if ($('#cgv:checked').length !== 0)
-		checked = 1;
-	else
-		checked = 0;
-	$('#opc_payment_methods-overlay').fadeIn('slow', function(){
-		$.ajax({
-			type: 'POST',
-			headers: { "cache-control": "no-cache" },
-			url: orderOpcUrl + '?rand=' + new Date().getTime(),
-			async: true,
-			cache: false,
-			dataType : "json",
-			data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
-			success: function(json)
-			{
-				updatePaymentMethods(json);
-				if (typeof bindUniform !=='undefined')
-					bindUniform();
-			}
-		});
-		$(this).fadeOut('slow');
-	});
+    var checked = ($('#cgv:checked').length !== 0) ? 1 : 0;
+
+    $('#opc_payment_methods-overlay').fadeIn('slow', function () {
+        $.ajax({
+            type: 'POST',
+            headers: {"cache-control": "no-cache"},
+            url: orderOpcUrl + '?rand=' + new Date().getTime(),
+            async: true,
+            cache: false,
+            dataType: "json",
+            data: 'ajax=true&method=updateTOSStatusAndGetPayments&checked=' + checked + '&token=' + static_token,
+            success: function (json) {
+                var $cgvCheckBox = $('#cgv');
+                if (json.hasError) {
+                    if (0 === $('.fancybox-error').length) {
+                        var errors = '';
+                        for (var error in json.errors) {
+                            //IE6 bug fix
+                            if (error !== 'indexOf') {
+                                errors += $('<div />').html(json.errors[error]).text() + "\n";
+                            }
+                        }
+                        if (typeof($.prototype.fancybox) !== "undefined") {
+                            $.fancybox.open([
+                                {
+                                    type: 'inline',
+                                    autoScale: true,
+                                    minHeight: 30,
+                                    content: '<p class="fancybox-error">' + errors + '</p>'
+                                }
+                            ], {
+                                padding: 0
+                            });
+                        } else {
+                            alert(errors);
+                        }
+                    }
+
+                    $cgvCheckBox.closest("span").removeClass('checked');
+                    $cgvCheckBox.attr('checked', false);
+                } else {
+                    updatePaymentMethods(json);
+                    if (typeof bindUniform !== 'undefined') {
+                        bindUniform();
+                    }
+                }
+            }
+        });
+        $(this).fadeOut('slow');
+    });
 }
 
 function updateAddressSelection(is_adv_api)

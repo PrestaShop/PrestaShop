@@ -1030,27 +1030,27 @@ function updateExtraCarrier(id_delivery_option, id_address)
  * @param {string[]} errors - Array of errors
  */
 var displayError = function displayError(errors) {
-	if (errors.length > 0) {
-		var errorsMsg = '';
-		for (var error in errors) {
-			//IE6 bug fix
-			if (error !== 'indexOf') {
-				errorsMsg += $('<div />').html(errors[error]).text() + "\n";
-			}
-		}
-		if (!!$.prototype.fancybox) {
-			$.fancybox.open([
-					{
-						type: 'inline',
-						autoScale: true,
-						minHeight: 30,
-						content: '<p class="fancybox-error">' + errorsMsg + '</p>'
-					}],
-				{
-					padding: 0
-				});
-		} else {
-			alert(errorsMsg);
-		}
-	}
+    if (errors.length > 0) {
+        var errorsMsg = '';
+        for (var error in errors) {
+            //IE6 bug fix
+            if (error !== 'indexOf') {
+                errorsMsg += $('<div />').html(errors[error]).text() + "\n";
+            }
+        }
+        if (typeof($.prototype.fancybox) !== "undefined") {
+            $.fancybox.open([
+                {
+                    type: 'inline',
+                    autoScale: true,
+                    minHeight: 30,
+                    content: '<p class="fancybox-error">' + errorsMsg + '</p>'
+                }
+            ], {
+                padding: 0
+            });
+        } else {
+            alert(errorsMsg);
+        }
+    }
 };
