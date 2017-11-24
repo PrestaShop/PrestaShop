@@ -257,134 +257,45 @@ class AdminThemesControllerCore extends AdminController
             $this->errors[] = $e->getMessage();
         }
 
-        if ('exporttheme' === Tools::getValue('action')) {
-            try {
-                $this->validateAddAuthorization(true);
-            } catch (Exception $e) {
-                $this->errors[] = $this->trans(
-                    'You do not have permission to edit this.',
-                    array(),
-                    'Admin.Notifications.Error'
-                );
-
-                return false;
-            }
-
-            $exporter = SymfonyContainer::getInstance()->get('prestashop.core.addon.theme.exporter');
-            $path = $exporter->export($this->context->shop->theme);
-            $this->confirmations[] = $this->trans(
-                'Your theme has been correctly exported: %path%',
-                ['%path%' => $path],
-                'Admin.Notifications.Success'
-            );
-        } elseif (Tools::isSubmit('submitAddconfiguration')) {
-            try {
-                $this->validateAddAuthorization();
-
-                if ($filename = Tools::getValue('theme_archive_server')) {
-                    $path = _PS_ALL_THEMES_DIR_.$filename;
-                    $this->theme_manager->install($path);
-                } elseif ($filename = Tools::getValue('themearchive')) {
-                    $path = _PS_ALL_THEMES_DIR_.$filename;
-                    $destination = $this->processUploadFile($path);
-                    if (!empty($destination)) {
-                        $this->theme_manager->install($destination);
-                        @unlink($destination);
-                    }
-                } elseif ($source = Tools::getValue('themearchiveUrl')) {
-                    $this->theme_manager->install($source);
+        /** Specific processes, depending on action and/or submitted form */
+        switch (Tools::getValue('action')) {
+            case 'importtheme':
+                if (Tools::isSubmit('submitAddconfiguration')) {
+                    $this->postProcessSubmitAddConfiguration();
                 }
-            } catch (Exception $e) {
-                $this->errors[] = $e->getMessage();
-            }
+                break;
 
-            if (empty($this->errors)) {
-                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
-            }
-        } elseif (Tools::getValue('action') == 'submitConfigureLayouts') {
-            try {
-                $this->validateAllAuthorizations();
-                $this->processSubmitConfigureLayouts();
-                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
-            } catch (Exception $e) {
-                $this->errors[] = $e->getMessage();
-            }
-        } elseif (Tools::getValue('action') == 'enableTheme') {
-            try {
-                $this->validateAllAuthorizations();
+            case 'exporttheme':
+                if (false === $this->postProcessExportTheme()) {
+                    return false;
+                }
+                break;
 
-                $isThemeEnabled = $this->theme_manager->enable(Tools::getValue('theme_name'));
-                // get errors if theme wasn't enabled
-                if (!$isThemeEnabled) {
-                    $this->errors[] = $this->theme_manager->getErrors(Tools::getValue('theme_name'));
-                } else {
-                    Tools::clearSmartyCache();
-                    Tools::clearCache();
-                    $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
-                }
-            } catch (Exception $e) {
-                $this->errors[] = $e->getMessage();
-            }
-        } elseif (Tools::getValue('action') == 'deleteTheme') {
-            try {
-                $this->validateDeleteAuthorization();
-                $this->theme_manager->uninstall(Tools::getValue('theme_name'));
-                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
-            } catch (Exception $e) {
-                $this->errors[] = $e->getMessage();
-            }
-        } elseif (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('PS_GENERATE_RTL')) {
-            Language::getRtlStylesheetProcessor()
-                ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
-                ->setRegenerate(true)
-                ->process();
-            $this->confirmations[] = $this->trans(
-                'Your RTL stylesheets has been generated successfully',
-                array(),
-                'Admin.Design.Notification'
-            );
-        } elseif (Tools::getValue('action') == 'resetToDefaults') {
-            try {
-                $this->validateAllAuthorizations();
-                if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
-                    $this->confirmations[] = $this->trans(
-                        'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
-                        array(),
-                        'Admin.Design.Notification'
-                    );
-                }
-            } catch (Exception $e) {
-                $this->errors[] = $e->getMessage();
-            }
-        }
+            case 'enableTheme':
+                $this->postProcessEnableTheme();
+                break;
 
-        if (Tools::isSubmit('submitOptionsconfiguration')) {
-            try {
-                $this->validateAllAuthorizations();
+            case 'deleteTheme':
+                $this->postProcessDeleteTheme();
+                break;
 
-                Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
+            case 'resetToDefaults':
+                $this->postProcessResetToDefaults();
+                break;
 
-                if (Tools::getValue('PS_LOGO')) {
-                    $this->logo_uploader->updateHeader();
-                }
-                if (Tools::getValue('PS_LOGO_MAIL')) {
-                    $this->logo_uploader->updateMail();
-                }
-                if (Tools::getValue('PS_LOGO_INVOICE')) {
-                    $this->logo_uploader->updateInvoice();
-                }
-                if (Tools::getValue('PS_FAVICON')) {
-                    $this->logo_uploader->updateFavicon();
-                    $this->redirect_after = self::$currentIndex . '&token=' . $this->token;
+            case 'submitConfigureLayouts':
+                $this->postProcessSubmitConfigureLayouts();
+                break;
+
+            // Main Theme page
+            default:
+                if (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('PS_GENERATE_RTL')) {
+                    $this->postProcessSubmitGenerateRTL();
                 }
 
-                Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
-            } catch (PrestaShopException $e) {
-                $this->errors[] = $e->getMessage();
-                $this->addErrorToRedirectAfter();
-            } catch (Exception $e) {
-                $this->addErrorToRedirectAfter();
-            }
+                if (Tools::isSubmit('submitOptionsconfiguration')) {
+                    $this->postProcessSubmitOptionsConfiguration();
+                }
         }
 
         return parent::postProcess();
@@ -1005,5 +916,184 @@ class AdminThemesControllerCore extends AdminController
     protected function addErrorToRedirectAfter()
     {
         $this->redirect_after = self::$currentIndex . '&token=' . $this->token . '&error';
+    }
+
+    /**
+     * Specific postProcess for "exporttheme" action
+     *
+     * @return bool false if access not granted
+     */
+    protected function postProcessExportTheme()
+    {
+        try {
+            $this->validateAddAuthorization(true);
+        } catch (Exception $e) {
+            $this->errors[] = $this->trans(
+                'You do not have permission to edit this.',
+                array(),
+                'Admin.Notifications.Error'
+            );
+
+            return false;
+        }
+
+        $exporter = SymfonyContainer::getInstance()->get('prestashop.core.addon.theme.exporter');
+        $path = $exporter->export($this->context->shop->theme);
+        $this->confirmations[] = $this->trans(
+            'Your theme has been correctly exported: %path%',
+            ['%path%' => $path],
+            'Admin.Notifications.Success'
+        );
+
+        return true;
+    }
+
+    /**
+     * Specific postProcess for "submitAddconfiguration" action
+     */
+    protected function postProcessSubmitAddConfiguration()
+    {
+        try {
+            $this->validateAddAuthorization();
+
+            if ($filename = Tools::getValue('theme_archive_server')) {
+                $path = _PS_ALL_THEMES_DIR_ . $filename;
+                $this->theme_manager->install($path);
+            } elseif ($filename = Tools::getValue('themearchive')) {
+                $path        = _PS_ALL_THEMES_DIR_ . $filename;
+                $destination = $this->processUploadFile($path);
+                if (!empty($destination)) {
+                    $this->theme_manager->install($destination);
+                    @unlink($destination);
+                }
+            } elseif ($source = Tools::getValue('themearchiveUrl')) {
+                $this->theme_manager->install($source);
+            }
+        } catch (Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+
+        if (empty($this->errors)) {
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        }
+    }
+
+    /**
+     * Specific postProcess for "submitConfigureLayouts" action
+     */
+    protected function postProcessSubmitConfigureLayouts()
+    {
+        try {
+            $this->validateAllAuthorizations();
+            $this->processSubmitConfigureLayouts();
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } catch (Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+    }
+
+    /**
+     * Specific postProcess for "enableTheme" action
+     */
+    protected function postProcessEnableTheme()
+    {
+        try {
+            $this->validateAllAuthorizations();
+
+            $isThemeEnabled = $this->theme_manager->enable(Tools::getValue('theme_name'));
+            // get errors if theme wasn't enabled
+            if (!$isThemeEnabled) {
+                $this->errors[] = $this->theme_manager->getErrors(Tools::getValue('theme_name'));
+            } else {
+                Tools::clearSmartyCache();
+                Tools::clearCache();
+                $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+            }
+        } catch (Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+    }
+
+    /**
+     * Specific postProcess for "deleteTheme" action
+     */
+    protected function postProcessDeleteTheme()
+    {
+        try {
+            $this->validateDeleteAuthorization();
+            $this->theme_manager->uninstall(Tools::getValue('theme_name'));
+            $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
+        } catch (Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+    }
+
+    /**
+     * Specific postProcess for "submitGenerateRTL" action
+     */
+    protected function postProcessSubmitGenerateRTL()
+    {
+        Language::getRtlStylesheetProcessor()
+            ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
+            ->setRegenerate(true)
+            ->process();
+
+        $this->confirmations[] = $this->trans(
+            'Your RTL stylesheets has been generated successfully',
+            array(),
+            'Admin.Design.Notification'
+        );
+    }
+
+    /**
+     * Specific postProcess for "resetToDefaults" action
+     */
+    protected function postProcessResetToDefaults()
+    {
+        try {
+            $this->validateAllAuthorizations();
+            if ($this->theme_manager->reset(Tools::getValue('theme_name'))) {
+                $this->confirmations[] = $this->trans(
+                    'Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the \'Regenerate thumbnails\' button.',
+                    array(),
+                    'Admin.Design.Notification'
+                );
+            }
+        } catch (Exception $e) {
+            $this->errors[] = $e->getMessage();
+        }
+    }
+
+    /**
+     * Specific postProcess for "submitOptionsconfiguration" action
+     */
+    protected function postProcessSubmitOptionsConfiguration()
+    {
+        try {
+            $this->validateAllAuthorizations();
+
+            Configuration::updateValue('PS_IMG_UPDATE_TIME', time());
+
+            if (Tools::getValue('PS_LOGO')) {
+                $this->logo_uploader->updateHeader();
+            }
+            if (Tools::getValue('PS_LOGO_MAIL')) {
+                $this->logo_uploader->updateMail();
+            }
+            if (Tools::getValue('PS_LOGO_INVOICE')) {
+                $this->logo_uploader->updateInvoice();
+            }
+            if (Tools::getValue('PS_FAVICON')) {
+                $this->logo_uploader->updateFavicon();
+                $this->redirect_after = self::$currentIndex . '&token=' . $this->token;
+            }
+
+            Hook::exec('actionAdminThemesControllerUpdate_optionsAfter');
+        } catch (PrestaShopException $e) {
+            $this->errors[] = $e->getMessage();
+            $this->addErrorToRedirectAfter();
+        } catch (Exception $e) {
+            $this->addErrorToRedirectAfter();
+        }
     }
 }
