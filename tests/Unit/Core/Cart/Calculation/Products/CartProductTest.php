@@ -68,7 +68,10 @@ class CartProductTest extends AbstractCartCalculationTest
                     1 => 3,
                     3 => 1,
                 ),
-                'expectedTotal' => 162.41, // default carrier has $7 shipping fees
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
+                                   + 2 * static::PRODUCT_FIXTURES[2]['price']
+                                   + static::PRODUCT_FIXTURES[3]['price']
+                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => array(),
             ),
         );

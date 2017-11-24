@@ -199,7 +199,7 @@ class CartRow
     public function subDiscountPercent($percent)
     {
         $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
-        $discountTaxExcluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
+        $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
         $amount = new Amount($discountTaxIncluded, $discountTaxExcluded);
         $this->subDiscountAmount($amount);
 
