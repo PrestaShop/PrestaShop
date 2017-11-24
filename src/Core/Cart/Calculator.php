@@ -113,10 +113,13 @@ class Calculator
 
         $amount = new Amount;
         foreach ($this->cartRows as $cartRow) {
-            $amount->add($cartRow->getFinalTotalPrice());
+            $rowPrice = $cartRow->getFinalTotalPrice();
+            $amount->add($rowPrice);
         }
-        $amount->add($this->fees->getFinalShippingFees());
-        $amount->add($this->fees->getFinalWrappingFees());
+        $shippingFees = $this->fees->getFinalShippingFees();
+        $amount->add($shippingFees);
+        $wrappingFees = $this->fees->getFinalWrappingFees();
+        $amount->add($wrappingFees);
 
         return $amount;
     }

@@ -1808,6 +1808,7 @@ class CartCore extends ObjectModel
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
 
+        //$tutu = $this->getTotalShippingCost(null, (bool)$with_taxes);
         if ($with_shipping || $type == Cart::ONLY_DISCOUNTS) {
             if (is_null($products) && is_null($id_carrier)) {
                 $shipping_fees = $this->getTotalShippingCost(null, (bool)$with_taxes);
@@ -2339,16 +2340,12 @@ class CartCore extends ObjectModel
      */
     public function getNbOfPackages()
     {
-        static $nb_packages = array();
-
-        if (!isset($nb_packages[$this->id])) {
-            $nb_packages[$this->id] = 0;
-            foreach ($this->getPackageList() as $by_address) {
-                $nb_packages[$this->id] += count($by_address);
-            }
+        $nb_packages = 0;
+        foreach ($this->getPackageList() as $by_address) {
+            $nb_packages += count($by_address);
         }
 
-        return $nb_packages[$this->id];
+        return $nb_packages;
     }
 
     /**
@@ -2367,11 +2364,6 @@ class CartCore extends ObjectModel
      */
     public function getPackageList($flush = false)
     {
-        static $cache = array();
-        $cache_key = (int)$this->id.'_'.(int)$this->id_address_delivery;
-        if (isset($cache[$cache_key]) && $cache[$cache_key] !== false && !$flush) {
-            return $cache[$cache_key];
-        }
 
         $product_list = $this->getProducts($flush);
         // Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
@@ -2600,7 +2592,7 @@ class CartCore extends ObjectModel
                 }
             }
         }
-        $cache[$cache_key] = $final_package_list;
+
         return $final_package_list;
     }
 
@@ -2659,11 +2651,6 @@ class CartCore extends ObjectModel
      */
     public function getDeliveryOptionList(Country $default_country = null, $flush = false)
     {
-        static $cache = array();
-        if (isset($cache[$this->id]) && !$flush) {
-            return $cache[$this->id];
-        }
-
         $delivery_option_list = array();
         $carriers_price = array();
         $carrier_collection = array();
@@ -3102,17 +3089,12 @@ class CartCore extends ObjectModel
      */
     public function isMultiAddressDelivery()
     {
-        static $cache = array();
+        $sql = new DbQuery();
+        $sql->select('count(distinct id_address_delivery)');
+        $sql->from('cart_product', 'cp');
+        $sql->where('id_cart = '.(int)$this->id);
 
-        if (!isset($cache[$this->id])) {
-            $sql = new DbQuery();
-            $sql->select('count(distinct id_address_delivery)');
-            $sql->from('cart_product', 'cp');
-            $sql->where('id_cart = '.(int)$this->id);
-
-            $cache[$this->id] = Db::getInstance()->getValue($sql) > 1;
-        }
-        return $cache[$this->id];
+        return Db::getInstance()->getValue($sql) > 1;
     }
 
     /**
@@ -3209,12 +3191,6 @@ class CartCore extends ObjectModel
      */
     public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
     {
-        static $cache = array();
-        $cache_id = (int)(is_object($default_country) ? $default_country->id : 0).'-'.(int)$dontAutoSelectOptions;
-        if (isset($cache[$cache_id]) && $use_cache) {
-            return $cache[$cache_id];
-        }
-
         $delivery_option_list = $this->getDeliveryOptionList($default_country);
 
         // The delivery option was selected
@@ -3263,8 +3239,6 @@ class CartCore extends ObjectModel
                 $delivery_option[$id_address] = key($options);
             }
         }
-
-        $cache[$cache_id] = $delivery_option;
 
         return $delivery_option;
     }

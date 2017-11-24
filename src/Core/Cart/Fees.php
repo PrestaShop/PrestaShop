@@ -68,7 +68,7 @@ class Fees
         \PrestaShop\PrestaShop\Core\Cart\CartRowCollection $cartRowCollection,
         $id_carrier = null
     ) {
-        if (!count($cartRowCollection) && $id_carrier === null) {
+        if ($id_carrier === null) {
             $this->shippingFees = new Amount(
                 $cart->getTotalShippingCost(null, true),
                 $cart->getTotalShippingCost(null, false)
@@ -149,7 +149,7 @@ class Fees
      */
     public function getFinalWrappingFees()
     {
-        return $this->finalShippingFees;
+        return $this->finalWrappingFees;
     }
 
     /**
@@ -157,7 +157,7 @@ class Fees
      */
     public function getInitialWrappingFees()
     {
-        return $this->finalWrappingFees;
+        return $this->getInitialWrappingFees();
     }
 
     public function subDiscountValueShipping(Amount $amount)

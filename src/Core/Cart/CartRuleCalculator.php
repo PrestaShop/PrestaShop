@@ -191,32 +191,33 @@ class CartRuleCalculator
                 $totalTaxIncl += $concernedRow->getFinalTotalPrice()->getTaxIncluded();
                 $totalTaxExcl += $concernedRow->getFinalTotalPrice()->getTaxExcluded();
             }
-            // apply weighted discount
+            // apply weighted discount :
+            // on each line we apply a part of the discount corresponding to discount*rowWeight/total
             foreach ($concernedRows as $concernedRow) {
                 // get current line tax rate
                 $taxRate = 0;
-                $weightFactor = 0;
                 if ($concernedRow->getFinalTotalPrice()->getTaxExcluded() != 0) {
                     $taxRate = ($concernedRow->getFinalTotalPrice()->getTaxIncluded()
                                 - $concernedRow->getFinalTotalPrice()->getTaxExcluded())
                                / $concernedRow->getFinalTotalPrice()->getTaxExcluded();
                 }
+                $weightFactor = 0;
                 if ($cartRule->reduction_tax) {
-                    // cart rule amount set tax included : caldulate tax excluded
+                    // if cart rule amount is set tax included : calculate weight tax included
                     if ($totalTaxIncl != 0) {
                         $weightFactor = $concernedRow->getFinalTotalPrice()->getTaxIncluded() / $totalTaxIncl;
                     }
                     $discountAmountTaxIncl = $discountConverted * $weightFactor;
                     // recalculate tax included
-                    $discountAmountTaxExcl = $discountConverted / (1 + $taxRate);
+                    $discountAmountTaxExcl = $discountAmountTaxIncl / (1 + $taxRate);
                 } else {
-                    // cart rule amount set tax excluded : caldulate tax included
+                    // if cart rule amount is set tax excluded : calculate weight tax excluded
                     if ($totalTaxExcl != 0) {
                         $weightFactor = $concernedRow->getFinalTotalPrice()->getTaxExcluded() / $totalTaxExcl;
                     }
                     $discountAmountTaxExcl = $discountConverted * $weightFactor;
                     // recalculate tax excluded
-                    $discountAmountTaxIncl = $discountConverted * (1 + $taxRate);
+                    $discountAmountTaxIncl = $discountAmountTaxExcl * (1 + $taxRate);
                 }
                 $amount = new Amount($discountAmountTaxIncl, $discountAmountTaxExcl);
                 $concernedRow->subDiscountAmount($amount);
