@@ -29,10 +29,11 @@
     "window": "^1.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-string": "^1.4.0",
     "dateformat": "^2.0.0",
     "mochawesome": "^2.3.0",
     "nodemailer": "^4.0.1",
-    "chai": "^4.1.2",
-    "chai-string": "^1.4.0"
+    "pdf-to-text": "0.0.6"
   }
 }

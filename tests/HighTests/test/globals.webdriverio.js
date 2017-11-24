@@ -3,6 +3,7 @@ var common = require('./common.webdriverio.js');
 var path = require('path');
 var should = require('should');
 var argv = require('minimist')(process.argv.slice(2));
+var pdfUtil = require('pdf-to-text');
 
 global.date_time = new Date().getTime();
 global.URL = argv.URL;
@@ -14,7 +15,9 @@ global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
 global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
+global.downloadsFolderPath = '/home/fourat.achour/Téléchargements/';
 global.onboarding = false;
+
 module.exports = {
   selector: require('./selectors'),
   shouldExist: function (err, existing) {
