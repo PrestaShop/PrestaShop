@@ -1,14 +1,14 @@
 scenario('Check order in BO', client => {
   test('should status be equal to Awaiting check payment', () => client.checkOrderStatus('Awaiting check payment'));
-  test('should update order status to Payment accepted ', () => client.updateStatus('Payment accepted'));
+  test('should update order status to Refunded ', () => client.updateStatus('Payment error'));
   test('should click on update order status button ', () => client.clickOnUpdateStatusButton());
-  test('should status be equal to Payment accepted', () => client.checkOrderStatus('Payment accepted'));
+  test('should status be equal to Refunded', () => client.checkOrderStatus('Payment error'));
   test('should update order status to Awaiting bank wire payment ', () => client.updateStatus('Awaiting bank wire payment'));
   test('should click on update order status button ', () => client.clickOnUpdateStatusButton());
   test('should status be equal to Awaiting bank wire payment', () => client.checkOrderStatus('Awaiting bank wire payment'));
-  test('should update order status to Refunded ', () => client.updateStatus('Refunded'));
+  test('should update order status to Payment accepted ', () => client.updateStatus('Payment accepted'));
   test('should click on update order status button ', () => client.clickOnUpdateStatusButton());
-  test('should status be equal to Refunded', () => client.checkOrderStatus('Refunded'));
+  test('should status be equal to Payment accepted', () => client.checkOrderStatus('Payment accepted'));
   test('should check the shipping cost', () => client.checkShippingCost('€8.40'));
   test('should check order message', () => client.checkOrderMessage('Order message test'));
   test('should check payment type ', () => client.checkPayment('Payments by check'));
@@ -16,5 +16,7 @@ scenario('Check order in BO', client => {
   test('should check quantity ', () => client.checkQuantity('4'));
   test('should check basic price ', () => client.checkBasicPrice());
   test('should check customer name ', () => client.checkCustomer('John DOE'));
-  //test('should sign out BO', () => client.signoutBO());
-}, 'order_BO', true);
+  test('should update order status to Payment accepted ', () => client.updateStatus('Delivered'));
+  test('should click on update order status button ', () => client.clickOnUpdateStatusButton());
+  test('should status be equal to Payment accepted', () => client.checkOrderStatus('Delivered'))
+}, 'order_BO');
