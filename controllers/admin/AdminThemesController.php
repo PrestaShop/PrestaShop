@@ -289,7 +289,7 @@ class AdminThemesControllerCore extends AdminController
 
             // Main Theme page
             default:
-                if (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('PS_GENERATE_RTL')) {
+                if (Tools::isSubmit('submitGenerateRTL')) {
                     $this->postProcessSubmitGenerateRTL();
                 }
 
@@ -1033,12 +1033,14 @@ class AdminThemesControllerCore extends AdminController
      */
     protected function postProcessSubmitGenerateRTL()
     {
-        Language::installRtlStylesheets(false, true, Tools::getValue('PS_THEMES_LIST'));
-        $this->confirmations[] = $this->trans(
-            'Your RTL stylesheets has been generated successfully',
-            array(),
-            'Admin.Design.Notification'
-        );
+        if ((bool)Tools::getValue('PS_GENERATE_RTL')) {
+            Language::installRtlStylesheets(false, true, Tools::getValue('PS_THEMES_LIST'));
+            $this->confirmations[] = $this->trans(
+                'Your RTL stylesheets has been generated successfully',
+                array(),
+                'Admin.Design.Notification'
+            );
+        }
     }
 
     /**
