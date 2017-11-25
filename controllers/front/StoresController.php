@@ -151,8 +151,6 @@ class StoresControllerCore extends FrontController
 
         header('Content-type: text/xml');
         die($parnode->asXML());
-
-        die();
     }
 
     /**
