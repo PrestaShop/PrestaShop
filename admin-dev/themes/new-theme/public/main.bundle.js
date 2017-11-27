@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bfb236a58b74ba6d8c0c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "620327412105c58b46a5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -55680,12 +55680,17 @@ class Header {
   }
 
   initNotificationsToggle() {
+    $('#notif').on({
+      "shown.bs.dropdown": function() { $(this).attr('closable', false); },
+      'hide.bs.dropdown': function () { return $(this).attr('closable') == 'true';}
+    });
+
     $('.notification.dropdown-toggle').on('click', () => {
       if(!$('.mobile-nav').hasClass('expanded')) {
-        $('.notification-center.dropdown').addClass('open');
-        $('.mobile-layer').addClass('expanded');
         this.updateEmployeeNotifications();
       }
+
+      $('#notif').attr('closable', true );
     });
 
     $('body').on('click', function (e) {
@@ -55698,8 +55703,8 @@ class Header {
           $('.mobile-layer').removeClass('expanded');
           __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__notifications_js__["a" /* default */])();
         }
-        $('div.notification-center.dropdown').removeClass('open');
 
+        $('#notif').attr('closable', true);
       }
     });
 
@@ -56145,12 +56150,13 @@ let setNotificationsNumber = function (id, number) {
         if (idsProductAttribute[0] != '') {
           getCombinations(response);
         }
-        $('#create-combinations').click(function(event) {
-          event.preventDefault();
-          form.send(false, false, generate);
-        });
       });
-
+      
+    $('#create-combinations').click(function(event) {
+      event.preventDefault();
+      form.send(false, false, generate);
+    });
+    
     let productDropzone = Dropzone.forElement('#product-images-dropzone');
     let updateCombinationImages = function () {
       var productAttributeIds = $.map($('.js-combinations-list .combination'), function (combination) {
@@ -56168,12 +56174,7 @@ let setNotificationsNumber = function (id, number) {
       var isChecked = input.prop('checked');
       input.prop('checked', isChecked ? false : true);
 
-      if (isChecked) {
-        $(this).removeClass('img-highlight');
-
-      } else {
-        $(this).addClass('img-highlight');
-      }
+      $(this).toggleClass('img-highlight', isChecked);
       refreshDefaultImage();
     });
 
@@ -56225,15 +56226,15 @@ let setNotificationsNumber = function (id, number) {
         $imagesElem = $('#combination_' + $index + '_id_image_attr');
       }
 
-      $imagesElem.html('');
+      var html = '';
 
       $.each(combinationsImages[value], function(key, image) {
-        $imagesElem.append(`<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
+        html += `<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
           <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
-        </div>`);
+        </div>`;
       });
-
+      $imagesElem.html(html);
       $combinationElem.fadeIn(1000);
     });
 
@@ -56269,7 +56270,7 @@ let setNotificationsNumber = function (id, number) {
 
       if (defaultImageUrl) {
         var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
-        $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
+        $('#attribute_' + $(elem).attr('data')).find('td.img').html(img);
       }
     });
   };
@@ -56778,8 +56779,8 @@ class Combination {
 
   $('.js-nav-tabs li').each((index, item) => {
     navWidth += $(item).width();
-    $('.js-nav-tabs').width(navWidth);
   });
+  $('.js-nav-tabs').width(navWidth);
 
   $('.js-nav-tabs [data-toggle="tab"]').on('click', (e) => {
     if (!$(e.target).hasClass('active')) {
