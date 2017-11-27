@@ -35,7 +35,7 @@ use Composer\Script\Event;
 class Hook
 {
     /** @var string */
-    const ZIP_CORE_URL = '//i18n.prestashop.com/cldr/core.zip';
+    const ZIP_CORE_URL = 'https://i18n.prestashop.com/cldr/core.zip';
 
     /**
      * Triggers CLDR download
