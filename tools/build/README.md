@@ -3,13 +3,23 @@
 To create a release:
 
 ```
-php CreateRelease.php --version="1.7.2.4"
+php tools/build/CreateRelease.php --version="1.7.2.4"
 ```
+
+Available options:
+* --version: Desired release version of PrestaShop. Required.
+* --no-installer: Do not put the installer in the release. Interesting if release will be upload remotly by FTP or for public release. Default: false.
+* --no-zip: Do not zip the release directory. Default: false.
+* --destination-dir: Path where the release will be store. Default: tools/build/releases/prestashop_{version}.
+* --help: Show help.
+
 This will:
             
 * Define constants (`_PS_MODE_DEV_` to false etc...)
-* Concatenate all licence files into one unique in /LICENCES
-* Update composer.json
+* Concatenate all licence files into one unique in {project_root}/LICENCES
 * Create somes folders (app/cache, app/logs...)
+* Zip release if no --no-zip arg
+* Add the installer if no --no-installer arg
+* Move the generated release to {project_root}/tools/build/releases or another directory if --destination-dir arg provided
 
-Created releases are available in tools/build/releases directory.
+[More information on release creation](http://doc.prestashop.com/display/PSRD/Release)
