@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="notif" class="notification-center dropdown">
-  <div class="notification js-notification dropdown-toggle">
+  <div class="notification js-notification dropdown-toggle" data-toggle="dropdown">
     <i class="material-icons">notifications_none</i>
     <span id="notifications-total" class="count hide">0</span>
   </div>

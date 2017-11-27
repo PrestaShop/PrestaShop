@@ -100,12 +100,17 @@ export default class Header {
   }
 
   initNotificationsToggle() {
+    $('#notif').on({
+      "shown.bs.dropdown": function() { $(this).attr('closable', false); },
+      'hide.bs.dropdown': function () { return $(this).attr('closable') == 'true';}
+    });
+
     $('.notification.dropdown-toggle').on('click', () => {
       if(!$('.mobile-nav').hasClass('expanded')) {
-        $('.notification-center.dropdown').addClass('open');
-        $('.mobile-layer').addClass('expanded');
         this.updateEmployeeNotifications();
       }
+
+      $('#notif').attr('closable', true );
     });
 
     $('body').on('click', function (e) {
@@ -118,8 +123,8 @@ export default class Header {
           $('.mobile-layer').removeClass('expanded');
           refreshNotifications();
         }
-        $('div.notification-center.dropdown').removeClass('open');
 
+        $('#notif').attr('closable', true);
       }
     });
 
