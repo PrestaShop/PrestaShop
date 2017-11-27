@@ -85,17 +85,17 @@
                     <div class="card-block">
                         <div class="card-text">
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Disable non PrestaShop modules'|trans }}</label>
+                                {{ ps.label_with_help(('Disable non PrestaShop modules'|trans), ('Enable or disable non PrestaShop Modules.'|trans({}, 'Admin.Advparameters.Feature'))) }}
                                 {{ form_errors(debugModeForm.disable_non_native_modules) }}
                                 {{ form_widget(debugModeForm.disable_non_native_modules) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Disable all overrides'|trans }}</label>
+                                {{ ps.label_with_help(('Disable all overrides'|trans), ('Enable or disable all classes and controllers overrides.'|trans({}, 'Admin.Advparameters.Feature'))) }}
                                 {{ form_errors(debugModeForm.disable_overrides) }}
                                 {{ form_widget(debugModeForm.disable_overrides) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Debug mode'|trans }}</label>
+                                {{ ps.label_with_help(('Debug mode'|trans), ('Enable or disable debug mode.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(debugModeForm.debug_mode) }}
                                 {{ form_widget(debugModeForm.debug_mode) }}
                             </div>
@@ -122,7 +122,7 @@
                             {{ ps.infotip('Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help')) }}
 
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Combinations'|trans({}, 'Admin.Global') }}</label>
+                                {{ ps.label_with_help(('Combinations'|trans({}, 'Admin.Global')), ('Choose "No" to disable Product Combinations.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(optionalFeaturesForm.combinations) }}
                                 {{ form_widget(optionalFeaturesForm.combinations) }}
                             </div>
@@ -132,12 +132,12 @@
                             {% endif %}
 
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Features'|trans({}, 'Admin.Global') }}</label>
+                                {{ ps.label_with_help(('Features'|trans({}, 'Admin.Global')), ('Choose "No" to disable Product Features.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(optionalFeaturesForm.features) }}
                                 {{ form_widget(optionalFeaturesForm.features) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Customer groups'|trans }}</label>
+                                {{ ps.label_with_help(('Customer groups'|trans), ('Enable or disable debug mode.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(optionalFeaturesForm.customer_groups) }}
                                 {{ form_widget(optionalFeaturesForm.customer_groups) }}
                             </div>
@@ -199,17 +199,17 @@
                             {{ ps.infotip('You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature')) }}
 
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Media server #1'|trans }}</label>
+                                {{ ps.label_with_help(('Media server #1'|trans({}, 'Admin.Advparameters.Feature')), ('Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(mediaServersForm.media_server_one) }}
                                 {{ form_widget(mediaServersForm.media_server_one) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Media server #2'|trans }}</label>
+                                {{ ps.label_with_help(('Media server #2'|trans({}, 'Admin.Advparameters.Feature')), ('Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(mediaServersForm.media_server_two) }}
                                 {{ form_widget(mediaServersForm.media_server_two) }}
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">{{ 'Media server #3'|trans }}</label>
+                                {{ ps.label_with_help(('Media server #3'|trans({}, 'Admin.Advparameters.Feature')), ('Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.'|trans({}, 'Admin.Advparameters.Help'))) }}
                                 {{ form_errors(mediaServersForm.media_server_three) }}
                                 {{ form_widget(mediaServersForm.media_server_three) }}
                             </div>
