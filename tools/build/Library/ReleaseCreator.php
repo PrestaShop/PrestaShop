@@ -32,6 +32,9 @@ class ReleaseCreator
     /** @var string */
     const INSTALLER_ZIP_FILENAME = 'prestashop.zip';
 
+    /** @var string */
+    const PRESTASHOP_TMP_DIR = 'prestashop';
+
     /** @var array */
     protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
 
@@ -116,7 +119,8 @@ class ReleaseCreator
     public function __construct($version, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
         $tmpDir = sys_get_temp_dir();
-        $this->tempProjectPath = "{$tmpDir}/PrestaShop-release-tmp";
+        $prestashopTmpDir = self::PRESTASHOP_TMP_DIR;
+        $this->tempProjectPath = "{$tmpDir}/$prestashopTmpDir";
         echo "\e[32m--- Temp dir used will be '{$tmpDir}' \e[m\n";
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version;
@@ -163,6 +167,13 @@ class ReleaseCreator
             ->createPackage();
         $endTime = date('H:i:s');
         echo "\n\e[32m--- Script ended at {$endTime} \e[m\n";
+
+        if ($this->useZip) {
+            $releaseSize = exec("du -hs {$this->destinationDir}/{$this->zipFileName} | cut -f1");
+        } else {
+            $releaseSize = exec("du -hs {$this->destinationDir} | cut -f1");
+        }
+        echo "\n\e[32m--- Release size: $releaseSize \e[m\n";
 
         return $this;
     }
@@ -520,10 +531,7 @@ class ReleaseCreator
                 "{$this->destinationDir}/prestashop_$this->version.zip"
             );
         } else {
-            rename(
-                $this->tempProjectPath,
-                $this->destinationDir
-            );
+            exec("mv $this->tempProjectPath $this->destinationDir");
         }
         rename(
             "/tmp/prestashop_$this->version.xml",
