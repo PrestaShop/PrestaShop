@@ -1,6 +1,6 @@
 scenario('Create product with combination', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signinBO());
+  test('should log in successfully in BO', () => client.signInBO());
   test('should go to product menu', () => client.goToProductMenu());
   test('should click on the add new product button', () => client.addNewProduct());
 
@@ -71,7 +71,7 @@ scenario('Create product with combination', client => {
     test('should enter the ISBN', () => client.ISBNEntry());
     test('should enter the EAN-13', () => client.EAN13Entry());
     test('should enter the UPC', () => client.UPCEntry());
-    test('should click on customization button', () => client.customizationButton());
+    test('should click on customization button', () => client.AddCustomFieldButton());
     test('should create new custom field', () => client.createCustomField());
     test('should click on add a customization field button', () => client.AddCustomFieldButton());
     test('should create new custom field', () => client.newCustomField());
@@ -89,14 +89,14 @@ scenario('Create product with combination', client => {
 
 scenario('Check the product in the catalog', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signinBO());
-  test('should go to the catalog', () => client.goToCatalog('combination'));
-  test('should search the product by name', () => client.searchProductByName());
-  test('should check the product name', () => client.checkProductName());
-  test('should check the product reference', () => client.checkProductReference());
-  test('should check the product category', () => client.checkProductCategory());
-  test('should check the product price TE', () => client.checkProductPriceTE());
-  test('should check the product quantity', () => client.checkProductQuantityCombination());
-  test('should check the product status', () => client.checkProductStatus());
+  test('should log in successfully in BO', () => client.signInBO());
+  test('should go to "Catalog"', () => client.goToCatalog('combination'));
+  test('should search for product by name', () => client.searchProductByName());
+  test('should check the existance of product name', () => client.checkProductName());
+  test('should check the existance of product reference', () => client.checkProductReference());
+  test('should check the existance of product category', () => client.checkProductCategory());
+  test('should check the existance of product price TE', () => client.checkProductPriceTE());
+  test('should check the existance of product quantity Combination', () => client.checkProductQuantityCombination());
+  test('should check the existance of product status', () => client.checkProductStatus());
   test('should reset filter', () => client.resetFilter());
 }, 'product/checkproduct', true);

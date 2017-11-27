@@ -1,10 +1,10 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 global.productName = '';
 global.categoryName = '';
 
-class CheckProductBO extends PrestashopClient {
+class CheckProductBO extends CommonClient {
 
   goToCatalog(type) {
     switch (type) {
@@ -26,18 +26,15 @@ class CheckProductBO extends PrestashopClient {
     }
     return this.client
       .pause(2000)
-      .waitForExist(selector.BO.CatalogPage.menu_button, 90000)
-      .click(selector.BO.CatalogPage.menu_button)
+      .waitForExistAndClick(selector.BO.CatalogPage.menu_button)
   }
 
   searchProductByName() {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.catalogue_filter_by_name_input, 90000)
-      .click(selector.BO.AddProductPage.catalogue_filter_by_name_input)
-      .setValue(selector.BO.AddProductPage.catalogue_filter_by_name_input, productName)
-      .click(selector.BO.AddProductPage.click_outside)
-      .waitForExist(selector.BO.AddProductPage.catalogue_submit_filter_button, 60000)
-      .click(selector.BO.AddProductPage.catalogue_submit_filter_button)
+      .waitForExistAndClick(selector.BO.AddProductPage.catalogue_filter_by_name_input)
+      .waitAndSetValue(selector.BO.AddProductPage.catalogue_filter_by_name_input,productName)
+      .waitForExistAndClick(selector.BO.AddProductPage.click_outside)
+      .waitForExistAndClick(selector.BO.AddProductPage.catalogue_submit_filter_button)
   }
 
   checkProductName() {

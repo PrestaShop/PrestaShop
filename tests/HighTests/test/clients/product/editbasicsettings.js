@@ -1,27 +1,19 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 var path = require('path');
 
-class EditBasicSettings extends PrestashopClient {
+class EditBasicSettings extends CommonClient {
 
   setProductName(type) {
     if (type === 'virtual') {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.virtual.name + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_name_input, data.virtual.name + date_time)
     } else if (type === 'pack') {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.pack.name + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_name_input, data.pack.name + date_time)
     } else if (type === 'combination') {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.standard.name + 'Combination' + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_name_input, data.standard.name + 'Combination' + date_time)
     } else {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_name_input, data.standard.name + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_name_input, data.standard.name + date_time)
     }
   }
 
@@ -70,19 +62,7 @@ class EditBasicSettings extends PrestashopClient {
   }
 
   setQuantity() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.quantity_shortcut_input, 90000)
-      .clearElement(selector.BO.AddProductPage.quantity_shortcut_input)
-      .addValue(selector.BO.AddProductPage.quantity_shortcut_input, "10")
-  }
-
-  setPrice() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.price_te_shortcut_input, 90000)
-      .execute(function () {
-        document.querySelector('#form_step1_price_shortcut').value = "";
-      })
-      .setValue(selector.BO.AddProductPage.price_te_shortcut_input, "5")
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.quantity_shortcut_input, "10")
   }
 
   uploadPicture(fileName) {
@@ -115,136 +95,94 @@ class EditBasicSettings extends PrestashopClient {
 
   addCategory() {
     return this.client
-      .scroll(0, 600)
-      .waitForExist(selector.BO.AddProductPage.product_create_category_btn, 90000)
-      .click(selector.BO.AddProductPage.product_create_category_btn)
+      .scrollTo(selector.BO.AddProductPage.product_create_category_btn,50)
+      .waitForExistAndClick(selector.BO.AddProductPage.product_create_category_btn)
   }
 
   setCategoryName(type) {
     if (type === 'virtual') {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.new_category_name + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_category_name_input, data.virtual.new_category_name + date_time)
     } else if (type === 'pack') {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.pack.new_category_name + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_category_name_input,  data.pack.new_category_name + date_time)
     } else if (type === 'combination') {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + 'Combination' + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_category_name_input,  data.standard.new_category_name + 'Combination' + date_time)
     } else {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.product_category_name_input, 90000)
-        .setValue(selector.BO.AddProductPage.product_category_name_input, data.standard.new_category_name + date_time);
+      return this.client.waitAndSetValue(selector.BO.AddProductPage.product_category_name_input,  data.standard.new_category_name + date_time)
     }
   }
 
   createCategory() {
     return this.client
-      .scroll(0, 1000)
-      .waitForExist(selector.BO.AddProductPage.category_create_btn, 90000)
-      .click(selector.BO.AddProductPage.category_create_btn)
+      .scrollTo(selector.BO.AddProductPage.category_create_btn,50)
+      .waitForExistAndClick(selector.BO.AddProductPage.category_create_btn)
+      .pause(3000)
   }
 
   removeHomeCategory() {
     return this.client
-      .waitForVisible(selector.BO.AddProductPage.product_create_category_btn, 90000)
-      .pause(2000)
-      .click(selector.BO.AddProductPage.category_home)
+    .waitForVisibleAndClick(selector.BO.AddProductPage.category_home)
   }
 
   addBrand(type) {
-    if (type === 'pack') {
       return this.client
-        .scroll(0, 600)
-        .waitForExist(selector.BO.AddProductPage.product_add_brand_btn, 90000)
-        .click(selector.BO.AddProductPage.product_add_brand_btn)
-    } else {
-      return this.client
-        .scroll(0,600)
-        .waitForExist(selector.BO.AddProductPage.product_add_brand_btn, 90000)
-        .click(selector.BO.AddProductPage.product_add_brand_btn)
-    }
+        .scrollTo(selector.BO.AddProductPage.product_add_brand_btn,50)
+        .waitForExistAndClick(selector.BO.AddProductPage.product_add_brand_btn)
   }
 
   selectBrand() {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.product_brand_select, 90000)
-      .click(selector.BO.AddProductPage.product_brand_select)
-      .waitForExist(selector.BO.AddProductPage.product_brand_select_option, 90000)
-      .click(selector.BO.AddProductPage.product_brand_select_option)
+      .waitForExistAndClick(selector.BO.AddProductPage.product_brand_select)
+      .waitForExistAndClick(selector.BO.AddProductPage.product_brand_select_option)
   }
 
   productOnline() {
-    return this.client
-      .pause(1000)
-      .click(selector.BO.AddProductPage.product_online_toggle)
+    return this.client.waitForExistAndClick(selector.BO.AddProductPage.product_online_toggle)
   }
 
   addRelatedProduct(type) {
     if (type === 'pack') {
       return this.client
-        .scroll(0, 1000)
-        .waitForExist(selector.BO.AddProductPage.add_related_product_btn, 90000)
-        .click(selector.BO.AddProductPage.add_related_product_btn)
+        .scrollTo(selector.BO.AddProductPage.add_related_product_btn,50)
+        .waitForExistAndClick(selector.BO.AddProductPage.add_related_product_btn)
     } else {
-      return this.client
-        .waitForExist(selector.BO.AddProductPage.add_related_product_btn, 90000)
-        .click(selector.BO.AddProductPage.add_related_product_btn)
+      return this.client.waitForExistAndClick(selector.BO.AddProductPage.add_related_product_btn)
     }
   }
 
   searchAndAddRelatedProduct() {
     var search_products = data.common.search_related_products.split('//');
     return this.client
-      .waitForExist(selector.BO.AddProductPage.search_add_related_product_input, 90000)
-      .setValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[0])
-      .waitForExist(selector.BO.AddProductPage.related_product_item, 90000)
-      .click(selector.BO.AddProductPage.related_product_item)
-      .setValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[1])
-      .waitForExist(selector.BO.AddProductPage.related_product_item, 90000)
-      .click(selector.BO.AddProductPage.related_product_item)
+      .waitAndSetValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[0])
+      .waitForExistAndClick(selector.BO.AddProductPage.related_product_item)
+      .waitAndSetValue(selector.BO.AddProductPage.search_add_related_product_input, search_products[1])
+      .waitForExistAndClick(selector.BO.AddProductPage.related_product_item)
   }
 
   addFeatureHeight(type) {
     if (type === 'pack') {
       return this.client
-        .scroll(0, 1000)
-        .waitForExist(selector.BO.AddProductPage.product_add_feature_btn, 90000)
-        .click(selector.BO.AddProductPage.product_add_feature_btn)
-        .waitForExist(selector.BO.AddProductPage.feature_select_button, 90000)
-        .click(selector.BO.AddProductPage.feature_select_button)
-        .waitForExist(selector.BO.AddProductPage.feature_select_option_height, 90000)
-        .click(selector.BO.AddProductPage.feature_select_option_height)
-        .waitForExist(selector.BO.AddProductPage.feature_custom_value_height, 90000)
-        .setValue(selector.BO.AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
+        .scrollTo(selector.BO.AddProductPage.product_add_feature_btn,50)
+        .waitForExistAndClick(selector.BO.AddProductPage.product_add_feature_btn)
+        .waitForExistAndClick(selector.BO.AddProductPage.feature_select_button)
+        .waitForExistAndClick(selector.BO.AddProductPage.feature_select_option_height)
+        .waitAndSetValue(selector.BO.AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
     } else {
       return this.client
-        .waitForExist(selector.BO.AddProductPage.product_add_feature_btn, 90000)
-        .click(selector.BO.AddProductPage.product_add_feature_btn)
-        .waitForExist(selector.BO.AddProductPage.feature_select_button, 90000)
-        .click(selector.BO.AddProductPage.feature_select_button)
-        .waitForExist(selector.BO.AddProductPage.feature_select_option_height, 90000)
-        .click(selector.BO.AddProductPage.feature_select_option_height)
-        .waitForExist(selector.BO.AddProductPage.feature_custom_value_height, 90000)
-        .setValue(selector.BO.AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
+        .waitForExistAndClick(selector.BO.AddProductPage.product_add_feature_btn)
+        .waitForExistAndClick(selector.BO.AddProductPage.feature_select_button)
+        .waitForExistAndClick(selector.BO.AddProductPage.feature_select_option_height)
+        .waitAndSetValue(selector.BO.AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
     }
   }
 
   addProductPriceTaxExcluded() {
     return this.client
-      .scroll(800, 0)
-      .waitForExist(selector.BO.AddProductPage.priceTE_shortcut, 60000)
-      .clearElement(selector.BO.AddProductPage.priceTE_shortcut)
-      .setValue(selector.BO.AddProductPage.priceTE_shortcut, data.common.priceTE)
+      .scrollTo(selector.BO.AddProductPage.priceTE_shortcut,50)
+      .waitAndSetValue(selector.BO.AddProductPage.priceTE_shortcut, data.common.priceTE)
   }
 
   addProductReference() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.product_reference, 60000)
-      .click(selector.BO.AddProductPage.product_reference)
-      .setValue(selector.BO.AddProductPage.product_reference, data.common.product_reference)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.product_reference,data.common.product_reference)
   }
 
 }

@@ -1,9 +1,9 @@
-var PrestashopClient = require('./prestashop_client');
+var CommonClient = require('./common_client');
 var {selector} = require('../globals.webdriverio.js');
 
 global.orderQuantity = '';
 
-class OrderStatus extends PrestashopClient {
+class OrderStatus extends CommonClient {
 
   goToOrdersMenu() {
     return this.client
