@@ -1,9 +1,9 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 
 
-class CreateCombinations extends PrestashopClient {
+class CreateCombinations extends CommonClient {
 
   goToProductCombinationsForm() {
     return this.client

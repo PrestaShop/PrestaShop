@@ -1,25 +1,25 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
 
-class PrestashopClient {
+class CommonClient {
   constructor() {
     this.client = getClient();
   }
 
-  signinBO() {
-    return this.client.signinBO();
+  signInBO(selector) {
+    return this.client.signInBO(selector);
   }
 
-  signoutBO() {
-    return this.client.signoutBO();
+  signOutBO() {
+    return this.client.signOutBO();
   }
 
-  signinFO() {
-    return this.client.signinFO();
+  signInFO(selector) {
+    return this.client.signInFO(selector);
   }
 
-  signoutFO() {
-    return this.client.signoutFO();
+  signOutFO() {
+    return this.client.signOutFO();
   }
 
   checkOnBoardingModal() {
@@ -28,12 +28,12 @@ class PrestashopClient {
       .then((text) => global.onboarding = text)
   }
 
-  OnBoarding(){
-    if(global.onboarding == true){
+  OnBoarding() {
+    if (global.onboarding == true) {
       return this.client
         .click(selector.BO.Onboarding.popup_close_button)
         .pause(2000)
-    }else{
+    } else {
       return this.client
         .pause(1000)
     }
@@ -73,6 +73,29 @@ class PrestashopClient {
   close() {
     return this.client.end();
   }
+
+  // adding new functions
+
+  waitForExistAndClick(selector,timeout) {
+    return this.client.waitForExistAndClick(selector,timeout);
+  }
+
+  waitAndSetValue(selector, value, timeout) {
+    return this.client.waitAndSetValue(selector, value, timeout);
+  }
+
+  scrollTo(selector, margin) {
+    return this.client.scrollTo(selector, margin);
+  }
+
+  waitForVisibleAndClick(selector, timeout) {
+    return this.client.waitForVisibleAndClick(selector, timeout);
+  }
+
+  waitAndSelectByValue(selector,value,timeout){
+    return this.client.waitAndSelectByValue(selector,value,timeout);
+  }
+
 }
 
-module.exports = PrestashopClient;
+module.exports = CommonClient;

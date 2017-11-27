@@ -1,43 +1,32 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 
-class EditPricing extends PrestashopClient {
+class EditPricing extends CommonClient {
 
   goToPricingTab() {
     return this.client
-      .scroll(0, 0)
-      .waitForExist(selector.BO.AddProductPage.product_pricing_tab, 90000)
-      .click(selector.BO.AddProductPage.product_pricing_tab)
+      .scrollTo(selector.BO.AddProductPage.product_pricing_tab, 50)
+      .waitForExistAndClick(selector.BO.AddProductPage.product_pricing_tab)
   }
 
   pricingUnity() {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.unit_price, 60000)
-      .clearElement(selector.BO.AddProductPage.unit_price)
-      .setValue(selector.BO.AddProductPage.unit_price, data.common.unitPrice)
-      .setValue(selector.BO.AddProductPage.unity, data.common.unity)
+      .waitAndSetValue(selector.BO.AddProductPage.unit_price, data.common.unitPrice)
+      .waitAndSetValue(selector.BO.AddProductPage.unity, data.common.unity)
   }
 
   pricingWholesale() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.pricing_wholesale, 60000)
-      .clearElement(selector.BO.AddProductPage.pricing_wholesale)
-      .pause(2000)
-      .setValue(selector.BO.AddProductPage.pricing_wholesale, data.common.wholesale)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.pricing_wholesale, data.common.wholesale)
   }
 
   pricingPriorities() {
     return this.client
-      .scroll(0, 250)
-      .waitForExist(selector.BO.AddProductPage.pricing_first_priorities_select, 60000)
-      .selectByValue(selector.BO.AddProductPage.pricing_first_priorities_select,'id_shop')
-      .waitForExist(selector.BO.AddProductPage.pricing_second_priorities_select, 60000)
-      .selectByValue(selector.BO.AddProductPage.pricing_second_priorities_select,'id_currency')
-      .waitForExist(selector.BO.AddProductPage.pricing_third_priorities_select, 60000)
-      .selectByValue(selector.BO.AddProductPage.pricing_third_priorities_select,'id_country')
-      .waitForExist(selector.BO.AddProductPage.pricing_fourth_priorities_select, 60000)
-      .selectByValue(selector.BO.AddProductPage.pricing_third_priorities_select,'id_group')
+      .scrollTo(selector.BO.AddProductPage.pricing_first_priorities_select, 50)
+      .waitAndSelectByValue(selector.BO.AddProductPage.pricing_first_priorities_select, 'id_shop')
+      .waitAndSelectByValue(selector.BO.AddProductPage.pricing_second_priorities_select, 'id_currency')
+      .waitAndSelectByValue(selector.BO.AddProductPage.pricing_third_priorities_select, 'id_country')
+      .waitAndSelectByValue(selector.BO.AddProductPage.pricing_fourth_priorities_select, 'id_group')
   }
 
 }

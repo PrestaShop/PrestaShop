@@ -1,9 +1,9 @@
-var PrestashopClient = require('./prestashop_client');
+var CommonClient = require('./common_client');
 var {selector} = require('../globals.webdriverio.js');
 
 global.marqueName = 'PrestaShop' + new Date().getTime();
 
-class Manufacturers extends PrestashopClient {
+class Manufacturers extends CommonClient {
 
   goToManufacturersList() {
     return this.client

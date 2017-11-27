@@ -1,35 +1,28 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 var path = require('path');
 
-class EditQuantity extends PrestashopClient {
+class EditQuantity extends CommonClient {
 
   goToProductQuantity() {
     return this.client
-      .scroll(0, 0)
-      .waitForExist(selector.BO.AddProductPage.product_quantities_tab, 60000)
-      .click(selector.BO.AddProductPage.product_quantities_tab)
+      .scrollTo(selector.BO.AddProductPage.product_quantities_tab, 50)
+      .waitForExistAndClick(selector.BO.AddProductPage.product_quantities_tab)
   }
 
   productQuantity() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.product_quantity_input, 60000)
-      .click(selector.BO.AddProductPage.product_quantity_input)
-      .setValue(selector.BO.AddProductPage.product_quantity_input, data.common.quantity)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.product_quantity_input, data.common.quantity)
   }
 
   minQuantitySale() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.minimum_quantity_sale, 60000)
-      .click(selector.BO.AddProductPage.minimum_quantity_sale)
-      .setValue(selector.BO.AddProductPage.minimum_quantity_sale, data.common.qty_min)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.minimum_quantity_sale, data.common.qty_min)
   }
 
   packQuantity() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.pack_stock_type, 60000)
-      .selectByValue(selector.BO.AddProductPage.pack_stock_type,'2')
+      .selectByValue(selector.BO.AddProductPage.pack_stock_type, '2')
   }
 
   associatedFile() {
@@ -65,36 +58,25 @@ class EditQuantity extends PrestashopClient {
   selectAvailabilityPreferences(type) {
     if (type === 'virtual') {
       return this.client
-        .scroll(0, 1000)
-        .waitForExist(selector.BO.AddProductPage.pack_availability_preferences, 60000)
-        .click(selector.BO.AddProductPage.pack_availability_preferences)
+        .scrollTo(selector.BO.AddProductPage.pack_availability_preferences, 50)
+        .waitForExistAndClick(selector.BO.AddProductPage.pack_availability_preferences)
     } else {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.pack_availability_preferences, 60000)
-      .click(selector.BO.AddProductPage.pack_availability_preferences)
+      return this.client.waitForExistAndClick(selector.BO.AddProductPage.pack_availability_preferences)
     }
   }
 
-  availableStock(){
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.pack_label_in_stock, 90000)
-      .click(selector.BO.AddProductPage.pack_label_in_stock)
-      .setValue(selector.BO.AddProductPage.pack_label_in_stock, data.common.qty_msg_stock)
+  availableStock() {
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.pack_label_in_stock, data.common.qty_msg_stock)
   }
 
-  availableOutOfStock(){
+  availableOutOfStock() {
     return this.client
-      .scroll(0,600)
-      .waitForExist(selector.BO.AddProductPage.pack_label_out_stock, 90000)
-      .click(selector.BO.AddProductPage.pack_label_out_stock)
-      .setValue(selector.BO.AddProductPage.pack_label_out_stock, data.common.qty_msg_unstock)
+      .scrollTo(selector.BO.AddProductPage.pack_label_out_stock, 50)
+      .waitAndSetValue(selector.BO.AddProductPage.pack_label_out_stock, data.common.qty_msg_unstock)
   }
 
-  availabilityDate(){
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.pack_availability_date, 90000)
-      .click(selector.BO.AddProductPage.pack_availability_date)
-      .setValue(selector.BO.AddProductPage.pack_availability_date, data.common.qty_date)
+  availabilityDate() {
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.pack_availability_date, data.common.qty_date)
   }
 
 }

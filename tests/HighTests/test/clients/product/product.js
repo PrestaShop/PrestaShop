@@ -1,32 +1,27 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 
 global.productIdElement=[];
 
-class Product extends PrestashopClient {
+class Product extends CommonClient {
 
   goToProductMenu() {
     return this.client
       .waitForExist(selector.BO.AddProductPage.menu, 90000)
-      .click(selector.BO.AddProductPage.products_subtab)
+      .waitForExistAndClick(selector.BO.AddProductPage.products_subtab)
   }
 
   addNewProduct() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.new_product_button, 90000)
-      .click(selector.BO.AddProductPage.new_product_button)
+    return this.client.waitForExistAndClick(selector.BO.AddProductPage.new_product_button)
   }
 
   closeGreenValidation() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.close_validation_button, 90000)
-      .click(selector.BO.AddProductPage.close_validation_button)
+    return this.client.waitForExistAndClick(selector.BO.AddProductPage.close_validation_button)
   }
 
   saveProduct() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.save_product_button, 90000)
-      .click(selector.BO.AddProductPage.save_product_button)
+    return this.client.waitForExistAndClick(selector.BO.AddProductPage.save_product_button)
+
   }
   getElementID(){
     return this.client
@@ -58,16 +53,12 @@ class Product extends PrestashopClient {
 
   openAllCategory(){
     return this.client
-      .scroll(0, 1000)
-      .waitForExist(selector.BO.AddProductPage.catalog_home, 90000)
-      .click(selector.BO.AddProductPage.catalog_home)
-      .waitForExist(selector.BO.AddProductPage.catalog_first_element_radio, 90000)
-      .click(selector.BO.AddProductPage.catalog_first_element_radio)
-      .waitForExist(selector.BO.AddProductPage.catalog_second_element_radio, 90000)
-      .click(selector.BO.AddProductPage.catalog_second_element_radio)
-      .scroll(0, 1000)
-      .waitForExist(selector.BO.AddProductPage.catalog_third_element_radio, 90000)
-      .click(selector.BO.AddProductPage.catalog_third_element_radio)
+      .scrollTo(selector.BO.AddProductPage.catalog_home,50)
+      .waitForExistAndClick(selector.BO.AddProductPage.catalog_home)
+      .waitForExistAndClick(selector.BO.AddProductPage.catalog_first_element_radio)
+      .waitForExistAndClick(selector.BO.AddProductPage.catalog_second_element_radio)
+      .scrollTo(selector.BO.AddProductPage.catalog_third_element_radio,50)
+      .waitForExistAndClick(selector.BO.AddProductPage.catalog_third_element_radio)
   }
 }
 

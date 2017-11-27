@@ -1,10 +1,10 @@
-var PrestashopClient = require('./prestashop_client');
+var CommonClient = require('./common_client');
 var {selector} = require('../globals.webdriverio.js');
 
 global.featureName = 'Feature' + new Date().getTime();
 
 
-class Feature extends PrestashopClient {
+class Feature extends CommonClient {
 
   goToFeatureList() {
     return this.client
