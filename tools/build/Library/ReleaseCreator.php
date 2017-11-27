@@ -27,7 +27,10 @@
 class ReleaseCreator
 {
     /** @var string */
-    protected $tempProjectPath;
+    const RELEASES_DIR_RELATIVE_PATH = 'tools/build/releases';
+
+    /** @var string */
+    const INSTALLER_ZIP_FILENAME = 'prestashop.zip';
 
     /** @var array */
     protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
@@ -84,21 +87,67 @@ class ReleaseCreator
     protected $filesList = [];
 
     /** @var string */
+    protected $tempProjectPath;
+
+    /** @var string */
     protected $projectPath;
 
     /** @var string */
     protected $version;
 
+    /** @var bool */
+    protected $useInstaller;
+
+    /** @var bool */
+    protected $useZip;
+
+    /** @var string */
+    protected $zipFileName;
+
+    /** @var string */
+    protected $destinationDir;
+
     /**
      * @param string $version
+     * @param bool $useInstaller
+     * @param bool $useZip
+     * @param string $destinationDir
      */
-    public function __construct($version)
+    public function __construct($version, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
         $tmpDir = sys_get_temp_dir();
-        echo "\e[32m--- Temp dir used will be '{$tmpDir}' \e[m\n";
         $this->tempProjectPath = "{$tmpDir}/PrestaShop-release-tmp";
-        $this->version = $version;
+        echo "\e[32m--- Temp dir used will be '{$tmpDir}' \e[m\n";
         $this->projectPath = realpath(__DIR__ . '/../../..');
+        $this->version = $version;
+        $this->zipFileName = "prestashop_$this->version.zip";
+
+        if (empty($destinationDir)) {
+            $releasesDir = self::RELEASES_DIR_RELATIVE_PATH;
+            $reference = $this->version . "_" . date("Ymd_His");
+            $destinationDir = "{$this->projectPath}/$releasesDir/$reference";
+        }
+        $this->destinationDir = $destinationDir;
+
+        if (!file_exists($this->destinationDir)) {
+            if (!mkdir($this->destinationDir, 0777, true)) {
+                echo "\e[31mERROR: can not create directory '{$this->destinationDir}'\e[0m\n";
+
+                exit(1);
+            }
+        }
+        $absoluteDestinationPath = realpath($this->destinationDir);
+        echo "\e[32m--- Destination dir used will be '{$absoluteDestinationPath}' \e[m\n";
+        $this->useZip = $useZip;
+        $this->useInstaller = $useInstaller;
+
+        if ($this->useZip && $this->useInstaller) {
+            echo "\e[32m--- Release will have the installer and will be zipped.\e[m\n";
+        } else if ($this->useZip) {
+            echo "\e[32m--- Release will be zipped.\e[m\n";
+        } else if ($this->useInstaller) {
+            echo "\e[32m--- Release will have the installer.\e[m\n";
+        }
     }
 
     /**
@@ -111,7 +160,7 @@ class ReleaseCreator
         $this->setFilesConstants()
             ->generateLicensesFile()
             ->runComposerInstall()
-            ->createPackages();
+            ->createPackage();
         $endTime = date('H:i:s');
         echo "\n\e[32m--- Script ended at {$endTime} \e[m\n";
 
@@ -278,12 +327,13 @@ class ReleaseCreator
     /**
      * @return self
      */
-    protected function createPackages()
+    protected function createPackage()
     {
         echo "\e[33mCreating package...\e[m\n";
         $this->cleanTmpProject();
         $this->generateXMLChecksum();
         $this->createZipArchive();
+        $this->movePackage();
         echo "\e[32mPackage successfully created...\e[m\n";
 
         return $this;
@@ -425,38 +475,62 @@ class ReleaseCreator
     }
 
     /**
-     * @return $this
+     * @return self
      */
     protected function createZipArchive()
     {
+        if (!$this->useZip) {
+            return $this;
+        }
         echo "\e[33m--- Creating zip archive...\e[m";
-        $tempProjectPath = $this->tempProjectPath;
-        $zipZile = "prestashop_$this->version.zip";
-        // Will be used with the index.php installer
-        //$subZip = "prestashop.zip";
-        $cmd = "cd $tempProjectPath \
-            && zip -rq $zipZile . \
+        $installerZipFilename = self::INSTALLER_ZIP_FILENAME;
+        $cmd = "cd {$this->tempProjectPath} \
+            && zip -rq {$installerZipFilename} . \
             && cd -";
         exec($cmd);
-        // Will be used with the index.php installer
-        // $zip = new ZipArchive();
-        // $zip->open($zipZile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-        // $zip->addFile("$tempProjectPath/$subZip", $subZip);
-        // $zip->close();
-        $reference = $this->version . "_" . date("Ymd_His");
-        mkdir("$this->projectPath/tools/build/releases/$reference", 0777, true);
-        rename(
-            "$tempProjectPath/$zipZile",
-            "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.zip"
-        );
-        rename(
-            "/tmp/prestashop_$this->version.xml",
-            "$this->projectPath/tools/build/releases/$reference/prestashop_$this->version.xml"
-        );
-        exec("rm -rf $tempProjectPath");
+
+        if ($this->useInstaller) {
+            exec("cd {$this->projectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
+            $zip = new ZipArchive();
+            $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
+            $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);
+            $zip->addFile("{$this->projectPath}/tools/build/Library/InstallUnpacker/index.php", 'index.php');
+            $zip->close();
+            exec("rm {$this->projectPath}/tools/build/Library/InstallUnpacker/index.php");
+        } else {
+            rename(
+                "{$this->tempProjectPath}/$installerZipFilename",
+                "{$this->tempProjectPath}/{$this->zipFileName}"
+            );
+        }
         echo "\e[32m DONE\e[m\n";
 
         return $this;
+    }
+
+    /**
+     * @return self
+     */
+    protected function movePackage()
+    {
+        echo "\e[33m--- Move package...\e[m";
+        if ($this->useZip) {
+            rename(
+                "{$this->tempProjectPath}/{$this->zipFileName}",
+                "{$this->destinationDir}/prestashop_$this->version.zip"
+            );
+        } else {
+            rename(
+                $this->tempProjectPath,
+                $this->destinationDir
+            );
+        }
+        rename(
+            "/tmp/prestashop_$this->version.xml",
+            "{$this->destinationDir}/prestashop_$this->version.xml"
+        );
+        exec("rm -rf {$this->tempProjectPath}");
+        echo "\e[32m DONE\e[m\n";
     }
 
     /**
