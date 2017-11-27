@@ -4723,14 +4723,4 @@ class AdminControllerCore extends Controller
             return 0;
         }
     }
-
-    /**
-     * Returns the route name (this allow to identify the page)
-     *
-     * @return string
-     */
-    public function getRoute()
-    {
-        return get_class($this);
-    }
 }
