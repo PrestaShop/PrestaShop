@@ -873,15 +873,11 @@
 }
 
 .table {
-  &.table-no-bordered {
-    tbody,
-    th,
-    thead {
-      border: 0;
+  th {
+    padding: {
+      top: 0.625rem;
+      bottom: 0.625rem;
     }
-  }
-  th{
-    padding: 1.25rem 0.625rem;
   }
   td {
     vertical-align: middle;
