@@ -1,35 +1,25 @@
-var PrestashopClient = require('./../prestashop_client');
+var CommonClient = require('./../common_client');
 var {selector} = require('../../globals.webdriverio.js');
 var data = require('./../../datas/product-data');
 
-class EditSEO extends PrestashopClient {
+class EditSEO extends CommonClient {
 
   goToSEOTab() {
     return this.client
-      .scroll(800, 0)
-      .waitForExist(selector.BO.AddProductPage.product_SEO_tab, 90000)
-      .click(selector.BO.AddProductPage.product_SEO_tab)
+      .scrollTo(selector.BO.AddProductPage.product_SEO_tab, 50)
+      .waitForExistAndClick(selector.BO.AddProductPage.product_SEO_tab)
   }
 
   metaTitle() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.SEO_meta_title, 90000)
-      .click(selector.BO.AddProductPage.SEO_meta_title)
-      .setValue(selector.BO.AddProductPage.SEO_meta_title, data.common.metatitle)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.SEO_meta_title, data.common.metatitle)
   }
 
   metaDescription() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.SEO_meta_description, 90000)
-      .click(selector.BO.AddProductPage.SEO_meta_description)
-      .setValue(selector.BO.AddProductPage.SEO_meta_description, data.common.metadesc)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.SEO_meta_description, data.common.metadesc)
   }
 
   friendlyUrl() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.SEO_friendly_url, 90000)
-      .click(selector.BO.AddProductPage.SEO_friendly_url)
-      .setValue(selector.BO.AddProductPage.SEO_friendly_url, data.common.shortlink)
+    return this.client.waitAndSetValue(selector.BO.AddProductPage.SEO_friendly_url, data.common.shortlink)
   }
 
 }

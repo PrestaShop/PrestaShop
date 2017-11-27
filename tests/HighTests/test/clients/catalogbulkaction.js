@@ -1,8 +1,8 @@
-var PrestashopClient = require('./prestashop_client');
+var CommonClient = require('./common_client');
 var {selector} = require('../globals.webdriverio.js');
 
 
-class Catalog extends PrestashopClient {
+class Catalog extends CommonClient {
 
   goToCatalog() {
     return this.client

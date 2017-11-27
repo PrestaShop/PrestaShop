@@ -1,9 +1,9 @@
-var PrestashopClient = require('./prestashop_client');
+var CommonClient = require('./common_client');
 var {selector} = require('../globals.webdriverio.js');
 
 global.productQuantity = '';
 
-class ModifyQuantity extends PrestashopClient {
+class ModifyQuantity extends CommonClient {
 
   goToCatalogStock() {
     return this.client

@@ -1,16 +1,17 @@
+const {selector} = require('../../../globals.webdriverio.js');
+
 scenario('Create a pack of products', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signinBO());
-  test('should go to product menu', () => client.goToProductMenu());
-  test('should click on the add new product button', () => client.addNewProduct());
+  test('should log in successfully in BO', () => client.signInBO(selector));
+  test('should go to "Catalog"', () => client.waitForExistAndClick(selector.BO.AddProductPage.products_subtab));
+  test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(selector.BO.AddProductPage.new_product_button));
 
-  scenario('Edit Basic settings', client => {
-    test('should set the name of product', () => client.setProductName('pack'));
+ scenario('Edit Basic settings', client => {
+/*    test('should set the name of product', () => client.setProductName('pack'));
     test('should select pack product type', () => client.setProductType('pack'));
     test('should add first product item for pack', () => client.addPackProduct1());
     test('should add second search product item for pack', () => client.addPackProduct2());
     test('should enter the quantity of product', () => client.setQuantity());
-    test('should enter the price of product', () => client.setPrice());
     test('should upload the picture of product', () => client.uploadPicture('image_test.jpg'));
     test('should click on create category button', () => client.addCategory());
     test('should enter the category name', () => client.setCategoryName('pack'));
@@ -23,9 +24,10 @@ scenario('Create a pack of products', client => {
     test('should add feature height', () => client.addFeatureHeight('pack'));
     test('should enter the product price tax excluded', () => client.addProductPriceTaxExcluded());
     test('should enter the product reference', () => client.addProductReference());
-    test('should make the product on line', () => client.productOnline());
+    test('should make the product on line', () => client.productOnline());*/
   }, 'product/editbasicsettings');
 
+  /*
   scenario('Edit product quantities', client => {
     test('should go to the product quantities form', () => client.goToProductQuantity());
     test('should enter the product quantity', () => client.productQuantity());
@@ -69,7 +71,7 @@ scenario('Create a pack of products', client => {
     test('should enter the ISBN', () => client.ISBNEntry());
     test('should enter the EAN-13', () => client.EAN13Entry());
     test('should enter the UPC', () => client.UPCEntry());
-    test('should click on customization button', () => client.customizationButton());
+    test('should click on customization button', () => client.AddCustomFieldButton());
     test('should create new custom field', () => client.createCustomField());
     test('should click on add a customization field button', () => client.AddCustomFieldButton());
     test('should create new custom field', () => client.newCustomField());
@@ -81,20 +83,20 @@ scenario('Create a pack of products', client => {
   scenario('Save Product', client => {
     test('should save and stay in the product page', () => client.saveProduct());
     test('should close green validation', () => client.closeGreenValidation());
-    test('should sign out BO', () => client.signoutBO());
-  }, 'product/product');
+    test('should sign out BO', () => client.signOutBO());
+  }, 'product/product');*/
 }, 'product/product', true);
 
-scenario('Check the product in the catalog', client => {
+/*scenario('Check the product in the catalog', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signinBO());
-  test('should go to the catalog', () => client.goToCatalog('pack'));
-  test('should search the product by name', () => client.searchProductByName());
-  test('should check the product name', () => client.checkProductName());
-  test('should check the product reference', () => client.checkProductReference());
-  test('should check the product category', () => client.checkProductCategory());
-  test('should check the product price TE', () => client.checkProductPriceTE());
-  test('should check the product quantity', () => client.checkProductQuantity());
-  test('should check the product status', () => client.checkProductStatus());
+  test('should log in successfully in BO', () => client.signInBO(selector));
+  test('should go to "Catalog"', () => client.goToCatalog('pack'));
+  test('should search for product by name', () => client.searchProductByName());
+  test('should check the existance of product name', () => client.checkProductName());
+  test('should check the existance of product reference', () => client.checkProductReference());
+  test('should check the existance of product category', () => client.checkProductCategory());
+  test('should check the existance of product price TE', () => client.checkProductPriceTE());
+  test('should check the existance of product quantity', () => client.checkProductQuantity());
+  test('should check the existance of product status', () => client.checkProductStatus());
   test('should reset filter', () => client.resetFilter());
-}, 'product/checkproduct', true);
+}, 'product/checkproduct', true);*/

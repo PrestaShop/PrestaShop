@@ -50,6 +50,9 @@ module.exports = {
     },
 
     BO: {
+      Common:{
+        menu: '#nav-sidebar',
+      },
       // Back office login page selector
       AccessPage: {
         login_input: '#email',
@@ -65,7 +68,6 @@ module.exports = {
         go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
         more_option_button: '.btn.btn-primary.dropdown-toggle',
         new_product_button: '#page-header-desc-configuration-add',
-        menu: '#nav-sidebar',
         product_name_input: '#form_step1_name_1',
         save_product_button: '//*[@id="form"]/div[4]/div[2]/div/button[1]',
         green_validation_notice: '[class="growl growl-notice growl-medium"]',
@@ -73,7 +75,6 @@ module.exports = {
         validation_msg: '//*[@id="growls"]/div/div[3]',
         red_validation_notice: '[class="growl growl-error growl-medium"]',
         description_tab: '[href="#description"]',
-        price_te_shortcut_input: '#form_step1_price_shortcut',
         quantity_shortcut_input: '#form_step1_qty_0_shortcut',
         picture: '[class="dz-hidden-input"]',
         picture_cover: '.iscover',
@@ -193,7 +194,7 @@ module.exports = {
         options_upc: '//*[@id="form_step6_upc"]',
         options_add_customization_field_button: '//*[@id="custom_fields"]/a',
         options_first_custom_field_label: '//*[@id="form_step6_custom_fields_0_label_1"]',
-        options_first_custom_field_type: '//*[@id="form_step6_custom_fields_0_type"]/option[1]',
+        options_first_custom_field_type: '//*[@id="form_step6_custom_fields_0_type"]',
         options_first_custom_field_require: '//*[@id="form_step6_custom_fields_0_require"]',
         options_second_custom_field_label: '//*[@id="form_step6_custom_fields_1_label_1"]',
         options_second_custom_field_type: '//*[@id="form_step6_custom_fields_1_type"]',

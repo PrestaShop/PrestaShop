@@ -1,98 +1,103 @@
+const {selector} = require('../../../globals.webdriverio.js');
+
 scenario('Create Standard Product', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signinBO());
-  test('should go to product menu', () => client.goToProductMenu());
-  test('should click on the add new product button', () => client.addNewProduct());
+  test('should log in successfully in BO', () => client.signInBO(selector));
+  test('should go to "Catalog"', () => client.waitForExistAndClick(selector.BO.AddProductPage.products_subtab));
+  test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(selector.BO.AddProductPage.new_product_button));
 
   scenario('Edit Basic settings', client => {
-    test('should set the name of product', () => client.setProductName('standard'));
-    test('should set the quantity of product', () => client.setQuantity());
-    test('should set the price of product', () => client.setPrice());
-    test('should upload the picture one of product', () => client.uploadPicture('1.png'));
-    test('should upload the picture two of product', () => client.uploadPicture('2.jpg'));
-    test('should upload the picture three of product', () => client.uploadPicture('3.jpg'));
-    test('should click on add category button', () => client.addCategory());
-    test('should set the category name', () => client.setCategoryName('standard'));
-    test('should click on create category button', () => client.createCategory());
-    test('should remove home category tag', () => client.removeHomeCategory());
-    test('should click on add brand button', () => client.addBrand('standard'));
+    test('should set the "product name"', () => client.setProductName('standard'));
+    test('should set the "Quantity" of product', () => client.setQuantity());
+    // test('should upload the picture one of product', () => client.uploadPicture('1.png'));   // not done
+    // test('should upload the picture two of product', () => client.uploadPicture('2.jpg'));   // not done
+    // test('should upload the picture three of product', () => client.uploadPicture('3.jpg')); // not done
+    test('should click on "CREATE A CATEGORY"', () => client.addCategory());
+    // test('should upload the picture two of product', () => client.uploadPicture('2.jpg'));
+    test('should set the "New category name"', () => client.setCategoryName('standard'));
+    test('should click on "Create"', () => client.createCategory());
+    test('should remove "HOME" category', () => client.removeHomeCategory());
+    test('should click on "ADD A BRAND"', () => client.addBrand('standard'));
     test('should select brand', () => client.selectBrand());
-    test('should click on add a related product button', () => client.addRelatedProduct('standard'));
+    test('should click on "ADD RELATED PRODUCT"', () => client.addRelatedProduct('standard'));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should add feature height', () => client.addFeatureHeight('standard'));
-    test('should enter the product price tax excluded', () => client.addProductPriceTaxExcluded());
+    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('standard'));
+    test('should set "Tax exclude" price', () => client.addProductPriceTaxExcluded());
     test('should enter the product reference', () => client.addProductReference());
-    test('should make the product on line', () => client.productOnline());
+    test('should set the product "online"', () => client.productOnline());
   }, 'product/editbasicsettings');
 
   scenario('Edit product quantity', client => {
-    test('should go to the product quantity form', () => client.goToProductQuantity());
-    test('should enter the product quantity', () => client.productQuantity());
-    test('should enter the minimum quantity for sale', () => client.minQuantitySale());
-    test('should select the availability preferences', () => client.selectAvailabilityPreferences('standard'));
-    test('should enter the available label in stock', () => client.availableStock());
-    test('should enter the available label out of stock', () => client.availableOutOfStock());
-    test('should enter the availability date', () => client.availabilityDate());
+    test('should click on "Quantities"', () => client.goToProductQuantity());
+    test('should set the "Quantity"', () => client.productQuantity());
+    test('should set the "Minimum quantity for sale"', () => client.minQuantitySale());
+    test('should click on "Deny orders"', () => client.selectAvailabilityPreferences('standard'));
+    test('should set the "label when in stock"', () => client.availableStock());
+    test('should set the "Label when out of stock (and back order allowed)"', () => client.availableOutOfStock());
+    test('should set the "Availability date"', () => client.availabilityDate());
   }, 'product/editquantity');
 
+
   scenario('Edit product shipping', client => {
-    test('should go to the product shipping form', () => client.goToProductShipping());
-    test('should enter the shipping width', () => client.shippingWidth());
-    test('should enter the shipping height', () => client.shippingHeight());
-    test('should enter the shipping depth', () => client.shippingDepth());
-    test('should enter the shipping weight', () => client.shippingWeight());
-    test('should enter the additional shipping costs', () => client.shippingCosts());
-    test('should select the available carrier', () => client.selectAvailableCarrier());
+    test('should click on "Shipping"', () => client.goToProductShipping());
+    test('should set the "Width"', () => client.shippingWidth());
+    test('should set the "Height"', () => client.shippingHeight());
+    test('should set the "Depth"', () => client.shippingDepth());
+    test('should set the "Weight"', () => client.shippingWeight());
+    test('should set the "Does this product incur additional shipping costs?"', () => client.shippingCosts());
+    test('should click on "My carrier (Delivery next day!)"', () => client.selectAvailableCarrier());
   }, 'product/editshipping');
 
+
   scenario('Edit product pricing', client => {
-    test('should go to the product pricing tab', () => client.goToPricingTab());
-    test('should enter the pricing unity', () => client.pricingUnity());
-    test('should enter the pricing wholesale', () => client.pricingWholesale());
-    test('should select the pricing priorities', () => client.pricingPriorities());
+    test('should click on "Pricing"', () => client.goToPricingTab());
+    test('should set the "Price per unit (tax excl.)"', () => client.pricingUnity());
+    test('should set the "Price (tax excl.)"', () => client.pricingWholesale());
+    test('should select the "Priority management"', () => client.pricingPriorities());
   }, 'product/editpricing');
 
   scenario('Edit SEO information', client => {
-    test('should go to the product SEO form', () => client.goToSEOTab());
-    test('should enter the meta title', () => client.metaTitle());
-    test('should enter the meta description', () => client.metaDescription());
-    test('should enter the friendly url', () => client.friendlyUrl());
+    test('should click on "SEO"', () => client.goToSEOTab());
+    test('should set the "Meta title"', () => client.metaTitle());
+    test('should set the "Meta description"', () => client.metaDescription());
+    test('should set the "Friendly URL"', () => client.friendlyUrl());
   }, 'product/editseo');
 
   scenario('Edit product options', client => {
-    test('should go to the product SEO form', () => client.goToOptionsForm());
-    test('should select the visibility', () => client.selectVisibility());
-    test('should enable the web only visibility', () => client.webOnlyVisibility());
-    test('should select the condition', () => client.selectCondition());
-    test('should enter the ISBN', () => client.ISBNEntry());
-    test('should enter the EAN-13', () => client.EAN13Entry());
-    test('should enter the UPC', () => client.UPCEntry());
-    test('should click on customization button', () => client.customizationButton());
-    test('should create new custom field', () => client.createCustomField());
-    test('should click on add a customization field button', () => client.AddCustomFieldButton());
+    test('should click on "Options"', () => client.goToOptionsForm());
+    test('should select the "Visibility"', () => client.selectVisibility());
+    test('should click on "Web only (not sold in your retail store)"', () => client.webOnlyVisibility());
+    test('should select the "Condition"', () => client.selectCondition());
+    test('should set the "ISBN"', () => client.ISBNEntry());
+    test('should set the "EAN-13"', () => client.EAN13Entry());
+    test('should set the "UPC"', () => client.UPCEntry());
+    test('should click on "ADD A CUSTOMIZAITION"', () => client.AddCustomFieldButton());
+    test('should set "Label" ,"Type" and "Required"', () => client.createCustomField());
+    test('should click on "ADD A CUSTOMIZAITION"', () => client.AddCustomFieldButton());
     test('should create new custom field', () => client.newCustomField());
-    test('should click on attach a new file button', () => client.attachNewFile());
-    test('should add a file', () => client.addFile('image_test.jpg'));
+    test('should click on attach a new file button', () => client.attachNewFile()); // not done
+    test('should add a file', () => client.addFile('image_test.jpg')); // not done
     test('should select the previous added file', () => client.selectPreviousAddFile());
   }, 'product/editoptions');
 
   scenario('Save Product', client => {
-    test('should save and stay in the product page', () => client.saveProduct());
+    test('should click on "SAVE"', () => client.saveProduct());
     test('should close green validation', () => client.closeGreenValidation());
-    test('should sign out BO', () => client.signoutBO());
+    test('should sign out BO', () => client.signOutBO());
   }, 'product/product');
+
 }, 'product/product', true);
 
 scenario('Check the product in the catalog', client => {
- test('should open browser', () => client.open());
- test('should log in successfully in BO', () => client.signinBO());
- test('should go to the catalog', () => client.goToCatalog('standard'));
- test('should search the product by name', () => client.searchProductByName());
- test('should check the product name', () => client.checkProductName());
- test('should check the product reference', () => client.checkProductReference());
- test('should check the product category', () => client.checkProductCategory());
- test('should check the product price TE', () => client.checkProductPriceTE());
- test('should check the product quantity', () => client.checkProductQuantity());
- test('should check the product status', () => client.checkProductStatus());
- test('should reset filter', () => client.resetFilter());
- }, 'product/checkproduct', true);
+  test('should open browser', () => client.open());
+  test('should log in successfully in BO', () => client.signInBO(selector));
+  test('should go to "Catalog"', () => client.goToCatalog('standard'));
+  test('should search for product by name', () => client.searchProductByName());
+  test('should check the existance of product name', () => client.checkProductName());
+  test('should check the existance of product reference', () => client.checkProductReference());
+  test('should check the existance of product category', () => client.checkProductCategory());
+  test('should check the existance of product price TE', () => client.checkProductPriceTE());
+  test('should check the existance of product quantity', () => client.checkProductQuantity());
+  test('should check the existance of product status', () => client.checkProductStatus());
+  test('should reset filter', () => client.resetFilter());
+}, 'product/checkproduct', true);

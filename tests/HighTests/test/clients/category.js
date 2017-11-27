@@ -1,9 +1,9 @@
-var PrestashopClient = require('./prestashop_client');
+var CommonClient = require('./common_client');
 var {selector} = require('../globals.webdriverio.js');
 
 global.categoryNameEntry = 'category' + new Date().getTime();
 
-class Category extends PrestashopClient {
+class Category extends CommonClient {
 
   goToCategoryList() {
     return this.client
