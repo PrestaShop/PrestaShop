@@ -26,15 +26,15 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration;
-use PrestaShop\PrestaShop\Adapter\GeneralConfiguration;
 use PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Adapter\GeneralConfiguration;
 
 /**
  * This class is responsible of managing the data manipulated using forms
  * in "Configure > Advanced Parameters > Administration" page.
  */
-class FormDataProvider
+final class FormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var GeneralConfiguration
@@ -64,7 +64,7 @@ class FormDataProvider
     }
 
     /**
-     * @return array
+     * @{inheritdoc}
      */
     public function getData()
     {
@@ -76,11 +76,7 @@ class FormDataProvider
     }
 
     /**
-     * Persists form Data in Database and Filesystem
-     *
-     * @param array $data
-     * @return array $errors if data can't persisted an array of errors messages
-     * @throws UndefinedOptionsException
+     * @{inheritdoc}
      */
     public function setData(array $data)
     {
