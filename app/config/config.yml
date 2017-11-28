@@ -59,6 +59,7 @@ twig:
     paths:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
 
+
 # Doctrine Configuration
 doctrine:
     dbal:
