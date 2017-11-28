@@ -55,10 +55,10 @@ class LogsController extends FrameworkBundleAdminController
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminLogs'),
-            'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
-            'errorMessage' => 'ok',
-            'logsByEmailForm' => $this->createForm(LogsByEmailType::class)->createView(),
+            'logsByEmailForm' => $this->createForm(LogsByEmailType::class, array(
+                'severity_level' => (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_LOGS_BY_EMAIL')
+            ))->createView(),
             'logs' => $this->get('prestashop.core.admin.log.repository')->findAll(),
         );
 
