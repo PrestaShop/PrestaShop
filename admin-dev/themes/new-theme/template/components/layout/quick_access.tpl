@@ -1,6 +1,6 @@
 {* Quick access *}
 <div class="dropdown quick-accesses">
-  <button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <button class="btn btn-link btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="quick_select">
     {l s='Quick Access'}
   </button>
   <div class="dropdown-menu">
