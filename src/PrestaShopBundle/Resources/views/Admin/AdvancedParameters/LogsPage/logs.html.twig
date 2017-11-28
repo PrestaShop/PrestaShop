@@ -27,9 +27,7 @@
 
 {% block content %}
   {% block logs_severity_level_meaning %}
-    <div class="col-md-12">
-      Information Block
-    </div>
+    {{ include('@AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
   {% endblock %}
 
   {% block logs_main_panel %}
