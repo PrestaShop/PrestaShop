@@ -58,12 +58,19 @@ function initCommands(client) {
         .then((location) => client.scroll(0, location - margin));
   });
 
+  client.addCommand('scrollWaitForExistAndClick', function (selector, margin = 150, timeout=90000) {
+    return client
+      .getLocation(selector, 'y')
+      .then((location) => client.scroll(0, location - margin))
+      .waitForExist(selector , timeout)
+      .click(selector)
+  });
+
   client.addCommand('waitForVisibleAndClick', function (selector, timeout=90000) {
     return client
       .waitForVisible(selector, timeout)
       .click(selector)
   });
-
 
   client.addCommand('waitAndSelectByValue', function (selector, value, timeout=60000) {
     return client
@@ -73,24 +80,23 @@ function initCommands(client) {
 
 
 
-
   client.addCommand('signInBO', function (selector) {
     this.selector = globals.selector;
     return client
       .url('http://' + URL + '/admin-dev')
-      .waitAndSetValue(selector.BO.AccessPage.login_input, 'demo@prestashop.com')
-      .waitAndSetValue(selector.BO.AccessPage.password_input, 'prestashop_demo')
-      .waitForExistAndClick(selector.BO.AccessPage.login_button)
-      .waitForExist(selector.BO.Common.menu, 90000)
+      .waitAndSetValue(selector.login_input, 'demo@prestashop.com')
+      .waitAndSetValue(selector.password_inputBO, 'prestashop_demo')
+      .waitForExistAndClick(selector.login_buttonBO)
+      .waitForExist(selector.menuBO, 90000)
   });
 
   client.addCommand('signInFO', function (selector) {
     return client
-      .waitForExistAndClick(selector.FO.AccessPage.sign_in_button)
-      .waitAndSetValue(selector.FO.AccessPage.login_input, 'pub@prestashop.com')
-      .waitAndSetValue(selector.FO.AccessPage.password_input, '123456789')
-      .waitForExistAndClick(selector.FO.AccessPage.login_button)
-      .waitForExistAndClick(selector.FO.AccessPage.logo_home_page)
+      .waitForExistAndClick(selector.sign_in_button)
+      .waitAndSetValue(selector.AccessPageBO.login_input, 'pub@prestashop.com')
+      .waitAndSetValue(selector.AccessPageBO.password_inputFO, '123456789')
+      .waitForExistAndClick(selector.AccessPageBO.login_button)
+      .waitForExistAndClick(selector.AccessPageBO.logo_home_page)
   });
 
   client.addCommand('signOutBO', function (cb) {
@@ -103,8 +109,8 @@ function initCommands(client) {
   client.addCommand('signOutFO', function (cb) {
     this.selector = globals.selector;
     return client
-      .waitForExistAndClick(selector.FO.AccessPage.sign_out_button)
-      .waitForExist(this.selector.FO.AccessPage.sign_in_button, 90000)
+      .waitForExistAndClick(selector.AccessPageBO.sign_out_button)
+      .waitForExist(this.selector.FO.AccessPageBO.sign_in_button, 90000)
       .deleteCookie()
       .call(cb);
   });
