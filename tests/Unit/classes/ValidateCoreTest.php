@@ -106,7 +106,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, Validate::isInt($input));
     }
-
+        
         // --- providers ---
 
         public function isIp2LongDataProvider()
@@ -154,7 +154,6 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, 'john.doe@prestashop'),
             array(false, 123456789),
             array(false, false),
-            array(false, 'pubé@prestashop.com'),
         );
     }
 
