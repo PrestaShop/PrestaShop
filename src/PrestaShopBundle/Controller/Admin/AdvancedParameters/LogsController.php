@@ -64,4 +64,50 @@ class LogsController extends FrameworkBundleAdminController
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
     }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function processFormAction(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+            return $this->redirectToRoute('admin_logs');
+        }
+
+        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
+        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
+        $form->handleRequest($request);
+
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_logs');
+        }
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $saveErrors = $this->get('prestashop.adapter.performance.form_handler')->save($data);
+
+            if (0 === count($saveErrors)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_performance');
+            }
+
+            $this->flashErrors($saveErrors);
+        }
+
+        return $this->redirectToRoute('admin_performance');
+    }
 }
