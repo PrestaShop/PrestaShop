@@ -159,7 +159,8 @@
         "phpunit-controllers": [
             "PrestaShopBundle\\Tests\\Utils\\Database::createTestDB",
             "php -d date.timezone=UTC bin/phpunit -c app/"
-        ]
+        ],
+        "create-release": "@php tools/build/CreateRelease.php"
     },
     "config": {
         "bin-dir": "bin",
@@ -173,6 +174,9 @@
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
+        },
+        "scripts-description": {
+            "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
         }
     },
     "author": "PrestaShop",
