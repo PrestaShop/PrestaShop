@@ -28,8 +28,11 @@ namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsByEmailType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Logs" page display
@@ -47,6 +50,7 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
@@ -56,9 +60,7 @@ class LogsController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
-            'logsByEmailForm' => $this->createForm(LogsByEmailType::class, array(
-                'severity_level' => (int) $this->get('prestashop.adapter.legacy.configuration')->get('PS_LOGS_BY_EMAIL')
-            ))->createView(),
+            'logsByEmailForm' => $logsByEmailForm->createView(),
             'logs' => $this->get('prestashop.core.admin.log.repository')->findAll(),
         );
 
@@ -77,8 +79,8 @@ class LogsController extends FrameworkBundleAdminController
         }
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
-        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
-        $form->handleRequest($request);
+        $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
+        $logsByEmailForm->handleRequest($request);
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
@@ -94,20 +96,20 @@ class LogsController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_logs');
         }
 
-        if ($form->isSubmitted()) {
-            $data = $form->getData();
+        if ($logsByEmailForm->isSubmitted()) {
+            $data = $logsByEmailForm->getData();
 
             $saveErrors = $this->get('prestashop.adapter.performance.form_handler')->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_performance');
+                return $this->redirectToRoute('admin_logs');
             }
 
             $this->flashErrors($saveErrors);
         }
 
-        return $this->redirectToRoute('admin_performance');
+        return $this->redirectToRoute('admin_logs');
     }
 }

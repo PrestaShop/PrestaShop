@@ -43,6 +43,10 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
 
+    prestashop.adapter.logs.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
     prestashop.adapter.debug_mode:
         class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
 
@@ -93,12 +97,23 @@ services:
             - '@prestashop.adapter.media_servers.configuration'
             - '@prestashop.adapter.caching.configuration'
 
+    prestashop.adapter.logs.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.logs.configuration'
+
     prestashop.adapter.performance.form_handler:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.performance.form_provider'
             - '@prestashop.adapter.combination_feature'
+
+    prestashop.adapter.logs.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.logs.form_provider'
 
     prestashop.adapter.memcache_server.manager:
         class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
