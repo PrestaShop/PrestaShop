@@ -46,7 +46,7 @@ class LogRepository implements RepositoryInterface
     public function findAll()
     {
         $table = $this->tableName;
-        $statement = $this->connection->query("SELECT l.* FROM ${table} l");
+        $statement = $this->connection->query("SELECT l.* FROM $table l");
 
         return $statement->fetchAll();
     }
