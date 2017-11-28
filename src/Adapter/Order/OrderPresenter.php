@@ -292,7 +292,7 @@ class OrderPresenter implements PresenterInterface
 
     /**
      * @param Order $order
-     * @param bool  $getShippingInfos
+     * @param bool  $getExtraInfos
      *
      * @return array
      */
