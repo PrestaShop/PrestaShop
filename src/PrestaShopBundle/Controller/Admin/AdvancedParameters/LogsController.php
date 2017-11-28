@@ -61,6 +61,6 @@ class LogsController extends FrameworkBundleAdminController
             'logsByEmailForm' => $this->createForm(LogsByEmailType::class)->createView(),
         );
 
-        return $this->render('@PrestaShop/Admin/AdvancedParameters/logs.html.twig', $twigValues);
+        return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
     }
 }
