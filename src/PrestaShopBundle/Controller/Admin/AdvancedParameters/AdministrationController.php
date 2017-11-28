@@ -34,11 +34,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Responsible of "Configure > Advanced Parameters > Performance" page display
+ * Responsible of "Configure > Advanced Parameters > Administration" page display
  */
-class PerformanceController extends FrameworkBundleAdminController
+class AdministrationController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminPerformance';
+    const CONTROLLER_NAME = 'AdminAdminPreferences';
 
     /**
      * @var FormInterface
@@ -46,28 +46,21 @@ class PerformanceController extends FrameworkBundleAdminController
      */
     public function indexAction(FormInterface $form = null)
     {
-        $toolbarButtons['clear_cache'] = array(
-            'href' => $this->generateUrl('admin_clear_cache'),
-            'desc' => $this->trans('Clear cache', 'Admin.Advparameters.Feature'),
-            'icon' => 'delete',
-        );
-
-        $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
+        $form = is_null($form) ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
         $twigValues = array(
-            'layoutHeaderToolbarBtn' => $toolbarButtons,
-            'layoutTitle' => $this->get('translator')->trans('Performance', array(), 'Admin.Navigation.Menu'),
+            'layoutHeaderToolbarBtn' => array(),
+            'layoutTitle' => $this->get('translator')->trans('Administration', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminPerformance'),
+            'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
-            'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
         );
 
-        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:performance.html.twig', $twigValues);
+        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:administration.html.twig', $twigValues);
     }
 
     /**
@@ -81,8 +74,8 @@ class PerformanceController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_performance');
         }
 
-        $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', array('controller' => $this));
-        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
+        $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
+        $form = $this->get('prestashop.adapter.administration.form_handler')->getForm();
         $form->handleRequest($request);
 
         if (!in_array(
@@ -94,36 +87,25 @@ class PerformanceController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+            $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
 
-            return $this->redirectToRoute('admin_performance');
+            return $this->redirectToRoute('admin_administration');
         }
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
 
-            $saveErrors = $this->get('prestashop.adapter.performance.form_handler')->save($data);
+            $saveErrors = $this->get('prestashop.adapter.administration.form_handler')->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_performance');
+                return $this->redirectToRoute('admin_administration');
             }
 
             $this->flashErrors($saveErrors);
         }
 
-        return $this->redirectToRoute('admin_performance');
-    }
-
-    /**
-     * @return RedirectResponse
-     */
-    public function clearCacheAction()
-    {
-        $this->get('prestashop.adapter.cache_clearer')->clearAllCaches();
-        $this->addFlash('success', $this->trans('All caches cleared successfully', 'Admin.Advparameters.Notification'));
-
-        return $this->redirectToRoute('admin_performance');
+        return $this->redirectToRoute('admin_administration');
     }
 }
