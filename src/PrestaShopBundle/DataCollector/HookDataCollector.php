@@ -104,7 +104,7 @@ final class HookDataCollector extends DataCollector
     {
         foreach ($hooksList as &$hookList) {
             foreach ($hookList as &$hook) {
-                $hook['args'] = $this->varToString($hook['args']);
+                $hook['args'] = $this->cloneVar($hook['args']);
 
                 foreach ($hook['modules'] as &$modulesByType) {
                     foreach ($modulesByType as $type => &$module) {
@@ -113,7 +113,7 @@ final class HookDataCollector extends DataCollector
                         }
 
                         if (array_key_exists('args', $module)) {
-                            $module['args'] = $this->varToString($module['args']);
+                            $module['args'] = $this->cloneVar($module['args']);
                         }
                     }
                 }

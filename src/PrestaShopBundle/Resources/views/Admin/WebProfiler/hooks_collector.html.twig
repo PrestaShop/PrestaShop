@@ -103,7 +103,7 @@
             {% for position, hook in hooks %}
             <tr>
                 <td>
-                    {{ hook.args }}
+                    {{ profiler_dump(hook.args) }}
                 </td>
                 <td>
                     <span class="text-muted">{{ hook.location }}</span>
@@ -122,11 +122,11 @@
 
                                 {% if module.callback is defined %}
                                 <tr>
-                                    <td>{{ module.callback.args }}</td>
+                                    <td>{{ profiler_dump(module.callback.args) }}</td>
                                 </tr>
                                 {% else %}
                                 <tr>
-                                    <td>{{ module.widget.args }}</td>
+                                    <td>{{ profiler_dump(module.widget.args) }}</td>
                                 </tr>
                                 {% endif %}
                             </table>
