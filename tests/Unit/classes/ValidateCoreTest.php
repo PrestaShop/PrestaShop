@@ -106,7 +106,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, Validate::isInt($input));
     }
-
+        
         // --- providers ---
 
         public function isIp2LongDataProvider()
@@ -154,7 +154,13 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, 'john.doe@prestashop'),
             array(false, 123456789),
             array(false, false),
-            array(false, 'pubé@prestashop.com'),
+            // Following RFC 6530 (see https://en.wikipedia.org/wiki/Email_address#Internationalization_examples):
+            array(true, 'pubé@prestashop.com'),
+            array(true, 'δοκιμή@παράδειγμα.δοκιμή'),
+            array(true, '我買@屋企.香港'),
+            array(true, '甲斐@黒川.日本'),
+            array(true, 'чебурашка@ящик-с-апельсинами.рф'),
+            array(true, 'संपर्क@डाटामेल.भारत'),
         );
     }
 
