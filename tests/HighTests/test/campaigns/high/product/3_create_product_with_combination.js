@@ -1,102 +1,110 @@
+const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
+var data = require('./../../../datas/product-data');
+
 scenario('Create product with combination', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO());
-  test('should go to product menu', () => client.goToProductMenu());
-  test('should click on the add new product button', () => client.addNewProduct());
+  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+  test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
+  test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
   scenario('Edit Basic settings', client => {
-    test('should set the name of product', () => client.setProductName('combination'));
-    test('should select pack product type', () => client.setProductType('combination'));
-    test('should enter the price of product', () => client.setPrice());
-    test('should upload the picture of product', () => client.uploadPicture('image_test.jpg'));
-    test('should click on create category button', () => client.addCategory());
-    test('should enter the category name', () => client.setCategoryName('combination'));
-    test('should click on category create button', () => client.createCategory());
-    test('should remove home category', () => client.removeHomeCategory());
-    test('should click on add brand button', () => client.addBrand('combination'));
+    test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'Combination' + date_time));
+    test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations));
+    test('should upload the picture of product', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
+    test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
+    test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + 'Combination' + date_time));
+    test('should click on "Create"', () => client.createCategory());
+    test('should remove "HOME" category', () => client.removeHomeCategory());
+    test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select a brand', () => client.selectBrand());
-    test('should click on add a related product button', () => client.addRelatedProduct('combination'));
+    test('should click on "ADD RELATED PRODUCT"', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should add feature height', () => client.addFeatureHeight('combination'));
-    test('should enter the product price tax excluded', () => client.addProductPriceTaxExcluded());
-    test('should enter the product reference', () => client.addProductReference());
-    test('should make the product on line', () => client.productOnline());
-  }, 'product/editbasicsettings');
+    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
+    test('should set "Tax exclude" price', () => client.addProductPriceTaxExcluded());
+    test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
+    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+  }, 'product/product');
 
   scenario('Edit product shipping', client => {
-    test('should go to the product shipping form', () => client.goToProductShipping());
-    test('should enter the shipping width', () => client.shippingWidth());
-    test('should enter the shipping height', () => client.shippingHeight());
-    test('should enter the shipping depth', () => client.shippingDepth());
-    test('should enter the shipping weight', () => client.shippingWeight());
-    test('should enter the additional shipping costs', () => client.shippingCosts());
-    test('should select the available carrier', () => client.selectAvailableCarrier());
-  }, 'product/editshipping');
+    test('should click on "Shipping"', () => client.scrollWaitForExistAndClick(AddProductPage.product_shipping_tab, 50));
+    test('should set the "Width"', () => client.waitAndSetValue(AddProductPage.shipping_width, data.common.cwidth));
+    test('should set the "Height"', () => client.waitAndSetValue(AddProductPage.shipping_height, data.common.cheight));
+    test('should set the "Depth"', () => client.waitAndSetValue(AddProductPage.shipping_depth, data.common.cdepth));
+    test('should set the "Weight"', () => client.waitAndSetValue(AddProductPage.shipping_weight, data.common.cweight));
+    test('should set the "Does this product incur additional shipping costs?"', () => client.waitAndSetValue(AddProductPage.shipping_fees, data.common.cadd_ship_coast));
+    test('should click on "My carrier (Delivery next day!)"', () => client.scrollWaitForExistAndClick(AddProductPage.shipping_available_carriers, 50));
+  }, 'product/product');
 
   scenario('Create product combinations', client => {
-    test('should go to the product combinations form', () => client.goToProductCombinationsForm());
-    test('should create first combination', () => client.createFirstCombination());
-    test('should create second combination', () => client.createSecondCombination());
+    test('should click on "Combinations"', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
+    test('should set the first combination', () => client.createCombination(AddProductPage.combination_size_s, AddProductPage.combination_color_gray));
+    test('should set the second combination', () => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige));
     test('should get combination data', () => client.getCombinationData(1));
-    test('should go to edit first combination', () => client.goToEditCombination());
+    test('should click on "Edit" first combination', () => client.goToEditCombination());
     test('should edit first combination', () => client.editCombination(1));
     test('should go back to combination list', () => client.backToProduct());
     test('should get combination data', () => client.getCombinationData(2));
-    test('should go to edit second combination', () => client.goToEditCombination());
+    test('should click on "Edit" second combination', () => client.goToEditCombination());
     test('should edit second combination', () => client.editCombination(2));
     test('should go back to combination list', () => client.backToProduct());
-    test('should select the availability preferences', () => client.availabilityPreferences());
-    test('should enter the available label in stock', () => client.availabilityLabelInStock());
-    test('should enter the available label out of stock', () => client.availabilityLabelOutStock());
-  }, 'product/createcombinations');
+    test('should click on "Availability preferences"', () => client.scrollWaitForExistAndClick(AddProductPage.combination_availability_preferences, 50));
+    test('should set the available label in stock', () => client.waitAndSetValue(AddProductPage.combination_label_in_stock, data.common.qty_msg_stock));
+    test('should set the available label out of stock', () => client.waitAndSetValue(AddProductPage.combination_label_out_stock, data.common.qty_msg_unstock));
+  }, 'product/create_combinations');
+
   scenario('Edit product pricing', client => {
-    test('should go to the product pricing tab', () => client.goToPricingTab());
-    test('should enter the pricing unity', () => client.pricingUnity());
-    test('should enter the pricing wholesale', () => client.pricingWholesale());
-    test('should select the pricing priorities', () => client.pricingPriorities());
-  }, 'product/editpricing');
+    test('should click on "Pricing"', () => client.scrollWaitForExistAndClick(AddProductPage.product_pricing_tab, 50));
+    test('should set the "Price per unit (tax excl.)"', () => client.waitAndSetValue(AddProductPage.unit_price, data.common.unitPrice));
+    test('should set the "Unit"', () => client.waitAndSetValue(AddProductPage.unity, data.common.unity));
+    test('should set the "Price (tax excl.)"', () => client.waitAndSetValue(AddProductPage.pricing_wholesale, data.common.wholesale));
+    test('should select the "Priority management"', () => client.selectPricingPriorities());
+  }, 'product/product');
 
   scenario('Edit SEO information', client => {
-    test('should go to the product SEO form', () => client.goToSEOTab());
-    test('should enter the meta title', () => client.metaTitle());
-    test('should enter the meta description', () => client.metaDescription());
-    test('should enter the friendly url', () => client.friendlyUrl());
-  }, 'product/editseo');
+    test('should click on "SEO"', () => client.scrollWaitForExistAndClick(AddProductPage.product_SEO_tab, 50));
+    test('should set the "Meta title"', () => client.waitAndSetValue(AddProductPage.SEO_meta_title, data.common.metatitle));
+    test('should set the "Meta description"', () => client.waitAndSetValue(AddProductPage.SEO_meta_description, data.common.metadesc));
+    test('should set the "Friendly URL"', () => client.waitAndSetValue(AddProductPage.SEO_friendly_url, data.common.shortlink));
+  }, 'product/product');
 
   scenario('Edit product options', client => {
-    test('should go to the product SEO form', () => client.goToOptionsForm());
-    test('should select the visibility', () => client.selectVisibility());
-    test('should enable the web only visibility', () => client.webOnlyVisibility());
-    test('should select the condition', () => client.selectCondition());
-    test('should enter the ISBN', () => client.ISBNEntry());
-    test('should enter the EAN-13', () => client.EAN13Entry());
-    test('should enter the UPC', () => client.UPCEntry());
-    test('should click on customization button', () => client.AddCustomFieldButton());
-    test('should create new custom field', () => client.createCustomField());
-    test('should click on add a customization field button', () => client.AddCustomFieldButton());
-    test('should create new custom field', () => client.newCustomField());
-    test('should click on attach a new file button', () => client.attachNewFile());
-    test('should add a file', () => client.addFile('image_test.jpg'));
-    test('should select the previous added file', () => client.selectPreviousAddFile());
-  }, 'product/editoptions');
+    test('should click on "Options"', () => client.waitForExistAndClick(AddProductPage.product_options_tab));
+    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'search'));
+    test('should click on "Web only (not sold in your retail store)"', () => client.waitForExistAndClick(AddProductPage.options_online_only));
+    test('should select the "Condition"', () => client.selectCondition());
+    test('should set the "ISBN"', () => client.waitAndSetValue(AddProductPage.options_isbn, data.common.isbn));
+    test('should set the "EAN-13"', () => client.waitAndSetValue(AddProductPage.options_ean13, data.common.ean13));
+    test('should set the "UPC"', () => client.UPCEntry());
+    test('should click on "ADD A CUSTOMIZAITION"', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_customization_field_button, 50));
+    test('should set the customization field "Label"', () => client.waitAndSetValue(AddProductPage.options_first_custom_field_label, data.common.personalization.perso_text.name));
+    test('should select the customization field "Type" Text', () => client.waitAndSelectByValue(AddProductPage.options_first_custom_field_type, '1'));
+    test('should click on "Required"', () => client.waitForExistAndClick(AddProductPage.options_first_custom_field_require));
+    test('should click on "ADD A CUSTOMIZAITION"', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_customization_field_button, 50));
+    test('should set the second customization field "Label"', () => client.waitAndSetValue(AddProductPage.options_second_custom_field_label, data.common.personalization.perso_file.name));
+    test('should select the customization field "Type" File', () => client.waitAndSelectByValue(AddProductPage.options_second_custom_field_type, '0'));
+    test('should click on "ATTACH A NEW FILE"', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_new_file_button, 50));
+    test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
+    test('should add the previous added file', () => client.scrollWaitForExistAndClick(AddProductPage.options_file_add_button, 50));
+  }, 'product/product');
 
   scenario('Save Product', client => {
-    test('should save and stay in the product page', () => client.saveProduct());
-    test('should close green validation', () => client.closeGreenValidation());
-    test('should sign out BO', () => client.signoutBO());
+    test('should click on "SAVE"', () => client.waitForExistAndClick(AddProductPage.save_product_button));
+    test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
+    test('should sign out BO', () => client.signOutBO());
   }, 'product/product');
 }, 'product/product', true);
 
 scenario('Check the product in the catalog', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO());
-  test('should go to "Catalog"', () => client.goToCatalog('combination'));
-  test('should search for product by name', () => client.searchProductByName());
-  test('should check the existance of product name', () => client.checkProductName());
-  test('should check the existance of product reference', () => client.checkProductReference());
-  test('should check the existance of product category', () => client.checkProductCategory());
-  test('should check the existance of product price TE', () => client.checkProductPriceTE());
-  test('should check the existance of product quantity Combination', () => client.checkProductQuantityCombination());
-  test('should check the existance of product status', () => client.checkProductStatus());
-  test('should reset filter', () => client.resetFilter());
-}, 'product/checkproduct', true);
+  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+  test('should go to "Catalog"', () => client.goToCatalog());
+  test('should search for product by name', () => client.searchProductByName(data.standard.name + 'Combination' + date_time));
+  test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.standard.name + 'Combination' + date_time));
+  test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
+  test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.standard.new_category_name + 'Combination' + date_time));
+  test('should check the existence of product price TE', () => client.checkProductPriceTE());
+  test('should check the existence of product quantity Combination', () => client.checkTextValue(AddProductPage.catalog_product_quantity, (parseInt(data.standard.variations[0].quantity) + parseInt(data.standard.variations[1].quantity)).toString()));
+  test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
+  test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+}, 'product/check_product', true);

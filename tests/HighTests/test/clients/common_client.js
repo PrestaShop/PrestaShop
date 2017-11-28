@@ -1,5 +1,6 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
+var path = require('path');
 
 class CommonClient {
   constructor() {
@@ -31,7 +32,7 @@ class CommonClient {
   OnBoarding() {
     if (global.onboarding == true) {
       return this.client
-        .click(selector.BO.Onboarding.popup_close_button)
+        .click(selector.OnBoarding.popup_close_button)
         .pause(2000)
     } else {
       return this.client
@@ -45,24 +46,24 @@ class CommonClient {
 
   successPanel(index) {
     return this.client
-      .waitForExist(selector.BO.CatalogPage.success_panel)
-      .then(() => this.client.getText(selector.BO.CatalogPage.success_panel))
+      .waitForExist(selector.CatalogPageBO.success_panel)
+      .then(() => this.client.getText(selector.CatalogPageBO.success_panel))
       .then((text) => expect(text.substr(2)).to.be.equal(index));
   }
 
   languageChange(language) {
     if (language === "francais") {
       return this.client
-        .waitForExist(selector.FO.common.language_selector, 90000)
-        .click(selector.FO.common.language_selector)
-        .waitForVisible(selector.FO.common.language_FR, 90000)
-        .click(selector.FO.common.language_FR)
+        .waitForExist(selector.languageFO.language_selector, 90000)
+        .click(selector.languageFO.language_selector)
+        .waitForVisible(selector.languageFO.language_FR, 90000)
+        .click(selector.languageFO.language_FR)
     } else {
       return this.client
-        .waitForExist(selector.FO.common.language_selector, 90000)
-        .click(selector.FO.common.language_selector)
-        .waitForVisible(selector.FO.common.language_EN, 90000)
-        .click(selector.FO.common.language_EN)
+        .waitForExist(selector.languageFO.language_selector, 90000)
+        .click(selector.languageFO.language_selector)
+        .waitForVisible(selector.languageFO.language_EN, 90000)
+        .click(selector.languageFO.language_EN)
     }
   }
 
@@ -74,10 +75,8 @@ class CommonClient {
     return this.client.end();
   }
 
-  // adding new functions
-
-  waitForExistAndClick(selector,timeout) {
-    return this.client.waitForExistAndClick(selector,timeout);
+  waitForExistAndClick(selector, timeout) {
+    return this.client.waitForExistAndClick(selector, timeout);
   }
 
   waitAndSetValue(selector, value, timeout) {
@@ -88,14 +87,39 @@ class CommonClient {
     return this.client.scrollTo(selector, margin);
   }
 
+  scrollWaitForExistAndClick(selector, margin, timeout) {
+    return this.client.scrollWaitForExistAndClick(selector, margin, timeout)
+  }
+
   waitForVisibleAndClick(selector, timeout) {
     return this.client.waitForVisibleAndClick(selector, timeout);
   }
 
-  waitAndSelectByValue(selector,value,timeout){
-    return this.client.waitAndSelectByValue(selector,value,timeout);
+  waitAndSelectByValue(selector, value, timeout) {
+    return this.client.waitAndSelectByValue(selector, value, timeout);
   }
 
+  addFile(selector, picture, value = 150) {
+    return this.client
+      .scrollTo(selector, value)
+      .waitForExist(selector, 90000)
+      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+  }
+
+  checkTextValue(selector, message) {
+    return this.client
+      .waitForVisible(selector, 90000)
+      .then(() => this.client.getText(selector))
+      .then((text) => expect(text).to.be.equal(message));
+  }
+
+  uploadPicture(picture, selector, className = "dz-hidden-input") {
+    return this.client
+      .execute(function (className) {
+        document.getElementsByClassName(className).style = '';
+      })
+      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+  }
 }
 
 module.exports = CommonClient;
