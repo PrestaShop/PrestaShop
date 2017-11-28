@@ -23,10 +23,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="tags-input search-input search" :class="{ 'search-with-icon': hasIcon }" @click="focus()">
-    <span v-for="(tag, index) in tags" class="input-tag">
-      <span class="tag">{{ tag }}<i class="material-icons" @click="close(index)">close</i></span>
-    </span>
+  <div class="tags-input search-input search d-flex flex-wrap" :class="{ 'search-with-icon': hasIcon }" @click="focus()">
+    <div class="tags-wrapper">
+      <span v-for="(tag, index) in tags" class="tag">{{ tag }}<i class="material-icons" @click="close(index)">close</i></span>
+    </div>
     <input
       ref = "tags"
       :placeholder="placeholderToDisplay"
@@ -84,30 +84,3 @@
     data: () => ({ tag: null }),
   };
 </script>
-<style lang="sass" type="text/scss">
-  @import "../../../scss/config/_settings.scss";
-  .tags-input {
-    .tag {
-      background: $brand-primary;
-      color: white;
-      padding: 2px 4px;
-      border-radius: 0;
-      font-weight: lighter;
-      display: inline-block;
-      margin: 2px;
-      min-height: 25px;
-      .material-icons {
-        vertical-align: middle;
-        color: $gray-dark;
-        margin: 0 2px 0 5px;
-        cursor: pointer;
-      }
-    }
-    input.input, input.input:focus {
-      border: none;
-      outline: none;
-      min-height: 33px;
-      width: auto;
-    }
-  }
-</style>

@@ -49,37 +49,6 @@ body {
 }
 
 // To put into the PrestaKit
-$color-icons: #6c868e;
-.breadcrumb {
-  padding: 0.3125rem;
-  background: none;
-  border-radius: 0;
-  font-size: 0.75rem;
-  > li + li::before {
-    padding-right: 0;
-    padding-left: 0.1875rem;
-  }
-  > li > a {
-    color: #363A41; // TODO: Place the text color
-  }
-}
-.toolbar-button {
-  color: $color-icons;
-  text-align: center;
-  display: inline-block;
-  margin: 0 0.3125rem;
-  > .material-icons {
-    font-size: 1.5rem;
-  }
-  > .title {
-    font-size: 0.75rem;
-    color: $color-icons;
-    display: block;
-  }
-  &:hover {
-    text-decoration: none;
-  }
-}
 .col-center {
   float: none;
   margin: 0 auto;
