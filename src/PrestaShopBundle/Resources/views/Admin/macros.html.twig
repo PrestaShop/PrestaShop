@@ -52,8 +52,8 @@
 </div>
 {% endmacro %}
 
-{% macro label_with_help(label, help) %}
-<label class="form-control-label">
+{% macro label_with_help(label, help, class = '') %}
+<label class="form-control-label {{ class }}">
   {{ label }}
   <span class="help-box" data-toggle="popover"
     data-title="{{ label }}"
