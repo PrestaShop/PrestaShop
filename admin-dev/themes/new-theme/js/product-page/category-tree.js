@@ -24,6 +24,16 @@
  */
 
 export default function() {
+
+  /**
+   * scroll right to show radio buttons on the category tree
+   */
+  const scrollCategoryTree = function scrollCategoryTree() {
+    let $categoryTreeOverflow = $('.category-tree-overflow');
+    let leftPos = $categoryTreeOverflow.width();
+    $categoryTreeOverflow.animate({scrollLeft: leftPos}, 200);
+  };
+
   const treeAction = (treeState) => {
     if (treeState === 'expand') {
       $('.js-categories-tree ul').show();
@@ -51,14 +61,11 @@ export default function() {
         scrollCategoryTree();
     }
   });
+
   $('.category-tree-overflow .checkbox label').on('click', (e) => {
     if (!$(e.target).is('input')) {
         // do not scroll if (un)checking some inputs
         scrollCategoryTree();
     }
   });
-
-  function scrollCategoryTree() {
-      var leftPos = $('.category-tree-overflow').width();
-      $('.category-tree-overflow').animate({scrollLeft: leftPos}, 200);
-  }}
+}
