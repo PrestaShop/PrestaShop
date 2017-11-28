@@ -105,8 +105,13 @@ final class HookDataCollector extends DataCollector
         foreach ($hooksList as &$hookList) {
             foreach ($hookList as &$hook) {
                 $hook['args'] = $this->varToString($hook['args']);
+
                 foreach ($hook['modules'] as &$modulesByType) {
-                    foreach ($modulesByType as &$module) {
+                    foreach ($modulesByType as $type => &$module) {
+                        if (empty($module)) {
+                            unset($modulesByType[$type]);
+                        }
+
                         if (array_key_exists('args', $module)) {
                             $module['args'] = $this->varToString($module['args']);
                         }
