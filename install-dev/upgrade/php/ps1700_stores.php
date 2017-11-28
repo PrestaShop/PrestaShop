@@ -45,7 +45,7 @@ function ps1700_stores()
 
         $result &= Db::getInstance()->execute('
             UPDATE `'._DB_PREFIX_.'store`
-            SET `hours` = '.$hours.'
+            SET `hours` = \''.$hours.'\'
             WHERE `id_store` = '.$store['id_store']
         );
     }
