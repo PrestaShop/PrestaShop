@@ -100,12 +100,22 @@ export default class Header {
   }
 
   initNotificationsToggle() {
+    // Part of the notif dropdown's behavior is handled manually to prevent it to get closed when navigating its tabs
+    $('#notif').on({
+      'shown.bs.dropdown': function() {
+        $(this).data('closable', false);
+      },
+      'hide.bs.dropdown': function () {
+        return $(this).data('closable') === true;
+      }
+    });
+
     $('.notification.dropdown-toggle').on('click', () => {
       if(!$('.mobile-nav').hasClass('expanded')) {
-        $('.notification-center.dropdown').addClass('open');
-        $('.mobile-layer').addClass('expanded');
         this.updateEmployeeNotifications();
       }
+
+      $('#notif').data('closable', true );
     });
 
     $('body').on('click', function (e) {
@@ -118,8 +128,8 @@ export default class Header {
           $('.mobile-layer').removeClass('expanded');
           refreshNotifications();
         }
-        $('div.notification-center.dropdown').removeClass('open');
 
+        $('#notif').data('closable', true);
       }
     });
 

@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2be5e5f12e00d06d8b14"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "af88d95a1650639dc676"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -55678,12 +55678,22 @@ class Header {
   }
 
   initNotificationsToggle() {
+    // Part of the notif dropdown's behavior is handled manually to prevent it to get closed when navigating its tabs
+    $('#notif').on({
+      'shown.bs.dropdown': function() {
+        $(this).data('closable', false);
+      },
+      'hide.bs.dropdown': function () {
+        return $(this).data('closable') === true;
+      }
+    });
+
     $('.notification.dropdown-toggle').on('click', () => {
       if(!$('.mobile-nav').hasClass('expanded')) {
-        $('.notification-center.dropdown').addClass('open');
-        $('.mobile-layer').addClass('expanded');
         this.updateEmployeeNotifications();
       }
+
+      $('#notif').data('closable', true );
     });
 
     $('body').on('click', function (e) {
@@ -55696,8 +55706,8 @@ class Header {
           $('.mobile-layer').removeClass('expanded');
           __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__notifications_js__["a" /* default */])();
         }
-        $('div.notification-center.dropdown').removeClass('open');
 
+        $('#notif').data('closable', true);
       }
     });
 
