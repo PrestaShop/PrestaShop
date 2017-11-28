@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Cart\Calculation;
+namespace Tests\Unit\Core\Cart\Calculation;
 
-use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
+use Tests\Unit\Core\Cart\AbstractCartTest;
 use Tools;
 
 /**

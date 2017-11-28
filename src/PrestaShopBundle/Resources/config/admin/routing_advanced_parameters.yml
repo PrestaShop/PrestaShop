@@ -1,3 +1,4 @@
+# System Information
 admin_system_information:
     path: system_information
     methods: [GET]
@@ -13,6 +14,7 @@ admin_system_information_check_files:
         _legacy_controller: AdminInformation
     condition: "request.isXmlHttpRequest()"
 
+# Performance
 admin_performance:
     path: performance
     methods: [GET]
@@ -66,3 +68,17 @@ admin_servers_test:
         _legacy_controller: AdminPerformance
     condition: 'request.isXmlHttpRequest()'
 
+# Administration
+admin_administration:
+    path: administration
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Administration:index'
+        _legacy_controller: AdminAdminPreferences
+
+admin_administration_save:
+    path: administration
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Administration:processForm'
+        _legacy_controller: AdminAdminPreferences

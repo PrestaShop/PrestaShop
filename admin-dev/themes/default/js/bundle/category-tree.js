@@ -33,16 +33,16 @@
     if (isMethodCall) {
       switch (settings) {
         case 'unselect':
-          $('div.radio > label > input:radio', this).prop('checked', false);
+          this.find('.radio > label > input:radio').prop('checked', false);
           // TODO: add a callback method feature?
           break;
         case 'unfold':
-          $('ul', this).show();
-          $('li', this).has('ul').addClass('less');
+          this.find('ul').show();
+          this.find('li').has('ul').addClass('less');
           break;
         case 'fold':
-          $('ul ul', this).hide();
-          $('li', this).has('ul').addClass('more');
+          this.find('ul ul').hide();
+          this.find('li').has('ul').addClass('more');
           break;
         default:
           throw 'Unknown method';
@@ -50,9 +50,7 @@
     }
     // initialize tree
     else {
-      $('li > ul', this).each(function (i, item) {
         var clickHandler = function (event) {
-
           var $ui = $(event.target);
           if ($ui.attr('type') === 'radio' || $ui.attr('type') === 'checkbox') {
             return;
@@ -72,8 +70,8 @@
           }
 
           return false;
-        };
-
+    };
+      this.find('li > ul').each(function (i, item) {
         var $inputWrapper = $(item).prev('div');
         $inputWrapper.on('click', clickHandler);
         $inputWrapper.find('label').on('click', clickHandler);

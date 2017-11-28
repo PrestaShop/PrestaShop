@@ -58,4 +58,8 @@ class NullDispatcher implements EventDispatcherInterface
     public function removeSubscriber(EventSubscriberInterface $subscriber)
     {
     }
+
+    public function getListenerPriority($eventName, $listener)
+    {
+    }
 }

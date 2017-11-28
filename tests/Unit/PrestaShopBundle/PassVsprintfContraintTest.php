@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\PrestaShopBundle;
+namespace Tests\Unit\PrestaShopBundle;
 
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
@@ -69,7 +69,7 @@ class PassVsprintfContraintTest extends AbstractConstraintValidatorTest
         $constraint = new PassVsprintf();
 
         $this->validator->validate($translation, $constraint);
-        
+
         $this->buildViolation($constraint->message)->assertRaised();
     }
 }

@@ -42,43 +42,40 @@ class SmartyType extends CommonAbstractType
         $builder
             ->add('template_compilation', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    0 => 'Never recompile template files',
-                    1 => 'Recompile templates if the files have been updated',
-                    2 => 'Force compilation'
+                    'Never recompile template files' => 0,
+                    'Recompile templates if the files have been updated' => 1,
+                    'Force compilation' => 2,
                 ),
-                'choices_as_values' => false,
                 'required' => true,
             ))
             ->add('cache', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('multi_front_optimization', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    false => 'No',
-                    true => 'Yes',
+                    'No' => false,
+                    'Yes' => true,
                 ),
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
             ->add('caching_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    'filesystem' => 'File System',
-                    'mysql' => 'MySQL',
+                    'File System' => 'filesystem',
+                    'MySQL' => 'mysql',
                 ),
-                'choices_as_values' => false,
                 'required' => true,
             ))
             ->add('clear_cache', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices'  => array(
-                    'never' => 'Never clear cache files',
-                    'everytime' => 'Clear cache everytime something has been modified',
+                     'Never clear cache files' => 'never',
+                    'Clear cache everytime something has been modified' => 'everytime',
                 ),
-                'choices_as_values' => false,
                 'required' => true,
             ))
         ;

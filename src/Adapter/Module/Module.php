@@ -82,6 +82,7 @@ class Module implements ModuleInterface
         'need_instance' => 0,
         'limited_countries' => array(),
         'parent_class' => 'Module',
+        'is_paymentModule' => false,
         'productType' => 'module',
         'warning' => '',
         'img' => '',

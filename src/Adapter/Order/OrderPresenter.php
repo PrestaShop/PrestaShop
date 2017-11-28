@@ -310,7 +310,8 @@ class OrderPresenter implements PresenterInterface
             'gift_message' => nl2br($order->gift_message),
             'is_returnable' => (int)$order->isReturnable(),
             'payment' => $order->payment,
-            'recyclable' => (bool)$order->recyclable,
+            'module' => $order->module,
+            'recyclable' => (bool) $order->recyclable,
             'is_valid' => $order->valid,
         );
 

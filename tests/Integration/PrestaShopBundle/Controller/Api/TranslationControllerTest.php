@@ -24,11 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Tests\Integration\PrestaShopBundle\Controller\Api;
+namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 /**
  * @group api
  * @group translation
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class TranslationControllerTest extends ApiTestCase
 {
@@ -36,16 +38,13 @@ class TranslationControllerTest extends ApiTestCase
     {
         parent::setUp();
 
-        $container = self::$kernel->getContainer();
-
-        $cacheMock = $this->getMockBuilder('PrestaShopBundle\Service\Cache\Refresh')
-            ->getMock();
+        $cacheMock = $this->getMockBuilder('PrestaShopBundle\Service\Cache\Refresh')->getMock();
 
         $cacheMock
             ->method('execute')
             ->will($this->returnValue(true));
 
-        $container->set('prestashop.cache.refresh', $cacheMock);
+        self::$container->set('prestashop.cache.refresh', $cacheMock);
     }
 
     /**
@@ -259,11 +258,11 @@ class TranslationControllerTest extends ApiTestCase
             array('locale' => 'en-US', 'domain' => 'AdminActions')
         );
 
-        $this->client->request('POST', $editTranslationRoute);
+        self::$client->request('POST', $editTranslationRoute);
         $this->assertResponseBodyValidJson(400);
 
 
-        $this->client->request('POST', $editTranslationRoute, array(), array(), array(), '{}');
+        self::$client->request('POST', $editTranslationRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
         $fails = array(
@@ -293,7 +292,7 @@ class TranslationControllerTest extends ApiTestCase
 
         foreach ($fails as $fail) {
             $post = json_encode(array('translations' => array($fail)));
-            $this->client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
+            self::$client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
             $this->assertResponseBodyValidJson(400);
         }
     }
@@ -305,11 +304,11 @@ class TranslationControllerTest extends ApiTestCase
             array('locale' => 'en-US', 'domain' => 'AdminActions')
         );
 
-        $this->client->request('POST', $resetTranslationRoute);
+        self::$client->request('POST', $resetTranslationRoute);
         $this->assertResponseBodyValidJson(400);
 
 
-        $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), '{}');
+        self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), '{}');
         $this->assertResponseBodyValidJson(400);
 
         $fails = array(
@@ -336,7 +335,7 @@ class TranslationControllerTest extends ApiTestCase
 
         foreach ($fails as $fail) {
             $post = json_encode(array('translations' => array($fail)));
-            $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
+            self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
             $this->assertResponseBodyValidJson(400);
         }
     }
@@ -352,7 +351,7 @@ class TranslationControllerTest extends ApiTestCase
         );
 
         $post = json_encode(array('translations' => array($params)));
-        $this->client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
+        self::$client->request('POST', $editTranslationRoute, array(), array(), array(), $post);
         $this->assertResponseBodyValidJson(200);
     }
 
@@ -364,7 +363,7 @@ class TranslationControllerTest extends ApiTestCase
         );
 
         $post = json_encode(array('translations' => array($params)));
-        $this->client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
+        self::$client->request('POST', $resetTranslationRoute, array(), array(), array(), $post);
         $this->assertResponseBodyValidJson(200);
     }
 }

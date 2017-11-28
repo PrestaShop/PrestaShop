@@ -17,12 +17,13 @@ export default function() {
         if (idsProductAttribute[0] != '') {
           getCombinations(response);
         }
-        $('#create-combinations').click(function(event) {
-          event.preventDefault();
-          form.send(false, false, generate);
-        });
       });
-
+      
+    $('#create-combinations').click(function(event) {
+      event.preventDefault();
+      form.send(false, false, generate);
+    });
+    
     let productDropzone = Dropzone.forElement('#product-images-dropzone');
     let updateCombinationImages = function () {
       var productAttributeIds = $.map($('.js-combinations-list .combination'), function (combination) {
@@ -40,12 +41,7 @@ export default function() {
       var isChecked = input.prop('checked');
       input.prop('checked', isChecked ? false : true);
 
-      if (isChecked) {
-        $(this).removeClass('img-highlight');
-
-      } else {
-        $(this).addClass('img-highlight');
-      }
+      $(this).toggleClass('img-highlight', isChecked);
       refreshDefaultImage();
     });
 
@@ -97,15 +93,15 @@ export default function() {
         $imagesElem = $('#combination_' + $index + '_id_image_attr');
       }
 
-      $imagesElem.html('');
+      var html = '';
 
       $.each(combinationsImages[value], function(key, image) {
-        $imagesElem.append(`<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
+        html += `<div class="product-combination-image ${(image.id_image_attr ? 'img-highlight' : '')}">
           <input type="checkbox" name="combination_${$index}[id_image_attr][]" value="${image.id}" ${(image.id_image_attr ? 'checked="checked"' : '')}>
           <img src="${image.base_image_url}-small_default.${image.format}" alt="" />
-        </div>`);
+        </div>`;
       });
-
+      $imagesElem.html(html);
       $combinationElem.fadeIn(1000);
     });
 
@@ -141,7 +137,7 @@ export default function() {
 
       if (defaultImageUrl) {
         var img = '<img src="' + defaultImageUrl + '" class="img-responsive" />';
-        $('#accordion_combinations #attribute_' + $(elem).attr('data')).find('td.img').html(img);
+        $('#attribute_' + $(elem).attr('data')).find('td.img').html(img);
       }
     });
   };

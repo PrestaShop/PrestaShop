@@ -45,6 +45,6 @@
   </div>
 {else}
   <div class="shop-list">
-    <a class="link" href="{$base_url|escape:'html':'UTF-8'}" target= "_blank">{$shop_name}</a>
+    <a class="link" id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target= "_blank">{$shop_name}</a>
   </div>
 {/if}

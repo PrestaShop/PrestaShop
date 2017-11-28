@@ -232,7 +232,7 @@ class AdminFilter
             'last_offset' => 0,
             'last_limit' => 20,
             'last_orderBy' => 'id_product',
-            'last_sortOrder' => 'asc',
+            'last_sortOrder' => 'desc',
         );
     }
 

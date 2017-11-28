@@ -1,11 +1,11 @@
 <phpunit
   bootstrap="bootstrap-admin.php"
-  processIsolation="true"
+  processIsolation="false"
 >
     <php>
         <env name="SYMFONY_ENV" value="test"/>
         <env name="kernel.environment" value="test" />
-      <server name="KERNEL_DIR" value="../app/" />
+      <server name="KERNEL_DIR" value="app" />
     </php>
     <groups>
       <include>

@@ -25,9 +25,9 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace Tests\Integration;
 
-use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Tests\TestCase\IntegrationTestCase;
 
 class SmartySettingsTest extends IntegrationTestCase
 {

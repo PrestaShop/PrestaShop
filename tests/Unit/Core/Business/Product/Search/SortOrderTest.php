@@ -24,13 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace Tests\Unit\Core\Product\Search;
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Product\Search;
-
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
-class SortOrderTest extends PHPUnit_Framework_TestCase
+class SortOrderTest extends TestCase
 {
     public function test_toLegacyOrderBy_product_name()
     {

@@ -27,7 +27,7 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
@@ -37,7 +37,7 @@ use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 class PerformanceFormHandler implements FormHandlerInterface
 {
     /**
-     * @var FormFactory
+     * @var FormFactoryInterface
      */
     private $formFactory;
 
@@ -52,7 +52,7 @@ class PerformanceFormHandler implements FormHandlerInterface
     private $formDataProvider;
 
     public function __construct(
-        FormFactory $formFactory,
+        FormFactoryInterface $formFactory,
         PerformanceFormDataProvider $formDataProvider,
         CombinationFeature $combinationFeature
     )
