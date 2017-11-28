@@ -87,7 +87,7 @@ class AdministrationController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             )
         )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+            $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_administration');
         }
@@ -98,7 +98,7 @@ class AdministrationController extends FrameworkBundleAdminController
             $saveErrors = $this->get('prestashop.adapter.administration.form_handler')->save($data);
 
             if (0 === count($saveErrors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_administration');
             }

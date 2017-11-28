@@ -761,7 +761,6 @@ class LinkCore
                 $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_administration';
 
                 return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
-
         }
 
         $idLang = Context::getContext()->language->id;
