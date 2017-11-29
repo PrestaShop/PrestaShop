@@ -40,7 +40,7 @@ class LogsByEmailType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('severity_level', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
+            ->add('logs_by_email', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
                 'required' => true,
             ))
         ;
