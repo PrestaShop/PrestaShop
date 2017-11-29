@@ -381,7 +381,7 @@
 {% block form_errors -%}
     {% if errors|length > 0 -%}
     <div class="alert alert-danger">
-        {%- if errors|count > 1 -%}
+        {%- if errors|length > 1 -%}
             <ul class="alert-text">
                 {%- for error in errors -%}
                     <li> {{
