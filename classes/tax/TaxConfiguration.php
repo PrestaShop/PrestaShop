@@ -35,7 +35,7 @@ class TaxConfigurationCore
             return false;
         }
 
-        $idCustomer = Context::getContext()->cookie->id_customer;
+        $idCustomer = (int)Context::getContext()->cookie->id_customer;
         if (!array_key_exists($idCustomer, $this->taxCalculationMethod)) {
             $this->taxCalculationMethod[$idCustomer] = !Product::getTaxCalculationMethod($idCustomer);
         }
