@@ -50,7 +50,7 @@ class LogsConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        return array('severity_level' => $this->configuration->get('PS_LOGS_BY_EMAIL'));
+        return array('logs_by_email' => $this->configuration->get('PS_LOGS_BY_EMAIL'));
     }
 
     /**
@@ -59,7 +59,7 @@ class LogsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_LOGS_BY_EMAIL', $configuration['severity_level']);
+            $this->configuration->set('PS_LOGS_BY_EMAIL', $configuration['logs_by_email']);
         }
 
         return array();
@@ -72,7 +72,7 @@ class LogsConfiguration implements DataConfigurationInterface
     {
         $resolver = new OptionsResolver();
         $resolver
-            ->setRequired(array('severity_level'))
+            ->setRequired(array('logs_by_email'))
             ->resolve($configuration)
         ;
 
