@@ -54,7 +54,7 @@ class ThemeRepository implements AddonRepositoryInterface
         $dir = $this->appConfiguration->get('_PS_ALL_THEMES_DIR_') . $name;
 
         $confDir = $this->appConfiguration->get('_PS_CONFIG_DIR_') . 'themes/' . $name;
-        $jsonConf = '';
+        $jsonConf = $confDir . '/theme.json';
         if ($this->shop) {
             $jsonConf = $confDir . '/shop' . $this->shop->id . '.json';
         }
