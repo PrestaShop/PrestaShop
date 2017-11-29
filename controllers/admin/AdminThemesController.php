@@ -1095,7 +1095,7 @@ class AdminThemesControllerCore extends AdminController
             $this->errors[] = $e->getMessage();
             $this->addErrorToRedirectAfter();
         } catch (Exception $e) {
-            $this->addErrorToRedirectAfter();
+            $this->errors[] = $e->getMessage();
         }
     }
 }
