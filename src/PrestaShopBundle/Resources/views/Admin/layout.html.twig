@@ -56,35 +56,35 @@ app.request.attributes.get('_route')
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">close</i></span>
             </button>
-            <ul class="alert-text">
+            <div class="alert-text">
                 {% for flashMessage in app.session.flashbag.get('error') %}
-                    <li>{{ flashMessage|raw }}</li>
+                    <p>{{ flashMessage|raw }}</p>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% endif %}
     {% if app.session.flashbag.peek('failure')|length() > 0 %}
-        <div class="alert alert-danger">
+        <div class="alert alert-danger" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">close</i></span>
             </button>
-            <ul class="alert-text">
+            <div class="alert-text">
                 {% for flashMessage in app.session.flashbag.get('failure') %}
-                    <li>{{ flashMessage|raw }}</li>
+                    <p>{{ flashMessage|raw }}</p>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% endif %}
     {% if app.session.flashbag.peek('success')|length() > 0 %}
-        <div class="alert alert-success">
+        <div class="alert alert-success" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">close</i></span>
             </button>
-            <ul>
+            <div class="alert-text">
                 {% for flashMessage in app.session.flashbag.get('success') %}
-                    <li>{{ flashMessage|raw }}</li>
+                    <p>{{ flashMessage|raw }}</p>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% endif %}
 {% endblock %}

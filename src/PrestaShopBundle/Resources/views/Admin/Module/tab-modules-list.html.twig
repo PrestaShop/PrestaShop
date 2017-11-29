@@ -65,6 +65,8 @@
   {% endif %}
 </div>
 {% endif %}
-<div class="alert alert-addons row-margin-top">
-  <a href="http://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{{ app.request.locale }}&amp;utm_content=download{% if adminListFromSource is defined %}&amp;utm_term={{ adminListFromSource }}{% endif %}" onclick="return !window.open(this.href);">{{ 'More modules on addons.prestashop.com'|trans({}) }}</a>
+<div class="alert alert-addons row-margin-top" role="alert">
+  <p class="alert-text">
+    <a href="http://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{{ app.request.locale }}&amp;utm_content=download{% if adminListFromSource is defined %}&amp;utm_term={{ adminListFromSource }}{% endif %}" onclick="return !window.open(this.href);">{{ 'More modules on addons.prestashop.com'|trans({}) }}</a>
+  </p>
 </div>

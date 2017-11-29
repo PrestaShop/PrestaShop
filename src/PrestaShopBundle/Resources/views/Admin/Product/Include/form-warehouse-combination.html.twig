@@ -25,9 +25,11 @@
 {% if warehouses|length > 0 %}
     <h4>{{ 'Product location in warehouses'|trans({}, 'Admin.Catalog.Feature') }}</h4>
 
-    <div class="alert alert-info" style="display:block; position: 'auto';">
-        <p>{{ 'This interface allows you to specify the warehouse in which the product is stocked.'|trans({}, 'Admin.Catalog.Help') }}</p>
-        <p>{{ 'It is also possible to specify the location within the warehouse for each product or combination.'|trans({}, 'Admin.Catalog.Help') }}</p>
+    <div class="alert alert-info" style="display:block; position: 'auto';" role="alert">
+        <div class="alert-text">
+            <p>{{ 'This interface allows you to specify the warehouse in which the product is stocked.'|trans({}, 'Admin.Catalog.Help') }}</p>
+            <p>{{ 'It is also possible to specify the location within the warehouse for each product or combination.'|trans({}, 'Admin.Catalog.Help') }}</p>
+        </div>
     </div>
     <p>{{ 'Please choose the warehouses associated with this product.'|trans({}, 'Admin.Catalog.Feature') }}</p>
 

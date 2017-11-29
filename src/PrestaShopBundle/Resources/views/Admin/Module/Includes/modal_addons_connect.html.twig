@@ -34,8 +34,8 @@
         {% if level <= constant('PrestaShopBundle\\Security\\Voter\\PageVoter::LEVEL_UPDATE') %}
           <div class="row">
             <div class="col-md-12">
-              <div class="alert alert-danger">
-                <p>
+              <div class="alert alert-danger" role="alert">
+                <p class="alert-text">
                   {{ errorMessage }}
                 </p>
               </div>
