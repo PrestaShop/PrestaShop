@@ -26,12 +26,13 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Logs;
 
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration;
 
 /**
  * This class is responsible of managing the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-class PerformanceFormDataProvider
+class LogsFormDataProvider
 {
     /**
      * @var LogsConfiguration
