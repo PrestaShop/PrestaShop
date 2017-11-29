@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "28205b696007b5717225"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "ed4f51df808ea75fdf71"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -56109,10 +56109,22 @@ let setNotificationsNumber = function (id, number) {
  */
 
 /* harmony default export */ __webpack_exports__["a"] = (function() {
+
+  /**
+   * scroll right to show radio buttons on the category tree
+   */
+  const scrollCategoryTree = function scrollCategoryTree() {
+    let $categoryTreeOverflow = $('.category-tree-overflow');
+    let leftPos = $categoryTreeOverflow.width();
+    $categoryTreeOverflow.animate({scrollLeft: leftPos}, 200);
+  };
+
   const treeAction = (treeState) => {
     if (treeState === 'expand') {
       $('.js-categories-tree ul').show();
       $('.more').toggleClass('less');
+      // scroll right to see the radio buttons
+      scrollCategoryTree();
     } else {
       $('.js-categories-tree ul:not(.category-tree)').hide();
       $('.less').toggleClass('more');
@@ -56124,6 +56136,21 @@ let setNotificationsNumber = function (id, number) {
       treeAction('expand');
     } else {
       treeAction('reduce');
+    }
+  });
+
+  // scroll right to see the radio buttons
+  $('.category-tree-overflow .checkbox').on('click', (e) => {
+    if (!$(e.target).is('input')) {
+        // do not scroll if (un)checking some inputs
+        scrollCategoryTree();
+    }
+  });
+
+  $('.category-tree-overflow .checkbox label').on('click', (e) => {
+    if (!$(e.target).is('input')) {
+        // do not scroll if (un)checking some inputs
+        scrollCategoryTree();
     }
   });
 });

@@ -558,6 +558,34 @@
     }
   }
 
+  .category-tree-overflow {
+    white-space: nowrap;
+    overflow: auto;
+    ul.category-tree {
+      display: inline-block;
+      min-width: 100%;
+      .main-category {
+        font-size: .625rem;
+        font-weight: 600;
+      }
+      label {
+        position: relative;
+        padding-right: 1.5rem;
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 0;
+        .default-category {
+          position: absolute;
+          top: 5px;
+          right: 3px;
+        }
+      }
+      ul {
+        padding-left: 0.75rem;
+      }
+    }
+  }
+
   .categories-tree {
     padding: 0.625rem;
     border: $gray-light 1px solid;
