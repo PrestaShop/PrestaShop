@@ -40,7 +40,7 @@
         data-prompt-text="{l s='Please name this shortcut:' js=1}"
         data-link="{$quick_access_current_link_name|truncate:32}"
       >
-        <i class="material-icons">add_circle_outline</i>
+        <i class="material-icons">add_circle</i>
         {l s='Add current page to QuickAccess'}
       </a>
     {/if}
