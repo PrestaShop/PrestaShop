@@ -45,12 +45,13 @@ class LogsController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
+
+        dump($this->get('prestashop.core.admin.log.repository')->findAll());
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
@@ -68,6 +69,7 @@ class LogsController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
@@ -99,7 +101,7 @@ class LogsController extends FrameworkBundleAdminController
         if ($logsByEmailForm->isSubmitted()) {
             $data = $logsByEmailForm->getData();
 
-            $saveErrors = $this->get('prestashop.adapter.performance.form_handler')->save($data);
+            $saveErrors = $this->get('prestashop.adapter.logs.form_handler')->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -109,6 +111,16 @@ class LogsController extends FrameworkBundleAdminController
 
             $this->flashErrors($saveErrors);
         }
+
+        return $this->redirectToRoute('admin_logs');
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function eraseAllLogsAction()
+    {
+        $this->get('prestashop.core.admin.log.repository')->deleteAll();
 
         return $this->redirectToRoute('admin_logs');
     }
