@@ -380,17 +380,17 @@
 
 {% block form_errors -%}
     {% if errors|length > 0 -%}
-    {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
-    <ul class="list-unstyled">
+    <div class="alert alert-danger">
+        <div class="alert-text">
         {%- for error in errors -%}
-    <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{
-        error.messagePluralization is null
-        ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-        }}
-    </li>
-{%- endfor -%}
-    </ul>
-    {% if form.parent %}</span>{% else %}</div>{% endif %}
+            <p> {{
+                error.messagePluralization is null
+                ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+                }}
+            </p>
+        {%- endfor -%}
+        </div>
+    </div>
     {%- endif %}
 {%- endblock form_errors %}
