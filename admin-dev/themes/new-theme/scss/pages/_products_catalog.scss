@@ -10,15 +10,15 @@
 
     .row {
       align-items: center;
-
-      &#catalog-actions {
-        align-items: start;
-      }
     }
   }
 
   > .content:last-child {
     margin-bottom: 0;
+  }
+
+  #catalog-actions {
+    align-items: start;
   }
 
   .icon-caret {
