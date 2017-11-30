@@ -557,6 +557,11 @@ class SpecificPriceCore extends ObjectModel
         return Configuration::updateValue('PS_SPECIFIC_PRICE_PRIORITIES', rtrim($value, ';'));
     }
 
+    /**
+     * Truncate the specific price priorities
+     * 
+     * @return boolean
+     */
     public static function deletePriorities()
     {
         return Db::getInstance()->execute('
@@ -668,6 +673,13 @@ class SpecificPriceCore extends ObjectModel
         return $ids_product;
     }
 
+    /**
+     * Delete a product from its id
+     * 
+     * @param  int $id_product
+     * 
+     * @return boolean
+     */
     public static function deleteByProductId($id_product)
     {
         if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = '.(int)$id_product)) {
@@ -678,6 +690,13 @@ class SpecificPriceCore extends ObjectModel
         return false;
     }
 
+    /**
+     * Duplicate a product
+     * 
+     * @param  boolean|int $id_product The product ID to duplicate, false when duplicating the current product
+     * 
+     * @return boolean
+     */
     public function duplicate($id_product = false)
     {
         if ($id_product) {
@@ -702,6 +721,23 @@ class SpecificPriceCore extends ObjectModel
         return $feature_active;
     }
 
+    /**
+     * Check if a specific price exists based on given parameters and return the specific rule id.
+     * 
+     * @param  int  $id_product
+     * @param  int  $id_product_attribute Set at 0 when the specific price was set for all attributes
+     * @param  int  $id_shop              Set at 0 when the specific price was set for all shops
+     * @param  int  $id_group             Set at 0 when the specific price was set for all groups
+     * @param  int  $id_country           Set at 0 when the specific price was set for all countries
+     * @param  int  $id_currency          Set at 0 when the specific price was set for all currencies
+     * @param  int  $id_customer          Set at 0 when the specific price was set for all customers
+     * @param  int  $from_quantity        The starting quantity for which the specific price is applied
+     * @param  string $from               Date from which the specific price start. 0000-00-00 00:00:00 if no starting date
+     * @param  string $to                 Date from which the specific price end. 0000-00-00 00:00:00 if no ending date
+     * @param  boolean $rule              If a specific price rule (from specific_price_rule) was set or not.
+     * 
+     * @return int                        The specific rule id, 0 if no corresponding rule found
+     */
     public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
     {
         $rule = ' AND `id_specific_price_rule`'.(!$rule ? '=0' : '!=0');
