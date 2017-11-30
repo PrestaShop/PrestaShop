@@ -1,6 +1,9 @@
 parameters: ~
 
 services:
+    _defaults:
+        public: true
+
     prestashop.adapter.hosting_information:
             class: 'PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation'
 
