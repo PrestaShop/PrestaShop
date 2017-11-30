@@ -98,37 +98,34 @@
         >
           {% set buttons_action = [
           {
-          "onclick": "bulkProductAction(this, 'activate_all');",
-          "icon": "radio_button_checked",
-          "label": "Activate selection"|trans({}, 'Admin.Actions')
-          },
-          {
-          "onclick": "bulkProductAction(this, 'deactivate_all');",
-          "icon": "radio_button_unchecked",
-          "label": "Deactivate selection"|trans({}, 'Admin.Actions')
+            "onclick": "bulkProductAction(this, 'activate_all');",
+            "icon": "radio_button_checked",
+            "label": "Activate selection"|trans({}, 'Admin.Actions')
+          }, {
+            "onclick": "bulkProductAction(this, 'deactivate_all');",
+            "icon": "radio_button_unchecked",
+            "label": "Deactivate selection"|trans({}, 'Admin.Actions')
           }
           ] %}
 
           {% set buttons_action = buttons_action|merge([
           {
-          "divider": true
-          },
-          {
-          "onclick": "bulkProductAction(this, 'duplicate_all');",
-          "icon": "content_copy",
-          "label": "Duplicate selection"|trans({}, 'Admin.Actions')
+            "divider": true
+          }, {
+            "onclick": "bulkProductAction(this, 'duplicate_all');",
+            "icon": "content_copy",
+            "label": "Duplicate selection"|trans({}, 'Admin.Actions')
           }
           ]) %}
 
 
           {% set buttons_action = buttons_action|merge([
           {
-          "divider": true
-          },
-          {
-          "onclick": "bulkProductAction(this, 'delete_all');",
-          "icon": "delete",
-          "label": "Delete selection"|trans({}, 'Admin.Actions')
+            "divider": true
+          }, {
+            "onclick": "bulkProductAction(this, 'delete_all');",
+            "icon": "delete",
+            "label": "Delete selection"|trans({}, 'Admin.Actions')
           }
           ]) %}
 
