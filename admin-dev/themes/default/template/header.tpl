@@ -181,7 +181,7 @@
 										async: false,
 										url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
 										data: {
-											"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
+											"url": "{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}",
 											"name": name,
 											"icon": "{$quick_access_current_link_icon}"
 										},
