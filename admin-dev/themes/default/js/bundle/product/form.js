@@ -67,7 +67,8 @@ $(document).ready(function() {
   /** Attach date picker */
   $('.datepicker').datetimepicker({
     locale: iso_user,
-    format: 'YYYY-MM-DD'
+    format: 'YYYY-MM-DD HH:mm:ss',
+    sideBySide: true
   });
 
   /** tooltips should be hidden when we move to another tab */
