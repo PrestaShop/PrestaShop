@@ -1,4 +1,4 @@
-/**
+/*
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,31 +21,27 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
+ *
  */
 
-// Plugins CSS
+/**
+ * By default, bootstrap dropdowns close down when the user clicks anywhere.
+ * This plugin allows clicking inside the dropdown menu while keeping it open.
+ * In order to make a dropdown behave like this, simply add the class "dropdown-clickable" to its parent element.
+ */
+(($) => {
 
-import 'dropzone/dist/min/dropzone.min.css';
+  $.fn.clickableDropdown = function clickableDropdown() {
 
-import 'magnific-popup/dist/magnific-popup.css';
+    $(document).on('click', '.dropdown-clickable .dropdown-menu', (e) => {
+      e.stopPropagation();
+    });
 
-// Theme SCSS
+    return this;
+  };
 
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-Dropzone.autoDiscover = false;
-
-import NavBar from './nav_bar.js';
-
-// this needs to be ported into the UI kit
-import './clickable-dropdown';
-
-import './product-page/index';
-import './translation-page/index';
-
-import Header from './header.js';
-
-new NavBar();
-new Header();
+  // hook up the plugin
+  $(function initClickableDropdown() {
+    $(document).clickableDropdown();
+  });
+})(window.$);

@@ -142,16 +142,17 @@
             'items': buttons_action
           }%}
         </div>
-        <div id="product_catalog_category_tree_filter" class="col-md-3">
+        <div id="product_catalog_category_tree_filter" class="col-md-3 dropdown dropdown-clickable">
           <button
-            class="btn btn-outline-secondary"
-            data-toggle="collapse"
-            data-target="#tree-categories"
+            class="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
           >
-          {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
-          <i class="material-icons">expand_more</i>
+            {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
           </button>
-          <div id="tree-categories" class="collapse pt-1">
+          <div id="tree-categories" class="dropdown-menu">
             <a
               class="categories-tree-actions"
               href="#"
