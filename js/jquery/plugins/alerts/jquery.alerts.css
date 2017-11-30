@@ -45,6 +45,8 @@
 
 #popup_message {
 	padding-left: 48px;
+	max-height: 350px;
+	overflow: auto;
 }
 
 #popup_panel {
