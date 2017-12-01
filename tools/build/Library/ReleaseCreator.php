@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -18,30 +18,73 @@
  * versions in the future. If you wish to customize PrestaShop for your
  * needs please refer to http://www.prestashop.com for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2016 PrestaShop SA
- *  @version  Release: $Revision: 6844 $
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * This class is used to create a release of PrestaShop,
+ * see ReleaseCreator::createRelease() function.
  */
 class ReleaseCreator
 {
-    /** @var string */
+    /**
+     * Path where the releases will be stored.
+     *
+     * @var string
+     */
     const RELEASES_DIR_RELATIVE_PATH = 'tools/build/releases';
 
-    /** @var string */
+    /**
+     * Name of the release's zip.
+     *
+     * @var string
+     */
     const INSTALLER_ZIP_FILENAME = 'prestashop.zip';
 
-    /** @var string */
+    /**
+     * Directory's name of the prestashop release in creation.
+     * Deleted at the end.
+     *
+     * @var string
+     */
     const PRESTASHOP_TMP_DIR = 'prestashop';
 
-    /** @var array */
+    /**
+     * Use to write on terminal.
+     *
+     * @var ConsoleWriter
+     */
+    protected $consoleWriter;
+
+    /**
+     * Line separator used for all messages.
+     *
+     * @var string
+     */
+    protected $lineSeparator = PHP_EOL;
+
+    /**
+     * Files to remove.
+     *
+     * @var array
+     */
     protected $filesRemoveList = ['.DS_Store', '.gitignore', '.gitmodules', '.travis.yml'];
 
-    /** @var array */
+    /**
+     * Folders to remove.
+     *
+     * @var array
+     */
     protected $foldersRemoveList = [];
 
-    /** @var array */
+    /**
+     * Pattern of files or directories to remove.
+     *
+     * @var array
+     */
     protected $patternsRemoveList = [
         'tests$',
         'tools/contrib$',
@@ -86,31 +129,66 @@ class ReleaseCreator
         '.*node_modules.*',
     ];
 
-    /** @var array */
+    /**
+     * Contains all files and directories of the PrestaShop release.
+     *
+     * @var array
+     */
     protected $filesList = [];
 
-    /** @var string */
+    /**
+     * Absolute path of the temp PrestaShop release.
+     *
+     * @var string
+     */
     protected $tempProjectPath;
 
-    /** @var string */
+    /**
+     * Absolute path of the current user's PrestaShop (root path).
+     *
+     * @var string
+     */
     protected $projectPath;
 
-    /** @var string */
+    /**
+     * Release version which user wants.
+     *
+     * @var string
+     */
     protected $version;
 
-    /** @var bool */
+    /**
+     * Do we include the installer?
+     * Do not work with $useZip = false.
+     *
+     * @var bool
+     */
     protected $useInstaller;
 
-    /** @var bool */
+    /**
+     * Do we zip the release?
+     *
+     * @var bool
+     */
     protected $useZip;
 
-    /** @var string */
+    /**
+     * Consisting of prestashop_ and the version. e.g prestashop_1.7.3.4.zip
+     *
+     * @var string
+     */
     protected $zipFileName;
 
-    /** @var string */
+    /**
+     * Where the release will be moved when done.
+     *
+     * @var string
+     */
     protected $destinationDir;
 
     /**
+     * Set the release wanted version, and some options.
+     *
      * @param string $version
      * @param bool $useInstaller
      * @param bool $useZip
@@ -118,10 +196,14 @@ class ReleaseCreator
      */
     public function __construct($version, $useInstaller = true, $useZip = true, $destinationDir = '')
     {
+        $this->consoleWriter = new ConsoleWriter();
         $tmpDir = sys_get_temp_dir();
         $prestashopTmpDir = self::PRESTASHOP_TMP_DIR;
         $this->tempProjectPath = "{$tmpDir}/$prestashopTmpDir";
-        echo "\e[32m--- Temp dir used will be '{$tmpDir}' \e[m\n";
+        $this->consoleWriter->displayText(
+            "--- Temp dir used will be '{$tmpDir}'{$this->lineSeparator}",
+            ConsoleWriter::COLOR_GREEN
+        );
         $this->projectPath = realpath(__DIR__ . '/../../..');
         $this->version = $version;
         $this->zipFileName = "prestashop_$this->version.zip";
@@ -132,68 +214,93 @@ class ReleaseCreator
             $destinationDir = "{$this->projectPath}/$releasesDir/$reference";
         }
         $this->destinationDir = $destinationDir;
-
-        if (!file_exists($this->destinationDir)) {
-            if (!mkdir($this->destinationDir, 0777, true)) {
-                echo "\e[31mERROR: can not create directory '{$this->destinationDir}'\e[0m\n";
-
-                exit(1);
-            }
-        }
         $absoluteDestinationPath = realpath($this->destinationDir);
-        echo "\e[32m--- Destination dir used will be '{$absoluteDestinationPath}' \e[m\n";
+        $this->consoleWriter->displayText(
+            "--- Destination dir used will be '{$absoluteDestinationPath}'{$this->lineSeparator}",
+            ConsoleWriter::COLOR_GREEN
+        );
         $this->useZip = $useZip;
         $this->useInstaller = $useInstaller;
 
         if ($this->useZip && $this->useInstaller) {
-            echo "\e[32m--- Release will have the installer and will be zipped.\e[m\n";
+            $this->consoleWriter->displayText(
+                "--- Release will have the installer and will be zipped.{$this->lineSeparator}",
+                ConsoleWriter::COLOR_GREEN
+            );
         } else if ($this->useZip) {
-            echo "\e[32m--- Release will be zipped.\e[m\n";
+            $this->consoleWriter->displayText(
+                "--- Release will be zipped.{$this->lineSeparator}",
+                ConsoleWriter::COLOR_GREEN
+            );
         } else if ($this->useInstaller) {
-            echo "\e[32m--- Release will have the installer.\e[m\n";
+            $this->consoleWriter->displayText(
+                "--- Release will have the installer.{$this->lineSeparator}",
+                ConsoleWriter::COLOR_GREEN
+            );
         }
     }
 
     /**
+     * Create a new release.
+     *
      * @return $this
+     * @throws BuildException
      */
     public function createRelease()
     {
+        if (!file_exists($this->destinationDir) && !mkdir($this->destinationDir, 0777, true)) {
+            throw new BuildException("ERROR: can not create directory '{$this->destinationDir}'");
+        }
         $startTime = date('H:i:s');
-        echo "\e[32m--- Script started at {$startTime} \e[m\n\n";
+        $this->consoleWriter->displayText(
+            "--- Script started at {$startTime}{$this->lineSeparator}{$this->lineSeparator}",
+            ConsoleWriter::COLOR_GREEN
+        );
         $this->setFilesConstants()
             ->generateLicensesFile()
             ->runComposerInstall()
             ->createPackage();
         $endTime = date('H:i:s');
-        echo "\n\e[32m--- Script ended at {$endTime} \e[m\n";
+        $this->consoleWriter->displayText(
+            "{$this->lineSeparator}--- Script ended at {$endTime}{$this->lineSeparator}",
+            ConsoleWriter::COLOR_GREEN
+        );
 
         if ($this->useZip) {
-            $releaseSize = exec("du -hs {$this->destinationDir}/{$this->zipFileName} | cut -f1");
+            $argReleaseZipFilePath = escapeshellarg("{$this->destinationDir}/{$this->zipFileName}");
+            $releaseSize = exec("du -hs {$argReleaseZipFilePath} | cut -f1");
         } else {
-            $releaseSize = exec("du -hs {$this->destinationDir} | cut -f1");
+            $argReleaseDirectoryPath = escapeshellarg("{$this->destinationDir}");
+            $releaseSize = exec("du -hs {$argReleaseDirectoryPath} | cut -f1");
         }
-        echo "\n\e[32m--- Release size: $releaseSize \e[m\n";
+        $this->consoleWriter->displayText(
+            "--- Release size: {$releaseSize}{$this->lineSeparator}",
+            ConsoleWriter::COLOR_GREEN
+        );
 
         return $this;
     }
 
     /**
-     * @return self
+     * Define all constants of the project to the desired version.
+     *
+     * @return $this
      */
     protected function setFilesConstants()
     {
-        echo "\e[33mSetting files constants...\e[m";
+        $this->consoleWriter->displayText("Setting files constants...", ConsoleWriter::COLOR_YELLOW);
         $this->setConfigDefinesConstants()
             ->setConfigAutoloadConstants()
             ->setInstallDevConfigurationConstants()
             ->setInstallDevInstallVersionConstants();
-        echo "\e[32m DONE\e[m\n";
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
+     * Define all config/defines.inc.php constants to the desired version.
+     *
      * @return $this
      * @throws BuildException
      */
@@ -212,6 +319,8 @@ class ReleaseCreator
     }
 
     /**
+     * Define all config/autoload.php constants to the desired version.
+     *
      * @return $this
      * @throws BuildException
      */
@@ -229,6 +338,8 @@ class ReleaseCreator
     }
 
     /**
+     * Define all install-dev/data/xml/configuration.xml constants to the desired version.
+     *
      * @return $this
      * @throws BuildException
      */
@@ -250,6 +361,8 @@ class ReleaseCreator
     }
 
     /**
+     * Define all install-dev/install_version.php constants to the desired version.
+     *
      * @return $this
      * @throws BuildException
      */
@@ -267,12 +380,15 @@ class ReleaseCreator
     }
 
     /**
+     * Generate the /LICENCES file. Concatenate all text files which contains the 'licence' word
+     * in their filename into this unique one.
+     *
      * @return $this
      * @throws BuildException
      */
     protected function generateLicensesFile()
     {
-        echo "\e[33mGenerating licences file...\e[m";
+        $this->consoleWriter->displayText("Generating licences file...", ConsoleWriter::COLOR_YELLOW);
         $content = null;
         $directory = new \RecursiveDirectoryIterator($this->projectPath);
         $iterator = new \RecursiveIteratorIterator($directory);
@@ -285,30 +401,35 @@ class ReleaseCreator
         if (!file_put_contents($this->projectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
         }
-        echo "\e[32m DONE\e[m\n";
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
+     * Install all dependencies.
+     *
      * @return $this
      * @throws BuildException
      */
     protected function runComposerInstall()
     {
-        echo "\e[33mRunning composer install...\e[m";
-        $command = "cd $this->projectPath && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
+        $this->consoleWriter->displayText("Running composer install...", ConsoleWriter::COLOR_YELLOW);
+        $argProjectPath = escapeshellarg($this->projectPath);
+        $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
         if ($returnCode != 0) {
             throw new BuildException('Unable to run composer install.');
         }
-        echo "\e[32m DONE\e[m\n";
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
+     * Create some required folders and rename a few.
+     *
      * @return $this
      * @throws BuildException
      */
@@ -336,32 +457,40 @@ class ReleaseCreator
     }
 
     /**
-     * @return self
+     * Clean project with unwanted files and folders, generate a checksum xml file,
+     * zip the directory and move it to the final destination.
+     *
+     * @return $this
      */
     protected function createPackage()
     {
-        echo "\e[33mCreating package...\e[m\n";
+        $this->consoleWriter->displayText("Creating package...{$this->lineSeparator}", ConsoleWriter::COLOR_YELLOW);
         $this->cleanTmpProject();
         $this->generateXMLChecksum();
         $this->createZipArchive();
         $this->movePackage();
-        echo "\e[32mPackage successfully created...\e[m\n";
+        $this->consoleWriter->displayText("Package successfully created...{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
+     * Create a copy of PrestaShop in a tmp location and
+     * remove unwanted files and folders.
+     *
      * @return $this
      */
     protected function cleanTmpProject()
     {
-        echo "\e[33m--- Cleaning project...\e[m";
+        $this->consoleWriter->displayText("--- Cleaning project...", ConsoleWriter::COLOR_YELLOW);
         $destination = $this->tempProjectPath;
+        $argDestination = escapeshellarg($destination);
 
         if (file_exists($destination)) {
-            exec("rm -rf $destination");
+            exec("rm -rf $argDestination");
         }
-        exec("cp -r {$this->projectPath} $destination");
+        $argProjectPath = escapeshellarg($this->projectPath);
+        exec("cp -r $argProjectPath $argDestination");
         $this->createAndRenameFolders();
         $this->filesList = $this->getDirectoryStructure($destination);
         $this->removeUnnecessaryFiles(
@@ -371,12 +500,14 @@ class ReleaseCreator
             $this->patternsRemoveList,
             $this->tempProjectPath
         );
-        echo "\e[32m DONE\e[m\n";
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
+     * Return the directory structure of a given path as an array.
+     *
      * @param string $path
      * @return array
      */
@@ -407,12 +538,14 @@ class ReleaseCreator
     }
 
     /**
+     * Delete unwanted files and folders in the PrestaShop tmp directory.
+     *
      * @param array $filesList
      * @param array $filesRemoveList
      * @param array $foldersRemoveList
      * @param array $patternsRemoveList
      * @param string $folder
-     * @return self
+     * @return $this
      * @throws BuildException
      */
     protected function removeUnnecessaryFiles(
@@ -434,11 +567,13 @@ class ReleaseCreator
             }
 
             if (is_numeric($key)) {
+                $argValue = escapeshellarg($value);
+
                 // Remove files.
                 foreach ($filesRemoveList as $file_to_remove) {
                     if ($folder.'/'.$file_to_remove == $value) {
                         unset($filesList[$key]);
-                        exec("rm -f $value");
+                        exec("rm -f {$argValue}");
                         continue 2;
                     }
                 }
@@ -447,7 +582,7 @@ class ReleaseCreator
                 foreach ($foldersRemoveList as $folder_to_remove) {
                     if ($folder.'/'.$folder_to_remove == $value) {
                         unset($filesList[$key]);
-                        exec("rm -rf $value");
+                        exec("rm -rf {$argValue}");
                         continue 2;
                     }
                 }
@@ -456,16 +591,18 @@ class ReleaseCreator
                 foreach ($patternsRemoveList as $pattern_to_remove) {
                     if (preg_match('#'.$pattern_to_remove.'#', $value) == 1) {
                         unset($filesList[$key]);
-                        exec("rm -rf $value");
+                        exec("rm -rf {$argValue}");
                         continue 2;
                     }
                 }
             } else {
+                $argKey = escapeshellarg($key);
+
                 // Remove folders.
                 foreach ($foldersRemoveList as $folder_to_remove) {
                     if ($folder.'/'.$folder_to_remove == $key) {
                         unset($filesList[$key]);
-                        exec("rm -rf $key");
+                        exec("rm -rf {$argKey}");
                         continue 2;
                     }
                 }
@@ -474,7 +611,7 @@ class ReleaseCreator
                 foreach ($patternsRemoveList as $pattern_to_remove) {
                     if (preg_match('#'.$pattern_to_remove.'#', $key) == 1) {
                         unset($filesList[$key]);
-                        exec("rm -rf $key");
+                        exec("rm -rf {$argKey}");
                         continue 2;
                     }
                 }
@@ -486,85 +623,99 @@ class ReleaseCreator
     }
 
     /**
-     * @return self
+     * Zip the release if needed.
+     *
+     * @return $this
      */
     protected function createZipArchive()
     {
         if (!$this->useZip) {
             return $this;
         }
-        echo "\e[33m--- Creating zip archive...\e[m";
+        $this->consoleWriter->displayText("--- Creating zip archive...", ConsoleWriter::COLOR_YELLOW);
         $installerZipFilename = self::INSTALLER_ZIP_FILENAME;
-        $cmd = "cd {$this->tempProjectPath} \
-            && zip -rq {$installerZipFilename} . \
+        $argTempProjectPath = escapeshellarg($this->tempProjectPath);
+        $argInstallerZipFilename = escapeshellarg($installerZipFilename);
+        $argProjectPath = escapeshellarg($this->projectPath);
+        $cmd = "cd {$argTempProjectPath} \
+            && zip -rq {$argInstallerZipFilename} . \
             && cd -";
         exec($cmd);
 
         if ($this->useInstaller) {
-            exec("cd {$this->projectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
+            exec("cd {$argProjectPath}/tools/build/Library/InstallUnpacker && php compile.php && cd -");
             $zip = new ZipArchive();
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);
             $zip->addFile("{$this->projectPath}/tools/build/Library/InstallUnpacker/index.php", 'index.php');
             $zip->close();
-            exec("rm {$this->projectPath}/tools/build/Library/InstallUnpacker/index.php");
+            exec("rm {$argProjectPath}/tools/build/Library/InstallUnpacker/index.php");
         } else {
             rename(
                 "{$this->tempProjectPath}/$installerZipFilename",
                 "{$this->tempProjectPath}/{$this->zipFileName}"
             );
         }
-        echo "\e[32m DONE\e[m\n";
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
-     * @return self
+     * Move the final release to the desired location.
+     *
+     * @return $this
      */
     protected function movePackage()
     {
-        echo "\e[33m--- Move package...\e[m";
+        $this->consoleWriter->displayText("--- Move package...", ConsoleWriter::COLOR_YELLOW);
+        $argTempProjectPath = escapeshellarg($this->tempProjectPath);
+
         if ($this->useZip) {
             rename(
                 "{$this->tempProjectPath}/{$this->zipFileName}",
                 "{$this->destinationDir}/prestashop_$this->version.zip"
             );
         } else {
-            exec("mv $this->tempProjectPath $this->destinationDir");
+            $argDestinationDir = escapeshellarg($this->destinationDir);
+            exec("mv {$argTempProjectPath} {$argDestinationDir}");
         }
         rename(
             "/tmp/prestashop_$this->version.xml",
             "{$this->destinationDir}/prestashop_$this->version.xml"
         );
-        exec("rm -rf {$this->tempProjectPath}");
-        echo "\e[32m DONE\e[m\n";
+        exec("rm -rf {$argTempProjectPath}");
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
     }
 
     /**
-     * @return self
+     * Create a XML file with the checksum of all the PrestaShop release files.
+     *
+     * @return $this
      * @throws BuildException
      */
     protected function generateXMLChecksum()
     {
-        echo "\e[33m--- Generating XML checksum...\e[m";
+        $this->consoleWriter->displayText("--- Generating XML checksum...", ConsoleWriter::COLOR_YELLOW);
         $xmlPath = "/tmp/prestashop_$this->version.xml";
-        $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>".PHP_EOL;
-        $content .= "<checksum_list>".PHP_EOL;
-        $content .= "\t<ps_root_dir version=\"$this->version\">".PHP_EOL;
-        $content .= $this->generateXMLDirectoryChecksum($this->filesList);
-        $content .= "\t".'</ps_root_dir>'.PHP_EOL;
-        $content .= '</checksum_list>'.PHP_EOL;
+        $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>{$this->lineSeparator}"
+            . "<checksum_list>{$this->lineSeparator}"
+            . "\t<ps_root_dir version=\"$this->version\">{$this->lineSeparator}"
+            . $this->generateXMLDirectoryChecksum($this->filesList)
+            . "\t</ps_root_dir>{$this->lineSeparator}"
+            . "</checksum_list>{$this->lineSeparator}";
 
         if (!file_put_contents($xmlPath, $content)) {
             throw new BuildException('Unable to generate XML checksum.');
         }
-        echo "\e[32m DONE\e[m\n";
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
 
     /**
+     * Return the checksum of the files and folders given as parameter.
+     *
      * @param array $files
      * @return string
      */

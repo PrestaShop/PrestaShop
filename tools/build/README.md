@@ -8,9 +8,9 @@ php tools/build/CreateRelease.php --version="1.7.2.4"
 
 Available options:
 * --version: Desired release version of PrestaShop. Required.
-* --no-installer: Do not put the installer in the release. Interesting if release will be upload remotly by FTP or for public release. Default: false.
+* --no-installer: Do not put the installer in the release. Default: false.
 * --no-zip: Do not zip the release directory. Default: false.
-* --destination-dir: Path where the release will be store. Default: tools/build/releases/prestashop_{version}.
+* --destination-dir: Path where the release will be stored. Default: tools/build/releases/prestashop_{version}.
 * --help: Show help.
 
 This will:
@@ -21,5 +21,3 @@ This will:
 * Zip release if no --no-zip arg
 * Add the installer if no --no-installer arg
 * Move the generated release to {project_root}/tools/build/releases or another directory if --destination-dir arg provided
-
-[More information on release creation](http://doc.prestashop.com/display/PSRD/Release)
