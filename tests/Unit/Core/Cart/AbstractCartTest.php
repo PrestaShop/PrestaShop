@@ -156,6 +156,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
                 $product->out_of_stock = 0;
                 $product->quantity     = 0;
             }
+            if (!empty($productFixture['taxRuleGroupId'])) {
+                $product->id_tax_rules_group = $productFixture['taxRuleGroupId'];
+            }
             $product->add();
             if (!empty($productFixture['outOfStock'])) {
                 StockAvailable::setProductOutOfStock((int) $product->id, 0);
