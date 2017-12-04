@@ -535,26 +535,6 @@
     }
   }
 
-  #categories {
-    // probably needs to be updated in PrestaKit
-    .pstaggerTag {
-      font-size: .75rem;
-      padding: .3rem 0.15rem .3rem .4rem;
-
-      .pstaggerClosingCross {
-        font-size: 0;
-        margin: 0 .3rem;
-        &::after {
-          @extend .material-icons;
-          content: "\E5CD";
-          font-size: 1rem;
-          vertical-align: bottom;
-          line-height: .85rem;
-        }
-      }
-    }
-  }
-
   #add-categories {
     margin-top: 2.5rem;
   }
@@ -574,6 +554,34 @@
       &:-ms-input-placeholder,
       &:-moz-placeholder {
         font-size: 0.75rem;
+      }
+    }
+  }
+
+  .category-tree-overflow {
+    white-space: nowrap;
+    overflow: auto;
+    ul.category-tree {
+      display: inline-block;
+      min-width: 100%;
+      .main-category {
+        font-size: .625rem;
+        font-weight: 600;
+      }
+      label {
+        position: relative;
+        padding-right: 1.5rem;
+        max-width: 100%;
+        width: 100%;
+        margin-bottom: 0;
+        .default-category {
+          position: absolute;
+          top: 5px;
+          right: 3px;
+        }
+      }
+      ul {
+        padding-left: 0.75rem;
       }
     }
   }
@@ -893,15 +901,11 @@
 }
 
 .table {
-  &.table-no-bordered {
-    tbody,
-    th,
-    thead {
-      border: 0;
+  th {
+    padding: {
+      top: 0.625rem;
+      bottom: 0.625rem;
     }
-  }
-  th{
-    padding: 1.25rem 0.625rem;
   }
   td {
     vertical-align: middle;

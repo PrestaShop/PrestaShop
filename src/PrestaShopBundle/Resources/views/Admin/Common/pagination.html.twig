@@ -31,7 +31,7 @@
       <a class="page-link" aria-label="Previous" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}><span class="sr-only">Previous</span></a>
     </li>
     <li class="page-item active">
-      <input name="paginator_jump_page" class="page-link" type="text" value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
+      <input name="paginator_jump_page" class="jump-to-page" type="text" value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
     </li>
     <li class="page-item next {% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
       <a class="page-link" aria-label="Next" id="pagination_next_url" {% if next_url is defined and next_url != false %}href="{{ next_url }}"{% else %}nohref{% endif %}><span class="sr-only">Next</span></a>

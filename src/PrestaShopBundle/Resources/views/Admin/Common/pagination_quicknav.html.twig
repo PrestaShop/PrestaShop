@@ -32,7 +32,7 @@
             <a class="page-link" {% if previous_url %}href="{{ previous_url }}"{% else %}nohref{% endif %}>&lt;</a>
         </li>
         <li class="page-item active" style="float: left;">
-            <input name="paginator_jump_page" class="page-link" type="text" style="width: 4em;"
+            <input name="paginator_jump_page" class="jump-to-page" type="text" style="width: 4em;"
                    value="{{ current_page }}" psurl="{{ jump_page_url }}" psmax="{{ page_count }}" pslimit="{{ limit }}" />
         </li>
         <li class="page-item {% if next_url is defined and next_url != false %}{% else %}disabled{% endif %}">
