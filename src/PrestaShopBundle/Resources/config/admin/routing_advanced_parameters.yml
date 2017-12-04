@@ -3,14 +3,14 @@ admin_system_information:
     path: system_information
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle\Controller\Admin\AdvancedParameters\SystemInformationController::indexAction'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:index'
         _legacy_controller: AdminInformation
 
 admin_system_information_check_files:
     path: system_information/files
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle\Controller\Admin\AdvancedParameters\SystemInformationController::displayCheckFilesAction'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SystemInformation:displayCheckFiles'
         _legacy_controller: AdminInformation
     condition: "request.isXmlHttpRequest()"
 
@@ -19,28 +19,28 @@ admin_performance:
     path: performance
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Performance:index'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Performance:index'
         _legacy_controller: AdminPerformance
 
 admin_performance_save:
     path: performance
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Performance:processForm'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Performance:processForm'
         _legacy_controller: AdminPerformance
 
 admin_clear_cache:
     path: clear_cache
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Performance:clearCache'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Performance:clearCache'
         _legacy_controller: AdminPerformance
 
 admin_servers:
     path: memcache/servers
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\MemcacheServer:list'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\MemcacheServer:list'
         _legacy_controller: AdminPerformance
     condition: 'request.isXmlHttpRequest()'
 
@@ -48,7 +48,7 @@ admin_servers_add:
     path: memcache/servers
     methods: [POST]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\MemcacheServer:add'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\MemcacheServer:add'
         _legacy_controller: AdminPerformance
     condition: 'request.isXmlHttpRequest()'
 
@@ -56,7 +56,7 @@ admin_servers_delete:
     path: memcache/servers
     methods: [DELETE]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\MemcacheServer:delete'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\MemcacheServer:delete'
         _legacy_controller: AdminPerformance
     condition: 'request.isXmlHttpRequest()'
 
@@ -64,7 +64,7 @@ admin_servers_test:
     path: memcache/servers/test
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle:Admin\AdvancedParameters\MemcacheServer:test'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\MemcacheServer:test'
         _legacy_controller: AdminPerformance
     condition: 'request.isXmlHttpRequest()'
 
