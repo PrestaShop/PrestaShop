@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.0.19",
+            "version": "v1.0.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "edc0ef1bf7b9f84f91fbd1f27560395ce70a3092"
+                "reference": "f592c495f1c43851f5e3418cf9c2514e61d67e64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/edc0ef1bf7b9f84f91fbd1f27560395ce70a3092",
-                "reference": "edc0ef1bf7b9f84f91fbd1f27560395ce70a3092",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/f592c495f1c43851f5e3418cf9c2514e61d67e64",
+                "reference": "f592c495f1c43851f5e3418cf9c2514e61d67e64",
                 "shasum": ""
             },
             "require": {
@@ -66,7 +66,7 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2017-10-02T17:29:15+00:00"
+            "time": "2017-12-01T10:02:05+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -2078,16 +2078,16 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.26",
+            "version": "2.8.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297"
+                "reference": "fd3aa7a352608cbb2d899a61e35530bd1c9004bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297",
-                "reference": "a0ed86c9d7c04ae27fa6418b55e3beb04dfe3297",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/fd3aa7a352608cbb2d899a61e35530bd1c9004bc",
+                "reference": "fd3aa7a352608cbb2d899a61e35530bd1c9004bc",
                 "shasum": ""
             },
             "require": {
@@ -2126,7 +2126,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2017-08-29T18:23:54+00:00"
+            "time": "2017-12-03T15:42:01+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2649,7 +2649,7 @@
             ],
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
-            "time": "2017-06-29 07:28:29"
+            "time": "2017-06-29T07:28:29+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -2681,7 +2681,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2017-06-23 09:48:19"
+            "time": "2017-06-23T09:48:19+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -2713,7 +2713,7 @@
             ],
             "description": "PrestaShop module dashactivity",
             "homepage": "https://github.com/PrestaShop/dashactivity",
-            "time": "2017-02-01 16:31:16"
+            "time": "2017-02-01T16:31:16+00:00"
         },
         {
             "name": "prestashop/dashgoals",
@@ -2745,7 +2745,7 @@
             ],
             "description": "PrestaShop module dashgoals",
             "homepage": "https://github.com/PrestaShop/dashgoals",
-            "time": "2017-02-01 16:31:33"
+            "time": "2017-02-01T16:31:33+00:00"
         },
         {
             "name": "prestashop/dashproducts",
@@ -2777,7 +2777,7 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
-            "time": "2017-02-20 15:04:07"
+            "time": "2017-02-20T15:04:07+00:00"
         },
         {
             "name": "prestashop/dashtrends",
@@ -2809,7 +2809,7 @@
             ],
             "description": "PrestaShop module dashtrends",
             "homepage": "https://github.com/PrestaShop/dashtrends",
-            "time": "2017-02-20 10:23:54"
+            "time": "2017-02-20T10:23:54+00:00"
         },
         {
             "name": "prestashop/decimal",
@@ -2889,7 +2889,7 @@
             ],
             "description": "PrestaShop module graphnvd3",
             "homepage": "https://github.com/PrestaShop/graphnvd3",
-            "time": "2017-02-22 11:02:31"
+            "time": "2017-02-22T11:02:31+00:00"
         },
         {
             "name": "prestashop/gridhtml",
@@ -2921,7 +2921,7 @@
             ],
             "description": "PrestaShop module gridhtml",
             "homepage": "https://github.com/PrestaShop/gridhtml",
-            "time": "2017-02-22 11:03:13"
+            "time": "2017-02-22T11:03:13+00:00"
         },
         {
             "name": "prestashop/pagesnotfound",
@@ -2953,7 +2953,7 @@
             ],
             "description": "PrestaShop module pagesnotfound",
             "homepage": "https://github.com/PrestaShop/pagesnotfound",
-            "time": "2017-02-20 11:14:52"
+            "time": "2017-02-20T11:14:52+00:00"
         },
         {
             "name": "prestashop/ps_banner",
@@ -2985,7 +2985,7 @@
             ],
             "description": "PrestaShop module ps_banner",
             "homepage": "https://github.com/PrestaShop/ps_banner",
-            "time": "2017-05-09 09:57:07"
+            "time": "2017-05-09T09:57:07+00:00"
         },
         {
             "name": "prestashop/ps_categorytree",
@@ -3017,7 +3017,7 @@
             ],
             "description": "PrestaShop category tree links",
             "homepage": "https://github.com/PrestaShop/ps_categorytree",
-            "time": "2017-02-01 09:28:43"
+            "time": "2017-02-01T09:28:43+00:00"
         },
         {
             "name": "prestashop/ps_checkpayment",
@@ -3049,7 +3049,7 @@
             ],
             "description": "PrestaShop module ps_checkpayment",
             "homepage": "https://github.com/PrestaShop/ps_checkpayment",
-            "time": "2017-02-22 08:00:01"
+            "time": "2017-02-22T08:00:01+00:00"
         },
         {
             "name": "prestashop/ps_contactinfo",
@@ -3081,7 +3081,7 @@
             ],
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
-            "time": "2017-07-06 13:55:59"
+            "time": "2017-07-06T13:55:59+00:00"
         },
         {
             "name": "prestashop/ps_currencyselector",
@@ -3113,7 +3113,7 @@
             ],
             "description": "PrestaShop module ps_currencyselector",
             "homepage": "https://github.com/PrestaShop/ps_currencyselector",
-            "time": "2017-02-01 09:31:53"
+            "time": "2017-02-01T09:31:53+00:00"
         },
         {
             "name": "prestashop/ps_customeraccountlinks",
@@ -3177,7 +3177,7 @@
             ],
             "description": "PrestaShop - Customer 'Sign in' link",
             "homepage": "https://github.com/PrestaShop/ps_customersignin",
-            "time": "2017-02-01 16:40:08"
+            "time": "2017-02-01T16:40:08+00:00"
         },
         {
             "name": "prestashop/ps_customtext",
@@ -3241,7 +3241,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2017-02-01 13:09:58"
+            "time": "2017-02-01T13:09:58+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
@@ -3276,7 +3276,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2017-02-01 13:18:25"
+            "time": "2017-02-01T13:18:25+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3308,7 +3308,7 @@
             ],
             "description": "PrestaShop - Featured products",
             "homepage": "https://github.com/PrestaShop/ps_featuredproducts",
-            "time": "2017-02-01 13:20:33"
+            "time": "2017-02-01T13:20:33+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
@@ -3340,7 +3340,7 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
-            "time": "2017-05-09 09:57:15"
+            "time": "2017-05-09T09:57:15+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -3372,7 +3372,7 @@
             ],
             "description": "PrestaShop module ps_languageselector",
             "homepage": "https://github.com/PrestaShop/ps_languageselector",
-            "time": "2017-03-27 15:19:45"
+            "time": "2017-03-27T15:19:45+00:00"
         },
         {
             "name": "prestashop/ps_legalcompliance",
@@ -3468,7 +3468,7 @@
             ],
             "description": "PrestaShop - Main menu",
             "homepage": "https://github.com/PrestaShop/ps_mainmenu",
-            "time": "2017-02-14 08:11:36"
+            "time": "2017-02-14T08:11:36+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
@@ -3500,7 +3500,7 @@
             ],
             "description": "PrestaShop module ps_searchbar",
             "homepage": "https://github.com/PrestaShop/ps_searchbar",
-            "time": "2017-03-23 10:36:40"
+            "time": "2017-03-23T10:36:40+00:00"
         },
         {
             "name": "prestashop/ps_sharebuttons",
@@ -3532,7 +3532,7 @@
             ],
             "description": "PrestaShop module ps_sharebuttons",
             "homepage": "https://github.com/PrestaShop/ps_sharebuttons",
-            "time": "2017-08-03 07:12:38"
+            "time": "2017-08-03T07:12:38+00:00"
         },
         {
             "name": "prestashop/ps_shoppingcart",
@@ -3564,7 +3564,7 @@
             ],
             "description": "PrestaShop module ps_shoppingcart",
             "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
-            "time": "2017-03-23 10:36:49"
+            "time": "2017-03-23T10:36:49+00:00"
         },
         {
             "name": "prestashop/ps_socialfollow",
@@ -3596,7 +3596,7 @@
             ],
             "description": "PrestaShop module ps_socialfollow",
             "homepage": "https://github.com/PrestaShop/ps_socialfollow",
-            "time": "2017-02-01 13:17:47"
+            "time": "2017-02-01T13:17:47+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
@@ -3628,7 +3628,7 @@
             ],
             "description": "PrestaShop module ps_wirepayment",
             "homepage": "https://github.com/PrestaShop/ps_wirepayment",
-            "time": "2017-03-16 10:24:34"
+            "time": "2017-03-16T10:24:34+00:00"
         },
         {
             "name": "prestashop/sekeywords",
@@ -3660,7 +3660,7 @@
             ],
             "description": "PrestaShop module sekeywords",
             "homepage": "https://github.com/PrestaShop/sekeywords",
-            "time": "2017-01-30 15:46:25"
+            "time": "2017-01-30T15:46:25+00:00"
         },
         {
             "name": "prestashop/smarty",
@@ -3711,7 +3711,7 @@
             ],
             "description": "PrestaShop Smarty version",
             "homepage": "https://github.com/PrestaShop/smarty",
-            "time": "2017-05-11 08:29:53"
+            "time": "2017-05-11T08:29:53+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
@@ -3743,7 +3743,7 @@
             ],
             "description": "PrestaShop module statsbestcategories",
             "homepage": "https://github.com/PrestaShop/statsbestcategories",
-            "time": "2017-01-30 15:06:32"
+            "time": "2017-01-30T15:06:32+00:00"
         },
         {
             "name": "prestashop/statsbestcustomers",
@@ -3775,7 +3775,7 @@
             ],
             "description": "PrestaShop module statsbestcustomers",
             "homepage": "https://github.com/PrestaShop/statsbestcustomers",
-            "time": "2017-02-01 16:30:07"
+            "time": "2017-02-01T16:30:07+00:00"
         },
         {
             "name": "prestashop/statsbestmanufacturers",
@@ -3807,7 +3807,7 @@
             ],
             "description": "PrestaShop module statsbestmanufacturers",
             "homepage": "https://github.com/PrestaShop/statsbestmanufacturers",
-            "time": "2017-01-31 17:03:07"
+            "time": "2017-01-31T17:03:07+00:00"
         },
         {
             "name": "prestashop/statsbestproducts",
@@ -3839,7 +3839,7 @@
             ],
             "description": "PrestaShop module statsbestproducts",
             "homepage": "https://github.com/PrestaShop/statsbestproducts",
-            "time": "2017-01-30 16:33:56"
+            "time": "2017-01-30T16:33:56+00:00"
         },
         {
             "name": "prestashop/statsbestsuppliers",
@@ -3871,7 +3871,7 @@
             ],
             "description": "PrestaShop module statsbestsuppliers",
             "homepage": "https://github.com/PrestaShop/statsbestsuppliers",
-            "time": "2017-01-30 16:34:19"
+            "time": "2017-01-30T16:34:19+00:00"
         },
         {
             "name": "prestashop/statsbestvouchers",
@@ -3903,7 +3903,7 @@
             ],
             "description": "PrestaShop module statsbestvouchers",
             "homepage": "https://github.com/PrestaShop/statsbestvouchers",
-            "time": "2017-01-30 16:34:41"
+            "time": "2017-01-30T16:34:41+00:00"
         },
         {
             "name": "prestashop/statscarrier",
@@ -3935,7 +3935,7 @@
             ],
             "description": "PrestaShop module statscarrier",
             "homepage": "https://github.com/PrestaShop/statscarrier",
-            "time": "2017-01-30 17:03:51"
+            "time": "2017-01-30T17:03:51+00:00"
         },
         {
             "name": "prestashop/statscatalog",
@@ -3967,7 +3967,7 @@
             ],
             "description": "PrestaShop module statscatalog",
             "homepage": "https://github.com/PrestaShop/statscatalog",
-            "time": "2017-02-02 08:39:32"
+            "time": "2017-02-02T08:39:32+00:00"
         },
         {
             "name": "prestashop/statscheckup",
@@ -3999,7 +3999,7 @@
             ],
             "description": "PrestaShop module statscheckup",
             "homepage": "https://github.com/PrestaShop/statscheckup",
-            "time": "2017-01-30 17:29:08"
+            "time": "2017-01-30T17:29:08+00:00"
         },
         {
             "name": "prestashop/statsdata",
@@ -4031,7 +4031,7 @@
             ],
             "description": "PrestaShop module statsdata",
             "homepage": "https://github.com/PrestaShop/statsdata",
-            "time": "2017-01-31 17:00:41"
+            "time": "2017-01-31T17:00:41+00:00"
         },
         {
             "name": "prestashop/statsequipment",
@@ -4063,7 +4063,7 @@
             ],
             "description": "PrestaShop module statsequipment",
             "homepage": "https://github.com/PrestaShop/statsequipment",
-            "time": "2017-01-31 17:01:36"
+            "time": "2017-01-31T17:01:36+00:00"
         },
         {
             "name": "prestashop/statsforecast",
@@ -4095,7 +4095,7 @@
             ],
             "description": "PrestaShop module statsforecast",
             "homepage": "https://github.com/PrestaShop/statsforecast",
-            "time": "2017-02-01 16:33:09"
+            "time": "2017-02-01T16:33:09+00:00"
         },
         {
             "name": "prestashop/statslive",
@@ -4127,7 +4127,7 @@
             ],
             "description": "PrestaShop module statslive",
             "homepage": "https://github.com/PrestaShop/statslive",
-            "time": "2017-02-02 08:18:06"
+            "time": "2017-02-02T08:18:06+00:00"
         },
         {
             "name": "prestashop/statsnewsletter",
@@ -4159,7 +4159,7 @@
             ],
             "description": "PrestaShop module statsnewsletter",
             "homepage": "https://github.com/PrestaShop/statsnewsletter",
-            "time": "2017-02-01 16:29:27"
+            "time": "2017-02-01T16:29:27+00:00"
         },
         {
             "name": "prestashop/statsorigin",
@@ -4191,7 +4191,7 @@
             ],
             "description": "PrestaShop module statsorigin",
             "homepage": "https://github.com/PrestaShop/statsorigin",
-            "time": "2017-02-01 16:33:56"
+            "time": "2017-02-01T16:33:56+00:00"
         },
         {
             "name": "prestashop/statspersonalinfos",
@@ -4223,7 +4223,7 @@
             ],
             "description": "PrestaShop module statspersonalinfos",
             "homepage": "https://github.com/PrestaShop/statspersonalinfos",
-            "time": "2017-02-01 16:34:02"
+            "time": "2017-02-01T16:34:02+00:00"
         },
         {
             "name": "prestashop/statsproduct",
@@ -4255,7 +4255,7 @@
             ],
             "description": "PrestaShop module statsproduct",
             "homepage": "https://github.com/PrestaShop/statsproduct",
-            "time": "2017-02-01 16:30:44"
+            "time": "2017-02-01T16:30:44+00:00"
         },
         {
             "name": "prestashop/statsregistrations",
@@ -4287,7 +4287,7 @@
             ],
             "description": "PrestaShop module statsregistrations",
             "homepage": "https://github.com/PrestaShop/statsregistrations",
-            "time": "2017-01-31 17:22:19"
+            "time": "2017-01-31T17:22:19+00:00"
         },
         {
             "name": "prestashop/statssales",
@@ -4319,7 +4319,7 @@
             ],
             "description": "PrestaShop module statssales",
             "homepage": "https://github.com/PrestaShop/statssales",
-            "time": "2017-01-31 17:23:19"
+            "time": "2017-01-31T17:23:19+00:00"
         },
         {
             "name": "prestashop/statssearch",
@@ -4351,7 +4351,7 @@
             ],
             "description": "PrestaShop module statssearch",
             "homepage": "https://github.com/PrestaShop/statssearch",
-            "time": "2017-01-31 17:23:39"
+            "time": "2017-01-31T17:23:39+00:00"
         },
         {
             "name": "prestashop/statsstock",
@@ -4383,7 +4383,7 @@
             ],
             "description": "PrestaShop module statsstock",
             "homepage": "https://github.com/PrestaShop/statsstock",
-            "time": "2017-01-31 17:24:06"
+            "time": "2017-01-31T17:24:06+00:00"
         },
         {
             "name": "prestashop/statsvisits",
@@ -4415,7 +4415,7 @@
             ],
             "description": "PrestaShop module statsvisits",
             "homepage": "https://github.com/PrestaShop/statsvisits",
-            "time": "2017-02-01 16:31:01"
+            "time": "2017-02-01T16:31:01+00:00"
         },
         {
             "name": "prestashop/translationtools-bundle",
@@ -4511,7 +4511,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2017-07-11 08:16:29"
+            "time": "2017-07-11T08:16:29+00:00"
         },
         {
             "name": "psr/log",
@@ -6188,16 +6188,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.4.11",
+            "version": "1.4.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "e03f8f67534427a787e21a385a67ec3ca6978ea7"
+                "reference": "1ce90ba27c42e4e44e6d8458241466380b51fa16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/e03f8f67534427a787e21a385a67ec3ca6978ea7",
-                "reference": "e03f8f67534427a787e21a385a67ec3ca6978ea7",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/1ce90ba27c42e4e44e6d8458241466380b51fa16",
+                "reference": "1ce90ba27c42e4e44e6d8458241466380b51fa16",
                 "shasum": ""
             },
             "require": {
@@ -6233,7 +6233,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27T10:12:30+00:00"
+            "time": "2017-12-04T08:55:13+00:00"
         },
         {
             "name": "phpunit/phpunit",
