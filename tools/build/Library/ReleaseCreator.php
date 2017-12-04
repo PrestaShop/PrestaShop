@@ -119,6 +119,7 @@ class ReleaseCreator
         'admin\-dev/themes/new\-theme/js$',
         'admin\-dev/themes/new\-theme/scss$',
         'themes/_core$',
+        'themes/classic/_dev',
         'themes/webpack\.config\.js$',
         'themes/package\.json$',
         'vendor\/[a-zA-Z0-0_-]+\/[a-zA-Z0-0_-]+\/[Tt]ests?$',
@@ -214,9 +215,8 @@ class ReleaseCreator
             $destinationDir = "{$this->projectPath}/$releasesDir/$reference";
         }
         $this->destinationDir = $destinationDir;
-        $absoluteDestinationPath = realpath($this->destinationDir);
         $this->consoleWriter->displayText(
-            "--- Destination dir used will be '{$absoluteDestinationPath}'{$this->lineSeparator}",
+            "--- Destination dir used will be '{$this->destinationDir}'{$this->lineSeparator}",
             ConsoleWriter::COLOR_GREEN
         );
         $this->useZip = $useZip;
@@ -256,7 +256,8 @@ class ReleaseCreator
             "--- Script started at {$startTime}{$this->lineSeparator}{$this->lineSeparator}",
             ConsoleWriter::COLOR_GREEN
         );
-        $this->setFilesConstants()
+        $this->createDestinationDir()
+            ->setFilesConstants()
             ->generateLicensesFile()
             ->runComposerInstall()
             ->createPackage();
@@ -277,6 +278,26 @@ class ReleaseCreator
             "--- Release size: {$releaseSize}{$this->lineSeparator}",
             ConsoleWriter::COLOR_GREEN
         );
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function createDestinationDir()
+    {
+        $this->consoleWriter->displayText("Copy project in {$this->tempProjectPath}...", ConsoleWriter::COLOR_YELLOW);
+        $argDestination = escapeshellarg($this->tempProjectPath);
+
+        if (file_exists($this->tempProjectPath)) {
+            exec("rm -rf $argDestination && mkdir $argDestination");
+        } else {
+            exec("mkdir $argDestination");
+        }
+        $argProjectPath = escapeshellarg($this->projectPath);
+        exec("rsync -ar $argProjectPath/ $argDestination --exclude .git --exclude tools/build/releases --exclude node_modules --exclude themes/classic/_dev --exclude 'vendor/*'");
+        $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
     }
@@ -306,7 +327,7 @@ class ReleaseCreator
      */
     protected function setConfigDefinesConstants()
     {
-        $configDefinesPath = $this->projectPath . '/config/defines.inc.php';
+        $configDefinesPath = $this->tempProjectPath . '/config/defines.inc.php';
         $configDefinesContent = file_get_contents($configDefinesPath);
         $configDefinesNewContent = preg_replace('/(.*(define).*)_PS_MODE_DEV_(.*);/Ui', 'define(\'_PS_MODE_DEV_\', false);', $configDefinesContent);
         $configDefinesNewContent = preg_replace('/(.*)_PS_DISPLAY_COMPATIBILITY_WARNING_(.*);/Ui', 'define(\'_PS_DISPLAY_COMPATIBILITY_WARNING_\', false);', $configDefinesNewContent);
@@ -326,7 +347,7 @@ class ReleaseCreator
      */
     protected function setConfigAutoloadConstants()
     {
-        $configAutoloadPath = $this->projectPath.'/config/autoload.php';
+        $configAutoloadPath = $this->tempProjectPath.'/config/autoload.php';
         $configAutoloadContent = file_get_contents($configAutoloadPath);
         $configAutoloadNewContent = preg_replace('#_PS_VERSION_\', \'(.*)\'\)#', '_PS_VERSION_\', \'' . $this->version . '\')', $configAutoloadContent);
 
@@ -345,7 +366,7 @@ class ReleaseCreator
      */
     protected function setInstallDevConfigurationConstants()
     {
-        $configPath = $this->projectPath.'/install-dev/data/xml/configuration.xml';
+        $configPath = $this->tempProjectPath.'/install-dev/data/xml/configuration.xml';
 
         if (file_exists($configPath)) {
             $configPathContent = file_get_contents($configPath);
@@ -368,7 +389,7 @@ class ReleaseCreator
      */
     protected function setInstallDevInstallVersionConstants()
     {
-        $installVersionPath = $this->projectPath . '/install-dev/install_version.php';
+        $installVersionPath = $this->tempProjectPath . '/install-dev/install_version.php';
         $installVersionContent = file_get_contents($installVersionPath);
         $installVersionNewContent = preg_replace('#_PS_INSTALL_VERSION_\', \'(.*)\'\)#', '_PS_INSTALL_VERSION_\', \'' . $this->version . '\')', $installVersionContent);
 
@@ -390,7 +411,7 @@ class ReleaseCreator
     {
         $this->consoleWriter->displayText("Generating licences file...", ConsoleWriter::COLOR_YELLOW);
         $content = null;
-        $directory = new \RecursiveDirectoryIterator($this->projectPath);
+        $directory = new \RecursiveDirectoryIterator($this->tempProjectPath);
         $iterator = new \RecursiveIteratorIterator($directory);
         $regex = new \RegexIterator($iterator, '/^.*\/.*license(\.txt)?$/i', \RecursiveRegexIterator::GET_MATCH);
 
@@ -398,7 +419,7 @@ class ReleaseCreator
             $content .= file_get_contents($file) . "\r\n\r\n";
         }
 
-        if (!file_put_contents($this->projectPath . '/LICENSES', $content)) {
+        if (!file_put_contents($this->tempProjectPath . '/LICENSES', $content)) {
             throw new BuildException('Unable to create LICENSES file.');
         }
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
@@ -415,7 +436,7 @@ class ReleaseCreator
     protected function runComposerInstall()
     {
         $this->consoleWriter->displayText("Running composer install...", ConsoleWriter::COLOR_YELLOW);
-        $argProjectPath = escapeshellarg($this->projectPath);
+        $argProjectPath = escapeshellarg($this->tempProjectPath);
         $command = "cd {$argProjectPath} && export SYMFONY_ENV=prod && composer install --no-dev --optimize-autoloader --classmap-authoritative --no-interaction 2>&1";
         exec($command, $output, $returnCode);
 
@@ -435,12 +456,12 @@ class ReleaseCreator
      */
     protected function createAndRenameFolders()
     {
-        if (!file_exists($this->projectPath . '/app/cache/')) {
-            mkdir($this->projectPath . '/app/cache', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/app/cache/')) {
+            mkdir($this->tempProjectPath . '/app/cache', 0777, true);
         }
 
-        if (!file_exists($this->projectPath . '/app/logs/')) {
-            mkdir($this->projectPath . '/app/logs', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/app/logs/')) {
+            mkdir($this->tempProjectPath . '/app/logs', 0777, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
         $basePath = $this->tempProjectPath;
@@ -483,16 +504,8 @@ class ReleaseCreator
     protected function cleanTmpProject()
     {
         $this->consoleWriter->displayText("--- Cleaning project...", ConsoleWriter::COLOR_YELLOW);
-        $destination = $this->tempProjectPath;
-        $argDestination = escapeshellarg($destination);
-
-        if (file_exists($destination)) {
-            exec("rm -rf $argDestination");
-        }
-        $argProjectPath = escapeshellarg($this->projectPath);
-        exec("cp -r $argProjectPath $argDestination");
         $this->createAndRenameFolders();
-        $this->filesList = $this->getDirectoryStructure($destination);
+        $this->filesList = $this->getDirectoryStructure($this->tempProjectPath);
         $this->removeUnnecessaryFiles(
             $this->filesList,
             $this->filesRemoveList,
