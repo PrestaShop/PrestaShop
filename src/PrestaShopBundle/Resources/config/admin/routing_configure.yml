@@ -1,0 +1,3 @@
+_admin_advanced_parameters_routing:
+    resource: "routing_advanced_parameters.yml"
+    prefix: /advanced/
