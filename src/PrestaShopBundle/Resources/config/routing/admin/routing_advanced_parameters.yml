@@ -3,7 +3,7 @@ admin_logs:
     path: logs
     methods: [GET]
     defaults:
-        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\LogsController::indexAction'
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:index'
         _legacy_controller: AdminLogs
 
 admin_logs_save:
