@@ -1950,7 +1950,7 @@ class ToolsCore
         $url,
         $use_include_path = false,
         $stream_context = null,
-        $curl_timeout = 60,
+        $curl_timeout = 5,
         $fallback = false
     ) {
         $is_local_file = !preg_match('/^https?:\/\//', $url);
