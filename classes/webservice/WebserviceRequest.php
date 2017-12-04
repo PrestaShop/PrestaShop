@@ -1068,12 +1068,16 @@ class WebserviceRequestCore
                                     if (!is_array($url_param)) {
                                         $url_param = array($url_param);
                                     }
-                                    $sql_join .= 'LEFT JOIN `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']).'_lang` AS main_i18n ON (main.`'.pSQL($this->resourceConfiguration['fields']['id']['sqlId']).'` = main_i18n.`'.bqSQL($this->resourceConfiguration['fields']['id']['sqlId']).'`)'."\n";
+
+                                    $join = 'LEFT JOIN `' . bqSQL(_DB_PREFIX_ . $this->resourceConfiguration['retrieveData']['table']) . '_lang` AS main_i18n ON (main.`' . pSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '` = main_i18n.`' . bqSQL($this->resourceConfiguration['fields']['id']['sqlId']) . '`)' . "\n";
+                                    $sql_join .= (false === strpos($sql_join, $join)) ? $join : '';
+
                                     foreach ($url_param as $field2 => $value) {
                                         $linked_field = $this->resourceConfiguration['fields'][$field];
                                         $sql_filter .= $this->getSQLRetrieveFilter($linked_field['sqlId'], $value, 'main_i18n.');
-                                        $language_filter = '['.implode('|', $this->_available_languages).']';
-                                        $sql_filter .= $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
+                                        $language_filter = '[' . implode('|', $this->_available_languages) . ']';
+                                        $langFilter = $this->getSQLRetrieveFilter('id_lang', $language_filter, 'main_i18n.');
+                                        $sql_filter .= (false === strpos($sql_filter, $langFilter)) ? $langFilter : '';
                                     }
                                 }
                                 // if there are filters on linked tables but there are no linked table
