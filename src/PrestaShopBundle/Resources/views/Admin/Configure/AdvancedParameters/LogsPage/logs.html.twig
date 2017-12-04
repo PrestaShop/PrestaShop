@@ -31,9 +31,10 @@
   {% endblock %}
 
   {% block logs_main_panel %}
-    <div class="col-md-12">
-      Panel Block
-    </div>
+    {{ include('@AdvancedParameters/LogsPage/Blocks/main_panel.html.twig', {
+      'logs': logs
+      })
+    }}
   {% endblock %}
 
   {% block logs_by_mail %}

@@ -309,7 +309,7 @@ services:
         class: PrestaShopBundle\Entity\Repository\LogRepository
         arguments:
             - '@doctrine.dbal.default_connection'
-            - '%database_prefix%log'
+            - '%database_prefix%'
     # Api
     prestashop.core.api.query_params_collection:
         abstract: true

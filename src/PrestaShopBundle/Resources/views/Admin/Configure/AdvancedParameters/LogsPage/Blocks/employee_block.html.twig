@@ -1,0 +1,7 @@
+{%
+  set employeeName, employeeImage = log.firstname~' '~log.lastname, 'http://profile.prestashop.com/'~log.email|url_encode~'.jpg'
+%}
+<span class="employee_avatar_small">
+    <img class="img rounded-circle" alt="{{ employeeName }}" src="{{ employeeImage }}" height="32" width="32" />
+</span>
+{{ employeeName }}
