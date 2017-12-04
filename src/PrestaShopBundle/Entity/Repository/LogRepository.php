@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 class LogRepository implements RepositoryInterface
 {
     private $connection;
-    private $tableName;
+    private $databasePrefix;
+    private $logTable;
 
-    public function __construct(Connection $connection, $tableName)
+    public function __construct(Connection $connection, $databasePrefix)
     {
         $this->connection = $connection;
-        $this->tableName = $tableName;
+        $this->databasePrefix = $databasePrefix;
+        $this->logTable = $this->databasePrefix."log";
     }
 
     /**
@@ -45,7 +47,18 @@ class LogRepository implements RepositoryInterface
      */
     public function findAll()
     {
-        $statement = $this->connection->query("SELECT l.* FROM $this->tableName l");
+        $statement = $this->connection->query("SELECT l.* FROM $this->logTable l");
+
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Get all logs with employee name and avatar information
+     */
+    public function findAllWithEmployeeInformation()
+    {
+        $employeeTable = $this->databasePrefix.'employee';
+        $statement = $this->connection->query("SELECT l.*, e.firstname, e.lastname, e.email FROM $this->logTable l JOIN $employeeTable e ON (l.id_employee = e.id_employee)");
 
         return $statement->fetchAll();
     }

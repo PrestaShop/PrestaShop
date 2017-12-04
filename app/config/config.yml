@@ -61,7 +61,6 @@ twig:
     globals:
         webpack_server:   false
 
-
 # Doctrine Configuration
 doctrine:
     dbal:
