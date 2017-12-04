@@ -24,10 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsByEmailType;
+use PrestaShopBundle\Entity\Repository\LogRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -51,7 +52,6 @@ class LogsController extends FrameworkBundleAdminController
     {
         $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
 
-        dump($this->get('prestashop.core.admin.log.repository')->findAll());
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
@@ -62,7 +62,7 @@ class LogsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'logs' => $this->get('prestashop.core.admin.log.repository')->findAll(),
+            'logs' => $this->get('prestashop.core.admin.log.repository')->findAllWithEmployeeInformation(),
         );
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
