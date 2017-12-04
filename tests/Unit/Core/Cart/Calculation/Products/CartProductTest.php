@@ -45,8 +45,6 @@ class CartProductTest extends AbstractCartCalculationTest
     public function cartWithoutCartRulesProvider()
     {
         return array(
-            // WITHOUT CART RULES
-
             'empty cart'                             => array(
                 'products'      => array(),
                 'expectedTotal' => 0,
@@ -54,12 +52,14 @@ class CartProductTest extends AbstractCartCalculationTest
             ),
             'one product in cart, quantity 1'        => array(
                 'products'      => array(1 => 1,),
-                'expectedTotal' => 26.81, // default carrier has $7 shipping fees
+                'expectedTotal' => static::PRODUCT_FIXTURES[1]['price']
+                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => array(),
             ),
             'one product in cart, quantity 3'        => array(
                 'products'      => array(1 => 3,),
-                'expectedTotal' => 66.44, // default carrier has $7 shipping fees
+                'expectedTotal' => 3 * static::PRODUCT_FIXTURES[1]['price']
+                                   + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE,
                 'cartRules'     => array(),
             ),
             '3 products in cart, several quantities' => array(
