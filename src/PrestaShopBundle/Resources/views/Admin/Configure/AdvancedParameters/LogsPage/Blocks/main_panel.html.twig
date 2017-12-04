@@ -1,0 +1,17 @@
+<div class="col-md-12">
+  <div class="col">
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">bug_report</i>{{ 'Logs'|trans }} ({{ logs|length }})
+      </h3>
+      <div class="card-block">
+        <div class="card-text">
+          {{ include('@AdvancedParameters/LogsPage/Blocks/table.html.twig', {
+            'logs': logs
+            })
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

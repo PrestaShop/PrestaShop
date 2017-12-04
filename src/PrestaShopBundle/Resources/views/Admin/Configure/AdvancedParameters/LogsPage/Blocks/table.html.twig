@@ -1,0 +1,36 @@
+{% trans_default_domain "Admin.Advparameters.Feature" %}
+<table class="table table-responsive table-striped table-hover">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+      <th scope="col">{{ 'Employee'|trans({}, 'Admin.Global') }}</th>
+      <th scope="col" class="text-center">{{ 'Severity (1-4)'|trans }}</th>
+      <th scope="col">{{ 'Message'|trans({}, 'Admin.Global') }}</th>
+      <th scope="col" class="text-center">{{ 'Object type'|trans }}</th>
+      <th scope="col" class="text-center">{{ 'Object ID'|trans }}</th>
+      <th scope="col" class="text-center">{{ 'Error code'|trans }}</th>
+      <th scope="col">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for log in logs %}
+    <tr>
+      <th scope="row">{{ log.id_log }}</th>
+      <td>
+        {{ include('@AdvancedParameters/LogsPage/Blocks/employee_block.html.twig', {
+            'log': log
+          })
+        }}
+      </td>
+      <td class="text-center">{{ log.severity }}</td>
+      <td>{{ log.message }}</td>
+      <td class="text-center">{{ log.object_type }}</td>
+      <td class="text-center">{{ log.object_id }}</td>
+      <td class="text-center">{{ log.error_code }}</td>
+      <td>{{ log.date_add }}</td>
+      <td>&nbsp;</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
