@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,7 +65,7 @@ class SystemInformationController extends FrameworkBundleAdminController
             'userAgent' => $request->headers->get('User-Agent'),
         );
 
-        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:system_information.html.twig', $twigValues);
+        return $this->render('@AdvancedParameters/system_information.html.twig', $twigValues);
     }
 
     /**

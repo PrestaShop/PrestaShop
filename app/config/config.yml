@@ -9,6 +9,7 @@ parameters:
     AdapterSecurityAdminClass: PrestaShop\PrestaShop\Adapter\Security\Admin
     translator.class: PrestaShopBundle\Translation\Translator
     translator.data_collector: PrestaShopBundle\Translation\DataCollectorTranslator
+    admin_page: "%kernel.root_dir%/../src/PrestaShopBundle/Resources/views/Admin"
 
 framework:
     assets:
@@ -57,6 +58,8 @@ twig:
         - 'PrestaShopBundle:Admin/TwigTemplateForm:bootstrap_3_horizontal_layout.html.twig'
     globals:
         webpack_server:   false
+    paths:
+        '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
 
 # Doctrine Configuration
 doctrine:
