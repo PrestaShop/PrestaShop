@@ -59,7 +59,12 @@
         {% endif %}
       </p>
       {% if (module.attributes.message is defined and module.attributes.name is not empty) and (module.attributes.type is not defined or module.attributes.type != 'addonsMustHave' or module.attributes.type != 'addonsNative') %}
-        <div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{{ module.attributes.message }}</div>
+        <div class="alert alert-success" role="alert">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p class="alert-text">
+            {{ module.attributes.message }}
+          </p>
+        </div>
       {% endif %}
     </div>
   </td>
