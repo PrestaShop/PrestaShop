@@ -54,7 +54,7 @@ class HookEvent extends Event
      *
      * More values than the param set is returned:
      * - _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture.
-     * These values can either be overriden by szetHookParameters using the same parameter key.
+     * These values can either be overriden by setHookParameters using the same parameter key.
      *
      * @return array The array of hook parameters, more default fixed values.
      */
@@ -64,7 +64,9 @@ class HookEvent extends Event
 
         $sfContainer = SymfonyContainer::getInstance();
         if (!is_null($sfContainer) && !is_null($sfContainer->get('request_stack')->getCurrentRequest())) {
-            $globalParameters['request'] = $sfContainer->get('request');
+            $request = $sfContainer->get('request_stack')->getCurrentRequest();
+            $globalParameters['request'] = $request;
+            $globalParameters['route'] = $request->get('_route');
         }
 
         return array_merge($globalParameters, $this->hookParameters);
