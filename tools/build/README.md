@@ -1,5 +1,20 @@
 # PrestaShop Release Creation
 
+## Prerequisite
+
+This tool needs these system commands:
+
+- rsync
+- rm
+- mv
+- mkdir
+- du
+- cd
+- php
+- cut
+
+## Install and use
+
 To create a release:
 
 ```
