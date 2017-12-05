@@ -27,6 +27,12 @@
 
 use PrestaShopBundle\Install\Upgrade;
 
+// Although no arguments execute the script, you can get some help if requested.
+if (isset($argv) && is_array($argv) && in_array('--help', $argv)) {
+    displayHelp();
+    exit(0);
+}
+
 $filePrefix = 'PREFIX_';
 $engineType = 'ENGINE_TYPE';
 define('PS_IN_UPGRADE', 1);
@@ -116,4 +122,21 @@ if ($upgrade->getInAutoUpgrade()) {
 } else {
     header('Content-Type: text/xml');
     echo $result;
+}
+
+/**
+ * displays the help
+ */
+function displayHelp()
+{
+    echo <<<EOF
+PrestaShop upgrade
+
+This script can be called directly and is used by the 1-click upgrade module. It ouputs xml in the first case and json data for the module.
+It is mainly used for the database migration of your shop. Logs will be registered in your app/logs/<env> folder.
+------------------
+Options
+--help               Display this message
+
+EOF;
 }
