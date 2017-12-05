@@ -1,6 +1,7 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
 var path = require('path');
+var pdfUtil = require('pdf-to-text');
 
 class CommonClient {
   constructor() {
@@ -53,8 +54,8 @@ class CommonClient {
 
   successPanel(index) {
     return this.client
-      .waitForExist(selector.CatalogPageBO.success_panel)
-      .then(() => this.client.getText(selector.CatalogPageBO.success_panel))
+      .waitForExist(selector.CatalogPage.success_panel)
+      .then(() => this.client.getText(selector.CatalogPage.success_panel))
       .then((text) => expect(text.substr(2)).to.be.equal(index));
   }
 
@@ -116,6 +117,43 @@ class CommonClient {
       .then((text) => expect(text).to.be.equal(message));
   }
 
+  getTextInVar(selector, globalVar, split = false) {
+    if(split){
+      return this.client
+        .waitForExist(selector, 9000)
+        .then(() => this.client.getText(selector))
+        .then((variable) => global.tab[globalVar] = variable.split(': ')[1])
+    }else{
+      return this.client
+        .waitForExist(selector, 9000)
+        .then(() => this.client.getText(selector))
+        .then((variable) => global.tab[globalVar] = variable)
+    }
+  }
+
+  checkText(selector, textToCheckWith, parameter='equal') {
+      switch(parameter) {
+        case "contain":
+          return this.client
+            .waitForExist(selector, 9000)
+            .then(() => this.client.getText(selector))
+            .then((text) => expect(text).to.contain(textToCheckWith));
+          break;
+        case "equal":
+          return this.client
+            .waitForExist(selector, 9000)
+            .then(() => this.client.getText(selector))
+            .then((text) => expect(text).to.equal(textToCheckWith));
+          break;
+        case "notequal":
+          return this.client
+            .waitForExist(selector, 9000)
+            .then(() => this.client.getText(selector))
+            .then((text) => expect(text).to.not.equal(textToCheckWith));
+          break;
+      }
+  }
+
   uploadPicture(picture, selector, className = "dz-hidden-input") {
     return this.client
       .execute(function (className) {
@@ -135,6 +173,21 @@ class CommonClient {
     return this.client
       .waitAndSetValue(search_input, value)
       .waitForExistAndClick(search_button)
+  }
+
+  checkDocument(folderPath, fileName, text) {
+    function verify_text_existence(positionToVerify) {
+      if (positionToVerify == -1) {
+        throw(err)
+      }
+    }
+
+    pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
+      if (err) throw(err);
+      verify_text_existence(data.indexOf(text))
+    });
+    return this.client
+      .pause(5000)
   }
 }
 

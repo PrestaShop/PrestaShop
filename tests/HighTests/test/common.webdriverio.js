@@ -39,23 +39,22 @@ function initCommands(client) {
       .call(cb);
   });
 
-
   client.addCommand('waitForExistAndClick', function (selector , timeout = 90000) {
     return client
-      .waitForExist(selector , timeout)
+      .waitForExist(selector, timeout)
       .click(selector)
   });
 
   client.addCommand('waitAndSetValue', function (selector, value, timeout = 90000) {
     return client
-      .waitForExist(selector , timeout)
+      .waitForExist(selector, timeout)
       .setValue(selector, value)
   });
 
   client.addCommand('scrollTo', function (selector, margin = 150) {
-      return client
-        .getLocation(selector, 'y')
-        .then((location) => client.scroll(0, location - margin));
+    return client
+      .getLocation(selector, 'y')
+      .then((location) => client.scroll(0, location - margin));
   });
 
   client.addCommand('scrollWaitForExistAndClick', function (selector, margin = 150, timeout = 90000) {
@@ -75,13 +74,10 @@ function initCommands(client) {
   client.addCommand('waitAndSelectByValue', function (selector, value, timeout = 60000) {
     return client
       .waitForExist(selector, timeout)
-      .selectByValue(selector,value)
+      .selectByValue(selector, value)
   });
 
-
-
   client.addCommand('signInBO', function (selector) {
-    this.selector = globals.selector;
     return client
       .url('http://' + URL + '/admin-dev')
       .waitAndSetValue(selector.login_input, 'demo@prestashop.com')
@@ -111,7 +107,6 @@ function initCommands(client) {
       .waitForExist(selector.sign_in_button, 90000)
       .deleteCookie();
   });
-
 
 }
 
