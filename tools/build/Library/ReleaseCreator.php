@@ -256,7 +256,7 @@ class ReleaseCreator
             "--- Script started at {$startTime}{$this->lineSeparator}{$this->lineSeparator}",
             ConsoleWriter::COLOR_GREEN
         );
-        $this->createDestinationDir()
+        $this->createTmpProjectDir()
             ->setFilesConstants()
             ->generateLicensesFile()
             ->runComposerInstall()
@@ -283,9 +283,12 @@ class ReleaseCreator
     }
 
     /**
+     * Copy current user PrestaShop dir to a tmp directory
+     * where we'll clean it for the release.
+     *
      * @return $this
      */
-    protected function createDestinationDir()
+    protected function createTmpProjectDir()
     {
         $this->consoleWriter->displayText("Copy project in {$this->tempProjectPath}...", ConsoleWriter::COLOR_YELLOW);
         $argDestination = escapeshellarg($this->tempProjectPath);

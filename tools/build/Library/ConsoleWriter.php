@@ -85,7 +85,7 @@ class ConsoleWriter
      * @return $this
      * @throws BuildException
      */
-    public function displayText($text, $color = self::COLOR_GREEN)
+    public function displayText($text, $color = self::COLOR_WHITE)
     {
         $cliColors = array(
             self::COLOR_BLACK => '0;30',
