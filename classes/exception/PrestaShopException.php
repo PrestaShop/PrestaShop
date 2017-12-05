@@ -39,7 +39,10 @@ class PrestaShopExceptionCore extends Exception
         }
 
         header('HTTP/1.1 500 Internal Server Error');
-        if (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
+        if (ToolsCore::isPHPCLI()) { 
+            echo get_class($this).' in '. $this->getFile() .' line '. $this->getLine()."\n";
+            echo $this->getTraceAsString()."\n";
+        } elseif (_PS_MODE_DEV_ || defined('_PS_ADMIN_DIR_')) {
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
