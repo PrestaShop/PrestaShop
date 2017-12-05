@@ -8,7 +8,7 @@
   bootstrap                   = "bootstrap-sf.php"
 >
   <php>
-    <server name="KERNEL_DIR" value="../app" />
+    <server name="KERNEL_DIR" value="app" />
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
   </php>
 
