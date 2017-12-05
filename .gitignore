@@ -78,6 +78,8 @@ themes/default-bootstrap/modules/*/mails/*
 
 /bin/
 /.web-server-pid
+/app/Resources/translations/*
+!/app/Resources/translations/default
 /app/config/parameters.yml
 /app/config/parameters.php
 /build/
