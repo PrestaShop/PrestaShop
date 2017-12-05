@@ -1,8 +1,9 @@
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
 scenario('Catalog bulk action', () => {
 
   scenario('Log in back office and go to catalog list', client => {
     test('should open the browser', () => client.open());
-    test('should sign in BO', () => client.signinBO());
+    test('should sign in BO', () => client.signInBO(AccessPageBO));
     test('should go to catalog list', () => client.goToCatalog());
   }, 'catalogbulkaction');
 
@@ -21,7 +22,7 @@ scenario('Catalog bulk action', () => {
   scenario('Duplicate the product list', client => {
     test('should select all product', () => client.selectAllProduct());
     test('should duplicate the product list', () => client.duplicateProductlist());
-    test('should check that all products have been duplicated ', () => client.checkProductListMsg('Product(s) successfully duplicated.', 'check'));
+    test('should check that all products have been duplicated ', () => client.checkProductListMsg('Product(s) successfully duplicated.', 'clear'));
   }, 'catalogbulkaction');
 
   scenario('Enable the product list', client => {

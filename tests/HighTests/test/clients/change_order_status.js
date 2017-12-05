@@ -7,31 +7,31 @@ class OrderStatus extends CommonClient {
 
   goToOrdersMenu() {
     return this.client
-      .waitForExist(selector.BO.Orders.Order.orders_subtab, 90000)
-      .click(selector.BO.Orders.Order.orders_subtab)
+      .waitForExist(selector.OrderPage.orders_subtab, 90000)
+      .click(selector.OrderPage.orders_subtab)
   }
 
   goToFirstOrder() {
     return this.client
-      .waitForExist(selector.BO.Orders.Order.first_order, 90000)
-      .click(selector.BO.Orders.Order.first_order)
+      .waitForExist(selector.OrderPage.first_order, 90000)
+      .click(selector.OrderPage.first_order)
   }
 
   changeOrderState(state) {
     return this.client
-      .waitForExist(selector.BO.Orders.Order.order_state_select, 90000)
+      .waitForExist(selector.OrderPage.order_state_select, 90000)
       .execute(function () {
         document.querySelector('#id_order_state').style = "";
       })
-      .selectByVisibleText(selector.BO.Orders.Order.order_state_select, state)
-      .waitForExist(selector.BO.Orders.Order.update_order_status_button, 90000)
-      .click(selector.BO.Orders.Order.update_order_status_button)
+      .selectByVisibleText(selector.OrderPage.order_state_select, state)
+      .waitForExist(selector.OrderPage.update_order_status_button, 90000)
+      .click(selector.OrderPage.update_order_status_button)
   }
 
   getOrderQuantity() {
     return this.client
-      .waitForExist(selector.BO.Orders.Order.order_quantity, 90000)
-      .then(() => this.client.getText(selector.BO.Orders.Order.order_quantity))
+      .waitForExist(selector.OrderPage.order_quantity, 90000)
+      .then(() => this.client.getText(selector.OrderPage.order_quantity))
       .then((text) => global.orderQuantity= text)
   }
 }

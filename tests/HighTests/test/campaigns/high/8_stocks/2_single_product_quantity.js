@@ -1,6 +1,7 @@
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
 scenario('Modify quantity and check movement for single product', client => {
   test('should open the browser', () => client.open());
-  test('should sign in the Back Office', () => client.signinBO());
+  test('should sign in the Back Office', () => client.signInBO(AccessPageBO));
   test('should go to catalog stocks', () => client.goToCatalogStock());
   test('should get quantity of the third product', () => client.getThirdProductQuantity());
   test('should change third product quantity', () => client.modifyThirdProductQuantity());
@@ -13,4 +14,5 @@ scenario('Modify quantity and check movement for single product', client => {
   test('should save fourth product quantity', () => client.saveFourthProduct());
   test('should go to movements tab', () => client.goToStockMovements());
   test('should check movement history', () => client.checkMovement(1, "3", "-", "Employee Edition"));
+  test('should sign Out the Back Office', () => client.signOutBO());
 }, 'stocks', true);

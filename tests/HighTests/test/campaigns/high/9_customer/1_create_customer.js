@@ -1,6 +1,8 @@
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
+
 scenario('Create customer', client => {
   test('should open the browser', () => client.open());
-  test('should sign in BO', () => client.signinBO());
+  test('should sign in the Back Office', () => client.signInBO(AccessPageBO));
   test('should go to customer menu', () => client.goToCustomersMenu());
   test('should click on add new customer button', () => client.addNewCustomer());
   test('should add social title', () => client.addSocialTitle());
@@ -11,5 +13,5 @@ scenario('Create customer', client => {
   test('should add birthday', () => client.addBirthday());
   test('should save customer', () => client.saveCustomer());
   test('should check that the success alert message is well displayed', () => client.successPanel('Successful creation.'));
-  test('should sign out BO', () => client.signoutBO());
+  test('should sign Out the Back Office', () => client.signOutBO());
 }, 'customer', true);
