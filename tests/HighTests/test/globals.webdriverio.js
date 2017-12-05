@@ -17,6 +17,7 @@ global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png
 global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
 global.downloadsFolderPath = '/home/fourat.achour/Téléchargements/';
 global.onboarding = false;
+global.tab = [];
 
 module.exports = {
   selector: require('./selectors'),

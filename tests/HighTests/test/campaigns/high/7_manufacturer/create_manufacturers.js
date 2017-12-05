@@ -1,8 +1,10 @@
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
+
 scenario('Create new brand and brand address', () => {
 
   scenario('Open Browser and Login Back Office', client => {
     test('should open the browser', () => client.open());
-    test('should sign in BO', () => client.signinBO());
+    test('should sign in BO', () => client.signInBO(AccessPageBO));
   }, 'manufacturers');
 
   scenario('Create new brand', client => {
@@ -37,8 +39,5 @@ scenario('Create new brand and brand address', () => {
     test('should check brand success panel', () => client.successPanel('Successful creation.'));
   }, 'manufacturers');
 
-  scenario('Sign Out Back Office', client => {
-    test('should sign out BO', () => client.signoutBO());
-  }, 'manufacturers')
 
 }, 'manufacturers', true);

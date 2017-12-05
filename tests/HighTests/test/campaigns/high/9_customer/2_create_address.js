@@ -1,6 +1,8 @@
+const {AccessPageBO} = require('../../../selectors/BO/access_page');
+
 scenario('Create Address', client => {
   test('should open the browser', () => client.open());
-  test('should sign in BO', () => client.signinBO());
+  test('should sign in the Back Office', () => client.signInBO(AccessPageBO));
   test('should go to Address menu', () => client.goToCustomersAddress());
   test('should click on add new address', () => client.newAddress());
   test('should add customer email', () => client.addCustomerEmail());
@@ -19,5 +21,5 @@ scenario('Create Address', client => {
   test('should add other information', () => client.addOther());
   test('should save the new address', () => client.saveAddress());
   test('should check that the success alert message is well displayed', () => client.successPanel('Successful creation.'));
-  test('should sign out BO', () => client.signoutBO());
+  test('should sign Out the Back Office', () => client.signOutBO());
 }, 'customer', true);
