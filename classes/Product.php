@@ -1886,17 +1886,23 @@ class ProductCore extends ObjectModel
     *
     * @return array Deletion result
     */
-    public function deleteSearchIndexes()
-    {
-        return (
-            Db::getInstance()->execute(
-                'DELETE `'._DB_PREFIX_.'search_index`, `'._DB_PREFIX_.'search_word`
-				FROM `'._DB_PREFIX_.'search_index` JOIN `'._DB_PREFIX_.'search_word`
-				WHERE `'._DB_PREFIX_.'search_index`.`id_product` = '.(int)$this->id.'
-						AND `'._DB_PREFIX_.'search_word`.`id_word` = `'._DB_PREFIX_.'search_index`.id_word'
-            )
-        );
-    }
+	public function deleteSearchIndexes()
+	{
+		return (
+			Db::getInstance()->execute(
+				'DELETE FROM `'._DB_PREFIX_.'search_index`
+				WHERE `id_product` = '.(int)$this->id
+			)
+			&&
+			Db::getInstance()->execute(
+				'DELETE FROM `'._DB_PREFIX_.'search_word`
+				WHERE `id_word` NOT IN (
+					SELECT id_word
+					FROM `'._DB_PREFIX_.'search_index`
+				)'
+			)
+		);
+	}
 
     /**
     * Add a product attributes combinaison
