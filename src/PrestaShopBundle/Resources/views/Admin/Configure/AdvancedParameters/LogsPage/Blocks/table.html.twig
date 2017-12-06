@@ -1,15 +1,66 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{% set sumLogs = logs|length %}
 <table class="table table-responsive table-striped table-hover">
   <thead class="thead-light">
     <tr>
-      <th scope="col">{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-      <th scope="col">{{ 'Employee'|trans({}, 'Admin.Global') }}</th>
-      <th scope="col" class="text-center">{{ 'Severity (1-4)'|trans }}</th>
-      <th scope="col">{{ 'Message'|trans({}, 'Admin.Global') }}</th>
-      <th scope="col" class="text-center">{{ 'Object type'|trans }}</th>
-      <th scope="col" class="text-center">{{ 'Object ID'|trans }}</th>
-      <th scope="col" class="text-center">{{ 'Error code'|trans }}</th>
-      <th scope="col">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+      <th scope="col">
+        {{ 'ID'|trans({}, 'Admin.Global') }}
+        {{ ps.sort_arrows('id_log') }}
+      </th>
+      <th scope="col">
+        {{ 'Employee'|trans({}, 'Admin.Global') }}
+        {{ ps.sort_arrows('id_employee') }}
+      </th>
+      <th scope="col" class="text-center">
+        {{ 'Severity (1-4)'|trans }}
+        {{ ps.sort_arrows('severity') }}
+      </th>
+      <th scope="col">
+        {{ 'Message'|trans({}, 'Admin.Global') }}
+        {{ ps.sort_arrows('message') }}
+      </th>
+      <th scope="col" class="text-center">
+        {{ 'Object type'|trans }}
+        {{ ps.sort_arrows('object_type') }}
+      </th>
+      <th scope="col" class="text-center">
+        {{ 'Object ID'|trans }}
+        {{ ps.sort_arrows('object_id') }}
+      </th>
+      <th scope="col" class="text-center">
+        {{ 'Error code'|trans }}
+        {{ ps.sort_arrows('error_code') }}
+      </th>
+      <th scope="col">
+        {{ 'Date'|trans({}, 'Admin.Global') }}
+        {{ ps.sort_arrows('date') }}
+      </th>
       <th scope="col">&nbsp;</th>
     </tr>
   </thead>
@@ -34,3 +85,14 @@
   {% endfor %}
   </tbody>
 </table>
+
+{% if sumLogs > 20 %}
+  <div class="row">
+    <div class="col-md-12">
+      {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
+      {'limit': 10, 'offset': 0, 'total': sumLogs}))
+      }}
+    </div>
+  </div>
+{% endif %}
+
