@@ -50,7 +50,7 @@ class CartRulesGiftTest extends AbstractCartCalculationTest
     ) {
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $this->compareCartTotal($expectedTotal, $knownToFailOnV1);
+        $this->compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1);
         $this->assertEquals($expectedProductCount, \Cart::getNbProducts($this->cart->id));
     }
 

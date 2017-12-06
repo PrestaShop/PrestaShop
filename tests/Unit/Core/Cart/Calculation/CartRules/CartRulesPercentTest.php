@@ -49,7 +49,7 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
     ) {
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $this->compareCartTotal($expectedTotal, $knownToFailOnV1);
+        $this->compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1);
     }
 
     /**
@@ -63,7 +63,7 @@ class CartRulesPercentTest extends AbstractCartCalculationTest
     ) {
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $this->compareCartTotal($expectedTotal, $knownToFailOnV1);
+        $this->compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1);
     }
 
     public function cartWithOneCartRulePercentProvider()
