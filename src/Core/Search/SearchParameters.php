@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,22 +22,32 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *#}
-{% trans_default_domain "Admin.Advparameters.Feature" %}
-<div class="col-md-12">
-  <div class="col">
-    <div class="card">
-      <h3 class="card-header">
-        <i class="material-icons">bug_report</i>{{ 'Logs'|trans }} ({{ logsSum }})
-      </h3>
-      <div class="card-block">
-        <div class="card-text">
-          {{ include('@AdvancedParameters/LogsPage/Blocks/table.html.twig', {
-            'logs': logs
-            })
-          }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+ */
+namespace PrestaShop\PrestaShop\Core\Search;
+
+use Symfony\Component\HttpFoundation\Request;
+
+/**
+ * Retrieve filters parameters if any from the User request.
+ * @param array $defaultValues if a filter is not found, set the default value
+ */
+final class SearchParameters
+{
+    private $filterTypes = array(
+        'limit',
+        'offset',
+        'orderBy',
+        'sortOrder',
+    );
+
+    public function getFiltersFromRequest(Request $request, array $defaultValues)
+    {
+        $filters = array();
+
+        foreach ($this->filterTypes as $type) {
+            $filters[$type] = $request->get($type, $defaultValues[$type]);
+        }
+
+        return $filters;
+    }
+}

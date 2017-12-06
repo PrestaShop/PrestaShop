@@ -23,6 +23,8 @@ services:
     prestashop.core.admin.url_generator:
         class: Symfony\Component\Routing\Generator\UrlGeneratorInterface
         factory: ["@prestashop.core.admin.url_generator_factory", forSymfony]
+    prestashop.core.admin.search_parameters:
+        class: PrestaShop\PrestaShop\Core\Search\SearchParameters
 
     # Interfaced services to decorate
     prestashop.core.admin.data_provider.product_interface:
