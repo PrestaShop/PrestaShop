@@ -683,7 +683,7 @@ function updatePrice()
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
 	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
-	
+
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
 	var priceWithDiscountsWithTax = basePriceWithTax;
@@ -779,7 +779,7 @@ function updatePrice()
 			baseUnitPrice = productBasePriceTaxExcl / productUnitPriceRatio;
 			unit_price = baseUnitPrice + unit_impact;
 
-			if (!noTaxForThisProduct || !customerGroupWithoutTax)
+			if (displayPrice !== 1 && (!noTaxForThisProduct || !customerGroupWithoutTax))
 				unit_price = unit_price * (taxRate/100 + 1);
 		}
 		else
