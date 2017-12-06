@@ -291,15 +291,16 @@ class ReleaseCreator
     protected function createTmpProjectDir()
     {
         $this->consoleWriter->displayText("Copy project in {$this->tempProjectPath}...", ConsoleWriter::COLOR_YELLOW);
-        $argDestination = escapeshellarg($this->tempProjectPath);
-
-        if (file_exists($this->tempProjectPath)) {
-            exec("rm -rf $argDestination && mkdir $argDestination");
-        } else {
-            exec("mkdir $argDestination");
-        }
         $argProjectPath = escapeshellarg($this->projectPath);
-        exec("rsync -ar $argProjectPath/ $argDestination --exclude .git --exclude tools/build/releases --exclude node_modules --exclude themes/classic/_dev --exclude 'vendor/*'");
+        $argTmpDestination = escapeshellarg("{$this->tempProjectPath}");
+
+        if (file_exists("{$this->tempProjectPath}")) {
+            exec("rm -rf $argTmpDestination");
+        }
+        exec("mkdir $argTmpDestination && \
+            cd {$argProjectPath} && \
+            git archive HEAD | tar -xC {$argTmpDestination} && \
+            cd -");
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
 
         return $this;
