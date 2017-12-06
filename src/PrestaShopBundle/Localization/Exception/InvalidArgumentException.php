@@ -24,22 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Specification;
+namespace PrestaShopBundle\Localization;
 
-use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
-
-/**
- * Currency number (price) specification class
- * Regroups specific rules and data used when formatting a price in a given locale and a given numbering system
- * (latin, arab, ...).
- */
-class Currency extends NumberSpecification
+class InvalidArgumentException extends \InvalidArgumentException
 {
-    /**
-     * Type of display for currency symbol
-     * cf. self::CURRENCY_DISPLAY_SYMBOL and self::CURRENCY_DISPLAY_CODE constants
-     *
-     * @var string
-     */
-    protected $currencyDisplay;
+
 }
