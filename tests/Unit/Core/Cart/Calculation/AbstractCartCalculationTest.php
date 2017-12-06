@@ -34,16 +34,30 @@ use Tools;
  */
 abstract class AbstractCartCalculationTest extends AbstractCartTest
 {
-    protected function compareCartTotal($expectedTotal, $knownToFailOnV1 = false)
+    protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
         $totalV1 = $this->cart->getOrderTotal();
         // NO_PROD do not keep it in commit : round is for development only !
         $expectedTotal = floor($expectedTotal * 10) / 10;
         $totalV1       = floor($totalV1 * 10) / 10;
         if (!$knownToFailOnV1) {
-            $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail');
+            $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
         }
         $totalV2       = floor($totalV2 * 10) / 10;
-        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail');
+        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
+    }
+
+    protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
+    {
+        $totalV1 = $this->cart->getOrderTotal(false);
+        $totalV2 = $this->cart->getOrderTotalV2(false);
+        // NO_PROD do not keep it in commit : round is for development only !
+        $expectedTotal = floor($expectedTotal * 10) / 10;
+        $totalV1       = floor($totalV1 * 10) / 10;
+        if (!$knownToFailOnV1) {
+            $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
+        }
+        $totalV2       = floor($totalV2 * 10) / 10;
+        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
     }
 }

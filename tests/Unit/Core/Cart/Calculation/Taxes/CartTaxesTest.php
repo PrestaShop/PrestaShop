@@ -55,7 +55,7 @@ class CartProductTest extends AbstractCartCalculationTest
      */
     public function testTaxes(
         $productData,
-        $expectedTotalExcl,
+        $expectedTotalTaxExcl,
         $expectedTotalTaxIncl,
         $cartRuleData,
         $addressId
@@ -65,25 +65,8 @@ class CartProductTest extends AbstractCartCalculationTest
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
 
-        // NO_PROD do not keep it in commit : round is for development only !
-        $expectedTotalExcl    = floor($expectedTotalExcl * 10) / 10;
-        $expectedTotalTaxIncl = floor($expectedTotalTaxIncl * 10) / 10;
-
-        $totalV1TaxExcl = $this->cart->getOrderTotal(false);
-        $totalV1TaxIncl = $this->cart->getOrderTotal(true);
-        // NO_PROD do not keep it in commit : round is for development only !
-        $totalV1TaxExcl = floor($totalV1TaxExcl * 10) / 10;
-        $totalV1TaxIncl = floor($totalV1TaxIncl * 10) / 10;
-        $this->assertEquals(\Tools::convertPrice($expectedTotalExcl), $totalV1TaxExcl, 'tax excl V1 fail');
-        $this->assertEquals(\Tools::convertPrice($expectedTotalTaxIncl), $totalV1TaxIncl, 'tax incl V1 fail');
-
-        $totalV2TaxExcl = $this->cart->getOrderTotalV2(false);
-        $totalV2TaxIncl = $this->cart->getOrderTotalV2(true);
-        // NO_PROD do not keep it in commit : round is for development only !
-        $totalV2TaxExcl = floor($totalV2TaxExcl * 10) / 10;
-        $totalV2TaxIncl = floor($totalV2TaxIncl * 10) / 10;
-        $this->assertEquals(\Tools::convertPrice($expectedTotalExcl), $totalV2TaxExcl, 'tax excl V2 fail');
-        $this->assertEquals(\Tools::convertPrice($expectedTotalTaxIncl), $totalV2TaxIncl, 'tax incl V2 fail');
+        $this->compareCartTotalTaxExcl($expectedTotalTaxExcl);
+        $this->compareCartTotalTaxIncl($expectedTotalTaxIncl);
     }
 
     public function cartTaxesProvider()

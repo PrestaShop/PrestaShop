@@ -39,7 +39,7 @@ class CartProductTest extends AbstractCartCalculationTest
         $this->resetCart();
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $this->compareCartTotal($expectedTotal);
+        $this->compareCartTotalTaxIncl($expectedTotal);
     }
 
     public function cartWithoutCartRulesProvider()
