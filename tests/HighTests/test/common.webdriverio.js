@@ -40,13 +40,13 @@ function initCommands(client) {
   });
 
 
-  client.addCommand('waitForExistAndClick', function (selector , timeout=90000) {
+  client.addCommand('waitForExistAndClick', function (selector , timeout = 90000) {
     return client
       .waitForExist(selector , timeout)
       .click(selector)
   });
 
-  client.addCommand('waitAndSetValue', function (selector, value, timeout=90000) {
+  client.addCommand('waitAndSetValue', function (selector, value, timeout = 90000) {
     return client
       .waitForExist(selector , timeout)
       .setValue(selector, value)
@@ -58,7 +58,7 @@ function initCommands(client) {
         .then((location) => client.scroll(0, location - margin));
   });
 
-  client.addCommand('scrollWaitForExistAndClick', function (selector, margin = 150, timeout=90000) {
+  client.addCommand('scrollWaitForExistAndClick', function (selector, margin = 150, timeout = 90000) {
     return client
       .getLocation(selector, 'y')
       .then((location) => client.scroll(0, location - margin))
@@ -66,13 +66,13 @@ function initCommands(client) {
       .click(selector)
   });
 
-  client.addCommand('waitForVisibleAndClick', function (selector, timeout=90000) {
+  client.addCommand('waitForVisibleAndClick', function (selector, timeout = 90000) {
     return client
       .waitForVisible(selector, timeout)
       .click(selector)
   });
 
-  client.addCommand('waitAndSelectByValue', function (selector, value, timeout=60000) {
+  client.addCommand('waitAndSelectByValue', function (selector, value, timeout = 60000) {
     return client
       .waitForExist(selector, timeout)
       .selectByValue(selector,value)
@@ -92,27 +92,24 @@ function initCommands(client) {
 
   client.addCommand('signInFO', function (selector) {
     return client
+      .url('http://' + URL)
       .waitForExistAndClick(selector.sign_in_button)
-      .waitAndSetValue(selector.AccessPageBO.login_input, 'pub@prestashop.com')
-      .waitAndSetValue(selector.AccessPageBO.password_inputFO, '123456789')
-      .waitForExistAndClick(selector.AccessPageBO.login_button)
-      .waitForExistAndClick(selector.AccessPageBO.logo_home_page)
+      .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
+      .waitAndSetValue(selector.password_inputFO, '123456789')
+      .waitForExistAndClick(selector.login_button)
+      .waitForExistAndClick(selector.logo_home_page)
   });
 
-  client.addCommand('signOutBO', function (cb) {
-    this.selector = globals.selector;
+  client.addCommand('signOutBO', function () {
     return client
-      .deleteCookie()
-      .call(cb);
+      .deleteCookie();
   });
 
-  client.addCommand('signOutFO', function (cb) {
-    this.selector = globals.selector;
+  client.addCommand('signOutFO', function (selector) {
     return client
-      .waitForExistAndClick(selector.AccessPageBO.sign_out_button)
-      .waitForExist(this.selector.FO.AccessPageBO.sign_in_button, 90000)
-      .deleteCookie()
-      .call(cb);
+      .waitForExistAndClick(selector.sign_out_button)
+      .waitForExist(selector.sign_in_button, 90000)
+      .deleteCookie();
   });
 
 

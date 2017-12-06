@@ -1,99 +1,51 @@
 var CommonClient = require('./common_client');
-var {selector} = require('../globals.webdriverio.js');
 
 class CreateProduct extends CommonClient {
 
-  goToProductMenu() {
+  setQuantity(selector) {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.menu, 90000)
-      .click(selector.BO.AddProductPage.products_subtab)
-      .waitForExist(selector.BO.AddProductPage.new_product_button, 90000)
+      .waitForExist(selector, 90000)
+      .clearElement(selector)
+      .addValue(selector, "10")
   }
 
-  addNewProduct() {
+  setPrice(selector) {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.new_product_button, 90000)
-      .click(selector.BO.AddProductPage.new_product_button)
+      .waitForExist(selector, 90000)
+      .execute(function (selector) {
+        document.querySelector(selector).value = "";
+      }, selector)
+      .setValue(selector, "5")
   }
 
-  addProductName(name) {
-    global.product_id = new Date().getTime();
+  selectVariation(addProductPage, name) {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.product_name_input, 90000)
-      .setValue(selector.BO.AddProductPage.product_name_input, name +' '+ global.product_id)
+      .waitAndSetValue(addProductPage.variations_input, name + " : All")
+      .waitForExistAndClick(addProductPage.variations_select)
   }
 
-  addProductQuantity() {
+  setVariationsQuantity(addProductPage, value) {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.quantity_shortcut_input, 90000)
-      .clearElement(selector.BO.AddProductPage.quantity_shortcut_input)
-      .addValue(selector.BO.AddProductPage.quantity_shortcut_input, "10")
+      .pause(4000)
+      .waitAndSetValue(addProductPage.var_selected_quantitie, value)
+      .moveToObject(addProductPage.combinations_thead, 90000)
+      .waitForExistAndClick(addProductPage.save_quantitie_button)
   }
 
-  addProductPrice() {
+  clickOnAddFeature(addProductPage) {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.price_te_shortcut_input, 90000)
-      .execute(function () {
-        document.querySelector('#form_step1_price_shortcut').value = "";
-      })
-      .setValue(selector.BO.AddProductPage.price_te_shortcut_input, "5")
+      .moveToObject(addProductPage.product_create_category_btn)
+      .waitForExistAndClick(addProductPage.add_feature_to_product_button)
   }
 
-  addProductTypeAttribute() {
+  selectFeature(addProductPage, name, value) {
     return this.client
-      .waitForExist(selector.BO.AddProductPage.variations_type_button, 90000)
-      .click(selector.BO.AddProductPage.variations_type_button)
-      .waitForExist(selector.BO.AddProductPage.variations_tab, 90000)
-      .click(selector.BO.AddProductPage.variations_tab)
-      .waitForExist(selector.BO.AddProductPage.variations_input, 90000)
-      .setValue(selector.BO.AddProductPage.variations_input, global.attributeName + " : All")
-      .waitForExist(selector.BO.AddProductPage.variations_select, 90000)
-      .click(selector.BO.AddProductPage.variations_select)
-      .waitForExist(selector.BO.AddProductPage.variations_generate, 90000)
-      .click(selector.BO.AddProductPage.variations_generate)
-      .waitForExist(selector.BO.AddProductPage.close_validation_button, 90000)
-      .pause(3000)
-      .waitForExist(selector.BO.AddProductPage.var_selected, 90000)
-      .click(selector.BO.AddProductPage.var_selected)
-      .pause(3000)
-      .waitForExist(selector.BO.AddProductPage.var_selected_quantitie, 90000)
-      .setValue(selector.BO.AddProductPage.var_selected_quantitie, "10")
-      .moveToObject('//*[@id="combinations_thead"]/tr/th[7]', 90000)
-      .click(selector.BO.AddProductPage.save_quantitie_button)
-  }
-
-  addProductTypeFeature() {
-    return this.client
-      .moveToObject('//*[@id="add-categories"]/h2')
-      .click(selector.BO.AddProductPage.add_feature_to_product_button)
-      .waitForExist(selector.BO.AddProductPage.add_feature_to_product_button, 90000)
-      .moveToObject(selector.BO.AddProductPage.feature_select)
-      .click(selector.BO.AddProductPage.feature_select)
-      .waitForExist(selector.BO.AddProductPage.select_feature_created, 90000)
-      .setValue(selector.BO.AddProductPage.select_feature_created, global.featureName)
-      .click('//*[@id="select2-form_step1_features_0_feature-results"]/li')
+      .moveToObject(addProductPage.feature_select)
+      .waitForExistAndClick(addProductPage.feature_select)
+      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .waitForExistAndClick(addProductPage.result_feature_select.replace('%ID', 0))
       .pause(2000)
-      .selectByVisibleText(selector.BO.AddProductPage.feature_value_select,'feature value')
-  }
-
-
-  productEnLigne() {
-    return this.client
-      .pause(1000)
-      .click(selector.BO.AddProductPage.product_online_toggle)
-  }
-
-  saveProduct() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.save_product_button, 90000)
-      .click(selector.BO.AddProductPage.save_product_button)
-      .pause(3000)
-  }
-
-  closeGreenValidation() {
-    return this.client
-      .waitForExist(selector.BO.AddProductPage.close_validation_button, 90000)
-      .click(selector.BO.AddProductPage.close_validation_button)
+      .selectByVisibleText(addProductPage.feature_value_select, value)
   }
 
 }
