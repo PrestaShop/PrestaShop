@@ -19,8 +19,15 @@ class CommonClient {
     return this.client.signInFO(selector);
   }
 
-  signOutFO() {
-    return this.client.signOutFO();
+  signOutFO(selector) {
+    return this.client.signOutFO(selector);
+  }
+
+  goToSubtabMenuPage(menuSelector, selector) {
+    return this.client
+        .waitForExist(menuSelector, 90000)
+        .moveToObject(menuSelector)
+        .waitForExistAndClick(selector)
   }
 
   checkOnBoardingModal() {
@@ -29,10 +36,10 @@ class CommonClient {
       .then((text) => global.onboarding = text)
   }
 
-  OnBoarding() {
+  OnBoarding(selector) {
     if (global.onboarding == true) {
       return this.client
-        .click(selector.OnBoarding.popup_close_button)
+        .click(selector.popup_close_button)
         .pause(2000)
     } else {
       return this.client
@@ -54,16 +61,12 @@ class CommonClient {
   languageChange(language) {
     if (language === "francais") {
       return this.client
-        .waitForExist(selector.languageFO.language_selector, 90000)
-        .click(selector.languageFO.language_selector)
-        .waitForVisible(selector.languageFO.language_FR, 90000)
-        .click(selector.languageFO.language_FR)
+        .waitForExistAndClick(selector.languageFO.language_selector)
+        .waitForVisibleAndClick(selector.languageFO.language_FR)
     } else {
       return this.client
-        .waitForExist(selector.languageFO.language_selector, 90000)
-        .click(selector.languageFO.language_selector)
-        .waitForVisible(selector.languageFO.language_EN, 90000)
-        .click(selector.languageFO.language_EN)
+        .waitForExistAndClick(selector.languageFO.language_selector)
+        .waitForVisibleAndClick(selector.languageFO.language_EN)
     }
   }
 
@@ -75,11 +78,11 @@ class CommonClient {
     return this.client.end();
   }
 
-  waitForExistAndClick(selector, timeout) {
+  waitForExistAndClick(selector, timeout = 90000) {
     return this.client.waitForExistAndClick(selector, timeout);
   }
 
-  waitAndSetValue(selector, value, timeout) {
+  waitAndSetValue(selector, value, timeout = 90000) {
     return this.client.waitAndSetValue(selector, value, timeout);
   }
 
@@ -87,15 +90,15 @@ class CommonClient {
     return this.client.scrollTo(selector, margin);
   }
 
-  scrollWaitForExistAndClick(selector, margin, timeout) {
+  scrollWaitForExistAndClick(selector, margin, timeout = 90000) {
     return this.client.scrollWaitForExistAndClick(selector, margin, timeout)
   }
 
-  waitForVisibleAndClick(selector, timeout) {
+  waitForVisibleAndClick(selector, timeout = 90000) {
     return this.client.waitForVisibleAndClick(selector, timeout);
   }
 
-  waitAndSelectByValue(selector, value, timeout) {
+  waitAndSelectByValue(selector, value, timeout = 90000) {
     return this.client.waitAndSelectByValue(selector, value, timeout);
   }
 
@@ -119,6 +122,19 @@ class CommonClient {
         document.getElementsByClassName(className).style = '';
       })
       .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+  }
+
+  /**
+   * This function allows to search a data by value
+   * @param search_input
+   * @param search_button
+   * @param value
+   * @returns {*}
+     */
+  searchByValue(search_input, search_button, value) {
+    return this.client
+      .waitAndSetValue(search_input, value)
+      .waitForExistAndClick(search_button)
   }
 }
 
