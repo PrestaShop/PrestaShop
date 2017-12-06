@@ -583,7 +583,7 @@ class ReleaseCreator
             }
 
             if (substr($pathToTest, 0, $tmpDirPathLength) != $tmpDir) {
-                throw new BuildException("Trying to delete a file somewhere else than in /tmp, path: $pathToTest");
+                throw new BuildException("Trying to delete a file somewhere else than in $tmpDir, path: $pathToTest");
             }
 
             if (is_numeric($key)) {
@@ -689,6 +689,7 @@ class ReleaseCreator
     protected function movePackage()
     {
         $this->consoleWriter->displayText("--- Move package...", ConsoleWriter::COLOR_YELLOW);
+        $tmpDir = sys_get_temp_dir();
         $argTempProjectPath = escapeshellarg($this->tempProjectPath);
 
         if ($this->useZip) {
@@ -701,7 +702,7 @@ class ReleaseCreator
             exec("mv {$argTempProjectPath} {$argDestinationDir}");
         }
         rename(
-            "/tmp/prestashop_$this->version.xml",
+            "{$tmpDir}/prestashop_$this->version.xml",
             "{$this->destinationDir}/prestashop_$this->version.xml"
         );
         exec("rm -rf {$argTempProjectPath}");
@@ -717,7 +718,8 @@ class ReleaseCreator
     protected function generateXMLChecksum()
     {
         $this->consoleWriter->displayText("--- Generating XML checksum...", ConsoleWriter::COLOR_YELLOW);
-        $xmlPath = "/tmp/prestashop_$this->version.xml";
+        $tmpDir = sys_get_temp_dir();
+        $xmlPath = "{$tmpDir}/prestashop_$this->version.xml";
         $content = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>{$this->lineSeparator}"
             . "<checksum_list>{$this->lineSeparator}"
             . "\t<ps_root_dir version=\"$this->version\">{$this->lineSeparator}"
