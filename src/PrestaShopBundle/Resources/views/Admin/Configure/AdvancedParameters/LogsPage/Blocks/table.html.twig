@@ -85,11 +85,11 @@
   </tbody>
 </table>
 
-{% if logsSum >= 20 %}
+{% if logsSum >= 10 %}
   <div class="row">
     <div class="col-md-12">
       {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
-      {'limit': 10, 'offset': 0, 'total': logsSum, 'caller_route': app.request.attributes.get('_route') }))
+      {'limit': app.request.get('limit', 10), 'offset': app.request.get('offset', 0), 'total': logsSum, 'caller_route': app.request.attributes.get('_route') }))
       }}
     </div>
   </div>

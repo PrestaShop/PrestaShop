@@ -53,7 +53,7 @@ class LogsController extends FrameworkBundleAdminController
     {
         $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
-            'limit' => 20,
+            'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_log',
             'sortOrder' => 'desc'
