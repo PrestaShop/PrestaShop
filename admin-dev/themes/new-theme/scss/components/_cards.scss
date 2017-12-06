@@ -75,6 +75,10 @@
   &:first-child {
     border-radius: $card-border-radius-inner $card-border-radius-inner 0 0;
   }
+
+  .material-icons {
+    vertical-align: text-bottom;
+  }
 }
 
 .card-footer {
