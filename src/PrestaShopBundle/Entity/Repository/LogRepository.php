@@ -54,11 +54,26 @@ class LogRepository implements RepositoryInterface
 
     /**
      * Get all logs with employee name and avatar information
+     * @param array $filters
      */
-    public function findAllWithEmployeeInformation()
+    public function findAllWithEmployeeInformation($filters)
     {
         $employeeTable = $this->databasePrefix.'employee';
-        $statement = $this->connection->query("SELECT l.*, e.firstname, e.lastname, e.email FROM $this->logTable l JOIN $employeeTable e ON (l.id_employee = e.id_employee)");
+        $queryBuilder = $this->connection->createQueryBuilder();
+
+        $statement = $queryBuilder
+            ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
+            ->from($this->logTable, 'l')
+            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
+            ->orderBy(':orderBy', ':sortOrder')
+            ->setFirstResult($filters['offset'])
+            ->setMaxResults($filters['limit'])
+            ->setParameters(array(
+                ':orderBy' => $filters['orderBy'],
+                ':sortOrder' => $filters['sortOrder'],
+            ))
+            ->execute()
+        ;
 
         return $statement->fetchAll();
     }
