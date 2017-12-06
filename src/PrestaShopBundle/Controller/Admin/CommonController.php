@@ -63,10 +63,8 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full')
     {
-        // base elements
-        if ($limit <= 0) {
-            $limit = 10;
-        }
+        $limit = max($limit, 10);
+
         $currentPage = floor($offset/$limit)+1;
         $pageCount = ceil($total/$limit);
         $from = $offset;
@@ -87,6 +85,7 @@ class CommonController extends FrameworkBundleAdminController
                 'limit' => $limit
             )
         ));
+
         $previousPageUrl = (!$routeName || ($offset == 0)) ? false : $this->generateUrl($routeName, array_merge(
             $callerParameters,
             array(
@@ -122,7 +121,7 @@ class CommonController extends FrameworkBundleAdminController
                 'limit' => $limit
             )
         ));
-        $limitChoices = $request->attributes->get('limit_choices', array(20, 50, 100));
+        $limitChoices = $request->attributes->get('limit_choices', array(10, 20, 50, 100));
 
         // Template vars injection
         $vars = array(
