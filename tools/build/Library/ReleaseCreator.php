@@ -572,6 +572,9 @@ class ReleaseCreator
         array &$patternsRemoveList,
         $folder
     ) {
+        $tmpDir = sys_get_temp_dir();
+        $tmpDirPathLength = strlen($tmpDir);
+
         foreach ($filesList as $key => $value) {
             $pathToTest = $value;
 
@@ -579,7 +582,7 @@ class ReleaseCreator
                 $pathToTest = $key;
             }
 
-            if (substr($pathToTest, 0, 4) != '/tmp') {
+            if (substr($pathToTest, 0, $tmpDirPathLength) != $tmpDir) {
                 throw new BuildException("Trying to delete a file somewhere else than in /tmp, path: $pathToTest");
             }
 
