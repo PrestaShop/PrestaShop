@@ -25,7 +25,6 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
-{% set sumLogs = logs|length %}
 <table class="table table-responsive table-striped table-hover">
   <thead class="thead-light">
     <tr>
@@ -86,13 +85,12 @@
   </tbody>
 </table>
 
-{% if sumLogs > 20 %}
+{% if logsSum >= 20 %}
   <div class="row">
     <div class="col-md-12">
       {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
-      {'limit': 10, 'offset': 0, 'total': sumLogs}))
+      {'limit': 10, 'offset': 0, 'total': logsSum, 'caller_route': app.request.attributes.get('_route') }))
       }}
     </div>
   </div>
 {% endif %}
-

@@ -46,11 +46,18 @@ class LogsController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
+     * @param Symfony\Component\HttpFoundation\Request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
+        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
+            'limit' => 20,
+            'offset' => 0,
+            'orderBy' => 'id_log',
+            'sortOrder' => 'desc'
+        ));
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
@@ -62,7 +69,8 @@ class LogsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'logsByEmailForm' => $logsByEmailForm->createView(),
-            'logs' => $this->get('prestashop.core.admin.log.repository')->findAllWithEmployeeInformation(),
+            'logsSum' => count($this->getLogRepository()->findAll()),
+            'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
         );
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
@@ -120,8 +128,16 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function eraseAllLogsAction()
     {
-        $this->get('prestashop.core.admin.log.repository')->deleteAll();
+        $this->getLogRepository()->deleteAll();
 
         return $this->redirectToRoute('admin_logs');
+    }
+
+    /**
+     * @return LogRepository the repository to retrieve logs from database.
+     */
+    private function getLogRepository()
+    {
+        return $this->get('prestashop.core.admin.log.repository');
     }
 }
