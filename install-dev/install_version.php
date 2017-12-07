@@ -24,4 +24,4 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_INSTALL_VERSION_', '1.7.2.4');
+define('_PS_INSTALL_VERSION_', '1.7.3.0');
