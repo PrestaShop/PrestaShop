@@ -32,7 +32,7 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
  * Number's symbols data bag. Regroups all symbols used when formatting a number
  * (decimal separator, thousands separator, etc.).
  */
-class NumberSymbolList
+class NumberSymbolList implements NumberSymbolListInterface
 {
     /**
      * Decimal separator character

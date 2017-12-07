@@ -34,7 +34,7 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
  * Regroups rules and data used when formatting a decimal number in a given locale and a given numbering system
  * (latin, arab, ...).
  */
-class Number
+class Number implements NumberInterface
 {
     /**
      * Currency specification constructor.
@@ -116,7 +116,7 @@ class Number
      * List of available number symbols lists (NumberSymbolList objects)
      * Each list is indexed by numbering system
      *
-     * @var NumberSymbolList[]
+     * @var NumberSymbolListInterface[]
      */
     protected $symbols;
 
@@ -160,11 +160,45 @@ class Number
     protected $secondaryGroupSize;
 
     /**
+     * Add a new symbols list in the specification (one list by numbering system)
+     *
+     * @param string                    $numberingSystem
+     *  The numbering system
+     *
+     * @param NumberSymbolListInterface $symbolList
+     *  The symbols list to use when formatting in this numbering system
+     */
+    public function addSymbols($numberingSystem, NumberSymbolListInterface $symbolList)
+    {
+        $this->symbols[$numberingSystem] = $symbolList;
+    }
+
+    /**
+     * Fill missing symbols with "fallback" data
+     *
+     * For the given symbols lists, if one or several symbols are missing, they will be filled with fallback symbols
+     *
+     * @param string                    $numberingSystem
+     *  The concerned numbering system
+     *
+     * @param NumberSymbolListInterface $fallbackSymbolList
+     *  The fallback symbols list
+     */
+    public function hydrateSymbols($numberingSystem, NumberSymbolListInterface $fallbackSymbolList)
+    {
+        if (!isset($this->symbols[$numberingSystem])) {
+            $this->symbols[$numberingSystem] = $fallbackSymbolList;
+        }
+
+        ($this->symbols[$numberingSystem])->hydrate($fallbackSymbolList);
+    }
+
+    /**
      * Get all specified symbols lists, indexed by available numbering system.
      *
      * Each item of the result is a NumberSymbolList
      *
-     * @return NumberSymbolList[]
+     * @return NumberSymbolListInterface[]
      */
     public function getAllSymbols()
     {
@@ -176,7 +210,7 @@ class Number
      *
      * @param $numberingSystem
      *
-     * @return NumberSymbolList
+     * @return NumberSymbolListInterface
      * @throws LocalizationException
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
