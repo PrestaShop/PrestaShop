@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d798893e452b4a27941239b71928a93e",
+    "content-hash": "32442202f10cf568241ca070a004bd64",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -3725,57 +3725,6 @@
             "time": "2017-01-30T15:46:25+00:00"
         },
         {
-            "name": "prestashop/smarty",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/smarty.git",
-                "reference": "c141c2a15d5bffae23a45a791374fd0753749793"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/smarty/zipball/c141c2a15d5bffae23a45a791374fd0753749793",
-                "reference": "c141c2a15d5bffae23a45a791374fd0753749793",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "Smarty.class.php",
-                    "SmartyBC.class.php",
-                    "sysplugins/smarty_security.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Monte Ohrt",
-                    "email": "monte@ohrt.com"
-                },
-                {
-                    "name": "Uwe Tews",
-                    "email": "uwe.tews@googlemail.com"
-                },
-                {
-                    "name": "Rodney Rehm",
-                    "email": "rodney.rehm@medialize.de"
-                },
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop Smarty version",
-            "homepage": "https://github.com/PrestaShop/smarty",
-            "time": "2017-05-11T08:29:53+00:00"
-        },
-        {
             "name": "prestashop/statsbestcategories",
             "version": "dev-master",
             "source": {
@@ -7311,7 +7260,6 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "prestashop/translationtools-bundle": 20,
-        "prestashop/smarty": 20,
         "prestashop/blockreassurance": 20,
         "prestashop/contactform": 20,
         "prestashop/dashactivity": 20,
