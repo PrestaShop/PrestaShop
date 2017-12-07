@@ -133,7 +133,7 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
         ],
         "create-test-db": [
-            "Tests\\PrestaShopBundle\\Utils\\Database::createTestDB"
+            "Tests\\PrestaShopBundle\\Utils\\DatabaseCreator::createTestDB"
         ],
         "test-all": [
             "composer phpunit-legacy",
