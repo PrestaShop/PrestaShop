@@ -39,7 +39,7 @@ function initCommands(client) {
       .call(cb);
   });
 
-  client.addCommand('waitForExistAndClick', function (selector , timeout = 90000) {
+  client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {
     return client
       .waitForExist(selector, timeout)
       .click(selector)
@@ -61,8 +61,7 @@ function initCommands(client) {
     return client
       .getLocation(selector, 'y')
       .then((location) => client.scroll(0, location - margin))
-      .waitForExist(selector , timeout)
-      .click(selector)
+      .waitForExistAndClick(selector, timeout)
   });
 
   client.addCommand('waitForVisibleAndClick', function (selector, timeout = 90000) {
