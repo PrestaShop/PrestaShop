@@ -135,7 +135,7 @@ class Number
             $this->symbols[$numberingSystem] = $fallbackSymbolList;
         }
 
-        ($this->symbols[$numberingSystem])->hydrate($fallbackSymbolList);
+        $this->symbols[$numberingSystem]->hydrate($fallbackSymbolList);
     }
 
     /**
