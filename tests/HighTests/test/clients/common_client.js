@@ -110,13 +110,6 @@ class CommonClient {
       .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
   }
 
-  checkTextValue(selector, message) {
-    return this.client
-      .waitForVisible(selector, 90000)
-      .then(() => this.client.getText(selector))
-      .then((text) => expect(text).to.be.equal(message));
-  }
-
   getTextInVar(selector, globalVar, split = false) {
     if(split){
       return this.client
