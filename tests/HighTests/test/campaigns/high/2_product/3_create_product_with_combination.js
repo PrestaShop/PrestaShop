@@ -100,11 +100,11 @@ scenario('Check the product in the catalog', client => {
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.goToCatalog());
   test('should search for product by name', () => client.searchProductByName(data.standard.name + 'Combination' + date_time));
-  test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.standard.name + 'Combination' + date_time));
-  test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
-  test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.standard.new_category_name + 'Combination' + date_time));
+  test('should check the existence of product name', () => client.checkText(AddProductPage.catalog_product_name, data.standard.name + 'Combination' + date_time));
+  test('should check the existence of product reference', () => client.checkText(AddProductPage.catalog_product_reference, data.common.product_reference));
+  test('should check the existence of product category', () => client.checkText(AddProductPage.catalog_product_category, data.standard.new_category_name + 'Combination' + date_time));
   test('should check the existence of product price TE', () => client.checkProductPriceTE());
-  test('should check the existence of product quantity Combination', () => client.checkTextValue(AddProductPage.catalog_product_quantity, (parseInt(data.standard.variations[0].quantity) + parseInt(data.standard.variations[1].quantity)).toString()));
-  test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
+  test('should check the existence of product quantity Combination', () => client.checkText(AddProductPage.catalog_product_quantity, (parseInt(data.standard.variations[0].quantity) + parseInt(data.standard.variations[1].quantity)).toString()));
+  test('should check the existence of product status', () => client.checkText(AddProductPage.catalog_product_online, 'check'));
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);

@@ -91,11 +91,11 @@ scenario('Check the product in the catalog', client => {
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.goToCatalog());
   test('should search for product by name', () => client.searchProductByName(data.virtual.name + date_time));
-  test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.virtual.name + date_time));
-  test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
-  test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.virtual.new_category_name + date_time));
+  test('should check the existence of product name', () => client.checkText(AddProductPage.catalog_product_name, data.virtual.name + date_time));
+  test('should check the existence of product reference', () => client.checkText(AddProductPage.catalog_product_reference, data.common.product_reference));
+  test('should check the existence of product category', () => client.checkText(AddProductPage.catalog_product_category, data.virtual.new_category_name + date_time));
   test('should check the existence of product price TE', () => client.checkProductPriceTE());
-  test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, data.common.quantity));
-  test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
+  test('should check the existence of product quantity', () => client.checkText(AddProductPage.catalog_product_quantity, data.common.quantity));
+  test('should check the existence of product status', () => client.checkText(AddProductPage.catalog_product_online, 'check'));
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);

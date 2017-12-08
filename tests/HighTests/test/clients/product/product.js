@@ -23,9 +23,9 @@ class Product extends CommonClient {
 
   checkCategoryRadioButton(i, j) {
     return this.client
-      .waitForVisible('//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[' + i + ']/ul/li[' + j + ']/div/div/input')
+      .waitForVisible('//*[@id="form_step1_categories"]/ul/li[2]/ul/li[1]/ul/li['+i+']/ul/li['+j+']/div/label/input[2]')
       .scroll(0, 1000)
-      .isVisible('//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[' + i + ']/ul/li[' + j + ']/div/div/input', 60000)
+      .isVisible('//*[@id="form_step1_categories"]/ul/li[2]/ul/li[1]/ul/li['+i+']/ul/li['+j+']/div/label/input[2]', 60000)
       .then((text) => expect(text).to.be.true);
   }
 
@@ -72,11 +72,11 @@ class Product extends CommonClient {
       .waitAndSetValue(AddProductPage.options_upc, data.common.upc)
   }
 
-  addPackProduct(pack) {
+  addPackProduct(search,quantity) {
     return this.client
-      .waitAndSetValue(AddProductPage.search_product_pack, pack.search)
+      .waitAndSetValue(AddProductPage.search_product_pack, search)
       .waitForExistAndClick(AddProductPage.product_item_pack)
-      .waitAndSetValue(AddProductPage.product_pack_item_quantity, pack.quantity)
+      .waitAndSetValue(AddProductPage.product_pack_item_quantity, quantity)
       .waitForExistAndClick(AddProductPage.product_pack_add_button)
   }
 
