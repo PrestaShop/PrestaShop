@@ -22,6 +22,9 @@
     <testsuite name="PrestaShop Bundle Test Suite">
       <directory>PrestaShopBundle</directory>
     </testsuite>
+    <testsuite name="CLDR Test Suite">
+      <directory>../src/PrestaShopBundle/Tests</directory>
+    </testsuite>
   </testsuites>
 
   <filter>
