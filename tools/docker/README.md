@@ -3,7 +3,7 @@
 ## Run PrestaShop in local
 
 ```
-cd docker
+cd tools/docker
 docker-compose up -d
 ```
 
@@ -32,7 +32,7 @@ MySQL settings:
 When you want to stop PrestaShop containers, just run:
 
 ```
-cd docker
+cd tools/docker
 docker-compose down -v
 ```
 
@@ -61,7 +61,6 @@ grant all privileges on test_prestashop.* to 'prestashop' identified by 'passwor
 exit
 docker exec -it php-apache-prestashop bash
 cd /var/www/html
-composer install
 composer create-test-db
 ```
 
@@ -79,7 +78,7 @@ Open preferences -> Languages & Frameworks -> PHP -> Test Frameworks
 2. Choose or add a remote interpreter from Docker with settings:  
 **Type**: Docker Compose  
 **Server**: Docker  
-**Configuration file(s)**: docker/docker-compose-tests.yml  
+**Configuration file(s)**: tools/docker/docker-compose-tests.yml  
 **Service**: Choose php-apache-tests  
 3. When your CLI interpreter is added, select it in the PHPUnit by Remote Interpreter 
 dialog box and submit.  
@@ -111,8 +110,8 @@ docker exec -it mysql-prestashop bash
 ## Informations
 
 - Database credentials are available in the docker-composer.yml file.
-- MySQL data are persisted into docker/data/mysql
-- The docker/data/tests/ps_dump.sql file is used by our unit tests files to 
+- MySQL data are persisted into tools/docker/data/mysql
+- The tools/docker/data/tests/ps_dump.sql file is used by our unit tests files to 
 recreate the test database at different times.
 - The MySQL container is shared between your docker-compose.yml for local  
 development and docker-compose-tests.yml for unit testing.

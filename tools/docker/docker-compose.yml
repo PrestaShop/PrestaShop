@@ -9,7 +9,7 @@ services:
         ports:
             - "80:80"
         volumes:
-            - ./..:/var/www/html
+            - ./../..:/var/www/html
             - ./data/tests:/tmp/prestashop
         environment:
           - WEB_DOCUMENT_ROOT=/var/www/html
