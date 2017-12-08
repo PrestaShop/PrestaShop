@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {%
@@ -240,7 +240,7 @@
                                 {{ form_errors(cachingForm.caching_system) }}
                                 {{ form_widget(cachingForm.caching_system) }}
                             </div>
-                            {{ include('@PrestaShop/Admin/AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
+                            {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
                         </div>
                     </div>
                     <div class="card-footer">

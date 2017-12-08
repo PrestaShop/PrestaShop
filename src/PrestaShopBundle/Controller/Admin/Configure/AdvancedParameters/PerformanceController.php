@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
+namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -67,7 +67,7 @@ class PerformanceController extends FrameworkBundleAdminController
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
         );
 
-        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:performance.html.twig', $twigValues);
+        return $this->render('@AdvancedParameters/performance.html.twig', $twigValues);
     }
 
     /**
