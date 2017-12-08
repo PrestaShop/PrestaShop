@@ -79,7 +79,7 @@ class ProductAssemblerCore
 				)
 			) > 0) as new
                 FROM {$prefix}product p
-                INNER JOIN {$prefix}product_lang pl
+                LEFT JOIN {$prefix}product_lang pl
                     ON pl.id_product = p.id_product
                     AND pl.id_shop = $idShop
                     AND pl.id_lang = $idLang
@@ -89,6 +89,9 @@ class ProductAssemblerCore
 			        AND sa.id_shop = $idShop";
 
         $rows = Db::getInstance()->executeS($sql);
+        if ($rows === false) {
+            return $rawProduct;
+        }
 
         return array_merge($rows[0], $rawProduct);
     }
