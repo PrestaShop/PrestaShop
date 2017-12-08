@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Localization\Specification;
 
-use PrestaShopBundle\Localization\InvalidArgumentException;
+use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
 
 /**
  * Number specification class
@@ -132,7 +132,7 @@ class Number
     public function hydrateSymbols($numberingSystem, NumberSymbolList $fallbackSymbolList)
     {
         if (!isset($this->symbols[$numberingSystem])) {
-            $this->symbols[$numberingSystem] = $fallbackSymbolList;
+            $this->addSymbols($numberingSystem, $fallbackSymbolList);
         }
 
         $this->symbols[$numberingSystem]->hydrate($fallbackSymbolList);
