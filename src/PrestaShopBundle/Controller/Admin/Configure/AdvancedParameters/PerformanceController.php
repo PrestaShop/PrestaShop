@@ -81,10 +81,6 @@ class PerformanceController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_performance');
         }
 
-        $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', array('controller' => $this));
-        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
-        $form->handleRequest($request);
-
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             array(
@@ -98,6 +94,10 @@ class PerformanceController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_performance');
         }
+
+        $this->dispatchHook('actionAdminPerformanceControllerPostProcessBefore', array('controller' => $this));
+        $form = $this->get('prestashop.adapter.performance.form_handler')->getForm();
+        $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
