@@ -122,6 +122,7 @@ class LogsController extends FrameworkBundleAdminController
 
     /**
      * @return RedirectResponse
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function eraseAllLogsAction()
     {
