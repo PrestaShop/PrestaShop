@@ -43,9 +43,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage the maintenance mode in back office
-     *
-     * @return array
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {

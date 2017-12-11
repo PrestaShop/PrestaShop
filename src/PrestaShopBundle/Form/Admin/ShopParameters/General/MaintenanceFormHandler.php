@@ -42,7 +42,7 @@ class MaintenanceFormHandler implements FormHandlerInterface
     private $formFactory;
 
     /**
-     * @var PerformanceFormDataProvider
+     * @var MaintenanceFormDataProvider
      */
     private $formDataProvider;
 
@@ -56,7 +56,7 @@ class MaintenanceFormHandler implements FormHandlerInterface
     }
 
     /**
-     * @return \Symfony\Component\Form\FormInterface
+     * {@inheritdoc}
      */
     public function getForm()
     {
@@ -68,9 +68,7 @@ class MaintenanceFormHandler implements FormHandlerInterface
     }
 
     /**
-     * @param array $data
-     * @return array errors found if not empty
-     * @throws UndefinedOptionsException if data is invalid
+     * {@inheritdoc}
      */
     public function save(array $data)
     {
