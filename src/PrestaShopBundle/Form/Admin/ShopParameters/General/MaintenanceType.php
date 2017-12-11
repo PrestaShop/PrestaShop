@@ -34,6 +34,10 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
+/**
+ * Class retuning the content of the form in the maintenance page.
+ * To be found in Configure > Shop parameters > General > Maintenance
+ */
 class MaintenanceType extends TranslatorAwareType
 {
     protected $locales;
