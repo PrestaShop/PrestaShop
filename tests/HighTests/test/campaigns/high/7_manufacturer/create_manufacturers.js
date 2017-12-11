@@ -11,8 +11,6 @@ scenario('Create new brand and brand address', () => {
     test('should go to brands & Suppliers menu', () => client.goToManufacturersList());
     test('should click on add new brand', () => client.addNewBrand());
     test('should add brand name', () => client.addBrandName());
-   // test('should add short description', () => client.addShortDescription());
-    //test('should add description', () => client.addDescription());
     test('should add brand logo', () => client.addBrandLogo());
     test('should add brand meta title', () => client.addMetaTitle());
     test('should add brand meta description', () => client.addMetaDescription());
@@ -37,7 +35,7 @@ scenario('Create new brand and brand address', () => {
     test('should add brand information', () => client.addBrandOtherInformation());
     test('should save brand address', () => client.saveBrandAddress());
     test('should check brand success panel', () => client.successPanel('Successful creation.'));
+    test('should sign Out the Back Office', () => client.signOutBO());
   }, 'manufacturers');
-
 
 }, 'manufacturers', true);
