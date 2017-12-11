@@ -25,16 +25,23 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-class PerformanceFormHandler implements FormHandlerInterface
+final class PerformanceFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
@@ -47,13 +54,13 @@ class PerformanceFormHandler implements FormHandlerInterface
     private $combinationFeature;
 
     /**
-     * @var PerformanceFormDataProvider
+     * @var FormDataProviderInterface
      */
     private $formDataProvider;
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        PerformanceFormDataProvider $formDataProvider,
+        FormDataProviderInterface $formDataProvider,
         CombinationFeature $combinationFeature
     )
     {
@@ -63,29 +70,27 @@ class PerformanceFormHandler implements FormHandlerInterface
     }
 
     /**
-     * @return \Symfony\Component\Form\FormInterface
+     * @{inheritdoc}
      */
     public function getForm()
     {
         return $this->formFactory->createBuilder()
-            ->add('smarty', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType')
-            ->add('debug_mode', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType')
-            ->add('optional_features', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType', array(
+            ->add('smarty', SmartyType::class)
+            ->add('debug_mode', DebugModeType::class)
+            ->add('optional_features', OptionalFeaturesType::class, array(
                 'are_combinations_used' => $this->combinationFeature->isUsed()
             ))
-            ->add('ccc', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType')
-            ->add('media_servers', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType')
-            ->add('caching', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType')
-            ->add('add_memcache_server', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType')
+            ->add('ccc', CombineCompressCacheType::class)
+            ->add('media_servers', MediaServersType::class)
+            ->add('caching', CachingType::class)
+            ->add('add_memcache_server', MemcacheServerType::class)
             ->setData($this->formDataProvider->getData())
             ->getForm()
         ;
     }
 
     /**
-     * @param array $data
-     * @return array errors found if not empty
-     * @throws UndefinedOptionsException if data is invalid
+     * @{inheritdoc}
      */
     public function save(array $data)
     {

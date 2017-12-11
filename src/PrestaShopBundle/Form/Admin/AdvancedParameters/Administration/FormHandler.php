@@ -25,15 +25,18 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType;
+use PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Administration" page.
  */
-class FormHandler implements FormHandlerInterface
+final class FormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
@@ -41,37 +44,32 @@ class FormHandler implements FormHandlerInterface
     private $formFactory;
 
     /**
-     * @var FormDataProvider
+     * @var FormDataProviderInterface
      */
     private $formDataProvider;
 
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        FormDataProvider $formDataProvider
-    )
+    public function __construct(FormFactoryInterface $formFactory, FormDataProviderInterface $formDataProvider)
     {
         $this->formFactory = $formFactory;
         $this->formDataProvider = $formDataProvider;
     }
 
     /**
-     * @return \Symfony\Component\Form\FormInterface
+     * @{inheritdoc}
      */
     public function getForm()
     {
         return $this->formFactory->createBuilder()
-            ->add('general', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType')
-            ->add('upload_quota', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType')
-            ->add('notifications', 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType')
+            ->add('general', GeneralType::class)
+            ->add('upload_quota', UploadQuotaType::class)
+            ->add('notifications', NotificationsType::class)
             ->setData($this->formDataProvider->getData())
             ->getForm()
         ;
     }
 
     /**
-     * @param array $data
-     * @return array errors found if not empty
-     * @throws UndefinedOptionsException if data is invalid
+     * @{inheritdoc}
      */
     public function save(array $data)
     {

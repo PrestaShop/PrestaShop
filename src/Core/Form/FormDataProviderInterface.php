@@ -28,23 +28,21 @@ namespace PrestaShop\PrestaShop\Core\Form;
 use Symfony\Component\Form\FormInterface;
 
 /**
- * Manage Symfony forms outside the controllers.
+ * Symfony forms data provider.
  */
-interface FormHandlerInterface
+interface FormDataProviderInterface
 {
     /**
-     * @return FormInterface
+     * @return array the form data as an associative array
      */
-    public function getForm();
+    public function getData();
 
     /**
-     * Describe what need to be done on saving the form: mostly persists the data
-     * using a form data provider, but it's also the right place to dispatch events/log something.
+     * Persists form Data in Database and Filesystem.
      *
-     * @param array $data data retrieved from form that need to be persisted in database
-     * @throws \Exception if the data can't be handled
-     *
-     * @return void
+     * @param array $data
+     * @return array $errors if data can't persisted an array of errors messages
+     * @throws UndefinedOptionsException
      */
-    public function save(array $data);
+    public function setData(array $data);
 }
