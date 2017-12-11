@@ -56,16 +56,48 @@ class LogRepository implements RepositoryInterface
     }
 
     /**
+     * Get all logs with employee name and avatar information SQL query.
+     * @param array $filters
+     * @return string the SQL query
+     */
+    public function findAllWithEmployeeInformationQuery($filters)
+    {
+        $queryBuilder = $this->getAllWithEmployeeInformationQuery($filters);
+
+        $query = $queryBuilder->getSql();
+        $parameters = $queryBuilder->getParameters();
+
+        foreach ($parameters as $pattern => $value) {
+            $query = str_replace($pattern, $value, $query);
+        }
+
+        return $query;
+    }
+
+    /**
      * Get all logs with employee name and avatar information.
      * @param array $filters
      * @return array the list of logs
      */
     public function findAllWithEmployeeInformation($filters)
     {
+        $queryBuilder = $this->getAllWithEmployeeInformationQuery($filters);
+        $statement = $queryBuilder->execute();
+
+        return $statement->fetchAll();
+    }
+
+    /**
+     * Get a reusable Query Builder to dump and execute SQL.
+     * @param array $filters
+     * @return \Doctrine\DBAL\Query\QueryBuilder
+     */
+    private function getAllWithEmployeeInformationQuery($filters)
+    {
         $employeeTable = $this->databasePrefix.'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
 
-        $statement = $queryBuilder
+        return $queryBuilder
             ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
             ->from($this->logTable, 'l')
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
@@ -75,11 +107,7 @@ class LogRepository implements RepositoryInterface
             ->setParameters(array(
                 ':orderBy' => $filters['orderBy'],
                 ':sortOrder' => $filters['sortOrder'],
-            ))
-            ->execute()
-        ;
-
-        return $statement->fetchAll();
+            ));
     }
 
     /**

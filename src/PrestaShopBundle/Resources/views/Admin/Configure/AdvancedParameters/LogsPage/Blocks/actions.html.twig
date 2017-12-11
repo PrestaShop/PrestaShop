@@ -1,0 +1,66 @@
+{#**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *#}
+<div class="action-buttons float-right">
+    {{ renderhook('displayDashboardToolbarIcons', {}) }}
+
+    <form action="{{ path('admin_logs_delete') }}" id="logs_delete_form" method="POST" class="form-inline float-left">
+        <input name="_method" type="hidden" value="DELETE" />
+        <input name="_token" type="hidden" value="{{ csrf_token('logs') }}" />
+        {% set message = 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') %}
+        <a onclick="LogsPage.delete('{{ message }}');" href="javascript:void(0);">
+            {{ ps.tooltip(("Erase all"|trans({}, 'Admin.Actions')), 'delete_forever') }}
+        </a>
+    </form>
+    <a id="desc-product-import" class="list-toolbar-btn" href="javascript:location.reload();">
+        {{ ps.tooltip(("Refresh list"|trans({}, 'Admin.Actions')), 'refresh') }}
+    </a>
+    <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="SQLManager.showLastSqlQuery();">
+        {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
+    </a>
+    <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="SQLManager.sendLastSqlQuery(SQLManager.createSqlQueryName());">
+        {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
+    </a>
+</div>
+
+{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+    'id': "catalog_sql_query_modal",
+    'title': "SQL query"|trans({}, 'Admin.Global'),
+    'closable': true,
+    'actions': [{
+        'type': 'button',
+        'label': "Export to SQL Manager"|trans({}, 'Admin.Actions'),
+        'value': 'sql_manager',
+        'class': 'btn btn-primary btn-lg btn-sql-submit',
+    }],
+} %}
+    {% block content %}
+        <form method="post" action="{{ sql_manager_add_link }}" id="catalog_sql_query_modal_content">
+            <div class="modal-body">
+                <textarea name="sql" rows="20" cols="65"></textarea>
+                <input type="hidden" name="name" value="" />
+            </div>
+        </form>
+    {% endblock %}
+{% endembed %}

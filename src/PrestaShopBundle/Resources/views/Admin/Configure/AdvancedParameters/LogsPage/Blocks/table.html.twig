@@ -63,7 +63,7 @@
       <th scope="col">&nbsp;</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="sql-manager" data-query="{{ sql_query }}">
   {% for log in logs %}
     <tr>
       <th scope="row">{{ log.id_log }}</th>
