@@ -48,7 +48,7 @@
           <div class="card-block">
             <div class="card-text">
               <div class="form-group row">
-              {% set helptip = 'Enter "5" if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Feature') ~ ' ' ~ 'Emails will be sent to the shop owner.'|trans({}, 'Admin.Advparameters.Help') %}
+              {% set helptip = 'Enter "5" if you do not want to receive any emails.'|trans({}, 'Admin.Advparameters.Help') ~ ' ' ~ 'Emails will be sent to the shop owner.'|trans({}, 'Admin.Advparameters.Help') %}
               {{ ps.label_with_help(('Minimum severity level'|trans), helptip, 'col-sm-2') }}
                 <div class="col-sm-8">
                   {{ form_errors(logsByEmailForm.logs_by_email) }}
