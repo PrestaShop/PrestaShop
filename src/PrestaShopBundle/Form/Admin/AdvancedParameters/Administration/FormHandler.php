@@ -52,7 +52,7 @@ final class FormHandler extends AbstractFormHandler
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getForm()
     {
@@ -69,7 +69,7 @@ final class FormHandler extends AbstractFormHandler
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function save(array $data)
     {
