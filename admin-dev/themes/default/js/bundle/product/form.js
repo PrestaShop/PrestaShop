@@ -962,8 +962,8 @@ var form = (function() {
   }
 
   function switchLanguage(iso_code) {
-    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('visible');
-    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('visible');
+    $('div.translations.tabbable > div > div.translation-field:not(.translation-label-' + iso_code + ')').removeClass('show active');
+    $('div.translations.tabbable > div > div.translation-field.translation-label-' + iso_code).addClass('show active');
   }
 
   function updateMissingTranslatedNames() {

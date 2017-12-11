@@ -81,6 +81,7 @@ class MaintenanceType extends TranslatorAwareType
                     'required' => false,
                 ),
                 'locales' => $this->locales,
+                'hideTabs' => false,
                 'required' => true,
             ))
         ;
