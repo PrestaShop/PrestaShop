@@ -28,15 +28,22 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
+/**
+ * Extended input type for IP addresses
+ * Displays a bouton to add the user's one to the list.
+ */
 class IpAddressType extends TextType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function getExtendedType()
     {
         return TextType::class;
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getBlockPrefix()
     {
