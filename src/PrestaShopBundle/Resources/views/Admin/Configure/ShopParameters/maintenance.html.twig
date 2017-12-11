@@ -53,8 +53,8 @@
                             </div>
                             <div class="form-group">
                                 {{ ps.label_with_help(('Custom maintenance text'|trans), ('Custom text displayed on maintenance page while shop is deactivated.'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                                {{ form_errors(generalForm.maintenance_ip) }}
-                                {{ form_widget(generalForm.maintenance_ip) }}
+                                {{ form_errors(generalForm.maintenance_text) }}
+                                {{ form_widget(generalForm.maintenance_text) }}
                             </div>
                         </div>
                     </div>
@@ -72,4 +72,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
+    <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
+    <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
 {% endblock %}
