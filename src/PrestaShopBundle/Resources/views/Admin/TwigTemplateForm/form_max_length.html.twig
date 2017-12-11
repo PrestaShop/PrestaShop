@@ -24,21 +24,23 @@
  *#}
 {% if attr.counter is defined %}
   {% set isRecommandedType = attr.counter_type is defined and attr.counter_type == 'recommended' %}
-  <span class="maxLength {{ not(isRecommandedType) ? 'maxType' }}">
-    {% if isRecommandedType %}
-      {{ '[1][/1] of [2][/2] characters used (recommended)'|trans({}, 'Admin.Catalog.Feature')|replace({
-        '[1]': '<span class="currentLength">',
-        '[/1]': '</span>',
-        '[2]': '<span class="currentTotalMax">'~attr.counter,
-        '[/2]': '</span>',
-      })|raw }}
-    {% else %}
-      {{ '[1][/1] of [2][/2] characters allowed'|trans({}, 'Admin.Catalog.Feature')|replace({
-        '[1]': '<span class="currentLength">',
-        '[/1]': '</span>',
-        '[2]': '<span class="currentTotalMax">'~attr.counter,
-        '[/2]': '</span>',
-      })|raw }}
-    {% endif %}
-  </span>
+  <small class="form-text text-muted text-right maxLength {{ not(isRecommandedType) ? 'maxType' }}">
+      <em>
+        {% if isRecommandedType %}
+          {{ '[1][/1] of [2][/2] characters used (recommended)'|trans({}, 'Admin.Catalog.Feature')|replace({
+            '[1]': '<span class="currentLength">',
+            '[/1]': '</span>',
+            '[2]': '<span class="currentTotalMax">'~attr.counter,
+            '[/2]': '</span>',
+          })|raw }}
+        {% else %}
+          {{ '[1][/1] of [2][/2] characters allowed'|trans({}, 'Admin.Catalog.Feature')|replace({
+            '[1]': '<span class="currentLength">',
+            '[/1]': '</span>',
+            '[2]': '<span class="currentTotalMax">'~attr.counter,
+            '[/2]': '</span>',
+          })|raw }}
+        {% endif %}
+      </em>
+  </small>
 {% endif %}
