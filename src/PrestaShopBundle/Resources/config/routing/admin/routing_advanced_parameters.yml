@@ -13,6 +13,13 @@ admin_logs_save:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:processForm'
         _legacy_controller: AdminLogs
 
+admin_logs_delete:
+    path: logs
+    methods: [DELETE]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Logs:deleteAll'
+        _legacy_controller: AdminLogs
+
 # System Information
 admin_system_information:
     path: system_information
