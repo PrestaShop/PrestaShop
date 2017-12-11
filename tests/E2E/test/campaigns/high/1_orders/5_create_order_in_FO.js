@@ -9,7 +9,7 @@ scenario('Create order in FO', client => {
     test('should sign in FO', () => client.signInFO(AccessPageFO));
   }, 'order/order');
   scenario('Create order in FO', client => {
-    test('should change the FO language to english', () => client.languageChange());
+    test('should change the FO language to english', () => client.changeLanguage());
     test('should choose product ', () => client.waitForExistAndClick(productPage.first_product));
     test('should select product "size M" ', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
     test('should select product "color blue"', () => client.waitForExistAndClick(productPage.first_product_color));
