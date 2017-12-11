@@ -1,11 +1,10 @@
 const {OrderPage} = require('../../../selectors/BO/order_page');
 
 scenario('Print invoice', client => {
-  test('should go to "DOCUMENTS"', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
+  test('should click on "DOCUMENTS" subtab', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
   test('should download the invoice document', () => client.downloadDocument());
-  test('should check invoice name', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
-  test('should check invoice customer', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
-  test('should check invoice basic price', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price));
-  test('should check invoice product information', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "Blouse - Size : S- Color : White"));
+  test('should check the "invoice file name" ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
+  test('should check that the "invoice customer" is "Johan Doe', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, 'John DOE'));
+  test('should check  the "invoice basic price"  ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price));
+  test('should check that the "invoice product information" is : Blouse - Size : S- Color : White', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "Blouse - Size : S- Color : White"));
 }, 'order/order');
-
