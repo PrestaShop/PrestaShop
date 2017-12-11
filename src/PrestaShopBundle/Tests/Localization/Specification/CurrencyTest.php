@@ -24,44 +24,18 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Specification;
+namespace PrestaShopBundle\Tests\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
+use PrestaShopBundle\Localization\Specification\Currency;
 
-/**
- * Currency number (price) specification class
- * Regroups specific rules and data used when formatting a price in a given locale and a given numbering system
- * (latin, arab, ...).
- */
-class Currency extends NumberSpecification
+class CurrencyTest extends NumberTest
 {
     /**
-     * Currency display option : symbol notation
-     * eg: €
+     * Let's override numberSpec with the tested Currency specification
+     * All NumberTest tests are supposed to pass with a Currency spec.
      */
-    const CURRENCY_DISPLAY_SYMBOL = 'symbol';
-
-    /**
-     * Currency display option : ISO code notation
-     * eg: EUR
-     */
-    const CURRENCY_DISPLAY_CODE = 'code';
-
-    /**
-     * Type of display for currency symbol
-     * cf. self::CURRENCY_DISPLAY_SYMBOL and self::CURRENCY_DISPLAY_CODE constants
-     *
-     * @var string
-     */
-    protected $currencyDisplay;
-
-    /**
-     * Get type of display for currency symbol
-     *
-     * @return string
-     */
-    public function getCurrencyDisplay()
+    protected function setUp()
     {
-        return $this->currencyDisplay;
+        $this->numberSpec = new Currency();
     }
 }
