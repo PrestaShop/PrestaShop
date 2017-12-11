@@ -70,7 +70,7 @@ final class PerformanceFormHandler implements FormHandlerInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getForm()
     {
@@ -90,7 +90,7 @@ final class PerformanceFormHandler implements FormHandlerInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function save(array $data)
     {

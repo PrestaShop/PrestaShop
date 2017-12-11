@@ -55,7 +55,7 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getForm()
     {
@@ -69,7 +69,7 @@ final class FormHandler implements FormHandlerInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function save(array $data)
     {
