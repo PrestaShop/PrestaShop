@@ -463,6 +463,10 @@ class AdminFeaturesControllerCore extends AdminController
             if (isset($_POST['submitReset'.$this->list_id])) {
                 $this->processResetFilters();
             }
+
+            if (Tools::getIsset('deletefeature_value')) {
+                self::$currentIndex = self::$currentIndex . '&id_feature=' . (int)Tools::getValue('id_feature') . '&viewfeature';
+            }
         } else {
             $this->list_id = 'feature';
             $this->_defaultOrderBy = 'position';
