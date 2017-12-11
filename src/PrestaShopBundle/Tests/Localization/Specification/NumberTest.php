@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Tests\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
+use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
 use PrestaShopBundle\Localization\Specification\NumberSymbolList;
 
@@ -50,7 +50,7 @@ class NumberTest extends TestCase
      *
      * (also tests addSymbols() at the same time)
      */
-    public function testGetAllSymbols()
+    public function testGetAllSymbolsReturnsAListOfSymbols()
     {
         $latinList          = $this->createMock(NumberSymbolList::class);
         $latinList->decimal = ',';
@@ -85,7 +85,7 @@ class NumberTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @throws LocalizationException
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {

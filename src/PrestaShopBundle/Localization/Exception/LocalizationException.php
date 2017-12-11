@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Localization\Exception;
 
-class InvalidArgumentException extends \InvalidArgumentException
+class LocalizationException extends \Exception
 {
 
 }

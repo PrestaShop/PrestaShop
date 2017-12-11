@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Localization\Specification;
 
-use PrestaShopBundle\Localization\Exception\InvalidArgumentException;
+use PrestaShopBundle\Localization\Exception\LocalizationException;
 
 /**
  * Number specification class
@@ -61,6 +61,9 @@ class Number
     protected $negativePattern;
 
     /**
+     * List of available number symbols lists (NumberSymbolList objects)
+     * Each list is indexed by numbering system
+     *
      * @var NumberSymbolList[]
      */
     protected $symbols;
@@ -156,11 +159,12 @@ class Number
      * @param $numberingSystem
      *
      * @return NumberSymbolList
+     * @throws LocalizationException
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)
     {
         if (!isset($this->symbols[$numberingSystem])) {
-            throw new InvalidArgumentException('Unknown or invalid numbering system');
+            throw new LocalizationException('Unknown or invalid numbering system');
         }
 
         return $this->symbols[$numberingSystem];
