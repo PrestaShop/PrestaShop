@@ -73,7 +73,7 @@ class CustomerCore extends ObjectModel
     /** @var string Newsletter ip registration */
     public $ip_registration_newsletter;
 
-    /** @var string Newsletter ip registration */
+    /** @var string Newsletter registration date */
     public $newsletter_date_add;
 
     /** @var bool Opt-in subscription */
