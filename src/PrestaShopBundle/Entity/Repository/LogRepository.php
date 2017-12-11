@@ -29,6 +29,9 @@ namespace PrestaShopBundle\Entity\Repository;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
+/**
+ * Retrieve Logs data from database.
+ */
 class LogRepository implements RepositoryInterface
 {
     private $connection;
@@ -53,8 +56,9 @@ class LogRepository implements RepositoryInterface
     }
 
     /**
-     * Get all logs with employee name and avatar information
+     * Get all logs with employee name and avatar information.
      * @param array $filters
+     * @return array the list of logs
      */
     public function findAllWithEmployeeInformation($filters)
     {
@@ -80,9 +84,11 @@ class LogRepository implements RepositoryInterface
 
     /**
      * Delete all logs.
+     * @return integer The number of affected rows.
+     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteAll()
     {
-        return  $this->connection->delete("$this->tableName");
+        return $this->connection->delete("$this->tableName");
     }
 }

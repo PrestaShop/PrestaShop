@@ -40,6 +40,11 @@ final class SearchParameters
         'sortOrder',
     );
 
+    /**
+     * @param Request $request
+     * @param array $defaultValues
+     * @return array
+     */
     public function getFiltersFromRequest(Request $request, array $defaultValues)
     {
         $filters = array();
