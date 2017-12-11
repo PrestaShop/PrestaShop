@@ -481,6 +481,7 @@ class AdminFeaturesControllerCore extends AdminController
         if ($this->table == 'feature_value' && ($this->action == 'save' || $this->action == 'delete' || $this->action == 'bulkDelete')) {
             Hook::exec('displayFeatureValuePostProcess',
                 array('errors' => &$this->errors));
+            $this->redirect_after = self::$currentIndex . '&id_feature=' . (int)Tools::getValue('id_feature') . '&viewfeature' . '&token=' . $this->token;
         } // send errors as reference to allow displayFeatureValuePostProcess to stop saving process
         else {
             Hook::exec('displayFeaturePostProcess',
