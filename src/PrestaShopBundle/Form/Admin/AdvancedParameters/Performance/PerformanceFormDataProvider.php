@@ -87,7 +87,7 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getData()
     {
@@ -102,7 +102,7 @@ final class PerformanceFormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {
