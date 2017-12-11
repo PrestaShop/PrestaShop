@@ -27,13 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsByEmailType;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\FormInterface;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Logs" page display
@@ -46,7 +43,7 @@ class LogsController extends FrameworkBundleAdminController
     const CONTROLLER_NAME = 'AdminLogs';
 
     /**
-     * @param Symfony\Component\HttpFoundation\Request
+     * @param \Symfony\Component\HttpFoundation\Request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
