@@ -47,7 +47,7 @@ final class HookDataCollector extends DataCollector
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
@@ -89,7 +89,7 @@ final class HookDataCollector extends DataCollector
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
