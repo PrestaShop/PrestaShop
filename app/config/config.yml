@@ -58,6 +58,7 @@ twig:
         webpack_server:   false
     paths:
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
+        '%admin_page%/Configure/ShopParameters': ShopParameters
 
 # Doctrine Configuration
 doctrine:
