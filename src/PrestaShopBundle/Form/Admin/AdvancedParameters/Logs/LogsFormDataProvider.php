@@ -25,14 +25,14 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Logs;
 
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration;
 
 /**
  * This class is responsible of managing the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-class LogsFormDataProvider
+class LogsFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var LogsConfiguration
@@ -45,7 +45,7 @@ class LogsFormDataProvider
     }
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getData()
     {
@@ -53,11 +53,7 @@ class LogsFormDataProvider
     }
 
     /**
-     * Persists form Data in Database and Filesystem
-     *
-     * @param array $data
-     * @return array $errors if data can't persisted an array of errors messages
-     * @throws UndefinedOptionsException
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {

@@ -77,7 +77,7 @@ class CachingConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
@@ -89,7 +89,7 @@ class CachingConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -103,7 +103,7 @@ class CachingConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {

@@ -64,7 +64,7 @@ final class FormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getData()
     {
@@ -76,7 +76,7 @@ final class FormDataProvider implements FormDataProviderInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function setData(array $data)
     {

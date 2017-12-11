@@ -46,7 +46,7 @@ class CombinationFeature implements FeatureInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function isUsed()
     {
@@ -54,7 +54,7 @@ class CombinationFeature implements FeatureInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function isActive()
     {
@@ -62,7 +62,7 @@ class CombinationFeature implements FeatureInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function enable()
     {
@@ -70,7 +70,7 @@ class CombinationFeature implements FeatureInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function disable()
     {
@@ -78,7 +78,7 @@ class CombinationFeature implements FeatureInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function update($status)
     {
