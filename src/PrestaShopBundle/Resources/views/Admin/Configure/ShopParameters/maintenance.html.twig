@@ -75,4 +75,19 @@
     <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
     <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
     <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
+    <script>
+        function addRemoteAddr(event)
+        {
+            var input = $(event.target).prev("input");
+            var length = (input.val() || "").length;
+            if (length > 0) {
+                if (input.val().indexOf('{{ currentIp }}') < 0) {
+                    input.val(input.val() +',{{ currentIp }}');
+                }
+            } else {
+                input.val('{{ currentIp }}');
+            }
+        }
+        $(".add_ip_button").on("click", addRemoteAddr);
+    </script>
 {% endblock %}
