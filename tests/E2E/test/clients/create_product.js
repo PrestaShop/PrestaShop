@@ -2,20 +2,20 @@ var CommonClient = require('./common_client');
 
 class CreateProduct extends CommonClient {
 
-  setQuantity(selector) {
+  setQuantity(selector, quantity) {
     return this.client
       .waitForExist(selector, 90000)
       .clearElement(selector)
-      .addValue(selector, "10")
+      .addValue(selector, quantity)
   }
 
-  setPrice(selector) {
+  setPrice(selector, price) {
     return this.client
       .waitForExist(selector, 90000)
       .execute(function (selector) {
         document.querySelector(selector).value = "";
       }, selector)
-      .setValue(selector, "5")
+      .setValue(selector, price)
   }
 
   selectVariation(addProductPage, name) {

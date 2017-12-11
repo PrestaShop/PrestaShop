@@ -33,7 +33,7 @@ scenario('Check the attribute modification', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'attribute_and_feature');
   scenario('Check that the attribute is well updated in the Front Office', client => {
-    test('should set the shop language to "English"', () => client.languageChange('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage('english'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'attribute'));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product attribute name is "'+'attribute' + date_time+'update"', () => client.checkTextValue(SearchProductPage.attribut_name, 'attribute' + date_time + 'update'));

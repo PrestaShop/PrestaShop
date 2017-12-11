@@ -12,7 +12,7 @@ module.exports = {
     order_quantity: '//*[@id="orderProducts"]/tbody/tr[1]/td[4]/span[1]',
     order_check_status: '//*[@id="status"]/div/table/tbody/tr[1]/td[2]',
     check_shipping_Cost: '//*[@id="shipping_table"]/tbody/tr/td[5]/span',
-    check_message_order: '//*[@id="content"]/div[6]/div/div[@class="row"]/div[2]/div[2]/div[2]/div/div[2]/p',
+    check_message_order: '//*[@id="content"]//p[contains(@class, "message-item-text")]',
     check_payment_type: '//*[@id="formAddPayment"]/div/table/tbody/tr[1]/td[2]',
     check_quantity: '//*[@id="orderProducts"]/tbody/tr[1]/td[4]/span[1]',
     quantity_value:'//*[@id="orderProducts"]/tbody/tr[1]/td[4]/span[2]/input',
@@ -21,7 +21,7 @@ module.exports = {
     edit_product_button: '//*[@id="orderProducts"]/tbody/tr[1]/td[13]/div/button[1]',
     second_edit_product_button:'//*[@id="orderProducts"]/tbody/tr[1]/td[12]/div/button[1]',
     product_basic_price: '//*[@id="orderProducts"]/tbody/tr[1]/td[3]/div/div/div[1]/div/input',
-    customer_name: '//*[@id="content"]/div[6]/div/div[@class="row"]/div[2]/div[2]/div[2]/div/div[2]/h4',
+    customer_name: '//*[@id="content"]//h2[contains(@class, "page-title")]',
     update_order_status_button: '//*[@id="status"]/form/div/div[2]/button',
     order_submenu: '//*[@id="subtab-AdminOrders"]/a',
     document_submenu:'//*[@id="tabOrder"]/li[2]/a',
@@ -29,13 +29,10 @@ module.exports = {
     download_delivery_button:'//*[@id="documents_table"]/tbody/tr[3]/td[3]/a',
     check_shipping_price: '//*[@id="shipping_table"]/tbody/tr/td[5]/span',
     check_product: '//*[@id="orderProducts"]/tbody/tr[1]/td[2]/a/span',
-    check_order_message: '//*[@id="content"]/div[6]/div/div[@class="row"]/div[2]/div[2]/div[2]/div/div[2]/p',
     check_total_price: '//*[@id="total_products"]/td[2]',
-    check_basic_price: '//*[@id="orderProducts"]/tbody/tr[1]/td[12]/div/button[1]',
     check_shipping_method: '//*[@id="shipping_table"]/tbody/tr/td[3]',
     reference_search: '//*[@id="form-order"]/div/div[2]/table/thead/tr[2]/th[3]/input',
     search_order_button: '//*[@id="submitFilterButtonorder"]',
     view_order_button: '//*[@id="form-order"]/div/div[2]/table/tbody/tr/td[12]/div/a',
-
   }
 };
