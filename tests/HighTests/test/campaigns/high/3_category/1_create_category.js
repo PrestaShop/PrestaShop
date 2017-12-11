@@ -14,6 +14,7 @@ scenario('Create category', client => {
   test('should add category simplify url', () => client.addCategorySimplifyUrl());
   test('should save category ', () => client.SaveCategory());
   test('should check category success panel', () => client.successPanel('Successful creation.'));
+  test('should sign out BO', () => client.signOutBO());
 }, 'category', true);
 
 scenario('Check category in BO', client => {
