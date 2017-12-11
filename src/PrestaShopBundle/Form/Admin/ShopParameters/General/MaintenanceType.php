@@ -25,13 +25,13 @@
  */
 namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
+use PrestaShopBundle\Form\Admin\Type\IpAddressType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class MaintenanceType extends TranslatorAwareType
@@ -63,7 +63,7 @@ class MaintenanceType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))
-            ->add('maintenance_ip', TextType::class, array(
+            ->add('maintenance_ip', IpAddressType::class, array(
                 'required' => true,
             ))
             ->add('maintenance_text', TranslateType::class, array(

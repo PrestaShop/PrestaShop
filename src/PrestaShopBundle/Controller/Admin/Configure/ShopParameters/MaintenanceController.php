@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  * Responsible of "Configure > Shop Parameters > General > Maintenance" page
@@ -44,7 +45,7 @@ class MaintenanceController extends FrameworkBundleAdminController
      * @var FormInterface
      * @return Response
      */
-    public function indexAction(FormInterface $form = null)
+    public function indexAction(Request $request, FormInterface $form = null)
     {
         if (is_null($form)) {
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
@@ -60,9 +61,57 @@ class MaintenanceController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminMaintenance'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
+            'currentIp' => $request->getClientIp(),
         );
-        dump($twigValues['form']);
 
         return $this->render('@ShopParameters/maintenance.html.twig', $twigValues);
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function processFormAction(Request $request)
+    {
+        $redirectResponse = $this->redirectToRoute('admin_maintenance');
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+            return $redirectResponse;
+        }
+
+        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
+        $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
+        $form->handleRequest($request);
+
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+
+            return $redirectResponse;
+        }
+
+        if (!$form->isSubmitted()) {
+            return $redirectResponse;
+        }
+
+        $data = $form->getData();
+
+        $saveErrors = $this->get('prestashop.adapter.maintenance.form_handler')->save($data);
+
+        if (0 === count($saveErrors)) {
+            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+            return $redirectResponse;
+        }
+
+        $this->flashErrors($saveErrors);
+        return $redirectResponse;
     }
 }

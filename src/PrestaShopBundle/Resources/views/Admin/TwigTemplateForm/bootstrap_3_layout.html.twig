@@ -215,7 +215,7 @@
     {{ form_errors(form) }}
     <div class="translations tabbable" id="{{ form.vars.id }}">
         {% if hideTabs == false and form|length > 1 %}
-        <ul class="translationsLocales nav nav-tabs">
+        <ul class="translationsLocales nav nav-pills">
             {% for translationsFields in form %}
                 <li class="nav-item">
                     <a href="#" class="{% if defaultLocale.id_lang == translationsFields.vars.name %}active{% endif %} nav-link" data-toggle="tab" data-target=".translationsFields-{{ translationsFields.vars.id }}">

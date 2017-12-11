@@ -23,44 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
+namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-/**
- * This class is responsible of managing the data manipulated using forms
- * in "Configure > Shop Parameters > General > Maintenance" page.
- */
-class MaintenanceFormDataProvider implements FormDataProviderInterface
+class IpAddressType extends TextType
 {
-    /**
-     * @var MaintenanceConfiguration
-     */
-    protected $maintenanceConfiguration;
-
-    public function __construct(
-        MaintenanceConfiguration $maintenanceConfiguration
-    )
+    public function getExtendedType()
     {
-        $this->maintenanceConfiguration = $maintenanceConfiguration;
+        return TextType::class;
     }
 
     /**
-     * {@inheritdoc}
+     * @{inheritdoc}
      */
-    public function getData()
+    public function getBlockPrefix()
     {
-        return array(
-            'general' => $this->maintenanceConfiguration->getConfiguration(),
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data)
-    {
-        return $this->maintenanceConfiguration->updateConfiguration($data['general']);
+        return 'ip_address_text';
     }
 }
