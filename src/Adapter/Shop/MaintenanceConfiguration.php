@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MaintenanceConfiguration implements DataConfigurationInterface
 {
@@ -42,7 +43,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * Returns configuration used to manage Debug mode in back office
+     * Returns configuration used to manage the maintenance mode in back office
      *
      * @return array
      */
@@ -56,7 +57,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -72,7 +73,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
