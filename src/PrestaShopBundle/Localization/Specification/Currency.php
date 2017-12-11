@@ -55,6 +55,31 @@ class Currency extends NumberSpecification
      */
     protected $currencyDisplay;
 
+    public function __construct(
+        $positivePattern,
+        $negativePattern,
+        $symbols,
+        $maxFractionDigits,
+        $minFractionDigits,
+        $groupingUsed,
+        $primaryGroupSize,
+        $secondaryGroupSize,
+        $currencyDisplay
+    ) {
+        parent::__construct(
+            $positivePattern,
+            $negativePattern,
+            $symbols,
+            $maxFractionDigits,
+            $minFractionDigits,
+            $groupingUsed,
+            $primaryGroupSize,
+            $secondaryGroupSize
+        );
+
+        $this->currencyDisplay = $currencyDisplay;
+    }
+
     /**
      * Get type of display for currency symbol
      *

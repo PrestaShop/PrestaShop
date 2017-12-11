@@ -36,6 +36,26 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
  */
 class Number
 {
+    public function __construct(
+        $positivePattern,
+        $negativePattern,
+        $symbols,
+        $maxFractionDigits,
+        $minFractionDigits,
+        $groupingUsed,
+        $primaryGroupSize,
+        $secondaryGroupSize
+    ) {
+        $this->positivePattern    = $positivePattern;
+        $this->negativePattern    = $negativePattern;
+        $this->symbols            = $symbols;
+        $this->maxFractionDigits  = $maxFractionDigits;
+        $this->minFractionDigits  = $minFractionDigits;
+        $this->groupingUsed       = $groupingUsed;
+        $this->primaryGroupSize   = $primaryGroupSize;
+        $this->secondaryGroupSize = $secondaryGroupSize;
+    }
+
     /**
      * Positive number pattern.
      *
@@ -106,40 +126,6 @@ class Number
      * @var int
      */
     protected $secondaryGroupSize;
-
-    /**
-     * Add a new symbols list in the specification (one list by numbering system)
-     *
-     * @param string           $numberingSystem
-     *  The numbering system
-     *
-     * @param NumberSymbolList $symbolList
-     *  The symbols list to use when formatting in this numbering system
-     */
-    public function addSymbols($numberingSystem, NumberSymbolList $symbolList)
-    {
-        $this->symbols[$numberingSystem] = $symbolList;
-    }
-
-    /**
-     * Fill missing symbols with "fallback" data
-     *
-     * For the given symbols lists, if one or several symbols are missing, they will be filled with fallback symbols
-     *
-     * @param                  $numberingSystem
-     *  The concerned numbering system
-     *
-     * @param NumberSymbolList $fallbackSymbolList
-     *  The fallback symbols list
-     */
-    public function hydrateSymbols($numberingSystem, NumberSymbolList $fallbackSymbolList)
-    {
-        if (!isset($this->symbols[$numberingSystem])) {
-            $this->addSymbols($numberingSystem, $fallbackSymbolList);
-        }
-
-        $this->symbols[$numberingSystem]->hydrate($fallbackSymbolList);
-    }
 
     /**
      * Get all specified symbols lists, indexed by available numbering system.

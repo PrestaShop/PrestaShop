@@ -32,6 +32,32 @@ namespace PrestaShopBundle\Localization\Specification;
  */
 class NumberSymbolList
 {
+    public function __construct(
+        $decimal,
+        $group,
+        $list,
+        $percentSign,
+        $minusSign,
+        $plusSign,
+        $exponential,
+        $superscriptingExponent,
+        $perMille,
+        $infinity,
+        $nan
+    ) {
+        $this->decimal                = $decimal;
+        $this->group                  = $group;
+        $this->list                   = $list;
+        $this->percentSign            = $percentSign;
+        $this->minusSign              = $minusSign;
+        $this->plusSign               = $plusSign;
+        $this->exponential            = $exponential;
+        $this->superscriptingExponent = $superscriptingExponent;
+        $this->perMille               = $perMille;
+        $this->infinity               = $infinity;
+        $this->nan                    = $nan;
+    }
+
     /**
      * Decimal separator character
      *
@@ -39,7 +65,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $decimal;
+    protected $decimal;
 
     /**
      * Digits group separator character
@@ -49,7 +75,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $group;
+    protected $group;
 
     /**
      * List elements separator character
@@ -58,7 +84,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $list;
+    protected $list;
 
     /**
      * Percent sign character
@@ -67,7 +93,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $percentSign;
+    protected $percentSign;
 
     /**
      * Minus sign character
@@ -76,7 +102,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $minusSign;
+    protected $minusSign;
 
     /**
      * Plus sign character
@@ -86,7 +112,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $plusSign;
+    protected $plusSign;
 
     /**
      * Exponential character
@@ -95,7 +121,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $exponential;
+    protected $exponential;
 
     /**
      * Superscripting exponent character
@@ -105,7 +131,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $superscriptingExponent;
+    protected $superscriptingExponent;
 
     /**
      * Permille sign character
@@ -114,21 +140,21 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $perMille;
+    protected $perMille;
 
     /**
      * The infinity sign. Corresponds to the IEEE infinity bit pattern.
      *
      * @var string
      */
-    public $infinity;
+    protected $infinity;
 
     /**
      * The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
      *
      * @var string
      */
-    public $nan;
+    protected $nan;
 
     /**
      * Optional. If specified, then for currency formatting/parsing this is used as the decimal separator instead of
@@ -136,7 +162,7 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $currencyDecimal;
+    protected $currencyDecimal;
 
     /**
      * Optional. If specified, then for currency formatting/parsing this is used as the group separator instead of
@@ -144,38 +170,119 @@ class NumberSymbolList
      *
      * @var string
      */
-    public $currencyGroup;
+    protected $currencyGroup;
 
     /**
-     * Time separator character
+     * Get the decimal separator
      *
-     * This replaces any use of the timeSeparator pattern character in a date-time format pattern (no timeSeparator
-     * pattern character is currently defined, see note below). This allows the same time format to be used for multiple
-     * number systems when the time separator depends on the number system. For example, the time format for Arabic
-     * should be COLON when using the Latin numbering system (0, 1, 2, …), but when the Arabic numbering system is used
-     * (٠‎ - ١‎ - ٢‎ …), the traditional time separator in older print styles was often ARABIC COMMA.
-     *
-     * @var string
+     * @return string
      */
-    public $timeSeparator;
-
-    /**
-     * Fills missing items of this list with default data
-     *
-     * @param NumberSymbolList $defaultList
-     *   Used to fill missing items
-     *
-     * @return $this
-     *   Fluent interface
-     */
-    public function hydrate(NumberSymbolList $defaultList)
+    public function getDecimal()
     {
-        foreach (get_object_vars($this) as $property => $value) {
-            if (is_null($value) && !is_null($defaultList->$property)) {
-                $this->$property = $defaultList->$property;
-            }
-        }
+        return $this->decimal;
+    }
 
-        return $this;
+    /**
+     * Get the digit groups separator
+     *
+     * @return string
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Get the list elements separator
+     *
+     * @return string
+     */
+    public function getList()
+    {
+        return $this->list;
+    }
+
+    /**
+     * Get the percent sign
+     *
+     * @return string
+     */
+    public function getPercentSign()
+    {
+        return $this->percentSign;
+    }
+
+    /**
+     * Get the minus sign
+     *
+     * @return string
+     */
+    public function getMinusSign()
+    {
+        return $this->minusSign;
+    }
+
+    /**
+     * Get the plus sign
+     *
+     * @return string
+     */
+    public function getPlusSign()
+    {
+        return $this->plusSign;
+    }
+
+    /**
+     * Get the exponential character
+     *
+     * @return string
+     */
+    public function getExponential()
+    {
+        return $this->exponential;
+    }
+
+    /**
+     * Get the exponent character
+     *
+     * @return string
+     */
+    public function getSuperscriptingExponent()
+    {
+        return $this->superscriptingExponent;
+    }
+
+    /**
+     * Gert the per mille symbol (often "‰")
+     *
+     * @see https://en.wikipedia.org/wiki/Per_mille
+     *
+     * @return string
+     */
+    public function getPerMille()
+    {
+        return $this->perMille;
+    }
+
+    /**
+     * Get the infinity symbol (often "∞")
+     *
+     * @see https://en.wikipedia.org/wiki/Infinity_symbol
+     *
+     * @return string
+     */
+    public function getInfinity()
+    {
+        return $this->infinity;
+    }
+
+    /**
+     * Get the NaN (not a number) sign.
+     *
+     * @return string
+     */
+    public function getNan()
+    {
+        return $this->nan;
     }
 }
