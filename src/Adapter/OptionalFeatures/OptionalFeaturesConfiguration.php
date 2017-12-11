@@ -72,7 +72,7 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
@@ -84,7 +84,7 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -98,7 +98,7 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {

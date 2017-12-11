@@ -46,7 +46,7 @@ class LogRepository implements RepositoryInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function findAll()
     {
