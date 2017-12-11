@@ -47,6 +47,12 @@ let config = {
     ],
     translations: [
       './js/app/pages/translations',
+    ],
+    logs: [
+      './js/app/pages/logs'
+    ],
+    'sql-manager-helper': [
+      './js/app/utils/sql-manager.js'
     ]
   },
   output: {

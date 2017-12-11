@@ -68,6 +68,13 @@ class LogsController extends FrameworkBundleAdminController
             'logsByEmailForm' => $logsByEmailForm->createView(),
             'logsSum' => count($this->getLogRepository()->findAll()),
             'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
+            'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
+            'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
+                'AdminRequestSql',
+                true,
+                array(
+                'addrequest_sql' => 1
+            )),
         );
 
         return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
@@ -124,7 +131,7 @@ class LogsController extends FrameworkBundleAdminController
      * @return RedirectResponse
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
-    public function eraseAllLogsAction()
+    public function deleteAllAction()
     {
         $this->getLogRepository()->deleteAll();
 
