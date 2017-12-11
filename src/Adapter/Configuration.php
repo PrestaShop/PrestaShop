@@ -45,9 +45,14 @@ class Configuration implements ConfigurationInterface
     {
         if (defined($key)) {
             return constant($key);
-        } else {
-            return ConfigurationLegacy::get($key);
         }
+
+        // if the key is multi lang related, we return an array with the value per language.
+        // getInt() meaning probably getInternational()
+        if (ConfigurationLegacy::isLangKey($key)) {
+            return ConfigurationLegacy::getInt($key);
+        }
+        return ConfigurationLegacy::get($key);
     }
 
     /**
