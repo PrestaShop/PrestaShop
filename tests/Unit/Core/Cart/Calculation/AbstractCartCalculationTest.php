@@ -28,6 +28,7 @@ namespace Tests\Unit\Core\Cart\Calculation;
 
 use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
 use Tools;
+use Cart;
 
 /**
  * these tests aim to check the correct calculation of cart total
@@ -36,28 +37,29 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
 {
     protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
-        $totalV1 = $this->cart->getOrderTotal();
+        $totalV1 = $this->cart->getOrderTotal(true, Cart::BOTH, null, $this->cart->id_carrier);
+        $totalV2 = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $this->cart->id_carrier);
         // NO_PROD do not keep it in commit : round is for development only !
         $expectedTotal = floor($expectedTotal * 10) / 10;
         $totalV1       = floor($totalV1 * 10) / 10;
         if (!$knownToFailOnV1) {
             $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
         }
-        $totalV2       = floor($totalV2 * 10) / 10;
+        $totalV2 = floor($totalV2 * 10) / 10;
         $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
     }
 
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
     {
-        $totalV1 = $this->cart->getOrderTotal(false);
-        $totalV2 = $this->cart->getOrderTotalV2(false);
+        $totalV1 = $this->cart->getOrderTotal(false, Cart::BOTH, null, $this->cart->id_carrier);
+        $totalV2 = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $this->cart->id_carrier);
         // NO_PROD do not keep it in commit : round is for development only !
         $expectedTotal = floor($expectedTotal * 10) / 10;
         $totalV1       = floor($totalV1 * 10) / 10;
         if (!$knownToFailOnV1) {
             $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
         }
-        $totalV2       = floor($totalV2 * 10) / 10;
+        $totalV2 = floor($totalV2 * 10) / 10;
         $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
     }
 }
