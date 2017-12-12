@@ -47,7 +47,10 @@ let config = {
     ],
     translations: [
       './js/app/pages/translations',
-    ]
+    ],
+    'inputs': [
+      './js/app/utils/ip-input.js'
+     ]
   },
   output: {
     path: path.resolve(__dirname, 'public'),
