@@ -3598,9 +3598,22 @@ class ProductCore extends ObjectModel
                 return 0;
             }
         }
+        $availableQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
+        $nbProductInCart = 0;
+        $cart = Context::getContext()->cart;
+
+        if (!empty($cart)) {
+            $cartProduct = $cart->containsProduct($id_product);
+
+            if (isset($cartProduct['quantity'])
+                && $cartProduct['quantity'] > 0
+            ) {
+                $nbProductInCart = $cartProduct['quantity'];
+            }
+        }
 
         // @since 1.5.0
-        return (StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute));
+        return $availableQuantity - $nbProductInCart;
     }
 
     /**
