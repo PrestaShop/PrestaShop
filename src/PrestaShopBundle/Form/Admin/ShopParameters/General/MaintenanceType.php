@@ -40,18 +40,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 class MaintenanceType extends TranslatorAwareType
 {
-    protected $locales;
-
-    /**
-     * All languages available on shop. Used for translations
-     * 
-     * @param array $locales
-     */
-    public function setLocales(array $locales)
-    {
-        $this->locales = $locales;
-    }
-
     /**
      * {@inheritdoc}
      */

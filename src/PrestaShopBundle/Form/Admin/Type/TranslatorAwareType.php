@@ -37,9 +37,17 @@ abstract class TranslatorAwareType extends AbstractType
 {
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    /**
+     * All languages available on shop. Used for translations
+     *
+     * @param array $locales
+     */
+    protected $locales;
+
+    public function __construct(TranslatorInterface $translator, array $locales)
     {
         $this->translator = $translator;
+        $this->locales = $locales;
     }
 
     /**
