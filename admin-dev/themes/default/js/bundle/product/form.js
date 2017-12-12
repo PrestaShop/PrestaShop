@@ -791,7 +791,7 @@ var warehouseCombinations = (function() {
       // toggle all button action
       $(document).on('click', 'div[id^="warehouse_combination_"] button.check_all_warehouse', function() {
         var checkboxes = $(this).closest('div[id^="warehouse_combination_"]').find('input[type="checkbox"][id$="_activated"]');
-        checkboxes.prop('checked', checkboxes.filter(':checked').size() === 0);
+        checkboxes.prop('checked', checkboxes.filter(':checked').length === 0);
       });
       // location disablation depending on 'stored' checkbox
       $(document).on('change', 'div[id^="warehouse_combination_"] input[id^="form_step4_warehouse_combination_"][id$="_activated"]', function() {
@@ -812,7 +812,7 @@ var warehouseCombinations = (function() {
       });
     },
     'refresh': function() {
-      var show = $('input#form_step3_advanced_stock_management:checked').size() > 0;
+      var show = $('input#form_step3_advanced_stock_management:checked').length > 0;
       if (show) {
         var url = collectionHolder.attr('data-url').replace(/\/\d+(?=\?.*)/, '/' + id_product);
         $.ajax({
