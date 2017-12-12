@@ -26,7 +26,7 @@
 
 namespace Tests\Unit\Core\Cart\Calculation;
 
-use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
+use Tests\Unit\Core\Cart\AbstractCartTest;
 use Tools;
 use Cart;
 
