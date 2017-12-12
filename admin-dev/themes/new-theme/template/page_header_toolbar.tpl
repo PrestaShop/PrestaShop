@@ -101,7 +101,7 @@
           {foreach $level_2.sub_tabs as $level_3}
             {if $level_3.current}
               {foreach $level_3.sub_tabs as $level_4}
-                <a href="{$level_4.href}" {if $level_4.current}class="current"{/if}>{$level_4.name}</a>
+                <a href="{$level_4.href}" class="tab {if $level_4.current}current{/if}">{$level_4.name}</a>
               {/foreach}
             {/if}
           {/foreach}
