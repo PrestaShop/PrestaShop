@@ -148,21 +148,35 @@ class PackCore extends Product
         return self::$cachePackItems[$id_product];
     }
 
-    public static function isInStock($id_product)
+    /**
+     * Is the pack in stock and his associated products?
+     *
+     * @param $id_product
+     * @return bool
+     */
+    public static function isInStock($id_product, $wantedQuantity = null)
     {
         if (!Pack::isFeatureActive()) {
             return true;
         }
-
         $items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
+
+        if ($wantedQuantity === null
+            || ((int) $wantedQuantity <= 0)
+        ) {
+            $wantedQuantity = Tools::getValue('quantity_wanted', 1);
+        }
 
         foreach ($items as $item) {
             /** @var Product $item */
             // Updated for 1.5.0
-            if (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)) {
+            if (Product::getQuantity($item->id) < ($item->pack_quantity * $wantedQuantity)
+                && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)
+            ) {
                 return false;
             }
         }
+
         return true;
     }
 
