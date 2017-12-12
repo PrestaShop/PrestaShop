@@ -79,10 +79,6 @@ class MaintenanceController extends FrameworkBundleAdminController
             return $redirectResponse;
         }
 
-        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
-        $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
-        $form->handleRequest($request);
-
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
             array(
@@ -93,21 +89,22 @@ class MaintenanceController extends FrameworkBundleAdminController
             )
         )) {
             $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
             return $redirectResponse;
         }
+
+        $this->dispatchHook('actionAdminMaintenanceControllerPostProcessBefore', array('controller' => $this));
+        $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
+        $form->handleRequest($request);
 
         if (!$form->isSubmitted()) {
             return $redirectResponse;
         }
 
         $data = $form->getData();
-
         $saveErrors = $this->get('prestashop.adapter.maintenance.form_handler')->save($data);
 
         if (0 === count($saveErrors)) {
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
-
             return $redirectResponse;
         }
 
