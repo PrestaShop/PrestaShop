@@ -2828,6 +2828,7 @@ class ProductCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'cart_product`
 				WHERE `id_product` = '.(int)$id_product.'
 				AND `id_cart` = '.(int)$id_cart;
+                $sql .= $id_product_attribute ? " AND `id_product_attribute` = " . (int)$id_product_attribute : '';
                 $cart_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 Cache::store($cache_id, $cart_quantity);
             } else {
