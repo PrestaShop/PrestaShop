@@ -36,6 +36,11 @@ class PercentageTest extends NumberTest
      */
     protected function setUp()
     {
-        $this->numberSpec = new Percentage();
+        parent::setUp();
+        $this->latinNumberSpec = new Percentage(
+            null,
+            null,
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList]
+        );
     }
 }

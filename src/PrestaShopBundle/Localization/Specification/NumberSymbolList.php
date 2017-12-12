@@ -32,32 +32,6 @@ namespace PrestaShopBundle\Localization\Specification;
  */
 class NumberSymbolList
 {
-    public function __construct(
-        $decimal,
-        $group,
-        $list,
-        $percentSign,
-        $minusSign,
-        $plusSign,
-        $exponential,
-        $superscriptingExponent,
-        $perMille,
-        $infinity,
-        $nan
-    ) {
-        $this->decimal                = $decimal;
-        $this->group                  = $group;
-        $this->list                   = $list;
-        $this->percentSign            = $percentSign;
-        $this->minusSign              = $minusSign;
-        $this->plusSign               = $plusSign;
-        $this->exponential            = $exponential;
-        $this->superscriptingExponent = $superscriptingExponent;
-        $this->perMille               = $perMille;
-        $this->infinity               = $infinity;
-        $this->nan                    = $nan;
-    }
-
     /**
      * Decimal separator character
      *
@@ -171,6 +145,32 @@ class NumberSymbolList
      * @var string
      */
     protected $currencyGroup;
+
+    public function __construct(
+        $decimal = null,
+        $group = null,
+        $list = null,
+        $percentSign = null,
+        $minusSign = null,
+        $plusSign = null,
+        $exponential = null,
+        $superscriptingExponent = null,
+        $perMille = null,
+        $infinity = null,
+        $nan = null
+    ) {
+        $this->decimal                = $decimal;
+        $this->group                  = $group;
+        $this->list                   = $list;
+        $this->percentSign            = $percentSign;
+        $this->minusSign              = $minusSign;
+        $this->plusSign               = $plusSign;
+        $this->exponential            = $exponential;
+        $this->superscriptingExponent = $superscriptingExponent;
+        $this->perMille               = $perMille;
+        $this->infinity               = $infinity;
+        $this->nan                    = $nan;
+    }
 
     /**
      * Get the decimal separator

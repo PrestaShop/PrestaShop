@@ -36,11 +36,29 @@ class NumberTest extends TestCase
     /**
      * @var NumberSpecification
      */
-    protected $numberSpec;
+    protected $latinNumberSpec;
+
+    /**
+     * @var NumberSymbolList
+     */
+    protected $latinSymbolList;
+
+    /**
+     * @var NumberSymbolList
+     */
+    protected $arabSymbolList;
 
     protected function setUp()
     {
-        $this->numberSpec = new NumberSpecification();
+        $this->latinSymbolList = $this->getMockBuilder(NumberSymbolList::class)
+            ->setConstructorArgs([',']);
+        $this->arabSymbolList  = $this->getMockBuilder(NumberSymbolList::class)
+            ->setConstructorArgs(['.']);
+        $this->latinNumberSpec = new NumberSpecification(
+            null,
+            null,
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList]
+        );
     }
 
     /**
@@ -52,92 +70,37 @@ class NumberTest extends TestCase
      */
     public function testGetAllSymbolsReturnsAListOfSymbols()
     {
-        $latinList          = $this->createMock(NumberSymbolList::class);
-        $latinList->decimal = ',';
-        $arabList           = $this->createMock(NumberSymbolList::class);
-        $arabList->decimal  = '.';
-
-        $this->numberSpec->addSymbols('latin', $latinList);
-        $this->numberSpec->addSymbols('arab', $arabList);
-
         $this->assertSame(
             [
-                'latin' => $latinList,
-                'arab'  => $arabList,
+                'latin' => $this->latinSymbolList,
+                'arab'  => $this->arabSymbolList,
             ],
-            $this->numberSpec->getAllSymbols()
+            $this->latinNumberSpec->getAllSymbols()
         );
     }
 
     /**
      * Given a valid Number specification
-     * When adding to it a new symbols list (under a new numbering system)
-     * Then this symbols list should be retrievable afterwards, under the said numbering system
-     *
-     * (also tests addSymbols() at the same time)
+     * When asking it a symbols list for a given numbering system
+     * Then the good list should be retrieved
      */
     public function testGetSymbolsByNumberingSystem()
     {
-        $symbolList = $this->createMock(NumberSymbolList::class);
-        $this->numberSpec->addSymbols('latin', $symbolList);
-
-        $this->assertSame($symbolList, $this->numberSpec->getSymbolsByNumberingSystem('latin'));
-    }
-
-    /**
-     * @throws LocalizationException
-     */
-    public function testGetSymbolsByNumberingSystemWithInvalidParameter()
-    {
-        $symbolList = $this->createMock(NumberSymbolList::class);
-        $this->numberSpec->addSymbols('latin', $symbolList);
-
-        // Should throw an exception because 'bar' numbering system is unknown
-        $this->numberSpec->getSymbolsByNumberingSystem('arab');
-    }
-
-    /**
-     * Given a valid Number specification having several symbol lists
-     * When trying to hydrate one of its symbols list
-     * Then this (and only this) symbols list should be hydrated with passed data
-     */
-    public function testHydrateSymbols()
-    {
-        // Default list. Will be used to hydrate one of the incomplete lists
-        $defaultDataList          = $this->createMock(NumberSymbolList::class);
-        $defaultDataList->decimal = ',';
-
-        // Init two incomplete symbols lists (latin and arab)
-        $incompleteLatinList = $this->createMock(NumberSymbolList::class);
-        $incompleteLatinList
-            ->expects($this->once())
-            ->method('hydrate')
-            ->with($defaultDataList);
-        $this->numberSpec->addSymbols('latin', $incompleteLatinList);
-
-        $incompleteArabList = $this->createMock(NumberSymbolList::class);
-        $incompleteArabList
-            ->expects($this->never())
-            ->method('hydrate');
-        $this->numberSpec->addSymbols('arab', $incompleteArabList);
-
-        // Hydrate only one of them with default list
-        $this->numberSpec->hydrateSymbols('latin', $defaultDataList);
+        $this->assertSame(
+            $this->latinSymbolList,
+            $this->latinNumberSpec->getSymbolsByNumberingSystem('latin')
+        );
     }
 
     /**
      * Given a valid Number specification
-     * When trying to hydrate an unknown symbols list (unknown numbering system)
-     * Then this unknown symbols list should be created with passed numbering system and hydration data
+     * When asking it a symbols list for a given INVALID numbering system
+     * Then an exception souhd be raised
+     *
+     * @expectedException \PrestaShopBundle\Localization\Exception\LocalizationException
      */
-    public function testHydrateSymbolsOnNewNumberingSystem()
+    public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {
-        $defaultDataList = $this->createMock(NumberSymbolList::class);
-        $this->numberSpec->hydrateSymbols('latin', $defaultDataList);
-
-        $this->assertSame(
-            $defaultDataList,
-            $this->numberSpec->getSymbolsByNumberingSystem('latin')
-        );
+        $this->latinNumberSpec->getSymbolsByNumberingSystem('foobar');
     }
 }

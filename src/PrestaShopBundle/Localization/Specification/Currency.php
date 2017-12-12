@@ -56,15 +56,15 @@ class Currency extends NumberSpecification
     protected $currencyDisplay;
 
     public function __construct(
-        $positivePattern,
-        $negativePattern,
-        $symbols,
-        $maxFractionDigits,
-        $minFractionDigits,
-        $groupingUsed,
-        $primaryGroupSize,
-        $secondaryGroupSize,
-        $currencyDisplay
+        $positivePattern = null,
+        $negativePattern = null,
+        $symbols = null,
+        $maxFractionDigits = null,
+        $minFractionDigits = null,
+        $groupingUsed = null,
+        $primaryGroupSize = null,
+        $secondaryGroupSize = null,
+        $currencyDisplay = null
     ) {
         parent::__construct(
             $positivePattern,

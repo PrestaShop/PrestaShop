@@ -36,6 +36,11 @@ class CurrencyTest extends NumberTest
      */
     protected function setUp()
     {
-        $this->numberSpec = new Currency();
+        parent::setUp();
+        $this->latinNumberSpec = new Currency(
+            null,
+            null,
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList]
+        );
     }
 }

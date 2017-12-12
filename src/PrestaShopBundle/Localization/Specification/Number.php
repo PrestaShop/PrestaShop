@@ -37,14 +37,14 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
 class Number
 {
     public function __construct(
-        $positivePattern,
-        $negativePattern,
-        $symbols,
-        $maxFractionDigits,
-        $minFractionDigits,
-        $groupingUsed,
-        $primaryGroupSize,
-        $secondaryGroupSize
+        $positivePattern = null,
+        $negativePattern = null,
+        $symbols = null,
+        $maxFractionDigits = null,
+        $minFractionDigits = null,
+        $groupingUsed = null,
+        $primaryGroupSize = null,
+        $secondaryGroupSize = null
     ) {
         $this->positivePattern    = $positivePattern;
         $this->negativePattern    = $negativePattern;
