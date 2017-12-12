@@ -57,7 +57,12 @@ class DatabaseDump
         }
 
         if ($dumpFile === null) {
-            $this->dumpFile = sys_get_temp_dir() . '/' . 'ps_dump.sql';
+            $tmpDirPath = sys_get_temp_dir() . '/prestashop';
+
+            if (!file_exists($tmpDirPath)) {
+                mkdir($tmpDirPath, 0755);
+            }
+            $this->dumpFile = "{$tmpDirPath}/ps_dump.sql";
         } else {
             $this->dumpFile = $dumpFile;
         }
@@ -136,7 +141,7 @@ class DatabaseDump
     /**
      * Make a database dump
      */
-    public static function create()
+    public static function create($overrideIfExists = true)
     {
         $dump = new DatabaseDump();
 

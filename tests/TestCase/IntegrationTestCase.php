@@ -52,7 +52,7 @@ class IntegrationTestCase extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        Database::restoreTestDB();
         require_once(__DIR__ . '/../../config/config.inc.php');
+        Database::restoreTestDB();
     }
 }

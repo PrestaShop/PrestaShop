@@ -35,8 +35,13 @@ class Database
     /**
      * Create the initialize database used for test
      */
-    public static function createTestDB()
+    public static function createTestDB($overrideIfExists = true)
     {
+        if (file_exists(sys_get_temp_dir() . '/prestashop/' . 'ps_dump.sql')
+            && !$overrideIfExists
+        ) {
+            return;
+        }
         define('_PS_IN_TEST_', true);
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../../../');
@@ -77,7 +82,7 @@ class Database
      */
     public static function restoreTestDB()
     {
-        if (!file_exists(sys_get_temp_dir() . '/' . 'ps_dump.sql')) {
+        if (!file_exists(sys_get_temp_dir() . '/prestashop/ps_dump.sql')) {
             throw new DBALException('You need to run \'composer create-test-db\' to create the initial test database');
         }
 
