@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Tests\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Percentage;
+use PrestaShopBundle\Localization\Specification\Percentage as PercentageSpecification;
 
 class PercentageTest extends NumberTest
 {
@@ -37,10 +37,15 @@ class PercentageTest extends NumberTest
     protected function setUp()
     {
         parent::setUp();
-        $this->latinNumberSpec = new Percentage(
-            null,
-            null,
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList]
+        $this->latinNumberSpec = new PercentageSpecification(
+            '',
+            '',
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            3,
+            0,
+            true,
+            3,
+            3
         );
     }
 }

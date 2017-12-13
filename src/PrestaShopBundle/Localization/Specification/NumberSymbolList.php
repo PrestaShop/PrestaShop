@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Localization\Specification;
 
+use PrestaShopBundle\Localization\Exception\LocalizationException;
+
 /**
  * Number's symbols data bag. Regroups all symbols used when formatting a number
  * (decimal separator, thousands separator, etc.).
@@ -131,33 +133,55 @@ class NumberSymbolList
     protected $nan;
 
     /**
-     * Optional. If specified, then for currency formatting/parsing this is used as the decimal separator instead of
-     * using the regular decimal separator; otherwise, the regular decimal separator is used.
+     * NumberSymbolList constructor.
      *
-     * @var string
-     */
-    protected $currencyDecimal;
-
-    /**
-     * Optional. If specified, then for currency formatting/parsing this is used as the group separator instead of
-     * using the regular group separator; otherwise, the regular group separator is used.
+     * @param string $decimal
+     *  Decimal separator character
      *
-     * @var string
+     * @param string $group
+     *  Digits group separator character
+     *
+     * @param string $list
+     *  List elements separator character
+     *
+     * @param string $percentSign
+     *  Percent sign character
+     *
+     * @param string $minusSign
+     *  Minus sign character
+     *
+     * @param string $plusSign
+     *  Plus sign character
+     *
+     * @param string $exponential
+     *  Exponential character
+     *
+     * @param string $superscriptingExponent
+     *  Superscripting exponent character
+     *
+     * @param string $perMille
+     *  Permille sign character
+     *
+     * @param string $infinity
+     *  The infinity sign. Corresponds to the IEEE infinity bit pattern.
+     *
+     * @param string $nan
+     *  The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
+     *
+     * @throws LocalizationException
      */
-    protected $currencyGroup;
-
     public function __construct(
-        $decimal = null,
-        $group = null,
-        $list = null,
-        $percentSign = null,
-        $minusSign = null,
-        $plusSign = null,
-        $exponential = null,
-        $superscriptingExponent = null,
-        $perMille = null,
-        $infinity = null,
-        $nan = null
+        $decimal,
+        $group,
+        $list,
+        $percentSign,
+        $minusSign,
+        $plusSign,
+        $exponential,
+        $superscriptingExponent,
+        $perMille,
+        $infinity,
+        $nan
     ) {
         $this->decimal                = $decimal;
         $this->group                  = $group;
@@ -170,6 +194,8 @@ class NumberSymbolList
         $this->perMille               = $perMille;
         $this->infinity               = $infinity;
         $this->nan                    = $nan;
+
+        $this->validateData();
     }
 
     /**
@@ -284,5 +310,79 @@ class NumberSymbolList
     public function getNan()
     {
         return $this->nan;
+    }
+
+    /**
+     * Symbols list validation
+     *
+     * @throws LocalizationException
+     */
+    protected function validateData()
+    {
+        if (!isset($this->decimal)
+            || !is_string($this->decimal)
+        ) {
+            throw new LocalizationException('Invalid decimal');
+        }
+
+        if (!isset($this->group)
+            || !is_string($this->group)
+        ) {
+            throw new LocalizationException('Invalid group');
+        }
+
+        if (!isset($this->list)
+            || !is_string($this->list)
+        ) {
+            throw new LocalizationException('Invalid list');
+        }
+
+        if (!isset($this->percentSign)
+            || !is_string($this->percentSign)
+        ) {
+            throw new LocalizationException('Invalid percentSign');
+        }
+
+        if (!isset($this->minusSign)
+            || !is_string($this->minusSign)
+        ) {
+            throw new LocalizationException('Invalid minusSign');
+        }
+
+        if (!isset($this->plusSign)
+            || !is_string($this->plusSign)
+        ) {
+            throw new LocalizationException('Invalid plusSign');
+        }
+
+        if (!isset($this->exponential)
+            || !is_string($this->exponential)
+        ) {
+            throw new LocalizationException('Invalid exponential');
+        }
+
+        if (!isset($this->superscriptingExponent)
+            || !is_string($this->superscriptingExponent)
+        ) {
+            throw new LocalizationException('Invalid superscriptingExponent');
+        }
+
+        if (!isset($this->perMille)
+            || !is_string($this->perMille)
+        ) {
+            throw new LocalizationException('Invalid perMille');
+        }
+
+        if (!isset($this->infinity)
+            || !is_string($this->infinity)
+        ) {
+            throw new LocalizationException('Invalid infinity');
+        }
+
+        if (!isset($this->nan)
+            || !is_string($this->nan)
+        ) {
+            throw new LocalizationException('Invalid nan');
+        }
     }
 }

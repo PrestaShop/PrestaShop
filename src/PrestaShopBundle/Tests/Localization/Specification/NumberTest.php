@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Tests\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
 use PrestaShopBundle\Localization\Specification\NumberSymbolList;
 
@@ -51,13 +50,22 @@ class NumberTest extends TestCase
     protected function setUp()
     {
         $this->latinSymbolList = $this->getMockBuilder(NumberSymbolList::class)
-            ->setConstructorArgs([',']);
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->arabSymbolList  = $this->getMockBuilder(NumberSymbolList::class)
-            ->setConstructorArgs(['.']);
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->latinNumberSpec = new NumberSpecification(
-            null,
-            null,
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList]
+            '',
+            '',
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            3,
+            0,
+            true,
+            3,
+            3
         );
     }
 

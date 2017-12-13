@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Tests\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Currency;
+use PrestaShopBundle\Localization\Specification\Currency as CurrencySpecification;
 
 class CurrencyTest extends NumberTest
 {
@@ -37,10 +37,16 @@ class CurrencyTest extends NumberTest
     protected function setUp()
     {
         parent::setUp();
-        $this->latinNumberSpec = new Currency(
-            null,
-            null,
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList]
+        $this->latinNumberSpec = new CurrencySpecification(
+            '',
+            '',
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            3,
+            0,
+            true,
+            3,
+            3,
+            CurrencySpecification::CURRENCY_DISPLAY_SYMBOL
         );
     }
 }

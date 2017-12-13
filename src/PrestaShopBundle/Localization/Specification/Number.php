@@ -36,15 +36,45 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
  */
 class Number
 {
+    /**
+     * Currency specification constructor.
+     *
+     * @param string             $positivePattern
+     *  CLDR formatting pattern for positive amounts
+     *
+     * @param string             $negativePattern
+     *  CLDR formatting pattern for negative amounts
+     *
+     * @param NumberSymbolList[] $symbols
+     *  List of available number symbols lists (NumberSymbolList objects)
+     *  Each list is indexed by numbering system
+     *
+     * @param int                $maxFractionDigits
+     *  Maximum number of digits after decimal separator
+     *
+     * @param int                $minFractionDigits
+     *  Minimum number of digits after decimal separator
+     *
+     * @param bool               $groupingUsed
+     *  Is digits grouping used ?
+     *
+     * @param int                $primaryGroupSize
+     *  Size of primary digits group in the number
+     *
+     * @param int                $secondaryGroupSize
+     *  Size of secondary digits group in the number
+     *
+     * @throws LocalizationException
+     */
     public function __construct(
-        $positivePattern = null,
-        $negativePattern = null,
-        $symbols = null,
-        $maxFractionDigits = null,
-        $minFractionDigits = null,
-        $groupingUsed = null,
-        $primaryGroupSize = null,
-        $secondaryGroupSize = null
+        $positivePattern,
+        $negativePattern,
+        $symbols,
+        $maxFractionDigits,
+        $minFractionDigits,
+        $groupingUsed,
+        $primaryGroupSize,
+        $secondaryGroupSize
     ) {
         $this->positivePattern    = $positivePattern;
         $this->negativePattern    = $negativePattern;
@@ -54,6 +84,8 @@ class Number
         $this->groupingUsed       = $groupingUsed;
         $this->primaryGroupSize   = $primaryGroupSize;
         $this->secondaryGroupSize = $secondaryGroupSize;
+
+        $this->validateData();
     }
 
     /**
@@ -228,5 +260,67 @@ class Number
     public function getSecondaryGroupSize()
     {
         return $this->secondaryGroupSize;
+    }
+
+    /**
+     * Data (attributes) validation
+     *
+     * @throws LocalizationException
+     */
+    protected function validateData()
+    {
+        if (!isset($this->positivePattern)
+            || !is_string($this->positivePattern)
+        ) {
+            throw new LocalizationException('Invalid positivePattern');
+        }
+
+        if (!isset($this->negativePattern)
+            || !is_string($this->negativePattern)
+        ) {
+            throw new LocalizationException('Invalid negativePattern');
+        }
+
+        if (!isset($this->symbols)
+            || !(is_array($this->symbols))
+        ) {
+            throw new LocalizationException('Invalid symbols');
+        }
+
+        foreach ($this->symbols as $symbolList) {
+            if (!$symbolList instanceof NumberSymbolList) {
+                throw new LocalizationException('Symbol lists must be instances of NumberSymbolList');
+            }
+        }
+
+        if (!isset($this->maxFractionDigits)
+            || !is_int($this->maxFractionDigits)
+        ) {
+            throw new LocalizationException('Invalid maxFractionDigits');
+        }
+
+        if (!isset($this->minFractionDigits)
+            || !is_int($this->minFractionDigits)
+        ) {
+            throw new LocalizationException('Invalid minFractionDigits');
+        }
+
+        if (!isset($this->groupingUsed)
+            || !is_bool($this->groupingUsed)
+        ) {
+            throw new LocalizationException('Invalid groupingUsed');
+        }
+
+        if (!isset($this->primaryGroupSize)
+            || !is_int($this->primaryGroupSize)
+        ) {
+            throw new LocalizationException('Invalid primaryGroupSize');
+        }
+
+        if (!isset($this->secondaryGroupSize)
+            || !is_int($this->secondaryGroupSize)
+        ) {
+            throw new LocalizationException('Invalid secondaryGroupSize');
+        }
     }
 }

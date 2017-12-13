@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Localization\Specification;
 
+use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
 
 /**
@@ -55,17 +56,52 @@ class Currency extends NumberSpecification
      */
     protected $currencyDisplay;
 
+    /**
+     * Currency specification constructor.
+     *
+     * @param string             $positivePattern
+     *  CLDR formatting pattern for positive amounts
+     *
+     * @param string             $negativePattern
+     *  CLDR formatting pattern for negative amounts
+     *
+     * @param NumberSymbolList[] $symbols
+     *  List of available number symbols lists (NumberSymbolList objects)
+     *  Each list is indexed by numbering system
+     *
+     * @param int                $maxFractionDigits
+     *  Maximum number of digits after decimal separator
+     *
+     * @param int                $minFractionDigits
+     *  Minimum number of digits after decimal separator
+     *
+     * @param bool               $groupingUsed
+     *  Is digits grouping used ?
+     *
+     * @param int                $primaryGroupSize
+     *  Size of primary digits group in the number
+     *
+     * @param int                $secondaryGroupSize
+     *  Size of secondary digits group in the number
+     *
+     * @param string             $currencyDisplay
+     *  Type of display for currency symbol
+     *
+     * @throws LocalizationException
+     */
     public function __construct(
-        $positivePattern = null,
-        $negativePattern = null,
-        $symbols = null,
-        $maxFractionDigits = null,
-        $minFractionDigits = null,
-        $groupingUsed = null,
-        $primaryGroupSize = null,
-        $secondaryGroupSize = null,
-        $currencyDisplay = null
+        $positivePattern,
+        $negativePattern,
+        $symbols,
+        $maxFractionDigits,
+        $minFractionDigits,
+        $groupingUsed,
+        $primaryGroupSize,
+        $secondaryGroupSize,
+        $currencyDisplay
     ) {
+        $this->currencyDisplay = $currencyDisplay;
+
         parent::__construct(
             $positivePattern,
             $negativePattern,
@@ -76,8 +112,6 @@ class Currency extends NumberSpecification
             $primaryGroupSize,
             $secondaryGroupSize
         );
-
-        $this->currencyDisplay = $currencyDisplay;
     }
 
     /**
@@ -88,5 +122,21 @@ class Currency extends NumberSpecification
     public function getCurrencyDisplay()
     {
         return $this->currencyDisplay;
+    }
+
+    /**
+     * Data (attributes) validation
+     *
+     * @throws LocalizationException
+     */
+    protected function validateData()
+    {
+        parent::validateData();
+
+        if (!isset($this->currencyDisplay)
+            || !in_array($this->currencyDisplay, [self::CURRENCY_DISPLAY_CODE, self::CURRENCY_DISPLAY_SYMBOL])
+        ) {
+            throw new LocalizationException('Invalid currencyDisplay');
+        }
     }
 }
