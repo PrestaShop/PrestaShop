@@ -56,7 +56,8 @@ abstract class AbstractSpecificPriceRuleTest extends AbstractCartCalculationTest
 
     protected function insertSpecificPriceRule($priceRuleId)
     {
-        if (!isset (static::SPECIFIC_PRICE_RULES_FIXTURES[$priceRuleId])) {
+        $fixtures = static::SPECIFIC_PRICE_RULES_FIXTURES[$priceRuleId];
+        if (!isset($fixtures)) {
             throw new \Exception('Unknown specific cart rule with id #' . $priceRuleId);
         }
         $specificCartRuleFixture = static::SPECIFIC_PRICE_RULES_FIXTURES[$priceRuleId];
