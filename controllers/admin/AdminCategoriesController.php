@@ -350,6 +350,23 @@ class AdminCategoriesControllerCore extends AdminController
             }
         }
 
+        if (Tools::getIsset('categoryBox')
+            && (Tools::isSubmit('submitBulkenableSelectioncategory')
+                || Tools::isSubmit('submitBulkdisableSelectioncategory'))) {
+            $hasError = false;
+            $categories = Tools::getValue('categoryBox');
+
+            foreach ($categories as $categoryId) {
+                $hasError &= $this->processStatusCategory((int)$categoryId);
+            }
+
+            if ($hasError) {
+                $this->errors[] = Tools::displayError($this->l('Failed to update the status'));
+            } else {
+                Tools::redirectAdmin(Link::getAdminLink('AdminCategories'));
+            }
+        }
+
         parent::initProcess();
 
         if ($this->action == 'delete' || $this->action == 'bulkdelete') {
@@ -953,16 +970,37 @@ class AdminCategoriesControllerCore extends AdminController
 
     public function ajaxProcessStatusCategory()
     {
-        if (!$id_category = (int)Tools::getValue('id_category')) {
-            die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('Failed to update the status'))));
-        } else {
-            $category = new Category((int)$id_category);
+        $this->processStatusCategory((int)Tools::getValue('id_category'), true);
+    }
+
+    /**
+     * Update the category status
+     *
+     * @param int $categoryId - category ID
+     * @param bool $isAjax - if is an ajax process call
+     * @return bool
+     */
+    public function processStatusCategory($categoryId = null, $isAjax = false)
+    {
+        $error = (bool)!$categoryId;
+        $returnedMsg = 'Failed to update the status';
+
+        if (!$error) {
+            $category = new Category((int)$categoryId);
+            $category->groupBox = $category->getGroups();
+
             if (Validate::isLoadedObject($category)) {
-                $category->active = $category->active == 1 ? 0 : 1;
-                $category->save() ?
-                die(Tools::jsonEncode(array('success' => true, 'text' => $this->l('The status has been updated successfully')))) :
-                die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('Failed to update the status'))));
+                $category->active = (int)$category->active === 1 ? 0 : 1;
+                $returnedMsg = $category->save()
+                    ? 'The status has been updated successfully'
+                    : 'Failed to update the status';
             }
         }
+
+        if ($isAjax) {
+            die(Tools::jsonEncode(array('success' => !$error, 'error' => $error, 'text' => $this->l($returnedMsg))));
+        }
+
+        return $error;
     }
 }
