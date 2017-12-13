@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Cart\Calculation\Products;
+namespace Tests\Unit\Core\Cart\Calculation\Carrier;
 
 use Address;
 use Carrier;
