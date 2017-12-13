@@ -12,8 +12,6 @@ scenario('Create "Attribute"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   scenario('Create a new "Attribute"', client => {
-    test('should check the existence of the onboarding modal', () => client.checkOnBoardingModal());
-    test('should close the onboarding modal if exist', () => client.OnBoarding(OnBoarding));
     test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, AttributeSubMenu.submenu));
     test('should click on "Add new attribute" button', () => client.waitForExistAndClick(AttributeSubMenu.add_new_attribute));
     test('should set the "Name" input', () => client.waitAndSetValue(AttributeSubMenu.name_input, 'attribute' + date_time));
