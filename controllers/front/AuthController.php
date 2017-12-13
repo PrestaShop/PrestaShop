@@ -759,7 +759,8 @@ class AuthControllerCore extends FrontController
                 '{firstname}' => $customer->firstname,
                 '{lastname}' => $customer->lastname,
                 '{email}' => $customer->email,
-                '{passwd}' => Tools::getValue('passwd')),
+                '{passwd}' => str_repeat('*', strlen(Tools::getValue('passwd'))),
+            ),
             $customer->email,
             $customer->firstname.' '.$customer->lastname
         );
