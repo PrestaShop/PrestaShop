@@ -37,8 +37,9 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
 {
     protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
-        $totalV1 = $this->cart->getOrderTotal(true, Cart::BOTH, null, $this->cart->id_carrier);
-        $totalV2 = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $this->cart->id_carrier);
+        $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
+        $totalV1 = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
+        $totalV2 = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $carrierId);
         // NO_PROD do not keep it in commit : round is for development only !
         $expectedTotal = floor($expectedTotal * 10) / 10;
         $totalV1       = floor($totalV1 * 10) / 10;
@@ -51,8 +52,9 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
 
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
     {
-        $totalV1 = $this->cart->getOrderTotal(false, Cart::BOTH, null, $this->cart->id_carrier);
-        $totalV2 = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $this->cart->id_carrier);
+        $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
+        $totalV1 = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
+        $totalV2 = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $carrierId);
         // NO_PROD do not keep it in commit : round is for development only !
         $expectedTotal = floor($expectedTotal * 10) / 10;
         $totalV1       = floor($totalV1 * 10) / 10;

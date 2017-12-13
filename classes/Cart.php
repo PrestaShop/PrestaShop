@@ -2028,6 +2028,10 @@ class CartCore extends ObjectModel
         $products = null,
         $id_carrier = null
     ) {
+        if ((int) $id_carrier <= 0) {
+            $id_carrier = null;
+        }
+
         // deprecated type
         if ($type == Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING) {
             $type = Cart::ONLY_PRODUCTS;
