@@ -1,7 +1,8 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order_page');
 const {CreateOrder} = require('../../../selectors/BO/create_order');
-
+const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
+let promise = Promise.resolve();
 scenario('Create order in BO', client => {
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
@@ -9,6 +10,12 @@ scenario('Create order in BO', client => {
   }, 'order/order');
 
   scenario('Create order in BO', client => {
+
+    test('should close the onboarding modal if exist', () => {
+      return promise
+        .then(() => client.isVisible(OnBoarding.welcome_modal))
+        .then(() => client.closeBoarding(OnBoarding.popup_close_button))
+    });
     test('should go to orders list', () => client.goToSubtabMenuPage(OrderPage.orders_subtab, OrderPage.order_submenu));
     test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button));
     test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, 'john doe'));

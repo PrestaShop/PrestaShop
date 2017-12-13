@@ -21,8 +21,8 @@ scenario('Catalog bulk action', () => {
     test('should click on "Select all" radio', () => client.selectAllProducts(CatalogPage.select_all_product_button));
     test('should choose the "Activate selection" action', () => client.selectAction(CatalogPage, 1));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully activated.'));
-    test('should check that the status of the first product is equal to "Clear"', () => client.checkTextValue(CatalogPage.product_status_icon.replace('%S', 1), 'check'));
-    test('should check that the status of the last product is equal to "Clear"', () => client.checkTextValue(CatalogPage.product_status_icon.replace('%S', 7), 'check'));
+    test('should check that the status of the first product is equal to "check"', () => client.checkTextValue(CatalogPage.product_status_icon.replace('%S', 1), 'check'));
+    test('should check that the status of the last product is equal to "check"', () => client.checkTextValue(CatalogPage.product_status_icon.replace('%S', 7), 'check'));
   }, 'catalogbulkaction');
 
   scenario('Duplicate the product list', client => {
