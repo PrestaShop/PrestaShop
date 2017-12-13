@@ -76,7 +76,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         // Module installed
         $name = 'ganalytics';
         $filepath = $this->defaultDir.'/moduleConfExample.yml';
-        $this->assertEmpty($this->moduleSelfConfigurator->module($name)->file($filepath)->validate());
+        $result = $this->moduleSelfConfigurator->module($name)->file($filepath)->validate();
+        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: '.var_export($result, true));
     }
 
     public function testModuleInstallationRequirementFail()

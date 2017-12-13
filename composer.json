@@ -25,7 +25,7 @@
       "symfony/monolog-bundle": "^3.1.0",
       "sensio/distribution-bundle": "^5.0.19",
       "sensio/framework-extra-bundle": "^3.0.2",
-      "prestashop/translationtools-bundle": "2.x-dev",
+      "prestashop/translationtools-bundle": "~2.0",
       "tecnickcom/tcpdf": "6.2.12",
       "composer/installers": "1.0.21",
       "icanboogie/cldr": "1.3.9",
@@ -39,7 +39,6 @@
       "csa/guzzle-bundle": "~1.3",
       "ipresta/localize-fixture": "~v1.0",
       "paragonie/random_compat": "^1.4|^2.0",
-      "prestashop/smarty": "dev-master",
       "prestashop/blockreassurance": "dev-master",
       "prestashop/contactform": "dev-master",
       "prestashop/dashactivity": "dev-master",
@@ -97,7 +96,8 @@
       "beberlei/DoctrineExtensions": "^1.0",
       "composer/ca-bundle": "^1.0",
       "nikic/php-parser": "^2.1",
-      "prestashop/decimal": "^1.0.0"
+      "prestashop/decimal": "^1.0.0",
+      "smarty/smarty": "^3.1"
   },
   "require-dev": {
       "phpunit/phpunit": "~5.7",
