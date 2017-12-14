@@ -321,6 +321,8 @@ class ContextCore
             $idCarrier = (int) $this->cart->id_carrier;
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
+            
+            // this is wrong. It does not update ps_cart_products id_address_delivery as well. Otherwise the third step will throw error. Created pull request since the comments and issues are closed. 
             $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
             $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
         }
