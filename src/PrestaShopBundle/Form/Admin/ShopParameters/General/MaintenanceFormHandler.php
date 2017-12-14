@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-class MaintenanceFormHandler implements FormHandlerInterface
+final class MaintenanceFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
