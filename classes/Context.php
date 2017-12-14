@@ -335,6 +335,20 @@ class ContextCore
         $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+        
+
+        if ($this->cart->id > 0) {
+            $idAddressDelivery = Db::getInstance()->getValue('SELECT id_address_delivery FROM `'._DB_PREFIX_.'cart` WHERE id_cart = ' . (int)$this->cart->id);
+            $sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
+                SET `id_address_delivery` = ' . (int)$idAddressDelivery . ' 
+                WHERE `id_cart` = '.(int)$this->cart->id;
+            Db::getInstance()->execute($sql);
+
+            $sql = 'UPDATE `'._DB_PREFIX_.'customization`
+                SET `id_address_delivery` = ' . (int)$idAddressDelivery . ' 
+                WHERE `id_cart` = '.(int)$this->cart->id;
+            Db::getInstance()->execute($sql);
+        }
     }
 
     /**
