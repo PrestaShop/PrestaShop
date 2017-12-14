@@ -75,7 +75,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @Template("@PrestaShop/Admin/Product/catalog.html.twig")
+     * @Template("@Product/CatalogPage/catalog.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -251,7 +251,7 @@ class ProductController extends FrameworkBundleAdminController
      * The full page that shows products list will subcall this action (from catalogAction).
      * URL example: /product/list/html/40/20/id_product/asc
      *
-     * @Template("@PrestaShop/Admin/Product/list.html.twig")
+     * @Template("@Product/CatalogPage/Lists/list.html.twig")
      * @param Request $request
      * @param integer $limit The size of the listing
      * @param integer $offset The offset of the listing
@@ -317,7 +317,7 @@ class ProductController extends FrameworkBundleAdminController
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
         );
         if ($view != 'full') {
-            return $this->render('PrestaShopBundle:Admin:Product/list_' . $view . '.html.twig', array_merge($vars, [
+            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
                 'limit' => $limit,
                 'offset' => $offset,
                 'total' => $totalCount,
@@ -375,7 +375,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Product form
      *
-     * @Template("@PrestaShop/Admin/Product/form.html.twig")
+     * @Template("@Product/ProductPage/product.html.twig")
      * @param int $id The product ID
      * @param Request $request
      * @return array|Response Template vars
@@ -566,7 +566,7 @@ class ProductController extends FrameworkBundleAdminController
 
         //If context shop is define to a group shop, disable the form
         if ($shopContext->isShopGroupContext()) {
-            return $this->render('PrestaShopBundle:Admin/Product:formDisable.html.twig', ['showContentHeader' => false]);
+            return $this->render('@Product/ProductPage/disabled_form_alert.html.twig', ['showContentHeader' => false]);
         }
 
         // languages for switch dropdown

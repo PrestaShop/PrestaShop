@@ -22,25 +22,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% set column = column|default('') %}
-{% set sortOrder = sortOrder|default('') %}
-{% set orderBy = orderBy|default('') %}
-
-{% if column %}
-  {% spaceless %}
-    <span
-      psorderby="{{ column }}"
-      psorderway="asc"
-      class="icon-caret-up icon-caret {% if orderBy == column and sortOrder == 'asc' %}-current{% endif %}"
-    >
-      &#9650;
-    </span>
-    <span
-      psorderby="{{ column }}"
-      psorderway="desc"
-      class="icon-caret-down icon-caret {% if orderBy == column and sortOrder == 'desc' %}-current{% endif %}"
-    >
-      &#9660;
-    </span>
-  {% endspaceless %}
-{% endif %}
+<div role="tabpanel" class="form-contenttab tab-pane" id="step5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="container-fluid">
+        <div class="row">
+          {{ include('@Product/ProductPage/Forms/form_seo.html.twig', {
+            'seoForm' : seoForm,
+            'productId': productId
+            })
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

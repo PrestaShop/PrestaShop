@@ -54,7 +54,7 @@ class CombinationController extends Controller
                     $combinationDataProvider->getFormCombination($combinationId)
                 );
             $result .= $this->renderView(
-                'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
+                '@Product/ProductPage/Forms/form_combination.html.twig',
                 array(
                     'form' => $form->createView(),
                 )
