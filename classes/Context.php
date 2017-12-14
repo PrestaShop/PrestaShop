@@ -323,8 +323,8 @@ class ContextCore
             $this->cart->setDeliveryOption(null);
 
             $addressId = (int) Address::getFirstCustomerAddressId((int) ($customer->id));           
-            unset(this->cart->id_address_invoice);
-            unset(this->cart->id_address_delivery);
+            unset($this->cart->id_address_invoice);
+            unset($this->cart->id_address_delivery);
             $this->cart->updateAddressId($this->cart->id_address_delivery, $addressId);
         }
         $this->cart->id_customer = (int) $customer->id;
