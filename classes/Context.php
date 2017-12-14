@@ -331,7 +331,7 @@ class ContextCore
             // Cheers.
             
             // this is wrong. It does not update ps_cart_products id_address_delivery as well. Otherwise the third step will throw error.
-            $this->cart->updateAddressId(null, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
+            $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
             $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
             
             
