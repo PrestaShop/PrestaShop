@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Entity\Repository\LogRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -48,6 +49,7 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
         $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
             'limit' => 10,
@@ -64,8 +66,8 @@ class LogsController extends FrameworkBundleAdminController
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink('AdminLogs'),
-            'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
             'logsByEmailForm' => $logsByEmailForm->createView(),
+            'searchParametersForm' => $searchParametersForm->createView(),
             'logsSum' => count($this->getLogRepository()->findAll()),
             'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
             'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
