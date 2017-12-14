@@ -23,7 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Allow to display the last SQL query in a modal and redirect to SQL Manager.
+ */
 global.SQLManager = {};
+
 SQLManager.showLastSqlQuery = () => {
     $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
     $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
