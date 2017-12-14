@@ -321,11 +321,8 @@ class ContextCore
             $idCarrier = (int) $this->cart->id_carrier;
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
-
-            $addressId = (int) Address::getFirstCustomerAddressId((int) ($customer->id));           
-            unset($this->cart->id_address_invoice);
-            unset($this->cart->id_address_delivery);
-            $this->cart->updateAddressId($this->cart->id_address_delivery, $addressId);
+            $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
         }
         $this->cart->id_customer = (int) $customer->id;
 
@@ -338,6 +335,20 @@ class ContextCore
         $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
         $this->cart->autosetProductAddress();
+        
+
+        if ($this->cart->id > 0) {
+            $idAddressDelivery = Db::getInstance()->getValue('SELECT id_address_delivery FROM `'._DB_PREFIX_.'cart` WHERE id_cart = ' . (int)$this->cart->id);
+            $sql = 'UPDATE `'._DB_PREFIX_.'cart_product`
+                SET `id_address_delivery` = ' . (int)$idAddressDelivery . ' 
+                WHERE `id_cart` = '.(int)$this->cart->id;
+            Db::getInstance()->execute($sql);
+
+            $sql = 'UPDATE `'._DB_PREFIX_.'customization`
+                SET `id_address_delivery` = ' . (int)$idAddressDelivery . ' 
+                WHERE `id_cart` = '.(int)$this->cart->id;
+            Db::getInstance()->execute($sql);
+        }
     }
 
     /**
