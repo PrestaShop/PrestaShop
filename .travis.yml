@@ -25,6 +25,7 @@ php:
 env:
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
+    - PRESTASHOP_REFERENCE_VERSION=1.7.0.0
   matrix:
     - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit

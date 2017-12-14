@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [[ $EXTRA_TESTS != *"sqldiff"* ]]; then
+  exit 0
+fi
+
+# Check only some changes are brought to a SQL file
+
+
+
+# Create a network in order to use the local mysql
+docker network create -d bridge --subnet 192.167.0.0/24 --gateway 192.167.0.1 internalnetwork
+
+# Launch the requested release of PrestaShop
+docker run --tid --net internalnetwork --name upgrade-test -p 8085:80 \
+        -e PS_FOLDER_ADMIN=admin-dev -e PS_FOLDER_INSTALL=install-dev -e PS_DOMAIN=localhost:8085 \
+        -e PS_INSTALL_AUTO=1 -e DB_SERVER="192.167.0.1" -e DB_PASSWD="" -e DB_NAME="upgrade" \
+        prestashop/prestashop:$PRESTASHOP_REFERENCE_VERSION
+
+# Wait for it ...
+./wait-for-it.sh --timeout=120 localhost:8085
+if [ $? -ne 0 ]; then
+    echo "Timeout reached while waiting for PrestaShop x_X"
+    exit 1
+fi
+
+docker cp $TRAVIS_BUILD_DIR upgrade-test:/var/www/html
+
+docker exec -ti upgrade-test php install-dev/upgrade/upgrade.php
+
+mysqldiff --server1=root@localhost --skip-table-options --force prestashop:upgrade
+
+result = $?
+if [ $result -ne 0 ]; then
+    echo "Error! There are some structure differences between a fresh install and a migrated shop from $PRESTASHOP_REFERENCE_VERSION."
+    echo "Please check the upgrade files in install-dev/upgrade/sql/ lead to the same result as install-dev/data/structure.sql."
+fi
+
+exit $result
