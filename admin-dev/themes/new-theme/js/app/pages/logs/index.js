@@ -24,9 +24,10 @@
  */
 global.LogsPage = {};
 LogsPage.delete = (message) => {
-
     if (confirm(message)) {
         let form = document.getElementById('logs_delete_form');
         form.submit();
     }
 };
+
+TableFilters.init();

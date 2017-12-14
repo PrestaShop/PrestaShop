@@ -84,7 +84,7 @@ class LogRepository implements RepositoryInterface
         $queryBuilder = $this->getAllWithEmployeeInformationQuery($filters);
         $statement = $queryBuilder->execute();
 
-        return $statement->fetchAll();
+        return $statement->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**
