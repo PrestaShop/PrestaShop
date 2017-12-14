@@ -28,12 +28,13 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
- * This form class generates the "Logs by email" form in Logs page.
+ * This form class generates the "filters" form in Logs page, on "Logs" table header.
  */
-final class LogsByEmailType extends CommonAbstractType
+final class FilterLogsByAttributeType extends CommonAbstractType
 {
     /**
      * {@inheritdoc}
@@ -41,9 +42,15 @@ final class LogsByEmailType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('logs_by_email', TextType::class, array(
-                'required' => true,
-            ))
+            ->add('id', TextType::class)
+            ->add('employee', TextType::class)
+            ->add('severity', TextType::class)
+            ->add('message', TextType::class)
+            ->add('object_type', TextType::class)
+            ->add('object_id', TextType::class)
+            ->add('error_code', TextType::class)
+            ->add('date_from', DatePickerType::class)
+            ->add('date_to', DatePickerType::class)
         ;
     }
 
@@ -62,6 +69,6 @@ final class LogsByEmailType extends CommonAbstractType
      */
     public function getBlockPrefix()
     {
-        return 'logs_by_email_block';
+        return 'logs_filters_block';
     }
 }
