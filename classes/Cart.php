@@ -3209,7 +3209,6 @@ class CartCore extends ObjectModel
             }
 
             if ($validated) {
-                $cache[$cache_id] = $delivery_option;
                 return $delivery_option;
             }
         }
