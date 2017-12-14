@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4cbad44c59f47594af8d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a2f8039fb4131e67d3a1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 4;
+/******/ 			var chunkId = 3;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,12 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(465)(__webpack_require__.s = 465);
+/******/ 	return hotCreateRequire(410)(__webpack_require__.s = 410);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 239:
+/***/ 213:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -740,17 +740,164 @@
  */
 global.LogsPage = {};
 LogsPage.delete = (message) => {
-
     if (confirm(message)) {
         let form = document.getElementById('logs_delete_form');
         form.submit();
     }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+TableFilters.init();
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 
-/***/ 4:
+/***/ 22:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * Allow to display the last SQL query in a modal and redirect to SQL Manager.
+ */
+global.SQLManager = {};
+
+SQLManager.showLastSqlQuery = () => {
+    $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+    $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
+        $('#catalog_sql_query_modal_content').submit();
+    });
+    $('#catalog_sql_query_modal').modal('show');
+};
+
+SQLManager.sendLastSqlQuery = (name) => {
+    $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+    $('#catalog_sql_query_modal_content input[name="name"]').val(name);
+    $('#catalog_sql_query_modal_content').submit();
+}
+
+SQLManager.createSqlQueryName = () => {
+    var container = false;
+    var current = false;
+    if ($('.breadcrumb')) {
+        container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
+        current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+    }
+    var title = false;
+    if ($('h2.title'))
+        title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
+
+    var name = false;
+    if (container && current && container != current)
+        name = container + ' > ' + current;
+    else if (container)
+        name = container;
+    else if (current)
+        name = current;
+
+    if (title && title != current && title != container)
+    {
+        if (name)
+            name = name + ' > ' + title;
+        else
+            name = title;
+    }
+
+    return name.trim();
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ }),
+
+/***/ 23:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * Allow to be able to filter table results according to columns desc/asc.
+ * This force a reload of page with more query parameters.
+ */
+global.TableFilters = {};
+
+TableFilters.init = () => {
+    const url = new URL(window.location.href);
+    let filters = document.querySelectorAll(`#main-div [psorderby][psorderway]`);
+
+    for (let filter of filters) {
+        filter.addEventListener('click', () => {
+            let orderBy = filter.getAttribute('psorderby');
+            let orderWay = filter.getAttribute('psorderway');
+            let params = url.searchParams;
+
+            params.set('orderBy', orderBy);
+            params.set('sortOrder', orderWay);
+
+            window.location.href = url.toString();
+        });
+    }
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ }),
+
+/***/ 410:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(23);
+__webpack_require__(22);
+module.exports = __webpack_require__(213);
+
+
+/***/ }),
+
+/***/ 6:
 /***/ (function(module, exports) {
 
 var g;
@@ -774,14 +921,6 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
-
-
-/***/ }),
-
-/***/ 465:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(239);
 
 
 /***/ })

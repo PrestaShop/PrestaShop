@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 5;
+/******/ 			var chunkId = 4;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,12 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(408)(__webpack_require__.s = 408);
+/******/ 	return hotCreateRequire(409)(__webpack_require__.s = 409);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 22:
+/***/ 23:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -740,61 +740,37 @@
  */
 
 /**
- * Allow to display the last SQL query in a modal and redirect to SQL Manager.
+ * Allow to be able to filter table results according to columns desc/asc.
+ * This force a reload of page with more query parameters.
  */
-global.SQLManager = {};
+global.TableFilters = {};
 
-SQLManager.showLastSqlQuery = () => {
-    $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-    $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
-        $('#catalog_sql_query_modal_content').submit();
-    });
-    $('#catalog_sql_query_modal').modal('show');
-};
+TableFilters.init = () => {
+    const url = new URL(window.location.href);
+    let filters = document.querySelectorAll(`#main-div [psorderby][psorderway]`);
 
-SQLManager.sendLastSqlQuery = (name) => {
-    $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-    $('#catalog_sql_query_modal_content input[name="name"]').val(name);
-    $('#catalog_sql_query_modal_content').submit();
+    for (let filter of filters) {
+        filter.addEventListener('click', () => {
+            let orderBy = filter.getAttribute('psorderby');
+            let orderWay = filter.getAttribute('psorderway');
+            let params = url.searchParams;
+
+            params.set('orderBy', orderBy);
+            params.set('sortOrder', orderWay);
+
+            window.location.href = url.toString();
+        });
+    }
 }
 
-SQLManager.createSqlQueryName = () => {
-    var container = false;
-    var current = false;
-    if ($('.breadcrumb')) {
-        container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
-        current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
-    }
-    var title = false;
-    if ($('h2.title'))
-        title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
-
-    var name = false;
-    if (container && current && container != current)
-        name = container + ' > ' + current;
-    else if (container)
-        name = container;
-    else if (current)
-        name = current;
-
-    if (title && title != current && title != container)
-    {
-        if (name)
-            name = name + ' > ' + title;
-        else
-            name = title;
-    }
-
-    return name.trim();
-}
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 
-/***/ 408:
+/***/ 409:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(22);
+module.exports = __webpack_require__(23);
 
 
 /***/ }),
