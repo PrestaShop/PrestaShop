@@ -56,6 +56,8 @@ class LogsController extends FrameworkBundleAdminController
             'sortOrder' => 'desc'
         ));
 
+        dump($filters, $this->getLogRepository()->findAllWithEmployeeInformation($filters));
+
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
