@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "73d478c29c2f59851143"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1aa6d94860a5035ea6bb"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 3;
+/******/ 			var chunkId = 5;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,12 +706,12 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(464)(__webpack_require__.s = 464);
+/******/ 	return hotCreateRequire(406)(__webpack_require__.s = 406);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 239:
+/***/ 22:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -739,7 +739,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+/**
+ * Allow to display the last SQL query in a modal and redirect to SQL Manager.
+ */
 global.SQLManager = {};
+
 SQLManager.showLastSqlQuery = () => {
     $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
     $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
@@ -783,11 +787,19 @@ SQLManager.createSqlQueryName = () => {
 
     return name.trim();
 }
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 
-/***/ 4:
+/***/ 406:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(22);
+
+
+/***/ }),
+
+/***/ 6:
 /***/ (function(module, exports) {
 
 var g;
@@ -811,14 +823,6 @@ try {
 // easier to handle this case. if(!global) { ...}
 
 module.exports = g;
-
-
-/***/ }),
-
-/***/ 464:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(239);
 
 
 /***/ })
