@@ -50,17 +50,17 @@
 	<td style="display:none;">
 		<div class="row">
 			<div class="input-group fixed-width-xl">
-				{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
+				{if $currency->format|intval % 2}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 				<input type="text" name="add_product[product_price_tax_excl]" id="add_product_product_price_tax_excl" value="" disabled="disabled" />
-				{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
+				{if !($currency->format|intval % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax excl.' d='Admin.Global'}</div>{/if}
 			</div>
 		</div>
 		<br/>
 		<div class="row">
 			<div class="input-group fixed-width-xl">
-				{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
+				{if $currency->format|intval % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
 				<input type="text" name="add_product[product_price_tax_incl]" id="add_product_product_price_tax_incl" value="" disabled="disabled" />
-				{if !($currency->format % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
+				{if !($currency->format|intval % 2)}<div class="input-group-addon">{$currency->sign} {l s='tax incl.' d='Admin.Global'}</div>{/if}
 			</div>
 		</div>
 	</td>
