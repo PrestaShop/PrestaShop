@@ -53,10 +53,15 @@ let config = {
       './js/pages/product-preferences',
     ],
     logs: [
+      './js/app/utils/table-filters.js',
+      './js/app/utils/sql-manager.js',
       './js/app/pages/logs'
     ],
     'sql-manager-helper': [
       './js/app/utils/sql-manager.js'
+    ],
+    'table-filters-helper': [
+      './js/app/utils/table-filters.js'
     ]
   },
   output: {
