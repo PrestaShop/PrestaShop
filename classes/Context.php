@@ -322,18 +322,19 @@ class ContextCore
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
             
-//            ok to shortly put it: 
-//
-//do checkout with guest user, add two addresses. go to step 3 delivery. return to step 1 and continue with same account. It will throw error at step 3: 
-//Unfortunately, there are no carriers available for your delivery address.
-//
-//This is because the updateCustomer was called and it did not updated ps_cart_product delivery addresses for each item whihc is needed to get correct carriers.
-//
-//Cheers.
+            // ok to shortly put it:
+            // do checkout with guest user, add two addresses. go to step 3 delivery. return to step 1 and continue with same account. It will throw error at step 3: 
+            // Unfortunately, there are no carriers available for your delivery address.
+            //
+            // This is because the updateCustomer was called and it did not updated ps_cart_product delivery addresses for each item whihc is needed to get correct carriers.
+            //
+            // Cheers.
             
-            // this is wrong. It does not update ps_cart_products id_address_delivery as well. Otherwise the third step will throw error. Created pull request since the comments and issues are closed. 
+            // this is wrong. It does not update ps_cart_products id_address_delivery as well. Otherwise the third step will throw error.
             $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
             $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            
+            
         }
         $this->cart->id_customer = (int) $customer->id;
 
