@@ -23,18 +23,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 global.IpInput = {};
-IpInput.addRemoteAddr = (target) => {
-    var input = $(target).prev("input");
-    var length = (input.val() || "").length;
-    if ("undefined" === typeof ip) {
-        console.error("Cannot add IP if `ip` is undefined");
-        return;
+global.IpInput.addRemoteAddr = (target, ip) => {
+  const input = global.$(target).prev('input');
+  const inputValue = input.val() || '';
+  if (inputValue.length > 0) {
+    if (input.val().indexOf(ip) < 0) {
+      input.val(input.val() + ',' + ip);
     }
-    if (length > 0) {
-        if (input.val().indexOf(ip) < 0) {
-            input.val(input.val() +','+ip);
-        }
-    } else {
-        input.val(ip);
-    }
+  } else {
+    input.val(ip);
+  }
 };
