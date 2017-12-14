@@ -142,7 +142,7 @@ services:
             - '@prestashop.adapter.notifications.configuration'
 
     prestashop.adapter.logs.form_provider:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsFormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
         arguments:
             - '@prestashop.adapter.logs.configuration'
 
@@ -173,7 +173,7 @@ services:
             - '@prestashop.adapter.administration.form_provider'
 
     prestashop.adapter.logs.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.logs.form_provider'
