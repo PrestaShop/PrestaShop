@@ -101,13 +101,10 @@ class LogRepository implements RepositoryInterface
             ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
             ->from($this->logTable, 'l')
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
-            ->orderBy(':orderBy', ':sortOrder')
+            ->orderBy($filters['orderBy'], $filters['sortOrder'])
             ->setFirstResult($filters['offset'])
             ->setMaxResults($filters['limit'])
-            ->setParameters(array(
-                ':orderBy' => $filters['orderBy'],
-                ':sortOrder' => $filters['sortOrder'],
-            ));
+        ;
     }
 
     /**
