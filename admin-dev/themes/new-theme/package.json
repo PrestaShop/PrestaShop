@@ -82,5 +82,8 @@
     "vuex": "^2.1.2",
     "webpack": "^2.7.0",
     "webpack-dev-server": "^2.6.1"
+  },
+  "dependencies": {
+    "url-polyfill": "^1.0.10"
   }
 }
