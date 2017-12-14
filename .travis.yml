@@ -9,6 +9,7 @@ addons:
         - libapache2-mod-fastcgi
         - libappindicator1
         - fonts-liberation
+        - mysql-utilities
 
 cache:
   directories:
@@ -23,6 +24,7 @@ dist: trusty
 #  - 7.2
 
 env:
+<<<<<<< HEAD
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
     - PRESTASHOP_REFERENCE_VERSION=1.7.0.0
@@ -30,6 +32,15 @@ env:
     - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=e2e
+||||||| merged common ancestors
+    global:
+        - SYMFONY_DEPRECATIONS_HELPER=disabled
+        - PRESTASHOP_REFERENCE_VERSION=1.7.0.0
+=======
+    global:
+        - SYMFONY_DEPRECATIONS_HELPER=disabled
+        - PRESTASHOP_REFERENCE_VERSION=1.7.0.1
+>>>>>>> Fixes
 
 matrix:
   include:
@@ -67,6 +78,7 @@ script:
 
 after_script:
   - sudo cat /var/log/apache2/error.log
+  - docker logs upgrade-test # Created in sqldiff step
 
 after_failure:
   - curl -L http://localhost/
