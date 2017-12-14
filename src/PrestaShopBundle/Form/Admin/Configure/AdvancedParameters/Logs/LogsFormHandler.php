@@ -23,18 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Logs;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use Symfony\Component\Form\FormFactory;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Logs\LogsByEmailType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 /**
  * This class manages the data manipulated using "Logs By Email" form
  * in "Configure > Advanced Parameters > Logs" page.
  */
-class LogsFormHandler implements FormHandlerInterface
+final class LogsFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactory

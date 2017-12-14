@@ -23,44 +23,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Logs;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration;
 
 /**
- * This form class generates the "Logs by email" form in Logs page
+ * This class is responsible of managing the data manipulated using forms
+ * in "Configure > Advanced Parameters > Performance" page.
  */
-class LogsByEmailType extends CommonAbstractType
+final class LogsFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @var LogsConfiguration
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    private $logsConfiguration;
+
+    public function __construct(LogsConfiguration $logsConfiguration)
     {
-        $builder
-            ->add('logs_by_email', 'Symfony\Component\Form\Extension\Core\Type\TextType', array(
-                'required' => true,
-            ))
-        ;
+        $this->logsConfiguration = $logsConfiguration;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function getData()
     {
-        $resolver->setDefaults(array(
-            'translation_domain' => 'Admin.Advparameters.Feature'
-        ));
+        return array('logs_by_email' => $this->logsConfiguration->getConfiguration());
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function setData(array $data)
     {
-        return 'performance_media_servers_block';
+        return $this->logsConfiguration->updateConfiguration($data['logs_by_email']);
     }
 }
