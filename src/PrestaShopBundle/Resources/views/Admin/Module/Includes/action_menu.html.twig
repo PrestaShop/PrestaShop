@@ -44,12 +44,10 @@
           data-confirm_modal="module-modal-confirm-{{ name }}-{{ url_active }}">
           {{ url_active|capitalize|replace({'_': " "})|trans({}, 'Admin.Actions') }}
       </button>
-      {% if urls|length > 1 %}
-      <input type="hidden" class="btn">
-      {% endif %}
     </form>
     {% if (urls|length > 1) %}
-          <button type="button" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <input type="hidden" class="btn">
+          <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="caret"></span>
             <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
           </button>
