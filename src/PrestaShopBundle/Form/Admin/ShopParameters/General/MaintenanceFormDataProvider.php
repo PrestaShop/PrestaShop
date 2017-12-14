@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  * This class is responsible of managing the data manipulated using forms
  * in "Configure > Shop Parameters > General > Maintenance" page.
  */
-class MaintenanceFormDataProvider implements FormDataProviderInterface
+final class MaintenanceFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var MaintenanceConfiguration

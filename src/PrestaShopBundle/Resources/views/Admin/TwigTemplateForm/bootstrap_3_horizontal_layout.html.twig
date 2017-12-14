@@ -106,7 +106,7 @@
 {% block ip_address_text_widget %}
 <div class="input-group">
     {{- block('form_widget_simple') -}}
-    <button type="button" class="btn btn-outline-primary add_ip_button" onclick="IpInput.addRemoteAddr(this)">
+    <button type="button" class="btn btn-outline-primary add_ip_button" onclick="IpInput.addRemoteAddr(this, '{{ currentIp|default('') }}';)">
         <i class="material-icons">add_circle</i> {{ 'Add my IP'|trans({}, 'Helper') }}
     </button>
 </div>
