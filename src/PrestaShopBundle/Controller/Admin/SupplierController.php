@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
 /**
@@ -84,7 +85,7 @@ class SupplierController extends FrameworkBundleAdminController
         $allFormData = $modelMapper->getFormData();
 
         $form = $this->createFormBuilder($allFormData);
-        $simpleSubForm = $form->create('step6', 'form');
+        $simpleSubForm = $form->create('step6', FormType::class);
 
         foreach ($suppliers as $idSupplier) {
             if ($idSupplier == 0 || !is_numeric($idSupplier)) {
