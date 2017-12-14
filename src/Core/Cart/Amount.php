@@ -38,7 +38,7 @@ class Amount
      */
     protected $taxExcluded = 0.0;
 
-    public function __construct($taxIncluded = 0, $taxExcluded = 0)
+    public function __construct($taxIncluded = 0.0, $taxExcluded = 0.0)
     {
         $this->setTaxIncluded($taxIncluded);
         $this->setTaxExcluded($taxExcluded);
