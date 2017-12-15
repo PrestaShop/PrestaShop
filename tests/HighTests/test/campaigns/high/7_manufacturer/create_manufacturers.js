@@ -1,5 +1,5 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {CatalogPageBO} = require('../../../selectors/BO/catalogpage/index');
+const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Manufacturers} = require('../../../selectors/BO/catalogpage/Manufacturers/index');
 const {Brands} = require('../../../selectors/BO/catalogpage/Manufacturers/brands');
 const {BrandAddress} = require('../../../selectors/BO/catalogpage/Manufacturers/brands_address');
@@ -11,7 +11,7 @@ scenario('Create "Brand" - "Brand address"', () => {
     }, 'manufacturers');
 
     scenario('Create a new "Brand"', client => {
-        test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(CatalogPageBO.menu_button, Manufacturers.submenu));
+        test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, Manufacturers.submenu));
         test('should click on "Add new brand" button', () => client.waitForExistAndClick(Brands.new_brand_button));
         test('should set the "Name" input', () => client.waitAndSetValue(Brands.name_input, 'PrestaShop' + date_time));
         test('should upload "Picture" to the brand', () => client.uploadPicture("prestashop.png", Brands.image_input, "logo"));
@@ -20,11 +20,11 @@ scenario('Create "Brand" - "Brand address"', () => {
         test('should set the "Meta keywords" input', () => client.addMetaKeywords(Brands.meta_keywords_input));
         test('should click on "Activate" button', () => client.waitForExistAndClick(Brands.active_button));
         test('should click on "Save" button', () => client.waitForExistAndClick(Brands.save_button));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPageBO.success_panel, '×\nSuccessful creation.'));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
     }, 'manufacturers');
 
     scenario('Create a new "Brand address"', client => {
-        test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(CatalogPageBO.menu_button, Manufacturers.submenu));
+        test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, Manufacturers.submenu));
         test('should click on "Add new brand address" button', () => client.waitForExistAndClick(BrandAddress.new_brand_address_button));
         test('should Choose the brand name', () => client.waitAndSelectByVisibleText(BrandAddress.branch_select, 'PrestaShop' + date_time));
         test('should set the "Last name" input', () => client.waitAndSetValue(BrandAddress.last_name_input, "Prestashop"));
@@ -37,7 +37,7 @@ scenario('Create "Brand" - "Brand address"', () => {
         test('should set the "Phone" input', () => client.waitAndSetValue(BrandAddress.phone_input, "0140183004"));
         test('should set the "Other information" input', () => client.waitAndSetValue(BrandAddress.other_input, "azerty"));
         test('should click on "Save" button', () => client.waitForExistAndClick(BrandAddress.save_button));
-        test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPageBO.success_panel, '×\nSuccessful creation.'));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful creation.'));
     }, 'manufacturers');
 
     scenario('Logout from the Back Office', client => {

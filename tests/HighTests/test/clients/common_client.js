@@ -44,7 +44,7 @@ class CommonClient {
     }
 
     OnBoarding(selector) {
-        if (global.onboarding == true) {
+        if (global.onboarding) {
             return this.client
                 .click(selector.popup_close_button)
                 .pause(2000)
