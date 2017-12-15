@@ -56,7 +56,8 @@ abstract class AbstractCommand
         $this->commands = array();
 
         require_once _PS_ROOT_DIR_.'/app/AppKernel.php';
-        $kernel = new \AppKernel($this->env, false);
+
+        $kernel = new \AppKernel($this->env, true);
         $this->application = new Application($kernel);
         $this->application->setAutoExit(false);
     }

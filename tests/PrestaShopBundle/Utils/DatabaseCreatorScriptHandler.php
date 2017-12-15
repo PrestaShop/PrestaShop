@@ -28,11 +28,9 @@ namespace Tests\PrestaShopBundle\Utils;
 
 use Doctrine\DBAL\DBALException;
 use PrestaShopBundle\Install\DatabaseDump;
-use PrestaShopBundle\Service\Command\CommandExecutor;
 use PrestaShopBundle\Install\Install;
-use Symfony\Component\Debug\Debug;
 
-class DatabaseCreator
+class DatabaseCreatorScriptHandler
 {
     /**
      * Create the initialize database used for test
@@ -43,12 +41,13 @@ class DatabaseCreator
         define('__PS_BASE_URI__', '/');
         define('_PS_ROOT_DIR_', __DIR__ . '/../../..');
         define('_PS_MODULE_DIR_', _PS_ROOT_DIR_ . '/tests/resources/modules/');
+        require_once(__DIR__ . '/../../../vendor/autoload.php');
         require_once(__DIR__ . '/../../../install-dev/init.php');
-        
+
         $install = new Install();
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase();
-        $install->installDatabase();
+        $install->installDatabase(true);
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, true);
         $install->populateDatabase();

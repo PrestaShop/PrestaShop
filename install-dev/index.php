@@ -36,6 +36,7 @@ require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
 try {
     require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'controllerHttp.php');
     require_once(_PS_INSTALL_PATH_.'classes'.DIRECTORY_SEPARATOR.'HttpConfigureInterface.php');
+    dump(spl_autoload_functions ());die;
     InstallControllerHttp::execute();
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();

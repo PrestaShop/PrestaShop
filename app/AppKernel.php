@@ -30,6 +30,7 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Kernel;
 use PrestaShopBundle\Kernel\ModuleRepository;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppKernel extends Kernel
 {
@@ -47,7 +48,7 @@ class AppKernel extends Kernel
             new PrestaShopBundle\PrestaShopBundle(),
             // PrestaShop Translation parser
             new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
-            // Api consumer
+            // REST API consumer
             new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
         );
 
@@ -57,13 +58,13 @@ class AppKernel extends Kernel
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
         }
 
-        /**
-         * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
-         */
         if ('dev' === $this->getEnvironment()) {
             $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
         }
 
+        /**
+         * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
+         */
         if (extension_loaded('apc')) {
             $_SERVER['SYMFONY__CACHE__DRIVER'] = 'apc';
         } else {
@@ -125,6 +126,12 @@ class AppKernel extends Kernel
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
+        $loader->load(function (ContainerBuilder $container) {
+            $container->setParameter('container.autowiring.strict_mode', true);
+            $container->setParameter('container.dumper.inline_class_loader', false);
+            $container->addObjectResource($this);
+        });
+
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
     }
 
