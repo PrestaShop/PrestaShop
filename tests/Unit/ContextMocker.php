@@ -85,6 +85,7 @@ class ContextMocker
         Cart::resetStaticCache();
         Carrier::resetStaticCache();
         CartRule::resetStaticCache();
+        Currency::resetStaticCache();
         Shop::resetContext();
 
         $this->contextBackup = Context::getContext();

@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Core\Cart\Calculation;
 
+use Context;
 use Tests\Unit\Core\Cart\AbstractCartTest;
 use Tools;
 use Cart;
@@ -38,23 +39,23 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
     protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
-        $totalV1 = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
-        $totalV2 = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $carrierId);
+        $totalV1   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
+        $totalV2   = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $carrierId);
         // NO_PROD do not keep it in commit : round is for development only !
-        $expectedTotal = floor($expectedTotal * 10) / 10;
+        $expectedTotal = floor($expectedTotal * 10)/ 10;
         $totalV1       = floor($totalV1 * 10) / 10;
         if (!$knownToFailOnV1) {
-            $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
+            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
         }
         $totalV2 = floor($totalV2 * 10) / 10;
-        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
+        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
     {
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
-        $totalV1 = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
-        $totalV2 = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $carrierId);
+        $totalV1   = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
+        $totalV2   = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $carrierId);
         // NO_PROD do not keep it in commit : round is for development only !
         $expectedTotal = floor($expectedTotal * 10) / 10;
         $totalV1       = floor($totalV1 * 10) / 10;
