@@ -84,7 +84,7 @@ class StockManagementControllerTest extends ApiTestCase
         foreach ($routes as $route) {
             self::$client->request('GET', $route, array('page_index' => 0));
             $response = self::$client->getResponse();
-            $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
+            $this->assertSame(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
         }
     }
 
@@ -189,7 +189,7 @@ class StockManagementControllerTest extends ApiTestCase
 
         /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
+        $this->assertSame(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
 
         if ($expectedTotalPages) {
             $this->assertResponseHasTotalPages($parameters, $expectedTotalPages);
@@ -217,7 +217,7 @@ class StockManagementControllerTest extends ApiTestCase
         /** @var \Symfony\Component\HttpFoundation\ResponseHeaderBag $headers */
         $headers = $response->headers;
         $this->assertTrue($headers->has('Total-Pages'), 'The response headers should contain the total pages.');
-        $this->assertEquals(
+        $this->assertSame(
             $expectedTotalPages,
             $headers->get('Total-Pages'),
             sprintf(
@@ -359,13 +359,13 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertProductQuantity($expectedQuantities, $content)
     {
-        $this->assertEquals($expectedQuantities['available_quantity'], $content['product_available_quantity'],
+        $this->assertSame($expectedQuantities['available_quantity'], $content['product_available_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
-        $this->assertEquals($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
+        $this->assertSame($expectedQuantities['physical_quantity'], $content['product_physical_quantity'],
             'The response body should contain the newly updated quantity.'
         );
-        $this->assertEquals($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
+        $this->assertSame($expectedQuantities['reserved_quantity'], $content['product_reserved_quantity'],
             'The response body should contain the newly updated physical quantity.'
         );
     }
