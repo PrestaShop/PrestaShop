@@ -57,7 +57,6 @@ use PrestashopInstallerException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
-use Symfony\Component\Debug\Debug;
 use Symfony\Component\Yaml\Yaml;
 use PhpEncryption;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
@@ -240,6 +239,10 @@ class Install extends AbstractInstall
 
     protected function clearCache()
     {
+        if (defined('_PS_IN_TEST_')) {
+            return true;
+        }
+
         $output = Tools::clearSf2Cache('prod');
 
         if (0 !== $output['cache:clear']['exitCode']) {
@@ -247,7 +250,7 @@ class Install extends AbstractInstall
             return false;
         }
 
-        $output = Tools::clearSf2Cache('prod');
+        $output = Tools::clearSf2Cache();
 
         if (0 !== $output['cache:clear']['exitCode']) {
             $this->setError(explode("\n", $output['cache:clear']['output']));
@@ -306,7 +309,10 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new UpgradeDatabase(defined('_PS_IN_TEST_') ? 'test' : null);
+        if (defined('_PS_IN_TEST_')) {
+            return true;
+        }
+        $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac695919b0f234a840a31b09124e7938",
+    "content-hash": "a6c6b4e3a7b1b4151d3d13ae4a593736",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -597,16 +597,16 @@
         },
         {
             "name": "doctrine/common",
-            "version": "v2.7.3",
+            "version": "v2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/common.git",
-                "reference": "4acb8f89626baafede6ee5475bc5844096eba8a9"
+                "reference": "10f1f19651343f87573129ca970aef1a47a6f29e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/common/zipball/4acb8f89626baafede6ee5475bc5844096eba8a9",
-                "reference": "4acb8f89626baafede6ee5475bc5844096eba8a9",
+                "url": "https://api.github.com/repos/doctrine/common/zipball/10f1f19651343f87573129ca970aef1a47a6f29e",
+                "reference": "10f1f19651343f87573129ca970aef1a47a6f29e",
                 "shasum": ""
             },
             "require": {
@@ -615,20 +615,20 @@
                 "doctrine/collections": "1.*",
                 "doctrine/inflector": "1.*",
                 "doctrine/lexer": "1.*",
-                "php": "~5.6|~7.0"
+                "php": ">=5.3.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.4.6"
+                "phpunit/phpunit": "~3.7"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.7.x-dev"
+                    "dev-master": "2.5.x-dev"
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\": "lib/Doctrine/Common"
+                "psr-0": {
+                    "Doctrine\\Common\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -666,7 +666,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2017-07-22T08:35:12+00:00"
+            "time": "2015-12-25T13:10:16+00:00"
         },
         {
             "name": "doctrine/dbal",
@@ -2140,23 +2140,23 @@
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.27",
+            "version": "2.8.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "fd3aa7a352608cbb2d899a61e35530bd1c9004bc"
+                "reference": "65cd802dad5e85cb8f0ab1ba54ae5fdca765062b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/fd3aa7a352608cbb2d899a61e35530bd1c9004bc",
-                "reference": "fd3aa7a352608cbb2d899a61e35530bd1c9004bc",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/65cd802dad5e85cb8f0ab1ba54ae5fdca765062b",
+                "reference": "65cd802dad5e85cb8f0ab1ba54ae5fdca765062b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "*"
+                "phpunit/phpunit": "~4.8|5.7"
             },
             "type": "library",
             "autoload": {
@@ -2188,7 +2188,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2017-12-03T15:42:01+00:00"
+            "time": "2017-12-09T09:59:47+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2751,12 +2751,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashactivity.git",
-                "reference": "dd664599e3e529bb2232ff7ee3dfe9ec961c2746"
+                "reference": "8d41fab7a58cdaeabc0248f6fd571da32d7615d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashactivity/zipball/dd664599e3e529bb2232ff7ee3dfe9ec961c2746",
-                "reference": "dd664599e3e529bb2232ff7ee3dfe9ec961c2746",
+                "url": "https://api.github.com/repos/PrestaShop/dashactivity/zipball/8d41fab7a58cdaeabc0248f6fd571da32d7615d4",
+                "reference": "8d41fab7a58cdaeabc0248f6fd571da32d7615d4",
                 "shasum": ""
             },
             "require": {
@@ -2775,7 +2775,7 @@
             ],
             "description": "PrestaShop module dashactivity",
             "homepage": "https://github.com/PrestaShop/dashactivity",
-            "time": "2017-02-01T16:31:16+00:00"
+            "time": "2017-12-08T11:06:01+00:00"
         },
         {
             "name": "prestashop/dashgoals",
@@ -2815,12 +2815,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashproducts.git",
-                "reference": "7871fe88abc93a0e1622eb3e5150fdd8dda8eefb"
+                "reference": "eac47a61b8e7256852b8fc358afbba1abb481523"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/7871fe88abc93a0e1622eb3e5150fdd8dda8eefb",
-                "reference": "7871fe88abc93a0e1622eb3e5150fdd8dda8eefb",
+                "url": "https://api.github.com/repos/PrestaShop/dashproducts/zipball/eac47a61b8e7256852b8fc358afbba1abb481523",
+                "reference": "eac47a61b8e7256852b8fc358afbba1abb481523",
                 "shasum": ""
             },
             "require": {
@@ -2839,7 +2839,7 @@
             ],
             "description": "PrestaShop module dashproducts",
             "homepage": "https://github.com/PrestaShop/dashproducts",
-            "time": "2017-02-20T15:04:07+00:00"
+            "time": "2017-12-08T12:25:41+00:00"
         },
         {
             "name": "prestashop/dashtrends",
@@ -3119,12 +3119,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_contactinfo.git",
-                "reference": "91588d6e19e2d796bd38df9656c16a27944260cd"
+                "reference": "e28551a9c857262b214775312ce195818933bd7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/91588d6e19e2d796bd38df9656c16a27944260cd",
-                "reference": "91588d6e19e2d796bd38df9656c16a27944260cd",
+                "url": "https://api.github.com/repos/PrestaShop/ps_contactinfo/zipball/e28551a9c857262b214775312ce195818933bd7e",
+                "reference": "e28551a9c857262b214775312ce195818933bd7e",
                 "shasum": ""
             },
             "require": {
@@ -3143,7 +3143,7 @@
             ],
             "description": "PrestaShop module ps_contactinfo",
             "homepage": "https://github.com/PrestaShop/ps_contactinfo",
-            "time": "2017-07-06T13:55:59+00:00"
+            "time": "2017-12-08T12:30:57+00:00"
         },
         {
             "name": "prestashop/ps_currencyselector",
@@ -3279,12 +3279,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "1cfa769fb260e2c9f32c39225b5f9b3c1a2c56e4"
+                "reference": "ac9c360f5a8a7d5484c61cebba7a7bffbb75c7c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/1cfa769fb260e2c9f32c39225b5f9b3c1a2c56e4",
-                "reference": "1cfa769fb260e2c9f32c39225b5f9b3c1a2c56e4",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/ac9c360f5a8a7d5484c61cebba7a7bffbb75c7c2",
+                "reference": "ac9c360f5a8a7d5484c61cebba7a7bffbb75c7c2",
                 "shasum": ""
             },
             "require": {
@@ -3303,7 +3303,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2017-02-01T13:09:58+00:00"
+            "time": "2017-12-08T10:34:56+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",
@@ -3311,12 +3311,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "67889e67f0a03ca907649fb654d0cfaa30c65bb3"
+                "reference": "0efaa397bdfd71c1b179b45df1d04733f1161be4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/67889e67f0a03ca907649fb654d0cfaa30c65bb3",
-                "reference": "67889e67f0a03ca907649fb654d0cfaa30c65bb3",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/0efaa397bdfd71c1b179b45df1d04733f1161be4",
+                "reference": "0efaa397bdfd71c1b179b45df1d04733f1161be4",
                 "shasum": ""
             },
             "require": {
@@ -3338,7 +3338,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2017-02-01T13:18:25+00:00"
+            "time": "2017-12-07T17:34:13+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3730,12 +3730,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestcategories.git",
-                "reference": "5bd28a7cbfabc54aaee6623638b3da42b193e384"
+                "reference": "57791a21f63d43cf145fa1ef1f84031a47f5e7c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestcategories/zipball/5bd28a7cbfabc54aaee6623638b3da42b193e384",
-                "reference": "5bd28a7cbfabc54aaee6623638b3da42b193e384",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcategories/zipball/57791a21f63d43cf145fa1ef1f84031a47f5e7c2",
+                "reference": "57791a21f63d43cf145fa1ef1f84031a47f5e7c2",
                 "shasum": ""
             },
             "require": {
@@ -3754,7 +3754,7 @@
             ],
             "description": "PrestaShop module statsbestcategories",
             "homepage": "https://github.com/PrestaShop/statsbestcategories",
-            "time": "2017-01-30T15:06:32+00:00"
+            "time": "2017-12-08T14:47:07+00:00"
         },
         {
             "name": "prestashop/statsbestcustomers",
@@ -4338,12 +4338,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statssearch.git",
-                "reference": "6375e91a92008898a451dad9036912a8767b3010"
+                "reference": "8b77131a1fdbebc4d5d6768a31de17b4d2a26b97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statssearch/zipball/6375e91a92008898a451dad9036912a8767b3010",
-                "reference": "6375e91a92008898a451dad9036912a8767b3010",
+                "url": "https://api.github.com/repos/PrestaShop/statssearch/zipball/8b77131a1fdbebc4d5d6768a31de17b4d2a26b97",
+                "reference": "8b77131a1fdbebc4d5d6768a31de17b4d2a26b97",
                 "shasum": ""
             },
             "require": {
@@ -4362,7 +4362,7 @@
             ],
             "description": "PrestaShop module statssearch",
             "homepage": "https://github.com/PrestaShop/statssearch",
-            "time": "2017-01-31T17:23:39+00:00"
+            "time": "2017-12-08T12:37:58+00:00"
         },
         {
             "name": "prestashop/statsstock",
@@ -4493,12 +4493,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "e3c1dbd6f02dc6f6c1516003dc43a23af522a5b5"
+                "reference": "138bc56ecdd73289427fc309c92800dc982a7978"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/e3c1dbd6f02dc6f6c1516003dc43a23af522a5b5",
-                "reference": "e3c1dbd6f02dc6f6c1516003dc43a23af522a5b5",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/138bc56ecdd73289427fc309c92800dc982a7978",
+                "reference": "138bc56ecdd73289427fc309c92800dc982a7978",
                 "shasum": ""
             },
             "require": {
@@ -4523,7 +4523,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2017-07-11T08:16:29+00:00"
+            "time": "2017-12-08T11:01:44+00:00"
         },
         {
             "name": "psr/cache",
@@ -5587,16 +5587,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.4.1",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "46d4a9027c752ce425f67c94e89e3e3098f3a488"
+                "reference": "29961b693fa2157a3f349d1a801f9f8742be4e03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/46d4a9027c752ce425f67c94e89e3e3098f3a488",
-                "reference": "46d4a9027c752ce425f67c94e89e3e3098f3a488",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/29961b693fa2157a3f349d1a801f9f8742be4e03",
+                "reference": "29961b693fa2157a3f349d1a801f9f8742be4e03",
                 "shasum": ""
             },
             "require": {
@@ -5738,7 +5738,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-12-04T23:05:15+00:00"
+            "time": "2017-12-15T02:05:35+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -7145,16 +7145,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.1",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "9ecf83a2628b4668f02e680f65357c62600749fc"
+                "reference": "074c2e205c849a5fb37b1c24ade03cc975ac8079"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/9ecf83a2628b4668f02e680f65357c62600749fc",
-                "reference": "9ecf83a2628b4668f02e680f65357c62600749fc",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/074c2e205c849a5fb37b1c24ade03cc975ac8079",
+                "reference": "074c2e205c849a5fb37b1c24ade03cc975ac8079",
                 "shasum": ""
             },
             "require": {
@@ -7203,7 +7203,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-12-04T20:23:06+00:00"
+            "time": "2017-12-14T19:40:10+00:00"
         },
         {
             "name": "webmozart/assert",
