@@ -274,13 +274,11 @@ class CarrierTest extends AbstractCartCalculationTest
     }
 
     /**
-     * @param int $id fixture product id
+     * @param int $id fixture id
      *
      * @return Carrier|null
      */
-    protected function getCarrierFromFixtureId(
-        $id
-    ) {
+    protected function getCarrierFromFixtureId($id) {
         if (isset($this->carriers[$id])) {
             return $this->carriers[$id];
         }
@@ -348,7 +346,7 @@ class CarrierTest extends AbstractCartCalculationTest
     }
 
     /**
-     * @param int $id fixture product id
+     * @param int $id fixture id
      *
      * @return Zone|null
      */
@@ -362,7 +360,7 @@ class CarrierTest extends AbstractCartCalculationTest
     }
 
     /**
-     * @param int $id fixture product id
+     * @param int $id fixture id
      *
      * @return Country|null
      */
@@ -378,7 +376,7 @@ class CarrierTest extends AbstractCartCalculationTest
     }
 
     /**
-     * @param int $id fixture product id
+     * @param int $id fixture id
      *
      * @return State|null
      */
@@ -392,7 +390,7 @@ class CarrierTest extends AbstractCartCalculationTest
     }
 
     /**
-     * @param int $id fixture product id
+     * @param int $id fixture id
      *
      * @return Address|null
      */

@@ -197,6 +197,14 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * reset static cache (eg unit testsing purpose)
+     */
+    static public function resetStaticCache(){
+        static::$currencies = array();
+        static::$countActiveCurrencies = array();
+    }
+
+    /**
      * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
      * If it's true, currency is not added.
      *
