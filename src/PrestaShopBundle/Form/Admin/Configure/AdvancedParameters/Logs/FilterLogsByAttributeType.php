@@ -42,15 +42,15 @@ final class FilterLogsByAttributeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', TextType::class)
-            ->add('employee', TextType::class)
-            ->add('severity', TextType::class)
-            ->add('message', TextType::class)
-            ->add('object_type', TextType::class)
-            ->add('object_id', TextType::class)
-            ->add('error_code', TextType::class)
-            ->add('date_from', DatePickerType::class)
-            ->add('date_to', DatePickerType::class)
+            ->add('id', TextType::class, array('required' => false))
+            ->add('employee', TextType::class, array('required' => false))
+            ->add('severity', TextType::class, array('required' => false))
+            ->add('message', TextType::class, array('required' => false))
+            ->add('object_type', TextType::class, array('required' => false))
+            ->add('object_id', TextType::class, array('required' => false))
+            ->add('error_code', TextType::class, array('required' => false))
+            ->add('date_from', DatePickerType::class, array('required' => false))
+            ->add('date_to', DatePickerType::class, array('required' => false))
         ;
     }
 
