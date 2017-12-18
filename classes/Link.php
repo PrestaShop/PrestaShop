@@ -669,11 +669,12 @@ class LinkCore
     /**
      * Use controller name to create a link.
      *
-     * @param string        $controller
-     * @param bool          $withToken     include or not the token in the url
+     * @param string $controller
+     * @param bool $withToken include or not the token in the url
      * @param array(string) $sfRouteParams Optional parameters to use into New architecture specific cases. If these specific cases should redirect to legacy URLs, then this parameter is used to complete GET query string
-     *
+     * @param array $params Optional
      * @return string url
+     * @throws PrestaShopException
      */
     public function getAdminLink($controller, $withToken = true, $sfRouteParams = array(), $params = array())
     {
@@ -693,6 +694,7 @@ class LinkCore
             $sfRouter = $sfContainer->get('router');
         }
 
+        $routeName = null;
         switch ($controller) {
             case 'AdminProducts':
                 // New architecture modification: temporary behavior to switch between old and new controllers.
@@ -729,50 +731,50 @@ class LinkCore
                 break;
 
             case 'AdminModulesSf':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_module_manage';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_module_manage';
+                break;
 
             case 'AdminStockManagement':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_stock_overview';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_stock_overview';
+                break;
 
             case 'AdminTranslationSf':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_international_translation_overview';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_international_translation_overview';
+                break;
 
             case 'AdminInformation':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_system_information';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_system_information';
+                break;
 
             case 'AdminAddonsCatalog':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_module_addons_store';
+                $routeName = 'admin_module_addons_store';
+                break;
 
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+            case 'AdminLogs':
+                $routeName = 'admin_logs';
+                break;
 
             case 'AdminPerformance':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_performance';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_performance';
+                break;
 
             case 'AdminAdminPreferences':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_administration';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_administration';
+                break;
 
             case 'AdminMaintenance':
-                return $sfRouter->generate('admin_maintenance', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+                $routeName = 'admin_maintenance';
+                break;
 
             case 'AdminPPreferences':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_product_preferences';
+                $routeName = 'admin_product_preferences';
+                break;
+        }
 
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+        if (!is_null($routeName)) {
+            $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
 
-            case 'AdminPreferences':
-                return $sfRouter->generate('admin_preferences', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+            return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
@@ -991,8 +993,10 @@ class LinkCore
      * Create link after language change, for the change language block.
      *
      * @param int $idLang Language ID
+     * @param Context $context the context if needed
      *
      * @return string link
+     * @throws PrestaShopException
      */
     public function getLanguageLink($idLang, Context $context = null)
     {
@@ -1061,6 +1065,8 @@ class LinkCore
      * @param bool   $sort       Show sort attribute
      * @param bool   $pagination Show page number attribute
      * @param bool   $array      If false return an url, if true return an array
+     *
+     * @return string|array
      */
     public function getPaginationLink($type, $idObject, $nb = false, $sort = false, $pagination = false, $array = false)
     {
