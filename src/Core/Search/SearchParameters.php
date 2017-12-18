@@ -38,6 +38,7 @@ final class SearchParameters
         'offset',
         'orderBy',
         'sortOrder',
+        'filters'
     );
 
     /**

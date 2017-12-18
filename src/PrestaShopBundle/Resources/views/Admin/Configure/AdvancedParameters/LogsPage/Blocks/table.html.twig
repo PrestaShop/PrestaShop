@@ -25,6 +25,7 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
+{{ form_start(searchParametersForm, {'method': 'POST', 'action': path('admin_search_logs') }) }}
 <table class="table table-hover">
   <thead class="thead-default">
     <tr class="column-headers">
@@ -99,6 +100,8 @@
   {% endfor %}
   </tbody>
 </table>
+{{ form_rest(searchParametersForm) }}
+{{ form_end(searchParametersForm) }}
 
 {% if logsSum >= 10 %}
   <div class="row">
