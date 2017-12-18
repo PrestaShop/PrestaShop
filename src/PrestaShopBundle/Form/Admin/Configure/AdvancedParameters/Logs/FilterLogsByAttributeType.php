@@ -42,7 +42,7 @@ final class FilterLogsByAttributeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', TextType::class, array('required' => false))
+            ->add('id_log', TextType::class, array('required' => false))
             ->add('employee', TextType::class, array('required' => false))
             ->add('severity', TextType::class, array('required' => false))
             ->add('message', TextType::class, array('required' => false))

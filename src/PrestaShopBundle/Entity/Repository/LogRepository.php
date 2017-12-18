@@ -68,7 +68,7 @@ class LogRepository implements RepositoryInterface
         $parameters = $queryBuilder->getParameters();
 
         foreach ($parameters as $pattern => $value) {
-            $query = str_replace($pattern, $value, $query);
+            $query = str_replace(":$pattern", $value, $query);
         }
 
         return $query;
@@ -96,8 +96,11 @@ class LogRepository implements RepositoryInterface
     {
         $employeeTable = $this->databasePrefix.'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
+        $wheres = array_filter($filters['filters'], function ($value) {
+            return !empty($value);
+        });
 
-        return $queryBuilder
+        $qb = $queryBuilder
             ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
             ->from($this->logTable, 'l')
             ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
@@ -105,6 +108,15 @@ class LogRepository implements RepositoryInterface
             ->setFirstResult($filters['offset'])
             ->setMaxResults($filters['limit'])
         ;
+
+        if (!empty($wheres)) {
+            foreach ($wheres as $column => $value) {
+                $qb->andWhere("$column LIKE :$column");
+                $qb->setParameter($column, '%'.$value.'%');
+            }
+        }
+
+        return $qb;
     }
 
     /**
