@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\FilterLogsByAttributeType;
 use PrestaShopBundle\Entity\Repository\LogRepository;
@@ -49,13 +50,15 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
-        $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
+        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
+        $logsByEmailForm = $this->getFormHandler()->getForm();
+
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_log',
-            'sortOrder' => 'desc'
+            'sortOrder' => 'desc',
+            'filters' => array()
         ));
 
         $twigValues = array(
@@ -86,6 +89,46 @@ class LogsController extends FrameworkBundleAdminController
      * @param Request $request
      * @return RedirectResponse
      */
+    public function searchAction(Request $request)
+    {
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+            return $this->redirectToRoute('admin_logs');
+        }
+
+        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
+        $searchParametersForm->handleRequest($request);
+        $filters = array();
+
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_logs');
+        }
+
+        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
+
+        if ($searchParametersForm->isSubmitted()) {
+            $filters = $searchParametersForm->getData();
+        }
+
+        return $this->redirectToRoute('admin_logs', array('filters' => $filters));
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws \Exception
+     */
     public function processFormAction(Request $request)
     {
         if ($this->isDemoModeEnabled()) {
@@ -94,8 +137,7 @@ class LogsController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_logs');
         }
 
-        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
-        $logsByEmailForm = $this->get('prestashop.adapter.logs.form_handler')->getForm();
+        $logsByEmailForm = $this->getFormHandler()->getForm();
         $logsByEmailForm->handleRequest($request);
 
         if (!in_array(
@@ -112,10 +154,12 @@ class LogsController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_logs');
         }
 
+        $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
+
         if ($logsByEmailForm->isSubmitted()) {
             $data = $logsByEmailForm->getData();
 
-            $saveErrors = $this->get('prestashop.adapter.logs.form_handler')->save($data);
+            $saveErrors = $this->getFormHandler()->save($data);
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
@@ -138,6 +182,14 @@ class LogsController extends FrameworkBundleAdminController
         $this->getLogRepository()->deleteAll();
 
         return $this->redirectToRoute('admin_logs');
+    }
+
+    /**
+     * @return FormHandlerInterface the form handler to set the severity level.
+     */
+    private function getFormHandler()
+    {
+        return $this->get('prestashop.adapter.logs.form_handler');
     }
 
     /**
