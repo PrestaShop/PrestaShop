@@ -5,6 +5,8 @@ if [[ $EXTRA_TESTS != *"sqldiff"* ]]; then
   exit 0
 fi
 
+forceAllUpgrades=1
+
 # Check only some changes are brought to a SQL file
 
 # Temp change required for mysqldiff: disabling some rules to let the tool working properly
@@ -46,13 +48,19 @@ docker exec -ti upgrade-test apt -qq install -y rsync
 docker exec -ti upgrade-test rsync -ar /tmp/fresh-git/ /var/www/html/
 docker exec -ti upgrade-test chown root:root -R /var/www/html
 
+# If requested, bump version to execute ALL sql requests
+if [ $forceAllUpgrades -eq 1 ]; then
+    echo -e "<?php\ndefine('_PS_INSTALL_VERSION_', '9.9.9.9');" > /tmp/bump_version.php
+    docker cp /tmp/bump_version.php upgrade-test:/var/www/html/install-dev/install_version.php
+fi
+
 # Run SQL upgrade
 echo "Running SQL upgrade ..."
 docker exec -ti upgrade-test php /var/www/html/install-dev/upgrade/upgrade.php
 
 # Use MySQL tool to find differences between the fresh install & an upgraded database
 mysqldiff --server1=root@localhost --server2=root:doge@`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' upgrade-mysql` \
-    --changes-for=server2 --difftype=sql --skip-table-options --force prestashop:upgrade
+    --changes-for=server2 --skip-table-options --force prestashop:upgrade
 
 result=$?
 if [ $result -ne 0 ]; then
