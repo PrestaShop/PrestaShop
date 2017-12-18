@@ -135,4 +135,16 @@ interface StockManagerInterface
      * @return int time
      */
     public function getProductCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null);
+
+    /**
+     * For a given product, returns the number of products sold for the the given coverage period.
+     * By default, for the given product, it will use sum(quantities removed in all warehouses)
+     *
+     * @param int $id_product
+     * @param int $id_product_attribute
+     * @param int $coverage
+     * @param int|null $id_warehouse Optional
+     * @return int Number of products sold over the coverage period
+     */
+    public function getProductOutForCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null);
 }

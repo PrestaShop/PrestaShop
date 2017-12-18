@@ -836,6 +836,28 @@ class StockManagerCore implements StockManagerInterface
             $coverage = 7;
         } // Week by default
 
+        $quantity_out = $this->getProductOutForCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse);
+        if (!$quantity_out) {
+            return -1;
+        }
+
+        $quantity_per_day = Tools::ps_round($quantity_out / $coverage);
+        $physical_quantity = $this->getProductPhysicalQuantities($id_product,
+                                                                 $id_product_attribute,
+                                                                 ($id_warehouse ? array($id_warehouse) : null),
+                                                                 true);
+        $time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);
+
+        return $time_left;
+    }
+
+    /**
+     * @see StockManagerInterface::getProductOutForCoverage()
+     * Here, $coverage is a number of days
+     * @return int number of products sold over the coverage period
+     */
+    public function getProductOutForCoverage($id_product, $id_product_attribute, $coverage, $id_warehouse = null) {
+
         // gets all stock_mvt for the given coverage period
         $query = '
 			SELECT SUM(view.quantity) as quantity_out
@@ -856,19 +878,7 @@ class StockManagerCore implements StockManagerInterface
 				GROUP BY sm.`id_stock_mvt`
 			) as view';
 
-        $quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-        if (!$quantity_out) {
-            return -1;
-        }
-
-        $quantity_per_day = $quantity_out / $coverage;
-        $physical_quantity = $this->getProductPhysicalQuantities($id_product,
-                                                                 $id_product_attribute,
-                                                                 ($id_warehouse ? array($id_warehouse) : null),
-                                                                 true);
-        $time_left = ($quantity_per_day == 0) ? (-1) : Tools::ps_round($physical_quantity / $quantity_per_day);
-
-        return $time_left;
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
