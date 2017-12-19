@@ -35,23 +35,23 @@ class CommonClient {
             .waitForExistAndClick(selector)
     }
 
-  closeBoarding(selector) {
-    if (global.isVisible) {
-      return this.client
-        .click(selector)
-        .pause(2000)
-    } else {
-      return this.client.pause(1000)
+    closeBoarding(selector) {
+        if (global.isVisible) {
+            return this.client
+                .click(selector)
+                .pause(2000)
+        } else {
+            return this.client.pause(1000)
+        }
     }
-  }
 
-  isVisible(selector) {
-    return this.client
-      .isVisible(selector)
-      .then((isVisible) => {
-        global.isVisible = isVisible;
-      });
-  }
+    isVisible(selector) {
+        return this.client
+            .isVisible(selector)
+            .then((isVisible) => {
+                global.isVisible = isVisible;
+            });
+    }
 
     takeScreenshot() {
         return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
@@ -64,17 +64,17 @@ class CommonClient {
             .then((text) => expect(text.substr(2)).to.be.equal(index));
     }
 
-  changeLanguage(language) {
-    if (language === "francais") {
-      return this.client
-        .waitForExistAndClick(selector.languageFO.language_selector)
-        .waitForVisibleAndClick(selector.languageFO.language_FR)
-    } else {
-      return this.client
-        .waitForExistAndClick(selector.languageFO.language_selector)
-        .waitForVisibleAndClick(selector.languageFO.language_EN)
+    changeLanguage(language) {
+        if (language === "francais") {
+            return this.client
+                .waitForExistAndClick(selector.languageFO.language_selector)
+                .waitForVisibleAndClick(selector.languageFO.language_FR)
+        } else {
+            return this.client
+                .waitForExistAndClick(selector.languageFO.language_selector)
+                .waitForVisibleAndClick(selector.languageFO.language_EN)
+        }
     }
-  }
 
     open() {
         return this.client.init().windowHandleSize({width: 1280, height: 1024});
@@ -105,11 +105,11 @@ class CommonClient {
     }
 
     moveToObject(selector) {
-    return this.client.moveToObject(selector);
+        return this.client.moveToObject(selector);
     }
 
     waitAndSelectByValue(selector, value, timeout = 90000) {
-    return this.client.waitAndSelectByValue(selector, value, timeout);
+        return this.client.waitAndSelectByValue(selector, value, timeout);
     }
 
     waitAndSelectByVisibleText(selector, value, timeout = 90000) {
@@ -157,6 +157,21 @@ class CommonClient {
                     .then(() => this.client.getText(selector))
                     .then((text) => expect(text).to.not.equal(textToCheckWith));
                 break;
+        }
+    }
+
+    checkAttributeValue(selector, attribute, value, parameter = 'equal') {
+        switch (parameter) {
+            case "contain":
+                return this.client
+                    .waitForExist(selector, 90000)
+                    .then(() => this.client.getAttribute(selector, attribute))
+                    .then((text) => expect(text).to.be.contain(value));
+            case "equal":
+                return this.client
+                    .waitForExist(selector, 90000)
+                    .then(() => this.client.getAttribute(selector, attribute))
+                    .then((text) => expect(text).to.be.equal(value));
         }
     }
 
