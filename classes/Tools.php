@@ -2045,12 +2045,16 @@ class ToolsCore
     /**
     * Translates a string with underscores into camel case (e.g. first_name -> firstName)
     * @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
-    */
-    public static function toCamelCase($str, $catapitalise_first_char = false)
+     *
+     * @param string $str Source string to convert in camel case
+     * @param bool $capitaliseFirstChar Optionnal parameters to transform the first letter in upper case
+     * @return string The string in camel case
+     */
+    public static function toCamelCase($str, $capitaliseFirstChar = false)
     {
         $str = Tools::strtolower($str);
         $str = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)) );
-        if (!$catapitalise_first_char) {
+        if (!$capitaliseFirstChar) {
             $str = lcfirst($str);
         }
         return $str;
