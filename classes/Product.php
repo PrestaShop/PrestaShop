@@ -1888,14 +1888,25 @@ class ProductCore extends ObjectModel
     */
     public function deleteSearchIndexes()
     {
-        return (
-            Db::getInstance()->execute(
-                'DELETE `'._DB_PREFIX_.'search_index`, `'._DB_PREFIX_.'search_word`
-				FROM `'._DB_PREFIX_.'search_index` JOIN `'._DB_PREFIX_.'search_word`
-				WHERE `'._DB_PREFIX_.'search_index`.`id_product` = '.(int)$this->id.'
-						AND `'._DB_PREFIX_.'search_word`.`id_word` = `'._DB_PREFIX_.'search_index`.id_word'
-            )
+        /** Delete the index word if it is not used in other products */
+        $return = Db::getInstance()->execute(
+            'DELETE `' . _DB_PREFIX_ . 'search_word` 
+            FROM `' . _DB_PREFIX_ . 'search_word` 
+            JOIN `' . _DB_PREFIX_ . 'search_index` 
+            WHERE `' . _DB_PREFIX_ . 'search_index`.`id_product` = ' . (int)$this->id . ' 
+            AND `' . _DB_PREFIX_ . 'search_word`.`id_word` = `' . _DB_PREFIX_ . 'search_index`.`id_word` 
+            AND (SELECT COUNT(si.`id_word`) 
+                FROM `' . _DB_PREFIX_ . 'search_index` si 
+                WHERE si.`id_word` = `' . _DB_PREFIX_ . 'search_index`.`id_word`) < 2'
         );
+
+        /** Delete the product search indexes */
+        $return &= Db::getInstance()->execute('
+            DELETE FROM `' . _DB_PREFIX_ . 'search_index` 
+            WHERE `' . _DB_PREFIX_ . 'search_index`.`id_product` = ' . (int)$this->id
+        );
+
+        return $return;
     }
 
     /**
