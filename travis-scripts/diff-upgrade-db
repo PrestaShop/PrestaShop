@@ -11,11 +11,12 @@ forceAllUpgrades=1
 
 # Temp change required for mysqldiff: disabling some rules to let the tool working properly
 sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf.old
-echo -e '[mysqld]\nsql_mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' | sudo tee -a /etc/mysql/my.cnf
+echo -e '[mysqld]\nsql_mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' | sudo tee -a /etc/mysql/conf.d/safe-mode.cnf
 sudo service mysql restart
 
-# We cannot use the default mysql server (Connection refused)
-docker run -tid --name upgrade-mysql -e MYSQL_ROOT_PASSWORD=doge -e MYSQL_DATABASE=upgrade mysql:5.6
+# We cannot use the default mysql server (Connection refused), so we create a new one with the same config as Travis
+docker run -tid --name upgrade-mysql -e MYSQL_ROOT_PASSWORD=doge -e MYSQL_DATABASE=upgrade \
+        -v /etc/mysql/conf.d/safe-mode.cnf:/etc/mysql/conf.d/safe-mode.cnf mysql
 
 # Launch the requested release of PrestaShop
 docker run -tid --name upgrade-test --link upgrade-mysql -p 8085:80 \
@@ -70,6 +71,6 @@ fi
 
 # Cleanup
 docker kill upgrade-test upgrade-mysql
-sudo mv -f /etc/mysql/my.cnf.old /etc/mysql/my.cnf && sudo service mysql restart
+sudo rm /etc/mysql/conf.d/safe-mode.cnf && sudo service mysql restart
 
 exit $result
