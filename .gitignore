@@ -220,3 +220,6 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+
+### Docker ###
+tools/docker/data

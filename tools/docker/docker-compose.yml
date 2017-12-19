@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+    php-apache:
+        build:
+          context: .
+          dockerfile: conf/Apache-Php/DockerFile-Apache-Php
+        container_name: php-apache-prestashop
+        ports:
+            - "80:80"
+        volumes:
+            - ./../..:/var/www/html
+            - ./data/tests:/tmp/prestashop
+        environment:
+          - WEB_DOCUMENT_ROOT=/var/www/html
+          - WEB_DOCUMENT_INDEX=index.php
+          - WEB_ALIAS_DOMAIN=prestashop
+          - PHP_DISPLAY_ERRORS=1
+          - PHP_DEBUGGER=xdebug
+          - _PS_MODE_DEV_=true
+        depends_on:
+          - mysql
+    mysql:
+        image: mysql
+        container_name: mysql-prestashop
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+        environment:
+          - MYSQL_ROOT_PASSWORD=LetMeIn!
+          - MYSQL_DATABASE=prestashop
+          - MYSQL_USER=prestashop
+          - MYSQL_PASSWORD=password

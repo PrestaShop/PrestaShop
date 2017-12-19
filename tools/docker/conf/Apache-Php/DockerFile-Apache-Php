@@ -1,0 +1,5 @@
+FROM webdevops/php-apache-dev
+COPY conf/Apache-Php/php.ini /opt/docker/etc/php/php.ini
+COPY conf/Apache-Php/.bash_aliases /root
+RUN apt-get update && \
+    apt-get install -y mysql-client

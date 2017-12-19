@@ -1,0 +1,8 @@
+FROM php:7.1-fpm
+COPY conf/Apache-Php-Tests/.bashrc /root
+RUN apt-get update && \
+    apt-get install -y mysql-client zlib1g-dev && \
+    docker-php-ext-install pdo_mysql && \
+    pecl install xdebug-2.5.0 && \
+    docker-php-ext-enable xdebug && \
+    docker-php-ext-install zip
