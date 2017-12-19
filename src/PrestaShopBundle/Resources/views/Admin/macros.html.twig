@@ -37,18 +37,18 @@
 {% endmacro %}
 
 {% macro infotip(text)%}
-<div class="alert alert-info">
-  <ul>
-    <li>{{ text }} </li>
-  </ul>
+<div class="alert alert-info" role="alert">
+  <p class="alert-text">
+    {{ text }}
+  </p>
 </div>
 {% endmacro %}
 
 {% macro warningtip(text)%}
-<div class="alert alert-warning">
-  <ul>
-    <li>{{ text }} </li>
-  </ul>
+<div class="alert alert-warning" role="alert">
+  <p class="alert-text">
+    {{ text }}
+  </p>
 </div>
 {% endmacro %}
 

@@ -41,8 +41,8 @@ ul.category-tree {
     .category {
       cursor: pointer;
       position: absolute;
-      top: 0;
-      right: -9px;
+      top: .4em; // relative to the current font size, so "em" and not "rem"
+      right: .4em;
     }
   }
   ul {
@@ -63,13 +63,19 @@ ul.category-tree {
     }
   }
 }
+
+// category tree on the catalog page
 #tree-categories {
   padding: 0.625rem;
-  border: $gray-light 1px solid;
-  border-radius: 0.1875rem;
+
   .categories-tree-actions {
     display: inline-block;
-    margin-left: 0.9375rem;
+    margin-right: 0.9375rem;
+
+    &:hover {
+      text-decoration: none;
+    }
+
     i.material-icons {
       font-size: 1.25rem;
       vertical-align: bottom;

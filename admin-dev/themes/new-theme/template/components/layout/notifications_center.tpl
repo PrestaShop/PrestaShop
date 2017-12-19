@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<div id="notif" class="notification-center dropdown">
+<div id="notif" class="notification-center dropdown dropdown-clickable">
   <div class="notification js-notification dropdown-toggle" data-toggle="dropdown">
     <i class="material-icons">notifications_none</i>
     <span id="notifications-total" class="count hide">0</span>
