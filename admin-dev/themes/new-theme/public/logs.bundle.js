@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a2f8039fb4131e67d3a1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2a25820e0264530cb060"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,7 +706,7 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(410)(__webpack_require__.s = 410);
+/******/ 	return hotCreateRequire(411)(__webpack_require__.s = 411);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -739,14 +739,61 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 global.LogsPage = {};
+
 LogsPage.delete = (message) => {
-    if (confirm(message)) {
-        let form = document.getElementById('logs_delete_form');
-        form.submit();
-    }
+  if (confirm(message)) {
+    const form = document.getElementById('logs_delete_form');
+    form.submit();
+  }
 };
 
 TableFilters.init();
+DatePicker.init();
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+
+/***/ }),
+
+/***/ 216:
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(global) {/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+/**
+ * Enable all datepickers.
+ */
+global.DatePicker = {};
+
+DatePicker.init = () => {
+    $('.datepicker').datetimepicker({
+        locale: full_language_code,
+        format: 'YYYY-MM-DD'
+    });
+}
+
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
@@ -887,11 +934,12 @@ TableFilters.init = () => {
 
 /***/ }),
 
-/***/ 410:
+/***/ 411:
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(23);
 __webpack_require__(22);
+__webpack_require__(216);
 module.exports = __webpack_require__(213);
 
 
