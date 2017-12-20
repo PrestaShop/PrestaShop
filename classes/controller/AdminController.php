@@ -1978,11 +1978,13 @@ class AdminControllerCore extends Controller
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
         $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
+
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
+
                 continue;
             }
 
@@ -1996,6 +1998,10 @@ class AdminControllerCore extends Controller
             $tabs[$index]['img'] = null;
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
+            if (empty($tabs[$index]['icon'])) {
+                $tabs[$index]['icon'] = 'extension';
+            }
 
             if (isset($tabs[$index]['sub_tabs'][0])) {
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
