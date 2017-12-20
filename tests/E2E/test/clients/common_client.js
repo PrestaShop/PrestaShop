@@ -2,7 +2,6 @@ const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
 var path = require('path');
 var fs = require('fs');
-
 var pdfUtil = require('pdf-to-text');
 
 global.tab = [];
@@ -53,10 +52,7 @@ class CommonClient {
             });
     }
 
-    takeScreenshot() {
-        return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
-    }
-  OnBoarding(selector) {
+    OnBoarding(selector) {
     if (global.onboarding == true) {
       return this.client
         .click(selector.popup_close_button)
@@ -65,7 +61,7 @@ class CommonClient {
       return this.client
         .pause(1000)
     }
-  }
+    }
 
   takeScreenshot() {
     return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
@@ -98,9 +94,11 @@ class CommonClient {
         return this.client.end();
     }
 
-    waitForExistAndClick(selector, timeout = 90000) {
-        return this.client.waitForExistAndClick(selector, timeout);
-    }
+      waitForExistAndClick(selector, pause=0, timeout = 90000) {
+        return this.client
+          .pause(pause)
+          .waitForExistAndClick(selector, timeout);
+      }
 
     waitAndSetValue(selector, value, timeout = 90000) {
         return this.client.waitAndSetValue(selector, value, timeout);
@@ -232,6 +230,10 @@ class CommonClient {
             .pause(5000)
     }
 
+      waitForVisible(selector, timeout = 90000) {
+        return this.client
+          .waitForVisible(selector, timeout)
+      }
 }
 
 module.exports = CommonClient;
