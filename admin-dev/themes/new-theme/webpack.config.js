@@ -52,6 +52,7 @@ let config = {
     logs: [
       './js/app/utils/table-filters.js',
       './js/app/utils/sql-manager.js',
+      './js/app/utils/datepicker.js',
       './js/app/pages/logs'
     ],
     'sql-manager-helper': [
