@@ -10,13 +10,18 @@ module.exports = {
     page_loaded: '.module-search-result-wording',
     installed_modules_tabs: '(//div[@class="page-head-tabs"]/a)[2]',
     modules_search_input:'.pstaggerAddTagInput',
-    modules_search_button:'//*[@id="main-div"]/div[3]/div/div/div[2]/div/div[6]/div/div[1]/div/div[2]/button',
-    action_module_built_button: '//*[@id="modules-list-container-native"]/div/div/div/div[2]/div[4]/div[2]/form/button',
+    module_selection_input:'//input[contains(@class,"pstaggerAddTagInput ")]',
+    modules_search_button:'//*[@id="main-div"]//button[contains(@class,"search-button")]',
+    action_module_built_button: '//*[@id="modules-list-container-native"]//button[contains(@class,"module_action_menu_configure")]',
     success_install_message:'//*[@id="importDropzone"]/div[3]/i',
-    option_button:'//*[@id="modules-list-container-native"]/div/div/div/div[2]/div[4]/div[2]/button',
-    uninstall_button:'//*[@id="modules-list-container-native"]/div/div/div/div[2]/div[4]/div[2]/div/li[1]/form/button',
-    optional_button:'//*[@id="module-modal-confirm-prestafraud-uninstall"]/div/div/div[2]/div/p/label',
-    uninstall_confirmation:'//*[@id="module-modal-confirm-prestafraud-uninstall"]/div/div/div[3]/a',
-    built_in_module:'//*[@id="main-div"]/div[3]/div/div/div[2]/div/div[10]/span[1]'
+    option_button:'//*[@id="modules-list-container-native"]//button[contains(@class,"dropdown-toggle")]',
+    uninstall_button:'//*[@id="modules-list-container-native"]//button[contains(@class,"module_action_menu_uninstall")]',
+    uninstall_confirmation:'//*[@id="module-modal-confirm-prestafraud-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]',
+    built_in_module:'(//*[@id="main-div"]//div[contains(@class,"module-short-list")])[2]/span[1]',
+    selection_search_button:'//*[@id="main-div"]//button[contains(@class,"search-button")]',
+    install_button:'//*[@id="modules-list-container-all"]//button[contains(@class,"module_action_menu_install")]',
+    config_legend:'//*[@id="content"]/fieldset/legend',
+    config_legend_adwords:'//*[@id="content"]//h4[contains(@class,"page-subtitle")]',
+    uninstall_adwords_module:'//*[@id="module-modal-confirm-gadwords-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]'
   }
 };
