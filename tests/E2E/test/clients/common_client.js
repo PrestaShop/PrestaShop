@@ -56,6 +56,20 @@ class CommonClient {
     takeScreenshot() {
         return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
     }
+  OnBoarding(selector) {
+    if (global.onboarding == true) {
+      return this.client
+        .click(selector.popup_close_button)
+        .pause(2000)
+    } else {
+      return this.client
+        .pause(1000)
+    }
+  }
+
+  takeScreenshot() {
+    return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
+  }
 
     successPanel(index) {
         return this.client
