@@ -44,8 +44,8 @@ while [[ "$(curl -L -s -o /dev/null -w ''%{http_code}'' localhost:8085)" != "200
 
 # Copy latests changes on the release content
 docker cp $TMP_GIT_DIR upgrade-test:/tmp
-docker exec -ti upgrade-test apt -qq update
-docker exec -ti upgrade-test apt -qq install -y rsync
+docker exec -ti upgrade-test apt-get -qq update
+docker exec -ti upgrade-test apt-get -qq install -y rsync
 docker exec -ti upgrade-test rsync -ar /tmp/fresh-git/ /var/www/html/
 docker exec -ti upgrade-test chown root:root -R /var/www/html
 
@@ -58,6 +58,10 @@ fi
 # Run SQL upgrade
 echo "Running SQL upgrade ..."
 docker exec -ti upgrade-test php /var/www/html/install-dev/upgrade/upgrade.php
+
+# Run doctrine upgrade
+echo "Running Doctrine database upgrade"
+docker exec -ti upgrade-test php bin/console prestashop:schema:update-without-foreign
 
 # Use MySQL tool to find differences between the fresh install & an upgraded database
 mysqldiff --server1=root@localhost --server2=root:doge@`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' upgrade-mysql` \
