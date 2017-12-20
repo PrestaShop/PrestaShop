@@ -127,20 +127,23 @@ $(document).ready(function() {
       }
     });
     //sidebar menu collapse
-    sidebar.find('.menu-collapse').on('click',function(){
-      $(this).toggleClass('icon-rotate-90');
+    sidebar.find('.menu-collapse').on('click', function(e) {
+      $(this).toggleClass('icon-rotate-180');
+      jQuery('#nav-sidebar ul.menu > li')
+          .removeClass('open')
+          .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
 
-      if ($(this).hasClass('icon-rotate-90')) {
+      if ($(this).hasClass('icon-rotate-180')) {
+        $(this).css('margin-left', '5px');
         $('.page-head .page-title').css('padding-left', '70px');
         $('.page-head .breadcrumb').css('left', '70px');
         $('.page-head .page-subtitle').css('left', '70px');
-
       } else {
         $('.page-head .page-title').css('padding-left', '230px');
         $('.page-head .breadcrumb').css('left', '230px');
         $('.page-head .page-subtitle').css('left', '230px');
+        jQuery('#nav-sidebar ul.menu > li.active').addClass('open');
       }
-
       $('body').toggleClass('page-sidebar-closed');
       $('.expanded').removeClass('expanded');
       $.ajax({
@@ -153,7 +156,8 @@ $(document).ready(function() {
     var menuCollapse = sidebar.find('.menu-collapse');
 
     if ($('body').hasClass('page-sidebar-closed')) {
-      menuCollapse.addClass('icon-rotate-90');
+      menuCollapse.addClass('icon-rotate-180');
+      menuCollapse.css('margin-left', '5px');
       $('.page-head .page-title').css('padding-left', '70px');
       $('.page-head .breadcrumb').css('left', '70px');
       $('.page-head .page-subtitle').css('left', '70px');
@@ -272,7 +276,7 @@ $(document).ready(function() {
     navigation.on('click.collapse','span.menu-collapse', expand);
 
     $('span.menu-collapse').off();
-	  $('.menu-collapse').removeClass('icon-rotate-90');
+	  $('.menu-collapse').removeClass('icon-rotate-180');
 
     buildMobileMenu(true);
 
@@ -357,41 +361,28 @@ $(document).ready(function() {
 
   // prevent mouseout + direct path to submenu on sidebar uncollapsed navigation + avoid out of bounds
   var closingMenu, openingMenu;
-  $('li.maintab.has_submenu').hover(function() {
-    var submenu = $(this);
-    if (submenu.is('.active') && submenu.children('ul.submenu').is(':visible')) {
-      return;
-    }
-    clearTimeout(openingMenu);
-    clearTimeout(closingMenu);
-    openingMenu = setTimeout(function(){
-      $('li.maintab').removeClass('hover');
-      $('ul.submenu.outOfBounds').removeClass('outOfBounds').css('top',0);
-      submenu.addClass('hover');
-      var h = $( window ).height();
-      var x = submenu.find('.submenu li').last().offset();
-      var l = x.top + submenu.find('.submenu li').last().height();
-      var f = 25;
-      if ($('#footer').is(':visible')){
-        f = $('#footer').height() + f;
+  jQuery('li.maintab.has_submenu > a').on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var $submenu = jQuery(this).parent();
+
+      if (!$submenu.hasClass('open')) {
+          jQuery('li.maintab').find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
+          jQuery('li.maintab').removeClass('open');
+          $submenu.addClass('open');
+          jQuery($submenu).find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
+      } else {
+          $submenu.removeClass('open');
+          $submenu.find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
       }
-      var s = $(document).scrollTop();
-      var position = h - l - f + s;
-      var out = false;
-      if ( position < 0) {
-        out = true;
-        submenu.find('.submenu').addClass('outOfBounds').css('top', position);
-      }
-    },50);
-  }, function() {
-    var submenu = $(this);
-    closingMenu = setTimeout(function(){
-      submenu.removeClass('hover');
-    },250);
   });
 
-  $('ul.submenu').on('mouseenter', function(){
-    clearTimeout(openingMenu);
+  jQuery('#nav-sidebar ul.menu > li').on('hover', function() {
+      var $li = jQuery(this);
+
+      if (jQuery('body').hasClass('page-sidebar-closed')) {
+          $li.toggleClass('open');
+      }
   });
 
   //media queries - depends of enquire.js

@@ -6,13 +6,25 @@ $min-height: 950px
 #nav-sidebar
 	position: fixed
 	width: $widthSidebarNav
+	overflow-y: scroll
+	padding-bottom: 85px
 	height: 100%
 	z-index: 500
 	background-color: $main-color
 	@include left(0)
 	ul.menu
+		.menu-collapse
+			.material-icons
+				font-size: 19px
+
+				&:last-child
+					margin-left: -19px
+		.line
+			border-bottom: 1px solid #bbcdd2
+			padding-top: 29px
+			margin-left: 15px
 		.categorytab
-			padding-top:    15px
+			padding-top:    11px
 			margin-bottom:  5px
 			position:       relative
 			height:         39px
@@ -20,120 +32,133 @@ $min-height: 950px
 			vertical-align: middle
 			font-weight:    bold
 			text-transform: uppercase
-			.line
-				border-bottom: 1px solid #bbcdd2
-				position:      absolute
-				top:           26px
-				left:          5px
-				right:         5px
 			span
 				background: $main-color
-				padding:    0 10px
-				color:      #bbcdd2
+				padding:    0 15px
+				color:      #ffffff
 				position:   relative
 		margin: 15px 0 0 0
 		padding: 0
 		list-style: none !important
-		li.maintab
-			position: relative
-			ul.submenu
-				display: none
-				padding: 0px
-				background-color: #363A41
-				&.list-group
-					margin-bottom: 0
-				li
-					list-style: none !important
-					a
-						color: $sidebar-menu-color
-						display: block
-						padding: 4px 8px
-						background-color: $main-color
-						&:hover
-							color: $sidebar-menu-hover-color
-							text-decoration: none
-							background-color: $sidebar-menu-bg-hover-color
-			a
-				white-space: nowrap
-				text-overflow: ellipsis
-				overflow: hidden
-				span
-					padding-left: 15px
-			> a.title
-				display: block
+		> li
+			&:first-of-type
+				margin-bottom: -15px
+			&.maintab
 				position: relative
-				padding: 0 .35em
-				height: $menu-item-size
-				background-color: $main-color
-				color: $sidebar-menu-color
-				line-height: $menu-item-size
-				text-decoration: none
-				@include transition-property(background-color)
-				@include transition-duration(0.2s)
-				@include transition-timing-function(ease-out)
-				i
-					display: none
-					vertical-align: middle
-					margin-top: -5px
-					color: $sidebar-menu-color
-					@include transition-property(color)
-					@include transition-duration(0.4s)
-					@include transition-timing-function(ease-out)
-			&.hover, &:hover:not(.hover)
-				> a.title
-					color: $sidebar-menu-hover-color
-					background-color: $sidebar-menu-bg-hover-color
-					i
-						color: $sidebar-menu-hover-color
-			&.hover:not(.active)
-				&:before
-					content: ''
-					width: 0
-					height: 0
-					border-style: solid
-					border-width: 8px 10px 8px 0
-					border-color: transparent $main-color transparent transparent
-					background-color: transparent
-					margin-top: 6px
-					@media (min-height: $min-height)
-						margin-top: 10px
-					position: absolute
-					z-index: 1
-					right: 0
-			&.hover
+
+				&:not(#subtab-AdminParentModulesSf)
+					i.material-icons.extension
+						color: #6c868e
+
 				ul.submenu
-					position: absolute
-					display: block
-					width: $widthSidebarSubmenu
-					top: 0
-					z-index: 600
-					@include left($widthSidebarNav)
-			&:last-child > a.title
-				border-bottom: none
-			&.active
-				a, li.active a
-					color: $sidebar-menu-active-color
-					&.title
-						border-right: 3px solid #fff
-						background-color: $sidebar-menu-bg-hover-color
-					i
-						color: $sidebar-menu-active-color
-				@media (min-height: $min-height)
-					ul.submenu
-						body:not(.page-sidebar-closed) &
+					display: none
+					padding: 0px
+					&.list-group
+						margin-bottom: 0
+					li
+						&:first-child
+							padding-top: 10px
+						&:last-child
+							padding-bottom: 12px
+						list-style: none !important
+						margin-left: 50px
+						a
+							color: $sidebar-menu-color
 							display: block
-							@include border-left(1px solid $sidebar-menu-bg-hover-color)
-							a
-								color: $sidebar-menu-color
-								padding: 5px 8px
-								padding-left: 38px
-								&:hover
-									color: $sidebar-menu-hover-color
-									background-color: $sidebar-menu-bg-hover-color
-									text-decoration: none
-							li.active a
-								color: $sidebar-menu-active-color
-								position: relative
+							padding: 4px 8px
+							&:hover
+								color: $sidebar-menu-hover-color
+								text-decoration: none
+								background-color: #202226
+				a
+					white-space: nowrap
+					text-overflow: ellipsis
+					overflow: hidden
+					span
+						padding-left: 10px
+						vertical-align: middle
+				> a.title
+					text-align: left
+					display: block
+					position: relative
+					padding: 0 .35em 0 0
+					height: $menu-item-size
+					background-color: $main-color
+					color: $sidebar-menu-color
+					line-height: $menu-item-size
+					text-decoration: none
+					@include transition-property(background-color)
+					@include transition-duration(0.2s)
+					@include transition-timing-function(ease-out)
+					i
+						vertical-align: middle
+						width: 18px
+						font-size: 18px
+						margin-left: 15px
+						color: #ffffff
+
+						&.sub-tabs-arrow
+							display: none
+							color: #6c868e
+						@include transition-property(color)
+						@include transition-duration(0.4s)
+						@include transition-timing-function(ease-out)
+				&.open, &:hover:not(.open)
+					> a.title
+						color: $sidebar-menu-hover-color
+						background-color: #202226
+
+						.sub-tabs-arrow
+							display: block
+				&.open:not(.active)
+					&:before
+						content: ''
+						width: 0
+						height: 0
+						border-style: solid
+						border-width: 8px 10px 8px 0
+						border-color: transparent $main-color transparent transparent
+						background-color: transparent
+						margin-top: 6px
+						@media (min-height: $min-height)
+							margin-top: 10px
+						position: absolute
+						z-index: 1
+						right: 0
+				&.open
+					ul.submenu
+						display: block
+						background-color: #202226
+				&:last-child > a.title
+					border-bottom: none
+				&.active
+					& > a
+						&.title
+							border-left: 4px solid $brand-info
+					a, li.active a
+						color: $sidebar-menu-active-color
+
+						&.title
+							background-color: #202226
+						i
+							color: $brand-info
+							margin-left: 11px
+					@media (min-height: $min-height)
+						ul.submenu
+							body:not(.page-sidebar-closed) &
+								display: block
+								@include border-left(1px solid $sidebar-menu-bg-hover-color)
+								a
+									color: $sidebar-menu-color
+									padding: 5px 8px
+									padding-left: 38px
+									&:hover
+										color: $sidebar-menu-hover-color
+										background-color: $sidebar-menu-bg-hover-color
+										text-decoration: none
+								li.active a
+									color: $sidebar-menu-active-color
+									position: relative
 
 	@media (max-width: $screen-phone)
 		display: none
@@ -145,9 +170,7 @@ $min-height: 950px
 			height: 28px
 			line-height: 28px
 			i
-				vertical-align: baseline
 				width: 18px
-				font-size: $icon-size-base
 				@include text-align(right)
 		#nav-sidebar ul.menu li.maintab ul.submenu
 			@include padding(1px, 1px, 0, 1px)
@@ -157,30 +180,35 @@ $min-height: 950px
 				line-height: 27px
 		#nav-sidebar ul.menu li.maintab.active ul.submenu
 			display: none
-		#nav-sidebar ul.menu li.maintab.active.hover ul.submenu
-			position: absolute
+		#nav-sidebar ul.menu li.maintab.active.open ul.submenu
 			display: block
-			width: 200px
-			z-index: 600
-			@include left($widthSidebarNav)
-			top: 0
 
 .page-sidebar
 	#content
 		@include margin-left($widthSidebarNav)
 
 .page-sidebar-closed
+	.menu-collapse
+		padding-right: 0
+		text-align: center
 	.categorytab
 		span
 			display: none
 	#nav-sidebar
 		overflow: visible
 		width: 50px
-		ul.submenu
-			display: none!important
-			position: relative
-			top: $menu-item-size
-			padding-top: 0!important
+		ul.menu
+			& > li:first-of-type
+				margin-bottom: 0
+			li.maintab
+				ul.submenu
+					display: none!important
+					position: relative
+					top: $menu-item-size
+					padding-top: 0!important
+
+					& > li
+						margin-left: 20px
 		li.searchtab
 			color: rgba(white,.5)
 			&:hover
@@ -196,6 +224,12 @@ $min-height: 950px
 					display: block
 		li.maintab.active ul.submenu
 			border: none!important
+		li
+			& > .line
+				padding-top: 14px
+				margin-bottom: 13px
+			& > .categorytab
+				display: none
 		.maintab
 			> a
 				> i
@@ -569,11 +603,12 @@ $min-height: 950px
 
 .menu-collapse
 	cursor: pointer
-	height: 54px
-	width: 100%
+	height: 13px
 	font-size: 2em
-	text-align: center
-	line-height: 55px
+	text-align: right
+	padding-right: 15px
+	margin-bottom: 19px
+	line-height: 13px
 	display: block
 	color: #BEBEBE
 

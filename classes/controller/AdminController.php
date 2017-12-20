@@ -1978,14 +1978,15 @@ class AdminControllerCore extends Controller
     {
         $tabs = Tab::getTabs($this->context->language->id, $parentId);
         $current_id = Tab::getCurrentParentId($this->controller_name ? $this->controller_name : '');
+
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
+
                 continue;
             }
-
             $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
             $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
 
@@ -2012,6 +2013,7 @@ class AdminControllerCore extends Controller
             if (!file_exists($path_img)) {
                 $img = str_replace('png', 'gif', $img);
             }
+
             // tab[class_name] does not contains the "Controller" suffix
             if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $this->controller_name) {
                 $tabs[$index]['current'] = true;
@@ -2019,11 +2021,14 @@ class AdminControllerCore extends Controller
             } else {
                 $tabs[$index]['current'] = false;
             }
-
             $tabs[$index]['img'] = $img;
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
-
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
+            if (empty($tabs[$index]['icon'])) {
+                $tabs[$index]['icon'] = 'extension';
+            }
+
             if (isset($tabs[$index]['sub_tabs'][0])) {
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
             } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
