@@ -22,14 +22,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-global.LogsPage = {};
 
-LogsPage.delete = (message) => {
-  if (confirm(message)) {
-    const form = document.getElementById('logs_delete_form');
-    form.submit();
-  }
-};
+/**
+ * Enable all datepickers.
+ */
+global.DatePicker = {};
 
-TableFilters.init();
-DatePicker.init();
+DatePicker.init = () => {
+    $('.datepicker').datetimepicker({
+        locale: full_language_code,
+        format: 'YYYY-MM-DD'
+    });
+}
