@@ -128,6 +128,12 @@ class LogRepository implements RepositoryInterface
             ));
         }
 
+        /* Manage Employee filter */
+        if (!empty($wheres['employee'])) {
+            $qb->andWhere("e.lastname LIKE :employee OR e.firstname LIKE :employee");
+            $qb->setParameter('employee', '%'.$wheres['employee'].'%');
+        }
+
         return $qb;
     }
 
