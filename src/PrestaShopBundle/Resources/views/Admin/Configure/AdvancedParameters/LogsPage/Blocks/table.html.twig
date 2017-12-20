@@ -106,8 +106,9 @@
 {% if logsSum >= 10 %}
   <div class="row">
     <div class="col-md-12">
+      {% set request = app.request %}
       {{ render(controller('PrestaShopBundle:Admin\\Common:pagination',
-      {'limit': app.request.get('limit', 10), 'offset': app.request.get('offset', 0), 'total': logsSum, 'caller_route': app.request.attributes.get('_route') }))
+      {'limit': request.get('limit', 10), 'offset': request.get('offset', 0), 'total': logsSum, 'caller_route': request.attributes.get('_route') }))
       }}
     </div>
   </div>
