@@ -28,7 +28,8 @@ env:
 matrix:
   include:
     - php: 7.1
-      env: EXTRA_TESTS=functional
+      # temporarily disabled
+      # env: EXTRA_TESTS=functional
 
 before_install:
   # Apache & php-fpm configuration
