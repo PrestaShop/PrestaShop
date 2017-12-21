@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,15 +42,15 @@ final class FilterLogsByAttributeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id_log', TextType::class, array('required' => false))
-            ->add('employee', TextType::class, array('required' => false))
-            ->add('severity', TextType::class, array('required' => false))
-            ->add('message', TextType::class, array('required' => false))
-            ->add('object_type', TextType::class, array('required' => false))
-            ->add('object_id', TextType::class, array('required' => false))
-            ->add('error_code', TextType::class, array('required' => false))
-            ->add('date_from', DatePickerType::class, array('required' => false))
-            ->add('date_to', DatePickerType::class, array('required' => false))
+            ->add('id_log')
+            ->add('employee')
+            ->add('severity')
+            ->add('message')
+            ->add('object_type')
+            ->add('object_id')
+            ->add('error_code')
+            ->add('date_from', DatePickerType::class)
+            ->add('date_to', DatePickerType::class)
         ;
     }
 
@@ -60,7 +60,8 @@ final class FilterLogsByAttributeType extends CommonAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'translation_domain' => 'Admin.Advparameters.Feature'
+            'translation_domain' => 'Admin.Advparameters.Feature',
+            'required' => false,
         ));
     }
 

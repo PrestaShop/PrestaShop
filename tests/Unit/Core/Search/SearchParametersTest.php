@@ -156,6 +156,23 @@ class SearchParametersTest extends TestCase
                     )
                 )
             ),
+            'NULL ENTRY BUT IN DEFAULT CASE' => array(
+                $this->createRequestParams(
+                    array(
+                        'limit' => 10,
+                        'offset' => 10,
+                        'sortOrder' => 'ASC',
+                        'filters' => array(),
+                    )
+                ),
+                array('orderBy' => 'foo'),
+                array(
+                    'limit' => 10,
+                    'offset' => 10,
+                    'orderBy' => 'foo',
+                    'sortOrder' => 'ASC',
+                )
+            ),
         );
     }
 

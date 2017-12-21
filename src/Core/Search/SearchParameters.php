@@ -56,10 +56,6 @@ final class SearchParameters
         foreach ($this->filterTypes as $type) {
             $filter = $request->get($type);
 
-            if (is_null($filter)) {
-                continue;
-            }
-
             if (empty($filter)) {
                 $filter = array_key_exists($type, $defaultValues) ? $defaultValues[$type] : null;
 

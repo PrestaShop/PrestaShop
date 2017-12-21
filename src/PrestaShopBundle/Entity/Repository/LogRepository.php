@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2017 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -42,7 +42,7 @@ class LogRepository implements RepositoryInterface
     {
         $this->connection = $connection;
         $this->databasePrefix = $databasePrefix;
-        $this->logTable = $this->databasePrefix."log";
+        $this->logTable = $this->databasePrefix.'log';
     }
 
     /**
@@ -57,7 +57,9 @@ class LogRepository implements RepositoryInterface
 
     /**
      * Get all logs with employee name and avatar information SQL query.
+     *
      * @param array $filters
+     *
      * @return string the SQL query
      */
     public function findAllWithEmployeeInformationQuery($filters)
@@ -76,7 +78,9 @@ class LogRepository implements RepositoryInterface
 
     /**
      * Get all logs with employee name and avatar information.
+     *
      * @param array $filters
+     *
      * @return array the list of logs
      */
     public function findAllWithEmployeeInformation($filters)
@@ -89,19 +93,25 @@ class LogRepository implements RepositoryInterface
 
     /**
      * Get a reusable Query Builder to dump and execute SQL.
+     *
      * @param array $filters
+     *
      * @return \Doctrine\DBAL\Query\QueryBuilder
      */
     private function getAllWithEmployeeInformationQuery($filters)
     {
         $employeeTable = $this->databasePrefix.'employee';
         $queryBuilder = $this->connection->createQueryBuilder();
-        $wheres = array_filter($filters['filters'], function ($value) {
-            return !empty($value);
-        });
-        $scalarFilters = array_filter($wheres, function ($key) {
-            return !in_array($key, array('date_from', 'date_to', 'employee'));
-        },ARRAY_FILTER_USE_KEY);
+
+        if (array_key_exists('filters', $filters)) {
+            $wheres = array_filter($filters['filters'], function ($value) {
+                return !empty($value);
+            });
+
+            $scalarFilters = array_filter($wheres, function ($key) {
+                return !in_array($key, array('date_from', 'date_to', 'employee'));
+            }, ARRAY_FILTER_USE_KEY);
+        }
 
         $qb = $queryBuilder
             ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
@@ -112,16 +122,16 @@ class LogRepository implements RepositoryInterface
             ->setMaxResults($filters['limit'])
         ;
 
-        if (!empty($scalarFilters)) {
+        if (isset($scalarFilters) && !empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {
                 $qb->andWhere("$column LIKE :$column");
                 $qb->setParameter($column, '%'.$value.'%');
             }
         }
 
-        /* Manage Dates interval */
-        if (!empty($wheres['date_from']) && !empty($wheres['date_to'])) {
-            $qb->andWhere("l.date_add BETWEEN :date_from AND :date_to");
+        /* Manage Dates interval filter */
+        if (isset($wheres) && !empty($wheres['date_from']) && !empty($wheres['date_to'])) {
+            $qb->andWhere('l.date_add BETWEEN :date_from AND :date_to');
             $qb->setParameters(array(
                'date_from' => $wheres['date_from'],
                'date_to' => $wheres['date_to'],
@@ -129,8 +139,8 @@ class LogRepository implements RepositoryInterface
         }
 
         /* Manage Employee filter */
-        if (!empty($wheres['employee'])) {
-            $qb->andWhere("e.lastname LIKE :employee OR e.firstname LIKE :employee");
+        if (isset($wheres) && !empty($wheres['employee'])) {
+            $qb->andWhere('e.lastname LIKE :employee OR e.firstname LIKE :employee');
             $qb->setParameter('employee', '%'.$wheres['employee'].'%');
         }
 
@@ -139,7 +149,9 @@ class LogRepository implements RepositoryInterface
 
     /**
      * Delete all logs.
-     * @return integer The number of affected rows.
+     *
+     * @return int The number of affected rows
+     *
      * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
      */
     public function deleteAll()
