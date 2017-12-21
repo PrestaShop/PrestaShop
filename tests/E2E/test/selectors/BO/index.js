@@ -9,5 +9,6 @@ module.exports = Object.assign({},
   require('./create_order'),
   require('./product_list'),
   require('./shopParameters')
+  require('./international')
 );
 

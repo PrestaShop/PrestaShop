@@ -104,13 +104,13 @@ class CommonClient {
         return this.client.waitForVisibleAndClick(selector, timeout);
     }
 
-  moveToObject(selector) {
+    moveToObject(selector) {
     return this.client.moveToObject(selector);
-  }
+    }
 
-  waitAndSelectByValue(selector, value, timeout = 90000) {
+    waitAndSelectByValue(selector, value, timeout = 90000) {
     return this.client.waitAndSelectByValue(selector, value, timeout);
-  }
+    }
 
     waitAndSelectByVisibleText(selector, value, timeout = 90000) {
         return this.client.waitAndSelectByVisibleText(selector, value, timeout);
@@ -168,19 +168,18 @@ class CommonClient {
             .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
     }
 
-  /**
-   * This function allows to search a data by value
-   * @param search_input
-   * @param search_button
-   * @param value
-   * @returns {*}
-   */
-  searchByValue(search_input, search_button, value) {
-    return this.client
-      .waitAndSetValue(search_input, value)
-      .waitForExistAndClick(search_button)
-  }
-
+    /**
+     * This function allows to search a data by value
+     * @param search_input
+     * @param search_button
+     * @param value
+     * @returns {*}
+     */
+    searchByValue(search_input, search_button, value) {
+        return this.client
+            .waitAndSetValue(search_input, value)
+            .waitForExistAndClick(search_button)
+    }
 
     /**
      * This function allows to download a pdf document and check the existence of string in it
