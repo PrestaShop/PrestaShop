@@ -150,8 +150,7 @@ class LegacyContext
         $showContentHeader,
         $headerTabContent,
         $enableSidebar,
-        $helpLink = '',
-        $routeName = ''
+        $helpLink = ''
     ) {
         $originCtrl = new AdminLegacyLayoutControllerCore(
             $controllerName,
@@ -161,8 +160,7 @@ class LegacyContext
             $showContentHeader,
             $headerTabContent,
             $enableSidebar,
-            $helpLink,
-            $routeName
+            $helpLink
         );
         $originCtrl->run();
 

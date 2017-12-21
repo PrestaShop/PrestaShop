@@ -250,7 +250,7 @@
                   <input type="hidden" name="id_order" value="{$order->id}" />
                 </div>
                 <div class="col-lg-3">
-                  <button type="submit" name="submitState" class="btn btn-primary">
+                  <button type="submit" name="submitState" id="submit_state" class="btn btn-primary">
                     {l s='Update status' d='Admin.Orderscustomers.Feature'}
                   </button>
                 </div>

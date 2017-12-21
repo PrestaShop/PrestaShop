@@ -31,8 +31,7 @@ layoutDisplayType is defined ? layoutDisplayType : '',
 showContentHeader is defined ? showContentHeader : true,
 headerTabContent is defined ? headerTabContent : '',
 enableSidebar is defined ? enableSidebar : false,
-help_link is defined ? help_link : '',
-app.request.attributes.get('_route')
+help_link is defined ? help_link : ''
 )
 )) %}
 
@@ -51,41 +50,36 @@ app.request.attributes.get('_route')
 {% endblock %}
 
 {% block content_header %}
-    {% if app.session.flashbag.peek('error')|length() > 0 %}
-        <div class="alert alert-danger" role="alert">
+    {% macro alert(type, flashbagContent) %}
+        <div class="alert alert-{{ type }}" role="alert">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true"><i class="material-icons">close</i></span>
             </button>
-            <ul class="alert-text">
-                {% for flashMessage in app.session.flashbag.get('error') %}
+            {% if flashbagContent|length > 1 %}
+                <ul class="alert-text">
+                {% for flashMessage in flashbagContent %}
                     <li>{{ flashMessage|raw }}</li>
                 {% endfor %}
-            </ul>
+                </ul>
+            {% else %}
+                <div class="alert-text">
+                {% for flashMessage in flashbagContent %}
+                    <p>{{ flashMessage|raw }}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
         </div>
+    {% endmacro %}
+    {% import _self as layout %}
+
+    {% if app.session.flashbag.peek('error')|length() > 0 %}
+        {{ layout.alert('danger', app.session.flashbag.get('error')) }}
     {% endif %}
     {% if app.session.flashbag.peek('failure')|length() > 0 %}
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true"><i class="material-icons">close</i></span>
-            </button>
-            <ul class="alert-text">
-                {% for flashMessage in app.session.flashbag.get('failure') %}
-                    <li>{{ flashMessage|raw }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+        {{ layout.alert('danger', app.session.flashbag.get('failure')) }}
     {% endif %}
     {% if app.session.flashbag.peek('success')|length() > 0 %}
-        <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true"><i class="material-icons">close</i></span>
-            </button>
-            <ul>
-                {% for flashMessage in app.session.flashbag.get('success') %}
-                    <li>{{ flashMessage|raw }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+        {{ layout.alert('success', app.session.flashbag.get('success')) }}
     {% endif %}
 {% endblock %}
 

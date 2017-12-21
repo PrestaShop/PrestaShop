@@ -207,7 +207,7 @@ crashlytics-build.properties
 
 ### NetBeans ###
 nbproject/private/
-build/
+/build/
 nbbuild/
 dist/
 nbdist/
@@ -220,3 +220,7 @@ nb-configuration.xml
 .project
 .settings/
 .externalToolBuilders/
+
+### Release creation ###
+tools/build/releases/*
+!tools/build/releases/.gitkeep

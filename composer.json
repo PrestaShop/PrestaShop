@@ -157,6 +157,7 @@
         "@composer create-test-db",
         "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
       ],
+      "create-release": "@php tools/build/CreateRelease.php",
       "git-hook-install": "@php .github/contrib/install.php",
       "git-hook-uninstall": "@php .github/contrib/uninstall.php",
       "cldr-init": "PrestaShop\\PrestaShop\\Core\\Cldr\\Composer\\Hook::init"
@@ -176,6 +177,9 @@
       "symfony-assets-install": "relative",
       "incenteev-parameters": {
           "file": "app/config/parameters.yml"
+      },
+      "scripts-description": {
+          "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information."
       }
   },
   "authors": [

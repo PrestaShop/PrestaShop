@@ -245,7 +245,7 @@
 
 	{block name="preTable"}{/block}
 	<div class="table-responsive-row clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
-		<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$table}" >
+		<table id="table-{if $table_id}{$table_id}{elseif $table}{$table}{/if}" class="table{if $table_dnd} tableDnD{/if} {$table}" >
 			<thead>
 				<tr class="nodrag nodrop">
 					{if $bulk_actions && $has_bulk_actions}

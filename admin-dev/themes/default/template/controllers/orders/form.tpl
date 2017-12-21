@@ -499,7 +499,7 @@
             html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
             html += '<div class="panel-footer">';
             html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer=' + this.id_customer + '&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global'}</a>';
-            html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions'}</button>';
+            html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right" id="choose_customer_btn"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions'}</button>';
             html += '</div>';
             html += '</div>';
             html += '</div>';
@@ -1568,7 +1568,7 @@
 				</div>
 				<div class="form-group">
 					<div class="col-lg-9 col-lg-offset-3">
-						<button type="submit" name="submitAddOrder" class="btn btn-default" />
+						<button type="submit" name="submitAddOrder" {if $table}id="{$table}_submit_btn"{/if} class="btn btn-default" />
 							<i class="icon-check"></i>
 							{l s='Create the order' d='Admin.Orderscustomers.Feature'}
 						</button>

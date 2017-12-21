@@ -26,7 +26,7 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="module-sorting-search-wording">
-                <span class="module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules.Feature') }}</span>
+                <span id="selected_modules" class="module-search-result-wording">{{ '%nbModules% modules and services selected for you'|trans({'%nbModules%' : totalModules}, 'Admin.Modules.Feature') }}</span>
                 <span class="help-box" data-toggle="popover"
                     data-title="{{ "Selection"|trans({}, 'Admin.Modules.Feature') }}"
                     data-content="{{ "Customize your store with this selection of modules recommended for your shop, based on your country, language and version of PrestaShop. It includes the most popular modules from our Addons marketplace, and free partner modules."|trans({}, 'Admin.Modules.Help') }}">
@@ -35,7 +35,7 @@
         </div>
         <div class="col-lg-6">
             <div class="module-sorting module-sorting-author float-right">
-                <select class="custom-select sort-component">
+                <select id="sort_module" class="custom-select sort-component">
                   <option value="" disabled selected>- {{ 'Sort by'|trans({}, 'Admin.Actions') }} -</option>
                   <option value="name">{{ 'Name'|trans({}, 'Admin.Global') }}</option>
                   <option value="price">{{ 'Increasing Price'|trans({}, 'Admin.Modules.Feature') }}</option>
