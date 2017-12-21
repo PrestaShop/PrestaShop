@@ -51,7 +51,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @Template
+     * @Template()
      *
      * @return array Template vars
      */

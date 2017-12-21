@@ -139,6 +139,9 @@ abstract class ApiTestCase extends WebTestCase
     private function mockEmployee()
     {
         $employeeMock = $this->getMockBuilder('\Employee')->getMock();
+        $employeeMock->id = 1;
+        $employeeMock->firstname = "puff";
+        $employeeMock->lastname = "daddy";
         $employeeMock->id_lang = 1;
 
         return $employeeMock;
