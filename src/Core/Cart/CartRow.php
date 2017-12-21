@@ -26,11 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use Order;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use Tools;
 
+/**
+ * represent a cart row, ie a product and a quantity, and some post-process data like cart rule applied
+ */
 class CartRow
 {
-    protected $rowData = array();
+    protected $rowData = [];
 
     /**
      * @var Amount
@@ -74,6 +79,10 @@ class CartRow
         return $this->rowData;
     }
 
+    /**
+     * @return \PrestaShop\PrestaShop\Core\Cart\Amount
+     * @throws \Exception
+     */
     public function getInitialUnitPrice()
     {
         if (!$this->isProcessed) {
@@ -83,6 +92,12 @@ class CartRow
         return $this->initialUnitPrice;
     }
 
+    /**
+     * return final price: initial minus the cart rule discounts
+     *
+     * @return \PrestaShop\PrestaShop\Core\Cart\Amount
+     * @throws \Exception
+     */
     public function getFinalUnitPrice()
     {
         if (!$this->isProcessed) {
@@ -92,6 +107,12 @@ class CartRow
         return $this->finalUnitPrice;
     }
 
+    /**
+     * return final price: initial minus the cart rule discounts
+     *
+     * @return \PrestaShop\PrestaShop\Core\Cart\Amount
+     * @throws \Exception
+     */
     public function getFinalTotalPrice()
     {
         if (!$this->isProcessed) {
@@ -101,6 +122,13 @@ class CartRow
         return $this->finalTotalPrice;
     }
 
+    /**
+     * run initial row calculation
+     *
+     * @param \CartCore $cart
+     *
+     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
+     */
     public function processCalculation(\CartCore $cart)
     {
         /** @var \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator $price_calculator */
@@ -165,16 +193,64 @@ class CartRow
                 (int) $rowData['id_customization']
             )
         );
-        $this->finalUnitPrice   = clone($this->initialUnitPrice);
-        $this->finalTotalPrice  = new Amount(
+        // store not rounded values
+        $this->finalTotalPrice = new Amount(
             $this->initialUnitPrice->getTaxIncluded() * $quantity,
             $this->initialUnitPrice->getTaxExcluded() * $quantity
         );
-
+        $this->applyRound();
         // store state
         $this->isProcessed = true;
     }
 
+    protected function applyRound()
+    {
+        // ROUNDING MODE
+        $this->finalUnitPrice = clone($this->initialUnitPrice);
+
+        $rowData  = $this->getRowData();
+        $quantity = (int) $rowData['cart_quantity'];
+        /** @var \PrestaShop\PrestaShop\Core\ConfigurationInterface $configuration */
+        $configuration = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $precision     = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        switch ($configuration->get('PS_ROUND_TYPE')) {
+            case Order::ROUND_TOTAL:
+                // do not round the line
+                $this->finalTotalPrice = new Amount(
+                    $this->initialUnitPrice->getTaxIncluded() * $quantity,
+                    $this->initialUnitPrice->getTaxExcluded() * $quantity
+                );
+                break;
+            case Order::ROUND_LINE:
+                // round line result
+                $this->finalTotalPrice = new Amount(
+                    Tools::ps_round($this->initialUnitPrice->getTaxIncluded() * $quantity, $precision),
+                    Tools::ps_round($this->initialUnitPrice->getTaxExcluded() * $quantity, $precision)
+                );
+                break;
+
+            case Order::ROUND_ITEM:
+            default:
+                // round each item
+                $this->initialUnitPrice->setTaxExcluded(
+                    Tools::ps_round($this->initialUnitPrice->getTaxExcluded(), $precision)
+                );
+                $this->initialUnitPrice->setTaxIncluded(
+                    Tools::ps_round($this->initialUnitPrice->getTaxIncluded(), $precision)
+                );
+                $this->finalTotalPrice = new Amount(
+                    $this->initialUnitPrice->getTaxIncluded() * $quantity,
+                    $this->initialUnitPrice->getTaxExcluded() * $quantity
+                );
+                break;
+        }
+    }
+
+    /**
+     * substract discount from the row
+     *
+     * @param \PrestaShop\PrestaShop\Core\Cart\Amount $amount
+     */
     public function subDiscountAmount(Amount $amount)
     {
         $taxIncluded = $this->finalTotalPrice->getTaxIncluded() - $amount->getTaxIncluded();
@@ -200,12 +276,15 @@ class CartRow
     {
         $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
         $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
-        $amount = new Amount($discountTaxIncluded, $discountTaxExcluded);
+        $amount              = new Amount($discountTaxIncluded, $discountTaxExcluded);
         $this->subDiscountAmount($amount);
 
         return $amount;
     }
 
+    /**
+     * when final row price is calculated, we need to update unit price
+     */
     protected function updateFinalUnitPrice()
     {
         $rowData     = $this->getRowData();

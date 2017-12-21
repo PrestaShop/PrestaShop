@@ -87,6 +87,7 @@ class ContextMocker
         CartRule::resetStaticCache();
         Currency::resetStaticCache();
         Shop::resetContext();
+        Tools::$round_mode = null;
 
         $this->contextBackup = Context::getContext();
         $context             = clone($this->contextBackup);

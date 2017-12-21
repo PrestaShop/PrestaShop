@@ -26,6 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+/**
+ * provides methods to process cart calculation
+ */
 class Calculator
 {
 
@@ -65,6 +68,13 @@ class Calculator
         $this->cartRules = new CartRuleCollection();
     }
 
+    /**
+     * insert a new cart row in the calculator
+     *
+     * @param \PrestaShop\PrestaShop\Core\Cart\CartRow $cartRow
+     *
+     * @return $this
+     */
     public function addCartRow(CartRow $cartRow)
     {
         $this->cartRows->addCartRow($cartRow);
@@ -72,6 +82,13 @@ class Calculator
         return $this;
     }
 
+    /**
+     * insert a new cart rule in the calculator
+     *
+     * @param \PrestaShop\PrestaShop\Core\Cart\CartRuleData $cartRule
+     *
+     * @return $this
+     */
     public function addCartRule(CartRuleData $cartRule)
     {
         $this->cartRules->addCartRule($cartRule);
@@ -79,6 +96,11 @@ class Calculator
         return $this;
     }
 
+    /**
+     * run the whole calculation process
+     *
+     * @return $this
+     */
     public function processCalculation()
     {
         // calculate product rows

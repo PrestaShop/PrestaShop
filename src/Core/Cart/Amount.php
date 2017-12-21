@@ -59,7 +59,7 @@ class Amount
      */
     public function setTaxIncluded($taxIncluded)
     {
-        $this->taxIncluded = $taxIncluded;
+        $this->taxIncluded = (float) $taxIncluded;
 
         return $this;
     }
@@ -79,17 +79,27 @@ class Amount
      */
     public function setTaxExcluded($taxExcluded)
     {
-        $this->taxExcluded = $taxExcluded;
+        $this->taxExcluded = (float) $taxExcluded;
 
         return $this;
     }
 
+    /**
+     * sums another amount object
+     *
+     * @param \PrestaShop\PrestaShop\Core\Cart\Amount $amount
+     */
     public function add(Amount $amount)
     {
         $this->setTaxIncluded($this->getTaxIncluded() + $amount->getTaxIncluded());
         $this->setTaxExcluded($this->getTaxExcluded() + $amount->getTaxExcluded());
     }
 
+    /**
+     * substract another amount object
+     *
+     * @param \PrestaShop\PrestaShop\Core\Cart\Amount $amount
+     */
     public function sub(Amount $amount)
     {
         $this->setTaxIncluded($this->getTaxIncluded() - $amount->getTaxIncluded());

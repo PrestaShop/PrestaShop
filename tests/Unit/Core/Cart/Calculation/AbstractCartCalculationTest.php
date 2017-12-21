@@ -41,13 +41,13 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
         $totalV1   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
         $totalV2   = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $carrierId);
-        // NO_PROD do not keep it in commit : round is for development only !
-        $expectedTotal = floor($expectedTotal * 10)/ 10;
-        $totalV1       = floor($totalV1 * 10) / 10;
+        // here we round values to avoid round issues : rounding modes are tested by specific tests
+        $expectedTotal = round($expectedTotal, 1);
+        $totalV1       = round($totalV1, 1);
         if (!$knownToFailOnV1) {
             $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
         }
-        $totalV2 = floor($totalV2 * 10) / 10;
+        $totalV2 = round($totalV2, 1);
         $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 
@@ -56,13 +56,13 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
         $totalV1   = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
         $totalV2   = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $carrierId);
-        // NO_PROD do not keep it in commit : round is for development only !
-        $expectedTotal = floor($expectedTotal * 10) / 10;
-        $totalV1       = floor($totalV1 * 10) / 10;
+        // here we round values to avoid round issues : rounding modes are tested by specific tests
+        $expectedTotal = round($expectedTotal, 1);
+        $totalV1       = round($totalV1, 1);
         if (!$knownToFailOnV1) {
             $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
         }
-        $totalV2 = floor($totalV2 * 10) / 10;
+        $totalV2 = round($totalV2, 1);
         $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
     }
 }

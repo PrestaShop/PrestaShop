@@ -169,27 +169,27 @@ class CurrencyTest extends AbstractCartCalculationTest
     public function currencyDataProvider()
     {
         $data              = [];
-        $currencyIdDoubles = [/*
+        $currencyIdDoubles = [
             [
                 'defaultCurrencyId' => 1,
                 'currencyId'        => 1,
-            ],*/
-                              [
-                                  'defaultCurrencyId' => 1,
-                                  'currencyId'        => 2,
-                              ],
-                              [
-                                  'defaultCurrencyId' => 2,
-                                  'currencyId'        => 1,
-                              ],
-                              [
-                                  'defaultCurrencyId' => 1,
-                                  'currencyId'        => 3,
-                              ],
-                              [
-                                  'defaultCurrencyId' => 3,
-                                  'currencyId'        => 1,
-                              ],
+            ],
+            [
+                'defaultCurrencyId' => 1,
+                'currencyId'        => 2,
+            ],
+            [
+                'defaultCurrencyId' => 2,
+                'currencyId'        => 1,
+            ],
+            [
+                'defaultCurrencyId' => 1,
+                'currencyId'        => 3,
+            ],
+            [
+                'defaultCurrencyId' => 3,
+                'currencyId'        => 1,
+            ],
         ];
         foreach ($currencyIdDoubles as $currencyIdDouble) {
             $dataSets = $this->getCurrencyData(
@@ -235,8 +235,11 @@ class CurrencyTest extends AbstractCartCalculationTest
             ],
             'one product in cart, quantity 3'        => [
                 'products'      => [1 => 3,],
-                'expectedTotal' => $rate * (3 * static::PRODUCT_FIXTURES[1]['price']
-                                            + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),
+                'expectedTotal' => round(
+                    $rate * (3 * static::PRODUCT_FIXTURES[1]['price']
+                             + static::DEFAULT_SHIPPING_FEE + static::DEFAULT_WRAPPING_FEE),
+                    2
+                ),
                 'cartRules'     => [],
             ],
             '3 products in cart, several quantities' => [

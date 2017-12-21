@@ -716,25 +716,6 @@ class ToolsCore
     }
 
     /**
-     * Return price converted from currency to another
-     *
-     * @param float    $price
-     * @param Currency $currencyFrom
-     * @param Currency $currencyTo
-     *
-     * @return float
-     */
-    public static function convertPriceToCurrency($price, Currency $currencyTo, Currency $currencyFrom = null)
-    {
-        $price *= $currencyTo->getConversionRate();
-        if ($currencyFrom !== null) {
-            $price /= $currencyFrom->getConversionRate();
-        }
-
-        return $price;
-    }
-
-    /**
      * Implement array_replace for PHP <= 5.2
      *
      * @return array|mixed|null
