@@ -150,8 +150,8 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         // Check files are equals
         $this->assertEquals(
-            file_get_contents(__DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg'),
-            file_get_contents('https://avatars0.githubusercontent.com/u/2815696?v=3&u=5e6a82beeff1d799c28bf31e25540d334ae40435&s=400')
+            file_get_contents(__DIR__.'/../../../../resources/modules/ganalytics/another-logo.png'),
+            file_get_contents('http://localhost/img/logo.png')
         );
         $this->assertEquals(
             file_get_contents(__DIR__.'/../../../../resources/modules/ganalytics/ganalytics.php'),
