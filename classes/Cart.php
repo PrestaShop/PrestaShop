@@ -1758,6 +1758,8 @@ class CartCore extends ObjectModel
         $id_carrier = null,
         $use_cache = true
     ) {
+        $t=Configuration::get('_PS_PRICE_COMPUTE_PRECISION_');
+        $b=$t;
         // Dependencies
         /** @var \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator $price_calculator */
         $price_calculator = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
