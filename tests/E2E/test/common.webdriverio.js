@@ -32,12 +32,13 @@ var options2 = {
 
 function initCommands(client) {
 
-  client.addCommand('localhost', function (cb) {
-    this.selector = globals.selector;
-    client
-      .url('http://' + URL + 'install-dev')
-      .call(cb);
-  });
+
+    client.addCommand('localhost', function (cb) {
+        this.selector = globals.selector;
+        client
+            .url('http://' + URL + '/install-dev')
+            .call(cb);
+    });
 
   client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {
     return client
@@ -67,6 +68,11 @@ function initCommands(client) {
     return client
       .waitForVisible(selector, timeout)
       .click(selector)
+  });
+
+  client.addCommand('waitForVisibleElement', function (selector, timeout = 90000) {
+    return client
+      .waitForVisible(selector, timeout)
   });
 
   client.addCommand('waitAndSelectByValue', function (selector, value, timeout = 60000) {

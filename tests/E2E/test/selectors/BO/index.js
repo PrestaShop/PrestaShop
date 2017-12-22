@@ -7,6 +7,7 @@ module.exports = Object.assign({},
   require('./onboarding'),
   require('./order'),
   require('./shopParameters'),
+  require('./installation'),
   require('./international')
 );
 
