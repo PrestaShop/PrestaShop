@@ -716,12 +716,15 @@ class ProductControllerCore extends FrontController
 
     protected function formatQuantityDiscounts($specific_prices, $price, $tax_rate, $ecotax_amount)
     {
+        $customerGroupDiscountPercent = 1 - ((float)Group::getReduction((int)$this->context->customer->id) / 100);
+        $displayPriceMethod = (int)Group::getPriceDisplayMethodByGroup((int)Group::getCurrent()->id);
+
         foreach ($specific_prices as $key => &$row) {
             $row['quantity'] = &$row['from_quantity'];
             if ($row['price'] >= 0) {
                 // The price may be directly set
 
-                $cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+                $cur_price = ($displayPriceMethod === 1 ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
 
                 if ($row['reduction_type'] == 'amount') {
                     $cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
@@ -729,6 +732,9 @@ class ProductControllerCore extends FrontController
                 } else {
                     $cur_price *= 1 - $row['reduction'];
                 }
+
+                /** Apply the group reduction */
+                $cur_price *= $customerGroupDiscountPercent;
 
                 $row['real_value'] = $row['base_price'] > 0 ? $row['base_price'] - $cur_price : $cur_price;
             } else {
@@ -745,6 +751,7 @@ class ProductControllerCore extends FrontController
             }
             $row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
         }
+
         return $specific_prices;
     }
 

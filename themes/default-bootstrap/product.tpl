@@ -416,7 +416,7 @@
 						<tbody>
 						{foreach from=$quantity_discounts item='quantity_discount' name='quantity_discounts'}
 							{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-								{$realDiscountPrice=$quantity_discount.base_price|floatval-$quantity_discount.real_value|floatval}
+								{$realDiscountPrice=($quantity_discount.base_price|floatval-$quantity_discount.real_value|floatval)|abs}
 							{else}
 								{$realDiscountPrice=$quantity_discount.base_price|floatval*(1 - $quantity_discount.reduction)|floatval}
 							{/if}
@@ -454,9 +454,10 @@
 									{else}
 										{$discountPrice=$productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
 									{/if}
-									{$discountPrice=$discountPrice * $quantity_discount.quantity}
-									{$qtyProductPrice=$productPriceWithoutReduction|floatval * $quantity_discount.quantity}
-									{convertPrice price=$qtyProductPrice - $discountPrice}
+									{if $quantity_discount.price|floatval < 0 && $quantity_discount.base_price|floatval == 0}
+										{$discountPrice=$quantity_discount.real_value|floatval}
+									{/if}
+									{convertPrice price=$discountPrice * $quantity_discount.quantity}
 								</td>
 							</tr>
 						{/foreach}
