@@ -29,45 +29,49 @@
 global.SQLManager = {};
 
 SQLManager.showLastSqlQuery = () => {
-    $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-    $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
-        $('#catalog_sql_query_modal_content').submit();
-    });
-    $('#catalog_sql_query_modal').modal('show');
+  $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+  $('#catalog_sql_query_modal .btn-sql-submit').click(() => {
+    $('#catalog_sql_query_modal_content').submit();
+  });
+  $('#catalog_sql_query_modal').modal('show');
 };
 
 SQLManager.sendLastSqlQuery = (name) => {
-    $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
-    $('#catalog_sql_query_modal_content input[name="name"]').val(name);
-    $('#catalog_sql_query_modal_content').submit();
+  $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+  $('#catalog_sql_query_modal_content input[name="name"]').val(name);
+  $('#catalog_sql_query_modal_content').submit();
 }
 
 SQLManager.createSqlQueryName = () => {
-    var container = false;
-    var current = false;
-    if ($('.breadcrumb')) {
-        container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
-        current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+  let container = false;
+  let current = false;
+  let title = false;
+  let name = false;
+
+  if ($('.breadcrumb')) {
+    container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
+    current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+  }
+
+  if ($('h2.title')) {
+    title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
+  }
+
+  if (container && current && container != current) {
+    name = container + ' > ' + current;
+  } else if (container) {
+    name = container;
+  } else if (current) {
+    name = current;
+  }
+
+  if (title && title != current && title != container) {
+    if (name) {
+      name = name + ' > ' + title;
+    } else {
+      name = title;
     }
-    var title = false;
-    if ($('h2.title'))
-        title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
+  }
 
-    var name = false;
-    if (container && current && container != current)
-        name = container + ' > ' + current;
-    else if (container)
-        name = container;
-    else if (current)
-        name = current;
-
-    if (title && title != current && title != container)
-    {
-        if (name)
-            name = name + ' > ' + title;
-        else
-            name = title;
-    }
-
-    return name.trim();
+  return name.trim();
 }
