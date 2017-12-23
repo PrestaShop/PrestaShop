@@ -39,7 +39,7 @@ class CacheClearer
      */
     public function clearAllCaches()
     {
-        Tools::clearSf2Cache();
+        $this->clearSymfonyCache();
         Tools::clearSmartyCache();
         Tools::clearXMLCache();
         Media::clearCache();
