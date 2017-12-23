@@ -243,20 +243,13 @@ class Install extends AbstractInstall
             return true;
         }
 
-        $output = Tools::clearSf2Cache('prod');
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
+        try {
+            Tools::clearSf2Cache('prod');
+            Tools::clearSf2Cache('dev');
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage());
             return false;
         }
-
-        $output = Tools::clearSf2Cache();
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
-            return false;
-        }
-
         return true;
     }
 

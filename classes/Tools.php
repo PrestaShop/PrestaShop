@@ -24,8 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShopBundle\Service\Cache\Refresh;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Filesystem\Filesystem;
 
 use Composer\CaBundle\CaBundle;
 
@@ -3042,17 +3042,17 @@ exit;
      */
     public static function clearSf2Cache($env = null)
     {
-        if (!$env) {
+        if (is_null($env)) {
             $env = _PS_MODE_DEV_ ? 'dev' : 'prod';
         }
 
-        $sf2Refresh = new Refresh($env);
-        $sf2Refresh->addCacheClear();
-        $ret = $sf2Refresh->execute();
+        $dir = _PS_ROOT_DIR_ . '/var/cache/' . $env . '/';
 
-        Hook::exec('actionClearSf2Cache');
-
-        return $ret;
+        register_shutdown_function(function() use ($dir) {
+            $fs = new Filesystem();
+            $fs->remove($dir);
+            Hook::exec('actionClearSf2Cache');
+        });
     }
 
     /**
