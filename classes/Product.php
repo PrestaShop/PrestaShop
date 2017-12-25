@@ -2897,6 +2897,9 @@ class ProductCore extends ObjectModel
             $cart_quantity
         );
 
+        $currencyDecimals = (int)Currency::getCurrent()->decimals;
+        $return = (bool)$currencyDecimals ? $return : Tools::ps_round($return, $currencyDecimals * _PS_PRICE_COMPUTE_PRECISION_);
+
         return $return;
     }
 
