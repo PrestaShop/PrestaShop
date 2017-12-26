@@ -367,7 +367,7 @@ class StockAvailableCore extends ObjectModel
         $key = 'StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_shop;
         if (!Cache::isStored($key)) {
             $query = new DbQuery();
-            $query->select('SUM(quantity)');
+            $query->select('SUM(IF(`quantity` < 0, 0, `quantity`)) as quantity');
             $query->from('stock_available');
 
             // if null, it's a product without attributes
@@ -375,7 +375,10 @@ class StockAvailableCore extends ObjectModel
                 $query->where('id_product = '.(int)$id_product);
             }
 
-            $query->where('id_product_attribute = '.(int)$id_product_attribute);
+            if ($id_product_attribute) {
+                $query->where('`id_product_attribute` = ' . (int)$id_product_attribute);
+            }
+
             $query = StockAvailable::addSqlShopRestriction($query, $id_shop);
             $result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
             Cache::store($key, $result);
