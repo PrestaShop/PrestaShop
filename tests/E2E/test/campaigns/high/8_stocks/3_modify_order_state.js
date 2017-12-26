@@ -1,10 +1,15 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {OrderPage} = require('../../../selectors/BO/order_page');
+
 scenario('Change order state to "Delivred"', client => {
-  test('should open the browser', () => client.open());
-  test('should sign in the Back Office', () => client.signInBO(AccessPageBO));
-  test('should go to orders menu', () => client.goToOrdersMenu());
-  test('should go to first order', () => client.goToFirstOrder());
-  test('should change order state to "Delivered"', () => client.changeOrderState('Delivered'));
-  test('should get order quantity', () => client.getOrderQuantity());
-  test('should sign Out the Back Office', () => client.signOutBO());
-}, 'change_order_status', true);
+  scenario('Login in the Back Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'stocks');
+  scenario('Change order state to "Delivred"', client => {
+    test('should click on "Orders" menu', () => client.waitForExistAndClick(OrderPage.orders_subtab));
+    test('should go to the first order', () => client.waitForExistAndClick(OrderPage.first_order));
+    test('should change order state to "Delivered"', () => client.changeOrderState(OrderPage, 'Delivered'));
+    test('should get the order quantity', () => client.getTextInVar(OrderPage.order_quantity,"orderQuantity"));
+  }, 'stocks');
+}, 'stocks', true);

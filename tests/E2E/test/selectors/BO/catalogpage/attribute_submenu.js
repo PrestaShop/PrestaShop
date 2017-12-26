@@ -16,7 +16,7 @@ module.exports = {
     value_action_group_button: '//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/button',
     delete_value_button: '//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/ul/li/a',
     group_action_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/button',
-    delete_attribut_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[3]/a',
+    delete_attribute_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[3]/a',
     update_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[1]/a',
     update_value_button: '//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/a'
   }
