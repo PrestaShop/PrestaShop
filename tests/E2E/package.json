@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "node_modules/selenium-standalone/bin/selenium-standalone install",
+    "start-selenium": "node_modules/selenium-standalone/bin/selenium-standalone start",
+    "test": "node_modules/mocha/bin/mocha test/campaigns/high/*"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,7 @@
     "parsed-url": "0.0.0",
     "q": "^1.4",
     "req": "^0.1",
+    "selenium-standalone": "^6.12.0",
     "should": "^9.0",
     "webdriverio": "^4.0",
     "window": "^1.0"
