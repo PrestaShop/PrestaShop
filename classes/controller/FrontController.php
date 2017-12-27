@@ -1200,7 +1200,7 @@ class FrontControllerCore extends Controller
         foreach ($libraries as $library) {
             if ($assets = PrestashopAssetsLibraries::getAssetsLibraries($library)) {
                 foreach ($assets as $asset) {
-                    $this->$asset['type']($library, $asset['path'], $asset['params']);
+                    $this->{$asset['type']}($library, $asset['path'], $asset['params']);
                 }
             }
         }
