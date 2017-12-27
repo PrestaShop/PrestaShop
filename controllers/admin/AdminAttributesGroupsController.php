@@ -473,7 +473,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         /** Reset the old search */
         if (Tools::getIsset('viewattribute_group')
             && !Tools::getIsset('submitReset' . $this->list_id)
-            && !Tools::getIsset('submitFilter')) {
+            && !Tools::getIsset('submitFilter' . $this->list_id)) {
             $this->processResetFilters();
         }
 
@@ -651,7 +651,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $this->processResetFilters();
             }
 
-            if (Tools::getIsset('submitFilterattribute_values')) {
+            if (Tools::getIsset('submitFilterattribute_values')
+                || Tools::getIsset('deleteattribute')) {
                 self::$currentIndex .= '&id_attribute_group=' . (int)Tools::getValue('id_attribute_group') . '&viewattribute_group';
             }
         } else {
@@ -734,6 +735,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         // If it's an attribute, load object Attribute()
         if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute')) {
+            $this->redirect_after = self::$currentIndex . '&id_attribute_group=' . (int)Tools::getValue('id_attribute_group') . '&viewattribute_group' . '&token=' . $this->token;
             if ($this->tabAccess['edit'] !== '1') {
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             } elseif (!$object = new Attribute((int)Tools::getValue($this->identifier))) {
