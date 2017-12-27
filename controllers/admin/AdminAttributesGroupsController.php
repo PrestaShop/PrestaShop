@@ -470,6 +470,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
             return;
         }
 
+        /** Reset the old search */
+        if (Tools::getIsset('viewattribute_group')
+            && !Tools::getIsset('submitReset' . $this->list_id)
+            && !Tools::getIsset('submitFilter')) {
+            $this->processResetFilters();
+        }
+
         // toolbar (save, cancel, new, ..)
         $this->initTabModuleList();
         $this->initToolbar();
@@ -640,8 +647,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (Tools::getIsset('viewattribute_group')) {
             $this->list_id = 'attribute_values';
 
-            if (isset($_POST['submitReset'.$this->list_id])) {
+            if (Tools::getIsset('submitReset' . $this->list_id)) {
                 $this->processResetFilters();
+            }
+
+            if (Tools::getIsset('submitFilterattribute_values')) {
+                self::$currentIndex .= '&id_attribute_group=' . (int)Tools::getValue('id_attribute_group') . '&viewattribute_group';
             }
         } else {
             $this->list_id = 'attribute_group';
