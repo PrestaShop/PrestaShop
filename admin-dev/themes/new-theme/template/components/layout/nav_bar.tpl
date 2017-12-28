@@ -23,6 +23,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <nav class="nav-bar">
+  <span class="menu-collapse d-none d-md-block">
+    <i class="material-icons">chevron_left</i>
+    <i class="material-icons">chevron_left</i>
+  </span>
+
   <ul class="main-menu">
 
     {foreach $tabs as $level1}
@@ -61,17 +66,29 @@
                 {if $level2.name eq ''}
                   {$level2Name = $level2.class_name|escape:'html':'UTF-8'}
                 {/if}
+                {assign var="levelOneClass" value=''}
 
-                <li class="link-levelone {if $level2.current}-active{/if}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
+                {if $level2.current and not $collapse_menu}
+                    {assign var="levelOneClass" value=" -active open"}
+                {elseif $level2.current and $collapse_menu}
+                    {assign var="levelOneClass" value=" -active"}
+                {/if}
+
+                <li class="link-levelone{if $level2.sub_tabs|@count} has_submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
                   <a href="{$level2Href}" class="link">
-                    <i class="material-icons">{$level2.icon}</i>
+                    <i class="material-icons {$level2.icon}">{$level2.icon}</i>
                     <span>
                     {$level2Name}
-                    {if $level2.sub_tabs|@count}
-                      <i class="material-icons float-right d-md-none">keyboard_arrow_down</i>
-                    {/if}
                     </span>
-
+                      {if $level1.sub_tabs|@count}
+                          <i class="material-icons float-right sub-tabs-arrow">
+                              {if $level2.current}
+                                  keyboard_arrow_up
+                              {else}
+                                  keyboard_arrow_down
+                              {/if}
+                          </i>
+                      {/if}
                   </a>
                     {if $level2.sub_tabs|@count}
                       <ul id="collapse-{$level2.id_tab}" class="submenu panel-collapse">
@@ -103,10 +120,5 @@
       {/if}
     {/foreach}
   </ul>
-
-  <span class="menu-collapse d-none d-md-block">
-    <i class="material-icons">&#xE8EE;</i>
-  </span>
-
   {hook h='displayAdminNavBarBeforeEnd'}
 </nav>
