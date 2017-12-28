@@ -2249,6 +2249,11 @@ PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_stock_mvt` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
 CREATE TABLE `PREFIX_stock_mvt_reason` (
   `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sign` tinyint(1) NOT NULL DEFAULT 1,
