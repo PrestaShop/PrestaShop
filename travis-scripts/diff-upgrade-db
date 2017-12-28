@@ -9,20 +9,24 @@ forceAllUpgrades=1
 
 # Check only some changes are brought to a SQL file
 
+# Add a specific user with password (Cannot install PS on docker without password yet)
+mysql -u root --execute="GRANT ALL ON *.* to upgrade@'%' IDENTIFIED BY 'doge'; " 2> /dev/null;
+mysql -u root --execute="flush privileges; " 2> /dev/null;
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`upgrade\`;"
+
+
 # Temp change required for mysqldiff: disabling some rules to let the tool working properly
-sudo cp /etc/mysql/my.cnf /etc/mysql/my.cnf.old
-echo -e '[mysqld]\nsql_mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' | sudo tee -a /etc/mysql/conf.d/safe-mode.cnf
+echo -e '[mysqld]\nbind-address=0.0.0.0\n' | sudo tee -a /etc/mysql/conf.d/all-bind.cnf
 sudo service mysql restart
 
-# We cannot use the default mysql server (Connection refused), so we create a new one with the same config as Travis
-docker run -tid --name upgrade-mysql -e MYSQL_ROOT_PASSWORD=doge -e MYSQL_DATABASE=upgrade \
-        -v /etc/mysql/conf.d/safe-mode.cnf:/etc/mysql/conf.d/safe-mode.cnf mysql
+# Create a network in order to use the local mysql
+docker network create -d bridge --subnet 192.167.0.0/24 --gateway 192.167.0.1 internalnetwork
 
 # Launch the requested release of PrestaShop
-docker run -tid --name upgrade-test --link upgrade-mysql -p 8085:80 \
+docker run -tid --net internalnetwork --name upgrade-test -p 8085:80 \
         -e PS_FOLDER_ADMIN=admin-dev -e PS_FOLDER_INSTALL=install-dev -e PS_DOMAIN="localhost:8085" \
-        -e PS_INSTALL_AUTO=1 -e DB_SERVER=upgrade-mysql -e DB_PASSWD=doge \
-        -e DB_USER=root -e DB_NAME=upgrade prestashop/prestashop:$PRESTASHOP_REFERENCE_VERSION
+        -e PS_INSTALL_AUTO=1 -e DB_SERVER=192.167.0.1 -e DB_PASSWD=doge \
+        -e DB_USER=upgrade -e DB_NAME=upgrade prestashop/prestashop:$PRESTASHOP_REFERENCE_VERSION
 
 if [ $? -ne 0 ]; then
     echo "Could not start container. Exiting..."
@@ -63,9 +67,12 @@ docker exec -ti upgrade-test php /var/www/html/install-dev/upgrade/upgrade.php
 echo "Running Doctrine database upgrade"
 docker exec -ti upgrade-test php bin/console prestashop:schema:update-without-foreign
 
+# Temp change required for mysqldiff: disabling some rules to let the tool working properly
+echo -e '[mysqld]\nsql_mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' | sudo tee -a /etc/mysql/conf.d/safe-mode.cnf
+sudo service mysql restart
+
 # Use MySQL tool to find differences between the fresh install & an upgraded database
-mysqldiff --server1=root@localhost --server2=root:doge@`docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' upgrade-mysql` \
-    --changes-for=server2 --skip-table-options --force prestashop:upgrade
+mysqldiff --server1=root@localhost --changes-for=server2 --skip-table-options --force prestashop:upgrade
 
 result=$?
 if [ $result -ne 0 ]; then
@@ -74,7 +81,7 @@ if [ $result -ne 0 ]; then
 fi
 
 # Cleanup
-docker kill upgrade-test upgrade-mysql
-sudo rm /etc/mysql/conf.d/safe-mode.cnf && sudo service mysql restart
+docker kill upgrade-test
+sudo rm /etc/mysql/conf.d/safe-mode.cnf && sudo rm /etc/mysql/conf.d/all-bind.cnf && sudo service mysql restart
 
 exit $result
