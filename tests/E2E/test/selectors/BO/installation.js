@@ -6,7 +6,10 @@ module.exports = {
     compatibility_green_box:'//*[@id="sheet_"]/h3',
     shop_name_input: '//*[@id="infosShop"]',
     country_select: '//*[@id="infosCountry_chosen"]',
-    country_france_option: '//*[@id="infosCountry_chosen"]/div/ul/li[2]',
+
+    search_country_input:'//*[@id="infosCountry_chosen"]//div[contains(@class,"chosen-search")]/input',
+
+    country_france_option: '//*[@id="infosCountry_chosen"]/div/ul/li',
     first_name_input: '//*[@id="infosFirstname"]',
     last_name_input: '//*[@id="infosName"]',
     email_address_input: '//*[@id="infosEmail"]',
