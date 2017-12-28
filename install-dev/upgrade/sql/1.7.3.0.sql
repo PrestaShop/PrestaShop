@@ -24,7 +24,6 @@ ALTER TABLE `PREFIX_product_shop` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFA
 
 ALTER TABLE `PREFIX_product_attribute` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0 AFTER `low_stock_threshold`;
 ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0 AFTER `low_stock_threshold`;
-ALTER TABLE `PREFIX_product_attribute_shop` ADD `low_stock_threshold` INT(10) NULL DEFAULT NULL AFTER `minimal_quantity`;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_store_lang` (
   `id_store` int(11) unsigned NOT NULL,
