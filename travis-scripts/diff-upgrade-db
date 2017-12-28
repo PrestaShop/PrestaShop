@@ -37,6 +37,7 @@ fi
 # (This avoids to send the parameters file, the cache and some other useless stuff)
 TMP_GIT_DIR=/tmp/fresh-git
 cp -R $TRAVIS_BUILD_DIR $TMP_GIT_DIR && cd $TMP_GIT_DIR && rm -rf var/cache/* app/config/parameters.* #git reset --hard && git clean -xf
+cd $TRAVIS_BUILD_DIR
 
 if [ $? -ne 0 ]; then
     echo "Could not prepare git environment to copy in the container. Exiting..."
@@ -65,7 +66,8 @@ docker exec -ti upgrade-test php /var/www/html/install-dev/upgrade/upgrade.php
 
 # Run doctrine upgrade
 echo "Running Doctrine database upgrade"
-docker exec -ti upgrade-test php bin/console prestashop:schema:update-without-foreign
+docker exec -ti upgrade-test php bin/console doctrine:schema:update --force
+php bin/console doctrine:schema:update --force
 
 # Temp change required for mysqldiff: disabling some rules to let the tool working properly
 echo -e '[mysqld]\nsql_mode="IGNORE_SPACE,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"' | sudo tee -a /etc/mysql/conf.d/safe-mode.cnf

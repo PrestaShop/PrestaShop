@@ -26,6 +26,7 @@
 
 function ps_1740_add_unique_index_authorization_role()
 {
+    echo "yo doge";
     $result = Db::getInstance()->getValue(
         "SELECT 1 FROM information_schema.TABLE_CONSTRAINTS WHERE
                    CONSTRAINT_SCHEMA = DATABASE() AND
