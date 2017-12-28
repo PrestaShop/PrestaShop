@@ -66,6 +66,8 @@ twig:
 doctrine:
     dbal:
         default_connection: default
+        default_table_options:
+            collate: utf8_general_ci
 
         connections:
             default:
@@ -77,7 +79,6 @@ doctrine:
                 password: "%database_password%"
                 server_version: 5.1
                 charset:  UTF8
-                collate: utf8_general_ci
                 # if using pdo_sqlite as your database driver:
                 #   1. add the path in parameters.yml
                 #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
