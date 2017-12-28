@@ -2249,11 +2249,6 @@ PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-/* Dummy table for column collation */
-CREATE TABLE `PREFIX_stock_mvt` (
-  `id` INT(11) UNSIGNED NOT NULL
-) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_stock_mvt_reason` (
   `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sign` tinyint(1) NOT NULL DEFAULT 1,
@@ -2629,3 +2624,24 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
   `name` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id_cms_role`,`id_lang`, id_shop)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_stock_mvt` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_tab` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_tab_lang` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
+
+/* Dummy table for column collation */
+CREATE TABLE `PREFIX_translation` (
+  `id` INT(11) UNSIGNED NOT NULL
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;

@@ -65,7 +65,7 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
-        default_connection: default            
+        default_connection: default
 
         connections:
             default:
