@@ -27,7 +27,14 @@
 					{if $level_1.sub_tabs|@count}
 						{foreach $level_1.sub_tabs as $level_2}
 							{if $level_2.active}
-								<li class="maintab {if $level_2.current}active open{/if} {if $level_2.sub_tabs|@count}has_submenu{/if}" id="subtab-{$level_2.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_2.id_tab}">
+                                {assign var="mainTabClass" value=''}
+
+                                {if $level_2.current and not $collapse_menu}
+									{assign var="mainTabClass" value=" active open"}
+								{elseif $level_2.current and $collapse_menu}
+                                    {assign var="mainTabClass" value=" active"}
+								{/if}
+								<li class="maintab{if $level_2.sub_tabs|@count} has_submenu{/if}{$mainTabClass}" id="subtab-{$level_2.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_2.id_tab}">
 									<a href="{$level_2.href|escape:'html':'UTF-8'}" class="title {if $level_2.sub_tabs|@count}has_submenu{/if}">
 										<i class="material-icons hidden-xs {$level_2.icon}">{$level_2.icon}</i>
 										<span>
