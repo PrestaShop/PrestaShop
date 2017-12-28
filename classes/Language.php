@@ -1339,19 +1339,21 @@ class LanguageCore extends ObjectModel
 
     /**
      * Language::installRtlStylesheets()
-     * @param bool $bo_theme
-     * @param bool $fo_theme
-     * @param null $theme_name
-     * @param null $iso
+     *
+     * @param bool $boTheme
+     * @param bool $foTheme
+     * @param string|null $themeName
+     * @param string|null $iso
      * @param bool $install
-     * @param null $path
+     * @param string|null $path
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException
+     * @throws Exception
      */
-    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false, $theme_name = null, $iso = null, $install = false, $path = null)
+    public static function installRtlStylesheets($boTheme = false, $foTheme = false, $themeName = null, $iso = null, $install = false, $path = null)
     {
-        $admin_dir = ($install) ? _PS_ROOT_DIR_.'/admin/' : _PS_ADMIN_DIR_.'/';
-        $front_dir = _PS_ROOT_DIR_.'/themes/';
         if ($iso) {
-            $lang_pack = Language::getLangDetails($iso);
+            $lang_pack = static::getLangDetails($iso);
             if (!$lang_pack['is_rtl']) {
                 return;
             }
@@ -1359,12 +1361,28 @@ class LanguageCore extends ObjectModel
 
         $generator = new StylesheetGenerator();
 
-        if ($bo_theme) {
-            $generator->generateFromDirectory($admin_dir.'themes');
+        // generate stylesheets for BO themes
+        if ($boTheme) {
+            if (defined('_PS_ADMIN_DIR_')) {
+                $adminDir = _PS_ADMIN_DIR_;
+            } else {
+                $adminDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin';
+                $adminDir = (is_dir($adminDir)) ? $adminDir : ($adminDir.'-dev');
+                $adminDir .= DIRECTORY_SEPARATOR;
+            }
+
+            if (!is_dir($adminDir)) {
+                throw new Exception("Cannot generate BO themes: \"$adminDir\" is not a directory");
+            }
+
+            $generator->generateFromDirectory($adminDir.'themes');
         }
 
-        if ($fo_theme) {
-            $generator->generateFromDirectory($front_dir.($theme_name?$theme_name:'classic'));
+        // generate stylesheets for BO themes
+        if ($foTheme) {
+            $frontDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
+
+            $generator->generateFromDirectory($frontDir.($themeName?$themeName:'classic'));
         }
 
         if ($path && is_dir($path)) {
