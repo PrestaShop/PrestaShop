@@ -24,23 +24,13 @@ dist: trusty
 #  - 7.2
 
 env:
-<<<<<<< HEAD
   global:
     - SYMFONY_DEPRECATIONS_HELPER=disabled
-    - PRESTASHOP_REFERENCE_VERSION=1.7.0.0
+    - PRESTASHOP_REFERENCE_VERSION=1.7.0.1
   matrix:
     - PRESTASHOP_TEST_TYPE=lint
     - PRESTASHOP_TEST_TYPE=unit
     - PRESTASHOP_TEST_TYPE=e2e
-||||||| merged common ancestors
-    global:
-        - SYMFONY_DEPRECATIONS_HELPER=disabled
-        - PRESTASHOP_REFERENCE_VERSION=1.7.0.0
-=======
-    global:
-        - SYMFONY_DEPRECATIONS_HELPER=disabled
-        - PRESTASHOP_REFERENCE_VERSION=1.7.0.1
->>>>>>> Fixes
 
 matrix:
   include:
