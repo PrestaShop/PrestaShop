@@ -7,6 +7,12 @@ var pdfUtil = require('pdf-to-text');
 
 global.date_time = new Date().getTime();
 global.URL = argv.URL;
+
+global.db_server = argv.DB_SERVER || "mysql";
+global.db_name = argv.DB_NAME || "prestashop";
+global.db_user = argv.DB_USER || "root";
+global.db_passwd = argv.DB_PASSWD || "doge";
+global.db_empty_password = !!argv.DB_EMPTY_PASSWD; // Cast as boolean
 global.module_tech_name = argv.MODULE;
 global.saucelabs = argv.SAUCELABS;
 global.selenium_url = argv.SELENIUM;
