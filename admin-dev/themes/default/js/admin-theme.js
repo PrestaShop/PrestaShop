@@ -360,10 +360,13 @@ $(document).ready(function() {
   initNav();
 
   // prevent mouseout + direct path to submenu on sidebar uncollapsed navigation + avoid out of bounds
-  var closingMenu, openingMenu;
   jQuery('li.maintab.has_submenu > a').on('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
+
+      if (jQuery('body').hasClass('page-sidebar-closed')) {
+        return;
+      }
       var $submenu = jQuery(this).parent();
 
       if (!$submenu.hasClass('open')) {

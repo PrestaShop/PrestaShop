@@ -36,8 +36,40 @@ export default class NavBar {
         $(this).removeClass("-hover");
       });
 
+      jQuery('.nav-bar li.link-levelone.has_submenu > a').on('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          if (jQuery('body').hasClass('page-sidebar-closed')) {
+              return;
+          }
+          let $submenu = jQuery(this).parent();
+
+          if (!$submenu.hasClass('open')) {
+              jQuery('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow')
+                  .text('keyboard_arrow_down');
+              jQuery('.nav-bar li.link-levelone.has_submenu').removeClass('open');
+              $submenu.addClass('open');
+              jQuery(this).find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
+          } else {
+              $submenu.removeClass('open');
+              jQuery(this).find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
+          }
+      });
+
       $('.nav-bar').on('click', '.menu-collapse', function() {
         $('body').toggleClass('page-sidebar-closed');
+
+        if (jQuery('body').hasClass('page-sidebar-closed')) {
+          jQuery('nav.nav-bar ul.main-menu > li')
+              .removeClass('open')
+              .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
+        } else {
+            jQuery('nav.nav-bar ul.main-menu > li.-active')
+                .addClass('open')
+                .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
+        }
+
         $.ajax({
           url: "index.php",
           cache: false,
