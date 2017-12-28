@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
+use PrestaShop\PrestaShop\Core\Localization\RTL\StylesheetGenerator;
 
 class LanguageCore extends ObjectModel
 {
@@ -185,7 +186,7 @@ class LanguageCore extends ObjectModel
         if (!parent::add($autodate, $nullValues)) {
             return false;
         }
-        
+
         if ($this->is_rtl) {
             self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false));
         }
@@ -199,17 +200,17 @@ class LanguageCore extends ObjectModel
 
         return true;
     }
-    
+
     public function update($nullValues = false)
     {
         if (!parent::update($nullValues)) {
             return false;
         }
-        
+
         if ($this->is_rtl) {
              self::installRtlStylesheets(true, false);
         }
- 
+
         return true;
     }
 
@@ -1335,7 +1336,7 @@ class LanguageCore extends ObjectModel
             }
         }
     }
-    
+
     /**
      * Language::installRtlStylesheets()
      * @param bool $bo_theme
@@ -1355,17 +1356,19 @@ class LanguageCore extends ObjectModel
                 return;
             }
         }
-        
+
+        $generator = new StylesheetGenerator();
+
         if ($bo_theme) {
-            \RTLGenerator::generate($admin_dir.'themes');
+            $generator->generateFromDirectory($admin_dir.'themes');
         }
-        
+
         if ($fo_theme) {
-            \RTLGenerator::generate($front_dir.($theme_name?$theme_name:'classic'));
+            $generator->generateFromDirectory($front_dir.($theme_name?$theme_name:'classic'));
         }
-        
+
         if ($path && is_dir($path)) {
-            \RTLGenerator::generate($path);
+            $generator->generateFromDirectory($path);
         }
     }
 }
