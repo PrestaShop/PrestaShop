@@ -739,6 +739,9 @@ class LanguageCore extends ObjectModel
 
     public static function copyLanguageData($from, $to)
     {
+        if ($from === $to) {
+            return true;
+        }
         $result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
         foreach ($result as $row) {
             if (preg_match('/_lang/', $row['Tables_in_'._DB_NAME_]) && $row['Tables_in_'._DB_NAME_] != _DB_PREFIX_.'lang') {
