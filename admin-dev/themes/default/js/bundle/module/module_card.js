@@ -164,8 +164,17 @@ var AdminModuleCard = function () {
         $(document).on('click', this.moduleActionModalResetLinkSelector, function () {
             return _this.requestToController('reset', $(_this.moduleActionMenuResetLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")));
         });
-        $(document).on('click', this.moduleActionModalUninstallLinkSelector, function () {
-            return _this.requestToController('uninstall', $(_this.moduleActionMenuUninstallLinkSelector, $("div.module-item-list[data-tech-name='" + $(this).attr("data-tech-name") + "']")), $(this).attr("data-deletion"));
+        $(document).on('click', this.moduleActionModalUninstallLinkSelector, function (e) {
+            jQuery(e.target).parents('.modal').on('hidden.bs.modal', function(event) {
+                return _this.requestToController(
+                    'uninstall',
+                    jQuery(
+                        _this.moduleActionMenuUninstallLinkSelector,
+                        jQuery("div.module-item-list[data-tech-name='" + jQuery(e.target).attr("data-tech-name") + "']")
+                    ),
+                    jQuery(e.target).attr("data-deletion")
+                );
+            }.bind(e));
         });
     };
 
