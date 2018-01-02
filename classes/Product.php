@@ -5148,7 +5148,7 @@ class ProductCore extends ObjectModel
         }
         if ($this->deleteCategories()) {
             if ($ids) {
-                $sql_values = '';
+                $sql_values = array();
                 $ids = array_map('intval', $ids);
                 foreach ($ids as $position => $id) {
                     $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
