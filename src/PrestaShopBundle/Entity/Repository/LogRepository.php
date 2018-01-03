@@ -156,6 +156,6 @@ class LogRepository implements RepositoryInterface
      */
     public function deleteAll()
     {
-        return $this->connection->delete("$this->tableName");
+        return $this->connection->delete("$this->logTable");
     }
 }
