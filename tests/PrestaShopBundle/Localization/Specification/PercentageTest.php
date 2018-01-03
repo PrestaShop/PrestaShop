@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Tests\Localization\Specification;
+namespace Tests\PrestaShopBundle\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Currency as CurrencySpecification;
+use PrestaShopBundle\Localization\Specification\Percentage as PercentageSpecification;
 
-class CurrencyTest extends NumberTest
+class PercentageTest extends NumberTest
 {
     /**
-     * Let's override numberSpec with the tested Currency specification
-     * All NumberTest tests are supposed to pass with a Currency spec.
+     * Let's override numberSpec with the tested Percentage specification
+     * All NumberTest tests are supposed to pass with a Percentage spec.
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->latinNumberSpec = new CurrencySpecification(
+        $this->latinNumberSpec = new PercentageSpecification(
             '',
             '',
             ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
@@ -45,8 +45,7 @@ class CurrencyTest extends NumberTest
             0,
             true,
             3,
-            3,
-            CurrencySpecification::CURRENCY_DISPLAY_SYMBOL
+            3
         );
     }
 }
