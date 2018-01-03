@@ -505,7 +505,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
             'link_rewrite', 'name', 'manufacturer_name', 'position', 'cover', 'url', 'canonical_url', 'add_to_cart_url',
             'has_discount', 'discount_type', 'discount_percentage', 'discount_percentage_absolute', 'discount_amount',
             'price_amount', 'regular_price_amount', 'regular_price', 'discount_to_display', 'labels', 'main_variants',
-            'unit_price', 'tax_name', 'rate'
+            'unit_price', 'tax_name', 'rate', 'show_price'
         );
         foreach ($products as $product_key => $product) {
             foreach ($product as $product_property => $data) {
