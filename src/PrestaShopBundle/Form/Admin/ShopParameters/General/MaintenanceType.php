@@ -26,14 +26,12 @@
 namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-
 /**
  * Class returning the content of the form in the maintenance page.
  * To be found in Configure > Shop parameters > General > Maintenance
@@ -59,17 +57,8 @@ class MaintenanceType extends TranslatorAwareType
                 'required' => true,
             ))
             ->add('maintenance_text', TranslateType::class, array(
-                'type' => TextareaType::class,
+                'type' => FormattedTextareaType::class,
                 'options' => array(
-                    'attr' => array(
-                        'class' => 'autoload_rte',
-                        'counter' => 21844
-                    ),
-                    'constraints' => array(
-                        new TinyMceMaxLength(array(
-                            'max' => 21844
-                        ))
-                    ),
                     'required' => false,
                 ),
                 'locales' => $this->locales,
