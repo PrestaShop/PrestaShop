@@ -44,7 +44,7 @@ class MaintenanceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disable_shop', ChoiceType::class, array(
+            ->add('enable_shop', ChoiceType::class, array(
                 'choices_as_values' => true,
                 'choices'  => array(
                     'No' => false,
@@ -54,7 +54,7 @@ class MaintenanceType extends TranslatorAwareType
                 'required' => true,
             ))
             ->add('maintenance_ip', IpAddressType::class, array(
-                'required' => true,
+                'required' => false,
             ))
             ->add('maintenance_text', TranslateType::class, array(
                 'type' => FormattedTextareaType::class,

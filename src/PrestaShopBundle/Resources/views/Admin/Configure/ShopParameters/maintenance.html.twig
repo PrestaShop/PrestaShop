@@ -43,8 +43,8 @@
                         <div class="card-text">
                             <div class="form-group">
                                 {{ ps.label_with_help(('Enable Shop'|trans), ('Activate or deactivate your shop (It is a good idea to deactivate your shop while you perform maintenance. Please note that the webservice will not be disabled).'|trans({}, 'Admin.Shopparameters.Help'))) }}
-                                {{ form_errors(generalForm.disable_shop) }}
-                                {{ form_widget(generalForm.disable_shop) }}
+                                {{ form_errors(generalForm.enable_shop) }}
+                                {{ form_widget(generalForm.enable_shop) }}
                             </div>
                             <div class="form-group">
                                 {{ ps.label_with_help(('Maintenance IP'|trans), ('IP addresses allowed to access the front office even if the shop is disabled. Please use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96)'|trans({}, 'Admin.Shopparameters.Help'))) }}
