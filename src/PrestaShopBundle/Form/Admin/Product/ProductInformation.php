@@ -157,19 +157,10 @@ class ProductInformation extends CommonAbstractType
             'label' => $this->translator->trans('Name', [], 'Admin.Global')
         ))
         ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-            'options' => [
-                'attr' => array(
-                    'class' => 'autoload_rte',
-                    'counter' => 21844
-                ),
-                'constraints' => array(
-                    new TinyMceMaxLength(array(
-                        'max' => 21844
-                    ))
-                ),
-                'required' => false
-            ],
+            'type' => \PrestaShopBundle\Form\Admin\Type\FormattedTextareaType::class,
+            'options' => array(
+                'required' => false,
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' =>  $this->translator->trans('Description', [], 'Admin.Global'),
