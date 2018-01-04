@@ -51,7 +51,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'disable_shop' => $this->configuration->get('PS_SHOP_ENABLE'),
+            'enable_shop' => $this->configuration->get('PS_SHOP_ENABLE'),
             'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP'),
             'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT'),
         );
@@ -65,7 +65,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
         $errors = array();
 
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHOP_ENABLE', $configuration['disable_shop']);
+            $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop']);
             $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip']);
             $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text']);
         }
@@ -81,7 +81,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
         $resolver = new OptionsResolver();
         $resolver->setRequired(
             array(
-                'disable_shop',
+                'enable_shop',
                 'maintenance_ip',
                 'maintenance_text',
             )
