@@ -37,7 +37,7 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
 class Number implements NumberInterface
 {
     /**
-     * Currency specification constructor.
+     * Number specification constructor.
      *
      * @param string             $positivePattern
      *  CLDR formatting pattern for positive amounts

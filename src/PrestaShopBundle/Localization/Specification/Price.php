@@ -30,11 +30,11 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
 
 /**
- * Currency number (price) specification class
+ * Price number specification class
  * Regroups specific rules and data used when formatting a price in a given locale and a given numbering system
  * (latin, arab, ...).
  */
-class Currency extends NumberSpecification
+class Price extends NumberSpecification
 {
     /**
      * Currency display option : symbol notation
@@ -57,7 +57,7 @@ class Currency extends NumberSpecification
     protected $currencyDisplay;
 
     /**
-     * Currency specification constructor.
+     * Price specification constructor.
      *
      * @param string             $positivePattern
      *  CLDR formatting pattern for positive amounts

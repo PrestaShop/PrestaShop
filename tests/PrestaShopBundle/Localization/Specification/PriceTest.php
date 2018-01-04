@@ -26,9 +26,9 @@
 
 namespace Tests\PrestaShopBundle\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Currency as CurrencySpecification;
+use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
 
-class CurrencyTest extends NumberTest
+class PriceTest extends NumberTest
 {
     /**
      * Let's override numberSpec with the tested Currency specification
@@ -37,7 +37,7 @@ class CurrencyTest extends NumberTest
     protected function setUp()
     {
         parent::setUp();
-        $this->latinNumberSpec = new CurrencySpecification(
+        $this->latinNumberSpec = new PriceSpecification(
             '',
             '',
             ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
@@ -46,7 +46,7 @@ class CurrencyTest extends NumberTest
             true,
             3,
             3,
-            CurrencySpecification::CURRENCY_DISPLAY_SYMBOL
+            PriceSpecification::CURRENCY_DISPLAY_SYMBOL
         );
     }
 }
