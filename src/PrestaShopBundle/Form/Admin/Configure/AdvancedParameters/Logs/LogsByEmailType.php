@@ -43,6 +43,7 @@ final class LogsByEmailType extends CommonAbstractType
         $builder
             ->add('logs_by_email', TextType::class, array(
                 'required' => true,
+                'label' => false,
             ))
         ;
     }
