@@ -116,7 +116,7 @@ class LogRepository implements RepositoryInterface
         $qb = $queryBuilder
             ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
             ->from($this->logTable, 'l')
-            ->innerJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
+            ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
             ->orderBy($filters['orderBy'], $filters['sortOrder'])
             ->setFirstResult($filters['offset'])
             ->setMaxResults($filters['limit'])
