@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -157,19 +158,10 @@ class ProductInformation extends CommonAbstractType
             'label' => $this->translator->trans('Name', [], 'Admin.Global')
         ))
         ->add('description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
-            'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
-            'options' => [
-                'attr' => array(
-                    'class' => 'autoload_rte',
-                    'counter' => 21844
-                ),
-                'constraints' => array(
-                    new TinyMceMaxLength(array(
-                        'max' => 21844
-                    ))
-                ),
-                'required' => false
-            ],
+            'type' => FormattedTextareaType::class,
+            'options' => array(
+                'required' => false,
+            ),
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' =>  $this->translator->trans('Description', [], 'Admin.Global'),
