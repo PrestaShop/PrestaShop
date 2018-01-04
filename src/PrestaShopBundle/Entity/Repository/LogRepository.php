@@ -46,6 +46,24 @@ class LogRepository implements RepositoryInterface
     }
 
     /**
+     * Count the rows to display with the given filters.
+     * Used for the paginating the results.
+     *
+     * @param array $filters
+     *
+     * @return int the number of rows max
+     */
+    public function countAllWithEmployeeInformation($filters)
+    {
+        unset($filters['limit'], $filters['offset']);
+        $queryBuilder = $this->getAllWithEmployeeInformationQuery($filters);
+        $queryBuilder->select('count(l.id_log)');
+        $statement = $queryBuilder->execute();
+
+        return $statement->fetchColumn();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function findAll()
@@ -117,10 +135,14 @@ class LogRepository implements RepositoryInterface
             ->select('l.*', 'e.firstname', 'e.lastname', 'e.email')
             ->from($this->logTable, 'l')
             ->leftJoin('l', $employeeTable, 'e', 'l.id_employee = e.id_employee')
-            ->orderBy($filters['orderBy'], $filters['sortOrder'])
-            ->setFirstResult($filters['offset'])
-            ->setMaxResults($filters['limit'])
-        ;
+            ->orderBy($filters['orderBy'], $filters['sortOrder']);
+
+        if (!empty($filters['offset'])) {
+            $qb->setFirstResult($filters['offset']);
+        }
+        if (!empty($filters['limit'])) {
+            $qb->setMaxResults($filters['limit']);
+        }
 
         if (isset($scalarFilters) && !empty($scalarFilters)) {
             foreach ($scalarFilters as $column => $value) {

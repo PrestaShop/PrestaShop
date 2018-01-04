@@ -71,7 +71,7 @@ class LogsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
             'searchParametersForm' => $searchParametersForm->createView(),
-            'logsSum' => count($this->getLogRepository()->findAll()),
+            'logsSum' => $this->getLogRepository()->countAllWithEmployeeInformation($filters),
             'logs' => $this->getLogRepository()->findAllWithEmployeeInformation($filters),
             'sql_query' => $this->getLogRepository()->findAllWithEmployeeInformationQuery($filters),
             'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink(
