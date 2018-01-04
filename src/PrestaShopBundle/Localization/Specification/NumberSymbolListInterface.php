@@ -88,15 +88,4 @@ interface NumberSymbolListInterface
      * @return string
      */
     public function getNan();
-
-    /**
-     * Fills missing items of this list with default data
-     *
-     * @param NumberSymbolListInterface $defaultList
-     *   Used to fill missing items
-     *
-     * @return $this
-     *   Fluent interface
-     */
-    public function hydrate(NumberSymbolListInterface $defaultList);
 }

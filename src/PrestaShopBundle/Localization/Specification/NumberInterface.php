@@ -46,19 +46,6 @@ interface NumberInterface
     public function addSymbols($numberingSystem, NumberSymbolListInterface $symbolList);
 
     /**
-     * Fill missing symbols with "fallback" data
-     *
-     * For the given symbols lists, if one or several symbols are missing, they will be filled with fallback symbols
-     *
-     * @param string                    $numberingSystem
-     *  The concerned numbering system
-     *
-     * @param NumberSymbolListInterface $fallbackSymbolList
-     *  The fallback symbols list
-     */
-    public function hydrateSymbols($numberingSystem, NumberSymbolListInterface $fallbackSymbolList);
-
-    /**
      * Get all specified symbols lists, indexed by available numbering system.
      *
      * Each item of the result is a NumberSymbolList
