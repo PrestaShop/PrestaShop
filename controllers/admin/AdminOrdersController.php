@@ -1352,8 +1352,8 @@ class AdminOrdersControllerCore extends AdminController
                         case 1:
                             if ($discount_value < 100) {
                                 if (isset($order_invoice)) {
-                                    $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
-                                    $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
+                                    $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_products_wt * $discount_value / 100, 2);
+                                    $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_products * $discount_value / 100, 2);
 
                                     // Update OrderInvoice
                                     $this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
@@ -1361,15 +1361,15 @@ class AdminOrdersControllerCore extends AdminController
                                     $order_invoices_collection = $order->getInvoicesCollection();
                                     foreach ($order_invoices_collection as $order_invoice) {
                                         /** @var OrderInvoice $order_invoice */
-                                        $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
-                                        $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
+                                        $cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_products_wt * $discount_value / 100, 2);
+                                        $cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_products * $discount_value / 100, 2);
 
                                         // Update OrderInvoice
                                         $this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
                                     }
                                 } else {
-                                    $cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * $discount_value / 100, 2);
-                                    $cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * $discount_value / 100, 2);
+                                    $cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_products_wt * $discount_value / 100, 2);
+                                    $cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_products * $discount_value / 100, 2);
                                 }
                             } else {
                                 $this->errors[] = Tools::displayError('The discount value is invalid.');
