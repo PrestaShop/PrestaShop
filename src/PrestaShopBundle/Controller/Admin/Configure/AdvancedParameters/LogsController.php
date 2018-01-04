@@ -91,29 +91,13 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
+        if (!$this->isAccessGranted()) {
             return $this->redirectToRoute('admin_logs');
         }
 
         $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
         $searchParametersForm->handleRequest($request);
         $filters = array();
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_logs');
-        }
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
@@ -131,28 +115,12 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function processFormAction(Request $request)
     {
-        if ($this->isDemoModeEnabled()) {
-            $this->addFlash('error', $this->getDemoModeErrorMessage());
-
+        if (!$this->isAccessGranted()) {
             return $this->redirectToRoute('admin_logs');
         }
 
         $logsByEmailForm = $this->getFormHandler()->getForm();
         $logsByEmailForm->handleRequest($request);
-
-        if (!in_array(
-            $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_CREATE,
-                PageVoter::LEVEL_DELETE,
-            )
-        )) {
-            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
-
-            return $this->redirectToRoute('admin_logs');
-        }
 
         $this->dispatchHook('actionAdminLogsControllerPostProcessBefore', array('controller' => $this));
 
@@ -198,5 +166,30 @@ class LogsController extends FrameworkBundleAdminController
     private function getLogRepository()
     {
         return $this->get('prestashop.core.admin.log.repository');
+    }
+
+    /**
+     * @return boolean True is access is granted to the current employee
+     */
+    private function isAccessGranted()
+    {
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+            return false;
+        }
+
+        if (!in_array(
+            $this->authorizationLevel($this::CONTROLLER_NAME),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            )
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
+            return false;
+        }
+        return true;
     }
 }
