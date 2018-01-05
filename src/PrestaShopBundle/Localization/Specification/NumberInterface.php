@@ -35,17 +35,6 @@ namespace PrestaShopBundle\Localization\Specification;
 interface NumberInterface
 {
     /**
-     * Add a new symbols list in the specification (one list by numbering system)
-     *
-     * @param string                    $numberingSystem
-     *  The numbering system
-     *
-     * @param NumberSymbolListInterface $symbolList
-     *  The symbols list to use when formatting in this numbering system
-     */
-    public function addSymbols($numberingSystem, NumberSymbolListInterface $symbolList);
-
-    /**
      * Get all specified symbols lists, indexed by available numbering system.
      *
      * Each item of the result is a NumberSymbolList

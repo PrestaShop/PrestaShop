@@ -30,67 +30,48 @@ use InvalidArgumentException as SPLInvalidArgumentException;
 use PrestaShop\Decimal\Number as DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\RoundingMapper;
-use PrestaShopBundle\Localization\InvalidArgumentException;
-use PrestaShopBundle\Localization\Locale;
-use PrestaShopBundle\Localization\Specification\NumberInterface;
+use PrestaShopBundle\Localization\Exception\LocalizationException;
+use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecification;
 
 class Formatter
 {
     const GROUP_SEPARATOR_PLACEHOLDER   = ',';
-    const DECIMAL_SEPARATOR_PLACEHOLDER = ',';
-
-    /**
-     * Locale to be used when formatting a number
-     *
-     * @var Locale
-     */
-    protected $locale;
+    const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
 
     /**
      * Number specification to be used when formatting a number
      *
-     * @var NumberInterface
+     * @var NumberSpecification
      */
     protected $numberSpecification;
 
     /**
-     * Create a number formatter instance whose behavior depends on the passed locale and number specification
+     * @var int The wanted rounding mode when formatting numbers
+     */
+    protected $roundingMode;
+
+    /**
+     * @var string Numbering system to use when formatting numbers
+     */
+    protected $numberingSystem;
+
+    /**
+     * Create a number formatter instance
      *
-     * @param Locale          $locale
-     *   Locale used when formatting a number
-     *
-     * @param NumberInterface $numberSpecification
+     * @param NumberSpecification $numberSpecification
      *   Number specification used when formatting a number
-     */
-    public function __construct(Locale $locale, NumberInterface $numberSpecification)
-    {
-        $this
-            ->setLocale($locale)
-            ->setNumberSpecification($numberSpecification);
-    }
-
-    /**
-     * @param Locale $locale
      *
-     * @return Formatter
-     */
-    public function setLocale($locale)
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
-    /**
-     * @param NumberInterface $numberSpecification
+     * @param int $roundingMode
+     *   The wanted rounding mode when formatting numbers
      *
-     * @return Formatter
+     * @param string $numberingSystem
+     *   Numbering system to use when formatting numbers
      */
-    public function setNumberSpecification($numberSpecification)
+    public function __construct(NumberSpecification $numberSpecification, $roundingMode, $numberingSystem)
     {
         $this->numberSpecification = $numberSpecification;
-
-        return $this;
+        $this->roundingMode        = (int)$roundingMode;
+        $this->numberingSystem     = $numberingSystem;
     }
 
     public function format($number)
@@ -98,7 +79,7 @@ class Formatter
         try {
             $decimalNumber = $this->prepareNumber($number);
         } catch (SPLInvalidArgumentException $e) {
-            throw new InvalidArgumentException('Invalid $number parameter : ' . $e->getMessage());
+            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage());
         }
 
         /*
@@ -139,7 +120,7 @@ class Formatter
     {
         $decimalNumber = new DecimalNumber((string)$number);
         $precision     = $this->numberSpecification->getMaxFractionDigits();
-        $roundingMode  = RoundingMapper::mapRounding($this->locale->getRoundMode());
+        $roundingMode  = RoundingMapper::mapRounding($this->roundingMode);
 
         $roundedNumber = (new Rounding())->compute(
             $decimalNumber,
@@ -274,9 +255,8 @@ class Formatter
      */
     protected function replaceSymbols($number)
     {
-        $numberingSystem = $this->locale->getNumberingSystem();
-        $symbols         = $this->numberSpecification->getSymbolsByNumberingSystem($numberingSystem);
-        $replacements    = [
+        $symbols      = $this->numberSpecification->getSymbolsByNumberingSystem($this->numberingSystem);
+        $replacements = [
             '.' => $symbols->getDecimal(),
             ',' => $symbols->getGroup(),
             '+' => $symbols->getPlusSign(),

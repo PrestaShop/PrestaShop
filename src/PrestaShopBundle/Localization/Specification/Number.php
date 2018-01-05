@@ -39,29 +39,29 @@ class Number implements NumberInterface
     /**
      * Number specification constructor.
      *
-     * @param string             $positivePattern
+     * @param string $positivePattern
      *  CLDR formatting pattern for positive amounts
      *
-     * @param string             $negativePattern
+     * @param string $negativePattern
      *  CLDR formatting pattern for negative amounts
      *
      * @param NumberSymbolList[] $symbols
      *  List of available number symbols lists (NumberSymbolList objects)
      *  Each list is indexed by numbering system
      *
-     * @param int                $maxFractionDigits
+     * @param int $maxFractionDigits
      *  Maximum number of digits after decimal separator
      *
-     * @param int                $minFractionDigits
+     * @param int $minFractionDigits
      *  Minimum number of digits after decimal separator
      *
-     * @param bool               $groupingUsed
+     * @param bool $groupingUsed
      *  Is digits grouping used ?
      *
-     * @param int                $primaryGroupSize
+     * @param int $primaryGroupSize
      *  Size of primary digits group in the number
      *
-     * @param int                $secondaryGroupSize
+     * @param int $secondaryGroupSize
      *  Size of secondary digits group in the number
      *
      * @throws LocalizationException
@@ -158,20 +158,6 @@ class Number implements NumberInterface
      * @var int
      */
     protected $secondaryGroupSize;
-
-    /**
-     * Add a new symbols list in the specification (one list by numbering system)
-     *
-     * @param string                    $numberingSystem
-     *  The numbering system
-     *
-     * @param NumberSymbolListInterface $symbolList
-     *  The symbols list to use when formatting in this numbering system
-     */
-    public function addSymbols($numberingSystem, NumberSymbolListInterface $symbolList)
-    {
-        $this->symbols[$numberingSystem] = $symbolList;
-    }
 
     /**
      * Get all specified symbols lists, indexed by available numbering system.
