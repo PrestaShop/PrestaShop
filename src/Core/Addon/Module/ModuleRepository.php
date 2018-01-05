@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -107,7 +108,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
         TranslatorInterface $translator,
-        $languageISO,
         CacheProvider $cacheProvider = null
     ) {
         $this->adminModuleProvider = $adminModulesProvider;
@@ -117,8 +117,10 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->translator = $translator;
         $this->finder = new Finder();
 
+        list($isoLang) = explode('-', $translator->getLocale());
+
         // Cache related variables
-        $this->cacheFilePath = $languageISO.'_local_modules';
+        $this->cacheFilePath = $isoLang.'_local_modules';
         $this->cacheProvider = $cacheProvider;
 
         if ($this->cacheProvider && $this->cacheProvider->contains($this->cacheFilePath)) {
@@ -413,9 +415,9 @@ class ModuleRepository implements ModuleRepositoryInterface
                 require_once $php_file_path;
 
                 // We load the main class of the module, and get its properties
-                $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($name);
+                $tmp_module = ServiceLocator::get($name);
                 foreach (array('warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_uri',
-                    'limited_countries', 'need_instance', ) as $data_to_get) {
+                    'limited_countries', 'need_instance', 'confirmUninstall', ) as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
                     }

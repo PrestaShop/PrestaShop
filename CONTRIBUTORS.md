@@ -1,12 +1,15 @@
 GitHub contributors:
 --------------------------------
 - (d)oekia
+- 0kph
 - 123monsite-regis
 - 1RV34
+- Abdelaziz JRIBI
 - Adonis Karavokyros
 - Adrien
 - Adrien Astier
 - Agence CINS
+- Agnes
 - Alban DEFLANDRE
 - Aleksander Palyan
 - Alessandro Corbelli
@@ -42,10 +45,13 @@ GitHub contributors:
 - Armando Salvador Perez
 - Arnaud Lemercier
 - Atchworks
+- Aurelien Pelletier
 - axi
 - Axome
 - Aylab
+- Azouz-Jribi
 - Balestrino
+- Bastien Bieri
 - bbsimon
 - bellini13
 - Benjamin PONGY
@@ -63,6 +69,7 @@ GitHub contributors:
 - cam.lafit
 - Captain FLAM
 - Captain-FLAM
+- Carlos Addis
 - Casper Olsen
 - cava89
 - ccauw
@@ -73,6 +80,7 @@ GitHub contributors:
 - Chen.Zhidong
 - Chris
 - Chris Gurk
+- Christian Verardi
 - christianverardi
 - ChristopheBoucaut
 - CINS
@@ -87,6 +95,7 @@ GitHub contributors:
 - Conner Burnett
 - Corentin Delcourt
 - Cosmin Hutanu
+- Cristiano Verardi
 - Cyril Dussert
 - Cedric Mouleyre
 - damien
@@ -111,7 +120,6 @@ GitHub contributors:
 - de saint leger
 - Debusschere Alexandre
 - Denis Yurevich
-- Denver Prophit Jr
 - Denver Prophit Jr.
 - Desbouche Christophe
 - DevNet
@@ -164,6 +172,7 @@ GitHub contributors:
 - fchellypresta
 - Felipe Uribe
 - fetis
+- Filippo Tessarotto
 - fird
 - firstred
 - flashmaestro
@@ -181,6 +190,7 @@ GitHub contributors:
 - Gaelle ITZKOVITZ
 - Galaydyuk Alexandr
 - Gamesh
+- Gaspar Fernandez
 - Geoffray
 - Gerdus van Zyl
 - gfanton
@@ -211,9 +221,9 @@ GitHub contributors:
 - ha99y
 - hadjedjvincent
 - harelguy
-- hibatallah.aouadni
 - hibatallahAouadni
 - hiousi
+- Howard Noz
 - htrex
 - hubiktomas
 - Ian Fung
@@ -223,6 +233,7 @@ GitHub contributors:
 - Inetbiz
 - iqit-commerce
 - ironwo0d
+- Ish Gupta
 - ITBpro.com
 - Ivan
 - Ivan Shcherbakov
@@ -239,6 +250,7 @@ GitHub contributors:
 - Jerome Nadaud
 - jeromenadaud
 - jessylenne
+- jestemradek
 - Jérôme Nadaud
 - Joan
 - Joan Juvanteny
@@ -299,6 +311,7 @@ GitHub contributors:
 - Mainmich
 - makk1ntosh
 - makoso
+- Manfredi Petruso
 - manuelbcd
 - marcinsz101
 - Marco Cervellin
@@ -316,6 +329,7 @@ GitHub contributors:
 - mauglee
 - MaX3315
 - Maxence
+- Maxence de Flotte
 - Maxime
 - Maxime - Vaisonet
 - Maxime Biloe
@@ -341,16 +355,19 @@ GitHub contributors:
 - minic studio
 - Mirko Esposito
 - misthero
+- Molka DJEMAL
 - moncef102
 - montes
 - mplh
 - MustangZhong
 - natrim
 - neemzy
+- neoteknic
 - nezenmoins
 - Nicolas Lœuillet
 - Nicolas Martin
 - Nicolas Sorosac
+- Nicolas Giacconi
 - Niels Wouda
 - nihco2
 - Niklas Ekman
@@ -363,6 +380,7 @@ GitHub contributors:
 - oleacorner
 - Olivier Bonvalet
 - Otto Nascarella
+- Pablo Borowicz
 - paeddl
 - Pan P
 - Pan P.
@@ -422,13 +440,16 @@ GitHub contributors:
 - Richard LT
 - Ricki Hirner
 - Rimas Kudelis
+- Riviere Serge
 - robert
 - Roland Schütz
 - romainberger
 - Roman Gusev
 - Roy
+- RS
 - runningz
 - Remi Gaillard
+- Ruben Martins
 - s-duval
 - Sacha
 - Sacha FROMENT
@@ -486,10 +507,12 @@ GitHub contributors:
 - Thomas
 - Thomas Blanc
 - Thomas Ferney
+- Thomas LEVIANDIER
 - Thomas N
 - Thomas Nabord
 - thomas-aw
 - Threef
+- tiledcode
 - timsit
 - tmackay
 - TMMeilleur
@@ -498,6 +521,7 @@ GitHub contributors:
 - tomek
 - Tomas Liska
 - Tomas Votruba
+- Tony BOTALLA
 - Travis-CI
 - tucoinfo
 - Tung Dao
@@ -531,6 +555,7 @@ GitHub contributors:
 - xitromedia
 - xKnut
 - yanngarras
+- Yannick A
 - Yoozio
 - zimmi1
 - ZiZuu.com

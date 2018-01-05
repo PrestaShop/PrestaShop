@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
+        <source>Relevance</source>
+        <target>Relevance</target>
+        <note>Context:
+File: modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php:121</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/ps_facetedsearch/ps_facetedsearch.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3601146c4e948c32b6424d2c0a7f0118">
@@ -67,16 +77,6 @@ File: modules/ps_facetedsearch/ps_facetedsearch.php:2112</note>
         <target>Categories</target>
         <note>Context:
 File: modules/ps_facetedsearch/ps_facetedsearch.php:2232</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
-        <source>Relevance</source>
-        <target>Relevance</target>
-        <note>Context:
-File: modules/ps_facetedsearch/src/Ps_FacetedsearchProductSearchProvider.php:121</note>
       </trans-unit>
     </body>
   </file>

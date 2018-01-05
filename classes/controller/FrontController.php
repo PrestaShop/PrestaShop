@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
@@ -496,6 +496,17 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
+        /* Begin patch to purge sensible data from cart to avoid expose them in html page */
+        $cleancart = $this->cart_presenter->present($this->context->cart);
+        if (count($cleancart['products']) > 0) {
+            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
+                unset($cleancart['products'][$idx_cart_line]['id_supplier']);
+                unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
+                unset($cleancart['products'][$idx_cart_line]['wholesale_price']);
+                unset($cleancart['products'][$idx_cart_line]['embedded_attributes']);
+            }
+        }
+        /* /patch */
         $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
@@ -854,7 +865,7 @@ class FrontControllerCore extends Controller
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme');
+                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme.Global');
                     if (isset($record->country->name) && $record->country->name) {
                         $countryName = $record->country->name;
                     }
@@ -1308,6 +1319,9 @@ class FrontControllerCore extends Controller
     public function getLayout()
     {
         $entity = $this->php_self;
+        if (empty($entity)) {
+            $entity = $this->getPageName();
+        }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
 
@@ -1654,7 +1668,7 @@ class FrontControllerCore extends Controller
         $breadcrumb = array();
 
         $breadcrumb['links'][] = array(
-            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme'),
+            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('index', true),
         );
 
@@ -1722,7 +1736,7 @@ class FrontControllerCore extends Controller
             $params = array();
         }
 
-        $queryString = str_replace('%2F', '/', http_build_query($params));
+        $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
 
         return $url.($queryString ? "?$queryString" : '');
     }

@@ -186,11 +186,12 @@ $(document).ready(() => {
       $target.val(resp.quantity);
 
       var dataset;
-      if ($target) {
+      if ($target && $target.dataset) {
         dataset = $target.dataset;
       } else {
-        dataset = null;
+        dataset = resp;
       }
+
 
       // Refresh cart preview
       prestashop.emit('updateCart', {

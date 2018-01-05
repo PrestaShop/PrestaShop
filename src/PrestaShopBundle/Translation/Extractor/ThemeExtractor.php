@@ -8,7 +8,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -21,7 +21,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -76,6 +76,8 @@ class ThemeExtractor
         );
         $this->smartyExtractor->extract($themeDirectory, $this->catalog, $options['root_dir']);
 
+        $this->overrideFromDefaultCatalog($locale, $this->catalog);
+
         if ($this->overrideFromDatabase) {
             $this->overrideFromDatabase($theme->getName(), $locale, $this->catalog);
         }
@@ -93,6 +95,56 @@ class ThemeExtractor
         throw new \LogicException(sprintf('The format %s is not supported.', $this->format));
     }
 
+    /**
+     * Add default catalogue in this &$catalogue when the translation exists
+     *
+     * @param string $locale
+     * @param MessageCatalogue $catalogue
+     */
+    private function overrideFromDefaultCatalog($locale, &$catalogue)
+    {
+        $defaultCatalogue = $this->themeProvider
+            ->setLocale($locale)
+            ->getDefaultCatalogue()
+        ;
+
+        if (empty($defaultCatalogue)) {
+            return;
+        }
+
+        $defaultCatalogue = $defaultCatalogue->all();
+
+        if (empty($defaultCatalogue)) {
+            return;
+        }
+
+        $defaultDomainsCatalogue = $catalogue->getDomains();
+
+        foreach ($defaultCatalogue as $domain => $translation) {
+            // AdminCatalogFeature.fr-FR to AdminCatalogFeature
+            $domain = str_replace('.' . $locale, '', $domain);
+
+            // AdminCatalogFeature to Admin.Catalog.Feature
+            $domain = implode('.', preg_split('/(?=[A-Z])/', $domain, -1, PREG_SPLIT_NO_EMPTY));
+
+            if (in_array($domain, $defaultDomainsCatalogue)) {
+                foreach ($translation as $key => $trans) {
+                    if ($catalogue->has($key, $domain)) {
+                        $catalogue->set($key, $trans, $domain);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Add database catalogue in this &$catalogue
+     *
+     * @param string $themeName
+     * @param string $locale
+     * @param MessageCatalogue $catalogue
+     * @throws \Exception
+     */
     private function overrideFromDatabase($themeName, $locale, &$catalogue)
     {
         if (is_null($this->themeProvider)) {

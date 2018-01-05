@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -732,11 +732,15 @@ class AdminPerformanceControllerCore extends AdminController
                     if (is_writable(_PS_ROOT_DIR_.'/.htaccess')) {
                         Tools::generateHtaccess();
                     } else {
+                        // [1] will be replaced by the html tag for list and [2] by the html tag for html list element
                         $this->errors[] = $this->trans(
-                            'Before being able to use this tool, you need to:
-                            <br />- Create a blank .htaccess in your root directory.
-                            <br />- Give it write permissions (CHMOD 666 on Unix system).',
-                            array(),
+                            'Before being able to use this tool, you need to:[1][2]Create a blank .htaccess in your root directory.[/2][2]Give it write permissions (CHMOD 666 on Unix system).[/2][/1]',
+                            array(
+                                '[1]' => '<ul>',
+                                '[/1]' => '</ul>',
+                                '[2]' => '<li>',
+                                '[/2]' => '</li>',
+                            ),
                             'Admin.Advparameters.Notification'
                         );
                         Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);

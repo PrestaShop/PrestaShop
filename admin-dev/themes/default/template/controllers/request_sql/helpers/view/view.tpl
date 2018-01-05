@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 
@@ -27,9 +27,9 @@
 
 {block name="override_tpl"}
 <div class="panel">
-	<h3><i class="icon-cog"></i> {l s='SQL query result'}</h3>
+	<h3><i class="icon-cog"></i> {l s='SQL query result' d='Admin.Advparameters.Feature'}</h3>
 	{if isset($view['error'])}
-		<div class="alert alert-warning">{l s='This SQL query has no result.'}</div>
+		<div class="alert alert-warning">{l s='This SQL query has no result.' d='Admin.Advparameters.Notification'}</div>
 	{else}
 		<table class="table" id="viewRequestSql">
 			<thead>

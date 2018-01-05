@@ -37,7 +37,7 @@
     <tax id="28" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="29" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="30" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
-    <taxRulesGroup name="FI Standard Rate (23%)">
+    <taxRulesGroup name="FI Standard Rate (24%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
       <taxRule iso_code_country="cz" id_tax="1"/>
@@ -66,7 +66,7 @@
       <taxRule iso_code_country="se" id_tax="1"/>
       <taxRule iso_code_country="uk" id_tax="1"/>
     </taxRulesGroup>
-    <taxRulesGroup name="FI Reduced Rate (13%)">
+    <taxRulesGroup name="FI Reduced Rate (14%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -95,7 +95,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="FI Super Reduced Rate (9%)">
+    <taxRulesGroup name="FI Super Reduced Rate (10%)">
       <taxRule iso_code_country="be" id_tax="3"/>
       <taxRule iso_code_country="bg" id_tax="3"/>
       <taxRule iso_code_country="cz" id_tax="3"/>
@@ -124,7 +124,7 @@
       <taxRule iso_code_country="se" id_tax="3"/>
       <taxRule iso_code_country="uk" id_tax="3"/>
     </taxRulesGroup>
-    <taxRulesGroup name="FI Foodstuff Rate (13%)">
+    <taxRulesGroup name="FI Foodstuff Rate (14%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -153,7 +153,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="FI Books Rate (9%)">
+    <taxRulesGroup name="FI Books Rate (10%)">
       <taxRule iso_code_country="be" id_tax="3"/>
       <taxRule iso_code_country="bg" id_tax="3"/>
       <taxRule iso_code_country="cz" id_tax="3"/>

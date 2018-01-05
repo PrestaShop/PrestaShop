@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -95,24 +95,19 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminZonesController'),
             array('AdminCurrenciesController'),
             array('AdminLoginController'),
-            array('AdminStockConfigurationController'),
             array('AdminCustomersController'),
             array('AdminCustomerPreferencesController'),
             array('AdminLogsController'),
             array('AdminProfilesController'),
-            array('AdminStockCoverController'),
             array('AdminAddonsCatalogController'),
             array('AdminCustomersController'),
             array('AdminMaintenanceController'),
             array('AdminQuickAccessesController'),
-            array('AdminStockInstantStateController'),
             array('AdminCustomerThreadsController'),
             array('AdminManufacturersController'),
             array('AdminReferrersController'),
-            array('AdminStockManagementController'),
             array('AdminAdminPreferencesController'),
             array('AdminMetaController'),
-            array('AdminStockMvtController'),
             array('AdminAttachmentsController'),
             array('AdminReturnController'),
             array('AdminStoresController'),
@@ -121,7 +116,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminAttributesGroupsController'),
             array('AdminEmployeesController'),
             array('AdminNotFoundController'),
-            array('AdminSupplyOrdersController'),
             array('AdminFeaturesController'),
             array('AdminOrderMessageController'),
             array('AdminSearchEnginesController'),
@@ -146,7 +140,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
             array('AdminStatesController'),
             array('AdminLanguagesController'),
             array('AdminStatsController'),
-            array('AdminWarehousesController'),
             array('AdminContactsController'),
             array('AdminLegacyLayoutController'),
             array('AdminPPreferencesController'),

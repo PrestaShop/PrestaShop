@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,13 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 abstract class ModuleCore
 {
@@ -1077,12 +1078,12 @@ abstract class ModuleCore
             $override = $module_name.'Override';
 
             if (class_exists($override, false)) {
-                $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($override);
+                $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($override);
             }
         }
 
         if (!$r && class_exists($module_name, false)) {
-            $r = self::$_INSTANCE[$module_name] = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module_name);
+            $r = self::$_INSTANCE[$module_name] = ServiceLocator::get($module_name);
         }
 
         return $r;
@@ -1198,7 +1199,7 @@ abstract class ModuleCore
         $result = Db::getInstance()->executeS('
         SELECT m.name, m.version, mp.interest, module_shop.enable_device
         FROM `'._DB_PREFIX_.'module` m
-        '.Shop::addSqlAssociation('module', 'm').'
+        '.Shop::addSqlAssociation('module', 'm', false).'
         LEFT JOIN `'._DB_PREFIX_.'module_preference` mp ON (mp.`module` = m.`name` AND mp.`id_employee` = '.(int)$id_employee.')');
         foreach ($result as $row) {
             $modules_installed[$row['name']] = $row;
@@ -1251,7 +1252,7 @@ abstract class ModuleCore
                         }
                     }
 
-                    $item = new stdClass();
+                    $item = new \stdClass();
                     $item->id = 0;
                     $item->warning = '';
 
@@ -1306,9 +1307,9 @@ abstract class ModuleCore
                 // If class exists, we just instanciate it
                 if (class_exists($module, false)) {
                     try {
-                        $tmp_module = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get($module);
+                        $tmp_module = ServiceLocator::get($module);
 
-                        $item = new stdClass();
+                        $item = new \stdClass();
 
                         $item->id = (int)$tmp_module->id;
                         $item->warning = $tmp_module->warning;
@@ -1415,7 +1416,7 @@ abstract class ModuleCore
                         }
 
                         if ($flag_found == 0) {
-                            $item = new stdClass();
+                            $item = new \stdClass();
                             $item->id = 0;
                             $item->warning = '';
                             $item->type = strip_tags((string)$f['type']);
@@ -3142,6 +3143,25 @@ abstract class ModuleCore
     {
         $parameters['legacy'] = 'htmlspecialchars';
         return $this->getTranslator()->trans($id, $parameters, $domain, $locale);
+    }
+
+    /**
+     * Check if the module uses the new translation system
+     * @return bool
+     */
+    public function isUsingNewTranslationSystem()
+    {
+        $moduleName = $this->name;
+        $domains = array_keys($this->context->getTranslator()->getCatalogue()->all());
+        $moduleName = preg_replace('/^ps_(\w+)/', '$1', $moduleName);
+
+        foreach ($domains as $domain) {
+            if (false !== stripos($domain, $moduleName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,14 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Feature;
+
+use Feature;
+use FeatureValue;
 
 /**
  * This class will provide data from DB / ORM about Feature
@@ -40,7 +43,7 @@ class FeatureDataProvider
      */
     public static function getFeatures($id_lang, $with_shop = true)
     {
-        return \FeatureCore::getFeatures($id_lang, $with_shop);
+        return Feature::getFeatures($id_lang, $with_shop);
     }
 
     /**
@@ -53,7 +56,7 @@ class FeatureDataProvider
      */
     public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
     {
-        return \FeatureValueCore::getFeatureValuesWithLang($id_lang, $id_feature, $custom);
+        return FeatureValue::getFeatureValuesWithLang($id_lang, $id_feature, $custom);
     }
 
     /**
@@ -64,6 +67,6 @@ class FeatureDataProvider
      */
     public static function getFeatureValueLang($id_feature_value)
     {
-        return \FeatureValueCore::getFeatureValueLang($id_feature_value);
+        return FeatureValue::getFeatureValueLang($id_feature_value);
     }
 }

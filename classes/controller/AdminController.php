@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -410,6 +410,9 @@ class AdminControllerCore extends Controller
 
         $this->controller_type = 'admin';
         $this->controller_name = !empty($forceControllerName) ? $forceControllerName : get_class($this);
+        if (strpos($this->controller_name, 'ControllerOverride')) {
+            $this->controller_name = substr($this->controller_name, 0, -18);
+        }
         if (strpos($this->controller_name, 'Controller')) {
             $this->controller_name = substr($this->controller_name, 0, -10);
         }
@@ -437,10 +440,12 @@ class AdminControllerCore extends Controller
             $this->bo_css = 'admin-theme.css';
         }
 
-        $this->context->smarty->setTemplateDir(array(
-            _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
-            _PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
-        ));
+        if (defined('_PS_BO_ALL_THEMES_DIR_')) {
+            $this->context->smarty->setTemplateDir(array(
+                _PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template',
+                _PS_OVERRIDE_DIR_.'controllers'.DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.'templates'
+            ));
+        }
 
         $this->id = Tab::getIdFromClassName($this->controller_name);
         $this->token = Tools::getAdminToken($this->controller_name.(int)$this->id.(int)$this->context->employee->id);
@@ -515,8 +520,11 @@ class AdminControllerCore extends Controller
 
         $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 
-        $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
-        $this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
+        if (defined('_PS_ADMIN_DIR_')) {
+            $this->admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
+            $this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
+        }
+
 
         // Check if logged on Addons
         $this->logged_on_addons = false;
@@ -909,7 +917,7 @@ class AdminControllerCore extends Controller
 
     /**
      * @TODO uses redirectAdmin only if !$this->ajax
-     * @return bool
+     * @return ObjectModel|bool
      */
     public function postProcess()
     {
@@ -1927,19 +1935,29 @@ class AdminControllerCore extends Controller
     {
         $tips = array(
             'order' => array(
-                $this->l('Your next order could be hiding there!'),
-                $this->l('Did you check your conversion rate lately?'),
-                $this->l('How about some seasonal discounts?'),
+                $this->trans('Did you check your conversion rate lately?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('How about some seasonal discounts?', array(), 'Admin.Navigation.Notification'),
+                $this->trans(
+                    'Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!',
+                        array(
+                            '[1]' => '<strong>',
+                            '[/1]' => '</strong>',
+                            '[2]' => '<a href="'.$this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts">',
+                             '[/2]' => '</a>',
+                            '[3]' => '<br>',
+                        ),
+                        'Admin.Navigation.Notification'
+                ),
             ),
             'customer' => array(
-                $this->l('Have you sent any acquisition email lately?'),
-                $this->l('Are you active on social media these days?'),
-                $this->l('Have you considered selling on marketplaces?'),
+                $this->trans('Have you sent any acquisition email lately?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Are you active on social media these days?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Have you considered selling on marketplaces?', array(), 'Admin.Navigation.Notification'),
             ),
             'customer_message' => array(
-                $this->l('That\'s more time for something else!'),
-                $this->l('No news is good news, isn\'t it?'),
-                $this->l('Seems like all your customers are happy :)'),
+                $this->trans('That\'s more time for something else!', array(), 'Admin.Navigation.Notification'),
+                $this->trans('No news is good news, isn\'t it?', array(), 'Admin.Navigation.Notification'),
+                $this->trans('Seems like all your customers are happy :)', array(), 'Admin.Navigation.Notification'),
             ),
         );
 
@@ -2656,7 +2674,7 @@ class AdminControllerCore extends Controller
     {
         if ($isNewTheme) {
             $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/theme.css', 'all', 1);
-            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/bundle.js');
+            $this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/new-theme/public/main.bundle.js');
             $this->addjQueryPlugin(array('chosen'));
         } else {
 
@@ -2810,7 +2828,6 @@ class AdminControllerCore extends Controller
             'token' => $this->token,
             'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
             'stock_management' => (int)Configuration::get('PS_STOCK_MANAGEMENT'),
-            'abandoned_cart_url' => $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts',
             'no_order_tip' => $this->getNotificationTip('order'),
             'no_customer_tip' => $this->getNotificationTip('customer'),
             'no_customer_message_tip' => $this->getNotificationTip('customer_message'),
@@ -2835,15 +2852,19 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * Sets the smarty variables used to show / hide some notifications
+     * Sets the smarty variables and js defs used to show / hide some notifications
      */
     public function initNotifications()
     {
-        $this->context->smarty->assign(array(
+        $notificationsSettings = array(
             'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS'),
             'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS'),
             'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES '),
-        ));
+        );
+        
+        $this->context->smarty->assign($notificationsSettings);
+
+        Media::addJsDef($notificationsSettings);
     }
 
     /**
@@ -3652,7 +3673,8 @@ class AdminControllerCore extends Controller
             if (isset($def['lang']) && $def['lang']) {
                 if (isset($def['required']) && $def['required']) {
                     $value = Tools::getValue($field.'_'.$default_language->id);
-                    if (empty($value)) {
+                    // !isset => not exist || "" == $value can be === 0 (before, empty $value === 0 returned true)
+                    if (!isset($value) || "" == $value) {
                         $this->errors[$field.'_'.$default_language->id] = sprintf(
                             $this->trans('The field %1$s is required at least in %2$s.', array(), 'Admin.Notifications.Error'),
                             $object->displayFieldName($field, $class_name),
@@ -4654,7 +4676,7 @@ class AdminControllerCore extends Controller
     protected function buildContainer()
     {
         $container = new ContainerBuilder();
-        $container->addCompilerPass(new \LegacyCompilerPass());
+        $container->addCompilerPass(new LegacyCompilerPass());
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
         $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
         $loader->load(_PS_CONFIG_DIR_.'services/admin/services_'. $env .'.yml');
@@ -4672,28 +4694,28 @@ class AdminControllerCore extends Controller
     {
         if(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_DELETE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_DELETE;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_CREATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_ADD;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_UPDATE',
                 $this->context->employee->id_profile
             )
         ) {
             return AdminController::LEVEL_EDIT;
         } elseif(
             Access::isGranted(
-                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ', 
+                'ROLE_MOD_TAB_'.strtoupper($this->controller_name).'_READ',
                 $this->context->employee->id_profile
             )
         ) {

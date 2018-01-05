@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -124,11 +124,11 @@ class ProductPresenter
         // TODO: move it to a common parent, since it's copied in OrderPresenter and CartPresenter
         $presentedProduct['labels'] = array(
             'tax_short' => ($settings->include_taxes)
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
             'tax_long' => ($settings->include_taxes)
-                ? $this->translator->trans('Tax included', array(), 'Shop.Theme')
-                : $this->translator->trans('Tax excluded', array(), 'Shop.Theme'),
+                ? $this->translator->trans('Tax included', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('Tax excluded', array(), 'Shop.Theme.Global'),
         );
 
         return $presentedProduct;
@@ -411,7 +411,7 @@ class ProductPresenter
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity']) {
+                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity'] && !$product['allow_oosp']) {
                         $presentedProduct['availability_message'] = $this->translator->trans(
                             'There are not enough products in stock',
                             array(),

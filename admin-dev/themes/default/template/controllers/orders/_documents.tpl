@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <div class="table-responsive">
@@ -27,16 +27,16 @@
 		<thead>
 			<tr>
 				<th>
-					<span class="title_box ">{l s='Date'}</span>
+					<span class="title_box ">{l s='Date' d='Admin.Global'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Document'}</span>
+					<span class="title_box ">{l s='Document' d='Admin.Orderscustomers.Feature'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Number'}</span>
+					<span class="title_box ">{l s='Number' d='Admin.Orderscustomers.Feature'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Amount'}</span>
+					<span class="title_box ">{l s='Amount' d='Admin.Global'}</span>
 				</th>
 				<th></th>
 			</tr>
@@ -58,12 +58,12 @@
 						<td>
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									{l s='Delivery slip'}
+									{l s='Delivery slip' d='Admin.Orderscustomers.Feature'}
 								{else}
-									{l s='Invoice'}
+									{l s='Invoice' d='Admin.Global'}
 								{/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								{l s='Credit Slip'}
+								{l s='Credit Slip' d='Admin.Orderscustomers.Feature'}
 							{/if}
 						</td>
 						<td>
@@ -96,9 +96,9 @@
 								{if $document->getTotalPaid()}
 									<span>
 									{if $document->getRestPaid() > 0}
-										({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
+										({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid' d='Admin.Orderscustomers.Feature'})
 									{elseif $document->getRestPaid() < 0}
-										({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
+										({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid' d='Admin.Orderscustomers.Feature'})
 									{/if}
 									</span>
 								{/if}
@@ -114,17 +114,17 @@
 								{if $document->getRestPaid()}
 									<a href="#formAddPaymentPanel" class="js-set-payment btn btn-default anchor" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
 										<i class="icon-money"></i>
-										{l s='Enter payment'}
+										{l s='Enter payment' d='Admin.Orderscustomers.Feature'}
 									</a>
 								{/if}
 
 								<a href="#" class="btn btn-default" onclick="$('#invoiceNote{$document->id}').show(); return false;" title="{if $document->note eq ''}{l s='Add note'}{else}{l s='Edit note'}{/if}">
 									{if $document->note eq ''}
 										<i class="icon-plus-sign-alt"></i>
-										{l s='Add note'}
+										{l s='Add note' d='Admin.Orderscustomers.Feature'}
 									{else}
 										<i class="icon-pencil"></i>
-										{l s='Edit note'}
+										{l s='Edit note' d='Admin.Orderscustomers.Feature'}
 									{/if}
 								</a>
 
@@ -138,7 +138,7 @@
 						<td colspan="5">
 							<form action="{$current_index}&amp;viewOrder&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}" method="post">
 								<p>
-									<label for="editNote{$document->id}" class="t">{l s='Note'}</label>
+									<label for="editNote{$document->id}" class="t">{l s='Note' d='Admin.Global'}</label>
 									<input type="hidden" name="id_order_invoice" value="{$document->id}" />
 									<textarea name="note" id="editNote{$document->id}" class="edit-note textarea-autosize">{$document->note|escape:'html':'UTF-8'}</textarea>
 								</p>
@@ -162,12 +162,12 @@
 					<td colspan="5" class="list-empty">
 						<div class="list-empty-msg">
 							<i class="icon-warning-sign list-empty-icon"></i>
-							{l s='There is no available document'}
+							{l s='There is no available document' d='Admin.Orderscustomers.Notification'}
 						</div>
 						{if isset($invoice_management_active) && $invoice_management_active}
 							<a class="btn btn-default" href="{$current_index}&amp;viewOrder&amp;submitGenerateInvoice&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">
 								<i class="icon-repeat"></i>
-								{l s='Generate invoice'}
+								{l s='Generate invoice' d='Admin.Orderscustomers.Feature'}
 							</a>
 						{/if}
 					</td>

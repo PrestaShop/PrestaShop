@@ -1,11 +1,11 @@
 .cart-grid {
-  margin-bottom: rem(16px);
+  margin-bottom: 1rem;
 }
 .cart-items {
   margin-bottom: 0;
 }
 .cart-item {
-  padding: rem(16px) 0;
+  padding: 1rem 0;
 }
 .cart-summary-line {
   @include clearfix;
@@ -34,29 +34,23 @@
     }
   }
   .card-block {
-    padding: rem(16px);
+    padding: 1rem;
     h1 {
       margin-bottom: 0;
     }
   }
-  hr {
-    margin: 0;
-  }
   .cart-overview {
-    padding: rem(16px);
+    padding: 1rem;
   }
-  margin-bottom: rem(12px);
+  margin-bottom: 0.75rem;
 }
 /** CART RIGHT **/
 .cart-grid-right {
-  hr {
-    margin: 0;
-  }
   .promo-discounts {
     margin-bottom: 0;
     .cart-summary-line {
       .label {
-        color: $gray-dark;
+        color: $gray;
         .code {
           text-decoration: underline;
           cursor: pointer;
@@ -71,7 +65,7 @@
     background: $gray-light;
     .alert-danger {
       position: relative;
-      margin-top: rem(20px);
+      margin-top: 1.25rem;
       background: $brand-danger;
       color: white;
       display: none;
@@ -93,8 +87,8 @@
   .promo-input {
     color: $gray-darker;
     border: $gray 1px solid;
-    height: rem(40px);
-    text-indent: rem(10px);
+    height: 2.5rem;
+    text-indent: 0.625rem;
     width: 60%;
     + button {
       margin-top: -4px;
@@ -112,12 +106,12 @@
     }
   }
   .promo-code-button {
-    padding-left: rem(20px);
-    margin-bottom: rem(20px);
+    padding-left: 1.25rem;
+    margin-bottom: 1.25rem;
     display: inline-block;
   }
   &.promo-highlighted {
-    padding: rem(20px);
+    padding: 1.25rem;
     padding-bottom: 0;
     margin-bottom: 0;
   }
@@ -146,28 +140,12 @@
     > .unit-price-cart {
       padding-left: 0.3125rem;
       font-size: 0.875rem;
-      color: $gray-dark;
+      color: $gray;
     }
   }
 }
 /** CONTENT LEFT **/
 .product-line-grid-right {
-  .bootstrap-touchspin {
-    width: rem(68px);
-    float: left;
-    box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.15);
-    > .form-control,
-    > .input-group {
-      color: $gray-darker;
-      background-color: white;
-      height: $input-height;
-      padding: 0.175rem 0.5rem;
-      width: rem(48px);
-    }
-    > .input-group-btn-vertical {
-      width: auto;
-    }
-  }
   .cart-line-product-actions,
   .product-price {
     color: $gray-darker;
@@ -175,7 +153,7 @@
     .remove-from-cart {
       color: $gray-darker;
       display: inline-block;
-      margin-top: rem(5px);
+      margin-top: 0.3125rem;
     }
   }
 }
@@ -183,13 +161,13 @@
 /*** Responsive part ***/
 @include media-breakpoint-down(sm) {
   .product-line-grid-body {
-    margin-bottom: rem(16px);
+    margin-bottom: 1rem;
   }
 }
 
 @include media-breakpoint-down(xs) {
   .cart-items {
-    padding: rem(16px) 0;
+    padding: 1rem 0;
   }
   .cart-item {
     border-bottom: 1px solid $gray-light;
@@ -202,7 +180,7 @@
       padding: 0;
     }
     .no-items {
-      padding: rem(16px);
+      padding: 1rem;
       display: inline-block;
     }
   }

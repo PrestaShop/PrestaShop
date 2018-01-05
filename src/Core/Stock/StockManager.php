@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,16 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Core\Stock;
+
+use DateTime;
+use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
+use PrestaShopBundle\Entity\StockMvt;
 
 /**
  * Class StockManager Refactored features about product stocks.
@@ -42,12 +48,17 @@ class StockManager
      */
     public function updatePackQuantity($product, $stock_available, $delta_quantity, $id_shop = null)
     {
-        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
+        $serviceLocator = new ServiceLocator();
+
+        $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
         if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
-            $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+
+            $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+            $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+            $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+
             $products_pack = $packItemsManager->getPackItems($product);
-            $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-            $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
             foreach ($products_pack as $product_pack) {
                 $productStockAvailable = $stockManager->getStockAvailableByProduct($product_pack, $product_pack->id_pack_product_attribute, $id_shop);
                 $productStockAvailable->quantity = $productStockAvailable->quantity + ($delta_quantity * $product_pack->pack_quantity);
@@ -76,10 +87,14 @@ class StockManager
      */
     public function updatePacksQuantityContainingProduct($product, $id_product_attribute, $stock_available, $id_shop = null)
     {
-        $configuration = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-        $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-        $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
+        $serviceLocator = new ServiceLocator();
+
+        $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+        $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
         foreach ($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
@@ -113,14 +128,19 @@ class StockManager
      * @param integer $id_product_attribute The declinaison to update (null if not)
      * @param integer $delta_quantity The quantity change (positive or negative)
      * @param integer|null $id_shop Optional
+     * @param boolean $add_movement Optional
+     * @param array $params Optional
      */
-    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null)
+    public function updateQuantity($product, $id_product_attribute, $delta_quantity, $id_shop = null, $add_movement = false, $params = array())
     {
-        $stockManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
+        $serviceLocator = new ServiceLocator();
+        $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+        $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
+        $cacheManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
+        $hookManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\HookManager');
+
         $stockAvailable = $stockManager->getStockAvailableByProduct($product, $id_product_attribute, $id_shop);
-        $packItemsManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
-        $cacheManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\CacheManager');
-        $hookManager = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\HookManager');
 
         // Update quantity of the pack products
         if ($packItemsManager->isPack($product)) {
@@ -129,8 +149,6 @@ class StockManager
         } else {
             // The product is not a pack
             $stockAvailable->quantity = $stockAvailable->quantity + $delta_quantity;
-            $stockAvailable->id_product = (int)$product->id;
-            $stockAvailable->id_product_attribute = (int)$id_product_attribute;
             $stockAvailable->update();
 
             // Decrease case only: the stock of linked packs should be decreased too.
@@ -142,7 +160,10 @@ class StockManager
             }
         }
 
-        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
+        // Prepare movement and save it
+        if (true === $add_movement && 0 != $delta_quantity) {
+            $this->saveMovement($product->id, $id_product_attribute, $delta_quantity, $params);
+        }
 
         $hookManager->exec('actionUpdateQuantity',
             array(
@@ -151,5 +172,88 @@ class StockManager
                 'quantity' => $stockAvailable->quantity
             )
         );
+
+        $cacheManager->clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$product->id.'*');
+    }
+
+    /**
+     * Public method to save a Movement
+     *
+     * @param $productId
+     * @param $productAttributeId
+     * @param $deltaQuantity
+     * @param array $params
+     * @return bool
+     */
+    public function saveMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
+    {
+        if ($deltaQuantity != 0) {
+            $stockMvt = $this->prepareMovement($productId, $productAttributeId, $deltaQuantity, $params);
+
+            if ($stockMvt) {
+                global $kernel;
+                if (!is_null($kernel) && $kernel instanceof \Symfony\Component\HttpKernel\HttpKernelInterface) {
+                    $stockMvtRepository = $kernel->getContainer()->get('prestashop.core.api.stockMovement.repository');
+                    return $stockMvtRepository->saveStockMvt($stockMvt);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Prepare a Movement for registration
+     *
+     * @param $productId
+     * @param $productAttributeId
+     * @param $deltaQuantity
+     * @param array $params
+     * @return bool|StockMvt
+     */
+    private function prepareMovement($productId, $productAttributeId, $deltaQuantity, $params = array())
+    {
+        $product = (new ProductDataProvider)->getProductInstance($productId);
+
+        if ($product->id) {
+
+            $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
+            $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId);
+
+            if ($stockAvailable->id) {
+
+                $stockMvt = new StockMvt();
+
+                $stockMvt->setIdStock((int)$stockAvailable->id);
+
+                if (!empty($params['id_order'])) {
+                    $stockMvt->setIdOrder((int)$params['id_order']);
+                }
+
+                if (!empty($params['id_stock_mvt_reason'])) {
+                    $stockMvt->setIdStockMvtReason((int)$params['id_stock_mvt_reason']);
+                }
+
+                if (!empty($params['id_supply_order'])) {
+                    $stockMvt->setIdSupplyOrder((int)$params['id_supply_order']);
+                }
+
+                $stockMvt->setSign($deltaQuantity >= 1 ? 1 : -1);
+                $stockMvt->setPhysicalQuantity(abs($deltaQuantity));
+
+                $stockMvt->setDateAdd(new DateTime());
+
+                $employee = (new ContextAdapter)->getContext()->employee;
+                if (!empty($employee)) {
+                    $stockMvt->setIdEmployee($employee->id);
+                    $stockMvt->setEmployeeFirstname($employee->firstname);
+                    $stockMvt->setEmployeeLastname($employee->lastname);
+                }
+
+                return $stockMvt;
+            }
+        }
+
+        return false;
     }
 }

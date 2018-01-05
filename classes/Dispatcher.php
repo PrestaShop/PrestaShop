@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -293,7 +293,12 @@ class DispatcherCore
                     $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$module_name.'/controllers/front/');
                     if (isset($controllers[strtolower($this->controller)])) {
                         include_once(_PS_MODULE_DIR_.$module_name.'/controllers/front/'.$this->controller.'.php');
-                        $controller_class = $module_name.$this->controller.'ModuleFrontController';
+                        if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name . '/controllers/front/' . $this->controller . '.php')) {
+                            include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $module_name . '/controllers/front/' . $this->controller . '.php');
+                            $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
+                        } else {
+                            $controller_class = $module_name . $this->controller . 'ModuleFrontController';
+                        }
                     }
                 }
                 $params_hook_action_dispatcher = array('controller_type' => self::FC_FRONT, 'controller_class' => $controller_class, 'is_module' => 1);
@@ -319,7 +324,12 @@ class DispatcherCore
                         } else {
                             // Controllers in modules can be named AdminXXX.php or AdminXXXController.php
                             include_once(_PS_MODULE_DIR_.$tab->module.'/controllers/admin/'.$controllers[strtolower($this->controller)].'.php');
-                            $controller_class = $controllers[strtolower($this->controller)].(strpos($controllers[strtolower($this->controller)], 'Controller') ? '' : 'Controller');
+                            if (file_exists(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module . '/controllers/admin/' . $controllers[strtolower($this->controller)] . '.php')) {
+                                include_once(_PS_OVERRIDE_DIR_ . 'modules/' . $tab->module . '/controllers/admin/' . $controllers[strtolower($this->controller)] . '.php');
+                                $controller_class = $controllers[strtolower($this->controller)] . (strpos($controllers[strtolower($this->controller)], 'Controller') ? 'Override' : 'ControllerOverride');
+                            } else {
+                                $controller_class = $controllers[strtolower($this->controller)] . (strpos($controllers[strtolower($this->controller)], 'Controller') ? '' : 'Controller');
+                            }
                         }
                     }
                     $params_hook_action_dispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 1);

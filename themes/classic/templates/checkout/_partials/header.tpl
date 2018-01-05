@@ -3,10 +3,10 @@
  *
  * NOTICE OF LICENSE
  *
- * This source file is subject to the Open Software License (OSL 3.0)
+ * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='header'}
@@ -29,19 +29,19 @@
         <div class="row">
           <div class="col-md-6 hidden-sm-down" id="_desktop_logo">
             <a href="{$urls.base_url}">
-              <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo' d='Shop.Theme'}">
+              <img class="logo img-responsive" src="{$shop.logo}" alt="{$shop.name} {l s='logo' d='Shop.Theme.Global'}">
             </a>
           </div>
           <div class="col-md-6 text-xs-right hidden-sm-down">
             {hook h='displayNav1'}
           </div>
-          <div class="hidden-md-up text-xs-center mobile">
+          <div class="hidden-md-up text-sm-center mobile">
             {hook h='displayNav2'}
-            <div class="pull-xs-left" id="menu-icon">
+            <div class="float-xs-left" id="menu-icon">
               <i class="material-icons">&#xE5D2;</i>
             </div>
-            <div class="pull-xs-right" id="_mobile_cart"></div>
-            <div class="pull-xs-right" id="_mobile_user_info"></div>
+            <div class="float-xs-right" id="_mobile_cart"></div>
+            <div class="float-xs-right" id="_mobile_user_info"></div>
             <div class="top-logo" id="_mobile_logo"></div>
             <div class="clearfix"></div>
           </div>

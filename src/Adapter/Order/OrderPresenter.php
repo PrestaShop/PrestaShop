@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -131,7 +131,7 @@ class OrderPresenter implements PresenterInterface
             }
 
             foreach ($cartProducts['products'] as $cartProduct) {
-                if ($cartProduct['id_product'] === $orderProduct['product_id']) {
+                if ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute']) {
                     if (isset($cartProduct['attributes'])) {
                         $orderProduct['attributes'] = $cartProduct['attributes'];
                     } else {
@@ -210,7 +210,7 @@ class OrderPresenter implements PresenterInterface
         if ($order->gift) {
             $giftWrapping = ($this->includeTaxes())
                 ? $order->total_wrapping_tax_incl
-                : $order->total_wrapping_tax_incl;
+                : $order->total_wrapping_tax_excl;
             $subtotals['gift_wrapping'] = array(
                 'type' => 'gift_wrapping',
                 'label' => $this->translator->trans('Gift wrapping', array(), 'Shop.Theme.Checkout'),
@@ -222,11 +222,12 @@ class OrderPresenter implements PresenterInterface
         $amounts['subtotals'] = $subtotals;
 
         $amounts['totals'] = array();
+        $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
         $amounts['totals']['total'] = array(
             'type' => 'total',
             'label' => $this->translator->trans('Total', array(), 'Shop.Theme.Checkout'),
-            'amount' => $order->total_paid,
-            'value' => $this->priceFormatter->format($order->total_paid, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'amount' => $amount,
+            'value' => $this->priceFormatter->format($amount, Currency::getCurrencyInstance((int)$order->id_currency)),
         );
 
         $amounts['totals']['total_paid'] = array(
@@ -447,11 +448,11 @@ class OrderPresenter implements PresenterInterface
     {
         return array(
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
         );
     }
 }

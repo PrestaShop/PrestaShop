@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -32,6 +32,8 @@ define('_CUSTOMIZE_FILE_', 0);
  * @deprecated 1.5.0.1
  */
 define('_CUSTOMIZE_TEXTFIELD_', 1);
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 
 class ProductCore extends ObjectModel
 {
@@ -289,7 +291,7 @@ class ProductCore extends ObjectModel
             'weight' =>                    array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat'),
             'quantity_discount' =>            array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'ean13' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13),
-            'isbn' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 13),
+            'isbn' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32),
             'upc' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12),
             'cache_is_pack' =>                array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'cache_has_attachments' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -933,12 +935,12 @@ class ProductCore extends ObjectModel
                 return false;
             }
 
-            $warehouse_product_locations = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
+            $warehouse_product_locations = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('WarehouseProductLocation')->findByIdProduct($this->id);
             foreach ($warehouse_product_locations as $warehouse_product_location) {
                 $warehouse_product_location->delete();
             }
 
-            $stocks = \PrestaShop\PrestaShop\Adapter\ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
+            $stocks = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Foundation\\Database\\EntityManager')->getRepository('Stock')->findByIdProduct($this->id);
             foreach ($stocks as $stock) {
                 $stock->delete();
             }
@@ -2908,8 +2910,8 @@ class ProductCore extends ObjectModel
         }
 
         if ($usetax != false
-            && !empty($address_infos['vat_number'])
-            && $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
+            && !empty($address->vat_number)
+            && $address->id_country != Configuration::get('VATNUMBER_COUNTRY')
             && Configuration::get('VATNUMBER_MANAGEMENT')) {
             $usetax = false;
         }
@@ -3652,7 +3654,7 @@ class ProductCore extends ObjectModel
 				GROUP BY product_shop.id_product';
 
         if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
-            return false;
+            return array();
         }
 
         foreach ($result as $k => &$row) {
@@ -5329,25 +5331,31 @@ class ProductCore extends ObjectModel
     {
         $ids = array();
         foreach ($category_ids as $value) {
-            $ids[] = $value['id'];
-        }
-        if ($this->deleteCategories()) {
-            if ($ids) {
-                $sql_values = [];
-                $ids = array_map('intval', $ids);
-                foreach ($ids as $position => $id) {
-                    $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
-                }
-                $result = Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
-					VALUES '.implode(',', $sql_values)
-                );
-                Hook::exec('updateProduct', array('id_product' => (int)$this->id));
-                return $result;
+            if ($value instanceof Category) {
+                $ids[] = (int)$value->id;
+            } else if (is_array($value) && array_key_exists('id', $value)) {
+                $ids[] = (int)$value['id'];
+            } else {
+                $ids[] = (int)$value;
             }
         }
+        $ids = array_unique($ids);
+
+        $return = true;
+        if ($this->deleteCategories() && !empty($ids)) {
+            $sql_values = array();
+            foreach ($ids as $position => $id) {
+                $sql_values[] = '('.(int)$id.', '.(int)$this->id.', '.(int)$position.')';
+            }
+
+            $return = Db::getInstance()->execute('
+                INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
+                VALUES '.implode(',', $sql_values)
+            );
+        }
+
         Hook::exec('updateProduct', array('id_product' => (int)$this->id));
-        return true;
+        return $return;
     }
 
     /**
@@ -5874,11 +5882,20 @@ class ProductCore extends ObjectModel
 
     public function updateWs($null_values = false)
     {
+        if (is_null($this->price)) {
+            $this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
+        }
+
+        if (is_null($this->unit_price)) {
+            $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
+        }
+
         $success = parent::update($null_values);
         if ($success && Configuration::get('PS_SEARCH_INDEXATION')) {
             Search::indexation(false, $this->id);
         }
         Hook::exec('updateProduct', array('id_product' => (int)$this->id));
+
         return $success;
     }
 

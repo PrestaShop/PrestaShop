@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -1787,7 +1787,13 @@ class AdminImportControllerCore extends AdminController
                     if ($category['id_category']) {
                         $product->id_category[] = (int)$category['id_category'];
                     } else {
-                        $this->errors[] = sprintf($this->trans('%1$s cannot be saved', array(), 'Admin.Advparameters.Notification'), trim($value));
+                        $this->errors[] = $this->trans(
+                            '%s cannot be saved',
+                            array(
+                                trim($value),
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                 }
             }
@@ -2415,20 +2421,21 @@ class AdminImportControllerCore extends AdminController
                         !$validateOnly &&
                         $image->add()) {
                         $image->associateTo($id_shop_list);
-// FIXME: 2s/image !
+                        // FIXME: 2s/image !
                         if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !$regenerate)) {
                             $this->warnings[] = sprintf($this->trans('Error copying image: %s', array(), 'Admin.Advparameters.Notification'), $url);
                             $image->delete();
                         } else {
                             $id_image[] = (int)$image->id;
                         }
-// until here
+                        // until here
                     } else {
                         if (!$validateOnly) {
-                            $this->warnings[] = sprintf(
-                                $this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'),
-                                (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
-                            );
+                            $this->warnings[] = $this->trans('%data% cannot be saved',
+                                array(
+                                    '%data%' => (isset($image->id_product) ? ' ('.$image->id_product.')' : ''),
+                                ),
+                                'Admin.Advparameters.Notification');
                         }
                         if ($field_error !== true || $lang_field_error !== true) {
                             $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
@@ -3103,7 +3110,13 @@ class AdminImportControllerCore extends AdminController
                 } else {
                     if (!$validateOnly) {
                         $default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
-                        $this->errors[] = sprintf($this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'), $country->name[$default_language_id]);
+                        $this->errors[] = $this->trans(
+                            '%data% cannot be saved',
+                            array(
+                                '%data%' => $country->name[$default_language_id],
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
@@ -3135,7 +3148,13 @@ class AdminImportControllerCore extends AdminController
                     $address->id_state = (int)$state->id;
                 } else {
                     if (!$validateOnly) {
-                        $this->errors[] = sprintf($this->trans('%s cannot be saved', array(), 'Admin.Advparameters.Notification'), $state->name);
+                        $this->errors[] = $this->trans(
+                            '%s cannot be saved',
+                            array(
+                                '%data%' => $state->name,
+                            ),
+                            'Admin.Advparameters.Notification'
+                        );
                     }
                     if ($field_error !== true || isset($lang_field_error) && $lang_field_error !== true) {
                         $this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
@@ -3663,6 +3682,8 @@ class AdminImportControllerCore extends AdminController
             );
         }
         $this->closeCsvFile($handle);
+
+        return $line_count;
     }
 
     public function storeContactImportOne($info, $shop_is_feature_active, $regenerate, $force_ids, $validateOnly = false)
@@ -3688,7 +3709,11 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (isset($store->hours) && is_array($store->hours)) {
-            $store->hours = serialize($store->hours);
+            $newHours = array();
+            foreach ($store->hours as $hour) {
+                array_push($newHours, array($hour));
+            }
+            $store->hours = json_encode($newHours);
         }
 
         if (isset($store->country) && is_numeric($store->country)) {
@@ -4587,7 +4612,7 @@ class AdminImportControllerCore extends AdminController
         $this->modals[] = array(
              'modal_id' => 'importProgress',
              'modal_class' => 'modal-md',
-             'modal_title' => $this->trans('Importing...', array(), 'Admin.Advparameters.Notification'),
+             'modal_title' => $this->trans('Importing your data...', array(), 'Admin.Advparameters.Notification'),
              'modal_content' => $modal_content
          );
     }

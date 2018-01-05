@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShop\PrestaShop\Adapter\Module;
@@ -30,9 +30,11 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Symfony\Component\Config\ConfigCacheFactory;
-use Symfony\Component\Filesystem\Exception\IOException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Translation\TranslatorInterface;
+use Module as LegacyModule;
+use Context;
 
 /**
  * Data provider for new Architecture, about Module object model.
@@ -47,25 +49,34 @@ class AdminModuleDataProvider implements ModuleInterface
     const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     private $languageISO;
-    private $router;
+    private $logger;
+    private $router = null;
     private $addonsDataProvider;
     private $categoriesProvider;
     private $cacheProvider;
+
     protected $catalog_modules = array();
     protected $catalog_modules_names;
+    public $failed = false;
 
     public function __construct(
-        $languageISO,
-        Router $router = null,
+        TranslatorInterface $translator,
+        LoggerInterface $logger,
         AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
         CacheProvider $cacheProvider = null
     ) {
-        $this->languageISO = $languageISO;
-        $this->router = $router;
+        list($this->languageISO) = explode('-', $translator->getLocale());
+
+        $this->logger = $logger;
         $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
         $this->cacheProvider = $cacheProvider;
+    }
+
+    public function setRouter(Router $router)
+    {
+        $this->router = $router;
     }
 
     public function clearCatalogCache()
@@ -78,15 +89,15 @@ class AdminModuleDataProvider implements ModuleInterface
 
     public function getAllModules()
     {
-        return \Module::getModulesOnDisk(true,
+        return LegacyModule::getModulesOnDisk(true,
             $this->addonsDataProvider->isAddonsAuthenticated(),
-            (int) \Context::getContext()->employee->id
+            (int) Context::getContext()->employee->id
         );
     }
 
     public function getCatalogModules(array $filters = array())
     {
-        if (count($this->catalog_modules) === 0) {
+        if (count($this->catalog_modules) === 0 && !$this->failed) {
             $this->loadCatalogData();
         }
 
@@ -278,6 +289,9 @@ class AdminModuleDataProvider implements ModuleInterface
                         $addon->categoryParent = $this->categoriesProvider
                             ->getParentCategory($addon->categoryName)
                         ;
+                        if (isset($addon->version)) {
+                            $addon->version_available = $addon->version;
+                        }
                         if (! isset($addon->product_type)) {
                             $addon->productType = isset($addonsType)?rtrim($addonsType, 's'):'module';
                         } else {
@@ -294,7 +308,8 @@ class AdminModuleDataProvider implements ModuleInterface
             } catch (\Exception $e) {
                 if (!$this->fallbackOnCatalogCache()) {
                     $this->catalog_modules = array();
-                    throw new \Exception('Data from PrestaShop Addons is invalid, and cannot fallback on cache', 0, $e);
+                    $this->failed = true;
+                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache. ', array('exception' => $e->getMessage()));
                 }
             }
         }

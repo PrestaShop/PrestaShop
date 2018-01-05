@@ -20,34 +20,6 @@ File: controllers/front/GuestTrackingController.php:96</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="67135a14d3ac4f1369633dd006d6efec">
-        <source>your@email.com</source>
-        <target>your@email.com</target>
-        <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:41</note>
-      </trans-unit>
-      <trans-unit id="863cf84b34def228394c03c156bff42c">
-        <source>Select reference</source>
-        <target>Select reference</target>
-        <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:51</note>
-      </trans-unit>
-      <trans-unit id="d57c24f3fe52d16e7169b912dd647f0d">
-        <source>optional</source>
-        <target>optional</target>
-        <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:70</note>
-      </trans-unit>
-      <trans-unit id="8307fac59310d028334df0306c7b29ad">
-        <source>How can we help?</source>
-        <target>How can we help?</target>
-        <note>Context:
-File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:81</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="themes/classic/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="20f4168399201bd498e52bafeb59b478">
@@ -76,13 +48,41 @@ File: themes/classic/templates/catalog/_partials/product-customization.tpl:56</n
       </trans-unit>
     </body>
   </file>
-  <file original="themes/starterTheme/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="themes/StarterTheme/templates/catalog/_partials/product-customization.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="7e8cfff1e4f6fbdc4d6f4149c84e17ed">
         <source>250 char. max</source>
         <target>250 char. max</target>
         <note>Context:
-File: themes/starterTheme/templates/catalog/_partials/product-customization.tpl:14</note>
+File: themes/StarterTheme/templates/catalog/_partials/product-customization.tpl:38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/contactform/views/templates/widget/contactform.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="67135a14d3ac4f1369633dd006d6efec">
+        <source>your@email.com</source>
+        <target>your@email.com</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:66</note>
+      </trans-unit>
+      <trans-unit id="863cf84b34def228394c03c156bff42c">
+        <source>Select reference</source>
+        <target>Select reference</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="d57c24f3fe52d16e7169b912dd647f0d">
+        <source>optional</source>
+        <target>optional</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:95</note>
+      </trans-unit>
+      <trans-unit id="8307fac59310d028334df0306c7b29ad">
+        <source>How can we help?</source>
+        <target>How can we help?</target>
+        <note>Context:
+File: themes/classic/modules/contactform/views/templates/widget/contactform.tpl:106</note>
       </trans-unit>
     </body>
   </file>

@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
 {extends file="helpers/form/form.tpl"}
@@ -30,13 +30,13 @@
 </div>
 
 <a class="btn btn-default" href="#" id="add_condition_group">
-	<i class="icon-plus-sign"></i> {l s='Add a new condition group'}
+	<i class="icon-plus-sign"></i> {l s='Add a new condition group' d='Admin.Catalog.Feature'}
 </a>
 <div class="clearfix">&nbsp;</div>
 <div class="panel" id="conditions-panel" style="display:none;">
-	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
+	<h3><i class="icon-tasks"></i> {l s='Conditions' d='Admin.Catalog.Feature'}</h3>
 	<div class="form-group">
-		<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
+		<label for="id_category" class="control-label col-lg-3">{l s='Category' d='Admin.Global'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
 				<select id="id_category" name="id_category">
@@ -47,13 +47,13 @@
 			</div>
 			<div class="col-lg-1">
 				<a class="btn btn-default" href="#" id="add_condition_category">
-					<i class="icon-plus-sign"></i> {l s='Add condition'}
+					<i class="icon-plus-sign"></i> {l s='Add condition' d='Admin.Catalog.Feature'}
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_manufacturer" class="control-label col-lg-3">{l s='Brand'}</label>
+		<label for="id_manufacturer" class="control-label col-lg-3">{l s='Brand' d='Admin.Global'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
 				<select id="id_manufacturer" name="id_manufacturer">
@@ -64,13 +64,13 @@
 			</div>
 			<div class="col-lg-1">
 				<a class="btn btn-default" href="#" id="add_condition_manufacturer">
-					<i class="icon-plus-sign"></i> {l s='Add condition'}
+					<i class="icon-plus-sign"></i> {l s='Add condition' d='Admin.Catalog.Feature'}
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
+		<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier' d='Admin.Global'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-8">
 				<select id="id_supplier" name="id_supplier">
@@ -81,13 +81,13 @@
 			</div>
 			<div class="col-lg-1">
 				<a class="btn btn-default" href="#" id="add_condition_supplier">
-					<i class="icon-plus-sign"></i> {l s='Add condition'}
+					<i class="icon-plus-sign"></i> {l s='Add condition' d='Admin.Catalog.Feature'}
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_attribute_group" class="control-label col-lg-3">{l s='Attributes'}</label>
+		<label for="id_attribute_group" class="control-label col-lg-3">{l s='Attributes' d='Admin.Global'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-4">
 				<select id="id_attribute_group">
@@ -107,13 +107,13 @@
 			</div>
 			<div class="col-lg-1">
 				<a class="btn btn-default" href="#" id="add_condition_attribute">
-					<i class="icon-plus-sign"></i> {l s='Add condition'}
+					<i class="icon-plus-sign"></i> {l s='Add condition' d='Admin.Catalog.Feature'}
 				</a>
 			</div>
 		</div>
 	</div>
 	<div class="form-group">
-		<label for="id_feature" class="control-label col-lg-3">{l s='Features'}</label>
+		<label for="id_feature" class="control-label col-lg-3">{l s='Features' d='Admin.Global'}</label>
 		<div class="col-lg-9">
 			<div class="col-lg-4">
 				<select id="id_feature">
@@ -133,7 +133,7 @@
 			</div>
 			<div class="col-lg-1">
 				<a class="btn btn-default" href="#" id="add_condition_feature">
-					<i class="icon-plus-sign"></i> {l s='Add condition'}
+					<i class="icon-plus-sign"></i> {l s='Add condition' d='Admin.Catalog.Feature'}
 				</a>
 			</div>
 		</div>
@@ -191,11 +191,11 @@ function new_condition_group()
 	var html = '';
 
 	if (last_condition_group > 0)
-		html += '<div class="row condition_separator text-center">{l s='OR'}</div><div class="clearfix">&nbsp;</div>';
+		html += '<div class="row condition_separator text-center initialism">{l s='or' d='Admin.Global'}</div><div class="clearfix">&nbsp;</div>';
 
 	last_condition_group++;
-	html += '<div id="condition_group_'+last_condition_group+'" class="panel condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group'} '+last_condition_group+'</h3>';
-		html += '<table class="table alert-info"><thead><tr><th class="fixed-width-md"><span class="title_box">{l s='Type'}</span></th><th><span class="title_box">{l s='Value'}</span></th><th></th></tr></thead><tbody></tbody></table>';
+	html += '<div id="condition_group_'+last_condition_group+'" class="panel condition_group alert-info"><h3><i class="icon-tasks"></i> {l s='Condition group' d='Admin.Catalog.Feature'} '+last_condition_group+'</h3>';
+		html += '<table class="table alert-info"><thead><tr><th class="fixed-width-md"><span class="title_box">{l s='Type' d='Admin.Global'}</span></th><th><span class="title_box">{l s='Value' d='Admin.Global'}</span></th><th></th></tr></thead><tbody></tbody></table>';
 		html += '</div>';
 	$('#condition_group_list').append(html);
 	toggle_condition_group(last_condition_group);
@@ -204,7 +204,7 @@ function new_condition_group()
 function appendConditionToGroup(html)
 {
 	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition initialism" colspan="3"><b>{l s='and' js=1 d='Admin.Global'}</b></td></tr>');
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 
@@ -271,7 +271,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Attribute' d='Admin.Global'}</td><td>'+$('#id_attribute_group option:selected').html()+': '+$('#id_attribute_'+$('#id_attribute_group option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;
@@ -282,7 +282,7 @@ $(document).ready(function() {
 		if (!id_condition)
 			return false;
 
-		var html = '<tr id="'+id_condition+'"><td>{l s='Feature'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
+		var html = '<tr id="'+id_condition+'"><td>{l s='Feature' d='Admin.Global'}</td><td>'+$('#id_feature option:selected').html()+': '+$('#id_feature_'+$('#id_feature option:selected').val()+' option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete' d='Admin.Actions'}</a></td></tr>';
 		appendConditionToGroup(html);
 
 		return false;

@@ -3,19 +3,19 @@
   z-index: 502;
   background: $gray-dark;
   width: $size-navbar-width;
-  padding-top: rem(10px) + $size-header-height;
+  padding-top: 0.625rem + $size-header-height;
   height: 100%;
   @include media-breakpoint-down(sm) {
     visibility: hidden;
   }
   .material-icons {
-    font-size: rem(20px);
-    line-height: rem(28px);
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
   &.mobile-nav {
     margin-left: -100%;
     width: 90%;
-    @include transition(all .5s ease-in);
+    transition: all .5s ease-in;
     &.expanded {
       visibility: visible;
       margin-left: 0;
@@ -27,7 +27,7 @@
     .panel-collapse {
       padding-left: 0;
       .link-leveltwo .link {
-        padding-left: rem(50px);
+        padding-left: 3.125rem;
         background: $gray-dark-hover;
       }
     }
@@ -39,11 +39,11 @@
       span {
         color: white;
         display: block;
-        margin-bottom: rem(10px);
+        margin-bottom: 0.625rem;
       }
       img{
-        width: rem(60px);
-        height: rem(60px);
+        width: 3.75rem;
+        height: 3.75rem;
       }
     }
     .shop-list {
@@ -51,20 +51,20 @@
       font-weight: bold;
     }
     .main-menu {
-      margin-top: rem(10px);
+      margin-top: 0.625rem;
     }
     .shop-list-title {
       color: $brand-primary;
       text-transform: uppercase;
-      font-size: rem(16px);
+      font-size: 1rem;
       text-align: center;
-      margin-bottom: rem(15px);
+      margin-bottom: 0.9375rem;
       &::after {
         font-family: 'Material Icons';
         content: "\E313";
-        font-size: rem(20px);
-        line-height: rem(22px);
-        margin-left: rem(10px);
+        font-size: 1.25rem;
+        line-height: 1.375rem;
+        margin-left: 0.625rem;
         vertical-align: bottom;
       }
     }
@@ -77,18 +77,18 @@
         background-color: white;
         border-bottom: $gray-light 1px solid;
         &.group a{
-          padding: rem(15px) rem(40px);
+          padding: 0.9375rem 2.5rem;
           font-weight: bold;
         }
         &.shop {
-          padding: rem(15px) rem(15px) rem(15px) rem(40px);
+          padding: 0.9375rem 0.9375rem 0.9375rem 2.5rem;
           a {
               display: inline-block;
               width: auto;
               &.link-shop {
                   float: right;
                   .material-icons {
-                      font-size: rem(20px);
+                      font-size: 1.25rem;
                       color: $gray-medium;
                   }
               }
@@ -98,8 +98,8 @@
       li:first-child a {
         color: $brand-primary;
         text-transform: uppercase;
-        font-size: rem(15px);
-        padding: rem(15px) rem(20px);
+        font-size: 0.9375rem;
+        padding: 0.9375rem 1.25rem;
       }
     }
   }
@@ -115,27 +115,27 @@
 }
 
 .link-levelone {
-  $padding-size: rem(20px);
+  $padding-size: 1.25rem;
   display: block;
   > .link {
     @include single-line-block($size-navbar-link-height);
-    font-size: rem(12px);
+    font-size: 0.75rem;
     display:block;
     color: $gray-dark-text;
     text-decoration: none;
-    padding: 0 rem(5px) 0 $padding-size;
+    padding: 0 0.3125rem 0 $padding-size;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     @include media-breakpoint-down(sm) {
-      font-size: rem(16px);
-      height: rem(50px);
+      font-size: 1rem;
+      height: 3.125rem;
       border-bottom: 1px solid $gray-medium;
-      padding-top: rem(10px);
+      padding-top: 0.625rem;
     }
   }
   &.-active {
-    border-right: rem(3px) solid $gray-dark-text-hover;
+    border-right: 0.1875rem solid $gray-dark-text-hover;
     @include media-breakpoint-down(sm) {
       border-right: none;
     }
@@ -185,9 +185,9 @@
     border: none;
   }
   > .link {
-    padding: 0 rem(20px);
+    padding: 0 1.25rem;
     @include media-breakpoint-down(sm) {
-      padding-top: rem(10px);
+      padding-top: 0.625rem;
     }
   }
   > .link:hover {
@@ -198,7 +198,7 @@
 .category-title {
   color: $gray-dark-title;
   font-weight: bold;
-  font-size: rem(12px);
+  font-size: 0.75rem;
   padding-left: 10px;
   padding-right: 10px;
   margin: 10px 0;
@@ -236,7 +236,7 @@
   }
 
   .menu-collapse {
-    @include transform(rotate(90deg));
+    transform: rotate(90deg);
   }
 
   .category-title > .title,
@@ -255,7 +255,7 @@
 
         > span {
           display: inline-block;
-          margin-left: rem(45px);
+          margin-left: 2.813rem;
           float: left;
         }
       }
@@ -278,7 +278,7 @@
     }
 
     > .link {
-      padding: 0 rem(5px);
+      padding: 0 0.3125rem;
       text-align: center;
 
       > .material-icons {
@@ -297,7 +297,7 @@
 
 .mobile-layer {
   @include media-breakpoint-down(sm) {
-    @include transition(all 0.2s ease-in-out);
+    transition: all 0.2s ease-in-out;
     opacity: 0;
     visibility: hidden;
     position: fixed;

@@ -2,12 +2,12 @@
 @mixin customer-area-base-box {
   @include box-shadow;
   background: white;
-  padding: rem(16px);
+  padding: 1rem;
 }
 @mixin customer-area-box {
   @include customer-area-base-box;
   font-size: $font-size-sm;
-  color: $gray-dark;
+  color: $gray;
 }
 .table-labeled {
   th {
@@ -20,8 +20,8 @@
     font-weight: 400;
     border-radius: 3px;
     font-size: inherit;
-    padding: rem(4px) rem(6px);
-    margin: rem(2px);
+    padding: 0.25rem 0.375rem;
+    margin: 0.125rem;
     color: white;
     white-space: nowrap;
   }
@@ -32,10 +32,10 @@
   }
   table {
     th {
-      padding: rem(8px);
+      padding: 0.5rem;
     }
     td {
-      padding: rem(8px);
+      padding: 0.5rem;
     }
     thead {
       th {
@@ -50,16 +50,13 @@
     margin: 0;
   }
   .custom-checkbox {
-    @include display(flex);
+    display: flex;
     span {
-      flex: 0 0 rem(15px);
+      flex: 0 0 0.9375rem;
     }
     label {
-      padding-left: rem(10px);
+      padding-left: 0.625rem;
     }
-  }
-  [data-action="show-password"]{
-    background: $gray-dark;
   }
 }
 #identity,
@@ -77,14 +74,14 @@
     @include customer-area-box;
     .order-actions {
       a {
-        padding: 0 rem(2px);
+        padding: 0 0.125rem;
       }
     }
     .forgot-password {
       text-align: center;
       font-size: $font-size-sm;
-      margin-top: rem(16px);
-      padding-bottom: rem(15px);
+      margin-top: 1rem;
+      padding-bottom: 0.9375rem;
     }
     .no-account {
       text-align: center;
@@ -105,25 +102,25 @@
   .address {
     @include box-shadow;
     background: white;
-    margin-bottom: rem(30px);
+    margin-bottom: 1.875rem;
     font-size: $font-size-sm;
     color: $gray-darker;
     .address-body {
-      padding: rem(16px);
+      padding: 1rem;
       h4 {
         font-size: $base-font-size;
         font-weight: 700;
       }
       address {
-        min-height: rem(144px);
+        min-height: 9rem;
       }
     }
     .address-footer {
       border-top: 1px solid $gray;
-      padding: rem(8px) rem(16px);
+      padding: 0.5rem 1rem;
       a {
-        color: $gray-dark;
-        margin-right: rem(8px);
+        color: $gray;
+        margin-right: 0.5rem;
         &:hover {
           color: $gray-darker;
         }
@@ -138,7 +135,7 @@
     }
   }
   .addresses-footer {
-    margin: 0 rem(15px);
+    margin: 0 0.9375rem;
     a {
       color: $gray-darker;
       &:hover {
@@ -157,18 +154,18 @@
 }
 /*** Order details page ***/
 .page-order-detail {
-  font-size: rem(14px);
-  color: $gray-dark;
+  font-size: 0.875rem;
+  color: $gray;
   .box {
     @include customer-area-base-box;
-    margin-bottom: rem(16px);
+    margin-bottom: 1rem;
   }
   h3 {
     font-size: $base-font-size;
     font-weight: 700;
     text-transform: uppercase;
     color: $gray-darker;
-    margin-bottom: rem(16px);
+    margin-bottom: 1rem;
   }
   #order-infos {
     ul {
@@ -178,15 +175,15 @@
   #order-history {
     .history-lines {
       .history-line {
-        padding: rem(8px) 0;
+        padding: 0.5rem 0;
         border-bottom: 1px solid $gray-lighter;
         &:last-child {
           border-bottom: 0;
         }
         .label {
           display: inline-block;
-          margin: rem(4px) 0;
-          padding: rem(4px) rem(6px);
+          margin: 0.25rem 0;
+          padding: 0.25rem 0.375rem;
           color: white;
           border-radius: 3px;
         }
@@ -194,7 +191,7 @@
     }
   }
   .addresses {
-    margin: 0 rem(-15px);
+    margin: 0 -0.9375rem;
     h4 {
       font-size: $base-font-size;
       font-weight: 700;
@@ -202,7 +199,7 @@
   }
   #order-products {
     &.return {
-      margin-bottom: rem(16px);
+      margin-bottom: 1rem;
       th {
         &.head-checkbox {
           width: 30px;
@@ -234,49 +231,49 @@
   .order-items {
     padding: 0 !important;
     .order-item {
-      padding: rem(16px) rem(16px) 0;
+      padding: 1rem 1rem 0;
       border-bottom: 1px solid $gray-lighter;
       .checkbox {
         width: 30px;
         float: left;
-        padding: 0 rem(15px);
+        padding: 0 0.9375rem;
       }
       .content {
         width: calc(100% - 30px);
         float: left;
-        padding: 0 rem(15px);
+        padding: 0 0.9375rem;
       }
       .desc {
         .name {
           font-weight: bold;
         }
-        margin-bottom: rem(16px);
+        margin-bottom: 1rem;
       }
       .qty {
-        margin-bottom: rem(16px);
+        margin-bottom: 1rem;
         .q {
-          margin-bottom: rem(4px);
+          margin-bottom: 0.25rem;
         }
         .s {
-          margin-bottom: rem(4px);
+          margin-bottom: 0.25rem;
         }
       }
     }
   }
   .messages {
     .message {
-      margin-top: rem(8px);
+      margin-top: 0.5rem;
       border-bottom: 1px solid $gray-lighter;
       &:last-child {
         border-bottom: 0;
       }
       > div {
-        margin-bottom: rem(8px);
+        margin-bottom: 0.5rem;
       }
     }
   }
   .customization {
-    margin-top: rem(12px);
+    margin-top: 0.75rem;
   }
 }
 /*** Order return page ***/
@@ -285,25 +282,25 @@
     color: $gray-darker;
   }
   .customization {
-    margin-top: rem(12px);
+    margin-top: 0.75rem;
   }
 }
 /*** My account landing page ***/
 .page-my-account {
   #content {
     .links {
-      @include display(flex);
-      @include flex-wrap(wrap);
-      @include justify-content(flex-start);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
       a {
         text-align: center;
         display: inline-block;
         font-size: $base-font-size;
         font-weight: 700;
         text-transform: uppercase;
-        color: $gray-dark;
-        padding: 0 rem(15px);
-        margin-bottom: rem(30px);
+        color: $gray;
+        padding: 0 0.9375rem;
+        margin-bottom: 1.875rem;
         span.link-item {
           display: block;
           height: 100%;
@@ -329,19 +326,19 @@
 /*** History page ***/
 #history {
   .orders {
-    margin: 0 rem(-16px);
+    margin: 0 -1rem;
     .order {
       a {
         h3 {
-          color: $gray-dark;
+          color: $gray;
         }
       }
-      padding: rem(12px) rem(16px);
+      padding: 0.75rem 1rem;
       border-bottom: 1px solid $gray-lighter;
       .label {
         display: inline-block;
-        margin: rem(4px) 0;
-        padding: rem(4px) rem(6px);
+        margin: 0.25rem 0;
+        padding: 0.25rem 0.375rem;
         color: white;
         border-radius: 3px;
       }
@@ -355,7 +352,7 @@
 /*** FOOTER ***/
 .page-footer {
   .account-link {
-    margin-right: rem(16px);
+    margin-right: 1rem;
     i {
       font-size: $base-font-size;
     }

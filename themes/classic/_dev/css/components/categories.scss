@@ -1,12 +1,12 @@
 #products {
-  color: $gray-dark;
+  color: $gray;
   .products-select {
-    @include display(flex);
-    @include align-items(baseline);
-    @include justify-content(space-between);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
   }
   .up {
-    margin-bottom: rem(16px);
+    margin-bottom: 1rem;
     .btn-secondary {
       color: $gray;
       text-transform: inherit;
@@ -17,8 +17,8 @@
   }
 }
 .block-category {
-  min-height: rem(220px);
-  margin-bottom: rem(25px);
+  min-height: 13.75rem;
+  margin-bottom: 1.563rem;
   #category-description {
     p,
     strong {
@@ -45,33 +45,34 @@
 }
 .products-selection {
   .sort-by-row {
-    @include display(flex);
+    display: flex;
     align-items: center;
   }
   .sort-by {
     white-space: normal;
     word-break: break-word;
-    margin-right: rem(-15px);
-    margin-left: rem(15px);
+    margin-right: -0.9375rem;
+    margin-left: 0.9375rem;
     text-align: right
   }
   .total-products {
-    padding-top: rem(10px);
+    padding-top: 0.625rem;
   }
   h1 {
-    padding-top: rem(10px);
+    padding-top: 0.625rem;
   }
 }
 .products-sort-order {
-  color: $gray-dark;
+  color: $gray;
   .select-title {
     display: inline-block;
-    margin-left: rem(6px);
     width: 100%;
     color: $gray-darker;
     background: white;
     padding: $small-space;
     cursor: pointer;
+    border: $input-btn-border-width solid $input-border-color;
+    @include box-shadow-light;
   }
   .select-list {
     display: block;
@@ -85,14 +86,16 @@
   }
   .dropdown-menu {
     left: auto;
-    width: rem(270px);
+    width: 16.88rem;
     background: $gray-lighter;
     border: none;
     border-radius: 0;
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    margin: 0;
   }
 }
 .facet-dropdown {
-  color: $gray-dark;
+  color: $gray;
   padding-left: 0;
   padding-right: 0;
   background: $gray-light;
@@ -144,9 +147,9 @@
 #search_filters_brands,
 #search_filters_suppliers {
   @include box-shadow;
-  margin-bottom: rem(25px);
+  margin-bottom: 1.563rem;
   background: white;
-  padding: rem(25px) rem(20px);
+  padding: 1.563rem 1.25rem;
   .facet {
     .collapse {
       display: block;
@@ -158,7 +161,7 @@
     .facet-label {
       margin-bottom: 0;
       a {
-        margin-top: rem(7px);
+        margin-top: 0.4375rem;
         color: $gray-darker;
         display: inline-block;
         font-size:$font-size-lg;
@@ -171,19 +174,20 @@
   .facet {
     padding-top: 0;
     .facet-label {
-      margin-bottom: rem(5px);
+      margin-bottom: 0.3125rem;
     }
   }
 }
 .pagination {
   width: 100%;
   > div:first-child{
-    line-height: rem(40px);
+    line-height: 2.5rem;
   }
   .page-list {
     background: white;
-    padding: rem(10px) rem(20px);
+    padding: 0.375rem;
     margin-bottom: 0;
+    @include box-shadow-light;
     li {
       display: inline;
     }
@@ -191,6 +195,9 @@
   a {
     color: black;
     font-weight: 600;
+    &:not(.previous):not(.next) {
+      letter-spacing: 0.125rem;
+    }
   }
   .previous {
     float: left;
@@ -204,6 +211,7 @@
   .current a {
     color: $brand-primary;
     text-decoration: none;
+    font-size: 1.25rem;
   }
 }
 .active_filters {
@@ -224,23 +232,23 @@
     margin-right: $small-space;
     margin-bottom: $small-space;
     background: white;
-    padding: rem(10px);
+    padding: 0.625rem;
     display: inline-block;
     font-size: $font-size-xs;
     .close {
       color: $gray-darker;
       font-size: $font-size-lg;
       opacity: 1;
-      margin-top: rem(3px);
-      margin-left: rem(5px);
+      margin-top: 0.1875rem;
+      margin-left: 0.3125rem;
     }
   }
 }
 .block-categories {
   @include box-shadow;
   background: white;
-  padding: rem(25px) rem(20px);
-  margin-bottom: rem(25px);
+  padding: 1.563rem 1.25rem;
+  margin-bottom: 1.563rem;
   .category-sub-menu {
     margin-top: $small-space;
     .category-sub-link{
@@ -254,17 +262,17 @@
     }
     li[data-depth="0"] > a {
       font-weight: 600;
-      border-bottom: $gray-light 2px solid;
+      border-bottom: rgba(0, 0, 0, 0.25) 1px solid;
       width: 100%;
       display: inline-block;
       margin: 0.3125rem 0 0;
-      padding-bottom: rem(3px);
+      padding-bottom: 0.1875rem;
     }
     li:not([data-depth="0"]):not([data-depth="1"]) {
-      padding-left: rem(5px);
+      padding-left: 0.3125rem;
       &::before {
         content: "-";
-        margin-right: rem(5px);
+        margin-right: 0.3125rem;
       }
     }
   }
@@ -324,7 +332,7 @@
 .products-selection {
   .filter-button {
     .btn-secondary {
-      padding: rem(12px) rem(8px) rem(11px);
+      padding: 0.75rem 0.5rem 0.6875rem;
     }
   }
 }
@@ -341,9 +349,9 @@
       #search_filter_controls {
         text-align: center;
         button {
-          margin: 0 rem(8px);
+          margin: 0 0.5rem;
         }
-        margin-bottom: rem(16px);
+        margin-bottom: 1rem;
       }
       #search_filters {
         margin-bottom: 0;
@@ -375,12 +383,12 @@
           }
           .h6 {
             margin-bottom: 0;
-            padding: rem(10px);
+            padding: 0.625rem;
             display: inline-block;
           }
           .navbar-toggler {
             display: inline-block;
-            padding: rem(10px) rem(10px) 0 0;
+            padding: 0.625rem 0.625rem 0 0;
           }
           .collapse {
             display: none;
@@ -397,7 +405,7 @@
             margin-bottom: 0;
             li {
               border-top: 1px solid $gray-lighter;
-              padding: rem(10px);
+              padding: 0.625rem;
             }
           }
         }
@@ -419,10 +427,10 @@
     h1 {
       padding-top: 0;
       text-align: center;
-      margin-bottom: rem(16px);
+      margin-bottom: 1rem;
     }
     .showing {
-      padding-top: rem(16px);
+      padding-top: 1rem;
     }
   }
   #prices-drop #content-wrapper,

@@ -12,6 +12,8 @@
 <header>
   <nav class="main-header">
 
+    <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
+
     {* TODO: BUTTON USED FOR THE MOBILE VERSION TO REACTIVATE *}
     {* TODO: TO REPLACE
     <button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
@@ -36,7 +38,7 @@
       <div class="component pull-right hidden-md-down">
         <div class="shop-state" id="maintenance-mode">
           <i class="material-icons">build</i>
-          <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">
+          <a class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true" title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}">
               {l s='Maintenance mode'}
           </a>
         </div>
@@ -60,7 +62,7 @@
           data-toggle="tooltip"
           data-placement="bottom"
           data-html="true"r
-          title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf=['<br />']}</p>">{l s='Maintenance mode'}</span>
+          title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />']}</p>">{l s='Maintenance mode'}</span>
         </span>
     {/if}
     *}

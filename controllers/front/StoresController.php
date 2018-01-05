@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -202,25 +202,25 @@ class StoresControllerCore extends FrontController
             unset($store['hours']);
             $store['business_hours'] = [
                 [
-                    'day' => $this->trans('Monday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Monday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[0],
                 ],[
-                    'day' => $this->trans('Tuesday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Tuesday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[1],
                 ],[
-                    'day' => $this->trans('Wednesday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Wednesday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[2],
                 ],[
-                    'day' => $this->trans('Thursday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Thursday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[3],
                 ],[
-                    'day' => $this->trans('Friday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Friday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[4],
                 ],[
-                    'day' => $this->trans('Saturday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Saturday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[5],
                 ],[
-                    'day' => $this->trans('Sunday', array(), 'Shop.Theme'),
+                    'day' => $this->trans('Sunday', array(), 'Shop.Theme.Global'),
                     'hours' => $temp[6],
                 ],
             ];

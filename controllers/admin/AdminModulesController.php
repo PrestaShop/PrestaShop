@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,11 +20,10 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
@@ -415,7 +414,7 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
         } else {
-            $archive = new \Archive_Tar($file);
+            $archive = new Archive_Tar($file);
             if ($archive->extract($tmp_folder)) {
                 $zip_folders = scandir($tmp_folder);
                 if ($archive->extract(_PS_MODULE_DIR_)) {
@@ -1396,10 +1395,36 @@ class AdminModulesControllerCore extends AdminController
     {
         parent::initModal();
 
+        $languages = Language::getLanguages(false);
+        $translateLinks = array();
+        
+        if (Tools::getIsset('configure')) {
+            $module = Module::getInstanceByName(Tools::getValue('configure'));
+            $isNewTranslateSystem = $module->isUsingNewTranslationSystem();
+            $link = Context::getContext()->link;
+            foreach ($languages as $lang) {
+                if ($isNewTranslateSystem) {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslationSf', true, array(
+                        'lang' => $lang['iso_code'],
+                        'type' => 'modules',
+                        'selected' => $module->name,
+                        'locale' => $lang['locale'],
+                    ));
+                } else {
+                    $translateLinks[$lang['iso_code']] = $link->getAdminLink('AdminTranslations', true, array(), array(
+                        'type' => 'modules',
+                        'module' => $module->name,
+                        'lang' => $lang['iso_code'],
+                    ));
+                }
+            }
+        }
+
         $this->context->smarty->assign(array(
             'trad_link' => 'index.php?tab=AdminTranslations&token='.Tools::getAdminTokenLite('AdminTranslations').'&type=modules&module='.Tools::getValue('configure').'&lang=',
-            'module_languages' => Language::getLanguages(false),
-            'module_name' => Tools::getValue('module_name'),
+            'module_languages' => $languages,
+            'module_name' => Tools::getValue('configure'),
+            'translateLinks' => $translateLinks,
         ));
 
         $modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -48,7 +48,7 @@ class TabCore extends ObjectModel
 
     /** @var int hide_host_mode */
     public $hide_host_mode = false;
-    
+
     /** @var string Icon font*/
     public $icon;
 
@@ -132,15 +132,6 @@ class TabCore extends ObjectModel
         if (!$context) {
             $context = Context::getContext();
         }
-        if (!$context->employee || !$context->employee->id_profile) {
-            return false;
-        }
-
-        /* Profile selection */
-        $profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM `'._DB_PREFIX_.'profile` WHERE `id_profile` != 1');
-        if (!$profiles || empty($profiles)) {
-            return true;
-        }
 
         /* Right management */
         $slug = 'ROLE_MOD_TAB_'.strtoupper(self::getClassNameById($idTab));
@@ -149,11 +140,14 @@ class TabCore extends ObjectModel
             Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'authorization_role` (`slug`) VALUES ("'.$slug.'_'.$action.'")');
         }
 
-        $access = new \Access;
+        $access = new Access();
 
         foreach (array('view', 'add', 'edit', 'delete') as $action) {
             $access->updateLgcAccess('1', $idTab, $action, true);
-            $access->updateLgcAccess($context->employee->id_profile, $idTab, $action, true);
+
+            if ($context->employee && $context->employee->id_profile) {
+                $access->updateLgcAccess($context->employee->id_profile, $idTab, $action, true);
+            }
         }
 
         return true;

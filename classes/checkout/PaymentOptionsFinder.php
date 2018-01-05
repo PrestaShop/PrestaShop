@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -72,9 +72,21 @@ class PaymentOptionsFinderCore extends HookFinder
         return $paymentOptions;
     }
 
-    public function present() //getPaymentOptionsForTemplate()
+    public function findFree()
+    {
+        $freeOption = new PaymentOption();
+        $freeOption->setModuleName('free_order')
+            ->setCallToActionText(Context::getContext()->getTranslator()->trans('Free order', array(), 'Admin.Orderscustomers.Feature'))
+            ->setAction(Context::getContext()->link->getPageLink('order-confirmation', null, null, 'free_order=1'));
+
+        return array('free_order' => array($freeOption));
+    }
+
+    public function present($free = false) //getPaymentOptionsForTemplate()
     {
         $id = 0;
+
+        $find = $free ? $this->findFree() : $this->find();
 
         return array_map(function (array $options) use (&$id) {
             return array_map(function (PaymentOption $option) use (&$id) {
@@ -92,6 +104,6 @@ class PaymentOptionsFinderCore extends HookFinder
 
                 return $formattedOption;
             }, $options);
-        }, $this->find());
+        }, $find);
     }
 }

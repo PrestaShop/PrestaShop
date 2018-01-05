@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,10 +20,9 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
 
 namespace PrestaShopBundle\Controller\Admin;
 
@@ -39,6 +38,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\Constraints as Assert;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use Module;
+use Profile;
+use stdClass;
+use DateTime;
 
 class ModuleController extends FrameworkBundleAdminController
 {
@@ -67,23 +70,23 @@ class ModuleController extends FrameworkBundleAdminController
 
         $translator = $this->container->get('translator');
         $errorMessage = $translator->trans(
-                'You do not have permission to add this.',
-                array(),
-                'Admin.Notifications.Error'
-            );
+            'You do not have permission to add this.',
+            array(),
+            'Admin.Notifications.Error'
+        );
 
         return $this->render('PrestaShopBundle:Admin/Module:catalog.html.twig', array(
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Module selection', array(), 'Admin.Navigation.Menu'),
-                'requireAddonsSearch' => true,
-                'requireBulkActions' => false,
-                'showContentHeader' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => false,
-                'level' => $this->authorizationLevel($this::controller_name),
-                'errorMessage' => $errorMessage,
-            ));
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $translator->trans('Module selection', array(), 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'requireFilterStatus' => false,
+            'level' => $this->authorizationLevel($this::controller_name),
+            'errorMessage' => $errorMessage,
+        ));
     }
 
     /**
@@ -117,7 +120,7 @@ class ModuleController extends FrameworkBundleAdminController
 
             $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
-            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu, $modules);
+            $responseArray['domElements'][] = $this->constructJsonCatalogCategoriesMenuResponse($categoriesMenu);
             $responseArray['domElements'][] = $this->constructJsonCatalogBodyResponse($modulesProvider, $modules);
             $responseArray['status'] = true;
         } catch (Exception $e) {
@@ -205,7 +208,7 @@ class ModuleController extends FrameworkBundleAdminController
             ->removeStatus(AddonListFilterStatus::UNINSTALLED);
         $installedProducts = $moduleRepository->getFilteredList($filters);
 
-        $modules = new \stdClass();
+        $modules = new stdClass();
         foreach (array('native_modules', 'theme_bundle', 'modules') as $subpart) {
             $modules->{$subpart} = array();
         }
@@ -245,18 +248,18 @@ class ModuleController extends FrameworkBundleAdminController
         );
 
         return $this->render('PrestaShopBundle:Admin/Module:manage.html.twig', array(
-                'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
-                'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
-                'modules' => $modules,
-                'topMenuData' => $this->getTopMenuData($categoriesMenu),
-                'requireAddonsSearch' => false,
-                'requireBulkActions' => true,
-                'enableSidebar' => true,
-                'help_link' => $this->generateSidebarLink('AdminModules'),
-                'requireFilterStatus' => true,
-                'level' => $this->authorizationLevel($this::controller_name),
-                'errorMessage' => $errorMessage,
-            ));
+            'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
+            'layoutTitle' => $translator->trans('Manage installed modules', array(), 'Admin.Modules.Feature'),
+            'modules' => $modules,
+            'topMenuData' => $this->getTopMenuData($categoriesMenu),
+            'requireAddonsSearch' => false,
+            'requireBulkActions' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink('AdminModules'),
+            'requireFilterStatus' => true,
+            'level' => $this->authorizationLevel($this::controller_name),
+            'errorMessage' => $errorMessage,
+        ));
     }
 
     public function moduleAction(Request $request)
@@ -304,8 +307,8 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%module%' => $module,
                             '%action%' => $action, ),
-                        'Admin.Notifications.Error'
-                        );
+                        'Admin.Modules.Notification'
+                    );
                 } elseif ($response[$module]['status'] === false) {
                     $error = $moduleManager->getError($module);
                     $response[$module]['msg'] = $translator->trans(
@@ -314,7 +317,7 @@ class ModuleController extends FrameworkBundleAdminController
                             '%action%' => str_replace('_', ' ', $action),
                             '%module%' => $module,
                             '%error_details%' => $error, ),
-                        'Admin.Notifications.Error'
+                        'Admin.Modules.Notification'
                     );
                 } else {
                     $response[$module]['msg'] = $translator->trans(
@@ -322,7 +325,7 @@ class ModuleController extends FrameworkBundleAdminController
                         array(
                             '%action%' => ucfirst(str_replace('_', ' ', $action)),
                             '%module%' => $module, ),
-                        'Admin.Notifications.Success'
+                        'Admin.Modules.Notification'
                     );
                 }
             } catch (Exception $e) {
@@ -330,10 +333,10 @@ class ModuleController extends FrameworkBundleAdminController
                 $response[$module]['msg'] = $translator->trans(
                     'Exception thrown by module %module% on %action%. %error_details%',
                     array(
-                            '%action%' => str_replace('_', ' ', $action),
-                            '%module%' => $module,
-                            '%error_details%' => $e->getMessage(), ),
-                    'Admin.Notifications.Error'
+                        '%action%' => str_replace('_', ' ', $action),
+                        '%module%' => $module,
+                        '%error_details%' => $e->getMessage(), ),
+                    'Admin.Modules.Notification'
                 );
 
                 $logger = $this->get('logger');
@@ -473,6 +476,7 @@ class ModuleController extends FrameworkBundleAdminController
         $twigParams = array(
             'currentIndex' => '',
             'modulesList' => $moduleListSorted,
+            'level' => $this->authorizationLevel($this::controller_name),
         );
 
         if ($request->request->has('admin_list_from_source')) {
@@ -501,10 +505,10 @@ class ModuleController extends FrameworkBundleAdminController
             if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList)) {
                 $perm = true;
                 if ($module->get('id')) {
-                    $perm &= \Module::getPermissionStatic($module->get('id'), 'configure');
+                    $perm &= Module::getPermissionStatic($module->get('id'), 'configure', $this->getContext()->employee);
                 } else {
                     $id_admin_module = $tabRepository->findOneIdByClassName('AdminModules');
-                    $access = \Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
+                    $access = Profile::getProfileAccess($this->getContext()->employee->id_profile, $id_admin_module);
                     if (!$access['edit']) {
                         $perm &= false;
                     }
@@ -564,7 +568,8 @@ class ModuleController extends FrameworkBundleAdminController
                         'msg' => $translator->trans(
                             'You do not have permission to add this.',
                             array(),
-                            'Admin.Notifications.Error'),
+                            'Admin.Notifications.Error'
+                        ),
                     ),
                     200,
                     array('Content-Type' => 'application/json')
@@ -606,12 +611,14 @@ class ModuleController extends FrameworkBundleAdminController
                 $installation_response['msg'] = $translator->trans(
                     '%module% did not return a valid response on installation.',
                     array('%module%' => $module_name),
-                    'Admin.Modules.Notification');
+                    'Admin.Modules.Notification'
+                );
             } elseif ($installation_response['status'] === true) {
                 $installation_response['msg'] = $translator->trans(
                     'Installation of module %module% was successful.',
                     array('%module%' => $module_name),
-                    'Admin.Modules.Notification');
+                    'Admin.Modules.Notification'
+                );
                 $installation_response['is_configurable'] = (bool) $this->get('prestashop.core.admin.module.repository')->getModule($module_name)->attributes->get('is_configurable');
             } else {
                 $error = $moduleManager->getError($module_name);
@@ -619,8 +626,10 @@ class ModuleController extends FrameworkBundleAdminController
                     'Installation of module %module% failed. %error%',
                     array(
                         '%module%' => $module_name,
-                        '%error%' => $error, ),
-                    'Admin.Modules.Notification');
+                        '%error%' => $error,
+                    ),
+                    'Admin.Modules.Notification'
+                );
             }
 
             return new JsonResponse(
@@ -672,7 +681,7 @@ class ModuleController extends FrameworkBundleAdminController
 
         $moduleHistory->setIdEmployee($currentEmployeeID);
         $moduleHistory->setIdModule($moduleAccessedID);
-        $moduleHistory->setDateUpd(new \DateTime(date('Y-m-d H:i:s')));
+        $moduleHistory->setDateUpd(new DateTime(date('Y-m-d H:i:s')));
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($moduleHistory);
@@ -695,12 +704,21 @@ class ModuleController extends FrameworkBundleAdminController
 
         // toolbarButtons
         $toolbarButtons = array();
-        $toolbarButtons['add_module'] = array(
-            'href' => '#',
-            'desc' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
-            'icon' => 'cloud_upload',
-            'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
-        );
+
+        if (!in_array(
+            $this->authorizationLevel($this::controller_name),
+            array(
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+            )
+        )) {
+            $toolbarButtons['add_module'] = array(
+                'href' => '#',
+                'desc' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
+                'icon' => 'cloud_upload',
+                'help' => $translator->trans('Upload a module', array(), 'Admin.Modules.Feature'),
+            );
+        }
 
         return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
     }

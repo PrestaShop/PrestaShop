@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use Module as LegacyModule;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -100,6 +101,7 @@ class Module implements ModuleInterface
         'avgRate' => 0,
         'nbRates' => 0,
         'fullDescription' => '',
+        'confirmUninstall' => '',
     );
 
     /**
@@ -144,9 +146,17 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        $version = is_null($this->attributes->get('version')) && $this->disk->get('is_valid') ?
-            $this->disk->get('version') :
-            $this->attributes->get('version');
+        if ($this->database->get('installed')) {
+            $version = $this->database->get('version');
+        } elseif (is_null($this->attributes->get('version')) && $this->disk->get('is_valid')) {
+            $version = $this->disk->get('version');
+        } else {
+            $version = $this->attributes->get('version');
+        }
+
+        if (!$this->attributes->has('version_available')) {
+            $this->attributes->set('version_available', $this->disk->get('version'));
+        }
 
         $img = $this->attributes->get('img');
         if (empty($img)) {
@@ -188,7 +198,7 @@ class Module implements ModuleInterface
                 // ToDo: Send to log when PR merged
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof \ModuleCore));
+        $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
 
         return $this->disk->get('is_valid');
     }
@@ -201,7 +211,7 @@ class Module implements ModuleInterface
 
         // If not modified, code used in installer is executed:
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
-        \Module::updateTranslationsAfterInstall(false);
+        LegacyModule::updateTranslationsAfterInstall(false);
 
         return $this->instance->install();
     }
@@ -287,7 +297,7 @@ class Module implements ModuleInterface
     protected function instanciateLegacyModule()
     {
         require_once _PS_MODULE_DIR_.DIRECTORY_SEPARATOR.$this->attributes->get('name').DIRECTORY_SEPARATOR.$this->attributes->get('name').'.php';
-        $this->instance = \Module::getInstanceByName($this->attributes->get('name'));
+        $this->instance = LegacyModule::getInstanceByName($this->attributes->get('name'));
     }
 
     public function get($attribute)
@@ -326,10 +336,17 @@ class Module implements ModuleInterface
 
     public function canBeUpgraded()
     {
-        return
-            $this->database->get('installed') == 1
-            && $this->database->get('version')
-            !== 0 && version_compare($this->database->get('version'), $this->attributes->get('version'), '<')
-        ;
+        if ($this->database->get('installed') == 0) {
+            return false;
+        }
+
+        // Potential update from API
+        if ($this->attributes->get('version_available') !== 0
+            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')) {
+            return true;
+        }
+
+        // Potential update from disk
+        return version_compare($this->database->get('version'), $this->disk->get('version'), '<');
     }
 }

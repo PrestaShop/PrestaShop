@@ -115,7 +115,7 @@ CREATE TABLE `PREFIX_carrier_lang` (
   `id_carrier` int(10) unsigned NOT NULL,
   `id_shop` int(11) unsigned NOT NULL DEFAULT '1',
   `id_lang` int(10) unsigned NOT NULL,
-  `delay` varchar(128) DEFAULT NULL,
+  `delay` varchar(512) DEFAULT NULL,
   PRIMARY KEY (`id_lang`,`id_shop`, `id_carrier`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
@@ -1166,7 +1166,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `group_reduction` DECIMAL(10, 2) NOT NULL DEFAULT '0.000000',
   `product_quantity_discount` decimal(20,6) NOT NULL DEFAULT '0.000000',
   `product_ean13` varchar(13) DEFAULT NULL,
-  `product_isbn` varchar(13) DEFAULT NULL,
+  `product_isbn` varchar(32) DEFAULT NULL,
   `product_upc` varchar(12) DEFAULT NULL,
   `product_reference` varchar(32) DEFAULT NULL,
   `product_supplier_reference` varchar(32) DEFAULT NULL,
@@ -1395,7 +1395,7 @@ CREATE TABLE `PREFIX_product` (
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `ean13` varchar(13) DEFAULT NULL,
-  `isbn` varchar(13) DEFAULT NULL,
+  `isbn` varchar(32) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
   `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
   `quantity` int(10) NOT NULL DEFAULT '0',
@@ -1490,7 +1490,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `supplier_reference` varchar(32) DEFAULT NULL,
   `location` varchar(64) DEFAULT NULL,
   `ean13` varchar(13) DEFAULT NULL,
-  `isbn` varchar(13) DEFAULT NULL,
+  `isbn` varchar(32) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
   `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
   `price` decimal(20,6) NOT NULL DEFAULT '0.000000',
@@ -1693,7 +1693,7 @@ CREATE TABLE `PREFIX_search_index` (
   `id_word` int(11) unsigned NOT NULL,
   `weight` smallint(4) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_word`, `id_product`),
-  KEY `id_product` (`id_product`)
+  KEY `id_product` (`id_product`,`weight`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_search_word` (
@@ -1841,7 +1841,7 @@ CREATE TABLE `PREFIX_store` (
   `postcode` varchar(12) NOT NULL,
   `latitude` decimal(13,8) DEFAULT NULL,
   `longitude` decimal(13,8) DEFAULT NULL,
-  `hours` varchar(254) DEFAULT NULL,
+  `hours` text,
   `phone` varchar(16) DEFAULT NULL,
   `fax` varchar(16) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
@@ -2083,27 +2083,6 @@ PRIMARY KEY (`id_webservice_account` , `id_shop`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
-CREATE TABLE `PREFIX_stock_mvt` (
-  `id_stock_mvt` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `id_stock` INT(11) UNSIGNED NOT NULL,
-  `id_order` INT(11) UNSIGNED DEFAULT NULL,
-  `id_supply_order` INT(11) UNSIGNED DEFAULT NULL,
-  `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL,
-  `id_employee` INT(11) UNSIGNED NOT NULL,
-  `employee_lastname` varchar(32) DEFAULT '',
-  `employee_firstname` varchar(32) DEFAULT '',
-  `physical_quantity` INT(11) UNSIGNED NOT NULL,
-  `date_add` DATETIME NOT NULL,
-  `sign` tinyint(1) NOT NULL DEFAULT 1,
-  `price_te` DECIMAL(20,6) DEFAULT '0.000000',
-  `last_wa` DECIMAL(20,6) DEFAULT '0.000000',
-  `current_wa` DECIMAL(20,6) DEFAULT '0.000000',
-  `referer` bigint UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`id_stock_mvt`),
-  KEY `id_stock` (`id_stock`),
-  KEY `id_stock_mvt_reason` (`id_stock_mvt_reason`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
-
 CREATE TABLE `PREFIX_stock_mvt_reason` (
   `id_stock_mvt_reason` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `sign` tinyint(1) NOT NULL DEFAULT 1,
@@ -2127,7 +2106,7 @@ CREATE TABLE `PREFIX_stock` (
 `id_product_attribute` INT(11) UNSIGNED NOT NULL,
 `reference`  VARCHAR(32) NOT NULL,
 `ean13`  VARCHAR(13) DEFAULT NULL,
-`isbn`  VARCHAR(13) DEFAULT NULL,
+`isbn`  VARCHAR(32) DEFAULT NULL,
 `upc`  VARCHAR(12) DEFAULT NULL,
 `physical_quantity` INT(11) UNSIGNED NOT NULL,
 `usable_quantity` INT(11) UNSIGNED NOT NULL,
@@ -2183,6 +2162,8 @@ CREATE TABLE `PREFIX_stock_available` (
 `id_shop` INT(11) UNSIGNED NOT NULL,
 `id_shop_group` INT(11) UNSIGNED NOT NULL,
 `quantity` INT(10) NOT NULL DEFAULT '0',
+`physical_quantity` INT(11) NOT NULL DEFAULT '0',
+`reserved_quantity` INT(11) NOT NULL DEFAULT '0',
 `depends_on_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
 `out_of_stock` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_stock_available`),
@@ -2229,7 +2210,7 @@ CREATE TABLE `PREFIX_supply_order_detail` (
 `supplier_reference`  VARCHAR(32) NOT NULL,
 `name`  varchar(128) NOT NULL,
 `ean13`  VARCHAR(13) DEFAULT NULL,
-`isbn`  VARCHAR(13) DEFAULT NULL,
+`isbn`  VARCHAR(32) DEFAULT NULL,
 `upc`  VARCHAR(12) DEFAULT NULL,
 `exchange_rate` DECIMAL(20,6) DEFAULT '0.000000',
 `unit_price_te` DECIMAL(20,6) DEFAULT '0.000000',

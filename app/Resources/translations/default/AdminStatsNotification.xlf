@@ -10,4 +10,20 @@ File: controllers/admin/AdminStatsTabController.php:239</note>
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/stats/stats.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8290fb626ffacf21450997f25967efeb">
+        <source>Module not found</source>
+        <target>Module not found</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/stats/stats.tpl:31</note>
+      </trans-unit>
+      <trans-unit id="9f8ba2077f4e7338b68934afe22b4ad9">
+        <source>Please select a module from the left column.</source>
+        <target>Please select a module from the left column.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/stats/stats.tpl:34</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

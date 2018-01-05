@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -34,6 +34,8 @@ class BoOrder extends PaymentModule
         $this->displayName = $this->trans('Back office order', array(), 'Admin.Orderscustomers.Feature');
     }
 }
+
+use PrestaShop\PrestaShop\Adapter\StockManager;
 
 /**
  * @property Order $object
@@ -419,7 +421,13 @@ class AdminOrdersControllerCore extends AdminController
                                         }
                                     }
                                 } else {
-                                    $this->errors[] = $this->trans('An error occurred while changing order status #%d, or we were unable to send an email to the customer.', array('#%d' => $id_order), 'Admin.Orderscustomers.Notification');
+                                    $this->errors[] = $this->trans(
+                                        'An error occurred while changing the status for order #%d, or we were unable to send an email to the customer.',
+                                        array(
+                                            '#%d' => $id_order,
+                                        ),
+                                        'Admin.Orderscustomers.Notification'
+                                    );
                                 }
                             }
                         }
@@ -1783,7 +1791,7 @@ class AdminOrdersControllerCore extends AdminController
             $product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
             $product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
             $product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
-            $product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
+            $product['amount_refund'] = $order->getTaxCalculationMethod() ? Tools::displayPrice($resume['amount_tax_excl'], $currency) : Tools::displayPrice($resume['amount_tax_incl'], $currency);
             $product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
             $product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
 
@@ -2910,11 +2918,25 @@ class AdminOrdersControllerCore extends AdminController
             StockAvailable::synchronize($id_product);
         } elseif ($order_detail->id_warehouse == 0) {
             StockAvailable::updateQuantity(
-                    $order_detail->product_id,
-                    $order_detail->product_attribute_id,
-                    $quantity_to_reinject,
-                    $order_detail->id_shop
-                );
+                $order_detail->product_id,
+                $order_detail->product_attribute_id,
+                $quantity_to_reinject,
+                $order_detail->id_shop,
+                true,
+                array(
+                    'id_order' => $order_detail->id_order,
+                    'id_stock_mvt_reason' => Configuration::get('PS_STOCK_CUSTOMER_RETURN_REASON')
+                )
+            );
+
+            // sync all stock
+            (new StockManager())->updatePhysicalProductQuantity(
+                (int)$order_detail->id_shop,
+                (int)Configuration::get('PS_OS_ERROR'),
+                (int)Configuration::get('PS_OS_CANCELED'),
+                null,
+                (int)$order_detail->id_order
+            );
 
             if ($delete) {
                 $order_detail->delete();

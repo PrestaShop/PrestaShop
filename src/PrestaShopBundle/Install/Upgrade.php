@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -76,6 +76,10 @@ namespace PrestaShopBundle\Install {
     use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
     use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
+    use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+    use PrestaShop\PrestaShop\Core\Cldr\Update;
+    use FileLogger;
+    use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 
     class Upgrade
     {
@@ -167,7 +171,7 @@ namespace PrestaShopBundle\Install {
 
         public function __construct($cacheDir, $installDir)
         {
-            $this->logger = new \FileLogger();
+            $this->logger = new FileLogger();
             $this->logger->setFilename($cacheDir.@date('Ymd').'_upgrade.log');
             $this->installDir = $installDir;
             $this->db = Db::getInstance();
@@ -201,7 +205,9 @@ namespace PrestaShopBundle\Install {
         private function defineConst()
         {
             // retrocompatibility (is present in some upgrade scripts)
-            define('INSTALL_PATH', $this->installDir);
+            if (!defined('INSTALL_PATH')) {
+                define('INSTALL_PATH', $this->installDir);
+            }
             require_once(INSTALL_PATH . 'install_version.php');
             // needed for upgrade before 1.5
             if (!defined('__PS_BASE_URI__')) {
@@ -313,7 +319,11 @@ namespace PrestaShopBundle\Install {
             require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
             Context::getContext()->smarty = $smarty;
-            Language::loadLanguages();
+            if(version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
+                Language::loadLanguagesLegacy();
+            } else {
+                Language::loadLanguages();
+            }
 
             $this->translator = Context::getContext()->getTranslator();
         }
@@ -345,7 +355,7 @@ namespace PrestaShopBundle\Install {
             $context = Context::getContext();
             $context->employee = new Employee((int) $idEmployee);
 
-            return (new \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, Db::getInstance()))->build();
+            return (new ThemeManagerBuilder($context, Db::getInstance()))->build();
         }
 
         private function checkVersion()
@@ -377,7 +387,7 @@ namespace PrestaShopBundle\Install {
 
                 if ($handle = opendir(_PS_INSTALLER_SQL_UPGRADE_DIR_)) {
                     while (false !== ($file = readdir($handle))) {
-                        if ($file != '.' and $file != '..') {
+                        if (!in_array($file, array('.', '..', 'index.php'))) {
                             $upgradeFiles[] = str_replace(".sql", "", $file);
                         }
                     }
@@ -423,7 +433,7 @@ namespace PrestaShopBundle\Install {
 
         private function upgradeDoctrineSchema()
         {
-            $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+            $schemaUpgrade = new UpgradeDatabase();
             $schemaUpgrade->addDoctrineSchemaUpdate();
             $output = $schemaUpgrade->execute();
             if (0 !== $output['prestashop:schema:update-without-foreign']['exitCode']) {
@@ -751,9 +761,13 @@ namespace PrestaShopBundle\Install {
                         Language::installEmailsLanguagePack($lang_pack, $errorsLanguage);
 
                         if (empty($errorsLanguage)) {
-                            Language::loadLanguages();
+                            if(version_compare(_PS_VERSION_, '1.5.0.0', '<=')) {
+                                Language::loadLanguagesLegacy();
+                            } else {
+                                Language::loadLanguages();
+                            }
 
-                            $cldrUpdate = new \PrestaShop\PrestaShop\Core\Cldr\Update(_PS_TRANSLATIONS_DIR_);
+                            $cldrUpdate = new Update(_PS_TRANSLATIONS_DIR_);
                             $cldrUpdate->fetchLocale(Language::getLocaleByIso($isoCode));
                         } else {
                             $this->logError('Error updating translations', 44);
@@ -792,7 +806,7 @@ namespace PrestaShopBundle\Install {
 
         public function run()
         {
-            \Tools::clearAllCache();
+            Tools::clearAllCache();
 
             $this->defineConst();
             $this->initContext();
@@ -830,7 +844,7 @@ namespace PrestaShopBundle\Install {
 
         public function doUpgradeDb()
         {
-            \Tools::clearAllCache();
+            Tools::clearAllCache();
 
             $this->defineConst();
             $this->initContext();
@@ -862,7 +876,7 @@ namespace PrestaShopBundle\Install {
 
             $this->next = 'EnableModules';
             $this->nextDesc = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
-            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled', array(), 'Install');
+            $this->nextQuickInfo[] = $this->getTranslator()->trans('Modules successfully disabled.', array(), 'Install');
             $this->nextQuickInfo[] = $this->getTranslator()->trans('Enabling modules now...', array(), 'Install');
         }
 
@@ -1174,13 +1188,13 @@ namespace PrestaShopBundle\Install {
                             'database_password' => _LEGACY_DB_PASSWD_,
                             'database_name' => _LEGACY_DB_NAME_,
                             'database_prefix' => _LEGACY_DB_PREFIX_,
-                            'database_engine' => _LEGACY_MYSQL_ENGINE_,
+                            'database_engine' => defined(_LEGACY_MYSQL_ENGINE_) ? _LEGACY_MYSQL_ENGINE_ : 'InnoDB',
                             'cookie_key' => _LEGACY_COOKIE_KEY_,
                             'cookie_iv' => _LEGACY_COOKIE_IV_,
                             'new_cookie_key' => _LEGACY_NEW_COOKIE_KEY_,
-                            'ps_caching' => _LEGACY_PS_CACHING_SYSTEM_,
-                            'ps_cache_enable' => _LEGACY_PS_CACHE_ENABLED_,
-                            'ps_creation_date' => _LEGACY_PS_CREATION_DATE_,
+                            'ps_caching' => defined(_LEGACY_PS_CACHING_SYSTEM_) ? _LEGACY_PS_CACHING_SYSTEM_ : 'CacheMemcache',
+                            'ps_cache_enable' => defined(_LEGACY_PS_CACHE_ENABLED_) ? _LEGACY_PS_CACHE_ENABLED_ : false,
+                            'ps_creation_date' => defined(_LEGACY_PS_CREATION_DATE_) ? _LEGACY_PS_CREATION_DATE_ : date('Y-m-d H:i:s'),
                             'secret' => $secret,
                             'mailer_transport' => 'smtp',
                             'mailer_host' => '127.0.0.1',

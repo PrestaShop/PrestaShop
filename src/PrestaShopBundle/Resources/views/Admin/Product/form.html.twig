@@ -6,7 +6,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -19,7 +19,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
@@ -148,7 +148,7 @@
                       <div id="product-images-dropzone" class="panel dropzone ui-sortable col-md-12"
                            url-upload="{{ path('admin_product_image_upload', {'idProduct': id_product}) }}"
                            url-position="{{ path('admin_product_image_positions') }}"
-                           data-max-size="{{ 'PS_ATTACHMENT_MAXIMUM_SIZE'|configuration }}"
+                           data-max-size="{{ 'PS_LIMIT_UPLOAD_IMAGE_VALUE'|configuration }}"
                       >
                         <div id="product-images-dropzone-error" class="text-danger"></div>
                         <div class="dz-default dz-message openfilemanager">
@@ -212,6 +212,8 @@
                       </div>
                     </div>
 
+                    {{ renderhook('displayAdminProductsMainStepLeftColumnMiddle', { 'id_product': id_product }) }}
+
                     <div id="features" class="m-b-1 m-t-1">
                       <div id="features-content" class="content {{ form.step1.features|length == 0 ? 'hide':'' }}">
                         <h2>{{ 'Features'|trans({}, 'Admin.Catalog.Feature') }}</h2>
@@ -241,6 +243,8 @@
                     <div id="related-product" class="m-b-1">
                       {{ include('PrestaShopBundle:Admin/Product/Include:form_related_products.html.twig', { 'form':form.step1.related_products }) }}
                     </div>
+
+                    {{ renderhook('displayAdminProductsMainStepLeftColumnBottom', { 'id_product': id_product }) }}
 
                   </div>
 
@@ -354,6 +358,9 @@
                           <div class="form-group">
                             {{ include('PrestaShopBundle:Admin/Product/Include:form-categories.html.twig', { 'form': form.step1, 'productId': id_product }) }}
                           </div>
+
+                          {{ renderhook('displayAdminProductsMainStepRightColumnBottom', { 'id_product': id_product }) }}
+
                         </div>
                       </div>
                   </div>
@@ -496,6 +503,8 @@
                       </div>
                     {% endif %}
                     {{ include('PrestaShopBundle:Admin/Product/Include:form_combinations.html.twig', {'form': form.step3, 'form_combination_bulk': formCombinations}) }}
+
+                    {{ renderhook('displayAdminProductsQuantitiesStepBottom', { 'id_product': id_product }) }}
 
                   </div>
                 </div>
@@ -708,6 +717,8 @@
                     </div>
                   </div>
 
+                  {{ renderhook('displayAdminProductsPriceStepBottom', { 'id_product': id_product }) }}
+
                 </div>
               </div>
             </div>
@@ -737,6 +748,8 @@
                 <div class="row">
 
                   <div class="col-md-12">
+
+                    {{ renderhook('displayAdminProductsOptionsStepTop', { 'id_product': id_product }) }}
 
                     <div class="row">
                       <div class="col-md-12">
@@ -783,7 +796,7 @@
                         <div class="alert alert-info alert-down" role="alert">
                           <p class="alert-down-text">
                             {{ 'Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.'|trans({}, 'Admin.Catalog.Help')|raw }}<br>
-                            {{ 'You can manage tag aliases in the [1]Search section[/1].'|trans({}, 'Admin.Catalog.Help')|
+                            {{ 'You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.'|trans({}, 'Admin.Catalog.Help')|
                               replace({
                                 '[1]' : '<a href="'~ getAdminLink("AdminSearchConf") ~'" target="_blank">',
                                 '[/1]' : '</a>'
@@ -915,6 +928,8 @@
                         {{ include('PrestaShopBundle:Admin:Product/Include/form-supplier-combination.html.twig', { 'suppliers': form.step6.suppliers.vars.value, 'form': form.step6 }) }}
                       </div>
                     </div>
+
+                    {{ renderhook('displayAdminProductsOptionsStepBottom', { 'id_product': id_product }) }}
 
                   </div>
                 </div>
@@ -1052,7 +1067,7 @@
         <h2 class="for-switch online-title" {% if not form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
             title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Online'|trans({}, 'Admin.Global') }}</h2>
         <h2 class="for-switch offline-title" {% if form.step1.vars.value.active %}style="display:none;"{% endif %} data-toggle="tooltip"
-            title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+0'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
+            title="{{ 'Enable or disable the product on your shop: ALT+SHIFT+O'|trans({}, 'Admin.Catalog.Help') }}">{{ 'Offline'|trans({}, 'Admin.Global') }}</h2>
         <input
           id="form_step1_active"
           data-toggle="switch"

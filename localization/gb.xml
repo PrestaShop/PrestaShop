@@ -4,7 +4,7 @@
     <currency name="Pound" iso_code="GBP" iso_code_num="826" sign="£" blank="1" conversion_rate="0.8633100" format="1" decimals="1"/>
   </currencies>
   <languages>
-    <language iso_code="en"/>
+    <language iso_code="gb"/>
   </languages>
   <taxes>
     <tax id="1" name="VAT UK 20%" rate="20.0" eu-tax-group="virtual"/>

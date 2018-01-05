@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -808,11 +808,30 @@ class LanguageCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'lang_shop` ls ON (l.id_lang = ls.id_lang)';
 
         $result = Db::getInstance()->executeS($sql);
+
         foreach ($result as $row) {
-            if (!isset(self::$_LANGUAGES[(int) $row['id_lang']])) {
-                self::$_LANGUAGES[(int) $row['id_lang']] = $row;
+            $idLang = (int) $row['id_lang'];
+
+            if (!isset(self::$_LANGUAGES[$idLang])) {
+                self::$_LANGUAGES[$idLang] = $row;
             }
-            self::$_LANGUAGES[(int) $row['id_lang']]['shops'][(int) $row['id_shop']] = true;
+            self::$_LANGUAGES[$idLang]['shops'][(int) $row['id_shop']] = true;
+        }
+    }
+
+    public static function loadLanguagesLegacy()
+    {
+        self::$_LANGUAGES = array();
+
+        $result = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'lang`');
+
+        foreach ($result as $row) {
+            $idLang = (int) $row['id_lang'];
+
+            if (!isset(self::$_LANGUAGES[$idLang])) {
+                self::$_LANGUAGES[$idLang] = $row;
+            }
+            self::$_LANGUAGES[$idLang]['shops'][1] = true;
         }
     }
 
@@ -1129,7 +1148,7 @@ class LanguageCore extends ObjectModel
                 }
             }
 
-            $gz = new \Archive_Tar($filegz, true);
+            $gz = new Archive_Tar($filegz, true);
             if (!$gz) {
                 continue;
             }

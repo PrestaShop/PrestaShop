@@ -1,0 +1,10 @@
+php:
+    - file: "php/MyComplexModuleConfiguration.php"
+      # Question: should we make a class to extend or do we ask for a function to call ?
+      params:
+        - myParam1: 1
+        - oneArrayParam:
+            - "value1"
+            - "value2"
+            - withSpecificKey: "value3"
+    - "php/MyComplexModuleConfiguration.php"

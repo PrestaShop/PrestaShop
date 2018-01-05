@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 namespace PrestaShopBundle\Form\Admin\Product;
@@ -70,25 +70,39 @@ class ProductSeo extends CommonAbstractType
         $builder->add('meta_title', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
-                    'counter' => 70],
+                'attr' => [
+                    'placeholder' => $this->translator->trans('To have a different title from the product name, enter it here.', [], 'Admin.Catalog.Help'),
+                    'counter' => 70,
+                    'counter_type' => 'recommended',
+                ],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta title', [], 'Admin.Catalog.Feature'),
+            'label_attr' => [
+                'popover' => $this->translator->trans('Public title for the product\'s page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.', [], 'Admin.Catalog.Help'),
+                'popover_placement' => 'right',
+            ],
             'required' => false
         ))
         ->add('meta_description', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
             'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
             'options' => [
-                'attr' => ['placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
-                'counter' => 160],
+                'attr' => [
+                    'placeholder' => $this->translator->trans('To have a different description than your product summary in search results pages, write it here.', [], 'Admin.Catalog.Help'),
+                    'counter' => 160,
+                    'counter_type' => 'recommended',
+                ],
                 'required' => false
             ],
             'locales' => $this->locales,
             'hideTabs' => true,
             'label' => $this->translator->trans('Meta description', [], 'Admin.Catalog.Feature'),
+            'label_attr' => [
+                'popover' => $this->translator->trans('This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)', [], 'Admin.Catalog.Help'),
+                'popover_placement' => 'right',
+            ],
             'required' => false
         ))
         ->add('link_rewrite', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(

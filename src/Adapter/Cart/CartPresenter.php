@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -295,12 +295,13 @@ class CartPresenter implements PresenterInterface
         $total_excluding_tax = $cart->getOrderTotal(false);
         $total_including_tax = $cart->getOrderTotal(true);
         $total_discount = $cart->getDiscountSubtotalWithoutGifts();
+        $totalCartAmount = $cart->getOrderTotal($this->includeTaxes(), Cart::ONLY_PRODUCTS);
 
         $subtotals['products'] = array(
             'type' => 'products',
             'label' => $this->translator->trans('Subtotal', array(), 'Shop.Theme.Checkout'),
-            'amount' => $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS),
-            'value' => $this->priceFormatter->format(($cart->getOrderTotal(true, Cart::ONLY_PRODUCTS))),
+            'amount' => $totalCartAmount,
+            'value' => $this->priceFormatter->format($totalCartAmount),
         );
 
         if ($total_discount) {
@@ -365,6 +366,18 @@ class CartPresenter implements PresenterInterface
                     $this->includeTaxes() ? $total_including_tax : $total_excluding_tax
                 ),
             ),
+            'total_including_tax' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax incl.)', array(), 'Shop.Theme.Checkout'),
+                'amount' => $total_including_tax,
+                'value' => $this->priceFormatter->format($total_including_tax),
+            ),
+            'total_excluding_tax' => array(
+                'type' => 'total',
+                'label' => $this->translator->trans('Total (tax excl.)', array(), 'Shop.Theme.Checkout'),
+                'amount' => $total_excluding_tax,
+                'value' => $this->priceFormatter->format($total_excluding_tax),
+            ),
         );
 
         $products_count = array_reduce($products, function ($count, $product) {
@@ -385,11 +398,11 @@ class CartPresenter implements PresenterInterface
         // TODO: move it to a common parent, since it's copied in OrderPresenter and ProductPresenter
         $labels = array(
             'tax_short' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax incl.)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excl.)', array(), 'Shop.Theme.Global'),
             'tax_long' => ($this->includeTaxes())
-                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme')
-                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme'),
+                ? $this->translator->trans('(tax included)', array(), 'Shop.Theme.Global')
+                : $this->translator->trans('(tax excluded)', array(), 'Shop.Theme.Global'),
         );
 
         $discounts = $cart->getDiscounts();

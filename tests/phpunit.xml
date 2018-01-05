@@ -5,6 +5,8 @@
     <groups>
         <exclude>
             <group>admin</group>
+            <group>demo</group>
+            <group>api</group>
         </exclude>
     </groups>
     <testsuites>

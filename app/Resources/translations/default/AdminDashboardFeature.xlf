@@ -46,4 +46,86 @@ File: controllers/admin/AdminDashboardController.php:207</note>
       </trans-unit>
     </body>
   </file>
+  <file original="admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2f310f524ccb95e1bf929cea106a8f24">
+        <source>Add more dashboard modules</source>
+        <target>Add more dashboard modules</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:94</note>
+      </trans-unit>
+      <trans-unit id="f87dfb10a52e92f3fc08bef2802da23d">
+        <source>PrestaShop News</source>
+        <target>PrestaShop News</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:100</note>
+      </trans-unit>
+      <trans-unit id="c9cd54b7c6c536dc09e7724c68412a56">
+        <source>Find more news</source>
+        <target>Find more news</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:102</note>
+      </trans-unit>
+      <trans-unit id="e9be76a44ba1c2521b80bc4a126e017a">
+        <source>Useful links</source>
+        <target>Useful links</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:108</note>
+      </trans-unit>
+      <trans-unit id="57290da4ab80180ce258e18d1a0c5abc">
+        <source>Official Documentation</source>
+        <target>Official Documentation</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:110</note>
+      </trans-unit>
+      <trans-unit id="560325da4b8aa781fb24499f7ff0b7d9">
+        <source>User, Developer and Designer Guides</source>
+        <target>User, Developer and Designer Guides</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:111</note>
+      </trans-unit>
+      <trans-unit id="01302c2b3dc304b92b75390bc76d5dcf">
+        <source>PrestaShop Forum</source>
+        <target>PrestaShop Forum</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:114</note>
+      </trans-unit>
+      <trans-unit id="a4a59496bd0d27dcf9b8ee74d7cceb2a">
+        <source>Connect with the PrestaShop community</source>
+        <target>Connect with the PrestaShop community</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:115</note>
+      </trans-unit>
+      <trans-unit id="164b7380deb0d897551d0c89c88de883">
+        <source>PrestaShop Addons</source>
+        <target>PrestaShop Addons</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:118</note>
+      </trans-unit>
+      <trans-unit id="6f6d2f5f73d1795f9138a74c59aaa1fb">
+        <source><![CDATA[Enhance your store with templates & modules]]></source>
+        <target><![CDATA[Enhance your store with templates & modules]]></target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:119</note>
+      </trans-unit>
+      <trans-unit id="f76e3bc0ddc043c3abdd4d40245172e4">
+        <source>The Forge</source>
+        <target>The Forge</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:122</note>
+      </trans-unit>
+      <trans-unit id="13df627c018625ce68ca2200a869dd65">
+        <source>Report issues in the Bug Tracker</source>
+        <target>Report issues in the Bug Tracker</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:123</note>
+      </trans-unit>
+      <trans-unit id="b5425b530ea3127c2877199c5b64c956">
+        <source>Contact Us!</source>
+        <target>Contact Us!</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/dashboard/helpers/view/view.tpl:126</note>
+      </trans-unit>
+    </body>
+  </file>
 </xliff>

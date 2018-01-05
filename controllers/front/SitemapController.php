@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,7 +20,7 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
@@ -36,7 +36,7 @@ class SitemapControllerCore extends FrontController
     {
         $this->context->smarty->assign(
             array(
-                'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme'),
+                'our_offers' => $this->trans('Our Offers', array(), 'Shop.Theme.Global'),
                 'categories' => $this->trans('Categories', array(), 'Shop.Theme.Catalog'),
                 'your_account' => $this->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
                 'pages' => $this->trans('Pages', array(), 'Shop.Theme.Catalog'),
@@ -68,25 +68,25 @@ class SitemapControllerCore extends FrontController
 
         $links[] = array(
             'id' => 'stores-page',
-            'label' => $this->trans('Our stores', array(), 'Shop.Theme'),
+            'label' => $this->trans('Our stores', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('stores'),
         );
 
         $links[] = array(
             'id' => 'contact-page',
-            'label' => $this->trans('Contact us', array(), 'Shop.Theme'),
+            'label' => $this->trans('Contact us', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('contact'),
         );
 
         $links[] = array(
             'id' => 'sitemap-page',
-            'label' => $this->trans('Sitemap', array(), 'Shop.Theme'),
+            'label' => $this->trans('Sitemap', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('sitemap'),
         );
 
         return $links;
     }
-    
+
     /**
      * @return array
      */
@@ -125,13 +125,13 @@ class SitemapControllerCore extends FrontController
 
         $links[] = array(
             'id' => 'login-page',
-            'label' => $this->trans('Log in', array(), 'Shop.Theme'),
+            'label' => $this->trans('Log in', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('authentication'),
         );
 
         $links[] = array(
             'id' => 'register-page',
-            'label' => $this->trans('Create new account', array(), 'Shop.Theme'),
+            'label' => $this->trans('Create new account', array(), 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('authentication'),
         );
 

@@ -7,7 +7,7 @@
  * This source file is subject to the Open Software License (OSL 3.0)
  * that is bundled with this package in the file LICENSE.txt.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -20,16 +20,13 @@
  *
  * @author    PrestaShop SA <contact@prestashop.com>
  * @copyright 2007-2017 PrestaShop SA
- * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 
 namespace PrestaShopBundle\Install;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
-use RandomLib;
 use PrestaShop\PrestaShop\Adapter\Entity\FileLogger;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
@@ -47,15 +44,16 @@ use PrestaShop\PrestaShop\Adapter\Entity\Employee;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Module;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
-use InstallSession;
-use Composer\Script\Event;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
+use InstallSession;
+use Language as LanguageLegacy;
 use PrestashopInstallerException;
-
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Yaml\Yaml;
+use PhpEncryption;
+use PrestaShopBundle\Service\Database\Upgrade;
 
 class Install extends AbstractInstall
 {
@@ -129,7 +127,7 @@ class Install extends AbstractInstall
             $database_host = implode(':', $splits);
         }
 
-        $key = \PhpEncryption::createNewRandomKey();
+        $key = PhpEncryption::createNewRandomKey();
 
         $parameters = array(
             'parameters' => array(
@@ -273,7 +271,7 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new \PrestaShopBundle\Service\Database\Upgrade();
+        $schemaUpgrade = new Upgrade();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 
@@ -988,12 +986,11 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        // Index products in search tables
         Search::indexation(true);
 
         // Update fixtures lang
         foreach ($languages as $lang) {
-            \Language::updateMultilangTable($lang);
+            LanguageLegacy::updateMultilangTable($lang);
         }
 
         return true;
