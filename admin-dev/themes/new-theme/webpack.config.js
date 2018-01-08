@@ -69,6 +69,18 @@ let config = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        include: path.resolve(__dirname, 'js'),
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['es2015', { modules: false }]
+            ]
+          }
+        }]
+      },
+      {
         test: /jquery-ui\.js/,
         use: "imports-loader?define=>false&this=>window"
       }, {
@@ -155,26 +167,28 @@ let config = {
   ]
 };
 
-// if (process.env.NODE_ENV === 'production') {
-//   config.plugins.push(
-//     new webpack.optimize.UglifyJsPlugin({
-//       sourceMap: false,
-//       compress: {
-//         sequences: true,
-//         conditionals: true,
-//         booleans: true,
-//         if_return: true,
-//         join_vars: true,
-//         drop_console: true
-//       },
-//       output: {
-//         comments: false
-//       }
-//     })
-//   );
-// } else {
+console.log(process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      compress: {
+        sequences: true,
+        conditionals: true,
+        booleans: true,
+        if_return: true,
+        join_vars: true,
+        drop_console: true
+      },
+      output: {
+        comments: false
+      }
+    })
+  );
+} else {
   config.entry.stock.push('webpack/hot/only-dev-server');
   config.entry.stock.push('webpack-dev-server/client?http://localhost:8080');
-// }
+}
 
 module.exports = config;
