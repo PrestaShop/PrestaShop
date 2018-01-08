@@ -1368,25 +1368,24 @@ class LanguageCore extends ObjectModel
             } else {
                 $adminDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin';
                 $adminDir = (is_dir($adminDir)) ? $adminDir : ($adminDir.'-dev');
-                $adminDir .= DIRECTORY_SEPARATOR;
             }
 
             if (!is_dir($adminDir)) {
                 throw new Exception("Cannot generate BO themes: \"$adminDir\" is not a directory");
             }
 
-            $generator->generateFromDirectory($adminDir.'themes');
+            $generator->generateInDirectory($adminDir.DIRECTORY_SEPARATOR.'themes');
         }
 
         // generate stylesheets for BO themes
         if ($foTheme) {
             $frontDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
 
-            $generator->generateFromDirectory($frontDir.($themeName?$themeName:'classic'));
+            $generator->generateInDirectory($frontDir.($themeName?$themeName:'classic'));
         }
 
         if ($path && is_dir($path)) {
-            $generator->generateFromDirectory($path);
+            $generator->generateInDirectory($path);
         }
     }
 }

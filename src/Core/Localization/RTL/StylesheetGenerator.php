@@ -85,7 +85,7 @@ class StylesheetGenerator
      *
      * @throws GenerationException
      */
-    public function generateFromDirectory($directory, $regenerate = false)
+    public function generateInDirectory($directory, $regenerate = false)
     {
         $allFiles = $this->getFilesInDirectory($directory);
 
