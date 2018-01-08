@@ -29,13 +29,19 @@ namespace PrestaShopBundle\Localization\Number;
 use InvalidArgumentException as SPLInvalidArgumentException;
 use PrestaShop\Decimal\Number as DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Adapter\RoundingMapper;
 use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecification;
 use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
 
+/**
+ * Formats a number (raw, price, percentage) according to passed specifications
+ */
 class Formatter
 {
+    /**
+     * These placeholders are used in CLDR number formatting templates.
+     * They are meant to be replaced by the correct localized symbols in the number formatting process.
+     */
     const CURRENCY_SYMBOL_PLACEHOLDER   = '¤';
     const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
     const GROUP_SEPARATOR_PLACEHOLDER   = ',';
@@ -51,12 +57,14 @@ class Formatter
     protected $numberSpecification;
 
     /**
-     * @var int The wanted rounding mode when formatting numbers
+     * @var string The wanted rounding mode when formatting numbers.
+     * Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
      */
     protected $roundingMode;
 
     /**
      * @var string Numbering system to use when formatting numbers
+     * @see http://cldr.unicode.org/translation/numbering-systems
      */
     protected $numberingSystem;
 
@@ -64,27 +72,41 @@ class Formatter
      * Create a number formatter instance
      *
      * @param NumberSpecification $numberSpecification
-     *   Number specification used when formatting a number
+     *  Number specification used when formatting a number
      *
      * @param int $roundingMode
-     *   The wanted rounding mode when formatting numbers
+     *  The wanted rounding mode when formatting numbers
+     *  Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
      *
      * @param string $numberingSystem
-     *   Numbering system to use when formatting numbers
+     *  Numbering system to use when formatting numbers
+     * @see http://cldr.unicode.org/translation/numbering-systems
      */
     public function __construct(NumberSpecification $numberSpecification, $roundingMode, $numberingSystem)
     {
         $this->numberSpecification = $numberSpecification;
-        $this->roundingMode        = (int)$roundingMode;
+        $this->roundingMode        = $roundingMode;
         $this->numberingSystem     = $numberingSystem;
     }
 
+    /**
+     * Formats the passed number according to specifications
+     *
+     * @param $number
+     *  The number to format
+     *
+     * @return string
+     *  The formatted number
+     *  You should use this this value for display, without modifying it.
+     *
+     * @throws LocalizationException
+     */
     public function format($number)
     {
         try {
             $decimalNumber = $this->prepareNumber($number);
         } catch (SPLInvalidArgumentException $e) {
-            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage());
+            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage(), null, $e);
         }
 
         /*
@@ -127,12 +149,10 @@ class Formatter
     {
         $decimalNumber = new DecimalNumber((string)$number);
         $precision     = $this->numberSpecification->getMaxFractionDigits();
-        $roundingMode  = RoundingMapper::mapRounding($this->roundingMode);
-
         $roundedNumber = (new Rounding())->compute(
             $decimalNumber,
             $precision,
-            $roundingMode
+            $this->roundingMode
         );
 
         return $roundedNumber;
@@ -162,9 +182,16 @@ class Formatter
     }
 
     /**
+     * Splits major digits into groups
+     *
+     * eg. : Given the major digits "1234567", and major group size
+     *  configured to 3 digits, the result would be "1 234 567"
+     *
      * @param $majorDigits
+     *  The major digits to be grouped
      *
      * @return string
+     *  The grouped major digits
      */
     protected function splitMajorGroups($majorDigits)
     {
@@ -189,6 +216,15 @@ class Formatter
         return $majorDigits;
     }
 
+    /**
+     * Adds or remove trailing zeroes, depending on specified min and max fraction digits numbers
+     *
+     * @param string $minorDigits
+     *  Digits to be adjusted with (trimmed or padded) zeroes
+     *
+     * @return string
+     *  The adjusted minor digits
+     */
     protected function adjustMinorDigitsZeroes($minorDigits)
     {
         if (strlen($minorDigits) > $this->numberSpecification->getMaxFractionDigits()) {
@@ -209,9 +245,15 @@ class Formatter
     }
 
     /**
+     * Get the CLDR formatting pattern
+     *
+     * @see http://cldr.unicode.org/translation/number-patterns
+     *
      * @param bool $isNegative
+     *  If true, the negative pattern will be returned instead of the positive one
      *
      * @return string
+     *  The CLDR formatting pattern
      */
     protected function getCldrPattern($isNegative)
     {
@@ -223,19 +265,28 @@ class Formatter
     }
 
     /**
-     * @param $formattedNumber
+     * Localize the passed number
      *
-     * @return mixed
+     * If needed, occidental ("latn") digits are replaced with the relevant
+     * ones (for instance with arab digits).
+     * Symbol placeholders will also be replaced by the real symbols (configured
+     * in number specification)
+     *
+     * @param string $number
+     *  The number to be processed
+     *
+     * @return string
+     *  The number after digits and symbols replacement
      */
-    protected function localizeNumber($formattedNumber)
+    protected function localizeNumber($number)
     {
         // If locale uses non-latin digits
-        $formattedNumber = $this->replaceDigits($formattedNumber);
+        $number = $this->replaceDigits($number);
 
         // Placeholders become real localized symbols
-        $formattedNumber = $this->replaceSymbols($formattedNumber);
+        $number = $this->replaceSymbols($number);
 
-        return $formattedNumber;
+        return $number;
     }
 
     /**
@@ -256,9 +307,11 @@ class Formatter
     /**
      * Replace placeholder number symbols with relevant numbering system's symbols
      *
-     * @param string $number The number to process
+     * @param string $number
+     *  The number to process
      *
-     * @return string The number with replaced symbols
+     * @return string
+     *  The number with replaced symbols
      */
     protected function replaceSymbols($number)
     {
@@ -283,6 +336,8 @@ class Formatter
      *  - Passed number (partially formatted) : 1,234.567
      *  - Returned number : 1,234.567 ¤
      *  ("¤" symbol is the currency symbol placeholder)
+     *
+     * @see http://cldr.unicode.org/translation/number-patterns
      *
      * @param $formattedNumber
      *  Number to process

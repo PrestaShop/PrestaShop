@@ -39,7 +39,7 @@ interface NumberInterface
      *
      * Each item of the result is a NumberSymbolList
      *
-     * @return NumberSymbolListInterface[]
+     * @return NumberSymbolList[]
      */
     public function getAllSymbols();
 
@@ -48,7 +48,7 @@ interface NumberInterface
      *
      * @param $numberingSystem
      *
-     * @return NumberSymbolListInterface
+     * @return NumberSymbolList
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null);
 

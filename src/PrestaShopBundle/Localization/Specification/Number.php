@@ -116,7 +116,7 @@ class Number implements NumberInterface
      * List of available number symbols lists (NumberSymbolList objects)
      * Each list is indexed by numbering system
      *
-     * @var NumberSymbolListInterface[]
+     * @var NumberSymbolList[]
      */
     protected $symbols;
 
@@ -164,7 +164,7 @@ class Number implements NumberInterface
      *
      * Each item of the result is a NumberSymbolList
      *
-     * @return NumberSymbolListInterface[]
+     * @return NumberSymbolList[]
      */
     public function getAllSymbols()
     {
@@ -176,7 +176,7 @@ class Number implements NumberInterface
      *
      * @param $numberingSystem
      *
-     * @return NumberSymbolListInterface
+     * @return NumberSymbolList
      * @throws LocalizationException
      */
     public function getSymbolsByNumberingSystem($numberingSystem = null)

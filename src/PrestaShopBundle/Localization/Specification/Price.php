@@ -97,6 +97,12 @@ class Price extends NumberSpecification
      * @param string $currencyDisplay
      *  Type of display for currency symbol
      *
+     * @param string $currencySymbol
+     *  Currency symbol of this price (eg. : €)
+     *
+     * @param $currencyCode
+     *  Currency code of this price (eg. : EUR)
+     *
      * @throws LocalizationException
      */
     public function __construct(
@@ -108,9 +114,13 @@ class Price extends NumberSpecification
         $groupingUsed,
         $primaryGroupSize,
         $secondaryGroupSize,
-        $currencyDisplay
+        $currencyDisplay,
+        $currencySymbol,
+        $currencyCode
     ) {
         $this->currencyDisplay = $currencyDisplay;
+        $this->currencySymbol  = $currencySymbol;
+        $this->currencyCode    = $currencyCode;
 
         parent::__construct(
             $positivePattern,
