@@ -27,7 +27,7 @@ scenario('Check the attribute value deletion', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'attribute_and_feature');
   scenario('Check that the attribute value is well deleted in the Front Office', client => {
-    test('should set the shop language to "English"', () => client.languageChange('english'));
+    test('should set the shop language to "English"', () => client.changeLanguage('english'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'attribute'));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should Check that the first attribute value is equal to 20', () => client.checkTextValue(SearchProductPage.attribut_value_1, '20'));

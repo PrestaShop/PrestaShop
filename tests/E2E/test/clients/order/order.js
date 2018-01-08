@@ -96,6 +96,13 @@ class Order extends CommonClient {
       .then(() => this.client.pause(2000));
   }
 
+  checkEnable(selector) {
+    return this.client
+      .waitForExist(selector, 90000)
+      .isEnabled(selector)
+      .then((text) => expect(text).to.be.false);
+  }
+
 }
 
 module.exports = Order;
