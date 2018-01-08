@@ -9,7 +9,7 @@ services:
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/runTests.sh"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=prestashop-web", "--SELENIUM=selenium-chrome"]
     volumes:
       - ./screenshots/:/home/test/screenshots/
     networks:
