@@ -32,12 +32,16 @@ var options2 = {
 
 function initCommands(client) {
 
+    client.addCommand('linkAccess', function (link) {
+        this.selector = globals.selector;
+        client
+            .url('http://' + link)
+    });
 
-    client.addCommand('localhost', function (cb) {
+    client.addCommand('localhost', function () {
         this.selector = globals.selector;
         client
             .url('http://' + URL + '/install-dev')
-            .call(cb);
     });
 
   client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {

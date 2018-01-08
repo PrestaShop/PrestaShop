@@ -4,17 +4,9 @@ const common_installation = require('./common_installation');
 scenario('The shop installation', client => {
     test('should open the browser', () => client.open());
     test('should log in install page ', () => client.localhost());
-
-    common_installation.choosingLanguage(Installation, "en");
-    common_installation.licenceAgreements(Installation);
-    common_installation.systemCompatibility(Installation);
-    common_installation.shopInformation(Installation, "United Kingdom");
-    common_installation.db_configuration(Installation);
-    common_installation.installationCheck(Installation);
-    common_installation.checkFinishedInstallation(Installation);
-
+    common_installation.prestaShopInstall(Installation, "en", "United Kingdom");
     scenario('Login to the Front Office', client => {
         test('should sign in FO', () => client.signInFO(AccessPageFO));
     }, 'installation');
 
-}, 'installation',true);
+}, 'installation', true);

@@ -21,7 +21,13 @@ global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
 global.categoryThumb = path.join(__dirname, '', 'datas', 'category_miniature.png');
 global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
-global.downloadsFolderPath = argv.DIR;
+
+/** @todo I have to delete this initial code before **/
+global.downloadsFolderPath = argv.DIR  || "/home/fourat.achour/Téléchargements/";
+global.rcLink = argv.RCLINK || "build.prestashop.com/news/prestashop-1-7-3-0-beta-1/";
+global.rcTarget = argv.RCTARGET || "/projet/prestashop_1.7.2.4/admin-dev/autoupgrade/download";
+global.filename = argv.FILENAME || "prestashop_1.7.3.0_beta1.zip";
+
 global.onboarding = false;
 global.invoiceFileName = "";
 global.basic_price = "";

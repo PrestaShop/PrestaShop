@@ -27,6 +27,24 @@ class CommonClient {
     return this.client.signOutFO(selector);
   }
 
+    localhost() {
+        return this.client.localhost();
+    }
+
+    linkAccess(link) {
+        return this.client.linkAccess(link);
+    }
+
+    waitForVisibleElement(selector, timeout) {
+        return this.client.waitForVisibleElement(selector, timeout);
+    }
+
+    waitForExist(selector, timeout = 90000) {
+        return this.client
+            .waitForExist(selector, timeout)
+    }
+
+
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
       .waitForExist(menuSelector, 90000)
@@ -229,6 +247,11 @@ class CommonClient {
   waitAndSelectByAttribute(selector, attribute, value, pause = 0, timeout = 90000) {
     return this.client.waitAndSelectByAttribute(selector, attribute, value, pause, timeout);
   }
+
+    refresh(selector){
+        return this.client
+            .refresh();
+    }
 
 }
 
