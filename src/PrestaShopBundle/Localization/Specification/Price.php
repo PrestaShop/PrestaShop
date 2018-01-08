@@ -38,13 +38,11 @@ class Price extends NumberSpecification
 {
     /**
      * Currency display option : symbol notation
-     * eg: €
      */
     const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
      * Currency display option : ISO code notation
-     * eg: EUR
      */
     const CURRENCY_DISPLAY_CODE = 'code';
 
@@ -57,34 +55,46 @@ class Price extends NumberSpecification
     protected $currencyDisplay;
 
     /**
+     * @var string The currency symbol
+     * eg : €
+     */
+    protected $currencySymbol;
+
+    /**
+     * @var string The currency code
+     * eg : EUR
+     */
+    protected $currencyCode;
+
+    /**
      * Price specification constructor.
      *
-     * @param string             $positivePattern
+     * @param string $positivePattern
      *  CLDR formatting pattern for positive amounts
      *
-     * @param string             $negativePattern
+     * @param string $negativePattern
      *  CLDR formatting pattern for negative amounts
      *
      * @param NumberSymbolList[] $symbols
      *  List of available number symbols lists (NumberSymbolList objects)
      *  Each list is indexed by numbering system
      *
-     * @param int                $maxFractionDigits
+     * @param int $maxFractionDigits
      *  Maximum number of digits after decimal separator
      *
-     * @param int                $minFractionDigits
+     * @param int $minFractionDigits
      *  Minimum number of digits after decimal separator
      *
-     * @param bool               $groupingUsed
+     * @param bool $groupingUsed
      *  Is digits grouping used ?
      *
-     * @param int                $primaryGroupSize
+     * @param int $primaryGroupSize
      *  Size of primary digits group in the number
      *
-     * @param int                $secondaryGroupSize
+     * @param int $secondaryGroupSize
      *  Size of secondary digits group in the number
      *
-     * @param string             $currencyDisplay
+     * @param string $currencyDisplay
      *  Type of display for currency symbol
      *
      * @throws LocalizationException
@@ -122,6 +132,28 @@ class Price extends NumberSpecification
     public function getCurrencyDisplay()
     {
         return $this->currencyDisplay;
+    }
+
+    /**
+     * Get the currency symbol
+     * eg. : €
+     *
+     * @return string
+     */
+    public function getCurrencySymbol()
+    {
+        return $this->currencySymbol;
+    }
+
+    /**
+     * Get the currency ISO code
+     * eg. : EUR
+     *
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
     }
 
     /**

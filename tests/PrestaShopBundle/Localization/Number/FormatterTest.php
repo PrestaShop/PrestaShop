@@ -31,6 +31,7 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Number\Formatter;
 use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecification;
 use PrestaShopBundle\Localization\Specification\NumberSymbolList;
+use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
 
 class FormatterTest extends TestCase
 {
@@ -81,7 +82,7 @@ class FormatterTest extends TestCase
         );
 
         /** @var NumberSpecification $numberSpecification */
-        $numberSpecification = $this->mockNumberSpecification($specs['numberSpecification']);
+        $numberSpecification = $this->mockNumberSpecification($specs['numberSpecification'], $specs['specType']);
         $rounding            = $specs['rounding'];
         $numberingSystem     = $specs['numberingSystem'];
 
@@ -149,7 +150,7 @@ class FormatterTest extends TestCase
         return $mocked;
     }
 
-    protected function mockNumberSpecification($numberSpecData)
+    protected function mockNumberSpecification($numberSpecData, $specType)
     {
         // Init defaults
         $positivePattern    = '';
@@ -160,11 +161,19 @@ class FormatterTest extends TestCase
         $groupingUsed       = true;
         $primaryGroupSize   = '';
         $secondaryGroupSize = '';
+        $currencyDisplay    = '';
+        $currencyCode       = '';
+        $currencySymbol     = '';
 
         // Get the real values
         extract($numberSpecData, EXTR_IF_EXISTS);
 
-        $mocked = $this->getMockBuilder(NumberSpecification::class)
+        $mockedSpecClass = NumberSpecification::class;
+        if ('price' == $specType) {
+            $mockedSpecClass = PriceSpecification::class;
+        }
+
+        $mocked = $this->getMockBuilder($mockedSpecClass)
             ->disableOriginalConstructor()
             ->getMock();
         $mocked->method('getPositivePattern')
@@ -188,14 +197,24 @@ class FormatterTest extends TestCase
                 ]
             );
 
+        if ('price' == $specType) {
+            $mocked->method('getCurrencyDisplay')
+                ->willReturn($currencyDisplay);
+            $mocked->method('getCurrencyCode')
+                ->willReturn($currencyCode);
+            $mocked->method('getCurrencySymbol')
+                ->willReturn($currencySymbol);
+        }
+
         return $mocked;
     }
 
     public function provideValidNumberFormatSpecs()
     {
         return [
-            'French positive number'   => [
+            'French positive number'           => [
                 'specs'    => [
+                    'specType'            => 'number',
                     'numberSpecification' => [
                         'positivePattern'    => '#,##0.###',
                         'negativePattern'    => '-#,##0.###',
@@ -223,8 +242,9 @@ class FormatterTest extends TestCase
                 'number'   => 123456.789,
                 'expected' => '123 456,789',
             ],
-            'French negative number'   => [
+            'French negative number'           => [
                 'specs'    => [
+                    'specType'            => 'number',
                     'numberSpecification' => [
                         'positivePattern'    => '#,##0.###',
                         'negativePattern'    => '-#,##0.###',
@@ -252,8 +272,9 @@ class FormatterTest extends TestCase
                 'number'   => -123456.789,
                 'expected' => '-123 456,789',
             ],
-            'English positive number'  => [
+            'English positive number'          => [
                 'specs'    => [
+                    'specType'            => 'number',
                     'numberSpecification' => [
                         'positivePattern'    => '#,##0.###',
                         'negativePattern'    => '-#,##0.###',
@@ -281,8 +302,9 @@ class FormatterTest extends TestCase
                 'number'   => 123456.789,
                 'expected' => '123,456.789',
             ],
-            'Too much fraction zeroes' => [
+            'Too much fraction zeroes'         => [
                 'specs'    => [
+                    'specType'            => 'number',
                     'numberSpecification' => [
                         'positivePattern'    => '#,##0.###',
                         'negativePattern'    => '-#,##0.###',
@@ -310,8 +332,9 @@ class FormatterTest extends TestCase
                 'number'   => '0.70000',
                 'expected' => '0.7',
             ],
-            'Rounding needed 1'        => [
+            'Rounding needed 1'                => [
                 'specs'    => [
+                    'specType'            => 'number',
                     'numberSpecification' => [
                         'positivePattern'    => '#,##0.###',
                         'negativePattern'    => '-#,##0.###',
@@ -339,8 +362,9 @@ class FormatterTest extends TestCase
                 'number'   => 1.2349,
                 'expected' => '1.235',
             ],
-            'Rounding needed 2'        => [
+            'Rounding needed 2'                => [
                 'specs'    => [
+                    'specType'            => 'number',
                     'numberSpecification' => [
                         'positivePattern'    => '#,##0.###',
                         'negativePattern'    => '-#,##0.###',
@@ -367,6 +391,138 @@ class FormatterTest extends TestCase
                 ],
                 'number'   => 1.2344,
                 'expected' => '1.234',
+            ],
+            'French positive price'            => [
+                'specs'    => [
+                    'specType'            => 'price',
+                    'numberSpecification' => [
+                        'positivePattern'    => '#,##0.## ¤',
+                        'negativePattern'    => '-#,##0.## ¤',
+                        'symbols'            => [
+                            'latn' => [
+                                'decimal'                => ',',
+                                'group'                  => ' ',
+                                'list'                   => ';',
+                                'percentSign'            => '%',
+                                'minusSign'              => '-',
+                                'plusSign'               => '+',
+                                'exponential'            => 'E',
+                                'superscriptingExponent' => '^',
+                            ],
+                        ],
+                        'maxFractionDigits'  => 2,
+                        'minFractionDigits'  => 2,
+                        'groupingUsed'       => true,
+                        'primaryGroupSize'   => 3,
+                        'secondaryGroupSize' => 3,
+                        'currencyDisplay'    => 'symbol',
+                        'currencySymbol'     => '€',
+                        'currencyCode'       => 'EUR',
+                    ],
+                    'rounding'            => 2,      // Half Up (PS_ROUND_HALF_UP)
+                    'numberingSystem'     => 'latn', // Occidental numbering system
+                ],
+                'number'   => 123456.789,
+                'expected' => '123 456,79 €',
+            ],
+            'French negative price'            => [
+                'specs'    => [
+                    'specType'            => 'price',
+                    'numberSpecification' => [
+                        'positivePattern'    => '#,##0.## ¤',
+                        'negativePattern'    => '-#,##0.## ¤',
+                        'symbols'            => [
+                            'latn' => [
+                                'decimal'                => ',',
+                                'group'                  => ' ',
+                                'list'                   => ';',
+                                'percentSign'            => '%',
+                                'minusSign'              => '-',
+                                'plusSign'               => '+',
+                                'exponential'            => 'E',
+                                'superscriptingExponent' => '^',
+                            ],
+                        ],
+                        'maxFractionDigits'  => 2,
+                        'minFractionDigits'  => 2,
+                        'groupingUsed'       => true,
+                        'primaryGroupSize'   => 3,
+                        'secondaryGroupSize' => 3,
+                        'currencyDisplay'    => 'symbol',
+                        'currencySymbol'     => '€',
+                        'currencyCode'       => 'EUR',
+                    ],
+                    'rounding'            => 2,      // Half Up (PS_ROUND_HALF_UP)
+                    'numberingSystem'     => 'latn', // Occidental numbering system
+                ],
+                'number'   => -123456.781,
+                'expected' => '-123 456,78 €',
+            ],
+            'USA negative price'               => [
+                'specs'    => [
+                    'specType'            => 'price',
+                    'numberSpecification' => [
+                        'positivePattern'    => '¤ #,##0.##',
+                        'negativePattern'    => '-¤ #,##0.##',
+                        'symbols'            => [
+                            'latn' => [
+                                'decimal'                => ',',
+                                'group'                  => ' ',
+                                'list'                   => ';',
+                                'percentSign'            => '%',
+                                'minusSign'              => '-',
+                                'plusSign'               => '+',
+                                'exponential'            => 'E',
+                                'superscriptingExponent' => '^',
+                            ],
+                        ],
+                        'maxFractionDigits'  => 2,
+                        'minFractionDigits'  => 2,
+                        'groupingUsed'       => true,
+                        'primaryGroupSize'   => 3,
+                        'secondaryGroupSize' => 3,
+                        'currencyDisplay'    => 'symbol',
+                        'currencySymbol'     => '$',
+                        'currencyCode'       => 'USD',
+                    ],
+                    'rounding'            => 2,      // Half Up (PS_ROUND_HALF_UP)
+                    'numberingSystem'     => 'latn', // Occidental numbering system
+                ],
+                'number'   => -123456.789,
+                'expected' => '-$ 123 456,79',
+            ],
+            'USA positive price with ISO code' => [
+                'specs'    => [
+                    'specType'            => 'price',
+                    'numberSpecification' => [
+                        'positivePattern'    => '¤ #,##0.##',
+                        'negativePattern'    => '-¤ #,##0.##',
+                        'symbols'            => [
+                            'latn' => [
+                                'decimal'                => ',',
+                                'group'                  => ' ',
+                                'list'                   => ';',
+                                'percentSign'            => '%',
+                                'minusSign'              => '-',
+                                'plusSign'               => '+',
+                                'exponential'            => 'E',
+                                'superscriptingExponent' => '^',
+                            ],
+                        ],
+                        'maxFractionDigits'  => 2,
+                        'minFractionDigits'  => 2,
+                        'groupingUsed'       => true,
+                        'primaryGroupSize'   => 3,
+                        'secondaryGroupSize' => 3,
+                        'currencyDisplay'    => 'code',
+                        'currencySymbol'     => '$',
+                        'currencyCode'       => 'USD',
+                    ],
+                    'rounding'            => 2,      // Half Up (PS_ROUND_HALF_UP)
+                    'numberingSystem'     => 'latn', // Occidental numbering system
+                ],
+                'number'   => 123456.781,
+                'expected' => 'USD 123 456,78',
             ],
         ];
     }

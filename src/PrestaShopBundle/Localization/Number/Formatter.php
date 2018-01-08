@@ -32,11 +32,16 @@ use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\RoundingMapper;
 use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecification;
+use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
 
 class Formatter
 {
-    const GROUP_SEPARATOR_PLACEHOLDER   = ',';
+    const CURRENCY_SYMBOL_PLACEHOLDER   = '¤';
     const DECIMAL_SEPARATOR_PLACEHOLDER = '.';
+    const GROUP_SEPARATOR_PLACEHOLDER   = ',';
+    const MINUS_SIGN_PLACEHOLDER        = '-';
+    const PERCENT_SYMBOL_PLACEHOLDER    = '%';
+    const PLUS_SIGN_PLACEHOLDER         = '+';
 
     /**
      * Number specification to be used when formatting a number
@@ -103,6 +108,8 @@ class Formatter
         $pattern         = $this->getCldrPattern($isNegative);
         $formattedNumber = $this->addPlaceholders($formattedNumber, $pattern);
         $formattedNumber = $this->localizeNumber($formattedNumber);
+
+        $formattedNumber = $this->performSpecificReplacements($formattedNumber);
 
         return $formattedNumber;
     }
@@ -257,11 +264,11 @@ class Formatter
     {
         $symbols      = $this->numberSpecification->getSymbolsByNumberingSystem($this->numberingSystem);
         $replacements = [
-            '.' => $symbols->getDecimal(),
-            ',' => $symbols->getGroup(),
-            '+' => $symbols->getPlusSign(),
-            '-' => $symbols->getMinusSign(),
-            '%' => $symbols->getPercentSign(),
+            self::DECIMAL_SEPARATOR_PLACEHOLDER => $symbols->getDecimal(),
+            self::GROUP_SEPARATOR_PLACEHOLDER   => $symbols->getGroup(),
+            self::MINUS_SIGN_PLACEHOLDER        => $symbols->getMinusSign(),
+            self::PERCENT_SYMBOL_PLACEHOLDER    => $symbols->getPercentSign(),
+            self::PLUS_SIGN_PLACEHOLDER         => $symbols->getPlusSign(),
         ];
 
         return strtr($number, $replacements);
@@ -295,6 +302,48 @@ class Formatter
          * (\.[0#]+)* : any combination of "0" and "#" characters groups, separated by '.'. Zero to infinity times.
          */
         $formattedNumber = preg_replace('/#(,#+)*0(\.[0#]+)*/', $formattedNumber, $pattern);
+
+        return $formattedNumber;
+    }
+
+    /**
+     * Perform some more specific replacements
+     *
+     * Specific replacements are needed when number specification is extended.
+     * For instance, prices have an extended number specification in order to
+     * add currency symbol to the formatted number.
+     *
+     * @param string $formattedNumber
+     *
+     * @return mixed
+     */
+    public function performSpecificReplacements($formattedNumber)
+    {
+        $formattedNumber = $this->tryCurrencyReplacement($formattedNumber);
+
+        return $formattedNumber;
+    }
+
+    /**
+     * Try to replace currency placeholder by actual currency
+     *
+     * Placeholder will be replaced either by the symbol or the ISO code, depending on price specification
+     *
+     * @param $formattedNumber
+     *  The number to format
+     *
+     * @return string
+     *  The number after currency replacement
+     */
+    protected function tryCurrencyReplacement($formattedNumber)
+    {
+        if ($this->numberSpecification instanceof PriceSpecification) {
+            $currency = PriceSpecification::CURRENCY_DISPLAY_CODE == $this->numberSpecification->getCurrencyDisplay()
+                ? $this->numberSpecification->getCurrencyCode()
+                : $this->numberSpecification->getCurrencySymbol();
+
+            $formattedNumber = str_replace(self::CURRENCY_SYMBOL_PLACEHOLDER, $currency, $formattedNumber);
+        }
 
         return $formattedNumber;
     }
