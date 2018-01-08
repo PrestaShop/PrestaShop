@@ -25,6 +25,8 @@
 
 import IpInput from './ip-input';
 
+const $ = window.$;
+
 $(() => {
   // Do not run if we're not on the maintenance page
   if (-1 === window.location.pathname.split('/').indexOf('maintenance')) {
