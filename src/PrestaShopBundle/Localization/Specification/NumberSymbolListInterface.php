@@ -27,8 +27,6 @@
 namespace PrestaShopBundle\Localization\Specification;
 
 /**
- * Class NumberSymbolList
- *
  * Number's symbols data bag. Regroups all symbols used when formatting a number
  * (decimal separator, thousands separator, etc.).*
  */

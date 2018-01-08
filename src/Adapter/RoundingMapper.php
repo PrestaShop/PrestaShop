@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 use PrestaShop\Decimal\Operation\Rounding;
 
 /**
- * Class RoundingMapper
- *
  * Maps rounding modes from legacy rounding modes values to the new PrestaShop/Decimal's Rounding constant values.
  */
 final class RoundingMapper
