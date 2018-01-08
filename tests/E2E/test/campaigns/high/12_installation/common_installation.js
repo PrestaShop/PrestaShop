@@ -1,18 +1,24 @@
 module.exports = {
-    choosingLanguage: function (selector, langage) {
+    prestaShopInstall: function (selector, langage, country) {
         scenario('Step 1 : Choosing language', client => {
             test('should choose english language', () => client.waitAndSelectByValue(selector.language_select, langage));
             test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
         }, 'installation');
-    },
-    shopInformation: function (selector, langage) {
         let promise = Promise.resolve();
+        scenario('Step 2 : Agreeing license agreements', client => {
+            test('should click on "I agree to the above terms and conditions " button', () => client.waitForExistAndClick(selector.agree_terms_and_conditions_button));
+            test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
+        }, 'installation');
+        scenario('Step 3 : Checking system compatibility', client => {
+            test('should check the test compatibility green box', () => client.checkTextValue(selector.compatibility_green_box, "PrestaShop compatibility with your system environment has been verified!"));
+            test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
+        }, 'installation');
         scenario('Step 4 : Inserting the shop information', client => {
             test('should set the "Shop name" input', () => client.setNameInput(selector.shop_name_input, "prestashop_1.7.3.0_beta.1-build.2"));
             test('should set the "Country" input', () => {
                 return promise
                     .then(() => client.waitForExistAndClick(selector.country_select))
-                    .then(() => client.waitAndSetValue(selector.search_country_input, langage))
+                    .then(() => client.waitAndSetValue(selector.search_country_input, country))
                     .then(() => client.waitForExistAndClick(selector.country_france_option));
             });
             test('should set the "First name" input', () => client.waitAndSetValue(selector.first_name_input, "demo"));
@@ -22,21 +28,6 @@ module.exports = {
             test('should set the "Re-type to confirm" input', () => client.waitAndSetValue(selector.retype_password_input, "prestashop_demo"));
             test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
         }, 'installation');
-    },
-    licenceAgreements: function (selector) {
-        scenario('Step 2 : Agreeing license agreements', client => {
-            test('should click on "I agree to the above terms and conditions " button', () => client.waitForExistAndClick(selector.agree_terms_and_conditions_button));
-            test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
-        }, 'installation');
-    },
-    systemCompatibility: function (selector) {
-        scenario('Step 3 : Checking system compatibility', client => {
-            test('should check the test compatibility green box', () => client.checkTextValue(selector.compatibility_green_box, "PrestaShop compatibility with your system environment has been verified!"));
-            test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
-        }, 'installation');
-    },
-    db_configuration: function (selector) {
-        let promise = Promise.resolve();
         scenario('Step 5 : Setting the BD configuration', client => {
             test('should set the "Database server address" input', () => client.setNameInput(selector.database_address_input, db_server));
             test('should set the "Database name" input', () => client.waitAndSetValue(selector.database_name_input, db_name));
@@ -51,12 +42,10 @@ module.exports = {
                 }
             });
             test('should click on "Test your database connection now!" button', () => client.waitForExistAndClick(selector.test_connection_button));
-            test('should check for the connection and click on "Attempt to create the database automatically" button', () => client.waitForVisibleAndClick(selector.create_DB_button));
+            test('should check for the connection and click on "Attempt to create the database automatically" button', () => client.dataBaseCreation(selector.create_DB_button));
             test('should check that the Database is created', () => client.waitForVisibleElement(selector.create_DB_button, 'Database is created'));
             test('should click on "Next" button', () => client.goToTheNextPage(selector.next_step_button));
         }, 'installation');
-    },
-    installationCheck: function (selector) {
         scenario('Step 6 : Checking installation', client => {
             test('should create file parameter', () => client.waitForVisibleElement(selector.create_file_parameter_step));
             test('should create database', () => client.waitForVisibleElement(selector.create_database_step));
@@ -69,12 +58,8 @@ module.exports = {
             test('should create install theme', () => client.waitForVisibleElement(selector.install_theme_step));
             test('should finish installation', () => client.waitForVisibleElement(selector.finish_step));
         }, 'installation');
-    },
-    checkFinishedInstallation: function (selector) {
         scenario('Step 7 : Checking that installation finished', client => {
             test('should check that the installation is finished!', () => client.checkTextValue(selector.finished_installation_msg, 'Your installation is finished!'));
         }, 'installation');
     }
-
-
 };
