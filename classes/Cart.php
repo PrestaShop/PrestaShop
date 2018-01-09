@@ -2130,7 +2130,7 @@ class CartCore extends ObjectModel
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
-    public function newCalculator($products, $cartRules, $id_carrier)
+    private function newCalculator($products, $cartRules, $id_carrier)
     {
         $calculator = new Calculator();
 
