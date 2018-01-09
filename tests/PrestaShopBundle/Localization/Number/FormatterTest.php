@@ -27,6 +27,7 @@
 namespace Tests\PrestaShopBundle\Localization\Number;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Number\Formatter;
 use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
@@ -104,7 +105,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 123456.789,
@@ -122,7 +123,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => -123456.789,
@@ -140,7 +141,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 123456.789,
@@ -158,7 +159,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => '0.70000',
@@ -176,7 +177,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => '0.7',
@@ -194,7 +195,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 1.2349,
@@ -212,7 +213,7 @@ class FormatterTest extends TestCase
                         3,
                         3
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 1.2344,
@@ -233,7 +234,7 @@ class FormatterTest extends TestCase
                         '€',
                         'EUR'
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 123456.789,
@@ -254,7 +255,7 @@ class FormatterTest extends TestCase
                         '€',
                         'EUR'
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => -123456.781,
@@ -275,7 +276,7 @@ class FormatterTest extends TestCase
                         '$',
                         'USD'
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => -123456.789,
@@ -296,7 +297,7 @@ class FormatterTest extends TestCase
                         '$',
                         'USD'
                     ),
-                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'rounding'            => Rounding::ROUND_HALF_UP,
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 123456.781,
