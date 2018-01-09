@@ -11,24 +11,24 @@ class CommonClient {
     this.client = getClient();
   }
 
-  signInBO(selector) {
-    return this.client.signInBO(selector);
-  }
+    signInBO(selector, link) {
+        return this.client.signInBO(selector, link);
+    }
 
   signOutBO() {
     return this.client.signOutBO();
   }
 
-  signInFO(selector) {
-    return this.client.signInFO(selector);
-  }
+    signInFO(selector, link) {
+        return this.client.signInFO(selector, link);
+    }
 
   signOutFO(selector) {
     return this.client.signOutFO(selector);
   }
 
-    localhost() {
-        return this.client.localhost();
+    localhost(link) {
+        return this.client.localhost(link);
     }
 
     linkAccess(link) {
@@ -100,10 +100,9 @@ class CommonClient {
       .waitForExistAndClick(selector, timeout);
   }
 
-  waitAndSetValue(selector, value, timeout = 90000) {
-    return this.client
-      .waitAndSetValue(selector, value, timeout);
-  }
+    waitAndSetValue(selector, value, timeout = 90000) {
+        return this.client.waitAndSetValue(selector, value, timeout);
+    }
 
   scrollTo(selector, margin) {
     return this.client.scrollTo(selector, margin);

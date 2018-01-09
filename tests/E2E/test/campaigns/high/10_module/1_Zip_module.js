@@ -24,10 +24,10 @@ scenario('Install "PrestaShop Security" module', () => {
         test('should check if the module "prestafraud" was installed', () => client.checkTextValue(ModulePage.built_in_module, "1", "contain"));
     }, 'common_client');
     scenario('Check Configuration page of "PrestaShop Security" module', client => {
-        module_common_scenarios.checkConfigPage(client, ModulePage, "PrestaShop Security");
+        module_common_scenarios.checkConfigPage(client, ModulePage, "prestafraud");
     }, 'common_client');
     scenario('Uninstall "PrestaShop Security" module', client => {
-        module_common_scenarios.uninstallModule(client, ModulePage, AddProductPage, "PrestaShop Security", "prestafraud");
+        module_common_scenarios.uninstallModule(client, ModulePage, AddProductPage, "prestafraud");
     }, 'common_client');
     scenario('Logout from the Back Office', client => {
         test('should logout successfully from the Back Office', () => client.signOutBO());
