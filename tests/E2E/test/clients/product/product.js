@@ -21,11 +21,11 @@ class Product extends CommonClient {
       .then((text) => expect(Number(global.productIdElement[1])).to.be.above(Number(global.productIdElement[2])));
   }
 
-  checkCategoryRadioButton(i, j) {
+  checkCategoryRadioButton(categoryValue) {
     return this.client
-      .waitForVisible('//*[@id="form_step1_categories"]/ul/li[2]/ul/li[1]/ul/li['+i+']/ul/li['+j+']/div/label/input[2]')
+      .waitForVisible(AddProductPage.category_radio_button.replace('%VALUE', categoryValue))
       .scroll(0, 1000)
-      .isVisible('//*[@id="form_step1_categories"]/ul/li[2]/ul/li[1]/ul/li['+i+']/ul/li['+j+']/div/label/input[2]', 60000)
+      .isVisible(AddProductPage.category_radio_button.replace('%VALUE', categoryValue), 60000)
       .then((text) => expect(text).to.be.true);
   }
 
@@ -72,7 +72,7 @@ class Product extends CommonClient {
       .waitAndSetValue(AddProductPage.options_upc, data.common.upc)
   }
 
-  addPackProduct(search,quantity) {
+  addPackProduct(search, quantity) {
     return this.client
       .waitAndSetValue(AddProductPage.search_product_pack, search)
       .waitForExistAndClick(AddProductPage.product_item_pack)
@@ -91,12 +91,6 @@ class Product extends CommonClient {
     return this.client
       .waitForVisible(AddProductPage.product_create_category_btn, 90000)
       .waitForVisibleAndClick(AddProductPage.category_home)
-  }
-
-  selectBrand() {
-    return this.client
-      .waitForExistAndClick(AddProductPage.product_brand_select)
-      .waitForExistAndClick(AddProductPage.product_brand_select_option)
   }
 
   searchAndAddRelatedProduct() {
@@ -121,10 +115,28 @@ class Product extends CommonClient {
       .waitAndSetValue(AddProductPage.feature_custom_value_height, data.standard.features.feature1.custom_value)
   }
 
-  addProductPriceTaxExcluded() {
+  setPrice(selector, price) {
     return this.client
-      .scrollTo(AddProductPage.priceTE_shortcut, 50)
-      .waitAndSetValue(AddProductPage.priceTE_shortcut, data.common.priceTE)
+      .scrollTo(selector, 50)
+      .waitAndSetValue(selector, price)
+  }
+
+  setVariationsQuantity(addProductPage, value) {
+    return this.client
+      .pause(4000)
+      .waitAndSetValue(addProductPage.var_selected_quantitie, value)
+      .scrollTo(addProductPage.combinations_thead)
+      .waitForExistAndClick(addProductPage.save_quantitie_button)
+  }
+
+  selectFeature(addProductPage, name, value) {
+    return this.client
+      .moveToObject(addProductPage.feature_select)
+      .waitForExistAndClick(addProductPage.feature_select)
+      .waitAndSetValue(addProductPage.select_feature_created, name)
+      .waitForExistAndClick(addProductPage.result_feature_select.replace('%ID', 0))
+      .pause(2000)
+      .selectByVisibleText(addProductPage.feature_value_select, value)
   }
 
 }

@@ -2,6 +2,7 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
+
 scenario('Create product with combination', client => {
     test('should open browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
@@ -18,11 +19,15 @@ scenario('Create product with combination', client => {
         test('should click on "Create"', () => client.createCategory());
         test('should remove "HOME" category', () => client.removeHomeCategory());
         test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
-        test('should select a brand', () => client.selectBrand());
+        test('should select brand', () => {
+            return promise
+                .then(() => client.waitForExistAndClick(AddProductPage.product_brand_select))
+                .then(() => client.waitForExistAndClick(AddProductPage.product_brand_select_option));
+        });
         test('should click on "ADD RELATED PRODUCT"', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
         test('should search and add a related product', () => client.searchAndAddRelatedProduct());
         test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('combination'));
-        test('should set "Tax exclude" price', () => client.addProductPriceTaxExcluded());
+        test('should set "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
         test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
         test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
     }, 'product/product');

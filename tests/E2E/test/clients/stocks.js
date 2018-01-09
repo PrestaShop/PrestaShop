@@ -1,5 +1,5 @@
 var CommonClient = require('./common_client');
-
+let promise = Promise.resolve();
 global.tab = [];
 
 class ModifyQuantity extends CommonClient {
@@ -14,15 +14,15 @@ class ModifyQuantity extends CommonClient {
   modifyProductQuantity(Stock, order, quantity) {
     return this.client
       .pause(1000)
-      .waitForExist(Stock.product_quantity.replace('%O',order), 90000)
-      .then(() => this.client.getText(Stock.product_quantity.replace('%O',order)))
+      .waitForExist(Stock.product_quantity.replace('%O', order), 90000)
+      .then(() => this.client.getText(Stock.product_quantity.replace('%O', order)))
       .then((text) => global.tab["productQuantity"] = text)
-      .waitAndSetValue(Stock.product_quantity_input.replace('%O',order), quantity)
-      .then(() => this.client.getText(Stock.product_quantity_modified.replace('%O',order)))
+      .waitAndSetValue(Stock.product_quantity_input.replace('%O', order), quantity)
+      .then(() => this.client.getText(Stock.product_quantity_modified.replace('%O', order)))
       .then((text) => expect(text.substring(14)).to.be.equal((Number(global.tab["productQuantity"]) + quantity).toString()));
   }
 
-  checkMovement(selector,order, quantity, variation, type) {
+  checkMovement(selector, order, quantity, variation, type) {
     return this.client
       .waitForVisible(selector.variation_value.replace('%P', order), 90000)
       .then(() => this.client.getText(selector.variation_value.replace('%P', order)))
@@ -41,6 +41,16 @@ class ModifyQuantity extends CommonClient {
       })
       .selectByVisibleText(selector.order_state_select, state)
       .waitForExistAndClick(selector.update_status_button)
+  }
+
+  checkOrderMovement(Movement, client) {
+    if (global.tab['firstMovementDate'] === global.tab['secondMovementDate']) {
+      promise = client.checkMovement(Movement, 1, "15", "+", "Employee Edition");
+      return promise.then(() => client.checkMovement(Movement, 2, "50", "+", "Employee Edition"));
+    } else {
+      promise = client.checkMovement(Movement, 1, "50", "+", "Employee Edition");
+      return promise.then(() => client.checkMovement(Movement, 2, "15", "+", "Employee Edition"));
+    }
   }
 
 }

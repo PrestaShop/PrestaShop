@@ -36,7 +36,7 @@ scenario('Check the feature modification', () => {
   }, 'attribute_and_feature');
   scenario('Check that the feature is well updated in Front Office', client => {
     test('should set the shop language to "English"', () => client.changeLanguage('english'));
-    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'Feature'));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, "Feat" + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the name of created feature is : "'+ 'Feature' + date_time +'update"', () => client.checkTextValue(SearchProductPage.feature_name, 'Feature' + date_time + 'update'));
     test('should check that the value of created feature is : "Feature Value Update"', () => client.checkTextValue(SearchProductPage.feature_value, 'Feature Value Update'));
