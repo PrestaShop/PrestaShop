@@ -1141,35 +1141,76 @@ class CartCore extends ObjectModel
      * @param int $id_customization Customization ID
      * @param int $id_address_delivery Delivery Address ID
      *
-     * @return array|bool|null|object Whether the Cart contains the Product
-     *                                Result comes directly from the database
+     * @return array quantity index     : number of product in cart without counting those of pack in cart
+     *               deep_quantity index: number of product in cart counting those of pack in cart
      */
-    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
+    public function getProductQuantity($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
-        $sql = 'SELECT cp.`quantity` FROM `'._DB_PREFIX_.'cart_product` cp';
+        $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity 
+          FROM `'._DB_PREFIX_.'cart_product` cp';
+        $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
+          FROM `'._DB_PREFIX_.'cart_product` cp' .
+            ' JOIN `'._DB_PREFIX_.'pack` p ON cp.`id_product` = p.`id_product_pack`';
 
         if ($id_customization) {
-            $sql .= '
+            $customizationJoin = '
                 LEFT JOIN `'._DB_PREFIX_.'customization` c ON (
                     c.`id_product` = cp.`id_product`
                     AND c.`id_product_attribute` = cp.`id_product_attribute`
                 )';
+            $firstUnionSql .= $customizationJoin;
+            $secondUnionSql .= $customizationJoin;
         }
-
-        $sql .= '
-            WHERE cp.`id_product` = '.(int)$id_product.'
-            AND cp.`id_product_attribute` = '.(int)$id_product_attribute.'
+        $commonWhere = '
+            WHERE cp.`id_product_attribute` = '.(int)$id_product_attribute.'
             AND cp.`id_customization` = '.(int)$id_customization.'
             AND cp.`id_cart` = '.(int)$this->id;
+        $firstUnionSql .=  $commonWhere;
+        $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $id_product;
+        $secondUnionSql .= $commonWhere;
+        $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $id_product;
+
         if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
-            $sql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
+            $firstUnionSql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
+            $secondUnionSql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
         }
 
         if ($id_customization) {
-            $sql .= ' AND c.`id_customization` = '.(int)$id_customization;
+            $firstUnionSql .= ' AND c.`id_customization` = '.(int)$id_customization;
+            $secondUnionSql .= ' AND c.`id_customization` = '.(int)$id_customization;
+        }
+        $parentSql = 'SELECT 
+            COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
+            COALESCE(SUM(first_level_quantity), 0) as quantity 
+          FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
+        $result = Db::getInstance()->getRow($parentSql);
+
+        return Db::getInstance()->getRow($parentSql);
+    }
+
+    /**
+     * Check if the Cart contains the given Product (Attribute)
+     *
+     * @deprecated 1.7.3.1
+     * @see Cart::getProductQuantity()
+     *
+     * @param int $id_product Product ID
+     * @param int $id_product_attribute ProductAttribute ID
+     * @param int $id_customization Customization ID
+     * @param int $id_address_delivery Delivery Address ID
+     *
+     * @return array|bool Whether the Cart contains the Product
+     *                                Result comes directly from the database
+     */
+    public function containsProduct($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
+    {
+        $result = $this->getProductQuantity($id_product, $id_product_attribute, $id_customization, $id_address_delivery);
+
+        if (empty($result['quantity'])) {
+            return false;
         }
 
-        return Db::getInstance()->getRow($sql);
+        return array('quantity' => $result['quantity']);
     }
 
     /**
@@ -1260,49 +1301,32 @@ class CartCore extends ObjectModel
             return false;
         } else {
             /* Check if the product is already in the cart */
-            $result = $this->containsProduct($id_product, $id_product_attribute, (int)$id_customization, (int)$id_address_delivery);
+            $cartProductQuantity = $this->getProductQuantity($id_product, $id_product_attribute, (int)$id_customization, (int)$id_address_delivery);
 
             /* Update quantity if product already exist */
-            if ($result) {
+            if (!empty($cartProductQuantity['quantity'])) {
+                $productQuantity = Product::getQuantity($id_product, $id_product_attribute);
+
                 if ($operator == 'up') {
-                    $sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
-                            FROM '._DB_PREFIX_.'product p
-                            '.Product::sqlStock('p', $id_product_attribute, true, $shop).'
-                            WHERE p.id_product = '.$id_product;
+                    $updateQuantity = '+ ' . $quantity;
+                    $newProductQuantity = $productQuantity - $quantity;
 
-                    $result2 = Db::getInstance()->getRow($sql);
-                    $product_qty = (int)$result2['quantity'];
-                    // Quantity for product pack
-                    if (Pack::isPack($id_product)) {
-                        $product_qty = Pack::getQuantity($id_product, $id_product_attribute);
+                    if ($newProductQuantity < 0) {
+                        return false;
                     }
-                    $new_qty = (int)$result['quantity'] + (int)$quantity;
-                    $qty = '+ '.(int)$quantity;
-
-                    if (!$skipAvailabilityCheckOutOfStock && !Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
-                        if ($new_qty > $product_qty) {
-                            return false;
-                        }
-                    }
-                } elseif ($operator == 'down') {
-                    $qty = '- '.(int)$quantity;
-                    $new_qty = (int)$result['quantity'] - (int)$quantity;
-                    if ($new_qty < $minimal_quantity && $minimal_quantity > 1) {
-                        return -1;
-                    }
+                } else if ($operator == 'down') {
+                    $updateQuantity = '- ' . $quantity;
+                    $newProductQuantity = $productQuantity + $quantity;
                 } else {
                     return false;
                 }
 
-                /* Delete product from cart */
-                if ($new_qty <= 0) {
+                if ($newProductQuantity < 0) {
                     return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
-                } elseif ($new_qty < $minimal_quantity) {
-                    return -1;
                 } else {
                     Db::getInstance()->execute(
                         'UPDATE `'._DB_PREFIX_.'cart_product`
-                        SET `quantity` = `quantity` '.$qty.'
+                        SET `quantity` = `quantity` ' . $updateQuantity . '
                         WHERE `id_product` = '.(int)$id_product.
                         ' AND `id_customization` = '.(int)$id_customization.
                         (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'

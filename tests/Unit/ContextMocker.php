@@ -40,6 +40,7 @@ use Product;
 use Shop;
 use Smarty;
 use Tools;
+use Pack;
 
 /**
  * This helper class provides methods to initialize context for front controller tests
@@ -84,6 +85,7 @@ class ContextMocker
         Carrier::resetStaticCache();
         CartRule::resetStaticCache();
         Shop::resetContext();
+        Pack::resetStaticCache();
 
         $this->contextBackup = Context::getContext();
         $context             = clone($this->contextBackup);
