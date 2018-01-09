@@ -9,13 +9,15 @@ scenario('Create order in BO', client => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'order/order');
 
-  scenario('Create order in BO', client => {
-
+  scenario('Close the onboarding modal if exist ', client => {
     test('should close the onboarding modal if exist', () => {
       return promise
         .then(() => client.isVisible(OnBoarding.welcome_modal))
         .then(() => client.closeBoarding(OnBoarding.popup_close_button))
     });
+  }, 'order/order');
+  
+  scenario('Create order in BO', client => {
     test('should go to orders list', () => client.goToSubtabMenuPage(OrderPage.orders_subtab, OrderPage.order_submenu));
     test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button));
     test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, 'john doe'));

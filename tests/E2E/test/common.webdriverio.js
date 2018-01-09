@@ -56,11 +56,10 @@ function initCommands(client) {
             .getLocation(selector, 'y')
             .then((location) => client.scroll(0, location - margin));
     });
-    
+
     client.addCommand('scrollWaitForExistAndClick', function (selector, margin = 150, timeout = 90000) {
         return client
-            .getLocation(selector, 'y')
-            .then((location) => client.scroll(0, location - margin))
+            .scrollTo(selector, margin)
             .waitForExistAndClick(selector, timeout)
     });
 
@@ -81,7 +80,7 @@ function initCommands(client) {
             .waitForExist(selector, timeout)
             .selectByVisibleText(selector, value)
     });
-    
+
     client.addCommand('signInBO', function (selector) {
         this.selector = globals.selector;
         return client

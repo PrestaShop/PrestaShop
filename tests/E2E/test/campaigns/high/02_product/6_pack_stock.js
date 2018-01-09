@@ -7,21 +7,21 @@ const {buyOrderPage}= require('../../../selectors/FO/buy_order_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {layerCart}= require('../../../selectors/FO/layer_cart_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const common_scenarios = require('../2_product/product');
+const common_scenarios = require('../02_product/product');
 
-productData = [{
-  name: 'productA',
+var productData = [{
+  name: 'A',
   quantity: "50",
   price: '5',
   image_name: 'image_test.jpg',
 }, {
   type: "pack",
-  name: 'productB',
+  name: 'B',
   quantity: "5",
   price: '5',
   image_name: 'image_test.jpg',
   product: {
-    name: "productA",
+    name: "A",
     quantity: "10"
   }
 }];
@@ -48,7 +48,7 @@ scenario('Check "Orders"', client => {
   }, 'product/product');
   scenario('Create order with 50 item of product A', client => {
     test('should change the FO language to english', () => client.changeLanguage());
-    test('should search for the product "A"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[0]['name']));
+    test('should search for the product "A"', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[0]['name'] + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, "50"));
     test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(buyOrderPage.add_to_cart_button));
@@ -56,7 +56,7 @@ scenario('Check "Orders"', client => {
     test('should click on proceed to checkout button', () => client.waitForExistAndClick(layerCart.command_button));
   }, 'order/order');
   scenario('Create order with 10 item of pack B ', client => {
-    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[1]['name']));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[1]['name'] + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should verify that the button "AJOUTER AU PANIER" is DISABLED', () => client.checkEnable(buyOrderPage.add_to_cart_button));
   }, 'order/order');
