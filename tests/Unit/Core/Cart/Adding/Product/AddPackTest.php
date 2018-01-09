@@ -30,6 +30,22 @@ use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddPackTest extends AbstractCartTest
 {
+    public function testProductQuantity()
+    {
+        $idProductInPackFixture = 5;
+        $idPackFixture = 6;
+        $pack = $this->getProductFromFixtureId($idPackFixture);
+        $productPack = $this->getProductFromFixtureId($idProductInPackFixture);
+        $idPack = $pack->id;
+        $idProductInPack = $productPack->id;
+        $nbPack = \Product::getQuantity($idPack);
+        $nbProduct = \Product::getQuantity($idProductInPack);
+        $this->assertEquals(10, $nbPack);
+        $this->assertEquals(50, $nbProduct);
+        $this->assertTrue(\Pack::isInStock($idPack));
+        $this->assertTrue(\Pack::isInStock($idProductInPack));
+    }
+
     public function testPackInCart()
     {
         $idProductInPackFixture = 5;
@@ -44,8 +60,8 @@ class AddPackTest extends AbstractCartTest
         $this->assertTrue($this->cart->updateQty(3, $idPack));
         $this->assertTrue($this->cart->updateQty(30, $idProductInPack));
 
-        $nbPackInCart = $this->cart->containsProduct($idPack);
-        $nbProductInCart = $this->cart->containsProduct($idProductInPack);
+        $nbPackInCart = $this->cart->getProductQuantity($idPack);
+        $nbProductInCart = $this->cart->getProductQuantity($idProductInPack);
         $cartProducts = $this->cart->getProducts(true);
 
         $this->assertCount(2, $cartProducts);

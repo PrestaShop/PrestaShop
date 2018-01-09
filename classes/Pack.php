@@ -30,6 +30,13 @@ class PackCore extends Product
     protected static $cacheIsPack = array();
     protected static $cacheIsPacked = array();
 
+    public static function resetStaticCache()
+    {
+        self::$cachePackItems = array();
+        self::$cacheIsPack = array();
+        self::$cacheIsPacked = array();
+    }
+
     /**
      * Is product a pack?
      *
