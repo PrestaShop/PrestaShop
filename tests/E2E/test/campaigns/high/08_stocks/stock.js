@@ -16,7 +16,7 @@ module.exports = {
       }
       return promise
         .then(() => client.getTextInVar(Stock.product_quantity.replace('%O', orderProduct), "productQuantity"))
-        .then(() => client.checkTextValue(Stock.product_quantity_modified, global.tab["productQuantity"].substring(18), "contain"));
+        .then(() => client.checkTextValue(Stock.product_quantity_modified.replace('%O', orderProduct), global.tab["productQuantity"].substring(18), "contain"));
     });
     test('should click on "Check" button of the third product quantity', () => client.waitForExistAndClick(Stock.save_product_quantity_button));
   },

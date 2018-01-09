@@ -1,28 +1,36 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 var data = require('./../../../datas/product-data');
+let promise = Promise.resolve();
 
-scenario('Create virtual Product', client => {
+scenario('Create a pack of products', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
   test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
   scenario('Edit the Basic settings', client => {
-    test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.virtual.name + date_time));
-    test('should select the "virtual product"', () => client.waitAndSelectByValue(AddProductPage.product_type, 2));
-    test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
-    test('should upload the first product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
+    test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.pack.name + date_time));
+    test('should select the "Pack of products"', () => client.waitAndSelectByValue(AddProductPage.product_type, 1));
+    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack1.search,data.pack.pack.pack1.quantity));
+    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack2.search,data.pack.pack.pack2.quantity));
+    test('set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
+    test('should upload the product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
-    test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.virtual.new_category_name + date_time));
+    test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.pack.new_category_name + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('should remove the "HOME" category', () => client.removeHomeCategory());
+    test('should remove "HOME" category', () => client.removeHomeCategory());
     test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
-    test('should select brand', () => client.selectBrand());
-    test('should click on "ADD RELATED PRODUCT"', () => client.waitForExistAndClick(AddProductPage.add_related_product_btn));
+    test('should select brand', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(AddProductPage.product_brand_select))
+        .then(() => client.waitForExistAndClick(AddProductPage.product_brand_select_option));
+
+    });
+    test('should click on "ADD RELATED PRODUCT"', () => client.scrollWaitForExistAndClick(AddProductPage.add_related_product_btn, 50));
     test('should search and add a related product', () => client.searchAndAddRelatedProduct());
-    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('virtual'));
-    test('should set the "Tax exclude" price', () => client.addProductPriceTaxExcluded());
+    test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('pack'));
+    test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
     test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
   }, 'product/product');
@@ -31,17 +39,21 @@ scenario('Create virtual Product', client => {
     test('should click on "Quantities"', () => client.scrollWaitForExistAndClick(AddProductPage.product_quantities_tab, 50));
     test('should set the "Quantity"', () => client.waitAndSetValue(AddProductPage.product_quantity_input, data.common.quantity));
     test('should set the "Minimum quantity for sale"', () => client.waitAndSetValue(AddProductPage.minimum_quantity_sale, data.common.qty_min));
-    test('should indicate that the product have an associated file', () => client.associatedFile());
-    test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
-    test('should add file "NAME"', () => client.waitAndSetValue(AddProductPage.virtual_file_name, data.virtual.attached_file_name));
-    test('should add file "NUMBER"', () => client.waitAndSetValue(AddProductPage.virtual_file_number_download, data.virtual.allowed_number_to_download));
-    test('should add file "EXPIRATION DATE"', () => client.waitAndSetValue(AddProductPage.virtual_expiration_file_date, data.virtual.expiration_date));
-    test('should add file "DAYS NUMBER"', () => client.waitAndSetValue(AddProductPage.virtual_number_days, data.virtual.number_of_days));
-    test('should save attached file', () => client.waitForExistAndClick(AddProductPage.virtual_save_attached_file));
-    test('should click on "Deny orders"', () => client.scrollWaitForExistAndClick(AddProductPage.pack_availability_preferences, 50));
+    test('should set the "Pack quantity"', () => client.waitAndSelectByValue(AddProductPage.pack_stock_type, '2'));
+    test('should click on "Deny orders"', () => client.waitForExistAndClick(AddProductPage.pack_availability_preferences));
     test('should set the "label when in stock"', () => client.waitAndSetValue(AddProductPage.pack_label_in_stock, data.common.qty_msg_stock));
     test('should set the "Label when out of stock (and back order allowed)"', () => client.availability());
     test('should set the "Availability date"', () => client.waitAndSetValue(AddProductPage.pack_availability_date, data.common.qty_date));
+  }, 'product/product');
+
+  scenario('Edit product shipping', client => {
+    test('should click on "Shipping"', () => client.scrollWaitForExistAndClick(AddProductPage.product_shipping_tab, 50));
+    test('should set the "Width"', () => client.waitAndSetValue(AddProductPage.shipping_width, data.common.cwidth));
+    test('should set the "Height"', () => client.waitAndSetValue(AddProductPage.shipping_height, data.common.cheight));
+    test('should set the "Depth"', () => client.waitAndSetValue(AddProductPage.shipping_depth, data.common.cdepth));
+    test('should set the "Weight"', () => client.waitAndSetValue(AddProductPage.shipping_weight, data.common.cweight));
+    test('should set the "Does this product incur additional shipping costs?"', () => client.waitAndSetValue(AddProductPage.shipping_fees, data.common.cadd_ship_coast));
+    test('should click on "My carrier (Delivery next day!)"', () => client.scrollWaitForExistAndClick(AddProductPage.shipping_available_carriers, 50));
   }, 'product/product');
 
   scenario('Edit product pricing', client => {
@@ -90,10 +102,10 @@ scenario('Check the product in the catalog', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.goToCatalog());
-  test('should search for product by name', () => client.searchProductByName(data.virtual.name + date_time));
-  test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.virtual.name + date_time));
+  test('should search for product by name', () => client.searchProductByName(data.pack.name + date_time));
+  test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.pack.name + date_time));
   test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
-  test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.virtual.new_category_name + date_time));
+  test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.pack.new_category_name + date_time));
   test('should check the existence of product price TE', () => client.checkProductPriceTE());
   test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, data.common.quantity));
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));

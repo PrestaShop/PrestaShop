@@ -52,26 +52,8 @@ class CommonClient {
             });
     }
 
-    OnBoarding(selector) {
-    if (global.onboarding == true) {
-      return this.client
-        .click(selector.popup_close_button)
-        .pause(2000)
-    } else {
-      return this.client
-        .pause(1000)
-    }
-    }
-
-  takeScreenshot() {
-    return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
-  }
-
-    successPanel(index) {
-        return this.client
-            .waitForExist(selector.CatalogPage.success_panel)
-            .then(() => this.client.getText(selector.CatalogPage.success_panel))
-            .then((text) => expect(text.substr(2)).to.be.equal(index));
+    takeScreenshot() {
+        return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
     }
 
     changeLanguage(language) {
@@ -94,11 +76,11 @@ class CommonClient {
         return this.client.end();
     }
 
-      waitForExistAndClick(selector, pause=0, timeout = 90000) {
-        return this.client
-          .pause(pause)
-          .waitForExistAndClick(selector, timeout);
-      }
+    waitForExistAndClick(selector, pause=0, timeout = 90000) {
+      return this.client
+	.pause(pause)
+	.waitForExistAndClick(selector, timeout);
+    }
 
     waitAndSetValue(selector, value, timeout = 90000) {
         return this.client.waitAndSetValue(selector, value, timeout);
@@ -230,10 +212,10 @@ class CommonClient {
             .pause(5000)
     }
 
-      waitForVisible(selector, timeout = 90000) {
-        return this.client
-          .waitForVisible(selector, timeout)
-      }
+    waitForVisible(selector, timeout = 90000) {
+      return this.client
+	.waitForVisible(selector, timeout)
+    }
 }
 
 module.exports = CommonClient;

@@ -2,6 +2,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {CategorySubMenu} = require('../../../selectors/BO/catalogpage/category_submenu');
+let promise = Promise.resolve();
 
 scenario('Create "Category"', () => {
     scenario('Login in the Back Office', client => {
@@ -19,7 +20,6 @@ scenario('Create "Category"', () => {
         test('should set the "Meta keywords" input', () => client.waitAndSetValue(CategorySubMenu.keyswords, 'keyswords'));
         test('should set the "Simplify url" input', () => client.waitAndSetValue(CategorySubMenu.simplify_URL_input, 'category' + date_time));
         test('should click on "Save" button', () => {
-            let promise = Promise.resolve();
             return promise
                 .then(() => client.scrollWaitForExistAndClick(CategorySubMenu.save_button, 50))
                 .then(() => client.getTextInVar(CategorySubMenu.category_number_span, "number_category"))
@@ -60,7 +60,6 @@ scenario('Check "Category" in the Front Office', () => {
         test('should change front office language to english', () => client.changeLanguage('english'));
         test('should click on "All products" link', () => client.scrollWaitForExistAndClick(AccessPageFO.product_list_button, 50));
         test('should check the existence of the created category', () => {
-            let promise = Promise.resolve();
             for (let i = 1; i < (parseInt(tab["number_category"]) + 1); i++) {
                 promise = client.getCategoriesName(AccessPageFO.categories_list, i);
             }
