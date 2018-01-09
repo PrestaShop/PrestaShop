@@ -3,7 +3,8 @@ const {OrderPage} = require('../../../selectors/BO/order_page');
 const {CreateOrder} = require('../../../selectors/BO/create_order');
 const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 let promise = Promise.resolve();
-scenario('Create order in BO', client => {
+
+scenario('Create order in BO', () => {
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));

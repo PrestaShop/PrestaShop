@@ -6,13 +6,13 @@ Until we can do more documentation, please have a look at the existing tests and
 
 ## Requirements 
 To run these tests you have to install
-* node.js
-* npm
-* java
-* Google Chrome
+* [node.js](https://nodejs.org/en/download/)
+* [npm](https://www.npmjs.com/get-npm)
+* [java](https://java.com/fr/download/)
+* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html?brand=CHBD&gclid=EAIaIQobChMIva2UgZTN2AIVjjgbCh2kcA9MEAAYASAAEgKC8fD_BwE)
 
 ## How to run the tests
-To use the following test suites, you need to install PrestaShop in **English** with setting country to **France**. (or you may change some assertions like the separator “,” or “.”, “€” or “$” or “£” or …) You need to create a user in Back Office with **SuperAdmin** rights and the following information’s:
+To use the following test suites, you need to install PrestaShop in **English** with setting country to **France** (or you may change some assertions like the separator “,” or “.”, “€” or “$” or “£” or …) You need to create a user in Back Office with **SuperAdmin** rights and the following information:
 
 * **Login**: demo@prestashop.com
 * **Password**: prestashop_demo
@@ -27,7 +27,7 @@ To install npm dependencies, selenium-server, chromedriver and geckodriver you h
 
 ### Launch selenium-standalone
 
-Then you have to lunch selenium-standalone 
+Then you have to launch selenium-standalone 
 ```
 ➜  npm run start-selenium
 ```
@@ -45,6 +45,12 @@ Selenium started
 ```
 ➜  npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory
 ```
-* URL: Front office URL of your prestashop website (without the “http://”)
-* DIR: Your download directory (exp: /home/toto/Downloads/) 
+* **URL**: Front office URL of your prestashop website (without the “http://”)
+* **DIR**: Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
 
+If you want to run test only on specific parts (for example products), you have to run this command:
+```
+➜  path=high/02_product npm run specific-test -- --URL=FrontOfficeURL
+```
+
+* **path**: path of directory you want to test.
