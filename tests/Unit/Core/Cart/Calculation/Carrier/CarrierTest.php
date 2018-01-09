@@ -145,6 +145,15 @@ class CarrierTest extends AbstractCartCalculationTest
      */
     protected $addresses = [];
 
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->resetCart();
+        $this->insertAddresses();
+        $this->insertCarriers();
+    }
+
     public function tearDown()
     {
         $this->cart->id_carrier          = 0;
@@ -196,14 +205,13 @@ class CarrierTest extends AbstractCartCalculationTest
         $addressId,
         $carrierId
     ) {
-        $this->resetCart();
-        $this->insertAddresses();
-        $this->insertCarriers();
-
+        // specific setUp
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
         $this->setCartCarrier($carrierId);
         $this->setCartAddress($addressId);
+
+        // assertions
         $this->assertEquals($expectedShippingFees, $this->cart->getPackageShippingCost($this->cart->id_carrier));
         $this->compareCartTotalTaxIncl($expectedTotal);
     }
@@ -220,14 +228,13 @@ class CarrierTest extends AbstractCartCalculationTest
         $addressId,
         $carrierId
     ) {
-        $this->resetCart();
-        $this->insertAddresses();
-        $this->insertCarriers();
-
+        // specific setUp
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
         $this->setCartCarrier($carrierId);
         $this->setCartAddress($addressId);
+
+        // assertions
         $this->assertEquals(
             round($expectedShippingFees, 1),
             round($this->cart->getPackageShippingCost($this->cart->id_carrier), 1)

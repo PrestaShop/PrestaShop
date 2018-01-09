@@ -37,10 +37,13 @@ class Calculator
      */
     protected $cart;
 
+    /**
+     * @var int
+     */
     protected $id_carrier;
 
     /**
-     * @var CartRowCollection
+     * @var CartRowCollection collection of cart content row (product+qty)
      */
     protected $cartRows;
 
@@ -71,12 +74,15 @@ class Calculator
     /**
      * insert a new cart row in the calculator
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\CartRow $cartRow
+     * @param CartRow $cartRow cart item row (product+qty informations)
      *
      * @return $this
      */
     public function addCartRow(CartRow $cartRow)
     {
+        // reset state
+        $this->isProcessed = false;
+
         $this->cartRows->addCartRow($cartRow);
 
         return $this;
@@ -91,13 +97,16 @@ class Calculator
      */
     public function addCartRule(CartRuleData $cartRule)
     {
+        // reset state
+        $this->isProcessed = false;
+
         $this->cartRules->addCartRule($cartRule);
 
         return $this;
     }
 
     /**
-     * run the whole calculation process
+     * run the whole calculation process: calculate rows, discounts, fees
      *
      * @return $this
      */
@@ -124,7 +133,7 @@ class Calculator
     /**
      * @param bool $withTaxes
      *
-     * @return Amount
+     * @return AmountImmutable
      * @throws \Exception
      */
     public function getTotal()
@@ -133,57 +142,45 @@ class Calculator
             throw new \Exception('Cart must be processed before getting its total');
         }
 
-        $amount = new Amount;
+        $amount = new AmountImmutable;
         foreach ($this->cartRows as $cartRow) {
             $rowPrice = $cartRow->getFinalTotalPrice();
-            $amount->add($rowPrice);
+            $amount = $amount->add($rowPrice);
         }
         $shippingFees = $this->fees->getFinalShippingFees();
-        $amount->add($shippingFees);
+        $amount = $amount->add($shippingFees);
         $wrappingFees = $this->fees->getFinalWrappingFees();
-        $amount->add($wrappingFees);
+        $amount = $amount->add($wrappingFees);
 
         return $amount;
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      * @throws \Exception
      */
     public function getRowTotal()
     {
-        $amount = new Amount;
+        $amount = new AmountImmutable;
         foreach ($this->cartRows as $cartRow) {
-            $amount->setTaxIncluded($amount->getTaxIncluded() + $cartRow->getFinalTotalPrice()->getTaxIncluded());
-            $amount->setTaxExcluded($amount->getTaxExcluded() + $cartRow->getFinalTotalPrice()->getTaxExcluded());
+            $amount = $amount->add($cartRow->getFinalTotalPrice());
         }
 
         return $amount;
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      * @throws \Exception
      */
     public function getDiscountTotal()
     {
-        $amount = new Amount;
+        $amount = new AmountImmutable;
         foreach ($this->cartRules as $cartRule) {
-            $amount->setTaxIncluded($amount->getTaxIncluded() + $cartRule->getDiscountApplied()->getTaxIncluded());
-            $amount->setTaxExcluded($amount->getTaxExcluded() + $cartRule->getDiscountApplied()->getTaxExcluded());
+            $amount = $amount->add($cartRule->getDiscountApplied());
         }
 
         return $amount;
-    }
-
-    /**
-     * Calculate row total
-     *
-     * @param \PrestaShop\PrestaShop\Core\Cart\CartRow $cartRow
-     */
-    protected function calculateRowTotal(CartRow $cartRow)
-    {
-        $cartRow->processCalculation($this->cart);
     }
 
     /**
@@ -193,14 +190,12 @@ class Calculator
      */
     public function setCart($cart)
     {
+        // reset state
+        $this->isProcessed = false;
+
         $this->cart = $cart;
 
         return $this;
-    }
-
-    protected function calculateFees()
-    {
-        $this->fees->processCalculation($this->cart, $this->cartRows, $this->id_carrier);
     }
 
     /**
@@ -210,6 +205,9 @@ class Calculator
      */
     public function setCarrierId($id_carrier)
     {
+        // reset state
+        $this->isProcessed = false;
+
         $this->id_carrier = $id_carrier;
 
         return $this;
@@ -229,5 +227,23 @@ class Calculator
     public function getCart()
     {
         return $this->cart;
+    }
+
+    /**
+     * Calculate row total
+     *
+     * @param CartRow $cartRow
+     */
+    protected function calculateRowTotal(CartRow $cartRow)
+    {
+        $cartRow->processCalculation($this->cart);
+    }
+
+    /**
+     * calculate wrapping and shipping fees
+     */
+    protected function calculateFees()
+    {
+        $this->fees->processCalculation($this->cart, $this->cartRows, $this->id_carrier);
     }
 }

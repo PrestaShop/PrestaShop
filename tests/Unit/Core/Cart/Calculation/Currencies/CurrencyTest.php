@@ -217,7 +217,7 @@ class CurrencyTest extends AbstractCartCalculationTest
         if ($defaultCurrencyId == $currencyId) {
             $rate = 1;
         } else {
-            $rate = 1 * static::CURRENCY_FIXTURES[$currencyId]['changeRate'];
+            $rate = static::CURRENCY_FIXTURES[$currencyId]['changeRate'];
         }
 
 
