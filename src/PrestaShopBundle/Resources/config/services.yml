@@ -1,6 +1,7 @@
 imports:
     - { resource: admin/services.yml }
     - { resource: admin/services-form.yml }
+    - { resource: admin/services_alias.yml }
     - { resource: adapter/services.yml }
 
 parameters:
