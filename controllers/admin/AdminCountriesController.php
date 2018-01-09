@@ -130,8 +130,8 @@ class AdminCountriesControllerCore extends AdminController
     }
 
     /**
-     * AdminController::setMedia($isNewTheme = false) override
-     * @see AdminController::setMedia($isNewTheme = false)
+     * AdminController::setMedia() override
+     * @see AdminController::setMedia()
      */
     public function setMedia($isNewTheme = false)
     {
