@@ -24,8 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Core\Cart\Amount;
+use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
+use PrestaShop\PrestaShop\Core\Cart\Calculator;
+use PrestaShop\PrestaShop\Core\Cart\CartRow;
+use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class CartCore extends ObjectModel
 {
@@ -1758,8 +1763,6 @@ class CartCore extends ObjectModel
         $id_carrier = null,
         $use_cache = true
     ) {
-        $t=Configuration::get('_PS_PRICE_COMPUTE_PRECISION_');
-        $b=$t;
         // Dependencies
         /** @var \PrestaShop\PrestaShop\Adapter\Product\PriceCalculator $price_calculator */
         $price_calculator = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator');
@@ -1810,7 +1813,6 @@ class CartCore extends ObjectModel
             $type = Cart::BOTH_WITHOUT_SHIPPING;
         }
 
-        //$tutu = $this->getTotalShippingCost(null, (bool)$with_taxes);
         if ($with_shipping || $type == Cart::ONLY_DISCOUNTS) {
             if (is_null($products) && is_null($id_carrier)) {
                 $shipping_fees = $this->getTotalShippingCost(null, (bool)$with_taxes);
@@ -1952,9 +1954,9 @@ class CartCore extends ObjectModel
 
             // Then, calculate the contextual value for each one
             $flag = false;
-            foreach ($cart_rules as $cart_rule) {
+            foreach ($cart_rules as $item) {
                 /** @var \CartRule $cartRule */
-                $cartRule = $cart_rule['obj'];
+                $cartRule = $item['obj'];
                 // If the cart rule offers free shipping, add the shipping cost
                 if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cartRule->free_shipping && !$flag) {
                     $order_shipping_discount = (float)Tools::ps_round($cartRule->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), $compute_precision);
@@ -2007,7 +2009,7 @@ class CartCore extends ObjectModel
     /**
      * This function returns the total cart amount
      *
-     * @param bool  $with_taxes With or without taxes
+     * @param bool  $withTaxes  With or without taxes
      * @param int   $type       Total type enum
      *                          - Cart::ONLY_PRODUCTS
      *                          - Cart::ONLY_DISCOUNTS
@@ -2025,7 +2027,7 @@ class CartCore extends ObjectModel
      *
      */
     public function getOrderTotalV2(
-        $with_taxes = true,
+        $withTaxes = true,
         $type = Cart::BOTH,
         $products = null,
         $id_carrier = null
@@ -2051,7 +2053,7 @@ class CartCore extends ObjectModel
             Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING,
         );
         if (!in_array($type, $allowedTypes)) {
-            die(\Tools::displayError());
+            throw new \Exception('Invalid calculation type: ' . $type);
         }
 
         // EARLY RETURNS
@@ -2110,7 +2112,7 @@ class CartCore extends ObjectModel
 
         // TAXES ?
 
-        $value = $with_taxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
+        $value = $withTaxes ? $amount->getTaxIncluded() : $amount->getTaxExcluded();
 
         // ROUND AND RETURN
 
@@ -2118,21 +2120,36 @@ class CartCore extends ObjectModel
         return Tools::ps_round($value, $compute_precision);
     }
 
+
+    /**
+     * get the cart calculator and process it
+     *
+     * @param $products
+     * @param $cartRules
+     * @param $id_carrier
+     *
+     * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
+     */
     public function newCalculator($products, $cartRules, $id_carrier)
     {
-        $calculator         = new \PrestaShop\PrestaShop\Core\Cart\Calculator();
+        $calculator = new Calculator();
 
         $calculator->setCart($this);
         $calculator->setCarrierId($id_carrier);
 
+        /** @var PriceCalculator $priceCalculator */
+        $priceCalculator = ServiceLocator::get(PriceCalculator::class);
+        /** @var ConfigurationInterface $configuration */
+        $configuration = ServiceLocator::get(ConfigurationInterface::class);
+
         // set cart rows (products)
-        foreach($products as $product){
-            $calculator->addCartRow(new \PrestaShop\PrestaShop\Core\Cart\CartRow($product));
+        foreach ($products as $product) {
+            $calculator->addCartRow(new CartRow($product, $priceCalculator, $configuration));
         }
 
         // set cart rules
         foreach ($cartRules as $cartRule) {
-            $calculator->addCartRule(new \PrestaShop\PrestaShop\Core\Cart\CartRuleData($cartRule));
+            $calculator->addCartRule(new CartRuleData($cartRule));
         }
 
         $calculator->processCalculation();

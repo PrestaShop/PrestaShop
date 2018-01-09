@@ -26,13 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
-class Amount
+/**
+ * provide objects dealing with tax ex/in-cluded amounts
+ * aims to avoid using multiple values into calculation processes
+ *
+ * this class is IMMUTABLE
+ */
+class AmountImmutable
 {
 
     /**
      * @var float
      */
     protected $taxIncluded = 0.0;
+
     /**
      * @var float
      */
@@ -55,9 +62,9 @@ class Amount
     /**
      * @param float $taxIncluded
      *
-     * @return Amount
+     * @return AmountImmutable
      */
-    public function setTaxIncluded($taxIncluded)
+    protected function setTaxIncluded($taxIncluded)
     {
         $this->taxIncluded = (float) $taxIncluded;
 
@@ -75,9 +82,9 @@ class Amount
     /**
      * @param float $taxExcluded
      *
-     * @return Amount
+     * @return AmountImmutable
      */
-    public function setTaxExcluded($taxExcluded)
+    protected function setTaxExcluded($taxExcluded)
     {
         $this->taxExcluded = (float) $taxExcluded;
 
@@ -87,22 +94,30 @@ class Amount
     /**
      * sums another amount object
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\Amount $amount
+     * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
+     *
+     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
      */
-    public function add(Amount $amount)
+    public function add(AmountImmutable $amount)
     {
-        $this->setTaxIncluded($this->getTaxIncluded() + $amount->getTaxIncluded());
-        $this->setTaxExcluded($this->getTaxExcluded() + $amount->getTaxExcluded());
+        return new AmountImmutable(
+            $this->getTaxIncluded() + $amount->getTaxIncluded(),
+            $this->getTaxExcluded() + $amount->getTaxExcluded()
+        );
     }
 
     /**
      * substract another amount object
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\Amount $amount
+     * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
+     *
+     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
      */
-    public function sub(Amount $amount)
+    public function sub(AmountImmutable $amount)
     {
-        $this->setTaxIncluded($this->getTaxIncluded() - $amount->getTaxIncluded());
-        $this->setTaxExcluded($this->getTaxExcluded() - $amount->getTaxExcluded());
+        return new AmountImmutable(
+            $this->getTaxIncluded() - $amount->getTaxIncluded(),
+        $this->getTaxExcluded() - $amount->getTaxExcluded()
+        );
     }
 }

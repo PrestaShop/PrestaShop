@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class Fees
 {
@@ -37,22 +38,22 @@ class Fees
     protected $cart;
 
     /**
-     * @var Amount
+     * @var AmountImmutable
      */
     protected $shippingFees;
 
     /**
-     * @var Amount
+     * @var AmountImmutable
      */
     protected $finalShippingFees;
 
     /**
-     * @var Amount
+     * @var AmountImmutable
      */
     protected $wrappingFees;
 
     /**
-     * @var Amount
+     * @var AmountImmutable
      */
     protected $finalWrappingFees;
 
@@ -69,13 +70,13 @@ class Fees
         $id_carrier = null
     ) {
         if ($id_carrier === null) {
-            $this->shippingFees = new Amount(
+            $this->shippingFees = new AmountImmutable(
                 $cart->getTotalShippingCost(null, true),
                 $cart->getTotalShippingCost(null, false)
             );
         } else {
             $products = $cartRowCollection->getProducts();
-            $this->shippingFees = new Amount(
+            $this->shippingFees = new AmountImmutable(
                 $cart->getPackageShippingCost(
                     (int) $id_carrier,
                     true,
@@ -93,9 +94,9 @@ class Fees
         $this->finalShippingFees = clone($this->shippingFees);
 
         // wrapping fees
-        $configuration           = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
+        $configuration           = ServiceLocator::get(ConfigurationInterface::class);
         $computePrecision        = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-        $this->wrappingFees      = new Amount(
+        $this->wrappingFees      = new AmountImmutable(
             \Tools::convertPrice(
                 \Tools::ps_round(
                     $cart->getGiftWrappingPrice(true),
@@ -129,7 +130,7 @@ class Fees
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      */
     public function getInitialShippingFees()
     {
@@ -137,7 +138,7 @@ class Fees
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      */
     public function getFinalShippingFees()
     {
@@ -145,7 +146,7 @@ class Fees
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      */
     public function getFinalWrappingFees()
     {
@@ -153,14 +154,14 @@ class Fees
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      */
     public function getInitialWrappingFees()
     {
         return $this->getInitialWrappingFees();
     }
 
-    public function subDiscountValueShipping(Amount $amount)
+    public function subDiscountValueShipping(AmountImmutable $amount)
     {
         $taxIncluded = $this->finalShippingFees->getTaxIncluded() - $amount->getTaxIncluded();
         $taxExcluded = $this->finalShippingFees->getTaxExcluded() - $amount->getTaxExcluded();
@@ -170,8 +171,10 @@ class Fees
         if ($taxExcluded < 0) {
             $taxExcluded = 0;
         }
-        $this->finalShippingFees->setTaxIncluded($taxIncluded);
-        $this->finalShippingFees->setTaxExcluded($taxExcluded);
+        $this->finalShippingFees = new AmountImmutable(
+            $taxIncluded,
+            $taxExcluded
+        );
     }
 
 }

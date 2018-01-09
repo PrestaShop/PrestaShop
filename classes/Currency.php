@@ -197,9 +197,10 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
-     * reset static cache (eg unit testsing purpose)
+     * reset static cache (eg unit testing purpose)
      */
-    static public function resetStaticCache(){
+    static public function resetStaticCache ()
+    {
         static::$currencies = array();
         static::$countActiveCurrencies = array();
     }

@@ -87,6 +87,10 @@ class CartRowCollection implements \Iterator, \Countable
         return count($this->cartRows);
     }
 
+    /**
+     * return product data as array
+     * @return array
+     */
     public function getProducts()
     {
         $products = array();

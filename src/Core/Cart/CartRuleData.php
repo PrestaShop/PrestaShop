@@ -31,14 +31,14 @@ class CartRuleData
     protected $ruleData = array();
 
     /**
-     * @var Amount
+     * @var AmountImmutable
      */
     protected $discountApplied;
 
     public function __construct($rowData)
     {
         $this->setRuleData($rowData);
-        $this->discountApplied = new Amount;
+        $this->discountApplied = new AmountImmutable;
     }
 
     /**
@@ -71,13 +71,13 @@ class CartRuleData
         return $cartRuleData['obj'];
     }
 
-    public function addDiscountApplied(Amount $amount)
+    public function addDiscountApplied(AmountImmutable $amount)
     {
-        $this->discountApplied->add($amount);
+        $this->discountApplied = $this->discountApplied->add($amount);
     }
 
     /**
-     * @return Amount
+     * @return AmountImmutable
      */
     public function getDiscountApplied()
     {

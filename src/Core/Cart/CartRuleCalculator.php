@@ -91,7 +91,7 @@ class CartRuleCalculator
                     && ($product['id_product_attribute'] == $cartRule->gift_product_attribute
                         || !(int) $cartRule->gift_product_attribute)
                 ) {
-                    $cartRow->subDiscountAmount($cartRow->getFinalUnitPrice());
+                    $cartRow->applyFlatDiscount($cartRow->getFinalUnitPrice());
                     $cartRuleData->addDiscountApplied($cartRow->getFinalUnitPrice());
                 }
             }
@@ -100,7 +100,7 @@ class CartRuleCalculator
         // Discount (%) on the whole order
         if ($cartRule->reduction_percent && $cartRule->reduction_product == 0) {
             foreach ($this->cartRows as $cartRow) {
-                $amount = $cartRow->subDiscountPercent($cartRule->reduction_percent);
+                $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                 $cartRuleData->addDiscountApplied($amount);
             }
         }
@@ -109,7 +109,7 @@ class CartRuleCalculator
         if ($cartRule->reduction_percent && $cartRule->reduction_product > 0) {
             foreach ($this->cartRows as $cartRow) {
                 if ($cartRow->getRowData()['id_product'] == $cartRule->reduction_product) {
-                    $amount = $cartRow->subDiscountPercent($cartRule->reduction_percent);
+                    $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                     $cartRuleData->addDiscountApplied($amount);
                 }
             }
@@ -133,8 +133,8 @@ class CartRuleCalculator
                                        * $cartRule->reduction_percent / 100;
                 $discountTaxExcluded = $cartRowCheapest->getInitialUnitPrice()->getTaxIncluded()
                                        * $cartRule->reduction_percent / 100;
-                $amount              = new Amount($discountTaxIncluded, $discountTaxExcluded);
-                $cartRowCheapest->subDiscountAmount($amount);
+                $amount              = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
+                $cartRowCheapest->applyFlatDiscount($amount);
                 $cartRuleData->addDiscountApplied($amount);
             }
         }
@@ -149,7 +149,7 @@ class CartRuleCalculator
                         || in_array($product['id_product'] . '-0', $selected_products)
                            && (($cartRule->reduction_exclude_special && !$product['reduction_applies'])
                                || !$cartRule->reduction_exclude_special)) {
-                        $amount = $cartRow->subDiscountPercent($cartRule->reduction_percent);
+                        $amount = $cartRow->applyPercentageDiscount($cartRule->reduction_percent);
                         $cartRuleData->addDiscountApplied($amount);
                     }
                 }
@@ -219,8 +219,8 @@ class CartRuleCalculator
                     // recalculate tax excluded
                     $discountAmountTaxIncl = $discountAmountTaxExcl * (1 + $taxRate);
                 }
-                $amount = new Amount($discountAmountTaxIncl, $discountAmountTaxExcl);
-                $concernedRow->subDiscountAmount($amount);
+                $amount = new AmountImmutable($discountAmountTaxIncl, $discountAmountTaxExcl);
+                $concernedRow->applyFlatDiscount($amount);
                 $cartRuleData->addDiscountApplied($amount);
             }
         }

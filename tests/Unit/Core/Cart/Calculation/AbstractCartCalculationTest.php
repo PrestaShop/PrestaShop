@@ -26,9 +26,7 @@
 
 namespace Tests\Unit\Core\Cart\Calculation;
 
-use Context;
 use Tests\Unit\Core\Cart\AbstractCartTest;
-use Tools;
 use Cart;
 
 /**
@@ -48,7 +46,7 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
             $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
         }
         $totalV2 = round($totalV2, 1);
-        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
+        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax incl)');
     }
 
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
@@ -60,9 +58,9 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
         $expectedTotal = round($expectedTotal, 1);
         $totalV1       = round($totalV1, 1);
         if (!$knownToFailOnV1) {
-            $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV1, 'V1 fail (tax incl)');
+            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax excl)');
         }
         $totalV2 = round($totalV2, 1);
-        $this->assertEquals(\Tools::convertPrice($expectedTotal), $totalV2, 'V2 fail (tax excl)');
+        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 }

@@ -41,7 +41,7 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
     /**
      * @dataProvider cartWithOneCartRuleAmountProvider
      */
-    public function testCartWithOneCartRuleAmount(
+    public function testCartAmountWithOneCartRule(
         $productData,
         $expectedTotal,
         $cartRuleData,
@@ -55,7 +55,7 @@ class CartRulesAmountTest extends AbstractCartCalculationTest
     /**
      * @dataProvider cartWithMultipleCartRulesAmountProvider
      */
-    public function testCartWithMultipleCartRulesAmount(
+    public function testCartAmountWithMultipleCartRules(
         $productData,
         $expectedTotal,
         $cartRuleData,
