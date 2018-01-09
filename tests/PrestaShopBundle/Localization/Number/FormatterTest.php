@@ -29,7 +29,8 @@ namespace Tests\PrestaShopBundle\Localization\Number;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Number\Formatter;
-use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecification;
+use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
+use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecificationInterface;
 use PrestaShopBundle\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
 
@@ -71,18 +72,13 @@ class FormatterTest extends TestCase
         $formatter       = $this->buildFormatter($specs);
         $formattedNumber = $formatter->format($number);
 
-        $this->assertEquals($expectedResult, $formattedNumber);
+        $this->assertSame($expectedResult, $formattedNumber);
     }
 
     protected function buildFormatter($specs)
     {
-        // Replace raw symbols data with mocked symbols lists
-        $specs['numberSpecification']['symbols'] = $this->mockNumberSymbolsLists(
-            $specs['numberSpecification']['symbols']
-        );
-
-        /** @var NumberSpecification $numberSpecification */
-        $numberSpecification = $this->mockNumberSpecification($specs['numberSpecification'], $specs['specType']);
+        /** @var NumberSpecificationInterface $numberSpecification */
+        $numberSpecification = $specs['numberSpecification'];
         $rounding            = $specs['rounding'];
         $numberingSystem     = $specs['numberingSystem'];
 
@@ -93,149 +89,21 @@ class FormatterTest extends TestCase
         );
     }
 
-    protected function mockNumberSymbolsLists($symbolsData)
-    {
-        $symbolsLists = [];
-        foreach ($symbolsData as $numberingSystem => $listData) {
-            $symbolsLists[$numberingSystem] = $this->mockNumberSymbolsSingleList($listData);
-        }
-
-        return $symbolsLists;
-    }
-
-    protected function mockNumberSymbolsSingleList($symbolsData)
-    {
-        // Init defaults
-        $decimal                = '';
-        $group                  = '';
-        $list                   = '';
-        $percentSign            = '';
-        $minusSign              = '';
-        $plusSign               = '';
-        $exponential            = '';
-        $superscriptingExponent = '';
-        $perMille               = '';
-        $infinity               = '';
-        $nan                    = '';
-
-        // Get the real values
-        extract($symbolsData, EXTR_IF_EXISTS);
-
-        $mocked = $this->getMockBuilder(NumberSymbolList::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mocked->method('getDecimal')
-            ->willReturn($decimal);
-        $mocked->method('getGroup')
-            ->willReturn($group);
-        $mocked->method('getList')
-            ->willReturn($list);
-        $mocked->method('getPercentSign')
-            ->willReturn($percentSign);
-        $mocked->method('getMinusSign')
-            ->willReturn($minusSign);
-        $mocked->method('getPlusSign')
-            ->willReturn($plusSign);
-        $mocked->method('getExponential')
-            ->willReturn($exponential);
-        $mocked->method('getSuperscriptingExponent')
-            ->willReturn($superscriptingExponent);
-        $mocked->method('getPerMille')
-            ->willReturn($perMille);
-        $mocked->method('getInfinity')
-            ->willReturn($infinity);
-        $mocked->method('getNan')
-            ->willReturn($nan);
-
-        return $mocked;
-    }
-
-    protected function mockNumberSpecification($numberSpecData, $specType)
-    {
-        // Init defaults
-        $positivePattern    = '';
-        $negativePattern    = '';
-        $symbols            = [];
-        $maxFractionDigits  = '';
-        $minFractionDigits  = '';
-        $groupingUsed       = true;
-        $primaryGroupSize   = '';
-        $secondaryGroupSize = '';
-        $currencyDisplay    = '';
-        $currencyCode       = '';
-        $currencySymbol     = '';
-
-        // Get the real values
-        extract($numberSpecData, EXTR_IF_EXISTS);
-
-        $mockedSpecClass = NumberSpecification::class;
-        if ('price' == $specType) {
-            $mockedSpecClass = PriceSpecification::class;
-        }
-
-        $mocked = $this->getMockBuilder($mockedSpecClass)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $mocked->method('getPositivePattern')
-            ->willReturn($positivePattern);
-        $mocked->method('getNegativePattern')
-            ->willReturn($negativePattern);
-        $mocked->method('getMaxFractionDigits')
-            ->willReturn($maxFractionDigits);
-        $mocked->method('getMinFractionDigits')
-            ->willReturn($minFractionDigits);
-        $mocked->method('isGroupingUsed')
-            ->willReturn($groupingUsed);
-        $mocked->method('getPrimaryGroupSize')
-            ->willReturn($primaryGroupSize);
-        $mocked->method('getSecondaryGroupSize')
-            ->willReturn($secondaryGroupSize);
-        $mocked->method('getSymbolsByNumberingSystem')
-            ->willReturnMap(
-                [
-                    ['latn', $symbols['latn']],
-                ]
-            );
-
-        if ('price' == $specType) {
-            $mocked->method('getCurrencyDisplay')
-                ->willReturn($currencyDisplay);
-            $mocked->method('getCurrencyCode')
-                ->willReturn($currencyCode);
-            $mocked->method('getCurrencySymbol')
-                ->willReturn($currencySymbol);
-        }
-
-        return $mocked;
-    }
-
     public function provideValidNumberFormatSpecs()
     {
         return [
             'French positive number'           => [
                 'specs'    => [
-                    'specType'            => 'number',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.###',
-                        'negativePattern'    => '-#,##0.###',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => ',',
-                                'group'                  => ' ',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 3,
-                        'minFractionDigits'  => 0,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                    ],
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        0,
+                        true,
+                        3,
+                        3
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -244,28 +112,16 @@ class FormatterTest extends TestCase
             ],
             'French negative number'           => [
                 'specs'    => [
-                    'specType'            => 'number',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.###',
-                        'negativePattern'    => '-#,##0.###',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => ',',
-                                'group'                  => ' ',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 3,
-                        'minFractionDigits'  => 0,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                    ],
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        0,
+                        true,
+                        3,
+                        3
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -274,28 +130,16 @@ class FormatterTest extends TestCase
             ],
             'English positive number'          => [
                 'specs'    => [
-                    'specType'            => 'number',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.###',
-                        'negativePattern'    => '-#,##0.###',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => '.',
-                                'group'                  => ',',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 3,
-                        'minFractionDigits'  => 0,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                    ],
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        0,
+                        true,
+                        3,
+                        3
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -304,58 +148,52 @@ class FormatterTest extends TestCase
             ],
             'Too much fraction zeroes'         => [
                 'specs'    => [
-                    'specType'            => 'number',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.###',
-                        'negativePattern'    => '-#,##0.###',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => '.',
-                                'group'                  => ',',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 3,
-                        'minFractionDigits'  => 0,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                    ],
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        0,
+                        true,
+                        3,
+                        3
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => '0.70000',
                 'expected' => '0.7',
             ],
+            'More fraction zeroes needed'      => [
+                'specs'    => [
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        3,
+                        true,
+                        3,
+                        3
+                    ),
+                    'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
+                    'numberingSystem'     => 'latn', // Occidental numbering system
+                ],
+                'number'   => '0.7',
+                'expected' => '0.700',
+            ],
             'Rounding needed 1'                => [
                 'specs'    => [
-                    'specType'            => 'number',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.###',
-                        'negativePattern'    => '-#,##0.###',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => '.',
-                                'group'                  => ',',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 3,
-                        'minFractionDigits'  => 0,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                    ],
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        0,
+                        true,
+                        3,
+                        3
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -364,28 +202,16 @@ class FormatterTest extends TestCase
             ],
             'Rounding needed 2'                => [
                 'specs'    => [
-                    'specType'            => 'number',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.###',
-                        'negativePattern'    => '-#,##0.###',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => '.',
-                                'group'                  => ',',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 3,
-                        'minFractionDigits'  => 0,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                    ],
+                    'numberSpecification' => new NumberSpecification(
+                        '#,##0.###',
+                        '-#,##0.###',
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        3,
+                        0,
+                        true,
+                        3,
+                        3
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -394,31 +220,19 @@ class FormatterTest extends TestCase
             ],
             'French positive price'            => [
                 'specs'    => [
-                    'specType'            => 'price',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.## ¤',
-                        'negativePattern'    => '-#,##0.## ¤',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => ',',
-                                'group'                  => ' ',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 2,
-                        'minFractionDigits'  => 2,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                        'currencyDisplay'    => 'symbol',
-                        'currencySymbol'     => '€',
-                        'currencyCode'       => 'EUR',
-                    ],
+                    'numberSpecification' => new PriceSpecification(
+                        '#,##0.## ¤',
+                        '-#,##0.## ¤',
+                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        2,
+                        2,
+                        true,
+                        3,
+                        3,
+                        'symbol',
+                        '€',
+                        'EUR'
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -427,31 +241,19 @@ class FormatterTest extends TestCase
             ],
             'French negative price'            => [
                 'specs'    => [
-                    'specType'            => 'price',
-                    'numberSpecification' => [
-                        'positivePattern'    => '#,##0.## ¤',
-                        'negativePattern'    => '-#,##0.## ¤',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => ',',
-                                'group'                  => ' ',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 2,
-                        'minFractionDigits'  => 2,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                        'currencyDisplay'    => 'symbol',
-                        'currencySymbol'     => '€',
-                        'currencyCode'       => 'EUR',
-                    ],
+                    'numberSpecification' => new PriceSpecification(
+                        '#,##0.## ¤',
+                        '-#,##0.## ¤',
+                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        2,
+                        2,
+                        true,
+                        3,
+                        3,
+                        'symbol',
+                        '€',
+                        'EUR'
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -460,31 +262,19 @@ class FormatterTest extends TestCase
             ],
             'USA negative price'               => [
                 'specs'    => [
-                    'specType'            => 'price',
-                    'numberSpecification' => [
-                        'positivePattern'    => '¤ #,##0.##',
-                        'negativePattern'    => '-¤ #,##0.##',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => ',',
-                                'group'                  => ' ',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 2,
-                        'minFractionDigits'  => 2,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                        'currencyDisplay'    => 'symbol',
-                        'currencySymbol'     => '$',
-                        'currencyCode'       => 'USD',
-                    ],
+                    'numberSpecification' => new PriceSpecification(
+                        '¤ #,##0.##',
+                        '-¤ #,##0.##',
+                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        2,
+                        2,
+                        true,
+                        3,
+                        3,
+                        'symbol',
+                        '$',
+                        'USD'
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
@@ -493,31 +283,19 @@ class FormatterTest extends TestCase
             ],
             'USA positive price with ISO code' => [
                 'specs'    => [
-                    'specType'            => 'price',
-                    'numberSpecification' => [
-                        'positivePattern'    => '¤ #,##0.##',
-                        'negativePattern'    => '-¤ #,##0.##',
-                        'symbols'            => [
-                            'latn' => [
-                                'decimal'                => ',',
-                                'group'                  => ' ',
-                                'list'                   => ';',
-                                'percentSign'            => '%',
-                                'minusSign'              => '-',
-                                'plusSign'               => '+',
-                                'exponential'            => 'E',
-                                'superscriptingExponent' => '^',
-                            ],
-                        ],
-                        'maxFractionDigits'  => 2,
-                        'minFractionDigits'  => 2,
-                        'groupingUsed'       => true,
-                        'primaryGroupSize'   => 3,
-                        'secondaryGroupSize' => 3,
-                        'currencyDisplay'    => 'code',
-                        'currencySymbol'     => '$',
-                        'currencyCode'       => 'USD',
-                    ],
+                    'numberSpecification' => new PriceSpecification(
+                        '¤ #,##0.##',
+                        '-¤ #,##0.##',
+                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        2,
+                        2,
+                        true,
+                        3,
+                        3,
+                        'code',
+                        '$',
+                        'USD'
+                    ),
                     'rounding'            => 'up',   // PrestaShop\Decimal\Operation\Rounding::ROUND_HALF_UP
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
