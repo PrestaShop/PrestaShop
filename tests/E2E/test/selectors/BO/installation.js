@@ -18,7 +18,6 @@ module.exports = {
         database_login_input: '//*[@id="dbLogin"]',
         database_password_input: '//*[@id="dbPassword"]',
         test_connection_button: '#btTestDB',
-        check_data_base: '//*[@id="dbResultCheck"]',
         create_DB_button: '//*[@id="btCreateDB"]',
         create_file_parameter_step: '//li[@id="process_step_generateSettingsFile" and @class="process_step success"]',
         create_database_step: '//li[@id="process_step_installDatabase" and @class="process_step success"]',
@@ -32,6 +31,6 @@ module.exports = {
         finish_step: '//*[@id="install_process_success"]/div[1]/h2',
         finished_installation_msg: '//*[@id="install_process_success"]/div[1]/h2',
         prestashop_download_button: '(//a[contains(@class,"btn-success")])[1]',
-        download_version:'//*[@id="node-81380"]/div/div[2]/div/div/div/div[3]/a[2]'
+        download_version:'//*[@id="node-81380"]/div/div[2]/div/div/div/div[3]/a[2]',
     }
 };

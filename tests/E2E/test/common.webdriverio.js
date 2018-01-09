@@ -33,15 +33,13 @@ var options2 = {
 function initCommands(client) {
 
     client.addCommand('linkAccess', function (link) {
-        this.selector = globals.selector;
-        client
+        return client
             .url('http://' + link)
     });
 
-    client.addCommand('localhost', function () {
-        this.selector = globals.selector;
-        client
-            .url('http://' + URL + '/install-dev')
+    client.addCommand('localhost', function (link) {
+        return client
+            .url('http://' + link + '/install-dev')
     });
 
   client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {
@@ -91,6 +89,15 @@ function initCommands(client) {
       .selectByVisibleText(selector, value)
   });
 
+    client.addCommand('signInBO', function (selector, URL=URL) {
+        this.selector = globals.selector;
+        return client
+            .url('http://' + URL + '/admin-dev')
+            .waitAndSetValue(selector.login_input, 'demo@prestashop.com')
+            .waitAndSetValue(selector.password_inputBO, 'prestashop_demo')
+            .waitForExistAndClick(selector.login_buttonBO)
+            .waitForExist(selector.menuBO, 90000)
+    });
   client.addCommand('waitAndSelectByAttribute', function (selector, attribute, value, pause = 0, timeout = 60000) {
     return client
       .waitForExist(selector, timeout)
@@ -108,15 +115,16 @@ function initCommands(client) {
       .waitForExist(selector.menuBO, 90000)
   });
 
-  client.addCommand('signInFO', function (selector) {
-    return client
-      .url('http://' + URL)
-      .waitForExistAndClick(selector.sign_in_button)
-      .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
-      .waitAndSetValue(selector.password_inputFO, '123456789')
-      .waitForExistAndClick(selector.login_button)
-      .waitForExistAndClick(selector.logo_home_page)
-  });
+    client.addCommand('signInFO', function (selector, URL=URL) {
+        return client
+            .url('http://' + URL)
+            .waitForExistAndClick(selector.sign_in_button)
+            .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
+            .waitAndSetValue(selector.password_inputFO, '123456789')
+            .waitForExistAndClick(selector.login_button)
+            .waitForExistAndClick(selector.logo_home_page)
+    });
+
 
   client.addCommand('signOutBO', function () {
     return client
