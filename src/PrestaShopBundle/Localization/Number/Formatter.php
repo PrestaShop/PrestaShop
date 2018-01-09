@@ -92,7 +92,7 @@ class Formatter
     /**
      * Formats the passed number according to specifications
      *
-     * @param $number
+     * @param int|float|string $number
      *  The number to format
      *
      * @return string
