@@ -106,7 +106,7 @@ class Formatter
         try {
             $decimalNumber = $this->prepareNumber($number);
         } catch (SPLInvalidArgumentException $e) {
-            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage(), null, $e);
+            throw new LocalizationException('Invalid $number parameter : ' . $e->getMessage(), 0, $e);
         }
 
         /*
