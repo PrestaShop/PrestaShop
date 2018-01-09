@@ -10,7 +10,7 @@ class Order extends CommonClient {
   checkBasicToTalPrice() {
     return this.client
       .scroll(0, 600)
-      .waitForExistAndClick(OrderPage.second_edit_product_button)
+      .waitForExistAndClick(OrderPage.edit_product_button)
       .waitForExist(OrderPage.product_basic_price, 90000)
       .then(() => this.client.getValue(OrderPage.product_basic_price))
       .then((basicPrice) => expect('€' + basicPrice).to.eql(global.tab["basic_price"]))
@@ -18,8 +18,8 @@ class Order extends CommonClient {
 
   checkShippingMethod() {
     return this.client
-      .waitForExist(OrderPage.check_shipping_method, 90000)
-      .then(() => this.client.getText(OrderPage.check_shipping_method))
+      .waitForExist(OrderPage.shipping_method, 90000)
+      .then(() => this.client.getText(OrderPage.shipping_method))
       .then((shippingMethod) => {
         expect(global.tab["method"]).to.contain(shippingMethod);
       })
@@ -82,8 +82,8 @@ class Order extends CommonClient {
 
   downloadDocument() {
     return this.client
-      .waitForExistAndClick(OrderPage.download_button)
-      .then(() => this.client.getText(OrderPage.download_button))
+      .waitForExistAndClick(OrderPage.download_invoice_button)
+      .then(() => this.client.getText(OrderPage.download_invoice_button))
       .then((name) => global.invoiceFileName = name.replace('#', ''))
       .then(() => this.client.pause(2000));
   }
