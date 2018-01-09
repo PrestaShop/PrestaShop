@@ -62,7 +62,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int Shop ID */
     protected $id_shop = null;
 
-    /** @var array|null List of shop IDs */
+    /** @var array List of shop IDs */
     public $id_shop_list = array();
 
     /** @var bool */
