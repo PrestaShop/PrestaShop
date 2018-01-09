@@ -33,10 +33,17 @@ module.exports = {
         upgrade_block:'//*[@id="upgradeButtonBlock"]',
         refresh_button:'//*[@id="upgradeButtonBlock"]/div/p[2]/a',
         module_import_success: '//*[@id="importDropzone"]/div[3]/p[1]',
-        config_legend: '//*[@id="content"]//h4[contains(@class,"page-subtitle")]',
+        config_legend: '//*[@id="content"]/div[4]/div/ul/li[2]',
         uninstall_module: '//a[contains(@class,"module_action_modal_uninstall")]',
         disable_module: '//button[contains(@class,"module_action_menu_disable")]',
         confirmation_disable_module: '(//a[contains(@class,"module_action_modal_disable")])[1]',
-        enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]'
+        enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]',
+        module_autoUpgrade_menu:'//*[@id="subtab-AdminSelfUpgrade"]/a',
+        rollback_selection:'//*[@id="restoreBackupContainer"]//select',
+        rollback_version:'//*[@id="restoreBackupContainer"]//option[2]',
+        rollback_button:'//*[@id="rollback"]',
+        success_msg:'(//p[contains(@class,"alert-success")])[1]/p',
+        maintenance_shop:'//*[@id="currentConfiguration"]//input[contains(@name,"putUnderMaintenance")]',
+        confirm_maintenance_shop_icon:'(//*[@id="currentConfiguration"]//img)[5]'
     }
 };

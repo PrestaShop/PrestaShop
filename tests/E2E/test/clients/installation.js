@@ -23,14 +23,14 @@ class Installation extends CommonClient {
             .click(selector)
     }
 
-    clickAndWaitForDownload(selector){
+    clickAndWaitForDownload(selector) {
         return this.client
             .waitForVisibleAndClick(selector, 90000)
             .pause(150000)
     }
 
-    copyFileToAutoUpgrade (downloadsFolderPath, rcTarget) {
-        const child = exec(' cp ' + downloadsFolderPath + 'prestashop_1.7.3.0_beta1.zip ' + rcTarget,
+    copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget) {
+        const child = exec(' cp ' + downloadsFolderPath + filename + ' ' + rcTarget,
             (error, stdout, stderr) => {
                 if (error !== null) {
                     console.log(`exec error: ${error}`);
@@ -40,7 +40,6 @@ class Installation extends CommonClient {
             .pause(3000)
             .refresh();
     }
-
 }
 
 module.exports = Installation;

@@ -1,10 +1,11 @@
+let promise = Promise.resolve();
+
 module.exports = {
-    prestaShopInstall: function (selector, langage, country) {
+    prestaShopInstall: function (selector, language, country) {
         scenario('Step 1 : Choosing language', client => {
-            test('should choose english language', () => client.waitAndSelectByValue(selector.language_select, langage));
+            test('should choose "English" language', () => client.waitAndSelectByValue(selector.language_select, language));
             test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
         }, 'installation');
-        let promise = Promise.resolve();
         scenario('Step 2 : Agreeing license agreements', client => {
             test('should click on "I agree to the above terms and conditions " button', () => client.waitForExistAndClick(selector.agree_terms_and_conditions_button));
             test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
@@ -14,7 +15,7 @@ module.exports = {
             test('should click on "Next" button', () => client.waitForVisibleAndClick(selector.next_step_button));
         }, 'installation');
         scenario('Step 4 : Inserting the shop information', client => {
-            test('should set the "Shop name" input', () => client.setNameInput(selector.shop_name_input, "prestashop_1.7.3.0_beta.1-build.2"));
+            test('should set the "Shop name" input', () => client.setNameInput(selector.shop_name_input, "prestashop_demo"));
             test('should set the "Country" input', () => {
                 return promise
                     .then(() => client.waitForExistAndClick(selector.country_select))
@@ -22,7 +23,7 @@ module.exports = {
                     .then(() => client.waitForExistAndClick(selector.country_france_option));
             });
             test('should set the "First name" input', () => client.waitAndSetValue(selector.first_name_input, "demo"));
-            test('should set the "Last name name" input', () => client.waitAndSetValue(selector.last_name_input, "prestashop"));
+            test('should set the "Last name" input', () => client.waitAndSetValue(selector.last_name_input, "prestashop"));
             test('should set the "E-mail address" input', () => client.waitAndSetValue(selector.email_address_input, "demo@prestashop.com"));
             test('should set the "Shop password" input', () => client.waitAndSetValue(selector.shop_password_input, "prestashop_demo"));
             test('should set the "Re-type to confirm" input', () => client.waitAndSetValue(selector.retype_password_input, "prestashop_demo"));
@@ -48,9 +49,9 @@ module.exports = {
         }, 'installation');
         scenario('Step 6 : Checking installation', client => {
             test('should create file parameter', () => client.waitForVisibleElement(selector.create_file_parameter_step));
-            test('should create database', () => client.waitForVisibleElement(selector.create_database_step));
+            test('should create database', () => client.waitForVisibleElement(selector.create_database_step, 140000));
             test('should create default shop', () => client.waitForVisibleElement(selector.create_default_shop_step));
-            test('should create database table', () => client.waitForVisibleElement(selector.create_database_table_step));
+            test('should create database table', () => client.waitForVisibleElement(selector.create_database_table_step, 140000));
             test('should create shop information', () => client.waitForVisibleElement(selector.create_shop_informations_step));
             test('should create demonstration data', () => client.waitForVisibleElement(selector.create_demonstration_data_step, 140000));
             test('should create install module', () => client.waitForVisibleElement(selector.install_module_step, 140000));
