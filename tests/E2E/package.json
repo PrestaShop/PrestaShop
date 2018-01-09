@@ -1,23 +1,24 @@
 {
-  "name": "ps_functional_tests",
+  "name": "END2END",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "install": "node_modules/selenium-standalone/bin/selenium-standalone install",
     "start-selenium": "node_modules/selenium-standalone/bin/selenium-standalone start",
-    "test": "node_modules/mocha/bin/mocha test/campaigns/high/*"
+    "high-test": "node_modules/mocha/bin/mocha test/campaigns/high/*",
+    "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$path"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PrestaShop/PSFunctionalTests.git"
+    "url": "git+https://github.com/PrestaShop/PrestaShop.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "PrestaShop",
+  "license": "OSL-3.0",
   "bugs": {
-    "url": "https://github.com/PrestaShop/PSFunctionalTests/issues"
+    "url": "https://github.com/PrestaShop/PrestaShop/issues"
   },
-  "homepage": "https://github.com/PrestaShop/PSFunctionalTests#readme",
+  "homepage": "https://github.com/PrestaShop/PrestaShop#readme",
   "dependencies": {
     "json": "^9.0",
     "minimist": "^1.2",
