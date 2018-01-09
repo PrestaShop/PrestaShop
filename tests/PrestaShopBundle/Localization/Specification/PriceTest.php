@@ -46,7 +46,9 @@ class PriceTest extends NumberTest
             true,
             3,
             3,
-            PriceSpecification::CURRENCY_DISPLAY_SYMBOL
+            PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
+            '',
+            ''
         );
     }
 }
