@@ -73,9 +73,9 @@ class CartRow
     protected $isProcessed = false;
 
     /**
-     * @param $rowData array item given by Cart::getProducts()
-     * @param $priceCalculator
-     * @param $configuration
+     * @param array $rowData array item given by Cart::getProducts()
+     * @param PriceCalculator $priceCalculator
+     * @param ConfigurationInterface $configuration
      */
     public function __construct($rowData, PriceCalculator $priceCalculator, ConfigurationInterface $configuration)
     {
@@ -182,7 +182,7 @@ class CartRow
         // The $null variable below is not used,
         // but it is necessary to pass it to getProductPrice because
         // it expects a reference.
-        $null = null;
+        $specificPriceOutput = null;
 
         $quantity = (int) $rowData['cart_quantity'];
 
@@ -200,7 +200,7 @@ class CartRow
                 (int) $cart->id_customer ? (int) $cart->id_customer : null,
                 (int) $cart->id,
                 $addressId,
-                $null,
+                $specificPriceOutput,
                 $userEcotax,
                 true,
                 $virtualContext,
@@ -220,7 +220,7 @@ class CartRow
                 (int) $cart->id_customer ? (int) $cart->id_customer : null,
                 (int) $cart->id,
                 $addressId,
-                $null,
+                $specificPriceOutput,
                 $userEcotax,
                 true,
                 $virtualContext,
