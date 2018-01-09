@@ -24,16 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Specification;
+namespace Tests\PrestaShopBundle\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
+use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
 
-/**
- * Percentage specification class
- *
- * Regroups specific rules and data used when formatting a percentage number in a given locale and a given numbering
- * system (latin, arab, ...).
- */
-class Percentage extends NumberSpecification
+class PriceTest extends NumberTest
 {
+    /**
+     * Let's override numberSpec with the tested Currency specification
+     * All NumberTest tests are supposed to pass with a Currency spec.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->latinNumberSpec = new PriceSpecification(
+            '',
+            '',
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            3,
+            0,
+            true,
+            3,
+            3,
+            PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
+            '',
+            ''
+        );
+    }
 }

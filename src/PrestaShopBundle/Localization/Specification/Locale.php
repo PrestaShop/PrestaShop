@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,34 +19,14 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Localization\Specification;
+namespace PrestaShopBundle\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Currency as CurrencySpecification;
-
-class CurrencyTest extends NumberTest
+class Locale
 {
-    /**
-     * Let's override numberSpec with the tested Currency specification
-     * All NumberTest tests are supposed to pass with a Currency spec.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->latinNumberSpec = new CurrencySpecification(
-            '',
-            '',
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
-            3,
-            0,
-            true,
-            3,
-            3,
-            CurrencySpecification::CURRENCY_DISPLAY_SYMBOL
-        );
-    }
+
 }

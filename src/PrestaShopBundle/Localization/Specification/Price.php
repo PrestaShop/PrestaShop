@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,21 +30,19 @@ use PrestaShopBundle\Localization\Exception\LocalizationException;
 use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
 
 /**
- * Currency number (price) specification class
+ * Price number specification class
  * Regroups specific rules and data used when formatting a price in a given locale and a given numbering system
  * (latin, arab, ...).
  */
-class Currency extends NumberSpecification
+class Price extends NumberSpecification
 {
     /**
      * Currency display option : symbol notation
-     * eg: €
      */
     const CURRENCY_DISPLAY_SYMBOL = 'symbol';
 
     /**
      * Currency display option : ISO code notation
-     * eg: EUR
      */
     const CURRENCY_DISPLAY_CODE = 'code';
 
@@ -57,35 +55,53 @@ class Currency extends NumberSpecification
     protected $currencyDisplay;
 
     /**
-     * Currency specification constructor.
+     * @var string The currency symbol
+     * eg : €
+     */
+    protected $currencySymbol;
+
+    /**
+     * @var string The currency code
+     * eg : EUR
+     */
+    protected $currencyCode;
+
+    /**
+     * Price specification constructor.
      *
-     * @param string             $positivePattern
+     * @param string $positivePattern
      *  CLDR formatting pattern for positive amounts
      *
-     * @param string             $negativePattern
+     * @param string $negativePattern
      *  CLDR formatting pattern for negative amounts
      *
      * @param NumberSymbolList[] $symbols
      *  List of available number symbols lists (NumberSymbolList objects)
      *  Each list is indexed by numbering system
      *
-     * @param int                $maxFractionDigits
+     * @param int $maxFractionDigits
      *  Maximum number of digits after decimal separator
      *
-     * @param int                $minFractionDigits
+     * @param int $minFractionDigits
      *  Minimum number of digits after decimal separator
      *
-     * @param bool               $groupingUsed
+     * @param bool $groupingUsed
      *  Is digits grouping used ?
      *
-     * @param int                $primaryGroupSize
+     * @param int $primaryGroupSize
      *  Size of primary digits group in the number
      *
-     * @param int                $secondaryGroupSize
+     * @param int $secondaryGroupSize
      *  Size of secondary digits group in the number
      *
-     * @param string             $currencyDisplay
+     * @param string $currencyDisplay
      *  Type of display for currency symbol
+     *
+     * @param string $currencySymbol
+     *  Currency symbol of this price (eg. : €)
+     *
+     * @param $currencyCode
+     *  Currency code of this price (eg. : EUR)
      *
      * @throws LocalizationException
      */
@@ -98,9 +114,13 @@ class Currency extends NumberSpecification
         $groupingUsed,
         $primaryGroupSize,
         $secondaryGroupSize,
-        $currencyDisplay
+        $currencyDisplay,
+        $currencySymbol,
+        $currencyCode
     ) {
         $this->currencyDisplay = $currencyDisplay;
+        $this->currencySymbol  = $currencySymbol;
+        $this->currencyCode    = $currencyCode;
 
         parent::__construct(
             $positivePattern,
@@ -122,6 +142,28 @@ class Currency extends NumberSpecification
     public function getCurrencyDisplay()
     {
         return $this->currencyDisplay;
+    }
+
+    /**
+     * Get the currency symbol
+     * eg. : €
+     *
+     * @return string
+     */
+    public function getCurrencySymbol()
+    {
+        return $this->currencySymbol;
+    }
+
+    /**
+     * Get the currency ISO code
+     * eg. : EUR
+     *
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
     }
 
     /**
