@@ -1,72 +1,50 @@
-# Ready Espresso
+# PrestaShop Functional Tests
+## Summary
+These tests are running using the awesome **[mocha](https://mochajs.org/)** test runner, using the **[chai](http://chaijs.com/)** assertions framework with the expect syntax.
+They are using also **[webdriver.io](http://webdriver.io/)** that allows you to perform almost any action a browser would do using a fluent promise-based API.
+Until we can do more documentation, please have a look at the existing tests and at the **[WebDriver.io](http://webdriver.io/api.html)** API.
 
-## Prerequisites
-- Download [Selenium Standalone](http://www.seleniumhq.org/download/)
-- Download [chromedriver (current v2.32)](https://chromedriver.storage.googleapis.com/index.html?path=2.32/)
+## Requirements 
+To run these tests you have to install
+* node.js
+* npm
+* java
+* Google Chrome
 
 ## How to run the tests
+To use the following test suites, you need to install PrestaShop in **English** with setting country to **France**. (or you may change some assertions like the separator “,” or “.”, “€” or “$” or “£” or …) You need to create a user in Back Office with **SuperAdmin** rights and the following information’s:
+
+* **Login**: demo@prestashop.com
+* **Password**: prestashop_demo
 
 ### Package install
 
-In a terminal
+To install npm dependencies, selenium-server, chromedriver and geckodriver you have to run this command on the root directory of the functional tests
 ```
+➜  cd tests/E2E
 ➜  npm install
 ```
 
-### Launch chromedriver
-
-In a terminal
-```
-➜  ./chromedriver
-```
-
-Expected
->Starting ChromeDriver 2.32.498537 (cb2f855cbc7b82e20387eaf9a43f6b99b6105061) on port 9515
->Only local connections are allowed.
-
 ### Launch selenium-standalone
 
-In a terminal
+Then you have to lunch selenium-standalone 
 ```
-➜  java -jar selenium-server-standalone-3.5.3.jar
+➜  npm run start-selenium
 ```
 
 Expected
 
 ```
-11:26:16.687 INFO - Selenium build info: version: '3.5.3', revision: 'a88d25fe6b'
-11:26:16.688 INFO - Launching a standalone Selenium Server
-2017-09-27 11:26:16.714:INFO::main: Logging initialized @263ms to org.seleniumhq.jetty9.util.log.StdErrLog
-11:26:16.781 INFO - Driver class not found: com.opera.core.systems.OperaDriver
-11:26:16.808 INFO - Driver provider class org.openqa.selenium.ie.InternetExplorerDriver registration is skipped:
- registration capabilities Capabilities [{ensureCleanSession=true, browserName=internet explorer, version=, platform=WINDOWS}] does not match the current platform MAC
-11:26:16.808 INFO - Driver provider class org.openqa.selenium.edge.EdgeDriver registration is skipped:
- registration capabilities Capabilities [{browserName=MicrosoftEdge, version=, platform=WINDOWS}] does not match the current platform MAC
-11:26:16.833 INFO - Using the passthrough mode handler
-2017-09-27 11:26:16.858:INFO:osjs.Server:main: jetty-9.4.5.v20170502
-2017-09-27 11:26:16.886:WARN:osjs.SecurityHandler:main: ServletContext@o.s.j.s.ServletContextHandler@3e9b1010{/,null,STARTING} has uncovered http methods for path: /
-2017-09-27 11:26:16.891:INFO:osjsh.ContextHandler:main: Started o.s.j.s.ServletContextHandler@3e9b1010{/,null,AVAILABLE}
-2017-09-27 11:26:16.923:INFO:osjs.AbstractConnector:main: Started ServerConnector@648ba6de{HTTP/1.1,[http/1.1]}{0.0.0.0:4444}
-2017-09-27 11:26:16.924:INFO:osjs.Server:main: Started @474ms
-11:26:16.924 INFO - Selenium Server is up and running
+...
+Selenium started
 ```
 
 ### Launch test suite
 
 
 ```
-➜  mocha test/campaigns/high/* --URL=URL_SITE
+➜  npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory
 ```
+* URL: Front office URL of your prestashop website (without the “http://”)
+* DIR: Your download directory (exp: /home/toto/Downloads/) 
 
-## Files and Repo
-
-### Files
-
-* common.webdriverio > common functions
-* globals.webdriverio > classic UI map (PS core) 
-
-
-### Repo
-
-* [datas] > pictures and files to use for tests
-* [campaigns] > High test suite
