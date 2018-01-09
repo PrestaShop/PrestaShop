@@ -3598,22 +3598,26 @@ class ProductCore extends ObjectModel
                 return 0;
             }
         }
+        $wantedQuantity = Tools::getValue('quantity_wanted', 0);
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
+
+        // Temp fix, Sorry :D. Work in progress in another branch.
+        if ($wantedQuantity > 0) {
+            $availableQuantity++;
+        }
         $nbProductInCart = 0;
         $cart = Context::getContext()->cart;
 
         if (!empty($cart)) {
-            $cartProduct = $cart->containsProduct($id_product);
+            $cartProduct = $cart->getProductQuantity($id_product);
 
-            if (isset($cartProduct['quantity'])
-                && $cartProduct['quantity'] > 0
-            ) {
-                $nbProductInCart = $cartProduct['quantity'];
+            if (!empty($cartProduct['deep_quantity'])) {
+                $nbProductInCart = $cartProduct['deep_quantity'];
             }
         }
 
         // @since 1.5.0
-        return $availableQuantity - $nbProductInCart;
+        return $availableQuantity - ($nbProductInCart + $wantedQuantity);
     }
 
     /**
@@ -3706,18 +3710,14 @@ class ProductCore extends ObjectModel
      */
     public function checkQty($qty)
     {
-        if (Pack::isPack((int)$this->id) && !Pack::isInStock((int)$this->id)) {
+        $id_product_attribute = isset($this->id_product_attribute) ? $this->id_product_attribute : null;
+
+        if (Product::getQuantity($this->id, $id_product_attribute) < 0) {
             return false;
         }
 
         if ($this->isAvailableWhenOutOfStock(StockAvailable::outOfStock($this->id))) {
             return true;
-        }
-
-        if (isset($this->id_product_attribute)) {
-            $id_product_attribute = $this->id_product_attribute;
-        } else {
-            $id_product_attribute = 0;
         }
 
         return ($qty <= StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute));

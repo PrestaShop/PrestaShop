@@ -177,6 +177,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
             }
             $this->products[$k] = $product;
         }
+
+        // Fix issue pack cache is set when adding products.
+        \Pack::resetStaticCache();
     }
 
     protected function addProductsToCart($productData)

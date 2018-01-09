@@ -231,8 +231,10 @@ class ProductPresenter
 
         $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
 
-        if ($settings->stock_management_enabled && !$product['allow_oosp'] && isset($product['quantity_wanted']) &&
-            ($product['quantity'] <= 0 || $product['quantity'] < $product['quantity_wanted'])) {
+        if ($settings->stock_management_enabled
+            && !$product['allow_oosp']
+            && $product['quantity'] <= 0
+        ) {
             $shouldEnable = false;
         }
 
@@ -443,23 +445,24 @@ class ProductPresenter
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity'] && !$product['allow_oosp']) {
-                        $presentedProduct['availability_message'] = $this->translator->trans(
-                            'There are not enough products in stock',
-                            array(),
-                            'Shop.Notifications.Error'
-                        );
-                        $presentedProduct['availability'] = 'unavailable';
-                    } else {
-                        $presentedProduct['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
-                        $presentedProduct['availability'] = 'available';
-                    }
+                    $presentedProduct['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
+                    $presentedProduct['availability'] = 'available';
                 }
             } elseif ($product['allow_oosp']) {
                 $presentedProduct['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'available';
-            } elseif ($product['quantity_all_versions']) {
+            } else if (!empty($product['quantity_wanted'])
+                && ($product['quantity'] + $product['quantity_wanted'] > 0)
+            ) {
+                $presentedProduct['availability_message'] = $this->translator->trans(
+                    'There are not enough products in stock',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
+                $presentedProduct['availability'] = 'unavailable';
+                $presentedProduct['availability_date'] = null;
+            } elseif (!empty($product['quantity_all_versions'])) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),
