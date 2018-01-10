@@ -27,8 +27,6 @@
 namespace Tests\Unit\Core\Cart\Calculation\Modes;
 
 use Configuration;
-use Context;
-use Currency;
 use Order;
 use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 use Tools;
