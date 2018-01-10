@@ -25,6 +25,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const keepLicense = require('uglify-save-license');
 
 let config = {
   entry: {
@@ -182,7 +183,7 @@ if (process.env.NODE_ENV === 'production') {
         drop_console: true
       },
       output: {
-        comments: false
+        comments: keepLicense
       }
     })
   );
