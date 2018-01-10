@@ -24,9 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Specification;
+namespace PrestaShop\PrestaShop\Localization\Specification;
 
-class Locale
+use PrestaShop\PrestaShop\Localization\Specification\Number as NumberSpecification;
+
+/**
+ * Percentage specification class
+ *
+ * Regroups specific rules and data used when formatting a percentage number in a given locale and a given numbering
+ * system (latin, arab, ...).
+ */
+class Percentage extends NumberSpecification
 {
-
 }

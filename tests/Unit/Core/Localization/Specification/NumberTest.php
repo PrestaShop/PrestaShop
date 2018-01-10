@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Localization\Specification;
+namespace Tests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
-use PrestaShopBundle\Localization\Specification\NumberSymbolList;
+use PrestaShop\PrestaShop\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Localization\Specification\NumberSymbolList;
 
 class NumberTest extends TestCase
 {

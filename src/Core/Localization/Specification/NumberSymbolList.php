@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Specification;
+namespace PrestaShop\PrestaShop\Localization\Specification;
 
-use PrestaShopBundle\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Localization\Exception\LocalizationException;
 
 /**
  * Number's symbols data bag. Regroups all symbols used when formatting a number

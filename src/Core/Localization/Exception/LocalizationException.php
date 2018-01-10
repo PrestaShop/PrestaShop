@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Exception;
+namespace PrestaShop\PrestaShop\Localization\Exception;
 
 class LocalizationException extends \Exception
 {
