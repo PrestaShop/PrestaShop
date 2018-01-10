@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Localization\Specification;
+namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
-use PrestaShop\PrestaShop\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 /**
  * Price number specification class

@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Localization\Specification;
+namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
-use PrestaShop\PrestaShop\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
 /**
  * Percentage specification class

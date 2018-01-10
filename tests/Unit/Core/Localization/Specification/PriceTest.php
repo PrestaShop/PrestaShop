@@ -26,7 +26,7 @@
 
 namespace Tests\Unit\Core\Localization\Specification;
 
-use PrestaShop\PrestaShop\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 class PriceTest extends NumberTest
 {

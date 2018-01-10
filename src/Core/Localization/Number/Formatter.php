@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Localization\Number;
+namespace PrestaShop\PrestaShop\Core\Localization\Number;
 
 use InvalidArgumentException as SPLInvalidArgumentException;
 use PrestaShop\Decimal\Number as DecimalNumber;
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Localization\Specification\NumberInterface as NumberSpecification;
-use PrestaShop\PrestaShop\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 /**
  * Formats a number (raw, price, percentage) according to passed specifications

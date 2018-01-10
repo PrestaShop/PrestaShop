@@ -26,7 +26,7 @@
 
 namespace Tests\Unit\Core\Localization\Specification;
 
-use PrestaShop\PrestaShop\Localization\Specification\Percentage as PercentageSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Percentage as PercentageSpecification;
 
 class PercentageTest extends NumberTest
 {

@@ -28,12 +28,12 @@ namespace Tests\Unit\Core\Localization\Number;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Localization\Number\Formatter;
-use PrestaShop\PrestaShop\Localization\Specification\Number as NumberSpecification;
-use PrestaShop\PrestaShop\Localization\Specification\NumberInterface as NumberSpecificationInterface;
-use PrestaShop\PrestaShop\Localization\Specification\NumberSymbolList;
-use PrestaShop\PrestaShop\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Number\Formatter;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as NumberSpecificationInterface;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 class FormatterTest extends TestCase
 {
