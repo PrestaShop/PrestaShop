@@ -1635,6 +1635,9 @@ class AdminProductsControllerCore extends AdminController
         }
         $res = false;
         if ($json = Tools::getValue('json')) {
+            // If there is an exception, at least the response is in JSON format.
+            $this->json = true;
+
             $res = true;
             $json = stripslashes($json);
             $images = Tools::jsonDecode($json, true);
