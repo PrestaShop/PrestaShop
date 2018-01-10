@@ -536,7 +536,7 @@ class ValidateCore
     {
         $phoneNumber = preg_replace("/[+. ()-]/", "", $number);
 
-        return preg_match('/^[0-9]{7,15}$/', $phoneNumber);
+        return (bool)preg_match('/^[0-9]{7,15}$/', $phoneNumber);
     }
 
     /**
