@@ -24,28 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Localization\Specification;
+namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
-use PrestaShopBundle\Localization\Specification\Percentage as PercentageSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 
-class PercentageTest extends NumberTest
+/**
+ * Percentage specification class
+ *
+ * Regroups specific rules and data used when formatting a percentage number in a given locale and a given numbering
+ * system (latin, arab, ...).
+ */
+class Percentage extends NumberSpecification
 {
-    /**
-     * Let's override numberSpec with the tested Percentage specification
-     * All NumberTest tests are supposed to pass with a Percentage spec.
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->latinNumberSpec = new PercentageSpecification(
-            '',
-            '',
-            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
-            3,
-            0,
-            true,
-            3,
-            3
-        );
-    }
 }

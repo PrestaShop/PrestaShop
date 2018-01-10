@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Specification;
+namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
-use PrestaShopBundle\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
  * Number specification class

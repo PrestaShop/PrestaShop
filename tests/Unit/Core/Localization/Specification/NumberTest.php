@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Localization\Specification;
+namespace Tests\Unit\Core\Localization\Specification;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
-use PrestaShopBundle\Localization\Specification\NumberSymbolList;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 
 class NumberTest extends TestCase
 {
@@ -105,7 +105,7 @@ class NumberTest extends TestCase
      * When asking it a symbols list for a given INVALID numbering system
      * Then an exception souhd be raised
      *
-     * @expectedException \PrestaShopBundle\Localization\Exception\LocalizationException
+     * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testGetSymbolsByNumberingSystemWithInvalidParameter()
     {

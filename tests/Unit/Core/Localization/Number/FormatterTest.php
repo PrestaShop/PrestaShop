@@ -24,16 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\PrestaShopBundle\Localization\Number;
+namespace Tests\Unit\Core\Localization\Number;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShopBundle\Localization\Exception\LocalizationException;
-use PrestaShopBundle\Localization\Number\Formatter;
-use PrestaShopBundle\Localization\Specification\Number as NumberSpecification;
-use PrestaShopBundle\Localization\Specification\NumberInterface as NumberSpecificationInterface;
-use PrestaShopBundle\Localization\Specification\NumberSymbolList;
-use PrestaShopBundle\Localization\Specification\Price as PriceSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Number\Formatter;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface as NumberSpecificationInterface;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 class FormatterTest extends TestCase
 {
@@ -266,7 +266,7 @@ class FormatterTest extends TestCase
                     'numberSpecification' => new PriceSpecification(
                         '¤ #,##0.##',
                         '-¤ #,##0.##',
-                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
                         2,
                         2,
                         true,
@@ -280,14 +280,14 @@ class FormatterTest extends TestCase
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => -123456.789,
-                'expected' => '-$ 123 456,79',
+                'expected' => '-$ 123,456.79',
             ],
             'USA positive price with ISO code' => [
                 'specs'    => [
                     'numberSpecification' => new PriceSpecification(
                         '¤ #,##0.##',
                         '-¤ #,##0.##',
-                        ['latn' => new NumberSymbolList(',', ' ', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
+                        ['latn' => new NumberSymbolList('.', ',', ';', '%', '-', '+', 'E', '^', '‰', '∞', 'NaN')],
                         2,
                         2,
                         true,
@@ -301,7 +301,7 @@ class FormatterTest extends TestCase
                     'numberingSystem'     => 'latn', // Occidental numbering system
                 ],
                 'number'   => 123456.781,
-                'expected' => 'USD 123 456,78',
+                'expected' => 'USD 123,456.78',
             ],
         ];
     }

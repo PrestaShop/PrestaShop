@@ -24,9 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Localization\Exception;
+namespace Tests\Unit\Core\Localization\Specification;
 
-class LocalizationException extends \Exception
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+
+class PriceTest extends NumberTest
 {
-
+    /**
+     * Let's override numberSpec with the tested Currency specification
+     * All NumberTest tests are supposed to pass with a Currency spec.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->latinNumberSpec = new PriceSpecification(
+            '',
+            '',
+            ['latin' => $this->latinSymbolList, 'arab' => $this->arabSymbolList],
+            3,
+            0,
+            true,
+            3,
+            3,
+            PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
+            '',
+            ''
+        );
+    }
 }
