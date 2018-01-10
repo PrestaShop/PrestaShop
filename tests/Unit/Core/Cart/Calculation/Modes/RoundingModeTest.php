@@ -45,6 +45,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
 
     public function setUp()
     {
+        // using Configuration instead of Adapter\Configuration because of different behavior
         $this->defaultRoundingMode = Configuration::get('PS_PRICE_ROUND_MODE');
 
         parent::setUp();
@@ -52,6 +53,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
 
     public function tearDown()
     {
+        // using Configuration instead of Adapter\Configuration because of different behavior
         Configuration::set('PS_PRICE_ROUND_MODE', $this->defaultRoundingMode);
 
         parent::tearDown();
@@ -64,6 +66,7 @@ class RoundingModeTest extends AbstractCartCalculationTest
      */
     protected function setRoundingMode($roundingMode)
     {
+        // using Configuration instead of Adapter\Configuration because of different behavior
         Configuration::set('PS_PRICE_ROUND_MODE', $roundingMode);
     }
 
