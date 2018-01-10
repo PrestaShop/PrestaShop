@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use Cart;
+
 /**
  * provides methods to process cart calculation
  */
@@ -64,8 +66,10 @@ class Calculator
      */
     protected $isProcessed = false;
 
-    public function __construct()
+    public function __construct(Cart $cart, $carrierId)
     {
+        $this->setCart($cart);
+        $this->setCarrierId($carrierId);
         $this->cartRows  = new CartRowCollection();
         $this->fees      = new Fees();
         $this->cartRules = new CartRuleCollection();

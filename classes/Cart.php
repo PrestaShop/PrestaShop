@@ -2143,10 +2143,7 @@ class CartCore extends ObjectModel
      */
     private function newCalculator($products, $cartRules, $id_carrier)
     {
-        $calculator = new Calculator();
-
-        $calculator->setCart($this);
-        $calculator->setCarrierId($id_carrier);
+        $calculator = new Calculator($this, $id_carrier);
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);
