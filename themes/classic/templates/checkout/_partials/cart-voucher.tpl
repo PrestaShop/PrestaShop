@@ -48,7 +48,7 @@
           </a>
         </p>
 
-        <div class="promo-code collapse{if $cart.discounts|count > 0} in{/if}" id="promo-code">
+        <div class="promo-code collapse{if $cart.discounts|count > 0} show{/if}" id="promo-code">
           {block name='cart_voucher_form'}
             <form action="{$urls.pages.cart}" data-link-action="add-voucher" method="post">
               <input type="hidden" name="token" value="{$static_token}">

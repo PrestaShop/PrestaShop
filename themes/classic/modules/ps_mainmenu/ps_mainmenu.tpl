@@ -6,21 +6,21 @@
             <li class="{$node.type}{if $node.current} current {/if}" id="{$node.page_identifier}">
             {assign var=_counter value=$_counter+1}
               <a
-                class="{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if}"
+                class="{if $depth >= 0}dropdown-item{/if}{if $depth === 1} dropdown-submenu{/if} d-flex justify-content-start"
                 href="{$node.url}" data-depth="{$depth}"
                 {if $node.open_in_new_window} target="_blank" {/if}
               >
+                <div>{$node.label}</div>
                 {if $node.children|count}
                   {* Cannot use page identifier as we can have the same page several times *}
                   {assign var=_expand_id value=10|mt_rand:100000}
-                  <span class="float-xs-right hidden-md-up">
+                  <div class="ml-auto hidden-md-up">
                     <span data-target="#top_sub_menu_{$_expand_id}" data-toggle="collapse" class="navbar-toggler collapse-icons">
                       <i class="material-icons add">&#xE313;</i>
                       <i class="material-icons remove">&#xE316;</i>
                     </span>
-                  </span>
+                  </div>
                 {/if}
-                {$node.label}
               </a>
               {if $node.children|count}
               <div {if $depth === 0} class="popover sub-menu js-sub-menu collapse"{else} class="collapse"{/if} id="top_sub_menu_{$_expand_id}">

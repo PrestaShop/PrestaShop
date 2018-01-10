@@ -1,10 +1,10 @@
 .contact-rich {
-  color: $gray;
+  color: gray('600');
   margin-bottom: 2rem;
   word-wrap: break-word;
   h4 {
     text-transform: uppercase;
-    color: $gray-darker;
+    color: gray('900');
     margin-bottom: 2rem;
   }
   .block {
@@ -18,7 +18,7 @@
       }
     }
     .data {
-      color: $gray-darker;
+      color: gray('900');
       font-size: $font-size-sm;
       width: auto;
       overflow: hidden;
@@ -31,10 +31,10 @@
 .contact-form {
   background: white;
   padding: 1rem;
-  color: $gray;
+  color: gray('600');
   width: 100%;
   h3 {
     text-transform: uppercase;
-    color: $gray-darker;
+    color: gray('900');
   }
 }

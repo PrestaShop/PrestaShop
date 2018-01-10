@@ -16,7 +16,7 @@
     white-space: inherit;
   }
   .value {
-    color: $gray-darker;
+    color: gray('900');
     float: right;
   }
   &.cart-summary-subtotals {
@@ -30,7 +30,7 @@
 .cart-grid-body {
   a.label {
     &:hover {
-      color: $brand-primary;
+      color: theme-color('primary');
     }
   }
   .card-block {
@@ -50,7 +50,7 @@
     margin-bottom: 0;
     .cart-summary-line {
       .label {
-        color: $gray;
+        color: gray('600');
         .code {
           text-decoration: underline;
           cursor: pointer;
@@ -62,11 +62,11 @@
 .block-promo {
   .promo-code {
     padding: 1.60rem;
-    background: $gray-light;
+    background: gray('200');
     .alert-danger {
       position: relative;
       margin-top: 1.25rem;
-      background: $brand-danger;
+      background: theme-color('danger');
       color: white;
       display: none;
       &::after {
@@ -78,15 +78,15 @@
         width: 0;
         position: absolute;
         pointer-events: none;
-        border-bottom-color:  $brand-danger;
+        border-bottom-color:  theme-color('danger');
         border-width: 10px;
         margin-left: -10px;
       }
     }
   }
   .promo-input {
-    color: $gray-darker;
-    border: $gray 1px solid;
+    color: gray('900');
+    border: gray('600') 1px solid;
     height: 2.5rem;
     text-indent: 0.625rem;
     width: 60%;
@@ -97,11 +97,11 @@
   }
   .cart-summary-line .label,
   .promo-name {
-    color: $brand-warning;
+    color: theme-color('warning');
     font-weight: 600;
     a {
       font-weight: normal;
-      color: $gray-darker;
+      color: gray('900');
       display: inline-block;
     }
   }
@@ -135,12 +135,12 @@
       color: red;
     }
     > .available {
-      color: $brand-success;
+      color: theme-color('success');
     }
     > .unit-price-cart {
       padding-left: 0.3125rem;
       font-size: 0.875rem;
-      color: $gray;
+      color: gray('600');
     }
   }
 }
@@ -148,10 +148,10 @@
 .product-line-grid-right {
   .cart-line-product-actions,
   .product-price {
-    color: $gray-darker;
+    color: gray('900');
     line-height: 36px;
     .remove-from-cart {
-      color: $gray-darker;
+      color: gray('900');
       display: inline-block;
       margin-top: 0.3125rem;
     }
@@ -170,7 +170,7 @@
     padding: 1rem 0;
   }
   .cart-item {
-    border-bottom: 1px solid $gray-light;
+    border-bottom: 1px solid gray('200');
     &:last-child {
       border-bottom: 0;
     }

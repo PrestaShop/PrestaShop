@@ -8,7 +8,7 @@
     display: block;
   }
   .product-title a {
-    color: $gray;
+    color: gray('600');
     font-size: $font-size-sm;
     text-decoration: none;
     text-align: center;
@@ -17,8 +17,8 @@
   .thumbnail-container {
     position: relative;
     margin-bottom: 1.563rem;
-    height: 318px;
-    width: 257px;
+    height: 325px;
+    width: 265px;
     background: white;
     @include box-shadow;
     &:hover, &:focus {
@@ -33,7 +33,7 @@
       }
       .product-description::after{
         content: "";
-        border-top: $gray 1px solid;
+        border-top: gray('600') 1px solid;
         position: absolute;
         width: 80%;
         top: 0;
@@ -52,7 +52,7 @@
     margin-top: 1rem;
   }
   .product-price-and-shipping {
-    color: $gray-darker;
+    color: gray('900');
     font-weight: 700;
     text-align: center;
   }
@@ -72,15 +72,15 @@
     z-index: 0;
     background: white;
     text-align: center;
-    width: 257px;
+    width: 265px;
     height: 3.125rem;
     box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
     transition: bottom .3s;
     .quick-view {
-      color: $gray;
+      color: gray('600');
       font-size: $base-font-size;
       &:hover {
-        color: $brand-primary;
+        color: theme-color('primary');
       }
     }
   }
@@ -89,7 +89,7 @@
     position: absolute;
     z-index: 1;
     background: white;
-    width: 257px;
+    width: 265px;
     bottom: 0;
     height: 70px;
   }
@@ -113,7 +113,7 @@
       left: -0.4375rem;
       padding: 0.3125rem 0.4375rem;
       color: white;
-      background: $brand-primary;
+      background: theme-color('primary');
       text-transform: uppercase;
       min-width: 3.125rem;
       min-height: 1.875rem;
@@ -123,10 +123,10 @@
       &.discount-percentage,
       &.discount-amount {
         z-index: 2;
-        background: $brand-secondary;
+        background: theme-color('secondary');
       }
       &.on-sale{
-        background: $brand-secondary;
+        background: theme-color('secondary');
         width: 100%;
         text-align: center;
         left:0;
@@ -147,22 +147,22 @@
   }
   .comments_note {
     text-align: center;
-    color: $gray;
+    color: gray('600');
   }
   .regular-price {
-    color: $gray;
+    color: gray('600');
     text-decoration: line-through;
     font-size: $font-size-sm;
   }
   .count {
-    color: $gray;
+    color: gray('600');
     font-weight: 700;
     position: relative;
     bottom: 0.5rem;
   }
   .all-product-link {
     clear: both;
-    color: $gray;
+    color: gray('600');
     font-weight: 700;
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;

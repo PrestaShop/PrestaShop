@@ -105,8 +105,8 @@ global_settings:
       height: 452
       scope: [products, manufacturers, suppliers]
     home_default:
-      width: 250
-      height: 250
+      width: 257
+      height: 257
       scope: [products]
     large_default:
       width: 800

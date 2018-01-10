@@ -21,7 +21,7 @@
         font-size: $font-size-lg;
       }
       .divide-left {
-        border-left: $gray-light 1px solid;
+        border-left: gray('200') 1px solid;
         tr {
           height: 1.563rem;
         }
@@ -42,14 +42,14 @@
       display: flex;
       justify-content: space-around;
       &.divide-top {
-        border-top: $gray-light 1px solid;
+        border-top: gray('200') 1px solid;
       }
       div:first-child {
         flex: 0 0 65%;
       }
       i.material-icons{
         margin-right: $small-space;
-        color: $gray;
+        color: gray('600');
         font-size: $base-font-size;
       }
       li{
@@ -90,7 +90,7 @@
       .store-item-footer {
         display: block;
         &.divide-top {
-          border-top: $gray-light 1px solid;
+          border-top: gray('200') 1px solid;
         }
         li{
           margin-bottom: $small-space;

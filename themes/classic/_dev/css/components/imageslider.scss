@@ -1,9 +1,6 @@
 .carousel {
   box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
   margin-bottom: 1.5rem;
-  .direction {
-    z-index: auto;
-  }
   .carousel-inner {
     height: 340px;
     @media (max-width: 767px) {
@@ -12,6 +9,9 @@
   }
   .carousel-item {
     height: 100%;
+    a {
+      width: 100%;
+    }
     img {
       @media (max-width: 767px) {
         max-width: 100%;
@@ -22,7 +22,7 @@
       margin-left: 0;
     }
     }
-    .caption {
+    .carousel-caption {
       position: absolute;
       @media (min-width: 768px) {
       bottom: 28px;
@@ -34,6 +34,7 @@
       }
       color: white;
       max-width: 340px;
+      text-align: left;
       .caption-description p {
         color: white;
       }
@@ -44,10 +45,11 @@
       }
     }
   }
-  .carousel-control {
-    opacity: 1;
-    .icon-next,
-    .icon-prev {
+  .direction {
+    .carousel-control-next,
+    .carousel-control-prev {
+      opacity: 1;
+      width: 4%;
       &::before {
         content: "";
       }
@@ -57,19 +59,9 @@
       }
       &:hover {
         i {
-          color: $brand-primary;
+          color: theme-color('primary');
         }
       }
-    }
-    .icon-prev {
-      left: 1rem;
-    }
-    .icon-next {
-      right: 2rem;
-    }
-    &.left,
-    &.right {
-      background: none;
     }
   }
 }

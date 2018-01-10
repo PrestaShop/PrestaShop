@@ -12,7 +12,7 @@
     "devDependencies": {
         "autoprefixer": "^6.7.7",
         "babel-loader": "^5.3.2",
-        "bootstrap": "4.0.0-alpha.5",
+        "bootstrap": "^4.0.0-beta",
         "bootstrap-touchspin": "^3.1.1",
         "bourbon": "^4.2.6",
         "css-loader": "^0.27.3",
@@ -32,5 +32,6 @@
         "velocity-animate": "^1.2.3",
         "webpack": "^2.2.1",
         "webpack-sources": "^0.1.0"
-    }
+    },
+    "dependencies": {}
 }

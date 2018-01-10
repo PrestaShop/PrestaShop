@@ -5,13 +5,14 @@
     padding-top: $small-space;
   }
   form {
-    .input-wrapper {
-      overflow: hidden;
+    .input-group-btn > .btn {
+      font-size: 1rem;
+      font-weight: 600;
     }
     input[type=text] {
       padding: 11px;
       &:focus {
-        border: 3px $brand-primary solid;
+        border: 3px theme-color('primary') solid;
         padding: 8px 8px 9px;
         outline: 0;
       }
@@ -25,22 +26,22 @@
   margin-bottom: 0.625rem;
 }
 .block-contact {
-  border-left: $gray-light 2px solid;
+  border-left: gray('200') 2px solid;
   padding-left: 3rem;
-  color: $gray;
+  color: gray('600');
   .block-contact-title{
-    color:$gray-darker;
+    color:gray('900');
   }
 }
 .linklist {
   .blockcms-title a {
-    color:$gray-darker;
+    color:gray('900');
   }
 }
 .account-list a {
-  color: $gray;
+  color: gray('600');
   &:hover {
-    color: $brand-primary;
+    color: theme-color('primary');
   }
 }
 .blockcms-title,
@@ -56,13 +57,13 @@
 .block-social li {
   height: 2.5rem;
   width: 2.5rem;
-  background-color: $gray-light;
+  background-color: gray('200');
   background-repeat: no-repeat;
   display: inline-block;
   margin: 0.125rem;
   cursor: pointer;
   &:hover {
-    background-color: $brand-primary;
+    background-color: theme-color('primary');
   }
   a {
     display: block;
@@ -122,7 +123,7 @@
 }
 #block_myaccount_infos{
   .myaccount-title a{
-    color:$gray-darker;
+    color:gray('900');
   }
 }
 .pinterest {
@@ -153,11 +154,11 @@
     margin-bottom: 0.3125rem;
   }
   li a {
-    color: $gray;
+    color: gray('600');
     cursor: pointer;
     font-size: $font-size-sm;
     &:hover {
-      color: $brand-primary;
+      color: theme-color('primary');
     }
   }
 }
@@ -171,7 +172,7 @@
 @include media-breakpoint-down(sm) {
   .block_newsletter {
     padding-bottom: 0.625rem;
-    border-bottom: 1px solid $gray-lighter;
+    border-bottom: 1px solid gray('100');
   }
   .footer-container {
     box-shadow: none;
@@ -186,14 +187,14 @@
         font-size: 1rem;
       }
       ul {
-        background-color: $gray-lighter;
+        background-color: gray('100');
         margin-bottom: 0;
         > li {
           padding: 0.625rem;
           border-bottom: 1px solid white;
           font-weight: bold;
           a {
-            color: $gray-darker;
+            color: gray('900');
           }
         }
       }
@@ -202,13 +203,13 @@
   .links {
     .collapse {
       display: none;
-      &.in {
+      &.show {
         display: block;
       }
     }
     .title {
       padding: 0.625rem;
-      border-bottom: 1px solid $gray-lighter;
+      border-bottom: 1px solid gray('100');
       cursor: pointer;
       .collapse-icons .remove {
         display: none;
