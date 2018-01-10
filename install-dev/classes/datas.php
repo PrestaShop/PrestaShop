@@ -154,7 +154,12 @@ class Datas
         'theme' => array(
             'name' => 'theme',
             'default' => ''
-        )
+        ),
+        'enable_ssl' => array(
+            'name' => 'ssl',
+            'default' => 0,
+            'help' => 'enable SSL for PrestaShop'
+        ),
     );
 
     protected $datas = array();

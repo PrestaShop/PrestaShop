@@ -698,6 +698,7 @@ class Install extends AbstractInstall
             'smtp_encryption' => 'off',
             'smtp_port' => 25,
             'rewrite_engine' => false,
+            'enable_ssl' => false,
         );
 
         foreach ($default_data as $k => $v) {
@@ -722,6 +723,10 @@ class Install extends AbstractInstall
         Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', $data['shop_country']);
         Configuration::updateGlobalValue('PS_TIMEZONE', $data['shop_timezone']);
         Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT', (int)$data['configuration_agrement']);
+
+        // Set SSL configuration
+        Configuration::updateGlobalValue('PS_SSL_ENABLED', (int)$data['enable_ssl']);
+        Configuration::updateGlobalValue('PS_SSL_ENABLED_EVERYWHERE', (int)$data['enable_ssl']);
 
         // Set mails configuration
         Configuration::updateGlobalValue('PS_MAIL_METHOD', ($data['use_smtp']) ? 2 : 1);
