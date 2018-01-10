@@ -106,16 +106,24 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
     {
         $this->assertSame($expected, Validate::isInt($input));
     }
-        
-        // --- providers ---
 
-        public function isIp2LongDataProvider()
-        {
-            return array(
+    /**
+     * @dataProvider isPhoneNumberDataProvider
+     */
+    public function testIsPhoneNumber($expected, $input)
+    {
+        $this->assertSame($expected, Validate::isPhoneNumber($input));
+    }
+
+    // --- providers ---
+
+    public function isIp2LongDataProvider()
+    {
+        return array(
             array(false, 'toto'),
             array(true, '123')
         );
-        }
+    }
 
     public function isMd5DataProvider()
     {
@@ -226,6 +234,23 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase
             array(false, null),
             array(false, ''),
             array(true, false),
+        );
+    }
+
+    public function isPhoneNumberDataProvider()
+    {
+        return array(
+            array(true, '+1 900 253 0000'),
+            array(true, '+1-900-253-0000'),
+            array(true, '+49 291 12345678'),
+            array(true, '(+49) 291-12345678'),
+            array(false, '02-1234'),
+            array(false, '+49 30/1234'),
+            array(false, '+1 123 4567 8963 0000'),
+            array(false, '+1 123 4567 8963 0000'),
+            array(false, '1-800-SIX-flag'),
+            array(false, ' '),
+            array(false, null),
         );
     }
 }
