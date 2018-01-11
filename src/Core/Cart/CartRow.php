@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use Cart;
 use Context;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
@@ -150,11 +151,11 @@ class CartRow
     /**
      * run initial row calculation
      *
-     * @param \CartCore $cart
+     * @param Cart $cart
      *
      * @throws \PrestaShop\PrestaShop\Adapter\CoreException
      */
-    public function processCalculation(\CartCore $cart)
+    public function processCalculation(Cart $cart)
     {
         $rowData                = $this->getRowData();
         $quantity               = (int) $rowData['cart_quantity'];
@@ -169,7 +170,7 @@ class CartRow
         $this->isProcessed = true;
     }
 
-    protected function getProductPrice(\CartCore $cart, $rowData)
+    protected function getProductPrice(Cart $cart, $rowData)
     {
         $userEcotax    = $this->configuration->get('PS_USE_ECOTAX');
 

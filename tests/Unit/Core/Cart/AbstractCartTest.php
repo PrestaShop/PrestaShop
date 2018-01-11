@@ -27,7 +27,6 @@
 namespace Tests\Unit\Core\Cart;
 
 use Cart;
-use CartCore;
 use CartRule;
 use Configuration;
 use Context;
@@ -70,7 +69,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     ];
 
     /**
-     * @var CartCore
+     * @var Cart
      */
     protected $cart;
 

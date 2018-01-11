@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use Cart;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
@@ -33,7 +34,7 @@ class Fees
 {
 
     /**
-     * @var \CartCore
+     * @var Cart
      */
     protected $cart;
 
@@ -65,8 +66,8 @@ class Fees
     protected $isProcessed = false;
 
     public function processCalculation(
-        \CartCore $cart,
-        \PrestaShop\PrestaShop\Core\Cart\CartRowCollection $cartRowCollection,
+        Cart $cart,
+        CartRowCollection $cartRowCollection,
         $id_carrier = null
     ) {
         if ($id_carrier === null) {
@@ -118,7 +119,7 @@ class Fees
     }
 
     /**
-     * @param \CartCore $cart
+     * @param Cart $cart
      *
      * @return Fees
      */
