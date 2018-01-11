@@ -7,8 +7,7 @@ module.exports = Object.assign({
   },
   require('./access_page'),
   require('./add_account_page'),
-  require('./buy_order_page'),
-  require('./layer_cart_page'),
+  require('./order_page'),
   require('./product_page'),
   require('./search_product_page')
 );

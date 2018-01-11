@@ -83,7 +83,8 @@ class CommonClient {
     }
 
     waitAndSetValue(selector, value, timeout = 90000) {
-        return this.client.waitAndSetValue(selector, value, timeout);
+        return this.client
+          .waitAndSetValue(selector, value, timeout);
     }
 
     scrollTo(selector, margin) {

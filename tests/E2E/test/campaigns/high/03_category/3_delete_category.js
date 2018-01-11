@@ -11,7 +11,7 @@ scenario('Delete "Category"', () => {
         test('should go to "Category" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, CategorySubMenu.submenu));
         test('should search for category ', () => client.searchByValue(CategorySubMenu.search_input, CategorySubMenu.search_button, 'category' + date_time));
         test('should click on "Delete" action', () => client.clickOnAction(CategorySubMenu.delete_button, CategorySubMenu.action_button, 'delete'));
-        test('should delete category', () => client.waitForExistAndClick(CategorySubMenu.second_delete_button));
+        test('should delete category', () => client.scrollWaitForExistAndClick(CategorySubMenu.second_delete_button));
         test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
     }, 'category');
     scenario('Logout from the Back Office', client => {
