@@ -436,7 +436,7 @@ class CartRuleCore extends ObjectModel
             foreach ($result as $key => $cart_rule) {
                 if ($cart_rule['product_restriction']) {
                     $cr = new CartRule((int) $cart_rule['id_cart_rule']);
-                    $r = $cr->checkProductRestrictions(Context::getContext(), false, false);
+                    $r = $cr->checkProductRestrictionsFromCart(Context::getContext()->cart, false, false);
                     if ($r !== false) {
                         continue;
                     }
@@ -715,7 +715,7 @@ class CartRuleCore extends ObjectModel
 
         // Check if the products chosen by the customer are usable with the cart rule
         if ($this->product_restriction) {
-            $r = $this->checkProductRestrictions($context, false, $display_error, $alreadyInCart);
+            $r = $this->checkProductRestrictionsFromCart($context->cart, false, $display_error, $alreadyInCart);
             if ($r !== false && $display_error) {
                 return $r;
             } elseif (!$r && !$display_error) {
@@ -811,6 +811,9 @@ class CartRuleCore extends ObjectModel
 
     /**
      * Checks if the products chosen by the customer are usable with the cart rule
+     *
+     * @deprecated since 1.7.4.0
+     * @see self::checkProductRestrictionsFromCart
      *
      * @param \Context $context
      * @param bool $returnProducts
@@ -1170,7 +1173,7 @@ class CartRuleCore extends ObjectModel
             // Discount (%) on the selection of products
             if ($this->reduction_percent && $this->reduction_product == -2) {
                 $selected_products_reduction = 0;
-                $selected_products = $this->checkProductRestrictions($context, true);
+                $selected_products = $this->checkProductRestrictionsFromCart($context->cart, true);
                 if (is_array($selected_products)) {
                     foreach ($package_products as $product) {
                         if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)

@@ -249,7 +249,7 @@ CREATE TABLE `PREFIX_cart_rule_combination` (
 	KEY `id_cart_rule_2` (`id_cart_rule_2`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-/* @TODO : check checkProductRestrictions() to understand the code */
+/* @TODO : check checkProductRestrictionsFromCart() to understand the code */
 CREATE TABLE `PREFIX_cart_rule_product_rule_group` (
 	`id_product_rule_group` int(10) unsigned NOT NULL auto_increment,
 	`id_cart_rule` int(10) unsigned NOT NULL,
@@ -257,7 +257,7 @@ CREATE TABLE `PREFIX_cart_rule_product_rule_group` (
 	PRIMARY KEY (`id_product_rule_group`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-/* @TODO : check checkProductRestrictions() to understand the code */
+/* @TODO : check checkProductRestrictionsFromCart() to understand the code */
 CREATE TABLE `PREFIX_cart_rule_product_rule` (
 	`id_product_rule` int(10) unsigned NOT NULL auto_increment,
 	`id_product_rule_group` int(10) unsigned NOT NULL,
@@ -265,7 +265,7 @@ CREATE TABLE `PREFIX_cart_rule_product_rule` (
 	PRIMARY KEY (`id_product_rule`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
-/* @TODO : check checkProductRestrictions() to understand the code */
+/* @TODO : check checkProductRestrictionsFromCart() to understand the code */
 CREATE TABLE `PREFIX_cart_rule_product_rule_value` (
 	`id_product_rule` int(10) unsigned NOT NULL,
 	`id_item` int(10) unsigned NOT NULL,
