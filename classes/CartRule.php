@@ -810,21 +810,39 @@ class CartRuleCore extends ObjectModel
     }
 
     /**
-     * method used to decorrelate checkProductRestrictions from context
+     * Checks if the products chosen by the customer are usable with the cart rule
      *
      * @param \Context $context
-     * @param bool     $return_products
-     * @param bool     $display_error
-     * @param bool     $already_in_cart
+     * @param bool $returnProducts
+     * @param bool $displayError
+     * @param bool $alreadyInCart
      *
-     * @return array|mixed|string
+     * @return array|bool|string
+     *
+     * @throws PrestaShopDatabaseException
      */
-    public function checkProductRestrictions(Context $context, $return_products = false, $display_error = true, $already_in_cart = false)
+    public function checkProductRestrictions(Context $context, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
-        return $this->checkProductRestrictionsFromCart($context->cart, $return_products, $display_error, $already_in_cart);
+        return $this->checkProductRestrictionsFromCart($context->cart, $returnProducts, $displayError, $alreadyInCart);
     }
 
-    public function checkProductRestrictionsFromCart(\Cart $cart, $return_products = false, $display_error = true, $already_in_cart = false)
+    /**
+     * Checks if the products chosen by the customer are usable with the cart rule
+     *
+     * @param \Cart $cart
+     * @param bool $returnProducts [default=false]
+     *     If true, this method will return an array of eligible products.
+     *     Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError).
+     * @param bool $displayError [default=false]
+     *     If true, this method will return an error message instead of FALSE on errors.
+     *     Otherwise, it returns FALSE on errors.
+     * @param bool $alreadyInCart
+     *
+     * @return array|bool|string
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public function checkProductRestrictionsFromCart(\Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
         $selected_products = array();
 
@@ -839,7 +857,7 @@ class CartRuleCore extends ObjectModel
                     }
                 }
                 if (!count($eligible_products_list)) {
-                    return (!$display_error) ? false : $this->trans('You cannot use this voucher in an empty cart', array(), 'Shop.Notifications.Error');
+                    return (!$displayError) ? false : $this->trans('You cannot use this voucher in an empty cart', array(), 'Shop.Notifications.Error');
                 }
                 $product_rules = $this->getProductRules($id_product_rule_group);
                 $countRulesProduct = count($product_rules);
@@ -860,7 +878,7 @@ class CartRuleCore extends ObjectModel
                                 if (in_array($cart_attribute['id_attribute'], $product_rule['values'])) {
                                     $count_matching_products += $cart_attribute['quantity'];
                                     if (
-                                        $already_in_cart
+                                        $alreadyInCart
                                         && $this->gift_product == $cart_attribute['id_product']
                                         && $this->gift_product_attribute == $cart_attribute['id_product_attribute']) {
                                         --$count_matching_products;
@@ -870,7 +888,7 @@ class CartRuleCore extends ObjectModel
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
-                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     $condition++;
                                     break;
@@ -889,7 +907,7 @@ class CartRuleCore extends ObjectModel
                             foreach ($cart_products as $cart_product) {
                                 if (in_array($cart_product['id_product'], $product_rule['values'])) {
                                     $count_matching_products += $cart_product['quantity'];
-                                    if ($already_in_cart && $this->gift_product == $cart_product['id_product']) {
+                                    if ($alreadyInCart && $this->gift_product == $cart_product['id_product']) {
                                         --$count_matching_products;
                                     }
                                     $matching_products_list[] = $cart_product['id_product'] . '-0';
@@ -897,7 +915,7 @@ class CartRuleCore extends ObjectModel
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
-                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     $condition++;
                                     break;
@@ -928,7 +946,7 @@ class CartRuleCore extends ObjectModel
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
-                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     $condition++;
                                     break;
@@ -957,7 +975,7 @@ class CartRuleCore extends ObjectModel
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
-                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     $condition++;
                                     break;
@@ -982,7 +1000,7 @@ class CartRuleCore extends ObjectModel
                             }
                             if ($count_matching_products < $product_rule_group['quantity']) {
                                 if ($countRulesProduct === 1) {
-                                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                                 } else {
                                     $condition++;
                                     break;
@@ -993,20 +1011,20 @@ class CartRuleCore extends ObjectModel
                     }
                     if (!count($eligible_products_list)) {
                         if ($countRulesProduct === 1) {
-                            return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                            return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                         }
                     }
                 }
                 if ($countRulesProduct !== 1 && $condition == $countRulesProduct) {
-                    return (!$display_error) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
+                    return (!$displayError) ? false : $this->trans('You cannot use this voucher with these products', array(), 'Shop.Notifications.Error');
                 }
                 $selected_products = array_merge($selected_products, $eligible_products_list);
             }
         }
-        if ($return_products) {
+        if ($returnProducts) {
             return $selected_products;
         }
-        return (!$display_error) ? true : false;
+        return (!$displayError) ? true : false;
     }
 
     /**
