@@ -21,6 +21,23 @@ module.exports = {
     total_price: '//*[@id="total_products"]/td[contains(@class,"amount")]',
     shipping_method: '//*[@id="shipping_table"]//tr/td[3]',
     search_by_reference_input: '//*[@id="form-order"]//table[contains(@class,"order")]//input[@name="orderFilter_reference"]',
-    search_order_button: '//*[@id="submitFilterButtonorder"]',
+    search_order_button: '//*[@id="submitFilterButtonorder"]'
+  },
+
+  CreateOrder:{
+    new_order_button: '//*[@id="page-header-desc-order-new_order"]',
+    customer_search_input: '//*[@id="customer"]',
+    choose_customer_button: '//*[@id="customers"]/div[1]/div/div[2]/button',
+    product_search_input: '//*[@id="product"]',
+    quantity_input: '//*[@id="qty"]',
+    add_to_cart_button: '//*[@id="submitAddProduct"]',
+    order_message_textarea: '//*[@id="order_message"]',
+    delivery_option: '//*[@id="delivery_option"]',
+    payment: '//*[@id="payment_module_name"]',
+    total_shipping:'//*[@id="total_shipping"]',
+    create_order_button: '//*[@id="summary_part"]//button[@name="submitAddOrder"]',
+    product_combination: '//*[@id="ipa_2"]',
+    basic_price_value: '//*[@id="customer_cart"]//tr[1]//input[@class="product_unit_price"]',
+    product_select:'//*[@id="id_product"]'
   }
 };

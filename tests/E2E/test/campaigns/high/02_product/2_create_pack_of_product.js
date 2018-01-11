@@ -72,7 +72,7 @@ scenario('Create a pack of products', client => {
   }, 'product/product');
 
   scenario('Edit product options', client => {
-    test('should click on "Options"', () => client.waitForExistAndClick(AddProductPage.product_options_tab));
+    test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
     test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'search'));
     test('should click on "Web only (not sold in your retail store)"', () => client.waitForExistAndClick(AddProductPage.options_online_only));
     test('should select the "Condition"', () => client.selectCondition());
