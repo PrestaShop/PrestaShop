@@ -1,5 +1,5 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {OrderPage} = require('../../../selectors/BO/order_page');
+const {OrderPage} = require('../../../selectors/BO/order');
 
 scenario('Change order state to "Delivred"', client => {
   scenario('Login in the Back Office', client => {
