@@ -1642,9 +1642,10 @@ class AdminProductsControllerCore extends AdminController
             $json = stripslashes($json);
             $images = Tools::jsonDecode($json, true);
             foreach ($images as $id => $position) {
-                $img = new Image((int)$id);
-                $img->position = (int)$position;
-                $res &= $img->update();
+                $res &= Db::getInstance()->execute(
+                    'UPDATE `'._DB_PREFIX_.'image` SET `position`= ' . (int) $position .
+                    ' WHERE `id_image` = ' . (int) $id
+                );
             }
         }
         if ($res) {
