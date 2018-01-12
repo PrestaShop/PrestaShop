@@ -67,6 +67,7 @@ class ProductPreferencesFormHandler implements FormHandlerInterface
             ->add('general', GeneralType::class)
             ->add('pagination', PaginationType::class)
             ->add('page', PageType::class)
+            ->add('stock', StockType::class)
             ->setData($this->formDataProvider->getData())
         ;
 

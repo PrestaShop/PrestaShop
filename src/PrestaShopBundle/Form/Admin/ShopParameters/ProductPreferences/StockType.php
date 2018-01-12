@@ -2,13 +2,13 @@
 
 namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class StockType extends AbstractType
+class StockType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,9 +27,12 @@ class StockType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('in_stock_label', TextType::class)
-            ->add('oos_label_with_backorders', TextType::class)
-            ->add('oos_label_without_backorders', TextType::class)
+            ->add('in_stock_label', TranslateTextType::class, [
+                'options' => [
+                    'required' => false,
+                ],
+                'locales' => $this->locales,
+            ])
         ;
     }
 

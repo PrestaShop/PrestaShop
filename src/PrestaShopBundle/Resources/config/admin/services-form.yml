@@ -186,7 +186,9 @@ services:
 
     form.type.translatable.aware:
         abstract: true
-        arguments: ['@translator']
+        arguments:
+            - "@translator"
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
     form.type.performance.smarty:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
@@ -244,6 +246,12 @@ services:
 
     form.type.product_preferences.general:
       class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\GeneralType'
+      parent: 'form.type.translatable.aware'
+      tags:
+          - { name: form.type }
+
+    form.type.product_preferences.stock:
+      class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\StockType'
       parent: 'form.type.translatable.aware'
       tags:
           - { name: form.type }

@@ -25,7 +25,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% set generalForm, paginationForm, pageForm = form.general, form.pagination, form.page %}
+{% set generalForm, paginationForm, pageForm, stockForm = form.general, form.pagination, form.page, form.stock %}
 
 {% block content %}
     <div class="container">
@@ -173,7 +173,33 @@
 
             {% block product_preferences_stock %}
                 <div class="col">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <i class="material-icons">settings</i> {{ 'Products stock'|trans }}
+                        </h3>
+                        <div class="card-body">
+                            <div class="form-group">
+                                {{ ps.label_with_help(('Allow ordering of out-of-stock products'|trans), ('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans)) }}
+                                {{ form_errors(stockForm.allow_ordering_oos) }}
+                                {{ form_widget(stockForm.allow_ordering_oos) }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">
+                                    {{ 'Enable stock management'|trans }}
+                                </label>
+                                {{ form_errors(stockForm.stock_management) }}
+                                {{ form_widget(stockForm.stock_management) }}
+                            </div>
 
+                            <div class="form-group">
+                                <label class="form-control-label">
+                                    {{ 'Label of in-stock products'|trans }}
+                                </label>
+                                {{ form_errors(stockForm.stock_management) }}
+                                {{ form_widget(stockForm.in_stock_label) }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             {% endblock %}
         </div>
