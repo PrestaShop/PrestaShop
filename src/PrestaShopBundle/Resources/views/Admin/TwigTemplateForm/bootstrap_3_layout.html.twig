@@ -256,6 +256,19 @@
     {% endspaceless %}
 {% endblock date_picker_widget %}
 
+{% block switch_widget %}
+    {% spaceless %}
+    <span class="ps-switch">
+        {% for choice in choices %}
+            {% set inputId = id ~'_' ~ choice.value %}
+            <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio">
+            <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
+        {% endfor %}
+        <span class="slide-button"></span>
+    </span>
+    {% endspaceless %}
+{% endblock switch_widget %}
+
 {% block _form_step6_attachments_widget %}
     <div class="js-options-no-attachments {{ form|length > 0 ? 'hide' : '' }}">
         <small>{{ 'There is no attachment yet.'|trans({}, 'Admin.Catalog.Notification') }}</small>
