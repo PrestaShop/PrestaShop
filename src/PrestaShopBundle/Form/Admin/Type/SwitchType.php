@@ -24,12 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
 
-header('Location: ../../../../../../../../');
-exit;
+/**
+ * Displays a switch (ON / OFF by default)
+ */
+class SwitchType extends AbstractType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(array(
+            'choices_at_values' => true,
+            'choices' => array(
+                'No' => false,
+                'Yes' => true,
+            ),
+            'multiple' => false,
+            'expanded' => false,
+        ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getParent()
+    {
+        return ChoiceType::class;
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'switch';
+    }
+}
