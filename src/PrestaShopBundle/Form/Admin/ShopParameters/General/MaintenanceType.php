@@ -55,6 +55,9 @@ class MaintenanceType extends TranslatorAwareType
             ))
             ->add('maintenance_ip', IpAddressType::class, array(
                 'required' => false,
+                'attr' => array(
+                    'class' => 'col-md-5',
+                ),
             ))
             ->add('maintenance_text', TranslateType::class, array(
                 'type' => FormattedTextareaType::class,
