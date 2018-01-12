@@ -563,14 +563,19 @@ class AdminControllerCore extends Controller
      * Set breadcrumbs array for the controller page
      *
      * @param int|null $tab_id
+     * @param array|null $tabs
      */
-    public function initBreadcrumbs($tab_id = null)
+    public function initBreadcrumbs($tab_id = null, $tabs = null)
     {
+        if (is_array($tabs) || count($tabs)) {
+            $tabs = array();
+        }
+
         if (is_null($tab_id)) {
             $tab_id = $this->id;
         }
 
-        $tabs = Tab::recursiveTab($tab_id, array());
+        $tabs = Tab::recursiveTab($tab_id, $tabs);
 
         $dummy = array('name' => '', 'href' => '', 'icon' => '');
         $breadcrumbs2 = array(
