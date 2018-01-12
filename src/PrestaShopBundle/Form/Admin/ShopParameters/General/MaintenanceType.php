@@ -27,11 +27,12 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
 use PrestaShopBundle\Form\Admin\Type\IpAddressType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 /**
  * Class returning the content of the form in the maintenance page.
  * To be found in Configure > Shop parameters > General > Maintenance
@@ -44,12 +45,7 @@ class MaintenanceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enable_shop', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
+            ->add('enable_shop', SwitchType::class, array(
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ))

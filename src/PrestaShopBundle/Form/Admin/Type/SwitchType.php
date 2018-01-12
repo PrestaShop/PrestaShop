@@ -26,27 +26,40 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Extended input type for IP addresses
- * Displays a bouton to add the user's one to the list.
+ * Displays a switch (ON / OFF by default)
  */
-class IpAddressType extends TextType
+class SwitchType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return TextType::class;
+        $resolver->setDefaults(array(
+            'choices_at_values' => true,
+            'choices' => array(
+                'No' => false,
+                'Yes' => true,
+            ),
+            'multiple' => false,
+            'expanded' => false,
+        ));
     }
 
     /**
      * {@inheritdoc}
      */
+    public function getParent()
+    {
+        return ChoiceType::class;
+    }
+
     public function getBlockPrefix()
     {
-        return 'ip_address_text';
+        return 'switch';
     }
 }
