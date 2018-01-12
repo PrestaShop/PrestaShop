@@ -26,6 +26,8 @@
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
@@ -47,7 +49,23 @@ class SwitchType extends AbstractType
             ),
             'multiple' => false,
             'expanded' => false,
+            'disabled' => false,
         ));
+        $resolver->setAllowedTypes('disabled', 'bool');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        if (true === $options['disabled']) {
+            $view->vars['disabled'] = true;
+        }
+        $view->vars['attr']['class'] = 'ps-switch';
+        if (isset($options['attr']['class'])) {
+            $view->vars['attr']['class'] .= ' '.$options['attr']['class'];
+        }
     }
 
     /**
