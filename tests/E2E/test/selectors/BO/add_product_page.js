@@ -152,6 +152,7 @@ module.exports = {
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[1]/div',
-    catalog_third_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[2]/div'
+    catalog_third_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[2]/div',
+    category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]'
   }
 };
