@@ -74,7 +74,9 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -106,7 +108,9 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -165,7 +169,9 @@
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -197,6 +203,11 @@
                                 </label>
                                 {{ form_errors(stockForm.stock_management) }}
                                 {{ form_widget(stockForm.in_stock_label) }}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
                             </div>
                         </div>
                     </div>
