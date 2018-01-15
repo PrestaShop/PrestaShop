@@ -8,7 +8,7 @@ scenario('Create "Address"', () => {
         test('should open the browser', () => client.open());
         test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'customer');
-    scenario('Createa a new "Address"', client => {
+    scenario('Create a new "Address"', client => {
         test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Customer.customer_menu, Addresses.addresses_menu));
         test('should click on add new address', () => client.waitForExistAndClick(Addresses.new_address_button));
         test('should set "Email" input', () => client.waitAndSetValue(Addresses.email_input, 'demo' + date_time + '@prestashop.com'));

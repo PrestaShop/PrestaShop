@@ -81,6 +81,13 @@ function initCommands(client) {
             .selectByVisibleText(selector, value)
     });
 
+    client.addCommand('waitAndSelectByAttribute', function (selector, attribute, value, pause = 0, timeout = 60000) {
+        return client
+            .waitForExist(selector, timeout)
+            .selectByAttribute(selector, attribute, value)
+            .pause(pause)
+    });
+
     client.addCommand('signInBO', function (selector) {
         this.selector = globals.selector;
         return client
@@ -111,6 +118,12 @@ function initCommands(client) {
             .waitForExistAndClick(selector.sign_out_button)
             .waitForExist(selector.sign_in_button, 90000)
             .deleteCookie();
+    });
+
+    client.addCommand('accessToFO', function (selector) {
+        return client
+            .url('http://' + URL)
+            .waitForExistAndClick(selector.logo_home_page)
     });
 }
 
