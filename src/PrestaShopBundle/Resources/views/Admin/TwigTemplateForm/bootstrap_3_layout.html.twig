@@ -244,32 +244,43 @@
     {{- parent() -}}
 {%- endblock translate_fields_widget %}
 
-{% block translate_text_widget %}
+{% block translate_text_widget -%}
     {{ form_errors(form) }}
-
-    {{ dump(form) }}
-    {{ dump(default_locale) }}
-    <div class="input-group">
+    <div class="input-group locale-input-group js-locale-input-group">
         {% for translateField in form %}
-            <input type="text"
-                   class="form-control {% if default_locale.id_lang != translateField.vars.name %}d-none{% endif %}"
-                   aria-label="Text input with dropdown button"
-            >
+            {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+            {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+
+            {% if default_locale.id_lang != translateField.vars.name %}
+                {% set classes = classes ~ ' d-none' %}
+            {% endif %}
+
+            {% set attr = translateField.vars.attr %}
+
+            {{ form_widget(translateField, {attr: {'class': classes|trim}}) }}
         {% endfor %}
 
-        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{ form.vars.default_locale.iso_code }}
-        </button>
-
         {% if not hide_locales %}
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton4">
-            {% for translateField in form %}
-                <span class="dropdown-item">{{ translateField.vars.label }}</span>
-            {% endfor %}
+        <div class="dropdown locale-dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    id="{{ form.vars.id }}"
+            >
+                {{ form.vars.default_locale.iso_code }}
+            </button>
+
+            <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+                {% for locale in locales %}
+                    <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
     </div>
-{% endblock translate_text_widget %}
+{%- endblock translate_text_widget %}
 
 {% block date_picker_widget %}
     {% spaceless %}

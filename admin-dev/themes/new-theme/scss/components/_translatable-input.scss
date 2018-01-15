@@ -1,0 +1,13 @@
+.locale-input-group {
+  .dropdown {
+    margin-left: 10px;
+
+    .dropdown-menu {
+      min-width: auto;
+
+      .dropdown-item {
+        cursor: pointer;
+      }
+    }
+  }
+}
