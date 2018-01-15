@@ -5,7 +5,7 @@ var should = require('should');
 
 module.exports = {
   standard: {
-    name: "AutoNewStandard",
+    name: "ST",
     new_category_name: "NewStandard",
     features: {
       feature1: {
@@ -41,7 +41,7 @@ module.exports = {
     },
 
   pack: {
-    name: "AutoNewPack",
+    name: "PK",
     type: "pack of products",
     new_category_name: "NewPack",
     product_reference: "new product automate",
@@ -58,7 +58,7 @@ module.exports = {
   },
 
   virtual: {
-    name: "AutoNewVirtual",
+    name: "VRT",
     type: "virtual",
     new_category_name: "newVirtual",
     product_reference: "new product automate",
