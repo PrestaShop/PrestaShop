@@ -82,42 +82,6 @@
                 </div>
             {% endblock %}
 
-            {% block product_preferences_pagination %}
-                <div class="col">
-                    <div class="card">
-                        <h3 class="card-header">
-                            <i class="material-icons">settings</i> {{ 'Pagination'|trans }}
-                        </h3>
-                        <div class="card-block">
-                            <div class="card-text">
-                                <div class="form-group">
-                                    {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans)) }}
-                                    {{ form_errors(paginationForm.products_per_page) }}
-                                    {{ form_widget(paginationForm.products_per_page) }}
-                                </div>
-                                <div class="form-group">
-                                    {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans)) }}
-                                    {{ form_errors(paginationForm.default_order_by) }}
-                                    {{ form_widget(paginationForm.default_order_by) }}
-                                </div>
-                                <div class="form-group">
-                                    {{ ps.label_with_help(('Default order way'|trans), ('Default order way for product list.'|trans)) }}
-                                    {{ form_errors(paginationForm.default_order_way) }}
-                                    {{ form_widget(paginationForm.default_order_way) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-end">
-                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endblock %}
-        </div>
-
-        <div class="row">
             {% block product_preferences_page %}
                 <div class="col">
                     <div class="card">
@@ -166,6 +130,42 @@
                                 </div>
 
                                 {{ ps.warningtip('In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").'|trans) }}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+
+        <div class="row">
+            {% block product_preferences_pagination %}
+                <div class="col">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <i class="material-icons">settings</i> {{ 'Pagination'|trans }}
+                        </h3>
+                        <div class="card-block">
+                            <div class="card-text">
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans)) }}
+                                    {{ form_errors(paginationForm.products_per_page) }}
+                                    {{ form_widget(paginationForm.products_per_page) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans)) }}
+                                    {{ form_errors(paginationForm.default_order_by) }}
+                                    {{ form_widget(paginationForm.default_order_by) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Default order way'|trans), ('Default order way for product list.'|trans)) }}
+                                    {{ form_errors(paginationForm.default_order_way) }}
+                                    {{ form_widget(paginationForm.default_order_way) }}
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer">
