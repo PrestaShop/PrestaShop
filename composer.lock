@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4bc36d34c2512ab8c9fc63a4492908d",
+    "content-hash": "b0fcc9b01c1cdeab61574a29544c92a6",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -275,6 +275,50 @@
             ],
             "description": "A bundle integrating GuzzleHttp >= 4.0",
             "time": "2015-11-17T00:02:55+00:00"
+        },
+        {
+            "name": "cssjanus/cssjanus",
+            "version": "dev-patch-1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/php-cssjanus.git",
+                "reference": "7866b8a6f7ad8ba8c7f4eb9f87b084452a41d8e5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/php-cssjanus/zipball/7866b8a6f7ad8ba8c7f4eb9f87b084452a41d8e5",
+                "reference": "7866b8a6f7ad8ba8c7f4eb9f87b084452a41d8e5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "jakub-onderka/php-parallel-lint": "0.8.*",
+                "phpunit/phpunit": "4.8.*",
+                "squizlabs/php_codesniffer": "2.3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "src/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "parallel-lint . --exclude vendor",
+                    "phpunit",
+                    "phpcs -p"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Convert CSS stylesheets between left-to-right and right-to-left.",
+            "support": {
+                "source": "https://github.com/PrestaShop/php-cssjanus/tree/patch-1"
+            },
+            "time": "2018-01-08T09:57:29+00:00"
         },
         {
             "name": "curl/curl",
@@ -1608,36 +1652,6 @@
                 "parameters management"
             ],
             "time": "2015-11-10T17:04:01+00:00"
-        },
-        {
-            "name": "ipresta/localize-fixture",
-            "version": "v1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iPresta/localize-fixture.git",
-                "reference": "5e24bcece3d88f4b53b844588763990f6ed20a6a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iPresta/localize-fixture/zipball/5e24bcece3d88f4b53b844588763990f6ed20a6a",
-                "reference": "5e24bcece3d88f4b53b844588763990f6ed20a6a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT License"
-            ],
-            "description": "Generate RTL CSS for PrestaShop",
-            "time": "2017-09-25T17:46:09+00:00"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -3711,7 +3725,7 @@
             ],
             "description": "PrestaShop Smarty version",
             "homepage": "https://github.com/PrestaShop/smarty",
-            "time": "2017-05-11 08:29:53"
+            "time": "2017-05-11T08:29:53+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
@@ -6843,6 +6857,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "prestashop/smarty": 20,
+        "cssjanus/cssjanus": 20,
         "phake/phake": 0
     },
     "prefer-stable": false,
