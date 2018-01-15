@@ -2,6 +2,10 @@
   .dropdown {
     margin-left: 10px;
 
+    button.dropdown-toggle {
+      border-color: #bbcdd2;
+    }
+
     .dropdown-menu {
       min-width: auto;
 
