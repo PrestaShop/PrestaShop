@@ -25,7 +25,7 @@ class TranslateTextType extends AbstractType
     {
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = reset($options['locales']);
-        $view->vars['hide_locales'] = 1 === count($options['locales']);
+        $view->vars['hide_locales'] = 1 >= count($options['locales']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -34,6 +34,9 @@ class TranslateTextType extends AbstractType
             'options' => [],
             'locales' => [],
         ]);
+
+        $resolver->setAllowedTypes('locales', 'array');
+        $resolver->setAllowedTypes('options', 'array');
     }
 
     public function getBlockPrefix()
