@@ -12,8 +12,8 @@ paths:
 exclude_files:
   - src/PrestaShopBundle/Tests
   - classes/PrestaShopAutoload.php
-  - app/cache/
-  - app/logs
+  - var/cache/
+  - var/logs
   - node_modules
   - vendor
   - tools

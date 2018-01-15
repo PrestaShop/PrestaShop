@@ -460,12 +460,12 @@ class ReleaseCreator
      */
     protected function createAndRenameFolders()
     {
-        if (!file_exists($this->tempProjectPath . '/app/cache/')) {
-            mkdir($this->tempProjectPath . '/app/cache', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/var/cache/')) {
+            mkdir($this->tempProjectPath . '/var/cache', 0777, true);
         }
 
-        if (!file_exists($this->tempProjectPath . '/app/logs/')) {
-            mkdir($this->tempProjectPath . '/app/logs', 0777, true);
+        if (!file_exists($this->tempProjectPath . '/var/logs/')) {
+            mkdir($this->tempProjectPath . '/var/logs', 0777, true);
         }
         $itemsToRename = ['admin-dev' => 'admin', 'install-dev' => 'install'];
         $basePath = $this->tempProjectPath;
