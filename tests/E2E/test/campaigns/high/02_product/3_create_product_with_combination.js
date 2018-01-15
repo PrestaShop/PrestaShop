@@ -1,7 +1,11 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {productPage} = require('../../../selectors/FO/product_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
+global.productVariations = [];
 
 scenario('Create product with combination', client => {
     test('should open browser', () => client.open());
@@ -10,7 +14,7 @@ scenario('Create product with combination', client => {
     test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
     scenario('Edit Basic settings', client => {
-        test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'Combination' + date_time));
+        test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
         test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations));
         test('should upload the first product picture', () => client.uploadPicture('1.png', AddProductPage.picture));
         test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
@@ -44,10 +48,22 @@ scenario('Create product with combination', client => {
 
     scenario('Create product combinations', client => {
         test('should click on "Combinations"', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
-        test('should choose the size "S" and color "Grey"', () => client.createCombination(AddProductPage.combination_size_s, AddProductPage.combination_color_gray));
+        test('should choose the size "S" and color "Grey"', () => {
+            return promise
+                .then(() => client.createCombination(AddProductPage.combination_size_s, AddProductPage.combination_color_gray))
+                .then(() => client.getTextInVar(AddProductPage.combination_size_s, "first_size"))
+                .then(() => client.getTextInVar(AddProductPage.combination_color_gray, "first_color"))
+                .then(() => productVariations.push([tab["first_size"], tab["first_color"]]))
+        });
         test('should click on "Generate" button', () => client.waitForExistAndClick(AddProductPage.combination_generate_button));
         test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
-        test('should choose the size "S" and color "Beige"', () => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige));
+        test('should choose the size "S" and color "Beige"', () => {
+            return promise
+                .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige))
+                .then(() => client.getTextInVar(AddProductPage.combination_size_m, "second_size"))
+                .then(() => client.getTextInVar(AddProductPage.combination_color_beige, "second_color"))
+                .then(() => productVariations.push([tab["second_size"], tab["second_color"]]))
+        });
         test('should click on "Generate" button', () => client.waitForExistAndClick(AddProductPage.combination_generate_button));
         test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
         test('should click on "Edit" first combination', () => {
@@ -121,8 +137,8 @@ scenario('Check the product in the catalog', client => {
     test('should open browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
     test('should go to "Catalog"', () => client.goToCatalog());
-    test('should search for product by name', () => client.searchProductByName(data.standard.name + 'Combination' + date_time));
-    test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.standard.name + 'Combination' + date_time));
+    test('should search for product by name', () => client.searchProductByName(data.standard.name + 'C' + date_time));
+    test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.standard.name + 'C' + date_time));
     test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
     test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.standard.new_category_name + 'Combination' + date_time));
     test('should check the existence of product price TE', () => client.checkProductPriceTE());
@@ -130,3 +146,34 @@ scenario('Check the product in the catalog', client => {
     test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
     test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
+
+scenario('Check the product with combination in the Front Office', () => {
+    scenario('Login in the Front Office', client => {
+        test('should open the browser', () => client.open());
+        test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+    }, 'product/product');
+    scenario('Check that the product with combination is well displayed in the Front Office', client => {
+        test('should set the shop language to "English"', () => client.changeLanguage('english'));
+        test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.standard.name + 'C' + date_time));
+        test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+        test('should check that the product name is equal to "' + (data.standard.name + 'C' + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.standard.name + 'C' + date_time).toUpperCase()));
+        test('should check that the product price is equal to "€27.00"', () => client.checkTextValue(productPage.product_price, '€27.00'));
+        test('should set the product size to "S"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[0][0], 3000));
+        test('should check that the product color is equal to "Grey"', () => client.checkTextValue(productPage.product_color, productVariations[0][1]));
+        test('should set the product size to "M"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[1][0], 3000));
+        test('should check that the product color is equal to "Beige"', () => client.checkTextValue(productPage.product_color, productVariations[1][1]));
+        test('should check that the product reference is equal to "variation_1"', () => {
+            return promise
+                .then(() => client.scrollTo(productPage.product_reference))
+                .then(() => client.checkTextValue(productPage.product_reference, 'variation_2'))
+        });
+        test('should check that the product quantity us equal to "20"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', '10'));
+    }, 'product/product');
+    scenario('Logout from the Front Office', client => {
+        test('should logout successfully from the Front Office', () => {
+            return promise
+                .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+                .then(() => client.signOutFO(AccessPageFO))
+        });
+    }, 'product/product');
+}, 'product/product', true);

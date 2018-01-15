@@ -1,5 +1,8 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {productPage} = require('../../../selectors/FO/product_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
@@ -37,7 +40,7 @@ scenario('Create virtual Product', client => {
         test('should set the "Quantity"', () => client.waitAndSetValue(AddProductPage.product_quantity_input, data.common.quantity));
         test('should set the "Minimum quantity for sale"', () => client.waitAndSetValue(AddProductPage.minimum_quantity_sale, data.common.qty_min));
         test('should indicate that the product have an associated file', () => client.associatedFile());
-        test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
+        test('should add a file', () => client.addFile(AddProductPage.virtual_select_file, 'image_test.jpg'), 50);
         test('should add file "NAME"', () => client.waitAndSetValue(AddProductPage.virtual_file_name, data.virtual.attached_file_name));
         test('should add file "NUMBER"', () => client.waitAndSetValue(AddProductPage.virtual_file_number_download, data.virtual.allowed_number_to_download));
         test('should add file "EXPIRATION DATE"', () => client.waitAndSetValue(AddProductPage.virtual_expiration_file_date, data.virtual.expiration_date));
@@ -81,6 +84,8 @@ scenario('Create virtual Product', client => {
         test('should select the customization field "Type" File', () => client.waitAndSelectByValue(AddProductPage.options_second_custom_field_type, '0'));
         test('should click on "ATTACH A NEW FILE"', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_new_file_button, 50));
         test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
+        test('should set the file "Title"', () => client.waitAndSetValue(AddProductPage.options_file_name, data.common.document_attach.name));
+        test('should set the file "Description" ', () => client.waitAndSetValue(AddProductPage.options_file_description, data.common.document_attach.desc));
         test('should add the previous added file', () => client.scrollWaitForExistAndClick(AddProductPage.options_file_add_button, 50));
     }, 'product/product');
 
@@ -104,3 +109,30 @@ scenario('Create virtual Product', client => {
       test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
       test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
+
+scenario('Check the virtual product in the Front Office', () => {
+    scenario('Login in the Front Office', client => {
+        test('should open the browser', () => client.open());
+        test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+    }, 'product/product');
+    scenario('Check that the pack product is well displayed in the Front Office', client => {
+        test('should set the shop language to "English"', () => client.changeLanguage('english'));
+        test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.virtual.name + date_time));
+        test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+        test('should check that the product name is equal to "' + (data.virtual.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.virtual.name + date_time).toUpperCase()));
+        test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+        test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
+            return promise
+                .then(() => client.scrollTo(productPage.product_reference))
+                .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+        });
+        test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
+    }, 'product/product');
+    scenario('Logout from the Front Office', client => {
+        test('should logout successfully from the Front Office', () => {
+            return promise
+                .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+                .then(() => client.signOutFO(AccessPageFO))
+        });
+    }, 'product/product');
+}, 'product/product', true);

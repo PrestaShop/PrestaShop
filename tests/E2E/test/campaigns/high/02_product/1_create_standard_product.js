@@ -1,5 +1,8 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {productPage} = require('../../../selectors/FO/product_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
@@ -121,3 +124,43 @@ scenario('Check the product creation', client => {
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
+scenario('Check the product creation', client => {
+  test('should open browser', () => client.open());
+  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+  test('should go to "Catalog"', () => client.goToCatalog());
+  test('should search for product by name', () => client.searchProductByName(data.standard.name + date_time));
+  test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.standard.name + date_time));
+  test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
+  test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, data.standard.new_category_name + date_time));
+  test('should check the existence of product price TE', () => client.checkProductPriceTE());
+  test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, data.common.quantity));
+  test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
+  test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+}, 'product/check_product', true);
+
+scenario('Check the standard product in the Front Office', () => {
+  scenario('Login in the Front Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+  }, 'product/product');
+  scenario('Check that the standard product is well displayed in the Front Office', client => {
+    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.standard.name + date_time));
+    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+    test('should check that the product name is equal to "' + (data.standard.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.standard.name + date_time).toUpperCase()));
+    test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+    test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
+      return promise
+          .then(() => client.scrollTo(productPage.product_reference))
+          .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+    });
+    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
+  }, 'product/product');
+  scenario('Logout from the Front Office', client => {
+    test('should logout successfully from the Front Office', () => {
+      return promise
+          .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+          .then(() => client.signOutFO(AccessPageFO))
+    });
+  }, 'product/product');
+}, 'product/product', true);

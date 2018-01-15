@@ -217,6 +217,19 @@ class CommonClient {
       return this.client
 	.waitForVisible(selector, timeout)
     }
+
+    accessToBO(selector) {
+        return this.client.accessToBO(selector);
+    }
+
+    accessToFO(selector) {
+        return this.client.accessToFO(selector);
+    }
+
+    waitAndSelectByAttribute(selector, attribute, value, pause = 0, timeout = 90000) {
+        return this.client.waitAndSelectByAttribute(selector, attribute, value, pause, timeout);
+    }
+
 }
 
 module.exports = CommonClient;
