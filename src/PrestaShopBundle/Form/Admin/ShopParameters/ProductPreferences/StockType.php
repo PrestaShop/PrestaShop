@@ -28,9 +28,6 @@ class StockType extends TranslatorAwareType
                 'required' => true,
             ])
             ->add('in_stock_label', TranslateTextType::class, [
-                'options' => [
-                    'required' => false,
-                ],
                 'locales' => $this->locales,
             ])
         ;
