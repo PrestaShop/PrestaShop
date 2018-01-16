@@ -1194,7 +1194,7 @@ class OrderCore extends ObjectModel
                 FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
                 ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '');
             $new_number = DB::getInstance()->getValue($new_number_sql);
-            
+
             $sql .= (int)$new_number;
         }
 
@@ -2257,48 +2257,45 @@ class OrderCore extends ObjectModel
             $round_type = Order::ROUND_LINE;
         }
 
-        // compute products discount
-        $order_discount_tax_excl = $this->total_discounts_tax_excl;
-
-        $free_shipping_tax = 0;
         $product_specific_discounts = array();
 
-        $expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
-
-        foreach ($this->getCartRules() as $order_cart_rule) {
-            if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0) {
-                $free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
-                $order_discount_tax_excl -= $this->total_shipping_tax_excl;
-                $expected_total_base += $this->total_shipping_tax_excl;
-            }
-
-            $cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
-            if ($cart_rule->reduction_product > 0) {
-                if (empty($product_specific_discounts[$cart_rule->reduction_product])) {
-                    $product_specific_discounts[$cart_rule->reduction_product] = 0;
+        $CartRuleProducts = array();
+        $discountedProducts = array();
+        foreach ($this->getCartRules() as $orderCartRule) {
+            $cartRule = new CartRule($orderCartRule['id_cart_rule']);
+            /** get all discounted products with CartRules */
+            $productRuleGroups = $cartRule->getProductRuleGroups();
+            if (!empty($productRuleGroups)) {
+                foreach ($productRuleGroups as $productRuleGroup) {
+                    foreach ($productRuleGroup['product_rules'] as $productRule) {
+                        if ("products" === $productRule['type']) {
+                            $discountedProducts = array_merge($discountedProducts, $productRule['values']);
+                            /** get cartRule of discounted products */
+                            $CartRuleProducts[trim(implode(" ", $productRule['values']))] = $cartRule;
+                        }
+                    }
                 }
-
-                $product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
-                $order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
             }
         }
-        
-        $expected_total_tax = $this->total_products_wt - $this->total_products;
-        $actual_total_tax = 0;
-        $actual_total_base = 0;
 
         $order_detail_tax_rows = array();
-
-        $breakdown = array();
 
         // Get order_details
         $order_details = $limitToOrderDetails ? $limitToOrderDetails : $this->getOrderDetailList();
 
         $order_ecotax_tax = 0;
-
         $tax_rates = array();
 
         foreach ($order_details as $order_detail) {
+            /** apply discount on one product */
+            $reductionPercent = 0;
+            if (!empty($discountedProducts) && in_array($order_detail['product_id'], $discountedProducts)) {
+                $cartRule = $CartRuleProducts[$order_detail['product_id']];
+                $reductionPercent = $this->getDiscountRate($cartRule);
+            } elseif (empty($discountedProducts)) {
+                $reductionPercent = $this->getDiscountRate($cartRule);
+            }
+
             $id_order_detail = $order_detail['id_order_detail'];
             $tax_calculator = OrderDetail::getTaxCalculatorStatic($id_order_detail);
 
@@ -2308,14 +2305,11 @@ class OrderCore extends ObjectModel
             $unit_ecotax_tax = $order_detail['ecotax'] * $order_detail['ecotax_tax_rate'] / 100.0;
             $order_ecotax_tax += $order_detail['product_quantity'] * $unit_ecotax_tax;
 
-            $discount_ratio = 0;
-
-            if ($this->total_products > 0) {
-                $discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
-            }
-
             // share of global discount
-            $discounted_price_tax_excl = $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
+            $discounted_price_tax_excl = (null !== $reductionPercent)
+                ? $order_detail['unit_price_tax_excl'] - ($order_detail['unit_price_tax_excl'] * $reductionPercent)
+                : $order_detail['unit_price_tax_excl'];
+
             // specific discount
             if (!empty($product_specific_discounts[$order_detail['product_id']])) {
                 $discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']];
@@ -2344,13 +2338,6 @@ class OrderCore extends ObjectModel
                         break;
                 }
 
-                if (!isset($breakdown[$id_tax])) {
-                    $breakdown[$id_tax] = array('tax_base' => 0, 'tax_amount' => 0);
-                }
-
-                $breakdown[$id_tax]['tax_base'] += $total_tax_base;
-                $breakdown[$id_tax]['tax_amount'] += $total_amount;
-
                 $order_detail_tax_rows[] = array(
                     'id_order_detail' => $id_order_detail,
                     'id_tax' => $id_tax,
@@ -2360,25 +2347,6 @@ class OrderCore extends ObjectModel
                     'unit_amount' => $unit_amount,
                     'total_amount' => $total_amount
                 );
-            }
-        }
-
-        if (!empty($order_detail_tax_rows)) {
-            foreach ($breakdown as $data) {
-                $actual_total_tax += Tools::ps_round($data['tax_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
-                $actual_total_base += Tools::ps_round($data['tax_base'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
-            }
-
-            $order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
-
-            $tax_rounding_error = $expected_total_tax - $actual_total_tax - $order_ecotax_tax;
-            if ($tax_rounding_error !== 0) {
-                Tools::spreadAmount($tax_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_amount');
-            }
-
-            $base_rounding_error = $expected_total_base - $actual_total_base;
-            if ($base_rounding_error !== 0) {
-                Tools::spreadAmount($base_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_tax_base');
             }
         }
 
@@ -2430,5 +2398,40 @@ class OrderCore extends ObjectModel
             'INNER JOIN '._DB_PREFIX_.'tax t ON t.id_tax = odt.id_tax '.
             'WHERE o.id_order = '.(int)$this->id
         );
+    }
+
+    /**
+     * Calculate the discount rate
+     *
+     * @param $cartRule
+     * @return float
+     */
+    public function getDiscountRate($cartRule)
+    {
+        /** compute discount rate */
+        if (0 !== (int)$cartRule->reduction_percent) {
+            return Tools::ps_round(($cartRule->reduction_percent / 100), _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+        } elseif (0 !== (int)$cartRule->reduction_amount) {
+            $order = new Order((int)$this->id);
+            $reduction = 100 / ($order->total_products / $cartRule->reduction_amount);
+            return Tools::ps_round($reduction / 100, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+        }
+
+        return 0;
+    }
+
+    /**
+     * Calculate the total products quantity of the order
+     *
+     * @return int
+     */
+    public function getTotalOrderQuantity()
+    {
+        $quantity = 0;
+        foreach ($this->getProductsDetail() as $product) {
+            $quantity += $product[product_quantity];
+        }
+
+        return $quantity;
     }
 }

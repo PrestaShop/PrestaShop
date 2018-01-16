@@ -91,6 +91,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $customer = new Customer((int)$this->order->id_customer);
         $this->order->total_paid_tax_excl = $this->order->total_paid_tax_incl = $this->order->total_products = $this->order->total_products_wt = 0;
 
+        $discountedProducts = array();
         if ($this->order_slip->amount > 0) {
             foreach ($this->order->products as &$product) {
                 $product['total_price_tax_excl'] = $product['unit_price_tax_excl'] * $product['product_quantity'];
@@ -98,9 +99,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
                 if ($this->order_slip->partial == 1) {
                     $order_slip_detail = Db::getInstance()->getRow('
-						SELECT * FROM `'._DB_PREFIX_.'order_slip_detail`
-						WHERE `id_order_slip` = '.(int)$this->order_slip->id.'
-						AND `id_order_detail` = '.(int)$product['id_order_detail']);
+                        SELECT * FROM `' . _DB_PREFIX_ . 'order_slip_detail`
+                        WHERE `id_order_slip` = ' . (int)$this->order_slip->id . '
+                        AND `id_order_detail` = ' . (int)$product['id_order_detail']);
 
                     $product['total_price_tax_excl'] = $order_slip_detail['amount_tax_excl'];
                     $product['total_price_tax_incl'] = $order_slip_detail['amount_tax_incl'];
@@ -110,6 +111,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
                 $this->order->total_products_wt += $product['total_price_tax_incl'];
                 $this->order->total_paid_tax_excl = $this->order->total_products;
                 $this->order->total_paid_tax_incl = $this->order->total_products_wt;
+
+                $discountedProducts[$product['product_id']]['unit_price_tax_excl'] = $product['unit_price_tax_excl'];
+                $discountedProducts[$product['product_id']]['unit_price_tax_incl'] = $product['unit_price_tax_incl'];
+                $discountedProducts[$product['product_id']]['product_quantity'] = $product['product_quantity'];
             }
         } else {
             $this->order->products = null;
@@ -123,7 +128,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 
         $tax = new Tax();
         $tax->rate = $this->order->carrier_tax_rate;
-        $tax_calculator = new TaxCalculator(array($tax));
         $tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
         $this->order->total_shipping_tax_incl = $this->order_slip->total_shipping_tax_incl;
@@ -133,28 +137,62 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         $this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
         $this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
 
-        $total_cart_rule = 0;
+        $totalCartRuleTaxExcl = 0;
+        $totalCartRuleTaxIncl = 0;
+        $orderCartsRules = array();
         if ($this->order_slip->order_slip_type == 1 && is_array($cart_rules = $this->order->getCartRules($this->order_invoice->id))) {
             foreach ($cart_rules as $cart_rule) {
-                if ($tax_excluded_display) {
-                    $total_cart_rule += $cart_rule['value_tax_excl'];
+                $cart = new CartRule($cart_rule['id_cart_rule']);
+                /** compute discount */
+                $discountRate = $this->order->getDiscountRate($cart);
+                $productRuleGroups = $cart->getProductRuleGroups();
+                if (!empty($productRuleGroups)) {
+                    foreach ($productRuleGroups as $productRuleGroup) {
+                        foreach ($productRuleGroup['product_rules'] as $productRule) {
+                            if ("products" === $productRule['type']) {
+                                $index = $productRule['values'][0];
+                                if (array_key_exists($index, $discountedProducts)) {
+                                    $order = new Order((int)$this->order->id);
+                                    /** recompute the discount */
+                                    $discountCalculator = $this->discountCalculator($cart, $cart_rule, $order, tax_excluded_display);
+                                    $cart_rule = $discountCalculator['cartRule'];
+                                    $discountRate = $discountCalculator['discountRate'];
+                                    $orderCartsRules[] = $cart_rule;
+                                    $totalCartRuleTaxExcl += ($discountedProducts[$index]['unit_price_tax_excl'] * $discountRate) * $discountedProducts[$index]['product_quantity'];
+                                    $totalCartRuleTaxIncl += ($discountedProducts[$index]['unit_price_tax_incl'] * $discountRate) * $discountedProducts[$index]['product_quantity'];
+                                }
+                            }
+                        }
+                    }
                 } else {
-                    $total_cart_rule += $cart_rule['value'];
+                    foreach ($discountedProducts as $product) {
+                        $totalCartRuleTaxExcl += ($product['unit_price_tax_excl'] * $discountRate) * $product['product_quantity'];
+                        $totalCartRuleTaxIncl += ($product['unit_price_tax_incl'] * $discountRate) * $product['product_quantity'];
+                    }
+
+                    $totalTaxExcl = $this->order->total_products - ($this->order->total_paid_tax_excl - $totalCartRuleTaxExcl);
+                    $totalTaxIncl = $this->order->total_products_wt - ($this->order->total_paid_tax_incl - $totalCartRuleTaxIncl);
+
+                    $cart_rule['value'] = Tools::ps_round($totalTaxIncl, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+                    $cart_rule['value_tax_excl'] = Tools::ps_round($totalTaxExcl, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+                    $orderCartsRules[] = $cart_rule;
                 }
             }
+            $this->order->total_paid_tax_incl -= $totalCartRuleTaxIncl;
+            $this->order->total_paid_tax_excl -= $totalCartRuleTaxExcl;
         }
 
         $this->smarty->assign(array(
             'order' => $this->order,
             'order_slip' => $this->order_slip,
             'order_details' => $this->order->products,
-            'cart_rules' => $this->order_slip->order_slip_type == 1 ? $this->order->getCartRules($this->order_invoice->id) : false,
+            'cart_rules' => $this->order_slip->order_slip_type == 1 ? $orderCartsRules : false,
             'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
             'delivery_address' => $formatted_delivery_address,
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
             'tax_excluded_display' => $tax_excluded_display,
-            'total_cart_rule' => $total_cart_rule
+            'total_cart_rule' => $tax_excluded_display ? $totalCartRuleTaxExcl : $totalCartRuleTaxIncl,
         ));
 
         $tpls = array(
@@ -321,5 +359,40 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         }
 
         return $taxes_breakdown;
+    }
+
+    /**
+     * Calculate the amount of discount
+     * @param Cart $cart
+     * @param CartRule $cartRule
+     * @param Order $order
+     * @param $taxExcludedDisplay
+     * @return array
+     */
+    private function discountCalculator($cart, $cartRule, $order, $taxExcludedDisplay)
+    {
+        $discountRate = false;
+        $quantity = $order->getTotalOrderQuantity();
+
+        if ($quantity) {
+            if (0 !== (int)$cart->reduction_percent) {
+                $cartRule['value'] /= $quantity;
+                $cartRule['value_tax_excl'] /= $quantity;
+            } elseif (0 !== (int)$cart->reduction_amount) {
+                $totalPaid = $taxExcludedDisplay ? $order->total_paid_tax_excl : $order->total_paid_tax_incl;
+                $reductionPercent = 100 / ($totalPaid / $cart->reduction_amount);
+                $discountRate = Tools::ps_round($reductionPercent / 100, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+                $cartRule['value'] /= $quantity;
+                $cartRule['value_tax_excl'] /= $quantity;
+            }
+        }
+
+        $cartRule['value'] = Tools::ps_round($cartRule['value'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+        $cartRule['value_tax_excl'] = Tools::ps_round($cartRule['value_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+
+        return array(
+            'discountRate' => $discountRate,
+            'cartRule' => $cartRule,
+        );
     }
 }
