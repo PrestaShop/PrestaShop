@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "webpack --progress",
-    "build": "webpack --progress --colors --debug --display-chunks",
+    "build": "NODE_ENV=production webpack --progress --colors --debug --display-chunks",
     "watch": "webpack --progress --colors --debug --display-chunks --watch",
     "start-dev-server": "webpack-dev-server --config webpack.config.js",
     "vue-test": "karma start js/app/test/unit/karma.conf.js"
@@ -73,6 +73,7 @@
     "style-loader": "^0.14.0",
     "tether": "^1.3.2",
     "typeahead.js": "^0.11.1",
+    "uglify-save-license": "^0.4.1",
     "vue": "^2.4.2",
     "vue-loader": "^11.1.3",
     "vue-resource": "^1.3.4",
