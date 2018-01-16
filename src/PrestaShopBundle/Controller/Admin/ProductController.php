@@ -29,11 +29,14 @@ use PrestaShop\PrestaShop\Adapter\Tax\TaxRuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Warehouse\WarehouseDataProvider;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
+use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -386,11 +389,7 @@ class ProductController extends FrameworkBundleAdminController
     public function formAction($id, Request $request)
     {
         gc_disable();
-        if (
-            !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
-            && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
-            && !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')
-        ) {
+        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), 'ADMINPRODUCTS_')) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -415,59 +414,10 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $response = new JsonResponse();
-        $modelMapper = new ProductAdminModelAdapter(
-            $product,
-            $this->get('prestashop.adapter.legacy.context'),
-            $this->get('prestashop.adapter.admin.wrapper.product'),
-            $this->get('prestashop.adapter.tools'),
-            $productAdapter,
-            $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
-            $this->get('prestashop.adapter.data_provider.feature'),
-            $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax')
-        );
+        $modelMapper = $this->get('prestashop.adapter.admin.model.product');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
 
-        $form = $this->createFormBuilder($modelMapper->getFormData(), array('allow_extra_fields' => true))
-            ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
-            ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
-            ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
-            ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
-            ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
-            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', array(
-                'mapping_type' => $product->getRedirectType(),
-            ))
-            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
-
-        // Prepare combination form (fake but just to validate the form)
-        $combinations = $modelMapper->getAttributesResume();
-
-        if (is_array($combinations)) {
-            $maxInputVars = (int) ini_get('max_input_vars');
-            $combinationsCount = count($combinations) * 25;
-            $combinationsInputs = ceil($combinationsCount/1000)*1000;
-
-            if ($combinationsInputs > $maxInputVars) {
-
-                $this->addFlash('error', $this->trans(
-                    'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
-                    'Admin.Global.Error',
-                    array('%value%' => $combinationsInputs)
-                ));
-            }
-
-
-            foreach ($combinations as $combination) {
-                $form->add(
-                    'combination_'.$combination['id_product_attribute'],
-                    'PrestaShopBundle\Form\Admin\Product\ProductCombination'
-                );
-            }
-        }
-
-        $form = $form->getForm();
+        $form = $this->createProductForm($product, $modelMapper);
 
         $formBulkCombinations = $this->createForm(
             'PrestaShopBundle\Form\Admin\Product\ProductCombinationBulk',
@@ -637,6 +587,56 @@ class ProductController extends FrameworkBundleAdminController
             'drawerModules' => $drawerModules,
             'layoutTitle' => $this->trans('Product', 'Admin.Global'),
         );
+    }
+
+    /**
+     * Builds the product form
+     *
+     * @param Product           $product
+     * @param AdminModelAdapter $modelMapper
+     * @return FormInterface
+     */
+    private function createProductForm (Product $product, AdminModelAdapter $modelMapper)
+    {
+        $formBuilder = $this->createFormBuilder(
+            $modelMapper->getFormData($product),
+            array('allow_extra_fields' => true, 'csrf_protection' => false)
+        )
+            ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
+            ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
+            ->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice')
+            ->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity')
+            ->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping')
+            ->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo', array(
+                'mapping_type' => $product->getRedirectType(),
+            ))
+            ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
+
+        // Prepare combination form (fake but just to validate the form)
+        $combinations = $product->getAttributesResume($this->get('prestashop.adapter.legacy.context')->getContext()->language->id);
+
+        if (is_array($combinations)) {
+            $maxInputVars = (int) ini_get('max_input_vars');
+            $combinationsCount = count($combinations) * 25;
+            $combinationsInputs = ceil($combinationsCount/1000)*1000;
+
+            if ($combinationsInputs > $maxInputVars) {
+                $this->addFlash('error', $this->trans(
+                    'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
+                    'Admin.Global.Error',
+                    array('%value%' => $combinationsInputs)
+                ));
+            }
+
+            foreach ($combinations as $combination) {
+                $form->add(
+                    'combination_'.$combination['id_product_attribute'],
+                    'PrestaShopBundle\Form\Admin\Product\ProductCombination'
+                );
+            }
+        }
+
+        return $formBuilder->getForm();
     }
 
     /**
@@ -992,21 +992,9 @@ class ProductController extends FrameworkBundleAdminController
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($productId);
 
-        $modelMapper = new ProductAdminModelAdapter(
-            $product,
-            $this->get('prestashop.adapter.legacy.context'),
-            $this->get('prestashop.adapter.admin.wrapper.product'),
-            $this->get('prestashop.adapter.tools'),
-            $productAdapter,
-            $this->get('prestashop.adapter.data_provider.supplier'),
-            $this->get('prestashop.adapter.data_provider.warehouse'),
-            $this->get('prestashop.adapter.data_provider.feature'),
-            $this->get('prestashop.adapter.data_provider.pack'),
-            $this->get('prestashop.adapter.shop.context'),
-            $this->get('prestashop.adapter.data_provider.tax')
-        );
+        $modelMapper = $this->get('prestashop.adapter.admin.model.product');
 
-        $form = $this->createFormBuilder($modelMapper->getFormData());
+        $form = $this->createFormBuilder($modelMapper->getFormData($product));
 
         switch ($step) {
             case 'step1':
