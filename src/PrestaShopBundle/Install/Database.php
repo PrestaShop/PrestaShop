@@ -104,6 +104,9 @@ class Database extends AbstractInstall
             }
         }
 
+        if (count($errors)) {
+            $this->setError($errors);
+        }
         return $errors;
     }
 
