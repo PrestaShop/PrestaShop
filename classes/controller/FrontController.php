@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -1500,7 +1501,10 @@ class FrontControllerCore extends Controller
         $urls['actions'] = array(
             'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
         );
-
+        
+        $imageRetriever = new ImageRetriever($this->context->link);
+        $urls['no_picture_image'] =  $imageRetriever->getNoPictureImage($this->context->language);
+        
         return $urls;
     }
 
