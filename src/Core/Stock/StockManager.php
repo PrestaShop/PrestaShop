@@ -340,7 +340,7 @@ class StockManager
             if ($stockMvt) {
                 $sfContainer = SymfonyContainer::getInstance();
                 if (!is_null($sfContainer)) {
-                    $stockMvtRepository = $sfContainer->get('prestashop.core.api.stockMovement.repository');
+                    $stockMvtRepository = $sfContainer->get('prestashop.core.api.stock_movement.repository');
 
                     return $stockMvtRepository->saveStockMvt($stockMvt);
                 }
