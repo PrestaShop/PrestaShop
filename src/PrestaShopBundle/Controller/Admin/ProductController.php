@@ -47,7 +47,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Product;
@@ -113,20 +112,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams));
         }
 
-        // If POST, then check/cast POST params formats
-        if ($request->isMethod('POST')) {
-            foreach ($request->request->all() as $param => $value) {
-                switch ($param) {
-                    case 'filter_category':
-                        if (!is_numeric($value)) {
-                            $request->request->set($param, '');
-                        }
-                        if (is_numeric($value) && $value < 0) {
-                            $request->request->set($param, '');
-                        }
-                }
-            }
-        }
+        $this->purifyRequestFilterCategories($request);
 
         /* @var $logger LoggerInterface */
         $logger = $this->get('logger');
@@ -134,52 +120,21 @@ class ProductController extends FrameworkBundleAdminController
         /* @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
-        /* @var $translator TranslatorInterface */
-        $translator = $this->get('translator');
-
-        // get old values from persistence (before the current update)
+        // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-
-        if ($offset === 'last') {
-            $offset = $persistedFilterParameters['last_offset'];
-        }
-        if ($limit === 'last') {
-            $limit = $persistedFilterParameters['last_limit'];
-        }
-        if ($orderBy === 'last') {
-            $orderBy = $persistedFilterParameters['last_orderBy'];
-        }
-        if ($sortOrder === 'last') {
-            $sortOrder = $persistedFilterParameters['last_sortOrder'];
-        }
-
-        // override the old values with the new ones.
+        $this->setPersistedFilterValues($offset, $limit, $orderBy, $sortOrder, $persistedFilterParameters);
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
-        // Add layout top-right menu actions
-        $toolbarButtons = array();
-        $toolbarButtons['add'] = array(
-            'href' => $this->generateUrl('admin_product_new'),
-            'desc' => $translator->trans('New product', array(), 'Admin.Actions'),
-            'icon' => 'add_circle_outline',
-            'help' => $translator->trans('Create a new product: CTRL+P', array(), 'Admin.Catalog.Help'),
-        );
+        $toolbarButtons = $this->getToolbarButtons();
 
         // Fetch product list (and cache it into view subcall to listAction)
-        $products = $productProvider->getCatalogProductList(
-            $offset,
-            $limit,
-            $orderBy,
-            $sortOrder,
-            $request->request->all()
-        );
+        $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
         $lastSql = $productProvider->getLastCompiledSql();
         $logger->info('Product catalog filters stored.');
         $hasCategoryFilter = $productProvider->isCategoryFiltered();
         $hasColumnFilter = $productProvider->isColumnFiltered();
-
-        // Alternative layout for empty list
         $totalFilteredProductCount = (count($products) > 0) ? $products[0]['total'] : 0;
+        // Alternative layout for empty list
         if ((!$hasCategoryFilter && !$hasColumnFilter && $totalFilteredProductCount === 0)
             || ($totalProductCount = $productProvider->countAllProducts()) === 0
         ) {
@@ -193,32 +148,10 @@ class ProductController extends FrameworkBundleAdminController
             // Pagination
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
-
-            // Category tree
-            $categories = $this->createForm(
-                'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType',
-                null,
-                array(
-                    'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->get('prestashop.adapter.data_provider.category')
-                        ->getNestedCategories(null, $context->language->id, false),
-                    'valid_list' => [],
-                    'multiple' => false,
-                )
-            );
-            if (!empty($persistedFilterParameters['filter_category'])) {
-                $categories->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
-            }
+            $categoriesForm = $this->getCategoriesForm($context);
         }
 
-        // when position_ordering, ignore all filters except filter_category
-        if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
-            foreach ($persistedFilterParameters as $key => $param) {
-                if (strpos($key, 'filter_column_') === 0) {
-                    $persistedFilterParameters[$key] = '';
-                }
-            }
-        }
+        $this->setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, $persistedFilterParameters);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
@@ -246,7 +179,7 @@ class ProductController extends FrameworkBundleAdminController
                 ),
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
-                'categories' => $categories->createView(),
+                'categories' => $categoriesForm->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
                 'import_link' => $this->get('prestashop.adapter.legacy.context')
                     ->getAdminLink('AdminImport', true, ['import_type' => 'products']),
@@ -295,20 +228,7 @@ class ProductController extends FrameworkBundleAdminController
 
         if ($products === null) {
             // get old values from persistence (before the current update)
-            $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-
-            if ($offset === 'last') {
-                $offset = $persistedFilterParameters['last_offset'];
-            }
-            if ($limit === 'last') {
-                $limit = $persistedFilterParameters['last_limit'];
-            }
-            if ($orderBy === 'last') {
-                $orderBy = $persistedFilterParameters['last_orderBy'];
-            }
-            if ($sortOrder === 'last') {
-                $sortOrder = $persistedFilterParameters['last_sortOrder'];
-            }
+            $this->setPersistedFilterValues($offset, $limit, $orderBy, $sortOrder, $persistedFilterParameters);
             /**
              * 2 hooks are triggered here:
              * - actionAdminProductsListingFieldsModifier
@@ -351,6 +271,118 @@ class ProductController extends FrameworkBundleAdminController
             ]));
         }
         return $vars;
+    }
+
+    /**
+     * Changes the filter category values in case it is not numeric or signed
+     * TODO : Verify if this cannot be done in the route, generally it does not look good to modify Symfony request
+     *
+     * @param Request $request
+     */
+    private function purifyRequestFilterCategories(Request &$request)
+    {
+        if ($request->isMethod('POST')) {
+            foreach ($request->request->all() as $param => $value) {
+                switch ($param) {
+                    case 'filter_category':
+                        if (!is_numeric($value) ||(is_numeric($value) && $value < 0)) {
+                            $request->request->set($param, '');
+                        }
+                }
+            }
+        }
+    }
+
+    /**
+     * In case of position ordering all the filters should be reset
+     *
+     * @param string $orderBy
+     * @param bool $hasCategoryFilter
+     * @param array $persistedFilterParameters
+     */
+    private function setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, &$persistedFilterParameters)
+    {
+        if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
+            foreach ($persistedFilterParameters as $key => $param) {
+                if (strpos($key, 'filter_column_') === 0) {
+                    $persistedFilterParameters[$key] = '';
+                }
+            }
+        }
+    }
+
+    /**
+     * Gets previous Product query values from persistence
+     *
+     * @param array $persistedFilterParameters
+     * @param string $offset
+     * @param string $limit
+     * @param string $orderBy
+     * @param string $sortOrder
+     */
+    private function setPersistedFilterValues(
+        &$offset,
+        &$limit,
+        &$orderBy,
+        &$sortOrder,
+        &$persistedFilterParameters
+    ) {
+        if ($offset === 'last') {
+            $offset = $persistedFilterParameters['last_offset'];
+        }
+        if ($limit === 'last') {
+            $limit = $persistedFilterParameters['last_limit'];
+        }
+        if ($orderBy === 'last') {
+            $orderBy = $persistedFilterParameters['last_orderBy'];
+        }
+        if ($sortOrder === 'last') {
+            $sortOrder = $persistedFilterParameters['last_sortOrder'];
+        }
+    }
+
+    /**
+     * Gets the categories form
+     *
+     * @param $context
+     * @return FormInterface
+     */
+    private function getCategoriesForm($context)
+    {
+        $translator = $this->get('translator');
+        $form = $this->createForm(
+            'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType',
+            null,
+            array(
+                'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
+                'list' => $this->get('prestashop.adapter.data_provider.category')
+                    ->getNestedCategories(null, $context->language->id, false),
+                'valid_list' => [],
+                'multiple' => false,
+            )
+        );
+        if (!empty($persistedFilterParameters['filter_category'])) {
+            $form->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
+        }
+        return $form;
+    }
+
+    /**
+     * Gets the header toolbar buttons
+     *
+     * @return array
+     */
+    private function getToolbarButtons()
+    {
+        $translator = $this->get('translator');
+        $toolbarButtons = array();
+        $toolbarButtons['add'] = array(
+            'href' => $this->generateUrl('admin_product_new'),
+            'desc' => $translator->trans('New product', array(), 'Admin.Actions'),
+            'icon' => 'add_circle_outline',
+            'help' => $translator->trans('Create a new product: CTRL+P', array(), 'Admin.Catalog.Help'),
+        );
+        return $toolbarButtons;
     }
 
     /**
@@ -573,11 +605,8 @@ class ProductController extends FrameworkBundleAdminController
             $preview_url = $adminProductWrapper->getPreviewUrlDeactivate($preview_url_deactive);
         }
 
-        $attributeGroups = $this
-            ->getDoctrine()
-            ->getManager()
-            ->getRepository('PrestaShopBundle:Attribute')
-            ->findByLangAndShop(1, 1);
+        $doctrine = $this->getDoctrine()->getManager();
+        $attributeGroups = $doctrine->getRepository('PrestaShopBundle:Attribute')->findByLangAndShop(1, 1);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(array('product' => $product))
@@ -619,7 +648,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param AdminModelAdapter $modelMapper
      * @return FormInterface
      */
-    private function createProductForm (Product $product, AdminModelAdapter $modelMapper)
+    private function createProductForm(Product $product, AdminModelAdapter $modelMapper)
     {
         $formBuilder = $this->createFormBuilder(
             $modelMapper->getFormData($product),
