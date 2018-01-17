@@ -23,17 +23,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TranslatableInput from '../components/translatable-input';
-import StockManagementOptionHandler from './stock-management-option-handler';
-
 const $ = window.$;
 
-$(() => {
-    // Do not run if we're not on the product preferences page
-    if (!window.location.pathname.match('/configure/shop/product_preferences\\b')) {
-        return;
+class StockManagementOptionHandler {
+    constructor() {
+        this.handle();
+
+        $('#form_stock_stock_management').on('change', this.handle);
     }
 
-    new TranslatableInput();
-    new StockManagementOptionHandler();
-});
+    /**
+     * If stock managament is disabled
+     * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
+     * otherwise it should be enabled
+     */
+    handle() {
+        const stockManagementVal = $('#form_stock_stock_management').val();
+        const isStockManagementEnabled = parseInt(stockManagementVal);
+
+        const allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
+
+        if (isStockManagementEnabled) {
+            allowOrderingOosSelect.removeAttr('disabled');
+        } else {
+            allowOrderingOosSelect.val(1);
+            allowOrderingOosSelect.attr('disabled', 'disabled');
+        }
+    }
+}
+
+export default StockManagementOptionHandler;
