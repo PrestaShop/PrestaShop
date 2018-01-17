@@ -47,16 +47,25 @@ class ProductPreferencesController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
+        $pageName = $this->trans('Product Settings', 'Admin.Navigation.Menu');
 
-        if (!in_array($this->authorizationLevel($legacyController), [PageVoter::LEVEL_READ])) {
-            //@todo: reidirect employee to default page
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            return $this->redirectToDefaultPage();
         }
 
         $form = $this->get('prestashop.admin.product_preferences.form_handler')->getForm();
 
         $twigValues = [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Product Settings', [], 'Admin.Navigation.Menu'),
+            'layoutTitle' => $pageName,
             'requireAddonsSearch' => true,
             'requireBulkAction' => false,
             'showContentHeader' => true,
@@ -83,7 +92,6 @@ class ProductPreferencesController extends FrameworkBundleAdminController
         if (!in_array(
             $this->authorizationLevel($legacyController),
             [
-                PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
