@@ -111,7 +111,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect($legacyUrlGenerator->generate('admin_product_catalog', $redirectionParams));
         }
 
-        $this->purifyRequestFilterCategories($request);
+        $request = $this->purifyRequestFilterCategories($request);
 
         /* @var $logger LoggerInterface */
         $logger = $this->get('logger');
@@ -121,6 +121,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
+        $offset = 'last';
         $this->setPersistedFilterValues($offset, $limit, $orderBy, $sortOrder, $persistedFilterParameters);
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
@@ -150,7 +151,7 @@ class ProductController extends FrameworkBundleAdminController
             $categoriesForm = $this->getCategoriesForm($context);
         }
 
-        $this->setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, $persistedFilterParameters);
+        $persistedFilterParameters = $this->setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, $persistedFilterParameters);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
@@ -277,8 +278,9 @@ class ProductController extends FrameworkBundleAdminController
      * TODO : Verify if this cannot be done in the route, generally it does not look good to modify Symfony request
      *
      * @param Request $request
+     * @return Request
      */
-    private function purifyRequestFilterCategories(Request &$request)
+    private function purifyRequestFilterCategories(Request $request)
     {
         if ($request->isMethod('POST')) {
             foreach ($request->request->all() as $param => $value) {
@@ -290,6 +292,7 @@ class ProductController extends FrameworkBundleAdminController
                 }
             }
         }
+        return $request;
     }
 
     /**
@@ -298,8 +301,9 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy
      * @param bool $hasCategoryFilter
      * @param array $persistedFilterParameters
+     * @return array
      */
-    private function setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, &$persistedFilterParameters)
+    private function setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, $persistedFilterParameters)
     {
         if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
             foreach ($persistedFilterParameters as $key => $param) {
@@ -308,6 +312,8 @@ class ProductController extends FrameworkBundleAdminController
                 }
             }
         }
+
+        return $persistedFilterParameters;
     }
 
     /**
@@ -648,7 +654,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         $formBuilder = $this->createFormBuilder(
             $modelMapper->getFormData($product),
-            array('allow_extra_fields' => true, 'csrf_protection' => false)
+            array('allow_extra_fields' => true)
         )
             ->add('id_product', 'Symfony\Component\Form\Extension\Core\Type\HiddenType')
             ->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation')
