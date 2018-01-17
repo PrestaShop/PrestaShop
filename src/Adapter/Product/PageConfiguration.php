@@ -41,12 +41,12 @@ class PageConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_DISPLAY_QTIES', (bool) $config['display_quantities']);
+            $this->configuration->set('PS_DISPLAY_QTIES', (int) $config['display_quantities']);
             $this->configuration->set('PS_LAST_QTIES', (int) $config['display_last_quantities']);
-            $this->configuration->set('PS_DISP_UNAVAILABLE_ATTR', (bool) $config['display_unavailable_attributes']);
-            $this->configuration->set('PS_ATTRIBUTE_CATEGORY_DISPLAY', (bool) $config['allow_add_variant_to_cart_from_listing']);
-            $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', (bool) $config['attribute_anchor_separator']);
-            $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (bool) $config['display_discount_price']);
+            $this->configuration->set('PS_DISP_UNAVAILABLE_ATTR', (int) $config['display_unavailable_attributes']);
+            $this->configuration->set('PS_ATTRIBUTE_CATEGORY_DISPLAY', (int) $config['allow_add_variant_to_cart_from_listing']);
+            $this->configuration->set('PS_ATTRIBUTE_ANCHOR_SEPARATOR', $config['attribute_anchor_separator']);
+            $this->configuration->set('PS_DISPLAY_DISCOUNT_PRICE', (int) $config['display_discount_price']);
         }
 
         return $errors;
