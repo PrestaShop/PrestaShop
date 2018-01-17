@@ -31,7 +31,7 @@ module.exports = {
         }, 'installation');
         scenario('Step 5 : Setting the BD configuration', client => {
             test('should set the "Database server address" input', () => client.setNameInput(selector.database_address_input, db_server));
-            test('should set the "Database name" input', () => client.waitAndSetValue(selector.database_name_input, db_name));
+            test('should set the "Database name" input', () => client.waitAndSetValue(selector.database_name_input, 'database' + new Date().getTime()));
             test('should set the "Database login" input', () => client.waitAndSetValue(selector.database_login_input, db_user));
             test('should set the "Database password" input', () => {
                 if (global.db_empty_password) {
@@ -49,7 +49,7 @@ module.exports = {
         }, 'installation');
         scenario('Step 6 : Checking installation', client => {
             test('should create file parameter', () => client.waitForVisibleElement(selector.create_file_parameter_step));
-            test('should create database', () => client.waitForVisibleElement(selector.create_database_step, 140000));
+            test('should create database', () => client.waitForVisibleElement(selector.create_database_step, 180000));
             test('should create default shop', () => client.waitForVisibleElement(selector.create_default_shop_step));
             test('should create database table', () => client.waitForVisibleElement(selector.create_database_table_step, 140000));
             test('should create shop information', () => client.waitForVisibleElement(selector.create_shop_informations_step));

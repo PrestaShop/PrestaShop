@@ -23,7 +23,6 @@ scenario('The shop installation', client => {
         test('should open the browser', () => client.open());
         test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
     }, 'installation');
-
     scenario('Rollback to the old version ', client => {
         test('should click on "Module" button', () => client.waitForExistAndClick(ModulePage.module_autoUpgrade_menu));
         test('should deactivate the shop', () => {
@@ -71,9 +70,8 @@ scenario('The shop installation', client => {
         test('should click on order with an obligation to pay button', () => client.waitForExistAndClick(CheckoutOrderPage.confirmation_order_button));
         test('should check the order confirmation', () => client.checkTextValue(CheckoutOrderPage.confirmation_order_message, 'YOUR ORDER IS CONFIRMED', "contain"));
     }, 'installation');
-
     scenario('Logout from the back office', client => {
         test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));
     }, 'installation');
 
-}, 'installation');
+}, 'installation', true);
