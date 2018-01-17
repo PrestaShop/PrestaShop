@@ -40,11 +40,15 @@ class StockConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
+        $errors = [];
+
         if ($this->validateConfiguration($config)) {
             $this->configuration->set('PS_ORDER_OUT_OF_STOCK', $config['allow_ordering_oos']);
             $this->configuration->set('PS_STOCK_MANAGEMENT', $config['stock_management']);
             $this->configuration->set('PS_LABEL_IN_STOCK_PRODUCTS', $config['in_stock_label']);
         }
+
+        return $errors;
     }
 
     /**
@@ -58,6 +62,11 @@ class StockConfiguration implements DataConfigurationInterface
             'allow_ordering_oos',
             'stock_management',
             'in_stock_label',
+            'delivery_time',
+            'oos_allowed_backorders',
+            'oos_delivery_time',
+            'oos_denied_backorders',
+            'pack_stock_management',
         ]);
 
         $resolver->resolve($configuration);
