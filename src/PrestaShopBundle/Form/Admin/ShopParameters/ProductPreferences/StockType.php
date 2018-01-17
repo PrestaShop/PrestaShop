@@ -30,6 +30,25 @@ class StockType extends TranslatorAwareType
             ->add('in_stock_label', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
+            ->add('oos_allowed_backorders', TranslateTextType::class, [
+                'locales' => $this->locales,
+            ])
+            ->add('oos_denied_backorders', TranslateTextType::class, [
+                'locales' => $this->locales,
+            ])
+            ->add('delivery_time', TranslateTextType::class, [
+                'locales' => $this->locales,
+            ])
+            ->add('oos_delivery_time', TranslateTextType::class, [
+                'locales' => $this->locales,
+            ])
+            ->add('pack_stock_management', ChoiceType::class, [
+                'choices' => [
+                      'Decrement pack only' => 0,
+                      'Decrement products in pack only' => 1,
+                      'Decrement both' => 2,
+                ],
+            ])
         ;
     }
 
