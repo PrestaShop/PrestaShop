@@ -40,6 +40,10 @@ try {
     exit(0);
 } catch (PrestashopInstallerException $e) {
     $e->displayMessage();
+} catch (Throwable $t) {
+    // Executed only in PHP 7, will not match in PHP 5.
+    // Allows `Error` classes to be catched, without throwing an error on PHP 5.
+    echo $t->getMessage();
 } catch (Exception $e) {
     echo $e->getMessage();
 }
