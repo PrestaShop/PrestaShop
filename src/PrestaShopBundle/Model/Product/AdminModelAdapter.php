@@ -433,8 +433,32 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $product->loadStockData();
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
 
-        $form_data = [
-            'id_product' => $product->id,
+        $form_data = ['id_product' => $product->id];
+        $this->mapStep1FromData($product, $form_data);
+        $this->mapStep2FormData($product, $form_data);
+        $this->mapStep3FormData($product, $form_data);
+        $this->mapStep4FormData($product, $form_data);
+        $this->mapStep5FormData($product, $form_data);
+        $this->mapStep6FormData($product, $form_data);
+
+        //Inject data form for supplier combinations
+        $form_data['step6'] = array_merge($form_data['step6'], $this->getDataSuppliersCombinations($product));
+
+        //Inject data form for warehouse combinations
+        $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations($product));
+
+        return $form_data;
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 1
+     *
+     * @param Product $product
+     * @param array $formData
+     */
+    private function mapStep1FromData(Product $product, &$formData)
+    {
+        $formData = [
             'step1' => [
                 'type_product' => $product->getType(),
                 'inputPackItems' => [
@@ -476,7 +500,19 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_manufacturer' => $product->id_manufacturer,
                 'features' => $this->getFormFeatures($product),
                 'images' => $this->productAdapter->getImages($product->id, $this->locales[0]['id_lang'])
-            ],
+            ]
+        ];
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 2
+     *
+     * @param Product $product
+     * @param array $formData
+     */
+    private function mapStep2FormData(Product $product, &$formData)
+    {
+        $formData = [
             'step2' => [
                 'price' => $product->price,
                 'ecotax' => $product->ecotax,
@@ -500,22 +536,45 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'specificPricePriority_1' => $this->productPricePriority[1],
                 'specificPricePriority_2' => $this->productPricePriority[2],
                 'specificPricePriority_3' => $this->productPricePriority[3],
-            ],
-            'step3' => [
-                'advanced_stock_management' => (bool) $product->advanced_stock_management,
-                'depends_on_stock' => $product->depends_on_stock?"1":"0",
-                'qty_0' => $product->getQuantity($product->id),
-                'id_product_attributes' => $this->getProductAttributes($product),
-                'out_of_stock' => $product->out_of_stock,
-                'minimal_quantity' => $product->minimal_quantity,
-                'low_stock_threshold' => $product->low_stock_threshold,
-                'low_stock_alert' => (bool) $product->low_stock_alert,
-                'available_now' => $product->available_now,
-                'available_later' => $product->available_later,
-                'available_date' => $product->available_date,
-                'pack_stock_type' => $product->pack_stock_type,
-                'virtual_product' => $this->getVirtualProductData($product),
-            ],
+            ]
+        ];
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 3
+     *
+     * @param Product $product
+     * @param $formData
+     */
+    private function mapStep3FormData(Product $product, &$formData)
+    {
+        $formData = ['step3' => [
+            'advanced_stock_management' => (bool) $product->advanced_stock_management,
+            'depends_on_stock' => $product->depends_on_stock?"1":"0",
+            'qty_0' => $product->getQuantity($product->id),
+            'id_product_attributes' => $this->getProductAttributes($product),
+            'out_of_stock' => $product->out_of_stock,
+            'minimal_quantity' => $product->minimal_quantity,
+            'low_stock_threshold' => $product->low_stock_threshold,
+            'low_stock_alert' => (bool) $product->low_stock_alert,
+            'available_now' => $product->available_now,
+            'available_later' => $product->available_later,
+            'available_date' => $product->available_date,
+            'pack_stock_type' => $product->pack_stock_type,
+            'virtual_product' => $this->getVirtualProductData($product),
+            ]
+        ];
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 4
+     *
+     * @param Product $product
+     * @param $formData
+     */
+    private function mapStep4FormData(Product $product, &$formData)
+    {
+        $formData = [
             'step4' => [
                 'width' => $product->width,
                 'height' => $product->height,
@@ -526,7 +585,19 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'additional_delivery_times' => $product->additional_delivery_times,
                 'delivery_in_stock' => $product->delivery_in_stock,
                 'delivery_out_stock' => $product->delivery_out_stock,
-            ],
+            ]
+        ];
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 5
+     *
+     * @param Product $product
+     * @param $formData
+     */
+    private function mapStep5FormData(Product $product, &$formData)
+    {
+        $formData = [
             'step5' => [
                 'link_rewrite' => $product->link_rewrite,
                 'meta_title' => $product->meta_title,
@@ -535,7 +606,19 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_type_redirected' => [
                     'data' => [$product->id_type_redirected]
                 ],
-            ],
+            ]
+        ];
+    }
+
+    /**
+     * Maps the existing products data to the form for Step 6
+     *
+     * @param Product $product
+     * @param $formData
+     */
+    private function mapStep6FormData(Product $product, &$formData)
+    {
+        $formData = [
             'step6' => [
                 'visibility' => $product->visibility,
                 'tags' => $this->getTags($product),
@@ -561,14 +644,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'attachments' => $this->getProductAttachments($product),
             ]
         ];
-
-        //Inject data form for supplier combinations
-        $form_data['step6'] = array_merge($form_data['step6'], $this->getDataSuppliersCombinations($product));
-
-        //Inject data form for warehouse combinations
-        $form_data['step4'] = array_merge($form_data['step4'], $this->getDataWarehousesCombinations($product));
-
-        return $form_data;
     }
 
     /**
