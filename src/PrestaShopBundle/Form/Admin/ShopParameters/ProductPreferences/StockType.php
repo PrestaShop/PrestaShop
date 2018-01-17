@@ -8,6 +8,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class generates "Products stock" form
+ * in "Configure > Shop Parameters > Product Settings" page.
+ */
 class StockType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
