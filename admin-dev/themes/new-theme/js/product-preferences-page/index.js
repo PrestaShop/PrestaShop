@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TraslateInput from '../components/translatable-input';
+import TranslatableInput from '../components/translatable-input';
 
 const $ = window.$;
 
@@ -33,5 +33,5 @@ $(() => {
         return;
     }
 
-    TraslateInput.init();
+    new TranslatableInput();
 });
