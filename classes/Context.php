@@ -27,6 +27,7 @@
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 
@@ -391,7 +392,7 @@ class ContextCore
         $translator->addLoader('xlf', new XliffFileLoader());
 
         $sqlTranslationLoader = new SqlTranslationLoader();
-        if (!is_null($this->shop)) {
+        if (!is_null($this->shop) && $this->shop->theme instanceof Theme) {
             $sqlTranslationLoader->setTheme($this->shop->theme);
         }
 
