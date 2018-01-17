@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 
+use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -47,15 +48,23 @@ class ProductPreferencesFormHandler implements FormHandlerInterface
     private $formDataProvider;
 
     /**
+     * @var CacheClearer
+     */
+    private $cacheClearer;
+
+    /**
      * @param FormFactoryInterface $formFactory
      * @param FormDataProviderInterface $formDataProvider
+     * @param CacheClearer $cacheClearer
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        FormDataProviderInterface $formDataProvider
+        FormDataProviderInterface $formDataProvider,
+        CacheClearer $cacheClearer
     ) {
         $this->formFactory = $formFactory;
         $this->formDataProvider = $formDataProvider;
+        $this->cacheClearer = $cacheClearer;
     }
 
     /**
@@ -79,6 +88,14 @@ class ProductPreferencesFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
+        $this->cacheClearer->clearSmartyCache();
+        $this->cacheClearer->clearMediaCache();
+
+        if (!$data['stock']['stock_management']) {
+            $data['stock']['allow_ordering_oos'] = 1;
+            $data['page']['display_quantities'] = 0;
+        }
+
         return $this->formDataProvider->setData($data);
     }
 }
