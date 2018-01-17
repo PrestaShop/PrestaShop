@@ -34,8 +34,6 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\DataProvider\StockInterface;
 use PrestaShopBundle\Service\Hook\HookEvent;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,10 +43,9 @@ use PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductInterfaceProvider;
 use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterfaceUpdater;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
-use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\TranslatorInterface;
 use PrestaShopBundle\Service\Csv;
@@ -68,7 +65,8 @@ use Tools;
  * The retro-compatibility is dropped for the corresponding Admin pages.
  * A set of hooks are integrated and an Adapter is made to wrap the new EventDispatcher
  * component to the existing hook system. So existing hooks are always triggered, but from the new
- * code (and so needs to be adapted on the module side ton comply on the new parameters formats, the new UI style, etc...).
+ * code (and so needs to be adapted on the module side ton comply on the new parameters formats,
+ * the new UI style, etc...).
  *
  * FIXME: to adapt after 1.7.0 when alternative behavior will be removed (@see AdminPagePreferenceInterface::getTemporaryShouldUseLegacyPage()).
  */
@@ -85,15 +83,16 @@ class ProductController extends FrameworkBundleAdminController
      * @param integer $offset The offset of the listing
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
-     * @return array Template vars
+     * @return array|Template|RedirectResponse|Response
      */
-    public function catalogAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'desc')
-    {
-        if (
-            !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
-            && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
-            && !$this->isGranted(PageVoter::CREATE, 'ADMINPRODUCTS_')
-        ) {
+    public function catalogAction(
+        Request $request,
+        $limit = 10,
+        $offset = 0,
+        $orderBy = 'id_product',
+        $sortOrder = 'desc'
+    ) {
+        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), 'ADMINPRODUCTS_')) {
             return $this->redirect('admin_dashboard');
         }
 
@@ -167,7 +166,13 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         // Fetch product list (and cache it into view subcall to listAction)
-        $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, $request->request->all());
+        $products = $productProvider->getCatalogProductList(
+            $offset,
+            $limit,
+            $orderBy,
+            $sortOrder,
+            $request->request->all()
+        );
         $lastSql = $productProvider->getLastCompiledSql();
         $logger->info('Product catalog filters stored.');
         $hasCategoryFilter = $productProvider->isCategoryFiltered();
@@ -195,7 +200,8 @@ class ProductController extends FrameworkBundleAdminController
                 null,
                 array(
                     'label' => $translator->trans('Categories', array(), 'Admin.Catalog.Feature'),
-                    'list' => $this->get('prestashop.adapter.data_provider.category')->getNestedCategories(null, $context->language->id, false),
+                    'list' => $this->get('prestashop.adapter.data_provider.category')
+                        ->getNestedCategories(null, $context->language->id, false),
                     'valid_list' => [],
                     'multiple' => false,
                 )
@@ -234,13 +240,18 @@ class ProductController extends FrameworkBundleAdminController
                 'last_sql' => $lastSql,
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
-                'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
+                'activate_drag_and_drop' => (
+                    ('position_ordering' == $orderBy)
+                    || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)
+                ),
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categories->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
-                'import_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminImport', true, ['import_type' => 'products']),
-                'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
+                'import_link' => $this->get('prestashop.adapter.legacy.context')
+                    ->getAdminLink('AdminImport', true, ['import_type' => 'products']),
+                'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')
+                    ->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
@@ -262,10 +273,16 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      * @param string $view full|quicknav To change default template used to render the content
-     * @return array Template vars
+     * @return array|Template|Response
      */
-    public function listAction(Request $request, $limit = 10, $offset = 0, $orderBy = 'id_product', $sortOrder = 'asc', $view = 'full')
-    {
+    public function listAction(
+        Request $request,
+        $limit = 10,
+        $offset = 0,
+        $orderBy = 'id_product',
+        $sortOrder = 'asc',
+        $view = 'full'
+    ) {
         /* @var $productProvider ProductInterfaceProvider */
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
         $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
@@ -292,8 +309,11 @@ class ProductController extends FrameworkBundleAdminController
             if ($sortOrder === 'last') {
                 $sortOrder = $persistedFilterParameters['last_sortOrder'];
             }
-
-            // 2 hooks are triggered here: actionAdminProductsListingFieldsModifier and actionAdminProductsListingResultsModifier
+            /**
+             * 2 hooks are triggered here:
+             * - actionAdminProductsListingFieldsModifier
+             * - actionAdminProductsListingResultsModifier
+             */
             $products = $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder);
             $lastSql = $productProvider->getLastCompiledSql();
         }
@@ -313,7 +333,10 @@ class ProductController extends FrameworkBundleAdminController
 
         // Template vars injection
         $vars = array(
-            'activate_drag_and_drop' => (('position_ordering' == $orderBy) || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)),
+            'activate_drag_and_drop' => (
+                ('position_ordering' == $orderBy)
+                || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)
+            ),
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
@@ -335,6 +358,7 @@ class ProductController extends FrameworkBundleAdminController
      * Then return to form action
      *
      * @return RedirectResponse
+     * @throws \PrestaShopException
      */
     public function newAction()
     {
@@ -466,7 +490,6 @@ class ProductController extends FrameworkBundleAdminController
             }
 
             if ($form->isValid()) {
-
                 //define POST values for keeping legacy adminController skills
                 $_POST = $modelMapper->getModelData($formData, $isMultiShopContext) + $_POST;
                 $_POST['state'] = Product::STATE_SAVED;
@@ -613,7 +636,9 @@ class ProductController extends FrameworkBundleAdminController
             ->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
 
         // Prepare combination form (fake but just to validate the form)
-        $combinations = $product->getAttributesResume($this->get('prestashop.adapter.legacy.context')->getContext()->language->id);
+        $combinations = $product->getAttributesResume(
+            $this->get('prestashop.adapter.legacy.context')->getContext()->language->id
+        );
 
         if (is_array($combinations)) {
             $maxInputVars = (int) ini_get('max_input_vars');
@@ -733,7 +758,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Do mass edit action on the current page of products. Used with the 'grouped action' dropdown menu on the Catalog page.
+     * Do mass edit action on the current page of products.
+     * Used with the 'grouped action' dropdown menu on the Catalog page.
      *
      * @param Request $request
      * @param string $action The action to apply on the selected products
@@ -783,7 +809,10 @@ class ProductController extends FrameworkBundleAdminController
                         $productList,
                         array('filter_category' => $persistedFilterParams['filter_category'])
                     );
-                    $this->addFlash('success', $translator->trans('Products successfully sorted.', array(), 'Admin.Catalog.Notification'));
+                    $this->addFlash(
+                        'success',
+                        $translator->trans('Products successfully sorted.', array(), 'Admin.Catalog.Notification')
+                    );
                     $logger->info('Products sorted: (' . implode(',', $productIdList) . ') with positions (' . implode(',', $productPositionList) . ').');
                     $hookDispatcher->dispatchMultiple(
                         array('actionAdminSortAfter', 'actionAdminProductsControllerSortAfter'),
