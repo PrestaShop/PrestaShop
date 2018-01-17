@@ -47,7 +47,6 @@ class ProductPreferencesController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
-        $pageName = $this->trans('Product Settings', 'Admin.Navigation.Menu');
 
         if (!in_array(
             $this->authorizationLevel($legacyController),
@@ -65,7 +64,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
 
         $twigValues = [
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $pageName,
+            'layoutTitle' => $this->trans('Product Settings', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkAction' => false,
             'showContentHeader' => true,
