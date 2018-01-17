@@ -253,4 +253,17 @@ class FrameworkBundleAdminController extends Controller
             $this->addFlash('error', $this->trans($error['key'], $error['domain'], $error['parameters']));
         }
     }
+
+    /**
+     * Redirect employee to default page
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    protected function redirectToDefaultPage()
+    {
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $defaultTab = $legacyContext->getDefaultEmployeeTab();
+
+        return $this->redirect($legacyContext->getAdminLink($defaultTab));
+    }
 }
