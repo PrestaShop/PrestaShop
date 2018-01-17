@@ -7,7 +7,6 @@ const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {ShopParameter} = require('../../../selectors/BO/shopParameters/index');
-
 const {productPage} = require('../../../selectors/FO/product_page');
 
 const commonScenarios = require('../02_product/product');
@@ -26,12 +25,17 @@ var productData = {
 scenario('The shop installation', client => {
     scenario('Open the browser and download the RC', client => {
         test('should open the browser', () => client.open());
-       // test('should log in install page ', () => client.linkAccess(rcLink));
-       // test('should click on "download now" button', () => client.waitForExistAndClick(Installation.prestashop_download_button));
-       // test('should click on the "Download this version" button and wait for the download to complete', () => client.clickAndWaitForDownload(Installation.download_version));
-    }, 'installation');
-    scenario('Go to the installation interface', client => {
-        test('should log in install page ', () => client.localhost(UrlLastStableVersion));
+        test('should rename folder "admin" to "admin-dev" and "install" to "install-dev"', () => client.renameFolders(rcTarget));
+        if (rcLink !== "") {
+            test('should check if the RC link exists, download it, if not go to the installation page', () => {
+                return promise
+                    .then(() => client.linkAccess(rcLink))
+                    .then(() => client.waitForExistAndClick(Installation.prestashop_download_button))
+                    .then(() => client.getRCName(Installation.download_version))
+                    .then(() => client.clickAndWaitForDownload(Installation.download_version))
+            })
+        };
+        test('should go to the last stable version URL', () => client.localhost(UrlLastStableVersion));
     }, 'installation');
     scenario('Installation of the last stable version of prestashop', client => {
         commonInstallation.prestaShopInstall(Installation, "en", "france");
@@ -55,7 +59,9 @@ scenario('The shop installation', client => {
                 .then(() => client.waitForVisibleElement(ModulePage.confirm_maintenance_shop_icon))
                 .then(() => client.waitForExistAndClick(ModulePage.maintenance_shop))
         });
-        test('should copy the downloaded RC to the auto upgrade directory', () => client.copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget));
+        if (rcLink !== "") {
+            test('should copy the downloaded RC to the auto upgrade directory', () => client.copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget + "admin-dev/autoupgrade/download"));
+        }
         test('should click on "More options (Expert mode)" button', () => client.waitForExistAndClick(ModulePage.more_option_button));
         test('should select the "Channel" option', () => client.waitAndSelectByValue(ModulePage.channel_select, "archive"));
         test('should select the "Archive to use" option', () => client.waitAndSelectByValue(ModulePage.archive_select, global.filename));
@@ -108,4 +114,4 @@ scenario('The shop installation', client => {
     scenario('Logout from the back office', client => {
         test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));
     }, 'installation');
-}, 'installation');
+}, 'installation', true);

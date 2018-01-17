@@ -5,7 +5,7 @@ const commonInstallation = require('./common_installation');
 scenario('The shop installation', client => {
     test('should open the browser', () => client.open());
     test('should go to install page ', () => client.localhost(URL));
-    commonInstallation.prestaShopInstall(Installation, global.URL, "en", "United Kingdom");
+    commonInstallation.prestaShopInstall(Installation, "en", "United Kingdom");
     scenario('Login to the Front Office', client => {
         test('should sign in FO', () => client.signInFO(AccessPageFO));
     }, 'installation');

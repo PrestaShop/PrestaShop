@@ -59,7 +59,8 @@ scenario('Create order in the Back Office', () => {
     test('should check that the "customer" is equal to "John DOE"', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', "contain"));
     test('should set order status to Payment accepted ', () => client.updateStatus('Delivered'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));
-    test('should check status to be equal to "Payment Delivered"', () => client.checkTextValue(OrderPage.order_status, 'Delivered'))
+    test('should check status to be equal to "Payment Delivered"', () => client.checkTextValue(OrderPage.order_status, 'Delivered'));
+
     scenario('Print invoice', client => {
       test('should click on "DOCUMENTS" subtab', () => client.waitForVisibleAndClick(OrderPage.document_submenu));
       test('should download the invoice document', () => client.downloadDocument(OrderPage.download_invoice_button));
@@ -68,6 +69,7 @@ scenario('Create order in the Back Office', () => {
       test('should check  the "invoice basic price"  ', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.basic_price));
       test('should check that the "invoice product information" is : "Blouse - Size : S- Color : White"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "Blouse - Size : S- Color : White"));
     }, 'order');
+
     scenario('Print delivery invoice', client => {
       test('should download the delivery invoice document', () => client.downloadDocument(OrderPage.download_delivery_button));
       test('should check the "delivery invoice file name"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, global.invoiceFileName));
@@ -75,6 +77,7 @@ scenario('Create order in the Back Office', () => {
       test('should check that the "delivery invoice product information" is : Blouse - Size : S- Color : White', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "Blouse - Size : S- Color : White"));
       test('should check that the "delivery invoice product carrier" is : My carrier"', () => client.checkDocument(global.downloadsFolderPath, global.invoiceFileName, "My carrier"));
     }, 'order');
+
   }, 'order');
 }, 'order', true);
 

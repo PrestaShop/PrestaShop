@@ -89,10 +89,10 @@ function initCommands(client) {
       .selectByVisibleText(selector, value)
   });
 
-    client.addCommand('signInBO', function (selector, URL=URL) {
+    client.addCommand('signInBO', function (selector, link=URL) {
         this.selector = globals.selector;
         return client
-            .url('http://' + URL + '/admin-dev')
+            .url('http://' + link + '/admin-dev')
             .waitAndSetValue(selector.login_input, 'demo@prestashop.com')
             .waitAndSetValue(selector.password_inputBO, 'prestashop_demo')
             .waitForExistAndClick(selector.login_buttonBO)
@@ -115,9 +115,9 @@ function initCommands(client) {
       .waitForExist(selector.menuBO, 90000)
   });
 
-    client.addCommand('signInFO', function (selector, URL=URL) {
+    client.addCommand('signInFO', function (selector, link=URL) {
         return client
-            .url('http://' + URL)
+            .url('http://' + link)
             .waitForExistAndClick(selector.sign_in_button)
             .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
             .waitAndSetValue(selector.password_inputFO, '123456789')
