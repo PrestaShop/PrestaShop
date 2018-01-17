@@ -17,6 +17,10 @@ class TranslateTextType extends AbstractType
             $localeOptions = $options['options'];
             $localeOptions['label'] = $locale['iso_code'];
 
+            if (!isset($localeOptions['required'])) {
+                $localeOptions['required'] = false;
+            }
+
             $builder->add($locale['id_lang'], TextType::class, $localeOptions);
         }
     }
