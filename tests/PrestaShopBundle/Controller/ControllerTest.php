@@ -141,7 +141,6 @@ class ControllerTest extends TestCase
             array('AdminStatsController'),
             array('AdminContactsController'),
             array('AdminLegacyLayoutController'),
-            array('AdminPPreferencesController'),
         );
     }
 
