@@ -9,6 +9,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class is responsible for creating translatable text inputs
+ */
 class TranslateTextType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
