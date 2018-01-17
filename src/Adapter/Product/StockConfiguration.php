@@ -43,9 +43,14 @@ class StockConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_ORDER_OUT_OF_STOCK', $config['allow_ordering_oos']);
-            $this->configuration->set('PS_STOCK_MANAGEMENT', $config['stock_management']);
+            $this->configuration->set('PS_ORDER_OUT_OF_STOCK', (int) $config['allow_ordering_oos']);
+            $this->configuration->set('PS_STOCK_MANAGEMENT', (int) $config['stock_management']);
             $this->configuration->set('PS_LABEL_IN_STOCK_PRODUCTS', $config['in_stock_label']);
+            $this->configuration->set('PS_LABEL_OOS_PRODUCTS_BOA', $config['oos_allowed_backorders']);
+            $this->configuration->set('PS_LABEL_OOS_PRODUCTS_BOD', $config['oos_denied_backorders']);
+            $this->configuration->set('PS_LABEL_DELIVERY_TIME_AVAILABLE', $config['delivery_time']);
+            $this->configuration->set('PS_LABEL_DELIVERY_TIME_OOSBOA', $config['oos_delivery_time']);
+            $this->configuration->set('PS_PACK_STOCK_TYPE', $config['pack_stock_management']);
         }
 
         return $errors;
