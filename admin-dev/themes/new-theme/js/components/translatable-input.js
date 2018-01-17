@@ -25,19 +25,19 @@
 const $ = window.$;
 const TranslatableInput = {};
 
-TranslatableInput.toggleInput = (event) => {
+TranslatableInput.toggleFormInputs = (event) => {
     const localeItem = $(event.target);
-    const localeInputGroup = localeItem.closest('.js-locale-input-group');
+    const form = localeItem.closest('form');
     const selectedLocale = localeItem.data('locale');
 
-    localeInputGroup.find('.js-locale-btn').text(selectedLocale);
+    form.find('.js-locale-btn').text(selectedLocale);
 
-    localeInputGroup.find('input.js-locale-input').addClass('d-none');
-    localeInputGroup.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
+    form.find('input.js-locale-input').addClass('d-none');
+    form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
 };
 
 TranslatableInput.init = () => {
-    $('body').on('click', '.js-locale-item', TranslatableInput.toggleInput);
+    $('body').on('click', '.js-locale-item', TranslatableInput.toggleFormInputs);
 };
 
 export default TranslatableInput;
