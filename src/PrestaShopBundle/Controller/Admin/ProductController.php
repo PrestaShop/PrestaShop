@@ -342,7 +342,8 @@ class ProductController extends FrameworkBundleAdminController
     private function setPositionOrderingFilterParameters($orderBy, $hasCategoryFilter, $persistedFilterParameters)
     {
         if ($orderBy == 'position_ordering' && $hasCategoryFilter) {
-            foreach ($persistedFilterParameters as $key => $param) {
+            $persistedFilterParametersKeys = array_keys($persistedFilterParameters);
+            foreach ($persistedFilterParametersKeys as $key) {
                 if (strpos($key, 'filter_column_') === 0) {
                     $persistedFilterParameters[$key] = '';
                 }
@@ -366,7 +367,7 @@ class ProductController extends FrameworkBundleAdminController
         &$limit,
         &$orderBy,
         &$sortOrder,
-        &$persistedFilterParameters
+        $persistedFilterParameters
     ) {
         if ($offset === 'last') {
             $offset = $persistedFilterParameters['last_offset'];
