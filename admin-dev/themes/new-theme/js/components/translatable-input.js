@@ -22,22 +22,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 const $ = window.$;
-const TranslatableInput = {};
 
-TranslatableInput.toggleFormInputs = (event) => {
-    const localeItem = $(event.target);
-    const form = localeItem.closest('form');
-    const selectedLocale = localeItem.data('locale');
+class TranslatableInput {
+    constructor() {
+        $('body').on('click', '.js-locale-item', this.toggleInputs);
+    }
 
-    form.find('.js-locale-btn').text(selectedLocale);
+    /**
+     * Toggle all translatable inputs in form in which locale was changed
+     *
+     * @param {Event} event
+     */
+    toggleInputs(event) {
+        const localeItem = $(event.target);
+        const form = localeItem.closest('form');
+        const selectedLocale = localeItem.data('locale');
 
-    form.find('input.js-locale-input').addClass('d-none');
-    form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
-};
+        form.find('.js-locale-btn').text(selectedLocale);
 
-TranslatableInput.init = () => {
-    $('body').on('click', '.js-locale-item', TranslatableInput.toggleFormInputs);
-};
+        form.find('input.js-locale-input').addClass('d-none');
+        form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
+    }
+}
 
 export default TranslatableInput;
