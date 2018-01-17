@@ -16,13 +16,13 @@ class PageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-       $builder
+        $builder
            ->add('display_quantities', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
-               'required' => true,
+                'required' => true,
            ])
            ->add('display_last_quantities', IntegerType::class)
            ->add('display_unavailable_attributes', ChoiceType::class, [
@@ -53,7 +53,7 @@ class PageType extends AbstractType
                ],
                'required' => true,
            ])
-       ;
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
