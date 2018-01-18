@@ -32,7 +32,7 @@
         </h3>
         <div class="card-body">
             <div class="form-group">
-                {{ ps.label_with_help(('Allow ordering of out-of-stock products'|trans), ('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans)) }}
+                {{ ps.label_with_help(('Allow ordering of out-of-stock products'|trans), ('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                 {{ form_errors(stockForm.allow_ordering_oos) }}
                 {{ form_widget(stockForm.allow_ordering_oos) }}
             </div>
@@ -65,19 +65,19 @@
                 {{ form_widget(stockForm.oos_denied_backorders) }}
             </div>
             <div class="form-group">
-                {{ ps.label_with_help(('Delivery time of in-stock products'|trans), ('Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)'|trans)) }}
+                {{ ps.label_with_help(('Delivery time of in-stock products'|trans), ('Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)'|trans({}, 'Admin.Shopparameters.Help'))) }}
                 {{ form_errors(stockForm.delivery_time) }}
                 {{ form_widget(stockForm.delivery_time) }}
                 <small class="form-text">{{ 'Leave empty to disable'|trans }}</small>
             </div>
             <div class="form-group">
-                {{ ps.label_with_help(('Delivery time of out-of-stock products with allowed backorders'|trans), ('Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)'|trans)) }}
+                {{ ps.label_with_help(('Delivery time of out-of-stock products with allowed backorders'|trans), ('Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)'|trans({}, 'Admin.Shopparameters.Help'))) }}
                 {{ form_errors(stockForm.oos_delivery_time) }}
                 {{ form_widget(stockForm.oos_delivery_time) }}
                 <small class="form-text">{{ 'Leave empty to disable'|trans }}</small>
             </div>
             <div class="form-group">
-                {{ ps.label_with_help(('Default pack stock management'|trans), ('When selling packs of products, how do you want your stock to be calculated?'|trans)) }}
+                {{ ps.label_with_help(('Default pack stock management'|trans), ('When selling packs of products, how do you want your stock to be calculated?'|trans({}, 'Admin.Shopparameters.Help'))) }}
                 {{ form_errors(stockForm.pack_stock_management) }}
                 {{ form_widget(stockForm.pack_stock_management) }}
             </div>
