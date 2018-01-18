@@ -4,7 +4,7 @@ const {CreateOrder} = require('../../../selectors/BO/order');
 const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 let promise = Promise.resolve();
 
-scenario('Create order in BO', () => {
+scenario('Create order in the Back Office', () => {
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
@@ -18,7 +18,7 @@ scenario('Create order in BO', () => {
     });
   }, 'order');
 
-  scenario('Create order in BO', client => {
+  scenario('Create order in the Back Office', client => {
     test('should go to orders list', () => client.goToSubtabMenuPage(OrderPage.orders_subtab, OrderPage.order_submenu));
     test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button));
     test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, 'john doe'));
@@ -36,7 +36,7 @@ scenario('Create order in BO', () => {
     test('should click on "Create the order"', () => client.waitForExistAndClick(CreateOrder.create_order_button));
   }, 'order');
 
-  scenario('Check the created order in BO', client => {
+  scenario('Check the created order in the Back Office', client => {
     test('should check status to be equal to "Awaiting check payment"', () => client.checkTextValue(OrderPage.order_status, 'Awaiting check payment'));
     test('should set order status to "Refunded"', () => client.updateStatus('Payment error'));
     test('should click on "UPDATE STATUS" button', () => client.waitForExistAndClick(OrderPage.update_status_button));

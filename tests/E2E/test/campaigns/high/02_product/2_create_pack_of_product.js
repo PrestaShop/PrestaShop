@@ -6,7 +6,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
-scenario('Create a pack of products', client => {
+scenario('Create a pack of products in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
@@ -22,7 +22,13 @@ scenario('Create a pack of products', client => {
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.pack.new_category_name + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('should remove "HOME" category', () => client.removeHomeCategory());
+    test('open all category', () => client.openAllCategory());
+    test('should choose the created category as default', () => {
+      return promise
+        .then(() => client.scrollTo(AddProductPage.category_radio.replace('%S', data.pack.new_category_name + date_time)))
+        .then(() => client.waitForExistAndClick(AddProductPage.category_radio.replace('%S', data.pack.new_category_name + date_time), 4000));
+
+    });
     test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
       return promise
@@ -76,7 +82,7 @@ scenario('Create a pack of products', client => {
 
   scenario('Edit product options', client => {
     test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
-    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'search'));
+    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'both'));
     test('should click on "Web only (not sold in your retail store)"', () => client.waitForExistAndClick(AddProductPage.options_online_only));
     test('should select the "Condition"', () => client.selectCondition());
     test('should set the "ISBN"', () => client.waitAndSetValue(AddProductPage.options_isbn, data.common.isbn));
@@ -103,9 +109,9 @@ scenario('Create a pack of products', client => {
   }, 'product/product');
 }, 'product/product', true);
 
-scenario('Check the product in the catalog', client => {
+scenario('Check the product creation in the Back Office', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.goToCatalog());
   test('should search for product by name', () => client.searchProductByName(data.pack.name + date_time));
   test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.pack.name + date_time));
