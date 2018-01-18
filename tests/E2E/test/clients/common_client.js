@@ -262,6 +262,13 @@ class CommonClient {
     return this.client.switchWindow(id);
   }
 
+  isExisting(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
+      .isExisting(selector)
+      .then((isExisting) => expect(isExisting).to.be.true)
+  }
 }
 
 module.exports = CommonClient;
