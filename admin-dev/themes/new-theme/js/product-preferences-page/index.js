@@ -29,11 +29,6 @@ import StockManagementOptionHandler from './stock-management-option-handler';
 const $ = window.$;
 
 $(() => {
-    // Do not run if we're not on the product preferences page
-    if (!window.location.pathname.match('/configure/shop/product_preferences\\b')) {
-        return;
-    }
-
     new TranslatableInput();
     new StockManagementOptionHandler();
 });
