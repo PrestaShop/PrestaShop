@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+namespace PrestaShop\PrestaShop\Core\Localization;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 

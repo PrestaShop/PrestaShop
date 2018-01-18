@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
+use PrestaShop\PrestaShop\Core\Localization\Currency;
+
 /**
  * Currency repository interface
  *
