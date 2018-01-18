@@ -39,6 +39,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GeneralType extends TranslatorAwareType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -80,6 +83,9 @@ class GeneralType extends TranslatorAwareType
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
@@ -87,6 +93,9 @@ class GeneralType extends TranslatorAwareType
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockPrefix()
     {
         return 'product_preferences_general_block';
