@@ -33,17 +33,17 @@
         <div class="card-block">
             <div class="card-text">
                 <div class="form-group">
-                    {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans)) }}
+                    {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(paginationForm.products_per_page) }}
                     {{ form_widget(paginationForm.products_per_page) }}
                 </div>
                 <div class="form-group">
-                    {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans)) }}
+                    {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(paginationForm.default_order_by) }}
                     {{ form_widget(paginationForm.default_order_by) }}
                 </div>
                 <div class="form-group">
-                    {{ ps.label_with_help(('Default order way'|trans), ('Default order way for product list.'|trans)) }}
+                    {{ ps.label_with_help(('Default order method'|trans), ('Default order method for product list.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(paginationForm.default_order_way) }}
                     {{ form_widget(paginationForm.default_order_way) }}
                 </div>

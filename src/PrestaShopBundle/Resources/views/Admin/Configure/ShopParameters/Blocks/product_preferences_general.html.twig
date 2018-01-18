@@ -28,12 +28,12 @@
 <div class="col">
     <div class="card">
         <h3 class="card-header">
-            <i class="material-icons">settings</i> {{ 'General'|trans }}
+            <i class="material-icons">settings</i> {{ 'Products (general)'|trans }}
         </h3>
         <div class="card-block">
             <div class="card-text">
                 <div class="form-group">
-                    {{ ps.label_with_help(('Catalog mode'|trans), ('When active all shopping features will be disabled.'|trans)) }}
+                    {{ ps.label_with_help(('Catalog mode'|trans), ('When active, all shopping features will be disabled.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(generalForm.catalog_mode) }}
                     {{ form_widget(generalForm.catalog_mode) }}
                 </div>
@@ -45,22 +45,22 @@
                     {{ form_widget(generalForm.new_days_number) }}
                 </div>
                 <div class="form-group">
-                    {{ ps.label_with_help(('Max size of short description'|trans), ('Set the maximum size of the short description (in numbers).'|trans)) }}
+                    {{ ps.label_with_help(('Max size of product summary'|trans), ('Set the maximum size of the summary of your product description (in characters).'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(generalForm.short_description_limit) }}
                     {{ form_widget(generalForm.short_description_limit) }}
                 </div>
                 <div class="form-group">
-                    {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans)) }}
+                    {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(generalForm.quantity_discount) }}
                     {{ form_widget(generalForm.quantity_discount) }}
                 </div>
                 <div class="form-group">
-                    {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans)) }}
+                    {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(generalForm.force_friendly_url) }}
                     {{ form_widget(generalForm.force_friendly_url) }}
                 </div>
                 <div class="form-group">
-                    {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans)) }}
+                    {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(generalForm.default_status) }}
                     {{ form_widget(generalForm.default_status) }}
                 </div>
