@@ -58,7 +58,7 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('short_description_limit', TextWithUnitType::class, [
                 'required' => false,
-                'unit' => $this->trans('characters', 'Admin.Shopparameters.Feature'),
+                'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
             ])
             ->add('quantity_discount', ChoiceType::class, [
                 'choices' => [
