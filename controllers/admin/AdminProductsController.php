@@ -1652,7 +1652,7 @@ class AdminProductsControllerCore extends AdminController
                 $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $def['table'] . '` WHERE `' . $def['primary'] . '` = ' . (int)$id;
                 $fields_from_table = Db::getInstance()->getRow($sql);
                 foreach ($def['fields'] as $key => $value) {
-                    if (!$value['lang']) {
+                    if (!isset($value['lang']) || !$value['lang']) {
                         $img->{$key} = $fields_from_table[$key];
                     }
                 }
@@ -1684,7 +1684,7 @@ class AdminProductsControllerCore extends AdminController
         $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $def['table'] . '` WHERE `' . $def['primary'] . '` = ' . $id_image;
         $fields_from_table = Db::getInstance()->getRow($sql);
         foreach ($def['fields'] as $key => $value) {
-            if (!$value['lang']) {
+            if (!isset($value['lang']) || !$value['lang']) {
                 $img->{$key} = $fields_from_table[$key];
             }
         }
