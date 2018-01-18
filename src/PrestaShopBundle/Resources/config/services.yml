@@ -544,7 +544,7 @@ services:
     prestashop.admin.product_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
         arguments:
-            - '@prestashop.adapter.product_general.configruation'
+            - '@prestashop.adapter.product_general.configuration'
             - '@prestashop.adapter.product_pagination.configuration'
             - '@prestashop.adapter.product_page.configuration'
             - '@prestashop.adapter.product_stock.configuration'

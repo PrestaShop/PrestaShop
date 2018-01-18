@@ -155,7 +155,7 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
         arguments: ['%kernel.root_dir%/config/parameters.php']
 
-    prestashop.adapter.product_general.configruation:
+    prestashop.adapter.product_general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
