@@ -1642,10 +1642,22 @@ class AdminProductsControllerCore extends AdminController
             $json = stripslashes($json);
             $images = Tools::jsonDecode($json, true);
             foreach ($images as $id => $position) {
-                $res &= Db::getInstance()->execute(
-                    'UPDATE `'._DB_PREFIX_.'image` SET `position`= ' . (int) $position .
-                    ' WHERE `id_image` = ' . (int) $id
-                );
+                /*
+                 * If the the image is not associated with the currently selected shop, the fields that are also in the
+                 * image_shop table (like id_product and cover) cannot be loaded properly, so we have to load them
+                 * separately.
+                 */
+                $img = new Image((int)$id);
+                $def = $img::$definition;
+                $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $def['table'] . '` WHERE `' . $def['primary'] . '` = ' . (int)$id;
+                $fields_from_table = Db::getInstance()->getRow($sql);
+                foreach ($def['fields'] as $key => $value) {
+                    if (!$value['lang']) {
+                        $img->{$key} = $fields_from_table[$key];
+                    }
+                }
+                $img->position = (int)$position;
+                $res &= $img->update();
             }
         }
         if ($res) {
