@@ -44,7 +44,6 @@ import './clickable-dropdown';
 
 import './product-page/index';
 import './translation-page/index';
-import './product-preferences-page/index';
 
 import Header from './header.js';
 
