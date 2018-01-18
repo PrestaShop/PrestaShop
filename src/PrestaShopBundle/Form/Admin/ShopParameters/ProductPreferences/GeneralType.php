@@ -50,6 +50,7 @@ class GeneralType extends TranslatorAwareType
                     'Yes' => true,
                     'No' => false,
                 ],
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
             ->add('new_days_number', IntegerType::class, [
@@ -64,6 +65,7 @@ class GeneralType extends TranslatorAwareType
                     'Products' => 0,
                     'Combinations' => 1,
                 ],
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
             ->add('force_friendly_url', ChoiceType::class, [
@@ -71,6 +73,7 @@ class GeneralType extends TranslatorAwareType
                     'Yes' => true,
                     'No' => false,
                 ],
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
             ->add('default_status', ChoiceType::class, [
@@ -78,6 +81,7 @@ class GeneralType extends TranslatorAwareType
                     'Yes' => true,
                     'No' => false,
                 ],
+                'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
         ;
