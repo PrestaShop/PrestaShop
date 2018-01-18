@@ -4,16 +4,22 @@ services:
   tests:
     build: .
     environment:
-      SELENIUM_HOST: selenium-chrome
-      URL: prestashop-web
+#      SELENIUM_HOST: selenium-chrome
+#      URL: prestashop-web
+      SELENIUM_HOST: 192.168.0.1
+      URL: localhost:8002
     depends_on:
       - "prestashop"
-      - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=prestashop-web", "--SELENIUM=selenium-chrome"]
+#      - "selenium-chrome"
+#    command: ["/tmp/wait-for-it.sh", "--timeout=200", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=prestashop-web", "--SELENIUM=selenium-chrome", "--DIR=/home/seluser/Downloads/"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=200", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=localhost:8002", "--SELENIUM=192.168.0.1", "--DIR=/home/seluser/Downloads/"]
     volumes:
       - ./screenshots/:/home/test/screenshots/
+#      - downloads:/home/seluser/Downloads
+      - /home/thomas/Téléchargements:/home/seluser/Downloads
     networks:
       - default
+      - dockernet
 
   prestashop:
     build: docker_prestashop/
@@ -22,25 +28,34 @@ services:
       PS_INSTALL_AUTO: 1
       PS_COUNTRY: fr
       PS_DEV_MODE: 0
-      PS_DOMAIN: prestashop-web
+#      PS_DOMAIN: prestashop-web
+      PS_DOMAIN: localhost:8002
       PS_FOLDER_ADMIN: admin-dev
       PS_FOLDER_INSTALL: install-dev
     depends_on:
       - "db"
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    ports:
+        - 8002:80
+    volumes:
+        - ../../:/var/www/html/
+        - ps_config:/var/www/html/config
+        - ps_var:/var/www/html/var
     networks:
       default:
           aliases:
               - prestashop-web
 
-  selenium-chrome:
-    image: selenium/standalone-chrome
-    ports:
-      - 4444:4444
-    networks:
-      default:
-          aliases:
-              - selenium-chrome
+#  selenium-chrome:
+#    image: selenium/standalone-chrome
+#    ports:
+#      - 4444:4444
+#    volumes:
+#        - downloads:/home/seluser/Downloads
+#    networks:
+#      default:
+#          aliases:
+#              - selenium-chrome
 
   db:
     image: mysql
@@ -49,5 +64,21 @@ services:
     networks:
       - default
 
+volumes:
+    ps_var:
+    ps_config:
+#    downloads:
+
 networks:
   default:
+  dockernet:
+    driver: bridge
+    driver_opts:
+        subnet: 192.168.0.0/24
+        gateway: 192.168.0.1
+#    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 192.168.0.0/24
