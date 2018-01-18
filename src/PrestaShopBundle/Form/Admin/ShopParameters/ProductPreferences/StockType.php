@@ -50,6 +50,7 @@ class StockType extends TranslatorAwareType
                     'No' => 0,
                 ],
                 'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
             ])
             ->add('stock_management', ChoiceType::class, [
                 'choices' => [
@@ -57,6 +58,7 @@ class StockType extends TranslatorAwareType
                     'No' => 0,
                 ],
                 'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
             ])
             ->add('in_stock_label', TranslateTextType::class, [
                 'locales' => $this->locales,

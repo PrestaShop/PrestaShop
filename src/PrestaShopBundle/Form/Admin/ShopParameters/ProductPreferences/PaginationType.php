@@ -64,6 +64,7 @@ class PaginationType extends AbstractType
                     'Descending' => 1,
                 ],
                 'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
             ])
         ;
     }
