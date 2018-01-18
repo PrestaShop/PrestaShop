@@ -2,6 +2,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const common_scenarios = require('./order');
+const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 
 scenario('Create order in the Front Office', () => {
@@ -24,7 +25,7 @@ scenario('Check the created order in the Back Office', () => {
   }, 'order');
 
   scenario('Check the created order in the Back Office', client => {
-    test('should go to "Orders" page', () => client.goToSubtabMenuPage(OrderPage.orders_subtab, OrderPage.order_submenu));
+    test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should search the order created by reference', () => client.waitAndSetValue(OrderPage.search_by_reference_input, global.tab['reference']));
     test('should go to search order', () => client.waitForExistAndClick(OrderPage.search_order_button));
     test('should go to the order ', () => client.scrollWaitForExistAndClick(OrderPage.view_order_button.replace('%NUMBER', 1)));

@@ -1,10 +1,9 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {Stock} = require('../../../selectors/BO/catalogpage/stocksubmenu/stock');
 const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movements');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../02_product/product');
-
+const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 
 productData = [{
@@ -30,7 +29,7 @@ scenario('Modify quantity and check the movement of a group of product', client 
   common_scenarios.createProduct(AddProductPage, productData[1]);
 
   scenario('Modify quantity and check the movement of a group of product', client => {
-    test('should go to "Stocks" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, Stock.submenu));
+    test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     test('should set the "Quantity" of the first product to 15', () => client.modifyProductQuantity(Stock, 1, 15));
     test('should set the "Quantity" of the second product to 50', () => client.modifyProductQuantity(Stock, 2, 50));
     test('should click on "Apply new quantity" button', () => client.waitForExistAndClick(Stock.group_apply_button));
@@ -42,5 +41,4 @@ scenario('Modify quantity and check the movement of a group of product', client 
         .then(() => client.checkOrderMovement(Movement, client));
     });
   }, 'stocks');
-
-}, 'stocks',true);
+}, 'stocks', true);

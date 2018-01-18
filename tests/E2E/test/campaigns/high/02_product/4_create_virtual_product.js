@@ -3,13 +3,14 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
 scenario('Create virtual Product in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
+  test('should go to "Catalog"', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
   test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
   scenario('Edit the Basic settings', client => {
@@ -46,7 +47,7 @@ scenario('Create virtual Product in the Back Office', client => {
     test('should set the "Quantity"', () => client.waitAndSetValue(AddProductPage.product_quantity_input, data.common.quantity));
     test('should set the "Minimum quantity for sale"', () => client.waitAndSetValue(AddProductPage.minimum_quantity_sale, data.common.qty_min));
     test('should indicate that the product have an associated file', () => client.associatedFile());
-    test('should add a file', () => client.addFile(AddProductPage.virtual_select_file, 'image_test.jpg'), 50);
+    test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
     test('should add file "NAME"', () => client.waitAndSetValue(AddProductPage.virtual_file_name, data.virtual.attached_file_name));
     test('should add file "NUMBER"', () => client.waitAndSetValue(AddProductPage.virtual_file_number_download, data.virtual.allowed_number_to_download));
     test('should add file "EXPIRATION DATE"', () => client.waitAndSetValue(AddProductPage.virtual_expiration_file_date, data.virtual.expiration_date));

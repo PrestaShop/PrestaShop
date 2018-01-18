@@ -155,22 +155,25 @@ class CommonClient {
     }
   }
 
-  checkTextValue(selector, textToCheckWith, parameter = 'equal') {
+  checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0) {
     switch (parameter) {
       case "contain":
         return this.client
+          .pause(pause)
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.contain(textToCheckWith));
         break;
       case "equal":
         return this.client
+          .pause(pause)
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.equal(textToCheckWith));
         break;
       case "notequal":
         return this.client
+          .pause(pause)
           .waitForExist(selector, 9000)
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.not.equal(textToCheckWith));
@@ -222,18 +225,13 @@ class CommonClient {
    * @returns {*}
    */
   checkDocument(folderPath, fileName, text) {
-    function verify_text_existence(positionToVerify) {
-      if (positionToVerify == -1) {
-        throw(err)
-      }
-    }
-
     pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
-      if (err) throw(err);
-      verify_text_existence(data.indexOf(text))
+      global.indexText=data.indexOf(text)
     });
+
     return this.client
-      .pause(5000)
+      .pause(2000)
+      .then(()=> expect(global.indexText,text + "does not exist in the PDF document").to.not.equal(-1))
   }
 
   waitForVisible(selector, timeout = 90000) {
@@ -268,6 +266,15 @@ class CommonClient {
       .scrollTo(selector)
       .isExisting(selector)
       .then((isExisting) => expect(isExisting).to.be.true)
+  }
+
+  clickOnResumeButton(selector) {
+    if (!global.isVisible) {
+      return this.client
+        .click(selector)
+    } else {
+      return this.client.pause(1000)
+    }
   }
 }
 
