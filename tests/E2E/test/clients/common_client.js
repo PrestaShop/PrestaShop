@@ -86,6 +86,12 @@ class CommonClient {
     }
   }
 
+  selectLanguage(selector, option, language, id) {
+    return this.client
+      .waitForExistAndClick(selector)
+      .waitForExistAndClick(option.replace('%LANG', language).replace('%ID', id))
+  }
+
   open() {
     return this.client.init().windowHandleSize({width: 1280, height: 1024});
   }
@@ -250,6 +256,10 @@ class CommonClient {
   refresh(selector) {
     return this.client
       .refresh();
+  }
+
+  switchWindow(id) {
+    return this.client.switchWindow(id);
   }
 
 }
