@@ -153,6 +153,14 @@ module.exports = {
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[1]/div',
     catalog_third_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[2]/div',
-    category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]'
+    category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
+    category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]'
+  },
+
+  ProductList:{
+    first_product_id:'//*[@id="product_catalog_list"]//tr[1]/td[1]/div/label',
+    second_product_id:'//*[@id="product_catalog_list"]//tr[2]/td[1]/div/label',
+    third_product_id:'//*[@id="product_catalog_list"]//tr[3]/td[1]/div/label',
+    status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]'
   }
 };

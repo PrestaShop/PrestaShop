@@ -17,7 +17,7 @@ module.exports = {
             test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
             test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
-            if (authentication === "create_account" && accountPage !== "") {
+            if (authentication === "create_account") {
                 scenario('Create new account', client => {
                     test('should choose a "Social title"', () => client.waitForExistAndClick(accountPage.radio_button_gender));
                     test('should set the "First name" input', () => client.waitAndSetValue(accountPage.firstname_input, data.customer.firstname));
