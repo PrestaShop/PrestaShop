@@ -27,7 +27,7 @@
 namespace Tests\Unit\Core\Localization\Currency;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency\Currency;
+use PrestaShop\PrestaShop\Core\Localization\Currency;
 
 class CurrencyTest extends TestCase
 {
