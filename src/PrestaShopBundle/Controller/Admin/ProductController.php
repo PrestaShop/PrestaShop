@@ -142,7 +142,6 @@ class ProductController extends FrameworkBundleAdminController
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-        $offset = 'last';
         $this->setPersistedFilterValues($offset, $limit, $orderBy, $sortOrder, $persistedFilterParameters);
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
@@ -252,6 +251,7 @@ class ProductController extends FrameworkBundleAdminController
 
         if ($products === null) {
             // get old values from persistence (before the current update)
+            $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
             $this->setPersistedFilterValues($offset, $limit, $orderBy, $sortOrder, $persistedFilterParameters);
             /**
              * 2 hooks are triggered here:
