@@ -1673,7 +1673,21 @@ class AdminProductsControllerCore extends AdminController
             return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
         }
         Image::deleteCover((int)Tools::getValue('id_product'));
-        $img = new Image((int)Tools::getValue('id_image'));
+        $id_image = (int)Tools::getValue('id_image');
+
+        /*
+         * If the the image is not associated with the currently selected shop, the fields that are also in the
+         * image_shop table (like id_product and cover) cannot be loaded properly, so we have to load them separately.
+         */
+        $img = new Image($id_image);
+        $def = $img::$definition;
+        $sql = 'SELECT * FROM `' . _DB_PREFIX_ . $def['table'] . '` WHERE `' . $def['primary'] . '` = ' . $id_image;
+        $fields_from_table = Db::getInstance()->getRow($sql);
+        foreach ($def['fields'] as $key => $value) {
+            if (!$value['lang']) {
+                $img->{$key} = $fields_from_table[$key];
+            }
+        }
         $img->cover = 1;
 
         @unlink(_PS_TMP_IMG_DIR_.'product_'.(int)$img->id_product.'.jpg');
