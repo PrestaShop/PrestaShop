@@ -25,7 +25,7 @@ var productData = [{
   }
 }];
 
-scenario('Create standard product "A" and pack product "B"', client => {
+scenario('Create standard product "A" and pack product "B" in the Back Office', client => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));

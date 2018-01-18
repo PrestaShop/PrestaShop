@@ -1,6 +1,6 @@
 var CommonClient = require('./../common_client');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
-const {ProductList} = require('../../selectors/BO/product_list');
+const {ProductList} = require('../../selectors/BO/add_product_page');
 var data = require('./../../datas/product-data');
 var path = require('path');
 
@@ -87,12 +87,6 @@ class Product extends CommonClient {
       .pause(4000)
   }
 
-  removeHomeCategory() {
-    return this.client
-      .waitForVisible(AddProductPage.product_create_category_btn, 90000)
-      .waitForVisibleAndClick(AddProductPage.category_home)
-  }
-
   searchAndAddRelatedProduct() {
     var search_products = data.common.search_related_products.split('//');
     return this.client
@@ -142,11 +136,22 @@ class Product extends CommonClient {
   clickPageNext(selector) {
     if (global.isVisible) {
       return this.client
-          .click(selector)
-          .pause(2000)
+        .click(selector)
+        .pause(2000)
     } else {
       return this.client.pause(1000)
     }
+  }
+
+  getProductsNumber(selector) {
+    return this.client
+      .execute(function (selector) {
+        var count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
+        return count;
+      }, selector)
+      .then((count) => {
+        global.productsNumber = count.value;
+      })
   }
 
 }
