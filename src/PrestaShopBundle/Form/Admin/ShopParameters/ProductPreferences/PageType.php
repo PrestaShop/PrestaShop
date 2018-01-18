@@ -50,6 +50,7 @@ class PageType extends AbstractType
                     'No' => 0,
                 ],
                 'required' => true,
+               'choice_translation_domain' => 'Admin.Global',
            ])
            ->add('display_last_quantities', IntegerType::class)
            ->add('display_unavailable_attributes', ChoiceType::class, [
@@ -58,6 +59,7 @@ class PageType extends AbstractType
                    'No' => 0,
                ],
                'required' => true,
+               'choice_translation_domain' => 'Admin.Global',
            ])
            ->add('allow_add_variant_to_cart_from_listing', ChoiceType::class, [
                'choices' => [
@@ -65,6 +67,7 @@ class PageType extends AbstractType
                    'No' => 0,
                ],
                'required' => true,
+               'choice_translation_domain' => 'Admin.Global',
            ])
            ->add('attribute_anchor_separator', ChoiceType::class, [
                'choices' => [
@@ -72,6 +75,7 @@ class PageType extends AbstractType
                    ',' => ',',
                ],
                'required' => true,
+               'choice_translation_domain' => 'Admin.Global',
            ])
            ->add('display_discount_price', ChoiceType::class, [
                'choices' => [
@@ -79,6 +83,7 @@ class PageType extends AbstractType
                    'No' => 0,
                ],
                'required' => true,
+               'choice_translation_domain' => 'Admin.Global',
            ])
         ;
     }
