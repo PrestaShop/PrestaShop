@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {AttributeSubMenu} = require('../../../selectors/BO/catalogpage/attribute_submenu');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 
 scenario('Update "Attribute"', () => {
   scenario('Login in the Back Office', client => {
@@ -10,7 +11,7 @@ scenario('Update "Attribute"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   scenario('Update the created "Attribute"', client => {
-    test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, AttributeSubMenu.submenu));
+    test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
     test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, 'attribute' + date_time));
     test('should click on "Edit" action', () => client.clickOnAction(AttributeSubMenu.group_action_button, AttributeSubMenu.update_button));
     test('should set the "Name" input', () => client.waitAndSetValue(AttributeSubMenu.name_input, 'attribute' + date_time + 'update'));
@@ -36,7 +37,7 @@ scenario('Check the attribute modification', () => {
     test('should set the shop language to "English"', () => client.changeLanguage('english'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, 'Att' + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
-    test('should check that the product attribute name is "'+'attribute' + date_time+'update"', () => client.checkTextValue(SearchProductPage.attribute_name, 'attribute' + date_time + 'update'));
+    test('should check that the product attribute name is "' + 'attribute' + date_time + 'update"', () => client.checkTextValue(SearchProductPage.attribute_name, 'attribute' + date_time + 'update'));
     test('should check that the first attribute value is equal to 40', () => client.checkTextValue(SearchProductPage.attribute_value_1, '40'));
     test('should check that the second attribute value is equal to 20', () => client.checkTextValue(SearchProductPage.attribute_value_2, '20'));
     test('should check that the third attribute value is equal to 30', () => client.checkTextValue(SearchProductPage.attribute_value_3, '30'));

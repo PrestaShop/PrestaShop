@@ -3,6 +3,7 @@ const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
 const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const orderScenarios = require('./order');
+const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 
 scenario('Create order in the Back Office', () => {

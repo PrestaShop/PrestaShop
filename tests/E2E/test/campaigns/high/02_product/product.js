@@ -1,9 +1,10 @@
+const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 
 module.exports = {
   createProduct: function (AddProductPage, productData) {
     scenario('Create a new product in the Back Office', client => {
-      test('should go to "Product Settings" page', () => client.waitForExistAndClick(AddProductPage.products_subtab));
+      test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
       test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
       test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time));
       test('should set the "Quantity" input', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]));

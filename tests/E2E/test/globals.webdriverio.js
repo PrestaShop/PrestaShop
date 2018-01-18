@@ -30,7 +30,7 @@ global.brandsImage = path.join(__dirname, '', 'datas', 'prestashop.png');
 global.onboarding = false;
 global.invoiceFileName = "";
 global.basic_price = "";
-
+global.indexText = 0;
 module.exports = {
     selector: require('./selectors'),
     shouldExist: function (err, existing) {
