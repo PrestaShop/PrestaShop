@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\Currency;
+namespace Tests\Unit\Core\Localization;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
