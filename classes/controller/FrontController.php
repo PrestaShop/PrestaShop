@@ -1612,6 +1612,7 @@ class FrontControllerCore extends Controller
     public function initLogoAndFavicon()
     {
         $mobile_device = $this->context->getMobileDevice();
+        $isMobile = ($this->context->getDevice() !== Context::DEVICE_COMPUTER);
 
         if ($mobile_device && Configuration::get('PS_LOGO_MOBILE')) {
             $logo = $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'));
@@ -1623,7 +1624,8 @@ class FrontControllerCore extends Controller
             'favicon_url'       => _PS_IMG_.Configuration::get('PS_FAVICON'),
             'logo_image_width'  => ($mobile_device == false ? Configuration::get('SHOP_LOGO_WIDTH')  : Configuration::get('SHOP_LOGO_MOBILE_WIDTH')),
             'logo_image_height' => ($mobile_device == false ? Configuration::get('SHOP_LOGO_HEIGHT') : Configuration::get('SHOP_LOGO_MOBILE_HEIGHT')),
-            'logo_url'          => $logo
+            'logo_url'          => $logo,
+            'showLogo'         => $isMobile ? $mobile_device : true,
         );
     }
 
