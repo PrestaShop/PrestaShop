@@ -134,6 +134,13 @@ function initCommands(client) {
       .url('http://' + URL)
       .waitForExistAndClick(selector.logo_home_page)
   });
+  
+  client.addCommand('switchWindow', function (id) {
+    return client
+      .getTabIds()
+      .then(ids => client.switchTab(ids[id]))
+      .refresh()
+  });
 }
 
 module.exports = {
