@@ -1,11 +1,14 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {productPage} = require('../../../selectors/FO/product_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
-scenario('Create Standard Product', client => {
+scenario('Create Standard Product in the Back Office', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
   test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
@@ -19,7 +22,6 @@ scenario('Create Standard Product', client => {
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.standard.new_category_name + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('should remove the "HOME" category', () => client.removeHomeCategory());
     test('open all category', () => client.openAllCategory());
     test('should check the existence of the first category Radio button', () => client.checkCategoryRadioButton(5));
     test('should check the existence of the second category Radio button', () => client.checkCategoryRadioButton(6));
@@ -27,6 +29,12 @@ scenario('Create Standard Product', client => {
     test('should check the existence of the fourth Radio button', () => client.checkCategoryRadioButton(9));
     test('should check the existence of the fifth category Radio button', () => client.checkCategoryRadioButton(10));
     test('should check the existence of the sixth category Radio button', () => client.checkCategoryRadioButton(11));
+    test('should choose the created category as default', () => {
+      return promise
+        .then(() => client.scrollTo(AddProductPage.category_radio.replace('%S', data.standard.new_category_name + date_time)))
+        .then(() => client.waitForExistAndClick(AddProductPage.category_radio.replace('%S', data.standard.new_category_name + date_time), 4000));
+
+    });
     test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
       return promise
@@ -79,7 +87,7 @@ scenario('Create Standard Product', client => {
 
   scenario('Edit product options', client => {
     test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
-    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'search'));
+    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'both'));
     test('should click on "Web only (not sold in your retail store)"', () => client.waitForExistAndClick(AddProductPage.options_online_only));
     test('should select the "Condition"', () => client.selectCondition());
     test('should set the "ISBN"', () => client.waitAndSetValue(AddProductPage.options_isbn, data.common.isbn));
@@ -107,7 +115,7 @@ scenario('Create Standard Product', client => {
 
 }, 'product/product', true);
 
-scenario('Check the product creation', client => {
+scenario('Check the product creation in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.goToCatalog());
@@ -121,3 +129,29 @@ scenario('Check the product creation', client => {
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
+scenario('Check the standard product in the Front Office', () => {
+  scenario('Login in the Front Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+  }, 'product/product');
+  scenario('Check that the standard product is well displayed in the Front Office', client => {
+    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.standard.name + date_time));
+    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+    test('should check that the product name is equal to "' + (data.standard.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.standard.name + date_time).toUpperCase()));
+    test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+    test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
+      return promise
+          .then(() => client.scrollTo(productPage.product_reference))
+          .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+    });
+    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
+  }, 'product/product');
+  scenario('Logout from the Front Office', client => {
+    test('should logout successfully from the Front Office', () => {
+      return promise
+          .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+          .then(() => client.signOutFO(AccessPageFO))
+    });
+  }, 'product/product');
+}, 'product/product', true);

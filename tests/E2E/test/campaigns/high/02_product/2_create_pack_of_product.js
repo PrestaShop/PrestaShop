@@ -1,9 +1,12 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../selectors/FO/access_page');
+const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {productPage} = require('../../../selectors/FO/product_page');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
-scenario('Create a pack of products', client => {
+scenario('Create a pack of products in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
@@ -19,7 +22,13 @@ scenario('Create a pack of products', client => {
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
     test('should set the "New category name"', () => client.waitAndSetValue(AddProductPage.product_category_name_input, data.pack.new_category_name + date_time));
     test('should click on "Create"', () => client.createCategory());
-    test('should remove "HOME" category', () => client.removeHomeCategory());
+    test('open all category', () => client.openAllCategory());
+    test('should choose the created category as default', () => {
+      return promise
+        .then(() => client.scrollTo(AddProductPage.category_radio.replace('%S', data.pack.new_category_name + date_time)))
+        .then(() => client.waitForExistAndClick(AddProductPage.category_radio.replace('%S', data.pack.new_category_name + date_time), 4000));
+
+    });
     test('should click on "ADD A BRAND"', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
       return promise
@@ -73,7 +82,7 @@ scenario('Create a pack of products', client => {
 
   scenario('Edit product options', client => {
     test('should click on "Options"', () => client.scrollWaitForExistAndClick(AddProductPage.product_options_tab));
-    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'search'));
+    test('should select the "Visibility"', () => client.waitAndSelectByValue(AddProductPage.options_visibility, 'both'));
     test('should click on "Web only (not sold in your retail store)"', () => client.waitForExistAndClick(AddProductPage.options_online_only));
     test('should select the "Condition"', () => client.selectCondition());
     test('should set the "ISBN"', () => client.waitAndSetValue(AddProductPage.options_isbn, data.common.isbn));
@@ -88,6 +97,8 @@ scenario('Create a pack of products', client => {
     test('should select the customization field "Type" File', () => client.waitAndSelectByValue(AddProductPage.options_second_custom_field_type, '0'));
     test('should click on "ATTACH A NEW FILE"', () => client.scrollWaitForExistAndClick(AddProductPage.options_add_new_file_button, 50));
     test('should add a file', () => client.addFile(AddProductPage.options_select_file, 'image_test.jpg'), 50);
+    test('should set the file "Title"', () => client.waitAndSetValue(AddProductPage.options_file_name, data.common.document_attach.name));
+    test('should set the file "Description" ', () => client.waitAndSetValue(AddProductPage.options_file_description, data.common.document_attach.desc));
     test('should add the previous added file', () => client.scrollWaitForExistAndClick(AddProductPage.options_file_add_button, 50));
   }, 'product/product');
 
@@ -98,9 +109,9 @@ scenario('Create a pack of products', client => {
   }, 'product/product');
 }, 'product/product', true);
 
-scenario('Check the product in the catalog', client => {
+scenario('Check the product creation in the Back Office', client => {
   test('should open browser', () => client.open());
-  test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   test('should go to "Catalog"', () => client.goToCatalog());
   test('should search for product by name', () => client.searchProductByName(data.pack.name + date_time));
   test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.pack.name + date_time));
@@ -111,3 +122,36 @@ scenario('Check the product in the catalog', client => {
   test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
+
+scenario('Check the pack product in the Front Office', () => {
+  scenario('Login in the Front Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
+  }, 'product/product');
+  scenario('Check that the pack product is well displayed in the Front Office', client => {
+    test('should set the shop language to "English"', () => client.changeLanguage('english'));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.pack.name + date_time));
+    test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+    test('should check that the product name is equal to "' + (data.pack.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.pack.name + date_time).toUpperCase()));
+    test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+    test('should check that the first product pack name is equal to "Printed Dress Size-S Color-Orange"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 1), 'Printed Dress Size-S Color-Orange'));
+    test('should check that the first product pack price is equal to "€31.19"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€31.19'));
+    test('should check that the first product pack quantity is equal to "1"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 1), 'x 1'));
+    test('should check that the second product pack name is equal to "Printed Chiffon Dress Size-S Color-Yellow"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 2), 'Printed Chiffon Dress Size-S Color-Yellow'));
+    test('should check that the second product pack price is equal to "€19.68"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 2), '€19.68'));
+    test('should check that the second product pack quantity is equal to "3"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 2), 'x 3'));
+    test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
+      return promise
+          .then(() => client.scrollTo(productPage.product_reference))
+          .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+    });
+    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
+  }, 'product/product');
+  scenario('Logout from the Front Office', client => {
+    test('should logout successfully from the Front Office', () => {
+      return promise
+          .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+          .then(() => client.signOutFO(AccessPageFO))
+    });
+  }, 'product/product');
+}, 'product/product', true);
