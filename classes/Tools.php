@@ -627,7 +627,7 @@ class ToolsCore
             }
         }
 
-        return $currency;
+        return empty($currency) ? new Currency() : $currency;
     }
 
     /**
