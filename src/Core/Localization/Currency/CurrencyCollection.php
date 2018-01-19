@@ -65,10 +65,15 @@ class CurrencyCollection implements IteratorAggregate, Countable
      *
      * @param Currency $currency
      *  The currency to add.
+     *
+     * @return CurrencyCollection
+     *  Fluent interface
      */
     public function add(Currency $currency)
     {
         $this->currencies[$currency->getIsoCode()] = $currency;
+
+        return $this;
     }
 
     /**
@@ -103,12 +108,17 @@ class CurrencyCollection implements IteratorAggregate, Countable
      *
      * @param string|string[] $isoCode
      *  The currency ISO code or an array of currency ISO codes
+     *
+     * @return CurrencyCollection
+     *  Fluent interface
      */
     public function remove($isoCode)
     {
         foreach ((array)$isoCode as $c) {
             unset($this->currencies[$c]);
         }
+
+        return $this;
     }
 
     /**
@@ -117,6 +127,9 @@ class CurrencyCollection implements IteratorAggregate, Countable
      *
      * @param CurrencyCollection $collection
      *  The CurrencyCollection to append at the end of the current one
+     *
+     * @return CurrencyCollection
+     *  Fluent interface
      */
     public function addCollection(CurrencyCollection $collection)
     {
@@ -126,13 +139,20 @@ class CurrencyCollection implements IteratorAggregate, Countable
             unset($this->currencies[$isoCode]);
             $this->currencies[$isoCode] = $currency;
         }
+
+        return $this;
     }
 
     /**
      * Clear the collection, removing all contained currencies.
+     *
+     * @return CurrencyCollection
+     *  Fluent interface
      */
     public function clear()
     {
         $this->currencies = [];
+
+        return $this;
     }
 }

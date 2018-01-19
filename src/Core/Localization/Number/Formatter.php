@@ -80,7 +80,7 @@ class Formatter
      *
      * @param string $numberingSystem
      *  Numbering system to use when formatting numbers
-     * @see http://cldr.unicode.org/translation/numbering-systems
+     *  @see http://cldr.unicode.org/translation/numbering-systems
      */
     public function __construct(NumberSpecification $numberSpecification, $roundingMode, $numberingSystem)
     {
