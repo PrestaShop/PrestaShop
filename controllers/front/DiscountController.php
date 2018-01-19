@@ -52,7 +52,7 @@ class DiscountControllerCore extends FrontController
                 new Currency((int)$discount['reduction_currency']),
                 new Currency((int)$this->context->cart->id_currency)
             );
-            
+
             if ((int)$discount['gift_product'] !== 0) {
                 $product = new Product((int) $discount['gift_product'], false, (int)$this->context->language->id);
                 if (!Validate::isLoadedObject($product) || !$product->isAssociatedToShop() || !$product->active) {
@@ -92,5 +92,15 @@ class DiscountControllerCore extends FrontController
         ));
 
         $this->setTemplate(_PS_THEME_DIR_.'discount.tpl');
+    }
+
+    /**
+     * Sets controller CSS and JS files.
+     * @see FrontController::setMedia()
+     */
+    public function setMedia()
+    {
+        parent::setMedia();
+        $this->addJqueryPlugin(array('footable'));
     }
 }
