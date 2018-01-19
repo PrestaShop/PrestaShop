@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 
 /**
- * Number specification class
+ * Number specification interface
  *
  * Regroups rules and data used when formatting a decimal number in a given locale and a given numbering system
  * (latin, arab, ...).
