@@ -102,19 +102,27 @@ class AccessCore extends ObjectModel
     public static function getRoles($idProfile)
     {
         $idProfile = (int) $idProfile;
-        $result =  Db::getInstance()->executeS('
+
+        $accesses = Db::getInstance()->executeS('
             SELECT r.`slug`
             FROM `'._DB_PREFIX_.'authorization_role` r
             WHERE r.`id_authorization_role` IN (
                 SELECT a.`id_authorization_role`
                 FROM `'._DB_PREFIX_.'access` a
                 WHERE a.`id_profile` = "'.$idProfile.'"
-                union all
+            )
+        ');
+        $accessesFromModules = Db::getInstance()->executeS('
+            SELECT r.`slug`
+            FROM `'._DB_PREFIX_.'authorization_role` r
+            WHERE r.`id_authorization_role` IN (
                 SELECT ma.`id_authorization_role`
                 FROM `'._DB_PREFIX_.'module_access` ma 
                 WHERE ma.`id_profile` = "'.$idProfile.'"
             )
         ');
+
+        $result = array_merge($accesses, $accessesFromModules);
 
         foreach ((array) $result as $key => $role) {
             $result[$key] = $role['slug'];
