@@ -171,3 +171,9 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.filter_categories.request_purifier:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterCategoriesRequestPurifier'
+
+    prestashop.adapter.filter_parameters_updater:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\FilterParametersUpdater'
