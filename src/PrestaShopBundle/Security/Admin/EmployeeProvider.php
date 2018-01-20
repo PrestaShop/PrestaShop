@@ -60,12 +60,22 @@ class EmployeeProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        if (isset($this->legacyContext->employee) && $this->legacyContext->employee->email == $username) {
-            $employee = new Employee($this->legacyContext->employee);
-            $employee->setRoles(
-                array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
-            );
-            return $employee;
+        static $employees = array();
+
+        if (isset(
+            $this->legacyContext->employee)
+            && $this->legacyContext->employee->email == $username
+        ) {
+            if (!isset($employees[$username])) {
+                $employee = new Employee($this->legacyContext->employee);
+                $employee->setRoles(
+                    array_merge([self::ROLE_EMPLOYEE], Access::getRoles($this->legacyContext->employee->id_profile))
+                );
+
+                $employees[$username] = $employee;
+            }
+
+            return $employees[$username];
         }
 
         throw new UsernameNotFoundException(

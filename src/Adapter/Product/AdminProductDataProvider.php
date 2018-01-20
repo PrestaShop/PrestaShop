@@ -80,20 +80,26 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
      */
     public function getPersistedFilterParameters()
     {
-        $employee = Context::getContext()->employee;
-        $shop = Context::getContext()->shop;
-        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
-            'employee' => $employee->id ?: 0,
-            'shop' => $shop->id ?: 0,
-            'controller' => 'ProductController',
-            'action' => 'catalogAction',
-        ));
-        /* @var $filter AdminFilter */
-        if (!$filter) {
-            return AdminFilter::getProductCatalogEmptyFilter();
+        static $filters = null;
+
+        if (is_null($filters)) {
+            $employee = Context::getContext()->employee;
+            $shop = Context::getContext()->shop;
+            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy(array(
+                'employee' => $employee->id ?: 0,
+                'shop' => $shop->id ?: 0,
+                'controller' => 'ProductController',
+                'action' => 'catalogAction',
+            ));
+            /* @var $filter AdminFilter */
+            if (!$filter) {
+                $filters = AdminFilter::getProductCatalogEmptyFilter();
+            }
+
+            $filters = $filter->getProductCatalogFilter();
         }
 
-        return $filter->getProductCatalogFilter();
+        return $filters;
     }
 
     /**
