@@ -181,3 +181,4 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
