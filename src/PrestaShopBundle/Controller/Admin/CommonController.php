@@ -28,9 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
-use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -231,10 +229,9 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param string $route
      * @param string $controller
      * @param string $action
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return JsonResponse
      * @throws \LogicException
      */
     public function resetSearchAction($controller, $action)
@@ -245,5 +242,32 @@ class CommonController extends FrameworkBundleAdminController
         $this->get('prestashop.core.admin.admin_filter.repository')->removeByEmployeeAndRouteParams($employeeId, $shopId, $controller, $action);
 
         return new JsonResponse();
+    }
+
+    /**
+     * Specific action to render a specific field multiple twice.
+     *
+     * @param $formName the form name
+     * @param $formType the form type FQCN
+     * @param $fieldName the field name
+     * @param $fieldData the field data
+     *
+     * @return Response
+     */
+    public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
+    {
+        $formData = array(
+            $formName => array(
+                $fieldName => $fieldData,
+            )
+        );
+
+        $form = $this->createFormBuilder($formData);
+        $form->add($formName, $formType);
+
+        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+            'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
+            'formId' => $formName . '_' . $fieldName . '_rendered'
+        ]);
     }
 }
