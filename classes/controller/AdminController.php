@@ -4672,6 +4672,9 @@ class AdminControllerCore extends Controller
         return $this->tabSlug;
     }
 
+    /**
+     * @return ContainerBuilder
+     */
     protected function buildContainer()
     {
         $container = new ContainerBuilder();

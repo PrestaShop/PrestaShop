@@ -111,7 +111,10 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
-        $this->container = $this->buildContainer();
+
+        if (defined(ADMIN_LEGACY_CONTEXT)) {
+            $this->container = $this->buildContainer();
+        }
     }
 
     /**
