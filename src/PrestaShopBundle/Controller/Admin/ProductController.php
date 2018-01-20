@@ -45,6 +45,7 @@ use PrestaShopBundle\Exception\UpdateProductException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use Product;
 use Tools;
 
@@ -129,7 +130,10 @@ class ProductController extends FrameworkBundleAdminController
             // Pagination
             $paginationParameters = $request->attributes->all();
             $paginationParameters['_route'] = 'admin_product_catalog';
-            $categoriesForm = $this->getCategoriesForm($language->id, $persistedFilterParameters);
+            $categoriesForm = $this->createForm(ProductCategories::class);
+            if (!empty($persistedFilterParameters['filter_category'])) {
+                $categoriesForm->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
+            }
         }
 
         $persistedFilterParameters = $this->get('prestashop.adapter.filter_parameters_updater')
@@ -256,32 +260,6 @@ class ProductController extends FrameworkBundleAdminController
             ]));
         }
         return $vars;
-    }
-
-    /**
-     * Gets the categories form
-     *
-     * @param $languageId
-     * @param $persistedFilterParameters
-     * @return FormInterface
-     */
-    private function getCategoriesForm($languageId, $persistedFilterParameters)
-    {
-        $form = $this->createForm(
-            'PrestaShopBundle\Form\Admin\Type\ChoiceCategoriesTreeType',
-            null,
-            array(
-                'label' => $this->trans('Categories', 'Admin.Catalog.Feature'),
-                'list' => $this->get('prestashop.adapter.data_provider.category')
-                    ->getNestedCategories(null, $languageId, false),
-                'valid_list' => [],
-                'multiple' => false,
-            )
-        );
-        if (!empty($persistedFilterParameters['filter_category'])) {
-            $form->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
-        }
-        return $form;
     }
 
     /**

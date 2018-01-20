@@ -229,6 +229,15 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.product.categories:
+        class: PrestaShopBundle\Form\Admin\Product\ProductCategories
+        arguments:
+            - "@translator"
+            - "@prestashop.adapter.data_provider.category"
+            - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+        tags:
+            - { name: form.type }
+
     form.type.translatable.aware:
         abstract: true
         parent: 'form.type.common_type'
