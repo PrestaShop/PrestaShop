@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 
@@ -204,6 +205,33 @@ class CommonController extends FrameworkBundleAdminController
             'footer' => $tools->purifyHTML($footer),
             'title' => $title,
             'url' => urldecode($url),
+        ]);
+    }
+
+    /**
+     * Specific action to render a specific field multiple twice.
+     *
+     * @param $formName the form name
+     * @param $formType the form type FQCN
+     * @param $fieldName the field name
+     * @param $fieldData the field data
+     *
+     * @return Response
+     */
+    public function renderFieldAction($formName, $formType, $fieldName, $fieldData)
+    {
+        $formData = array(
+            $formName => array(
+                $fieldName => $fieldData,
+            )
+        );
+
+        $form = $this->createFormBuilder($formData);
+        $form->add($formName, $formType);
+
+        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+            'form' => $form->getForm()->get($formName)->get($fieldName)->createView(),
+            'formId' => $formName . '_' . $fieldName . '_rendered'
         ]);
     }
 }
