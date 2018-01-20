@@ -289,4 +289,49 @@ class FrameworkBundleAdminController extends Controller
 
         return $this->redirect($legacyContext->getAdminLink($defaultTab));
     }
+
+    /**
+     * Check if the connected user is granted to actions on a specific object.
+     * @param $action
+     * @param $object
+     * @param string $suffix
+     * @return bool
+     */
+    protected function shouldDenyAction($action, $object = '', $suffix = '')
+    {
+        return (
+                $action === 'delete' . $suffix && !$this->isGranted(PageVoter::DELETE, $object)
+            ) || (
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                !$this->isGranted(PageVoter::UPDATE, $object)
+            ) || (
+                ($action === 'duplicate' . $suffix) &&
+                (!$this->isGranted(PageVoter::UPDATE, $object) || !$this->isGranted(PageVoter::CREATE, $object))
+            )
+        ;
+    }
+
+    /**
+     * Display a message about permissions failure according to an action.
+     * @param $action
+     * @param string $suffix
+     * @return string
+     * @throws \Exception
+     */
+    protected function getForbiddenActionMessage($action, $suffix = '')
+    {
+        if ($action === 'delete' . $suffix) {
+            return $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+            return $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'duplicate' . $suffix) {
+            return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
+        }
+
+        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+    }
 }
