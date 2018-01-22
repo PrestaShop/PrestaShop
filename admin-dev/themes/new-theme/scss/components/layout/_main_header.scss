@@ -11,6 +11,7 @@
     padding: 0.625rem 0;
     height: $size-header-height + 1;
   }
+
   .mobile & {
     > .component {
       margin-right: 0;
@@ -24,6 +25,16 @@
     > .material-icons {
       padding-top: 0.625rem;
       font-size: 1.313rem;
+
+      &.js-mobile-menu {
+        cursor: pointer;
+        padding-top: 0;
+        margin-left: 0.6rem;
+        font-size: 1.8rem;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+      }
     }
   }
   > .logo {
