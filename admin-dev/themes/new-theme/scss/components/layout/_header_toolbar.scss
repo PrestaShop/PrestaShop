@@ -9,6 +9,15 @@
   padding-left: 0.625rem;
   border-bottom: 0.0625rem solid $color-separator;
 
+  @include media-breakpoint-down(md) {
+    left: 0;
+  }
+
+  @include media-breakpoint-down(sm) {
+    padding-top: 0.3rem;
+    top: 3.5rem;
+  }
+
   > .title {
     padding: 0.3125rem;
     font-size: 1.625rem;
@@ -60,7 +69,7 @@
     }
 }
 
-.page-sidebar-closed {
+.page-sidebar-closed:not(.mobile) {
   .header-toolbar {
     left: $size-navbar-width-mini;
   }

@@ -22,8 +22,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
-<nav class="nav-bar">
-  <span class="menu-collapse d-none d-md-block">
+<nav class="nav-bar d-none d-md-block">
+  <span class="menu-collapse d-none d-lg-block">
     <i class="material-icons">chevron_left</i>
     <i class="material-icons">chevron_left</i>
   </span>
@@ -53,7 +53,7 @@
 
         {else}
 
-          <li class="category-title d-none d-sm-block {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
+          <li class="category-title d-none d-lg-block {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
               <span class="title">{$level1Name}</span>
           </li>
 

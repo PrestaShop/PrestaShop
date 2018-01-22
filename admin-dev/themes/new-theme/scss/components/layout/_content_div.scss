@@ -5,7 +5,11 @@
   padding-bottom: $grid-gutter-width / 2;
 
   .mobile & {
-    padding: 0;
+    @include media-breakpoint-down(sm) {
+      padding-top: 10.4rem;
+    }
+    padding-left: 0;
+    padding-right: 0;
   }
 
   &.-notoolbar {
@@ -13,7 +17,7 @@
   }
 }
 
-.page-sidebar-closed {
+.page-sidebar-closed:not(.mobile) {
   .content-div {
     padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
   }
