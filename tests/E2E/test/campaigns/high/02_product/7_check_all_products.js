@@ -25,4 +25,4 @@ scenario('Check that all products are well displayed in the Back Office', client
       .then(() => client.clickPageNext(productPage.pagination_next))
   });
   test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product_all));
-}, 'product/product');
+}, 'product/product', true);

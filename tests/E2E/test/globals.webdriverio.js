@@ -19,7 +19,7 @@ global.UrlLastStableVersion = argv.URLLASTSTABLEVERSION; // URL of last stable v
 
 global.rcLink = argv.RCLINK  || "" ; // Link for download The RC
 global.rcTarget = argv.RCTARGET    ; // Last stable version location directory
-global.filename = argv.FILENAME    ; // RC file name
+global.filename = argv.FILENAME  || ""  ; // RC file name
 
 global._projectdir = path.join(__dirname, '..', '..');
 global.new_customer_email = 'pub' + date_time + '@prestashop.com';
