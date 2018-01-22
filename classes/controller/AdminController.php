@@ -25,10 +25,10 @@
  */
 
 use PrestaShop\PrestaShop\Core\Cldr;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 
 class AdminControllerCore extends Controller
 {
@@ -4615,18 +4615,11 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @return ContainerBuilder
+     * {@inheritdoc}
      */
     protected function buildContainer()
     {
-        $container = new ContainerBuilder();
-        $container->addCompilerPass(new LegacyCompilerPass());
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
-        $loader->load(_PS_CONFIG_DIR_.'services/admin/services_'. $env .'.yml');
-        $container->compile();
-
-        return $container;
+        return ContainerBuilder::getContainer('admin', _PS_MODE_DEV_);
     }
 
     /**
