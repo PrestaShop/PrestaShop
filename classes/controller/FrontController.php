@@ -454,12 +454,6 @@ class FrontControllerCore extends Controller
             }
         }
 
-        $languages = Language::getLanguages(true, $this->context->shop->id);
-        $meta_language = array();
-        foreach ($languages as $lang) {
-            $meta_language[] = $lang['iso_code'];
-        }
-
         /*
          * These shortcuts are DEPRECATED as of version 1.5.0.1
          * Use the Context to access objects instead.
@@ -1495,6 +1489,8 @@ class FrontControllerCore extends Controller
         $pages['order_login'] = $this->context->link->getPageLink('order', true, null, array('login' => '1'));
         $urls['pages'] = $pages;
 
+        $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
+
         $urls['theme_assets'] = __PS_BASE_URI__.'themes/'.$this->context->shop->theme->getName().'/assets/';
 
         $urls['actions'] = array(
@@ -1949,5 +1945,24 @@ class FrontControllerCore extends Controller
         $container->compile();
 
         return $container;
+    }
+
+    /**
+     * @return array containing the URLs of the same page but for different languages
+     */
+    protected function getAlternativeLangsUrl()
+    {
+        $alternativeLangs = array();
+        $languages = Language::getLanguages(true, $this->context->shop->id);
+
+        if ($languages < 2) {
+            // No need to display alternative lang if there is only one enabled
+            return $alternativeLangs;
+        }
+
+        foreach ($languages as $lang) {
+            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+        }
+        return $alternativeLangs;
     }
 }
