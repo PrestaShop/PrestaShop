@@ -23,15 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
 
 class FrontControllerCore extends Controller
 {
@@ -1959,15 +1958,12 @@ class FrontControllerCore extends Controller
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function buildContainer()
     {
-        $container = new ContainerBuilder();
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-        $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
-        $loader->load(_PS_CONFIG_DIR_.'services/front/services_'. $env .'.yml');
-        $container->compile();
-
-        return $container;
+        return ContainerBuilder::getContainer('front', _PS_MODE_DEV_);
     }
 
     /**
