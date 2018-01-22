@@ -188,7 +188,13 @@ class LanguageCore extends ObjectModel
         }
 
         if ($this->is_rtl) {
-            self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false));
+            //@todo Add more if needed, we can't add all modules because some of them may be RTL compatible
+            $modules = array(
+                _PS_MODULE_DIR_.'gamification',
+                _PS_MODULE_DIR_.'welcome',
+                _PS_MODULE_DIR_.'cronjob',
+            );
+            self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false), $modules);
         }
 
         if ($only_add) {
@@ -207,8 +213,15 @@ class LanguageCore extends ObjectModel
             return false;
         }
 
+        //todo Generate RTL stylesheets if language is_rtl parameter changes
         if ($this->is_rtl) {
-             self::installRtlStylesheets(true, false);
+            //@todo Add more if needed, we can't add all modules because some of them may be RTL compatible
+            $modules = array(
+                _PS_MODULE_DIR_.'gamification',
+                _PS_MODULE_DIR_.'welcome',
+                _PS_MODULE_DIR_.'cronjob',
+            );
+            self::installRtlStylesheets(true, false, null, null, false, $modules);
         }
 
         return true;
@@ -1345,7 +1358,7 @@ class LanguageCore extends ObjectModel
      * @param string|null $themeName
      * @param string|null $iso
      * @param bool $install
-     * @param string|null $path
+     * @param string|array|null $path
      *
      * @throws \PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException
      * @throws Exception
@@ -1384,7 +1397,13 @@ class LanguageCore extends ObjectModel
             $generator->generateInDirectory($frontDir.($themeName?$themeName:'classic'));
         }
 
-        if ($path && is_dir($path)) {
+        if ($path && is_array($path)) {
+            foreach ($path as $p) {
+                if (is_dir($p)) {
+                    $generator->generateInDirectory($p);
+                }
+            }
+        } elseif ($path && is_dir($path)) {
             $generator->generateInDirectory($path);
         }
     }
