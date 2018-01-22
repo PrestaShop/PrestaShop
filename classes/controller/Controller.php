@@ -112,9 +112,7 @@ abstract class ControllerCore
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
 
-        if (defined('ADMIN_LEGACY_CONTEXT')) {
-            $this->container = $this->buildContainer();
-        }
+        $this->container = $this->buildContainer();
     }
 
     /**
@@ -645,6 +643,7 @@ abstract class ControllerCore
 
     /**
      * Construct the container of dependencies
+     * @return Symfony\Component\DependencyInjection\ContainerBuilder
      */
     protected function buildContainer()
     {
