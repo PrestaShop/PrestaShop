@@ -50,13 +50,6 @@ class Formatter
     const PLUS_SIGN_PLACEHOLDER         = '+';
 
     /**
-     * Number specification to be used when formatting a number
-     *
-     * @var NumberSpecification
-     */
-    protected $numberSpecification;
-
-    /**
      * @var string The wanted rounding mode when formatting numbers.
      * Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
      */
@@ -69,22 +62,24 @@ class Formatter
     protected $numberingSystem;
 
     /**
-     * Create a number formatter instance
+     * Number specification to be used when formatting a number
      *
-     * @param NumberSpecification $numberSpecification
-     *  Number specification used when formatting a number
+     * @var NumberSpecification
+     */
+    protected $numberSpecification;
+
+    /**
+     * Create a number formatter instance
      *
      * @param int $roundingMode
      *  The wanted rounding mode when formatting numbers
      *  Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
      *
      * @param string $numberingSystem
-     *  Numbering system to use when formatting numbers
-     * @see http://cldr.unicode.org/translation/numbering-systems
+     *  Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      */
-    public function __construct(NumberSpecification $numberSpecification, $roundingMode, $numberingSystem)
+    public function __construct($roundingMode, $numberingSystem)
     {
-        $this->numberSpecification = $numberSpecification;
         $this->roundingMode        = $roundingMode;
         $this->numberingSystem     = $numberingSystem;
     }
@@ -95,14 +90,19 @@ class Formatter
      * @param int|float|string $number
      *  The number to format
      *
+     * @param NumberSpecification $specification
+     *  Number specification to be used (can be a number spec, a price spec, a percentage spec)
+     *
      * @return string
      *  The formatted number
      *  You should use this this value for display, without modifying it.
      *
      * @throws LocalizationException
      */
-    public function format($number)
+    public function format($number, NumberSpecification $specification)
     {
+        $this->numberSpecification = $specification;
+
         try {
             $decimalNumber = $this->prepareNumber($number);
         } catch (SPLInvalidArgumentException $e) {

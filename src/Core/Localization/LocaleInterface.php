@@ -24,9 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Specification;
+namespace PrestaShop\PrestaShop\Core\Localization;
 
-class Locale
+/**
+ * Locale entity interface
+ *
+ * Describes the behavior of locale classes
+ */
+interface LocaleInterface
 {
 
 }
