@@ -282,12 +282,9 @@ class OrderCore extends ObjectModel
     {
         parent::__construct($id, $id_lang);
 
-        $is_admin = (is_object(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin');
-        if ($this->id_customer && !$is_admin) {
+        if ($this->id_customer) {
             $customer = new Customer((int)$this->id_customer);
             $this->_taxCalculationMethod = Group::getPriceDisplayMethod((int)$customer->id_default_group);
-        } else {
-            $this->_taxCalculationMethod = Group::getDefaultPriceDisplayMethod();
         }
     }
 
@@ -1194,7 +1191,7 @@ class OrderCore extends ObjectModel
                 FROM `'._DB_PREFIX_.'order_invoice`'.(Configuration::get('PS_INVOICE_RESET') ?
                 ' WHERE DATE_FORMAT(`date_add`, "%Y") = '.(int)date('Y') : '');
             $new_number = DB::getInstance()->getValue($new_number_sql);
-            
+
             $sql .= (int)$new_number;
         }
 
@@ -2282,7 +2279,7 @@ class OrderCore extends ObjectModel
                 $order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
             }
         }
-        
+
         $expected_total_tax = $this->total_products_wt - $this->total_products;
         $actual_total_tax = 0;
         $actual_total_base = 0;
