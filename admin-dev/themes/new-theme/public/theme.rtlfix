@@ -64,3 +64,6 @@ svg {
 .mce-panel {
   right: auto;
 }
+
+#right-sidebar {right: 0;}
+#right-sidebar.sidebar-open {right: auto}
