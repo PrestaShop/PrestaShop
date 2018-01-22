@@ -3,13 +3,12 @@
   z-index: 502;
   background: $gray-dark;
   width: $size-navbar-width;
-  padding-top: $size-header-height;
+  margin-top: $size-header-height;
   padding-bottom: 5.313rem;
   height: 100%;
   overflow-y: auto;
-  @include media-breakpoint-down(sm) {
-    visibility: hidden;
-  }
+  transition: all .5s ease-out;
+
   .material-icons {
     color: white;
     font-size: 1.188rem;
@@ -18,9 +17,17 @@
   &.mobile-nav {
     margin-left: -100%;
     width: 90%;
-    transition: all .5s ease-in;
+
+    @include media-breakpoint-only(sm) {
+      width: 60%;
+    }
+
+    @include media-breakpoint-only(md) {
+      width: 40%;
+    }
+
     &.expanded {
-      visibility: visible;
+      display: block;
       margin-left: 0;
       overflow-y: scroll;
     }
@@ -34,24 +41,44 @@
         background: $gray-dark-hover;
       }
     }
-    #header_logout::before {
-      font-family: 'Material Icons';
-      content: "\E8AC";
-    }
     .employee_avatar {
+      padding-top: 1rem;
+
+      .material-icons {
+        line-height: 3.75rem;
+        font-size: 3.75rem;
+
+        @include media-breakpoint-down(md) {
+          line-height: 4.6875rem;
+          font-size: 4.6875rem;
+        }
+      }
+
       span {
         color: white;
         display: block;
         margin-bottom: 0.625rem;
+
+        @include media-breakpoint-down(md) {
+          font-size: 1.09375rem;
+        }
       }
-      img{
+
+      img {
         width: 3.75rem;
         height: 3.75rem;
       }
     }
     .shop-list {
+      padding-bottom: 1rem;
       text-align: center;
       font-weight: bold;
+
+      a {
+        @include media-breakpoint-down(md) {
+          font-size: 1.09375rem;
+        }
+      }
     }
     .main-menu {
       margin-top: 0.625rem;
@@ -124,8 +151,34 @@
     $padding-size: 1.25rem;
     display: block;
 
+    &[data-submenu] {
+      @include media-breakpoint-down(md) {
+        a.link {
+          font-size: 1.25rem;
+          padding-top: 1.5rem;
+          padding-bottom: 1.5rem;
+
+          .material-icons {
+            font-size: 1.485rem;
+          }
+
+          span {
+            font-size: 1.25rem;
+          }
+        }
+      }
+
+      &.has_submenu {
+        @include media-breakpoint-down(md) {
+          .sub-tabs-arrow {
+            display: block;
+          }
+        }
+      }
+    }
+
     &.-active {
-      @include media-breakpoint-down(sm) {
+      @include media-breakpoint-down(md) {
         border-right: none;
       }
 
@@ -155,11 +208,10 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-      @include media-breakpoint-down(sm) {
+      @include media-breakpoint-down(md) {
         font-size: 1rem;
-        height: 3.125rem;
+        height: initial;
         border-bottom: 1px solid $gray-medium;
-        padding-top: .625rem;
       }
 
       span {
@@ -182,7 +234,7 @@
         color: white;
         transition: background 300ms ease;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
           background: $gray-dark;
         }
       }
@@ -203,10 +255,18 @@
       & > li {
         &:first-of-type {
           padding-top: .625rem;
+
+          @include media-breakpoint-down(md) {
+            padding-top: 0;
+          }
         }
 
         &:last-of-type {
           padding-bottom: .750rem;
+
+          @include media-breakpoint-down(md) {
+            padding-bottom: 0;
+          }
         }
       }
     }
@@ -229,16 +289,24 @@
 
     &.-active {
       > .link {
-        padding-left: 1rem;
+        padding-left: 0;
         border-left: none;
         color: white;
       }
     }
 
     > .link {
-      padding-left: 1rem;
-      @include media-breakpoint-down(sm) {
-        padding-top: .625rem;
+      height: initial;
+      line-height: 0.9rem;
+      word-wrap: break-word;
+      white-space: initial;
+      text-overflow: initial;
+      padding: 0.3125rem 0.3rem 0.3125rem 0;
+
+      @include media-breakpoint-down(md) {
+        padding-top: 1.4rem;
+        padding-bottom: 1.4rem;
+        line-height: 1.6rem;
       }
     }
 
@@ -271,6 +339,10 @@
   line-height: .813rem;
   color: $gray-dark-text;
 
+  @include media-breakpoint-down(md) {
+    padding-bottom: 1rem;
+  }
+
   .material-icons {
     color: #BEBEBE;
 
@@ -281,7 +353,7 @@
 }
 
 
-.page-sidebar-closed {
+.page-sidebar-closed:not(.mobile) {
   .content-div {
     transition: padding 1s ease;
   }
@@ -388,20 +460,12 @@
 }
 
 .mobile-layer {
-  @include media-breakpoint-down(sm) {
-    transition: all 0.2s ease-in-out;
-    opacity: 0;
-    visibility: hidden;
-    position: fixed;
-    background: rgba(0,0,0,.7);
-    width: 100%;
-    height: 100%;
-    z-index: 501;
-    top: 0;
-    left: 0;
-    &.expanded {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+  transition: all 0.2s ease-in-out;
+  position: fixed;
+  background: rgba(0,0,0,.7);
+  width: 100%;
+  height: 100%;
+  z-index: 501;
+  top: 0;
+  left: 0;
 }

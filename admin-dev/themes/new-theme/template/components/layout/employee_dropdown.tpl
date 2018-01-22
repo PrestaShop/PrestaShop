@@ -29,8 +29,8 @@
     </div>
   {/if}
   <div class="dropdown-menu dropdown-menu-right">
-    <div class="text-xs-center employee_avatar">
-      <img class="avatar rounded-circle" src="{$employee->getImage()}" /><br>
+    <div class="text-center employee_avatar">
+      <i class="material-icons">account_circle</i>
       <span>{$employee->firstname} {$employee->lastname}</span>
     </div>
     <div>
@@ -40,7 +40,7 @@
     </div>
     <div>
       <a class="employee-link" id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout">
-        <i class="material-icons">power_settings_new</i> {l s='Sign out'}
+          <i class="material-icons">power_settings_new</i> <span>{l s='Sign out'}</span>
       </a>
     </div>
   </div>

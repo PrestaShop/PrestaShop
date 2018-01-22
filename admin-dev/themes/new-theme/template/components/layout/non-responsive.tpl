@@ -38,4 +38,4 @@
     {l s='Back'}
   </a>
 </div>
-<div class="mobile-layer"></div>
+<div class="mobile-layer d-none"></div>
