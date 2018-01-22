@@ -94,10 +94,12 @@ class NumberTest extends TestCase
      */
     public function testGetSymbolsByNumberingSystem()
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertSame(
             $this->latinSymbolList,
             $this->latinNumberSpec->getSymbolsByNumberingSystem('latin')
         );
+        /** @noinspection end */
     }
 
     /**

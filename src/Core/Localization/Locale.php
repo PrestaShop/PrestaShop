@@ -28,10 +28,8 @@ namespace PrestaShop\PrestaShop\Core\Localization;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
-use PrestaShop\PrestaShop\Core\Localization\Number\FormatterFactory;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as NumberSpecificationCollection;
-use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 class Locale implements LocaleInterface
 {
@@ -44,24 +42,21 @@ class Locale implements LocaleInterface
     protected $numberFormatter;
 
     /**
-     * All Price formatters, by currency.
-     * Used to format prices in this locale context
+     * Number formatting specification
      *
-     * @var NumberFormatter[]
+     * @var NumberSpecification
      */
-    protected $priceFormatters;
+    protected $numberSpecification;
+
+    /**
+     * Price formatting specifications collection (one spec per currency)
+     *
+     * @var NumberSpecificationCollection
+     */
+    protected $priceSpecifications;
 
     /**
      * Locale constructor.
-     *
-     * @param int $roundingMode
-     *  Rounding mode that must be used by formatter
-     *  Cf. PrestaShop\Decimal\Operation\Rounding::ROUND_* values
-     *
-     * @param string $numberingSystem
-     *  Numbering system to use when formatting the number
-     *
-     * @see http://cldr.unicode.org/translation/numbering-systems
      *
      * @param NumberSpecification $numberSpecification
      *  Number specification used when formatting a number
@@ -69,38 +64,65 @@ class Locale implements LocaleInterface
      * @param NumberSpecificationCollection $priceSpecifications
      *  Collection of Price specifications (one per installed currency)
      *
-     * @param FormatterFactory $formatterFactory
-     *  Used to build all the needed formatters
-     *
-     * @throws LocalizationException
+     * @param NumberFormatter $formatter
+     *  This number formatter will use stored number / price specs
      */
     public function __construct(
-        $roundingMode,
-        $numberingSystem,
         NumberSpecification $numberSpecification,
         NumberSpecificationCollection $priceSpecifications,
-        FormatterFactory $formatterFactory
+        NumberFormatter $formatter
     ) {
-        $this->numberFormatter = $formatterFactory->buildFormatter(
-            $numberSpecification,
-            $roundingMode,
-            $numberingSystem
+        $this->numberSpecification = $numberSpecification;
+        $this->priceSpecifications = $priceSpecifications;
+        $this->numberFormatter     = $formatter;
+    }
+
+    /**
+     * Format a number according to locale rules
+     *
+     * @param int|float|string $number
+     *  The number to be formatted
+     *
+     * @return string
+     *  The formatted number
+     *
+     * @throws Exception\LocalizationException
+     */
+    public function formatNumber($number)
+    {
+        return $this->numberFormatter->format(
+            $number,
+            $this->numberSpecification
         );
+    }
 
-        /** @var PriceSpecification $priceSpecification */
-        foreach ($priceSpecifications as $priceSpecification) {
-            if (!$priceSpecification instanceof PriceSpecification) {
-                throw new LocalizationException(
-                    '$priceSpecifications items must be instances of Price specification. '
-                    . get_class($priceSpecification) . ' given.'
-                );
-            }
-
-            $this->priceFormatters[$priceSpecification->getCurrencyCode()] = $formatterFactory->buildFormatter(
-                $priceSpecification,
-                $roundingMode,
-                $numberingSystem
+    /**
+     * Format a number as a price
+     *
+     * @param int|float|string $number
+     *  Number to be formatted as a price
+     *
+     * @param $currencyCode
+     *  Currency of the price
+     *
+     * @return string
+     *  The formatted price
+     *
+     * @throws Exception\LocalizationException
+     */
+    public function formatPrice($number, $currencyCode)
+    {
+        $currencyCode = (string)$currencyCode;
+        $priceSpec    = $this->priceSpecifications->get($currencyCode);
+        if (is_null($priceSpec)) {
+            throw new LocalizationException(
+                'Price specification not found for currency "' . $currencyCode . '"'
             );
         }
+
+        return $this->numberFormatter->format(
+            $number,
+            $priceSpec
+        );
     }
 }
