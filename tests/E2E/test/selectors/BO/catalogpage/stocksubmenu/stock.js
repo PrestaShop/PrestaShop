@@ -1,5 +1,5 @@
 module.exports = {
-  Stock:{
+  Stock: {
     submenu: '//*[@id="collapse-9"]/li[8]/a',
     tabs: '//*[@id="tab"]/li[1]/a',
     product_quantity_input: '(//*[@id="app"]//div[contains(@class,"edit-qty")])[%O]/input',
@@ -9,6 +9,8 @@ module.exports = {
     group_apply_button: '//*[@id="app"]//button[contains(@class,"update-qty")]',
     add_quantity_button: '(//*[@id="app"]//span[contains(@class,"ps-number-up")])[1]',
     remove_quantity_button: '(//*[@id="app"]//span[contains(@class,"ps-number-down")])[1]',
-    success_panel: '//*[@id="growls"]'
+    success_panel: '//*[@id="growls"]',
+    search_input:'(//*[@id="search"]//input[contains(@class,"input")])[1]',
+    search_button:'//*[@id="search"]//button[contains(@class,"search-button")]'
   }
 };

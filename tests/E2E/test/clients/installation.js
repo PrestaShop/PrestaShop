@@ -1,7 +1,6 @@
 var CommonClient = require('../../../E2E/test/clients/common_client');
 const exec = require('child_process').exec;
 var path = require('path');
-
 class Installation extends CommonClient {
 
     setNameInput(selector, data) {
@@ -24,9 +23,8 @@ class Installation extends CommonClient {
             .click(selector)
     }
 
-    clickAndWaitForDownload(selector) {
+    WaitForDownload(selector) {
         return this.client
-            .waitForVisibleAndClick(selector, 90000)
             .pause(150000)
     }
 
@@ -59,11 +57,9 @@ class Installation extends CommonClient {
             .refresh();
     }
 
-    getRCName(selector) {
-        return this.client
-            .waitForExist(selector, 9000)
-            .then(() => this.client.getAttribute(selector, "href"))
-            .then((variable) => global.filename = variable.split('/')[variable.split('/').length - 1])
+    getRCName(chaine) {
+        global.filename = chaine.split('/')[chaine.split('/').length - 1];
+        return this.client.pause(1000)
     }
 }
 

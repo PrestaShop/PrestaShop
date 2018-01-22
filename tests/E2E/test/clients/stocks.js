@@ -52,7 +52,6 @@ class ModifyQuantity extends CommonClient {
       return promise.then(() => client.checkMovement(Movement, 2, "15", "+", "Employee Edition"));
     }
   }
-
 }
 
 module.exports = ModifyQuantity;

@@ -21,7 +21,8 @@ module.exports = {
     total_price: '//*[@id="total_products"]/td[contains(@class,"amount")]',
     shipping_method: '//*[@id="shipping_table"]//tr/td[3]',
     search_by_reference_input: '//*[@id="form-order"]//table[contains(@class,"order")]//input[@name="orderFilter_reference"]',
-    search_order_button: '//*[@id="submitFilterButtonorder"]'
+    search_order_button: '//*[@id="submitFilterButtonorder"]',
+    first_order: '//*[@id="form-order"]//table//tbody//tr[1]//a',
   },
 
   CreateOrder:{
