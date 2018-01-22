@@ -29,8 +29,14 @@ namespace PrestaShop\PrestaShop\Core\Localization;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
-use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as NumberSpecificationCollection;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
 
+/**
+ * Locale entity
+ *
+ * This is the main CLDR entry point. For example, Locale is used to format numbers, prices, percentages.
+ * To build a Locale instance, use the Locale repository.
+ */
 class Locale implements LocaleInterface
 {
     /**
@@ -51,7 +57,7 @@ class Locale implements LocaleInterface
     /**
      * Price formatting specifications collection (one spec per currency)
      *
-     * @var NumberSpecificationCollection
+     * @var PriceSpecificationMap
      */
     protected $priceSpecifications;
 
@@ -61,7 +67,7 @@ class Locale implements LocaleInterface
      * @param NumberSpecification $numberSpecification
      *  Number specification used when formatting a number
      *
-     * @param NumberSpecificationCollection $priceSpecifications
+     * @param PriceSpecificationMap $priceSpecifications
      *  Collection of Price specifications (one per installed currency)
      *
      * @param NumberFormatter $formatter
@@ -69,7 +75,7 @@ class Locale implements LocaleInterface
      */
     public function __construct(
         NumberSpecification $numberSpecification,
-        NumberSpecificationCollection $priceSpecifications,
+        PriceSpecificationMap $priceSpecifications,
         NumberFormatter $formatter
     ) {
         $this->numberSpecification = $numberSpecification;
@@ -102,7 +108,7 @@ class Locale implements LocaleInterface
      * @param int|float|string $number
      *  Number to be formatted as a price
      *
-     * @param $currencyCode
+     * @param string $currencyCode
      *  Currency of the price
      *
      * @return string
@@ -114,7 +120,7 @@ class Locale implements LocaleInterface
     {
         $currencyCode = (string)$currencyCode;
         $priceSpec    = $this->priceSpecifications->get($currencyCode);
-        if (is_null($priceSpec)) {
+        if (null === $priceSpec) {
             throw new LocalizationException(
                 'Price specification not found for currency "' . $currencyCode . '"'
             );
