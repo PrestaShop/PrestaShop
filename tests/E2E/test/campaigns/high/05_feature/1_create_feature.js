@@ -13,6 +13,7 @@ var productData = {
   quantity: "10",
   price: '5',
   image_name: 'image_test.jpg',
+  reference: 'feat',
   feature: {
     name: 'Feature',
     value: 'feature value'
