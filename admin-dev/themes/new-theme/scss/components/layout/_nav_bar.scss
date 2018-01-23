@@ -154,16 +154,12 @@
     &[data-submenu] {
       @include media-breakpoint-down(md) {
         a.link {
-          font-size: 1.25rem;
-          padding-top: 1.5rem;
-          padding-bottom: 1.5rem;
+          font-size: 1rem;
+          padding-top: 1.25rem;
+          padding-bottom: 1.25rem;
 
           .material-icons {
             font-size: 1.485rem;
-          }
-
-          span {
-            font-size: 1.25rem;
           }
         }
       }
@@ -211,7 +207,6 @@
       @include media-breakpoint-down(md) {
         font-size: 1rem;
         height: initial;
-        border-bottom: 1px solid $gray-medium;
       }
 
       span {
@@ -253,11 +248,22 @@
       white-space: nowrap;
 
       & > li {
+        @include media-breakpoint-down(md) {
+          a.link {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+          }
+        }
+
         &:first-of-type {
           padding-top: .625rem;
 
           @include media-breakpoint-down(md) {
             padding-top: 0;
+
+            a.link {
+              padding-top: 1.5rem;
+            }
           }
         }
 
@@ -266,6 +272,10 @@
 
           @include media-breakpoint-down(md) {
             padding-bottom: 0;
+
+            a.link {
+              padding-bottom: 1.5rem;
+            }
           }
         }
       }
