@@ -1132,7 +1132,7 @@ class AdminModulesControllerCore extends AdminController
         if (!Tools::getIsset('configure') && !Tools::getIsset('module_name')) {
             Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
         }
-		
+
         // Parent Post Process
         parent::postProcess();
 
@@ -1167,11 +1167,15 @@ class AdminModulesControllerCore extends AdminController
         if (!isset($ppm_return)) {
             $this->postProcessCallback();
         }
-		
-        if (Tools::getValue('generate_rtl') && Tools::getValue('configure') != '') {
-            Language::installRtlStylesheets(false, false, null, null, false, _PS_MODULE_DIR_.Tools::getValue('configure'));
-            Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&conf=6');
 
+        if (Tools::getValue('generate_rtl') && Tools::getValue('configure') != '') {
+            Language::getRtlStylesheetProcessor()
+                ->setProcessPaths(array(
+                    _PS_MODULE_DIR_.Tools::getValue('configure')
+                ))
+                ->setRegenerate(true)
+                ->process();
+            Tools::redirectAdmin('index.php?controller=adminmodules&configure='.Tools::getValue('configure').'&token='.Tools::getValue('token').'&conf=6');
         }
 
         if ($back = Tools::getValue('back')) {
@@ -1406,7 +1410,7 @@ class AdminModulesControllerCore extends AdminController
 
         $languages = Language::getLanguages(false);
         $translateLinks = array();
-        
+
         if (Tools::getIsset('configure')) {
             $module = Module::getInstanceByName(Tools::getValue('configure'));
             $isNewTranslateSystem = $module->isUsingNewTranslationSystem();

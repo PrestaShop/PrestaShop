@@ -25,7 +25,7 @@
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
-use PrestaShop\PrestaShop\Core\Localization\RTL\StylesheetGenerator;
+use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 
 class LanguageCore extends ObjectModel
 {
@@ -188,13 +188,11 @@ class LanguageCore extends ObjectModel
         }
 
         if ($this->is_rtl) {
-            //@todo Add more if needed, we can't add all modules because some of them may be RTL compatible
-            $modules = array(
-                _PS_MODULE_DIR_.'gamification',
-                _PS_MODULE_DIR_.'welcome',
-                _PS_MODULE_DIR_.'cronjob',
-            );
-            self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false), $modules);
+            self::getRtlStylesheetProcessor()
+                ->setIsInstall((defined('PS_INSTALLATION_IN_PROGRESS') ? true : false))
+                ->setProcessBOTheme(true)
+                ->setProcessDefaultModules(true)
+                ->process();
         }
 
         if ($only_add) {
@@ -213,15 +211,12 @@ class LanguageCore extends ObjectModel
             return false;
         }
 
-        //todo Generate RTL stylesheets if language is_rtl parameter changes
-        if ($this->is_rtl) {
-            //@todo Add more if needed, we can't add all modules because some of them may be RTL compatible
-            $modules = array(
-                _PS_MODULE_DIR_.'gamification',
-                _PS_MODULE_DIR_.'welcome',
-                _PS_MODULE_DIR_.'cronjob',
-            );
-            self::installRtlStylesheets(true, false, null, null, false, $modules);
+        // Generate RTL stylesheets if language is_rtl parameter changes
+		if ($this->is_rtl) {
+            self::getRtlStylesheetProcessor()
+                ->setProcessBOTheme(true)
+                ->setProcessDefaultModules(true)
+                ->process();
         }
 
         return true;
@@ -1351,60 +1346,31 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * Language::installRtlStylesheets()
+     * Returns an RTL stylesheet processor instance
      *
-     * @param bool $boTheme
-     * @param bool $foTheme
-     * @param string|null $themeName
-     * @param string|null $iso
-     * @param bool $install
-     * @param string|array|null $path
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException
-     * @throws Exception
+     * @return RtlStylesheetProcessor
      */
-    public static function installRtlStylesheets($boTheme = false, $foTheme = false, $themeName = null, $iso = null, $install = false, $path = null)
+    public static function getRtlStylesheetProcessor()
     {
-        if ($iso) {
-            $lang_pack = static::getLangDetails($iso);
-            if (!$lang_pack['is_rtl']) {
-                return;
-            }
+        if (defined('_PS_ADMIN_DIR_')) {
+            $adminDir = _PS_ADMIN_DIR_;
+        } else {
+            $adminDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin';
+            $adminDir = (is_dir($adminDir)) ? $adminDir : ($adminDir.'-dev');
         }
 
-        $generator = new StylesheetGenerator();
+        $themesDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
 
-        // generate stylesheets for BO themes
-        if ($boTheme) {
-            if (defined('_PS_ADMIN_DIR_')) {
-                $adminDir = _PS_ADMIN_DIR_;
-            } else {
-                $adminDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin';
-                $adminDir = (is_dir($adminDir)) ? $adminDir : ($adminDir.'-dev');
-            }
+        $processor = new RtlStylesheetProcessor(
+            $adminDir,
+            $themesDir,
+            array(
+                _PS_MODULE_DIR_.'gamification',
+                _PS_MODULE_DIR_.'welcome',
+                _PS_MODULE_DIR_.'cronjob',
+            )
+        );
 
-            if (!is_dir($adminDir)) {
-                throw new Exception("Cannot generate BO themes: \"$adminDir\" is not a directory");
-            }
-
-            $generator->generateInDirectory($adminDir.DIRECTORY_SEPARATOR.'themes');
-        }
-
-        // generate stylesheets for BO themes
-        if ($foTheme) {
-            $frontDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR;
-
-            $generator->generateInDirectory($frontDir.($themeName?$themeName:'classic'));
-        }
-
-        if ($path && is_array($path)) {
-            foreach ($path as $p) {
-                if (is_dir($p)) {
-                    $generator->generateInDirectory($p);
-                }
-            }
-        } elseif ($path && is_dir($path)) {
-            $generator->generateInDirectory($path);
-        }
+        return $processor;
     }
 }
