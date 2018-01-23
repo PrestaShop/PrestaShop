@@ -49,7 +49,7 @@ class CommonClient {
     return this.client
       .waitForExist(menuSelector, 90000)
       .moveToObject(menuSelector)
-      .waitForExistAndClick(selector)
+      .waitForVisibleAndClick(selector)
   }
 
   closeBoarding(selector) {
@@ -276,6 +276,11 @@ class CommonClient {
       return this.client.pause(1000)
     }
   }
+
+  pause(timeout){
+    return this.client.pause(timeout)
+  }
+
 }
 
 module.exports = CommonClient;
