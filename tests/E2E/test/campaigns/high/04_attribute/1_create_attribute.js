@@ -12,6 +12,7 @@ var productData = {
   quantity: "10",
   price: '5',
   image_name: 'image_test.jpg',
+  reference: 'att',
   attribute: {
     name: 'attribute',
     variation_quantity: '10'

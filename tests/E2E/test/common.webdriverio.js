@@ -10,7 +10,8 @@ var options = {
   desiredCapabilities: {
     browserName: 'chrome',
   },
-  port: 4444
+  port: 4444,
+  deprecationWarnings: false
 };
 if (typeof global.selenium_url !== 'undefined') {
   options.host = global.selenium_url;
@@ -25,9 +26,10 @@ var options2 = {
     username: process.env.SAUCE_USERNAME,
     access_key: process.env.SAUCE_ACCESS_KEY,
     screenResolution: "1680x1050",
-    platform: "Windows 7",
+    platform: "Windows 7"
   },
-  port: 4445
+  port: 4445,
+  deprecationWarnings: false
 };
 
 function initCommands(client) {
@@ -96,7 +98,7 @@ function initCommands(client) {
       .waitAndSetValue(selector.login_input, 'demo@prestashop.com')
       .waitAndSetValue(selector.password_inputBO, 'prestashop_demo')
       .waitForExistAndClick(selector.login_buttonBO)
-      .waitForExist(selector.menuBO, 90000)
+      .waitForExist(selector.menuBO, 120000)
   });
 
   client.addCommand('waitAndSelectByAttribute', function (selector, attribute, value, pause = 0, timeout = 60000) {

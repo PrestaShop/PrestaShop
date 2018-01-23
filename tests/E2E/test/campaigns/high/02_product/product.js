@@ -7,6 +7,7 @@ module.exports = {
       test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
       test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
       test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time));
+      test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]));
       test('should set the "Quantity" input', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, productData["quantity"]));
       test('should set the "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]));
       test('should upload the first product picture', () => client.uploadPicture(productData["image_name"], AddProductPage.picture));
@@ -53,5 +54,19 @@ module.exports = {
 
     }, 'product/product');
 
+  },
+  
+  checkProductBO(AddProductPage, productData) {
+    scenario('Check the product creation in the Back Office', client => {
+      test('should go to "Catalog"', () => client.goToCatalog());
+      test('should search for product by name', () => client.searchProductByName(productData.name + date_time));
+      test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, productData.name + date_time));
+      test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, productData.reference));
+      test('should check the existence of product category', () => client.checkTextValue(AddProductPage.catalog_product_category, 'Home'));
+      test('should check the existence of product price TE', () => client.checkProductPriceTE(productData.price));
+      test('should check the existence of product quantity', () => client.checkTextValue(AddProductPage.catalog_product_quantity, productData.quantity));
+      test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
+      test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
+    }, 'product/check_product');
   }
 };

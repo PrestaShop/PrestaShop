@@ -14,6 +14,7 @@ global.db_passwd = argv.DB_PASSWD || "doge";
 global.db_empty_password = !!argv.DB_EMPTY_PASSWD; //Cast as boolean
 
 global.module_tech_name = argv.MODULE || "gadwords";
+global.install_shop = argv.INSTALL || false;
 global.downloadsFolderPath = argv.DIR;                   // Download directory
 global.UrlLastStableVersion = argv.URLLASTSTABLEVERSION; // URL of last stable version of prestashop
 

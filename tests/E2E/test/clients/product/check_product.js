@@ -19,12 +19,11 @@ class CheckProductBO extends CommonClient {
       .waitForExistAndClick(AddProductPage.catalogue_submit_filter_button)
   }
 
-  checkProductPriceTE() {
+  checkProductPriceTE(priceTE) {
     return this.client
       .waitForExist(AddProductPage.catalog_product_price, 60000)
       .then(() => this.client.getText(AddProductPage.catalog_product_price))
-      .then((price) => price = price.replace('€', ''))
-      .then((price) => expect(price).to.be.equal(data.common.priceTE + '.00'));
+      .then((price) => expect(price.replace('€', '')).to.be.equal(priceTE + '.00'));
   }
 
 }
