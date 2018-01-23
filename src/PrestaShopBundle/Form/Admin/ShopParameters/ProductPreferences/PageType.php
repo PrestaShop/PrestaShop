@@ -44,47 +44,47 @@ class PageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-           ->add('display_quantities', ChoiceType::class, [
+            ->add('display_quantities', ChoiceType::class, [
                 'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
+                   'Yes' => 1,
+                   'No' => 0,
                 ],
                 'required' => true,
-               'choice_translation_domain' => 'Admin.Global',
-           ])
-           ->add('display_last_quantities', IntegerType::class)
-           ->add('display_unavailable_attributes', ChoiceType::class, [
-               'choices' => [
+                'choice_translation_domain' => 'Admin.Global',
+            ])
+            ->add('display_last_quantities', IntegerType::class)
+            ->add('display_unavailable_attributes', ChoiceType::class, [
+                'choices' => [
                    'Yes' => 1,
                    'No' => 0,
-               ],
-               'required' => true,
-               'choice_translation_domain' => 'Admin.Global',
-           ])
-           ->add('allow_add_variant_to_cart_from_listing', ChoiceType::class, [
-               'choices' => [
+                ],
+                'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
+            ])
+            ->add('allow_add_variant_to_cart_from_listing', ChoiceType::class, [
+                'choices' => [
                    'Yes' => 1,
                    'No' => 0,
-               ],
-               'required' => true,
-               'choice_translation_domain' => 'Admin.Global',
-           ])
-           ->add('attribute_anchor_separator', ChoiceType::class, [
-               'choices' => [
+                ],
+                'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
+            ])
+            ->add('attribute_anchor_separator', ChoiceType::class, [
+                'choices' => [
                    '-' => '-',
                    ',' => ',',
-               ],
-               'required' => true,
-               'choice_translation_domain' => 'Admin.Global',
-           ])
-           ->add('display_discount_price', ChoiceType::class, [
-               'choices' => [
+                ],
+                'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
+            ])
+            ->add('display_discount_price', ChoiceType::class, [
+                'choices' => [
                    'Yes' => 1,
                    'No' => 0,
-               ],
-               'required' => true,
-               'choice_translation_domain' => 'Admin.Global',
-           ])
+                ],
+                'required' => true,
+                'choice_translation_domain' => 'Admin.Global',
+            ])
         ;
     }
 
