@@ -41,12 +41,15 @@ class CurrencyCollection implements IteratorAggregate, Countable
      *
      * It implements \IteratorAggregate.
      *
-     * @return ArrayIterator|Currency[]
+     * @return Currency[] (needed for auto-completion)
      *  An ArrayIterator object for iterating over currencies
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->currencies);
+        /** @var Currency[] $iterator (needed for auto-completion) */
+        $iterator = new ArrayIterator($this->currencies);
+
+        return $iterator;
     }
 
     /**

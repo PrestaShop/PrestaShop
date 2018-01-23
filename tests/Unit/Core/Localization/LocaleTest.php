@@ -51,6 +51,7 @@ class LocaleTest extends TestCase
      */
     protected function setUp()
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $numberSpecification = new NumberSpecification(
             '#,##0.###',
             '-#,##0.###',
@@ -61,7 +62,9 @@ class LocaleTest extends TestCase
             3,
             3
         );
+        /** noinspection end */
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         $priceSpecsCollection = (new NumberCollection())
             ->add(
                 'EUR',
@@ -79,6 +82,7 @@ class LocaleTest extends TestCase
                     'EUR'
                 )
             );
+        /** @noinspection end */
 
         $formatter = new Formatter(
             Rounding::ROUND_HALF_UP,
