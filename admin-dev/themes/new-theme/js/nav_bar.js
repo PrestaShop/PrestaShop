@@ -41,38 +41,26 @@ export default class NavBar {
           if (!$submenu.hasClass('open')) {
               jQuery('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow')
                   .text('keyboard_arrow_down');
-
-              if (!jQuery('body').hasClass('mobile')) {
-                  jQuery('.nav-bar li.link-levelone.has_submenu.open ul.submenu').removeAttr('style');
-                  jQuery('.nav-bar li.link-levelone.has_submenu.open').removeClass('open');
-                  $submenu.addClass('open');
-              } else {
-                  jQuery('.nav-bar li.link-levelone.has_submenu.open ul.submenu').slideUp({
-                      complete: function() {
-                          jQuery(this).parent().removeClass('open');
-                          jQuery(this).removeAttr('style');
-                      }
-                  });
-                  $submenu.find('ul.submenu').slideDown({
-                      complete: function() {
-                          $submenu.addClass('open');
-                          jQuery(this).removeAttr('style');
-                      }
-                  });
-              }
+              jQuery('.nav-bar li.link-levelone.has_submenu.open ul.submenu').slideUp({
+                  complete: function() {
+                      jQuery(this).parent().removeClass('open');
+                      jQuery(this).removeAttr('style');
+                  }
+              });
+              $submenu.find('ul.submenu').slideDown({
+                  complete: function() {
+                      $submenu.addClass('open');
+                      jQuery(this).removeAttr('style');
+                  }
+              });
               jQuery(this).find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
           } else {
-              if (!jQuery('body').hasClass('mobile')) {
-                  $submenu.removeClass('open');
-                  $submenu.find('ul.submenu').removeAttr('style');
-              } else {
-                  $submenu.find('ul.submenu').slideUp({
-                      complete: function() {
-                          $submenu.removeClass('open');
-                          jQuery(this).removeAttr('style');
-                      }
-                  });
-              }
+              $submenu.find('ul.submenu').slideUp({
+                  complete: function() {
+                      $submenu.removeClass('open');
+                      jQuery(this).removeAttr('style');
+                  }
+              });
               jQuery(this).find('i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
           }
       });
@@ -157,7 +145,6 @@ export default class NavBar {
     $('.js-notifs_dropdown').css({
       'height' : window.innerHeight
     });
-    $('.js-non-responsive').show();
 
     function expand(e) {
         if ($('div.notification-center.dropdown').hasClass('open')) {
