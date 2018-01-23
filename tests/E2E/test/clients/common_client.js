@@ -11,21 +11,39 @@ class CommonClient {
     this.client = getClient();
   }
 
-  signInBO(selector) {
-    return this.client.signInBO(selector);
+  signInBO(selector, link) {
+    return this.client.signInBO(selector, link);
   }
 
   signOutBO() {
     return this.client.signOutBO();
   }
 
-  signInFO(selector) {
-    return this.client.signInFO(selector);
+  signInFO(selector, link) {
+    return this.client.signInFO(selector, link);
   }
 
   signOutFO(selector) {
     return this.client.signOutFO(selector);
   }
+
+  localhost(link) {
+    return this.client.localhost(link);
+  }
+
+  linkAccess(link) {
+    return this.client.linkAccess(link);
+  }
+
+  waitForVisibleElement(selector, timeout) {
+    return this.client.waitForVisibleElement(selector, timeout);
+  }
+
+  waitForExist(selector, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+  }
+
 
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
@@ -83,8 +101,7 @@ class CommonClient {
   }
 
   waitAndSetValue(selector, value, timeout = 90000) {
-    return this.client
-      .waitAndSetValue(selector, value, timeout);
+    return this.client.waitAndSetValue(selector, value, timeout);
   }
 
   scrollTo(selector, margin) {
@@ -228,6 +245,11 @@ class CommonClient {
 
   waitAndSelectByAttribute(selector, attribute, value, pause = 0, timeout = 90000) {
     return this.client.waitAndSelectByAttribute(selector, attribute, value, pause, timeout);
+  }
+
+  refresh(selector) {
+    return this.client
+      .refresh();
   }
 
 }

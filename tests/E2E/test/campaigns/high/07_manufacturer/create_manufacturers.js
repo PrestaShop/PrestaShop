@@ -24,7 +24,6 @@ scenario('Create "Brand" - "Brand address"', () => {
     }, 'manufacturers');
 
     scenario('Create a new "Brand address"', client => {
-        test('should go to "Brands & Suppliers" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, Manufacturers.submenu));
         test('should click on "Add new brand address" button', () => client.waitForExistAndClick(BrandAddress.new_brand_address_button));
         test('should Choose the brand name', () => client.waitAndSelectByVisibleText(BrandAddress.branch_select, 'PrestaShop' + date_time));
         test('should set the "Last name" input', () => client.waitAndSetValue(BrandAddress.last_name_input, "Prestashop"));

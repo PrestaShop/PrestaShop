@@ -1,6 +1,6 @@
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {ShopParametre} = require('../../../selectors/BO/shopParameters/');
+const {ShopParameter} = require('../../../selectors/BO/shopParameters/index');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
 const {productPage}= require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage}= require('../../../selectors/FO/order_page');
@@ -31,7 +31,7 @@ scenario('Create standard product "A" and pack product "B" in the Back Office', 
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
   scenario('Change configuration of "Default pack stock management" and "Allow ordering of out-of-stock products"', client => {
-    test('Should go to "Product settings" page', () => client.goToSubtabMenuPage(ShopParametre.menu_button, ProductSettings.menu));
+    test('Should go to "Product settings" page', () => client.goToSubtabMenuPage(ShopParameter.menu_button, ProductSettings.menu));
     test('Should click on "NO" button to disable ordering of out-of-stock products', () => client.scrollWaitForExistAndClick(ProductSettings.disableOrderOutOfStock_button));
     test('Should select "Decrement both" of "Default pack stock management"', () => client.waitAndSelectByValue(ProductSettings.stockManagement_button, 2));
     test('Should click "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button));
