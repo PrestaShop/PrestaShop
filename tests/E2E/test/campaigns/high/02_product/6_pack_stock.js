@@ -14,12 +14,14 @@ var productData = [{
   quantity: "50",
   price: '5',
   image_name: 'image_test.jpg',
+  reference: 'a'
 }, {
   type: "pack",
   name: 'B',
   quantity: "5",
   price: '5',
   image_name: 'image_test.jpg',
+  reference: 'b',
   product: {
     name: "A",
     quantity: "10"
