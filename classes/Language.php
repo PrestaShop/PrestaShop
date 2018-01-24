@@ -1367,7 +1367,7 @@ class LanguageCore extends ObjectModel
             array(
                 _PS_MODULE_DIR_.'gamification',
                 _PS_MODULE_DIR_.'welcome',
-                _PS_MODULE_DIR_.'cronjob',
+                _PS_MODULE_DIR_.'cronjobs',
             )
         );
 
