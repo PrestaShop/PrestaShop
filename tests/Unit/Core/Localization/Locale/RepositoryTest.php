@@ -112,6 +112,7 @@ class RepositoryTest extends TestCase
         $locale = $this->localeRepository->getLocale('fr-FR');
 
         $this->assertInstanceOf(Locale::class, $locale);
+        $this->assertSame('fr-FR', $locale->getCode());
     }
 
     /**
@@ -123,8 +124,6 @@ class RepositoryTest extends TestCase
      */
     public function testGetLocaleWithInvalidLocaleCode()
     {
-        $locale = $this->localeRepository->getLocale('en-US');
-
-        $this->assertInstanceOf(Locale::class, $locale);
+        $this->localeRepository->getLocale('en-US');
     }
 }

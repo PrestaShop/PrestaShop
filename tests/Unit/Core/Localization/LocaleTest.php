@@ -124,6 +124,8 @@ class LocaleTest extends TestCase
      * When asking the locale to format it
      * Then an exception should be raised
      *
+     * For more formatting cases, @see \Tests\Unit\Core\Localization\Number\FormatterTest
+     *
      * @expectedException \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
      */
     public function testFormatNumberWithInvalidRawNumber()
@@ -155,6 +157,8 @@ class LocaleTest extends TestCase
      * Given a valid number (numeric) and a valid currency code
      * When asking the locale to format this number as a price of this currency
      * Then the expected formatted price should be retrieved
+     *
+     * For more formatting cases, @see \Tests\Unit\Core\Localization\Number\FormatterTest
      *
      * @param int|float|string $number
      *  The number to be formatted

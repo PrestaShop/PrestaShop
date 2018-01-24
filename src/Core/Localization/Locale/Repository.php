@@ -116,6 +116,7 @@ class Repository implements RepositoryInterface
     {
         if (!isset($this->locales[$localeCode])) {
             $this->locales[$localeCode] = new Locale(
+                $localeCode,
                 $this->getNumberSpecification($localeCode),
                 $this->getPriceSpecifications($localeCode),
                 new NumberFormatter($this->roundingMode, $this->numberingSystem)
@@ -143,7 +144,7 @@ class Repository implements RepositoryInterface
         $cldrNumber = $this->cldrNumberRepository->getNumber($localeCode);
 
         if (null === $cldrNumber) {
-            throw new LocalizationException('CLDR Number data not found for locale "' . $localeCode . '""');
+            throw new LocalizationException('CLDR Number data not found for locale "' . $localeCode . '"');
         }
 
         return $this->buildNumberSpecification($cldrNumber);
@@ -151,7 +152,7 @@ class Repository implements RepositoryInterface
 
     /**
      * Get all the Price specifications for a given locale.
-     * Each installed currency for this locale has its own Price specification
+     * Each installed currency has its own Price specification
      *
      * @param string $localeCode
      *  The locale code (simplified IETF tag syntax)
@@ -167,7 +168,7 @@ class Repository implements RepositoryInterface
     {
         $cldrNumber = $this->cldrNumberRepository->getNumber($localeCode);
         if (null === $cldrNumber) {
-            throw new LocalizationException('CLDR Number data not found for locale "' . $localeCode . '""');
+            throw new LocalizationException('CLDR Number data not found for locale "' . $localeCode . '"');
         }
 
         $currencies = $this->currencyRepository->getInstalledCurrencies();

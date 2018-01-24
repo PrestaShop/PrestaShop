@@ -40,6 +40,15 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as Pr
 class Locale implements LocaleInterface
 {
     /**
+     * The locale code (simplified IETF tag syntax)
+     * Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     * eg: fr-FR, en-US
+     *
+     * @var string
+     */
+    protected $code;
+
+    /**
      * Number formatter.
      * Used to format raw numbers in this locale context
      *
@@ -64,6 +73,11 @@ class Locale implements LocaleInterface
     /**
      * Locale constructor.
      *
+     * @param string $localeCode
+     *  The locale code (simplified IETF tag syntax)
+     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     *  eg: fr-FR, en-US
+     *
      * @param NumberSpecification $numberSpecification
      *  Number specification used when formatting a number
      *
@@ -74,13 +88,27 @@ class Locale implements LocaleInterface
      *  This number formatter will use stored number / price specs
      */
     public function __construct(
+        $localeCode,
         NumberSpecification $numberSpecification,
         PriceSpecificationMap $priceSpecifications,
         NumberFormatter $formatter
     ) {
+        $this->code                = $localeCode;
         $this->numberSpecification = $numberSpecification;
         $this->priceSpecifications = $priceSpecifications;
         $this->numberFormatter     = $formatter;
+    }
+
+    /**
+     * Get this locale's code (simplified IETF tag syntax)
+     * Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
+     * eg: fr-FR, en-US
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
     }
 
     /**
