@@ -426,7 +426,7 @@ class LanguageCore extends ObjectModel
         foreach ($shops as $shop) {
             // retrieve current language to duplicate database rows
             // this language is used later to untranslate/retranslate rows
-            $id_lang_default = \Context::getContext()->language->id;
+            $id_lang_default = Context::getContext()->language->id;
 
             foreach ($langTables as $name) {
                 preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
