@@ -70,7 +70,7 @@
   };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass" type="text/scss" scoped>
   @import "../../../scss/config/_settings.scss";
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button {
@@ -96,9 +96,9 @@
       position: absolute;
       top: 1px;
       flex-direction: column;
-      right: 30px;
+      right: 34px;
       cursor: pointer;
-      line-height:17px;
+      line-height: 17px;
       transition: all 0.2s ease;
       .product-actions & {
         right: 7px;

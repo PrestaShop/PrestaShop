@@ -131,7 +131,7 @@
   };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass" type="text/scss" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
   @import "../../../../../../scss/config/_settings.scss";
   *{
@@ -147,10 +147,11 @@
         top: 1px;
         right: 26px;
         border: none;
-        height: 32px;
-        width: 32px;
+        height: 33px;
+        width: 33px;
         background: $brand-primary;
         z-index: 2;
+        padding: 0;
         .material-icons {
           color: white;
           vertical-align: middle;
