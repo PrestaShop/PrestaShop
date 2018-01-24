@@ -404,7 +404,7 @@ class LanguageCore extends ObjectModel
     }
 
     /**
-     * loadUpdateSQL will create default lang values when you create a new lang, based on default id lang.
+     * loadUpdateSQL will create default lang values when you create a new lang, based on current lang id.
      *
      * @return bool true if succeed
      */
@@ -426,7 +426,7 @@ class LanguageCore extends ObjectModel
         foreach ($shops as $shop) {
             // retrieve current language to duplicate database rows
             // this language is used later to untranslate/retranslate rows
-            $id_lang_default = Context::getContext()->language->id;
+            $id_lang = Context::getContext()->language->id;
 
             foreach ($langTables as $name) {
                 preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
@@ -461,7 +461,7 @@ class LanguageCore extends ObjectModel
                         $sql .= '(
 							SELECT `'.bqSQL($column['Field']).'`
 							FROM `'.bqSQL($name).'` tl
-							WHERE tl.`id_lang` = '.(int) $id_lang_default.'
+							WHERE tl.`id_lang` = '.(int) $id_lang.'
 							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shop->id : '').'
 							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $name)).'`.`'.bqSQL($identifier).'`
 						),';
