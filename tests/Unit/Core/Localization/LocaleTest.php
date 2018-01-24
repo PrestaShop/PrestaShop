@@ -91,6 +91,7 @@ class LocaleTest extends TestCase
 
         // $this->locale was already taken by TestCase class
         $this->cldrLocale = new Locale(
+            'fr-FR',
             $numberSpecification,
             $priceSpecsCollection,
             $formatter

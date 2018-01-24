@@ -93,7 +93,7 @@ class Locale implements LocaleInterface
         PriceSpecificationMap $priceSpecifications,
         NumberFormatter $formatter
     ) {
-        $this->code                = $localeCode;
+        $this->code                = (string)$localeCode;
         $this->numberSpecification = $numberSpecification;
         $this->priceSpecifications = $priceSpecifications;
         $this->numberFormatter     = $formatter;
