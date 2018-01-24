@@ -189,7 +189,7 @@ class LanguageCore extends ObjectModel
 
         if ($this->is_rtl) {
             self::getRtlStylesheetProcessor()
-                ->setIsInstall((defined('PS_INSTALLATION_IN_PROGRESS') ? true : false))
+                ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
                 ->process();
