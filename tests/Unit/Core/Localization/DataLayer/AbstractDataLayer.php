@@ -61,6 +61,8 @@ abstract class AbstractDataLayer
      *
      * @return mixed
      *  The searched field's value
+     *
+     * @throws LocalizationException
      */
     public function read($field)
     {
@@ -72,7 +74,20 @@ abstract class AbstractDataLayer
          * all the data layers chain...
          */
         if (null === $result) {
-            return $this->lowerDataLayer->read($field);
+            $result = $this->lowerDataLayer->read($field);
+        }
+
+        // Save result for later read
+        if ($this->isWritable()) {
+            try {
+                $this->doWrite($field, $result);
+            } catch (Exception $e) {
+                throw new LocalizationException(
+                    'Unable to write into "' . $field . '"" (data layer "' . __CLASS__ . '")',
+                    0,
+                    $e
+                );
+            }
         }
 
         return $result;
@@ -112,6 +127,12 @@ abstract class AbstractDataLayer
         return $this->read($field);
     }
 
+    /**
+     * Is this data layer writable ?
+     *
+     * @return bool
+     *  True if this data layer is writable
+     */
     public function isWritable()
     {
         return $this->isWritable;
