@@ -421,10 +421,12 @@ class LanguageCore extends ObjectModel
 
         $return = true;
 
+        /* @var Shop[] $shops */
         $shops = Shop::getShopsCollection(false);
         foreach ($shops as $shop) {
-            /* @var Shop $shop */
-            $id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+            // retrieve current language to duplicate database rows
+            // this language is used later to untranslate/retranslate rows
+            $id_lang_default = \Context::getContext()->language->id;
 
             foreach ($langTables as $name) {
                 preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
