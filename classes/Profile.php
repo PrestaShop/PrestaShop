@@ -214,7 +214,7 @@ class ProfileCore extends ObjectModel
     private static function findIdTabByAuthSlug($authSlug)
     {
         preg_match(
-            '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
+            '/ROLE_MOD_[A-Z]+_(?P<classname>[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)_(?P<auth>[A-Z]+)/',
             $authSlug,
             $matches
         );
