@@ -95,6 +95,14 @@
 				</a>
 			</li>
 			{/if}
+			{if isset($module_rtl_link)}
+			<li>
+				<a id="desc-module-rtl" class="toolbar_btn" href="{$module_rtl_link}" title="{l s='Generate RTL Stylesheets'}">
+					<i class="process-icon-rtl"></i>
+					<div>{l s='RTL Module' d='Admin.Modules.Feature'}</div>
+				</a>
+			</li>
+			{/if}
 			<li>
 				<a id="desc-module-hook" class="toolbar_btn" href="{$module_hook_link}" title="{l s='Manage hooks'}">
 					<i class="process-icon-anchor"></i>
