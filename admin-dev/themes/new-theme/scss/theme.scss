@@ -93,6 +93,7 @@ span.twitter-typeahead {
 .btn.btn-text {
   cursor: pointer;
   padding: 0;
+  background: transparent;
 
   &:focus {
     box-shadow: none;
