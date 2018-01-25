@@ -157,10 +157,14 @@ module.exports = {
     category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]'
   },
 
-  ProductList:{
-    first_product_id:'//*[@id="product_catalog_list"]//tr[1]/td[1]/div/label',
-    second_product_id:'//*[@id="product_catalog_list"]//tr[2]/td[1]/div/label',
-    third_product_id:'//*[@id="product_catalog_list"]//tr[3]/td[1]/div/label',
+  ProductList: {
+    product_id: '//*[@id="product_catalog_list"]//tbody//tr[%ID]/td[1]//label',
+    product_name: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[3]/a',
+    product_reference: '//*[@id="product_catalog_list"]//tbody/tr[%ID]/td[4]',
+    sort_by_icon: '//*[@id="product_catalog_list"]//thead//span[@psorderby="%B" and @psorderway="%W"]',
+    first_product_id: '//*[@id="product_catalog_list"]//tr[1]/td[1]/div/label',
+    second_product_id: '//*[@id="product_catalog_list"]//tr[2]/td[1]/div/label',
+    third_product_id: '//*[@id="product_catalog_list"]//tr[3]/td[1]/div/label',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]'
   }
 };
