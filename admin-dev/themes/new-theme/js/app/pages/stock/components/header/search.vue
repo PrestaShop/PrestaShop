@@ -113,30 +113,3 @@
     }),
   };
 </script>
-
-<style lang="sass">
-  @import "../../../../../../scss/config/_settings.scss";
-  #search {
-    .search-input {
-      box-shadow: none;
-      border: $gray-light 1px solid;
-      background-color: white;
-      min-height: 35px;
-      outline: none;
-      border-radius: 0;
-    }
-    .alert-box {
-      padding-top: 28px;
-      z-index: 3;
-      position: fixed;
-      right: 5px;
-      top: 40px;
-    }
-    .fade-enter-active, .fade-leave-active {
-      transition: opacity .5s;
-    }
-    .fade-enter, .fade-leave-to {
-      opacity: 0;
-    }
-  }
-</style>

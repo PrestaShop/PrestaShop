@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <section>
+  <section class="stock-overview">
     <ProductsActions />
     <ProductsTable
       :isLoading="isLoading"

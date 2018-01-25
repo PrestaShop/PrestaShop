@@ -1,0 +1,233 @@
+.stock-app {
+
+  padding: 3em 0 0 0;
+
+  .table {
+    td {
+      padding: 5px 5px 5px;
+      word-wrap: break-word;
+      white-space: normal;
+    }
+    thead th {
+      padding: 5px inherit;
+      vertical-align: middle;
+      .material-icons {
+        color: $gray-medium;
+        vertical-align: middle;
+      }
+    }
+    td:first-child {
+      // product description inside the product column
+      p {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .stock-header {
+    position: fixed;
+    top: 39px;
+    background: white;
+    width: 100%;
+    z-index: 3;
+    margin-left: -15px;
+  }
+
+  #search {
+    .search-input {
+      box-shadow: none;
+      border: $gray-light 1px solid;
+      background-color: white;
+      min-height: 35px;
+      outline: none;
+      border-radius: 0;
+    }
+    .alert-box {
+      padding-top: 28px;
+      z-index: 3;
+      position: fixed;
+      right: 5px;
+      top: 40px;
+    }
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+    .fade-enter, .fade-leave-to {
+      opacity: 0;
+    }
+  }
+
+  #filters-container {
+    .collapse-button {
+      width: 100%;
+      text-align: left;
+      .material-icons {
+        vertical-align: bottom;
+        font-size: 20px;
+        color: $gray-medium;
+      }
+    }
+
+    .filter-container {
+      border: $gray-light 1px solid;
+      padding: 10px;
+
+      &.filter-suppliers {
+        .item {
+          margin-bottom: 5px;
+        }
+
+        ul {
+          list-style: none;
+          padding-left: 0;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .low-filter-label {
+    cursor: pointer;
+  }
+
+  #filters {
+    background: white;
+    border-radius: 2px;
+    box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
+    border: solid 1px #b9cdd2;
+    width: 150%;
+
+    .row {
+      padding: 0.625rem; // 10px
+    }
+  }
+
+  // form that allows changing stock quantities
+  form.qty {
+    position: relative;
+    width: 120px;
+
+    .ps-number-button {
+      // we need this offset to make room for the confirmation button
+      right: 34px;
+    }
+
+    .check-button {
+      outline: none;
+      opacity: 0;
+      position: absolute;
+      top: 1px;
+      right: 26px;
+      border: none;
+      height: 33px;
+      width: 33px;
+      background: $brand-primary;
+      z-index: 2;
+      padding: 0;
+      .material-icons {
+        color: white;
+        vertical-align: middle;
+      }
+      &:hover {
+        background: $primary-hover;
+      }
+    }
+
+    &.active {
+      .check-button {
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+
+    &.disabled {
+      .check-button {
+        background: $gray-light;
+        cursor: default;
+      }
+    }
+
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+
+  .stock-movements {
+    .qty-number {
+      padding: 2px 5px;
+      background-color: $gray-dark;
+      display: inline-block;
+      min-width: 50px;
+      color: white;
+      &.is-positive {
+        background-color: $brand-primary;
+      }
+    }
+  }
+
+  .stock-overview {
+    .table {
+      font-size: .9em;
+      table-layout: fixed;
+      width: 100%;
+      white-space: nowrap;
+
+      thead {
+        th {
+          color: $gray-dark;
+          padding: 10px 0;
+          &.thead-title {
+            padding-left: 88px;
+          }
+          &:last-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            .material-icons {
+              margin-right: 5px;
+            }
+          }
+        }
+      }
+
+      .qty-update {
+        color: $brand-primary;
+        .material-icons {
+          vertical-align: middle;
+        }
+      }
+      .enable {
+        color: $success;
+      }
+      .disable {
+        color: $danger;
+      }
+      .low-stock {
+        background: $danger-hover;
+        .stock-warning {
+          color: $danger;
+          font-weight: bold;
+          &.ico {
+            border: 1px solid $danger;
+            background: lighten($danger, 30%);
+            padding: 0 5px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .product-actions {
+      .bulk-qty {
+        max-width: 100px;
+      }
+      .update-qty {
+        color: white;
+        transition: background-color 0.2s ease;
+      }
+      .qty {
+        padding-left: 20px;
+      }
+    }
+  }
+}

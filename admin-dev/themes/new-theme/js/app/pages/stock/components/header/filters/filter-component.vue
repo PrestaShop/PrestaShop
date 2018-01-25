@@ -186,19 +186,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../../../../scss/config/_settings.scss";
-  .filter-container {
-    border: $gray-light 1px solid;
-    padding: 10px;
-  }
-  .item {
-    margin-bottom: 5px;
-  }
-  ul {
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 0;
-  }
-</style>

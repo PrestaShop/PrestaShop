@@ -145,17 +145,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .bulk-qty {
-    max-width: 100px;
-  }
-  .update-qty {
-    color: white;
-    transition: background-color 0.2s ease;
-  }
-  .product-actions .qty {
-    padding-left: 20px;
-  }
-</style>

@@ -59,65 +59,13 @@
         this.$emit('blur', $event);
       },
       increment() {
-        const value = parseInt(this.value, 10) + 1;
-        this.$emit('change', value);
+        const value = parseInt(this.value, 10);
+        this.$emit('change', isNaN(value) ? 0 : value + 1);
       },
       decrement() {
-        const value = parseInt(this.value, 10) - 1;
-        this.$emit('change', value);
+        const value = parseInt(this.value, 10);
+        this.$emit('change', isNaN(value) ? -1 : value - 1);
       },
     },
   };
 </script>
-
-<style lang="sass" type="text/scss" scoped>
-  @import "../../../scss/config/_settings.scss";
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
-  input[type=number] {
-    -moz-appearance:textfield;
-  }
-  .danger {
-    border: 1px solid $danger;
-    background-color: #fff;
-    color: $gray-dark;
-    &:focus {
-      outline: none;
-    }
-  }
-  .ps-number {
-    position: relative;
-    width: 95px;
-    .ps-number-button {
-      position: absolute;
-      top: 1px;
-      flex-direction: column;
-      right: 34px;
-      cursor: pointer;
-      line-height: 17px;
-      transition: all 0.2s ease;
-      .product-actions & {
-        right: 7px;
-      }
-    }
-    .ps-number-up::before {
-      font-family: 'Material Icons';
-      content: "\E5C7";
-      font-size: 20px;
-      color: $gray-dark;
-      position: relative;
-    }
-    .ps-number-down::before {
-      font-family: 'Material Icons';
-      content: "\E5C5";
-      font-size: 20px;
-      color: $gray-dark;
-      bottom: 6px;
-      position: relative;
-    }
-  }
-</style>

@@ -564,6 +564,7 @@
     ul.category-tree {
       display: inline-block;
       min-width: 100%;
+      padding-top: .625rem;
       .main-category {
         font-size: .625rem;
         font-weight: 600;
@@ -591,10 +592,13 @@
     border: $gray-light 1px solid;
     border-radius: 0.1875rem;
     .categories-tree-actions {
+      display: flex;
+      align-items: center;
       text-transform: uppercase;
       font-size: 0.625rem;
       font-weight: 600;
-      clear: both;
+      border-bottom: .063rem solid $gray-light;
+
       [data-action="expand"],
       [data-action="reduce"] {
         cursor: pointer;
@@ -607,7 +611,7 @@
       }
       .material-icons {
         font-size: 1.25rem;
-        vertical-align: bottom;
+        vertical-align: middle;
       }
     }
   }
@@ -1047,9 +1051,6 @@
         width: auto;
         float: right;
       }
-    }
-    .category-hr {
-      width: 100%;
     }
     .checkbox label {
       max-width: 80%;
