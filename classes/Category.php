@@ -773,11 +773,17 @@ class CategoryCore extends ObjectModel
                     .($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '')
                     .($id_supplier ? ' AND p.id_supplier = '.(int)$id_supplier : '');
 
+        $limitOffset = 0;
+        $limitLength = (int)$random_number_products;
+        $isOrderByPrice = ($order_by === 'orderprice');
+
         if ($random === true) {
-            $sql .= ' ORDER BY RAND() LIMIT '.(int)$random_number_products;
+            $sql .= ' ORDER BY RAND()' . $isOrderByPrice ? '' : ' LIMIT ' . $limitLength;
         } else {
-            $sql .= ' ORDER BY '.(!empty($order_by_prefix) ? $order_by_prefix.'.' : '').'`'.bqSQL($order_by).'` '.pSQL($order_way).'
-			LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
+            $limitLength = (int)$n;
+            $limitOffset = (((int)$p - 1) * $limitLength);
+            $sql .= ' ORDER BY ' . (!empty($order_by_prefix) ? $order_by_prefix . '.' : '') . '`' . bqSQL($order_by) . '` ' . pSQL($order_way);
+            $sql .= $isOrderByPrice ? '' : ' LIMIT ' . $limitOffset . ',' . $limitLength;
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
@@ -786,8 +792,9 @@ class CategoryCore extends ObjectModel
             return array();
         }
 
-        if ($order_by == 'orderprice') {
+        if ($isOrderByPrice) {
             Tools::orderbyPrice($result, $order_way);
+            $result = array_splice($result, $limitOffset, $limitLength);
         }
 
         /** Modify SQL result */
