@@ -697,19 +697,11 @@ class CategoryCore extends ObjectModel
 
         $front = in_array($context->controller->controller_type, array('front', 'modulefront'));
         $id_supplier = (int)Tools::getValue('id_supplier');
+        $productsId = $this->getCategoryProductsId($front, $active, $id_supplier);
 
         /** Return only the number of products */
         if ($get_total) {
-            $sql = 'SELECT COUNT(cp.`id_product`) AS total
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
-					WHERE cp.`id_category` = '.(int)$this->id.
-                ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
-                ($active ? ' AND product_shop.`active` = 1' : '').
-                ($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
-
-            return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+            return sizeof($productsId);
         }
 
         if ($p < 1) {
@@ -734,6 +726,7 @@ class CategoryCore extends ObjectModel
 
         if ($order_by == 'price') {
             $order_by = 'orderprice';
+            $this->createTomporayCategoryProducts($front, $active, $id_supplier);
         }
 
         $nb_days_new_product = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
@@ -746,8 +739,10 @@ class CategoryCore extends ObjectModel
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00",
-					INTERVAL '.(int)$nb_days_new_product.' DAY)) > 0 AS new, product_shop.price AS orderprice
+					INTERVAL '.(int)$nb_days_new_product.' DAY)) > 0 AS new, 
+					' . (('orderprice' === $order_by) ? 'cpt' : 'product_shop') . '.price AS orderprice
 				FROM `'._DB_PREFIX_.'category_product` cp
+				'.(('orderprice' === $order_by) ? ' LEFT JOIN `'._DB_PREFIX_.'category_product_tmp` cpt ON cpt.`id_product` = cp.`id_product`' : '').'
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
 				'.Shop::addSqlAssociation('product', 'p').
@@ -1824,5 +1819,52 @@ class CategoryCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'category_shop`
 		WHERE `id_category` = '.(int)$this->id.'
 		AND `id_shop` = '.(int)$id_shop);
+    }
+
+    /**
+     * Get the IDs of the category products
+     *
+     * @param bool $front
+     * @param bool $active
+     * @param int $id_supplier
+     * @return array
+     */
+    private function getCategoryProductsId($front, $active, $id_supplier)
+    {
+        $sql = 'SELECT cp.`id_product`
+					FROM `'._DB_PREFIX_.'product` p
+					'.Shop::addSqlAssociation('product', 'p').'
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
+					WHERE cp.`id_category` = '.(int)$this->id.
+            ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
+            ($active ? ' AND product_shop.`active` = 1' : '').
+            ($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
+
+        return array_column(Db::getInstance()->executeS($sql), 'id_product');
+    }
+
+    /**
+     * Create a temporary table to record the price of products after applying discount calculation
+     *
+     * @param bool $front
+     * @param bool $active
+     * @param int $id_supplier
+     */
+    private function createTomporayCategoryProducts($front, $active, $id_supplier)
+    {
+        Db::getInstance()->execute('DROP TEMPORARY TABLE IF EXISTS `' . _DB_PREFIX_ . 'category_product_tmp`', false);
+        Db::getInstance()->execute(
+            'CREATE TEMPORARY TABLE `' . _DB_PREFIX_ . 'category_product_tmp` 
+            (`id_product` INT NOT NULL, `price` FLOAT NOT NULL)ENGINE=MEMORY',
+            false
+        );
+
+        $productsId = $this->getCategoryProductsId($front, $active, $id_supplier);
+        foreach ($productsId as $productId) {
+            Db::getInstance()->execute(
+                'INSERT INTO `' . _DB_PREFIX_ . 'category_product_tmp` 
+                values (' . $productId . ', ' . ProductCore::getPriceStatic($productId) . ')'
+            );
+        }
     }
 }
