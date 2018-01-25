@@ -390,6 +390,8 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirect('admin_dashboard');
         }
 
+        $context = $this->get('prestashop.adapter.legacy.context')->getContext();
+
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
         $product = $productAdapter->getProduct($id);
 
@@ -585,7 +587,7 @@ class ProductController extends FrameworkBundleAdminController
             ->getDoctrine()
             ->getManager()
             ->getRepository('PrestaShopBundle:Attribute')
-            ->findByLangAndShop(1, 1);
+            ->findByLangAndShop((int) $context->language->id, (int) $context->shop->id);
 
         $drawerModules = (new HookFinder())->setHookName('displayProductPageDrawer')
             ->setParams(array('product' => $product))
