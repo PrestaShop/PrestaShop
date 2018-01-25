@@ -42,6 +42,12 @@ class DiscountControllerCore extends FrontController
         $cart_rules = CartRule::getCustomerCartRules($this->context->language->id, $this->context->customer->id, true, false, true);
 
         foreach ($cart_rules as $key => &$discount ) {
+            $customerId = $this->context->customer->id;
+            if (0 !== (int)$discount ['id_customer']
+                && $customerId !== (int)$discount ['id_customer']) {
+                unset($cart_rules[$key]);
+                continue;
+            }
 
             if ((int)$discount['quantity_for_user'] === 0) {
                 unset($cart_rules[$key]);
@@ -52,7 +58,7 @@ class DiscountControllerCore extends FrontController
                 new Currency((int)$discount['reduction_currency']),
                 new Currency((int)$this->context->cart->id_currency)
             );
-            
+
             if ((int)$discount['gift_product'] !== 0) {
                 $product = new Product((int) $discount['gift_product'], false, (int)$this->context->language->id);
                 if (!Validate::isLoadedObject($product) || !$product->isAssociatedToShop() || !$product->active) {
