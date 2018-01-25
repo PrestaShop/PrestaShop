@@ -260,7 +260,7 @@
     <span {{ block('attributes') }}>
         {% for choice in choices %}
             {% set name = id ~'_' ~ choice.value %}
-            <input name="{{id}}" id="{{name}}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio">
+            <input id="{{name}}" {{ block('widget_attributes') }} name="{{id}}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio">
             <label for="{{name}}">{{ choice.label }}</label>
         {% endfor %}
         <span class="slide-button"></span>
