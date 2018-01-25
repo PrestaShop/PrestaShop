@@ -174,7 +174,8 @@ class Number implements NumberInterface
     /**
      * Get the specified symbols list for a given numbering system
      *
-     * @param $numberingSystem
+     * @param string $numberingSystem
+     *  Numbering system to use when formatting numbers. @see http://cldr.unicode.org/translation/numbering-systems
      *
      * @return NumberSymbolList
      * @throws LocalizationException

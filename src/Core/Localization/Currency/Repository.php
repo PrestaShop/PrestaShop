@@ -77,4 +77,12 @@ class Repository implements CurrencyRepositoryInterface
 
         return $this->currencies[$currencyCode];
     }
+
+    /**
+     * @return CurrencyCollection
+     */
+    public function getInstalledCurrencies()
+    {
+        // TODO : implement this method
+    }
 }
