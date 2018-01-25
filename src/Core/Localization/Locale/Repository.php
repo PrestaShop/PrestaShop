@@ -99,7 +99,7 @@ class Repository implements RepositoryInterface
         CldrNumberRepository $cldrNumberRepository,
         CurrencyRepository $currencyRepository,
         $roundingMode = Rounding::ROUND_HALF_UP,
-        $numberingSystem = 'latn',
+        $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
         $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL
     ) {
         $this->cldrNumberRepository = $cldrNumberRepository;
