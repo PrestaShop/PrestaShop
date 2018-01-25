@@ -43,10 +43,11 @@ export default class NavBar {
                   .text('keyboard_arrow_down');
               jQuery('.nav-bar li.link-levelone.has_submenu.open ul.submenu').slideUp({
                   complete: function() {
-                      jQuery(this).parent().removeClass('open');
+                      jQuery(this).parent().removeClass('ul-open open');
                       jQuery(this).removeAttr('style');
                   }
               });
+              $submenu.addClass('ul-open');
               $submenu.find('ul.submenu').slideDown({
                   complete: function() {
                       $submenu.addClass('open');
@@ -57,7 +58,7 @@ export default class NavBar {
           } else {
               $submenu.find('ul.submenu').slideUp({
                   complete: function() {
-                      $submenu.removeClass('open');
+                      $submenu.removeClass('ul-open open');
                       jQuery(this).removeAttr('style');
                   }
               });
@@ -70,11 +71,11 @@ export default class NavBar {
 
         if (jQuery('body').hasClass('page-sidebar-closed')) {
           jQuery('nav.nav-bar ul.main-menu > li')
-              .removeClass('open')
+              .removeClass('ul-open open')
               .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
         } else {
             jQuery('nav.nav-bar ul.main-menu > li.-active')
-                .addClass('open')
+                .addClass('ul-open open')
                 .find('a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_up');
         }
 
@@ -170,7 +171,7 @@ export default class NavBar {
 
   unbuildMobileMenu() {
     $('body').removeClass('mobile');
-    $('body.page-sidebar-closed .nav-bar .link-levelone.open').removeClass('open');
+    $('body.page-sidebar-closed .nav-bar .link-levelone.open').removeClass('ul-open open');
     $('.main-menu li:first, .main-menu li:last').remove();
     $('.js-notifs_dropdown').removeAttr('style');
     $('.nav-bar').removeClass('mobile-nav expanded').addClass('d-none').css('margin-left', 0);

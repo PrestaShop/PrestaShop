@@ -81,7 +81,7 @@
                     {$level2Name}
                     </span>
                       {if $level1.sub_tabs|@count}
-                          <i class="material-icons float-right sub-tabs-arrow">
+                          <i class="material-icons ml-auto sub-tabs-arrow">
                               {if $level2.current}
                                   keyboard_arrow_up
                               {else}
