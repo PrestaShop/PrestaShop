@@ -12,11 +12,11 @@
   .material-icons {
     color: white;
     font-size: 1.188rem;
-    line-height: 1.188rem;
+    line-height: inherit;
   }
   &.mobile-nav {
     margin-left: -100%;
-    width: 90%;
+    width: 70%;
 
     @include media-breakpoint-only(sm) {
       width: 60%;
@@ -36,9 +36,9 @@
     }
     .panel-collapse {
       padding-left: 0;
+
       .link-leveltwo .link {
-        padding-left: 3.125rem;
-        background: $gray-dark-hover;
+        padding-left: 0.75rem;
       }
     }
     .employee_avatar {
@@ -154,12 +154,18 @@
     &[data-submenu] {
       @include media-breakpoint-down(md) {
         a.link {
-          font-size: 1rem;
+          font-size: 1.25rem;
           padding-top: 1.25rem;
           padding-bottom: 1.25rem;
+          line-height: inherit;
 
           .material-icons {
-            font-size: 1.485rem;
+            font-size: 2rem;
+            line-height: 2rem;
+
+            &.sub-tabs-arrow {
+              padding-right: 1.2rem;
+            }
           }
         }
       }
@@ -167,7 +173,7 @@
       &.has_submenu {
         @include media-breakpoint-down(md) {
           .sub-tabs-arrow {
-            display: block;
+            visibility: visible;
           }
         }
       }
@@ -182,8 +188,10 @@
         border-left: .25rem solid #25b9d7;
         padding-left: .638rem;
 
-        .material-icons:first-child {
-          color: #25b9d7;
+        .material-icons {
+          &:first-child {
+            color: #25b9d7;
+          }
         }
       }
     }
@@ -195,34 +203,37 @@
     }
 
     > .link {
-      @include single-line-block($size-navbar-link-height);
+      //@include single-line-block($size-navbar-link-height);
       font-size: .75rem;
-      display: block;
+      display: flex;
+      height: initial;
+      line-height: 1rem;
+      align-items: end;
       color: $gray-dark-text;
       text-decoration: none;
-      padding: 0 .3125rem 0 .938rem;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      padding: 0.5rem .3125rem 0.5rem .938rem;
+      word-wrap: break-word;
+      white-space: initial;
+      text-overflow: initial;
       overflow: hidden;
       @include media-breakpoint-down(md) {
         font-size: 1rem;
-        height: initial;
       }
 
       span {
         padding-left: .625rem;
-        vertical-align: middle;
       }
 
       .sub-tabs-arrow {
-        display: none;
+        visibility: hidden;
         color: #6c868e;
         vertical-align: middle;
         line-height: inherit;
       }
     }
 
-    &.-active > .link,
+    &.ul-open,
+    &.-active,
     &.-hover {
       & > .link {
         background: #202226;
@@ -235,8 +246,10 @@
       }
 
       &.has_submenu {
-        .sub-tabs-arrow {
-          display: block;
+        .link {
+          .sub-tabs-arrow {
+            visibility: visible;
+          }
         }
       }
     }
@@ -246,6 +259,7 @@
       background: #202226;
       display: none;
       white-space: nowrap;
+      padding-left: 2.75rem;
 
       & > li {
         @include media-breakpoint-down(md) {
@@ -260,10 +274,6 @@
 
           @include media-breakpoint-down(md) {
             padding-top: 0;
-
-            a.link {
-              padding-top: 1.5rem;
-            }
           }
         }
 
@@ -281,13 +291,14 @@
       }
     }
 
-    &.open {
-      background: #202226;
-
-      .sub-tabs-arrow {
-        display: block;
+    &.ul-open,
+    &.-active {
+      .link {
+        background: #202226;
       }
+    }
 
+    &.open {
       > .submenu {
         display: block;
       }
@@ -308,9 +319,6 @@
     > .link {
       height: initial;
       line-height: 0.9rem;
-      word-wrap: break-word;
-      white-space: initial;
-      text-overflow: initial;
       padding: 0.3125rem 0.3rem 0.3125rem 0;
 
       @include media-breakpoint-down(md) {
@@ -362,7 +370,6 @@
   }
 }
 
-
 .page-sidebar-closed:not(.mobile) {
   .content-div {
     transition: padding 1s ease;
@@ -395,6 +402,10 @@
       .link-levelone {
         position: relative;
 
+        .link {
+          line-height: initial;
+        }
+
         &:first-of-type {
           margin-bottom: 0;
         }
@@ -418,11 +429,6 @@
             left: 50px;
             padding-left: 5px;
           }
-        }
-
-        & > .link {
-          height: 2.125rem;
-          line-height: 2.125rem;
         }
 
         .link-leveltwo {
