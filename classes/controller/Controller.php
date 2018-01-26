@@ -645,9 +645,7 @@ abstract class ControllerCore
      * Construct the container of dependencies
      * @return Symfony\Component\DependencyInjection\ContainerBuilder
      */
-    protected function buildContainer()
-    {
-    }
+    abstract protected function buildContainer();
 
     public function get($serviceId)
     {
