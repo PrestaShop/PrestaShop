@@ -26,6 +26,8 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,7 +42,7 @@ class SmartyType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('template_compilation', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('template_compilation', ChoiceType::class, array(
                 'choices'  => array(
                     'Never recompile template files' => 0,
                     'Recompile templates if the files have been updated' => 1,
@@ -48,30 +50,20 @@ class SmartyType extends CommonAbstractType
                 ),
                 'required' => true,
             ))
-            ->add('cache', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('cache', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('multi_front_optimization', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('multi_front_optimization', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('caching_type', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('caching_type', ChoiceType::class, array(
                 'choices'  => array(
                     'File System' => 'filesystem',
                     'MySQL' => 'mysql',
                 ),
                 'required' => true,
             ))
-            ->add('clear_cache', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('clear_cache', ChoiceType::class, array(
                 'choices'  => array(
                      'Never clear cache files' => 'never',
                     'Clear cache everytime something has been modified' => 'everytime',

@@ -52,8 +52,8 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
     {
         return array(
             'template_compilation' => $this->configuration->get('PS_SMARTY_FORCE_COMPILE'),
-            'cache' => $this->configuration->get('PS_SMARTY_CACHE'),
-            'multi_front_optimization' => $this->configuration->get('PS_SMARTY_LOCAL'),
+            'cache' => (bool)$this->configuration->get('PS_SMARTY_CACHE'),
+            'multi_front_optimization' => (bool)$this->configuration->get('PS_SMARTY_LOCAL'),
             'caching_type' => $this->configuration->get('PS_SMARTY_CACHING_TYPE'),
             'clear_cache' => $this->configuration->get('PS_SMARTY_CLEAR_CACHE'),
             'smarty_console' => $this->configuration->get('PS_SMARTY_CONSOLE'),
@@ -70,8 +70,8 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
     {
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_SMARTY_FORCE_COMPILE', $configuration['template_compilation']);
-            $this->configuration->set('PS_SMARTY_CACHE', $configuration['cache']);
-            $this->configuration->set('PS_SMARTY_LOCAL', $configuration['multi_front_optimization']);
+            $this->configuration->set('PS_SMARTY_CACHE', (bool)$configuration['cache']);
+            $this->configuration->set('PS_SMARTY_LOCAL', (bool)$configuration['multi_front_optimization']);
             $this->configuration->set('PS_SMARTY_CACHING_TYPE', $configuration['caching_type']);
             $this->configuration->set('PS_SMARTY_CLEAR_CACHE', $configuration['clear_cache']);
         }
