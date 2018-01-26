@@ -133,45 +133,8 @@
 
 <style lang="sass" type="text/scss" scoped>
   @import "~jquery-ui-dist/jquery-ui.css";
-  @import "../../../../../../scss/config/_settings.scss";
   *{
     outline: none;
-  }
-  .qty {
-      position: relative;
-      width: 120px;
-      .check-button {
-        outline:none;
-        opacity: 0;
-        position: absolute;
-        top: 1px;
-        right: 26px;
-        border: none;
-        height: 33px;
-        width: 33px;
-        background: $brand-primary;
-        z-index: 2;
-        padding: 0;
-        .material-icons {
-          color: white;
-          vertical-align: middle;
-        }
-        &:hover {
-          background: $primary-hover;
-        }
-      }
-  }
-  .qty.active {
-    .check-button {
-      opacity: 1;
-      cursor: pointer;
-    }
-  }
-  .qty.disabled {
-    .check-button {
-      background: $gray-light;
-      cursor: default;
-    }
   }
   .fade-enter-active, .fade-leave-active {
     transition: opacity 0.2s ease;

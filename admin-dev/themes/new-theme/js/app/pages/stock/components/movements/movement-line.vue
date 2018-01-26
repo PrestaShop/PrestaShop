@@ -24,18 +24,20 @@
  *-->
 <template>
   <tr>
-    <td class="d-flex align-items-center">
-      <PSMedia
-        class="d-flex align-items-center"
-        :thumbnail="thumbnail"
-      >
-        <p>
-          {{ product.product_name }}
-          <small v-if="hasCombination"><br />
-            {{ combinationName }}
-          </small>
-        </p>
-      </PSMedia>
+    <td>
+      <div class="d-flex align-items-center">
+        <PSMedia
+          class="d-flex align-items-center"
+          :thumbnail="thumbnail"
+        >
+          <p>
+            {{ product.product_name }}
+            <small v-if="hasCombination"><br />
+              {{ combinationName }}
+            </small>
+          </p>
+        </PSMedia>
+      </div>
     </td>
     <td>
       {{ product.product_reference }}
@@ -88,17 +90,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .qty-number {
-    padding: 2px 5px;
-    background-color: $gray-dark;
-    display: inline-block;
-    min-width: 50px;
-    color: white;
-    &.is-positive {
-      background-color: $brand-primary;
-    }
-  }
-</style>

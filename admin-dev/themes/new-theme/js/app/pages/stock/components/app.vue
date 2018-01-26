@@ -114,37 +114,11 @@
 </script>
 
 <style lang="sass" type="text/scss">
-  @import "../../../../../scss/config/_settings.scss";
   .header-toolbar {
     height: 0;
     border: none;
     .title {
       display: none;
-    }
-  }
-  .stock-app {
-    padding: 3em 0 0 0;
-  }
-  .table {
-    td {
-      border: none;
-      padding: 5px 5px 5px;
-      word-wrap: break-word;
-      white-space: normal;
-    }
-    thead th {
-      padding: 5px inherit;
-      vertical-align: middle;
-      .material-icons {
-        color: $gray-medium;
-        vertical-align: middle;
-      }
-    }
-    td:first-child {
-      // product description inside the product column
-      p {
-        margin-bottom: 0;
-      }
     }
   }
 </style>

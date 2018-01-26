@@ -42,14 +42,3 @@
     },
   };
 </script>
-
-<style lang="sass" scoped>
-  .stock-header {
-    position: fixed;
-    top: 39px;
-    background: white;
-    width: 100%;
-    z-index: 3;
-    margin-left: -15px;
-  }
-</style>

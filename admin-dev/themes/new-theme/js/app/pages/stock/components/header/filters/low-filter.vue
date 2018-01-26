@@ -82,9 +82,3 @@ export default {
   },
 };
 </script>
-
-<style lang="sass" scoped>
-  .low-filter-label {
-    cursor: pointer;
-  }
-</style>
