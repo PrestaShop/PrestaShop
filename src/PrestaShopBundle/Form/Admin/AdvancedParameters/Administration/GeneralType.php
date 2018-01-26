@@ -25,10 +25,10 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class GeneralType extends TranslatorAwareType
@@ -39,22 +39,10 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('check_modules_update', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('check_ip_address', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('check_ip_address', SwitchType::class, array(
                 'required' => true,
             ))
             ->add('front_cookie_lifetime', TextType::class, array(
