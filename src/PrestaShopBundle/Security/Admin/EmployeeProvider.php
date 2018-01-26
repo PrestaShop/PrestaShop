@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Security\Admin;
 
 use Access;
+use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -38,16 +39,20 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
  */
 class EmployeeProvider implements UserProviderInterface
 {
+    /**
+     * @var \Context
+     */
     private $legacyContext;
 
     /**
-     * Constructor.
-     *
-     * @param LegacyContext $context
+     * @var CacheItemPoolInterface
      */
-    public function __construct(LegacyContext $context)
+    private $cache;
+
+    public function __construct(LegacyContext $context, CacheItemPoolInterface $cache)
     {
         $this->legacyContext = $context->getContext();
+        $this->cache = $cache;
     }
 
     /**
@@ -55,24 +60,30 @@ class EmployeeProvider implements UserProviderInterface
      *
      * @param string $username
      * @return Employee
+     * @throws \Psr\Cache\InvalidArgumentException
+     * @throws \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function loadUserByUsername($username)
     {
-        static $employees = array();
-        if (isset(
-            $this->legacyContext->employee)
-            && $this->legacyContext->employee->email == $username
+        $cachedEmployee = $this->cache->getItem("app.employees_${username}");
+
+        if ($cachedEmployee->isHit()) {
+            return $cachedEmployee->get();
+        }
+
+        if (
+            null !== $this->legacyContext->employee
+            && $this->legacyContext->employee->email === $username
         ) {
-            if (!isset($employees[$username])) {
-                $employee = new Employee($this->legacyContext->employee);
-                $employee->setRoles(
-                    Access::getRoles($this->legacyContext->employee->id_profile)
-                );
+            $employee = new Employee($this->legacyContext->employee);
+            $employee->setRoles(
+                Access::getRoles($this->legacyContext->employee->id_profile)
+            );
 
-                $employees[$username] = $employee;
-            }
+            $cachedEmployee->set($employee);
+            $this->cache->save($cachedEmployee);
 
-            return $employees[$username];
+            return $cachedEmployee->get();
         }
 
         throw new UsernameNotFoundException(

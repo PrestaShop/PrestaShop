@@ -157,6 +157,7 @@ services:
         class: PrestaShopBundle\Security\Admin\EmployeeProvider
         arguments:
             - "@prestashop.adapter.legacy.context"
+            - "@cache.app"
 
     prestashop.user_locale.listener:
         class: PrestaShopBundle\EventListener\UserLocaleListener
