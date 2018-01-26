@@ -81,6 +81,10 @@ class FloatParserTest extends \PHPUnit_Framework_TestCase
             ['12,345,678', 12345.678],
             ['9.E-10', 9.E-10],
             ['-1,234,567.89', -1234567.89],
+            // persian
+            'persian' => ['۲۰٫۵۰۱۲۳۶۴', 20.5012364],
+            // arabic
+            'arabic' => ['٢٠٫٥٠١٢٣٦٤', 20.5012364],
             // edge cases
             ['1 dot 10', 1.1],
             ['1 hundred and 10 dot 15', 110.15],
