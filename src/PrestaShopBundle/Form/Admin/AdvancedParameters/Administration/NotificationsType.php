@@ -25,10 +25,10 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class NotificationsType extends TranslatorAwareType
 {
@@ -38,31 +38,13 @@ class NotificationsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('show_notifs_new_orders', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('show_notifs_new_orders', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('show_notifs_new_customers', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('show_notifs_new_customers', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('show_notifs_new_messages', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('show_notifs_new_messages', SwitchType::class, array(
                 'required' => true,
             ))
         ;
