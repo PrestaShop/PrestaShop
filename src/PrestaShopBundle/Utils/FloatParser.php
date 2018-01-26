@@ -32,6 +32,31 @@ namespace PrestaShopBundle\Utils;
  */
 class FloatParser
 {
+    private static $translationTable = array(
+        // arabic numbers
+        "٠" => "0",
+        "١" => "1",
+        "٢" => "2",
+        "٣" => "3",
+        "٤" => "4",
+        "٥" => "5",
+        "٦" => "6",
+        "٧" => "7",
+        "٨" => "8",
+        "٩" => "9",
+        // persian numbers (NOT the same UTF codes!)
+        "۰" => "0",
+        "۱" => "1",
+        "۲" => "2",
+        "۳" => "3",
+        "۴" => "4",
+        "۵" => "5",
+        "۶" => "6",
+        "۷" => "7",
+        "۸" => "8",
+        "۹" => "9",
+    );
+
     /**
      * Constructs a float value from an arbitrarily-formatted string.
      *
@@ -63,6 +88,12 @@ class FloatParser
         if ('' === $value) {
             return 0.0;
         }
+
+        // replace arabic numbers by latin
+        $value = strtr(
+            $value,
+            self::$translationTable
+        );
 
         // remove all non-digit characters
         $split = preg_split('/[^\dE-]+/', $value);
