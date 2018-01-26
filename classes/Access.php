@@ -106,29 +106,24 @@ class AccessCore extends ObjectModel
         $accesses = Db::getInstance()->executeS('
             SELECT r.`slug`
             FROM `'._DB_PREFIX_.'authorization_role` r
-            WHERE r.`id_authorization_role` IN (
-                SELECT a.`id_authorization_role`
-                FROM `'._DB_PREFIX_.'access` a
-                WHERE a.`id_profile` = "'.$idProfile.'"
-            )
+            INNER JOIN `'._DB_PREFIX_.'access` a ON a.`id_authorization_role` = r.`id_authorization_role`
+            WHERE a.`id_profile` = "'.$idProfile.'"
         ');
+
         $accessesFromModules = Db::getInstance()->executeS('
             SELECT r.`slug`
             FROM `'._DB_PREFIX_.'authorization_role` r
-            WHERE r.`id_authorization_role` IN (
-                SELECT ma.`id_authorization_role`
-                FROM `'._DB_PREFIX_.'module_access` ma 
-                WHERE ma.`id_profile` = "'.$idProfile.'"
-            )
+            INNER JOIN `'._DB_PREFIX_.'module_access` ma ON ma.`id_authorization_role` = r.`id_authorization_role`
+            WHERE ma.`id_profile` = "'.$idProfile.'"
         ');
 
-        $result = array_merge($accesses, $accessesFromModules);
+        $roles = array_merge($accesses, $accessesFromModules);
 
-        foreach ((array) $result as $key => $role) {
-            $result[$key] = $role['slug'];
+        foreach ($roles as $key => $role) {
+            $roles[$key] = $role['slug'];
         }
 
-        return $result;
+        return $roles;
     }
 
     /**
