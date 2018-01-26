@@ -1776,7 +1776,7 @@ class AdminControllerCore extends Controller
         $modal_module_list = file_exists($module_list_dir.'modal.tpl') ? $module_list_dir.'modal.tpl' : 'modal.tpl';
         $tpl_action = $this->tpl_folder.$this->display.'.tpl';
 
-        // Check if action template has been overriden
+        // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
             if (file_exists($template_dir.DIRECTORY_SEPARATOR.$tpl_action) && $this->display != 'view' && $this->display != 'options') {
                 if (method_exists($this, $this->display.Tools::toCamelCase($this->className))) {
