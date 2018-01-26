@@ -724,9 +724,7 @@ abstract class ControllerCore
      *
      * @return ContainerBuilder
      */
-    protected function buildContainer()
-    {
-    }
+    abstract protected function buildContainer();
 
     /**
      * Gets a service from the service container.

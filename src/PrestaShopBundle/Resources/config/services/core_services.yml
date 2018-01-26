@@ -1,4 +1,5 @@
 imports:
+    - { resource: core/cache.yml }
     - { resource: core/import.yml }
     - { resource: core/configuration.yml }
     - { resource: core/search.yml }
