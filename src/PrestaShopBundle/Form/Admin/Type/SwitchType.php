@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShopBundle\Form\Admin\Type;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
@@ -36,6 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class SwitchType extends AbstractType
 {
+    const TRANS_DOMAIN = 'Admin.Global';
     /**
      * {@inheritdoc}
      */
@@ -50,6 +53,7 @@ class SwitchType extends AbstractType
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
+            'choice_translation_domain' => self::TRANS_DOMAIN,
         ));
         $resolver->setAllowedTypes('disabled', 'bool');
     }
@@ -74,10 +78,5 @@ class SwitchType extends AbstractType
     public function getParent()
     {
         return ChoiceType::class;
-    }
-
-    public function getBlockPrefix()
-    {
-        return 'switch';
     }
 }
