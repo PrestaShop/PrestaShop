@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,30 +41,14 @@ class OptionalFeaturesType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('combinations', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('combinations', SwitchType::class, array(
                 'disabled' => $options['are_combinations_used'],
             ))
-            ->add('features', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('features', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('customer_groups', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'required' => true,
+            ->add('customer_groups', SwitchType::class, array(
                 'translation_domain' => 'Admin.Advparameters.features',
-                'choice_translation_domain' => 'Admin.Global',
             ))
         ;
     }

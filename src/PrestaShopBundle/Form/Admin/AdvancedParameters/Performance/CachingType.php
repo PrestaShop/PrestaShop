@@ -25,7 +25,9 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -47,14 +49,8 @@ class CachingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('use_cache', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
-            ->add('caching_system', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
+            ->add('use_cache', SwitchType::class)
+            ->add('caching_system', ChoiceType::class, array(
                 'choices'  => array(
                     'Memcached via PHP::Memcache' => 'CacheMemcache',
                     'Memcached via PHP::Memcached' => 'CacheMemcached',
