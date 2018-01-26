@@ -26,6 +26,7 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -40,28 +41,13 @@ class DebugModeType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disable_non_native_modules', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('disable_non_native_modules', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('disable_overrides', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('disable_overrides', SwitchType::class, array(
                 'required' => true,
             ))
-            ->add('debug_mode', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('debug_mode', SwitchType::class, array(
                 'required' => true,
             ))
         ;
