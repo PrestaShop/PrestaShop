@@ -42,6 +42,7 @@ use PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface as ProductInterf
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
 use PrestaShopBundle\Exception\UpdateProductException;
+use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Service\Csv;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -83,6 +84,10 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      * @return array|Template|RedirectResponse|Response
+     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+     * @throws \Symfony\Component\Form\Exception\LogicException
+     * @throws \Symfony\Component\Form\Exception\AlreadySubmittedException
      */
     public function catalogAction(
         Request $request,
@@ -104,7 +109,8 @@ class ProductController extends FrameworkBundleAdminController
 
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-        $this->get('prestashop.adapter.filter_parameters_updater')->setValues($persistedFilterParameters, $offset, $limit, $orderBy, $sortOrder);
+        $filterParametersUpdater = $this->get('prestashop.adapter.filter_parameters_updater');
+        $filterParametersUpdater->setValues($persistedFilterParameters, $offset, $limit, $orderBy, $sortOrder);
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         $toolbarButtons = $this->getToolbarButtons();
@@ -132,19 +138,23 @@ class ProductController extends FrameworkBundleAdminController
             $paginationParameters['_route'] = 'admin_product_catalog';
             $categoriesForm = $this->createForm(ProductCategories::class);
             if (!empty($persistedFilterParameters['filter_category'])) {
-                $categoriesForm->setData(array('tree' => array(0 => $persistedFilterParameters['filter_category'])));
+                $categoriesForm->setData(
+                    array(
+                        'tree' => array(0 => $persistedFilterParameters['filter_category'])
+                    )
+                );
             }
         }
 
-        $persistedFilterParameters = $this->get('prestashop.adapter.filter_parameters_updater')
-            ->setPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter)
-        ;
+        $persistedFilterParameters = $filterParametersUpdater->setPositionOrdering($persistedFilterParameters, $orderBy, $hasCategoryFilter);
 
         $permissionError = null;
         if ($this->get('session')->getFlashBag()->has('permission_error')) {
             $permissionError = $this->get('session')->getFlashBag()->get('permission_error')[0];
         }
 
+        $activateDragAndDrop = ('position_ordering' === $orderBy)
+            || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter);
         // Template vars injection
         return array_merge(
             $persistedFilterParameters,
@@ -153,17 +163,14 @@ class ProductController extends FrameworkBundleAdminController
                 'offset' => $offset,
                 'orderBy' => $orderBy,
                 'sortOrder' => $sortOrder,
-                'has_filter' => ($hasCategoryFilter | $hasColumnFilter),
+                'has_filter' => $hasCategoryFilter | $hasColumnFilter,
                 'has_category_filter' => $hasCategoryFilter,
                 'has_column_filter' => $hasColumnFilter,
                 'products' => $products,
                 'last_sql' => $lastSql,
                 'product_count_filtered' => $totalFilteredProductCount,
                 'product_count' => $totalProductCount,
-                'activate_drag_and_drop' => (
-                    ('position_ordering' == $orderBy)
-                    || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)
-                ),
+                'activate_drag_and_drop' => $activateDragAndDrop,
                 'pagination_parameters' => $paginationParameters,
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categoriesForm->createView(),
@@ -812,7 +819,6 @@ class ProductController extends FrameworkBundleAdminController
 
     public function exportAction()
     {
-
         $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
 
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
@@ -824,19 +830,17 @@ class ProductController extends FrameworkBundleAdminController
             return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, array(), true, false);
         };
 
-        $translator = $this->get('translator');
-
         $headersData = array(
             'id_product' => 'Product ID',
-            'image_link' => $translator->trans('Image', array(), 'Admin.Global'),
-            'name' => $translator->trans('Name', array(), 'Admin.Global'),
-            'reference' => $translator->trans('Reference', array(), 'Admin.Global'),
-            'name_category' => $translator->trans('Category', array(), 'Admin.Global'),
-            'price' => $translator->trans('Price (tax excl.)', array(), 'Admin.Catalog.Feature'),
-            'price_final' => $translator->trans('Price (tax incl.)', array(), 'Admin.Catalog.Feature'),
-            'sav_quantity' => $translator->trans('Quantity', array(), 'Admin.Global'),
-            'badge_danger' => $translator->trans('Status', array(), 'Admin.Global'),
-            'position' => $translator->trans('Position', array(), 'Admin.Global'),
+            'image_link' => $this->trans('Image','Admin.Global'),
+            'name' => $this->trans('Name', 'Admin.Global'),
+            'reference' => $this->trans('Reference', 'Admin.Global'),
+            'name_category' => $this->trans('Category', 'Admin.Global'),
+            'price' => $this->trans('Price (tax excl.)', 'Admin.Catalog.Feature'),
+            'price_final' => $this->trans('Price (tax incl.)', 'Admin.Catalog.Feature'),
+            'sav_quantity' => $this->trans('Quantity', 'Admin.Global'),
+            'badge_danger' => $this->trans('Status', 'Admin.Global'),
+            'position' => $this->trans('Position', 'Admin.Global'),
         );
 
         return (new CsvResponse())
@@ -870,5 +874,56 @@ class ProductController extends FrameworkBundleAdminController
         ]));
 
         return $this->redirectToRoute('admin_product_catalog');
+    }
+
+    /**
+     * @deprecated since 1.7.3.0, to be removed in 1.8 rely on CommonController::renderFieldAction
+     * @throws \OutOfBoundsException
+     * @throws \LogicException
+     * @throws \PrestaShopException
+     */
+    public function renderFieldAction($productId, $step, $fieldName)
+    {
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        $product = $productAdapter->getProduct($productId);
+        $modelMapper = new ProductAdminModelAdapter(
+            $product,
+            $this->get('prestashop.adapter.legacy.context'),
+            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get('prestashop.adapter.tools'),
+            $productAdapter,
+            $this->get('prestashop.adapter.data_provider.supplier'),
+            $this->get('prestashop.adapter.data_provider.warehouse'),
+            $this->get('prestashop.adapter.data_provider.feature'),
+            $this->get('prestashop.adapter.data_provider.pack'),
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
+        );
+        $form = $this->createFormBuilder($modelMapper->getFormData());
+        switch ($step) {
+            case 'step1':
+                $form->add('step1', 'PrestaShopBundle\Form\Admin\Product\ProductInformation');
+                break;
+            case 'step2':
+                $form->add('step2', 'PrestaShopBundle\Form\Admin\Product\ProductPrice');
+                break;
+            case 'step3':
+                $form->add('step3', 'PrestaShopBundle\Form\Admin\Product\ProductQuantity');
+                break;
+            case 'step4':
+                $form->add('step4', 'PrestaShopBundle\Form\Admin\Product\ProductShipping');
+                break;
+            case 'step5':
+                $form->add('step5', 'PrestaShopBundle\Form\Admin\Product\ProductSeo');
+                break;
+            case 'step6':
+                $form->add('step6', 'PrestaShopBundle\Form\Admin\Product\ProductOptions');
+                break;
+            case 'default':
+        }
+        return $this->render('PrestaShopBundle:Admin/Common/_partials:_form_field.html.twig', [
+            'form' => $form->getForm()->get($step)->get($fieldName)->createView(),
+            'formId' => $step . '_' . $fieldName . '_rendered'
+        ]);
     }
 }
