@@ -209,7 +209,7 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * Specific action to render a specific field multiple twice.
+     * Specific action to render a specific field twice.
      *
      * @param $formName the form name
      * @param $formType the form type FQCN
