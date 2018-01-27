@@ -41,6 +41,7 @@ class ContainerBuilder
      * @param bool $isDebug
      *
      * @return SfContainerBuilder
+     * @throws \Exception
      */
     public static function getContainer($name, $isDebug)
     {
@@ -49,18 +50,20 @@ class ContainerBuilder
 
         if (!$isDebug && file_exists($file)) {
             require_once $file;
-            $container = new $containerName;
-        } else {
-            $container = new SfContainerBuilder();
-            $container->addCompilerPass(new LegacyCompilerPass());
-            $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
-            $env = $isDebug ? 'dev' : 'prod';
-            $loader->load(_PS_CONFIG_DIR_."services/${name}/services_${env}.yml");
-            $container->compile();
 
-            $dumper = new PhpDumper($container);
-            file_put_contents($file, $dumper->dump(array('class' => $containerName)));
+            return new $containerName;
         }
+
+        $container = new SfContainerBuilder();
+        $container->addCompilerPass(new LegacyCompilerPass());
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
+        $env = $isDebug ? 'dev' : 'prod';
+        $servicesPath = _PS_CONFIG_DIR_."services/${name}/services_${env}.yml";
+        $loader->load($servicesPath);
+        $container->compile();
+
+        $dumper = new PhpDumper($container);
+        file_put_contents($file, $dumper->dump(array('class' => $containerName)));
 
         return $container;
     }
