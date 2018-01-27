@@ -41,10 +41,7 @@ class FilterCategoriesRequestPurifier
     {
         if ($request->isMethod('POST')) {
             foreach ($request->request->all() as $param => $value) {
-                if (
-                    $param === 'filter_category' &&
-                    (!is_numeric($value) || (is_numeric($value) && $value < 0))
-                ) {
+                if ($param === 'filter_category' && (!is_numeric($value) || $value < 0)) {
                     $request->request->set($param, '');
                 }
             }
