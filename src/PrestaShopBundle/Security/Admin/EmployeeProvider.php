@@ -65,7 +65,8 @@ class EmployeeProvider implements UserProviderInterface
      */
     public function loadUserByUsername($username)
     {
-        $cachedEmployee = $this->cache->getItem("app.employees_${username}");
+        $cacheKey = sha1($username);
+        $cachedEmployee = $this->cache->getItem("app.employees_${cacheKey}");
 
         if ($cachedEmployee->isHit()) {
             return $cachedEmployee->get();
