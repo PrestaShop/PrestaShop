@@ -460,7 +460,7 @@ class ProductPresenter
                 );
                 $presentedProduct['availability'] = 'unavailable';
                 $presentedProduct['availability_date'] = null;
-            } elseif (!empty($product['quantity_all_versions'])) {
+            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),
