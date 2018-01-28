@@ -27,8 +27,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 /**
  * Can manage filter parameters from request in Product Catalogue Page.
+ * For internal use only.
  */
-class FilterParametersUpdater
+final class FilterParametersUpdater
 {
     /**
      * In case of position ordering all the filters should be reset.

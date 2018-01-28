@@ -31,8 +31,9 @@ use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface as ProductDataP
 
 /**
  * Used to export list of Products in CSV in the Product list page.
+ * For internal use only.
  */
-class ProductCsvExporter implements ProductExporterInterface
+final class ProductCsvExporter implements ProductExporterInterface
 {
     /**
      * @var TranslatorInterface
@@ -54,9 +55,10 @@ class ProductCsvExporter implements ProductExporterInterface
      * In this specific case, we don't need to pass a products list.
      * @param array $products
      * @return CsvResponse
+     * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function export(array $products = null)
+    public function export(array $products = array())
     {
         $productProvider = $this->productProvider;
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
