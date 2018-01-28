@@ -93,6 +93,7 @@ class FrameworkBundleAdminController extends Controller
      * @param Form $form The form
      *
      * @return array[array[string]] Errors
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function getFormErrorsForJS(Form $form)
     {
@@ -156,6 +157,7 @@ class FrameworkBundleAdminController extends Controller
      * @param array  $parameters The hook parameters
      *
      * @return array The responses of hooks
+     * @throws \Exception
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -191,6 +193,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Get the old but still useful context
      *
+     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     protected function getContext()
     {
@@ -207,7 +210,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     protected function isDemoModeEnabled()
     {
@@ -228,6 +231,7 @@ class FrameworkBundleAdminController extends Controller
      * @param string $controller name of the controller to valide access
      *
      * @return int
+     * @throws \LogicException
      */
     protected function authorizationLevel($controller)
     {
@@ -268,6 +272,7 @@ class FrameworkBundleAdminController extends Controller
      * Return errors as flash error messages
      *
      * @param array $errorMessages
+     * @throws \LogicException
      */
     protected function flashErrors(array $errorMessages)
     {
@@ -296,6 +301,7 @@ class FrameworkBundleAdminController extends Controller
      * @param $object
      * @param string $suffix
      * @return bool
+     * @throws \LogicException
      */
     protected function shouldDenyAction($action, $object = '', $suffix = '')
     {
@@ -333,5 +339,18 @@ class FrameworkBundleAdminController extends Controller
         }
 
         throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+    }
+
+    /**
+     * Get Admin URI from PrestaShop 1.6 Back Office.
+     * @param string $controller the old Controller name
+     * @param bool $withToken whether we add token or not
+     * @param array $params url parameters
+     *
+     * @return string the page URI (with token)
+     */
+    protected function getAdminLink($controller, array $params, $withToken = true)
+    {
+        return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
     }
 }
