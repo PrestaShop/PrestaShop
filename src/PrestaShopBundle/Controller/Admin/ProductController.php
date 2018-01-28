@@ -85,6 +85,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      * @return array|Template|RedirectResponse|Response
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
      * @throws \LogicException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
@@ -178,10 +179,8 @@ class ProductController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'categories' => $categoriesForm->createView(),
                 'pagination_limit_choices' => $productProvider->getPaginationLimitChoices(),
-                'import_link' => $this->get('prestashop.adapter.legacy.context')
-                    ->getAdminLink('AdminImport', true, ['import_type' => 'products']),
-                'sql_manager_add_link' => $this->get('prestashop.adapter.legacy.context')
-                    ->getAdminLink('AdminRequestSql', true, ['addrequest_sql' => 1]),
+                'import_link' => $this->getAdminLink('AdminImport', ['import_type' => 'products']),
+                'sql_manager_add_link' => $this->getAdminLink('AdminRequestSql', ['addrequest_sql' => 1]),
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink('AdminProducts'),
                 'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
@@ -524,7 +523,7 @@ class ProductController extends FrameworkBundleAdminController
             'showContentHeader' => false,
             'preview_link' => $preview_url,
             'preview_link_deactivate' => $preview_url_deactive,
-            'stats_link' => $legacyContextService->getAdminLink('AdminStats', true, ['module' => 'statsproduct', 'id_product' => $id]),
+            'stats_link' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $id]),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
             'languages' => $languages,
             'default_language_iso' => $languages[0]['iso_code'],
@@ -540,9 +539,10 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Builds the product form
      *
-     * @param Product           $product
+     * @param Product $product
      * @param AdminModelAdapter $modelMapper
      * @return FormInterface
+     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     private function createProductForm(Product $product, AdminModelAdapter $modelMapper)
     {
@@ -562,7 +562,7 @@ class ProductController extends FrameworkBundleAdminController
 
         // Prepare combination form (fake but just to validate the form)
         $combinations = $product->getAttributesResume(
-            $this->get('prestashop.adapter.legacy.context')->getContext()->language->id
+            $this->getContext()->language->id
         );
 
         if (is_array($combinations)) {
