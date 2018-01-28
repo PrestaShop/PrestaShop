@@ -58,6 +58,7 @@ class ProductCategories extends TranslatorAwareType
     )
     {
         $this->categoryProvider = $categoryDataProvider;
+        $this->languageId = $languageId;
         parent::__construct($translator);
     }
 
