@@ -29,8 +29,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Extracted from Product Controller, used to cleanup the request.
+ * For internal use only.
  */
-class FilterCategoriesRequestPurifier
+final class FilterCategoriesRequestPurifier
 {
     /**
      * Changes the filter category values in case it is not numeric or signed.
