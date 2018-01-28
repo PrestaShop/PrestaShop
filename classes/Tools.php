@@ -128,9 +128,22 @@ class ToolsCore
         return false;
     }
 
+    /**
+     * Replace text within a portion of a string
+     *
+     * Replaces a string matching a search, (optionally) string from a certain position
+     *  
+     * @param  string  $search  The string to search in the input string
+     * @param  string  $replace The replacement string
+     * @param  string  $subject The input string
+     * @param  integer $cur     Starting position cursor for the search
+     * @return string  The result string is returned.
+     */
     public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
     {
-        return (strpos($subject, $search, $cur))?substr_replace($subject, $replace, (int)strpos($subject, $search, $cur), strlen($search)):$subject;
+        $strPos = strpos($subject, $search, $cur);
+
+        return $strPos !== false ? substr_replace($subject, $replace, (int)$strPos, strlen($search)) : $subject;
     }
 
     /**
