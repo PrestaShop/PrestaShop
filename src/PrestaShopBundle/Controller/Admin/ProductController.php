@@ -94,6 +94,8 @@ class ProductController extends FrameworkBundleAdminController
      * @param string $orderBy To order product list
      * @param string $sortOrder To order product list
      * @return array|Template|RedirectResponse|Response
+     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+     * @throws \LogicException
      * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
      * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
      * @throws \Symfony\Component\Form\Exception\LogicException
@@ -267,29 +269,21 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         // Template vars injection
-        $vars = [
-            'activate_drag_and_drop' => (
-                ('position_ordering' == $orderBy)
-                || ('position' == $orderBy && 'asc' == $sortOrder && !$hasColumnFilter)
-            ),
+        $vars = array(
+            'activate_drag_and_drop' => ('position_ordering' === $orderBy)
+            || ('position' === $orderBy && 'asc' === $sortOrder && !$hasColumnFilter),
             'products' => $products,
             'product_count' => $totalCount,
             'last_sql_query' => $lastSql,
             'has_category_filter' => $productProvider->isCategoryFiltered(),
             'is_shop_context' => $this->get('prestashop.adapter.shop.context')->isShopContext(),
-        ];
-        if ($view != 'full') {
-            return $this->render(
-                '@Product/CatalogPage/Lists/list_' . $view . '.html.twig',
-                array_merge(
-                    $vars,
-                    [
-                        'limit' => $limit,
-                        'offset' => $offset,
-                        'total' => $totalCount,
-                    ]
-                )
-            );
+        );
+        if ($view !== 'full') {
+            return $this->render('@Product/CatalogPage/Lists/list_' . $view . '.html.twig', array_merge($vars, [
+                'limit' => $limit,
+                'offset' => $offset,
+                'total' => $totalCount,
+            ]));
         }
         return $vars;
     }
@@ -316,6 +310,7 @@ class ProductController extends FrameworkBundleAdminController
      * Then return to form action
      *
      * @return RedirectResponse
+     * @throws \LogicException
      * @throws \PrestaShopException
      */
     public function newAction()
@@ -362,6 +357,7 @@ class ProductController extends FrameworkBundleAdminController
      * @param int $id The product ID
      * @param Request $request
      * @return array|Response Template vars
+     * @throws \LogicException
      */
     public function formAction($id, Request $request)
     {
@@ -378,7 +374,7 @@ class ProductController extends FrameworkBundleAdminController
 
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $legacyContextService = $this->get('prestashop.adapter.legacy.context');
-        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1 ? true : false;
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
 
         $response = new JsonResponse();
         $modelMapper = $this->get('prestashop.adapter.admin.model.product');
@@ -615,8 +611,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function bulkAction(Request $request, $action)
     {
-        $translator = $this->get('translator');
-
         if ($this->shouldDenyAction($action, self::PRODUCT_OBJECT, '_all')) {
             $this->addFlash('permission_error', $this->getForbiddenActionMessage($action));
 
@@ -650,10 +644,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList);
                     if (empty($hasMessages)) {
-                        $this->addFlash(
-                            'success',
-                            $translator->trans('Product(s) successfully activated.', [], 'Admin.Catalog.Notification')
-                        );
+                        $this->addFlash('success', $this->trans('Product(s) successfully activated.', 'Admin.Catalog.Notification'));
                     }
 
                     $logger->info('Products activated: (' . implode(',', $productIdList) . ').');
@@ -670,10 +661,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList($productIdList, false);
                     if (empty($hasMessages)) {
-                        $this->addFlash(
-                            'success',
-                            $translator->trans('Product(s) successfully deactivated.', [], 'Admin.Catalog.Notification')
-                        );
+                        $this->addFlash('success', $this->trans('Product(s) successfully deactivated.', 'Admin.Catalog.Notification'));
                     }
 
                     $logger->info('Products deactivated: (' . implode(',', $productIdList) . ').');
@@ -690,10 +678,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProductIdList($productIdList);
                     if (empty($hasMessages)) {
-                        $this->addFlash(
-                            'success',
-                            $translator->trans('Product(s) successfully deleted.', [], 'Admin.Catalog.Notification')
-                        );
+                        $this->addFlash('success', $this->trans('Product(s) successfully deleted.', 'Admin.Catalog.Notification'));
                     }
                     $logger->info('Products deleted: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(
@@ -709,10 +694,7 @@ class ProductController extends FrameworkBundleAdminController
                     // Hooks: managed in ProductUpdater
                     $productUpdater->duplicateProductIdList($productIdList);
                     if (empty($hasMessages)) {
-                        $this->addFlash(
-                            'success',
-                            $translator->trans('Product(s) successfully duplicated.', [], 'Admin.Catalog.Notification')
-                        );
+                        $this->addFlash('success', $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification'));
                     }
                     $logger->info('Products duplicated: (' . implode(',', $productIdList) . ').');
                     $hookDispatcher->dispatchMultiple(
@@ -752,12 +734,9 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function massEditAction(Request $request, $action)
     {
-        $translator = $this->get('translator');
-
         if (!$this->isGranted(PageVoter::UPDATE, self::PRODUCT_OBJECT)) {
-            $errorMessage = $translator->trans(
+            $errorMessage = $this->trans(
                 'You do not have permission to edit this.',
-                [],
                 'Admin.Notifications.Error'
             );
             $this->get('session')->getFlashBag()->add('permission_error', $errorMessage);
@@ -803,7 +782,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     $this->addFlash(
                         'success',
-                        $translator->trans('Products successfully sorted.', array(), 'Admin.Catalog.Notification')
+                        $this->trans('Products successfully sorted.', 'Admin.Catalog.Notification')
                     );
                     $logger->info('Products sorted: (' . implode(',', $productIdList) . ') with positions (' . implode(',', $productPositionList) . ').');
                     $hookDispatcher->dispatchMultiple(
@@ -843,8 +822,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function unitAction($action, $id)
     {
-        $translator = $this->get('translator');
-
         if ($this->shouldDenyAction($action, self::PRODUCT_OBJECT)) {
             $this->addFlash('permission_error', $this->getForbiddenActionMessage($action));
 
@@ -874,10 +851,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->deleteProduct($id);
-                    $this->addFlash(
-                        'success',
-                        $translator->trans('Product successfully deleted.', [], 'Admin.Catalog.Notification')
-                    );
+                    $this->addFlash('success', $this->trans('Product successfully deleted.', 'Admin.Catalog.Notification'));
                     $logger->info('Product deleted: (' . $id . ').');
                     $hookDispatcher->dispatchMultiple(
                         ['actionAdminDeleteAfter', 'actionAdminProductsControllerDeleteAfter'],
@@ -891,10 +865,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     // Hooks: managed in ProductUpdater
                     $duplicateProductId = $productUpdater->duplicateProduct($id);
-                    $this->addFlash(
-                        'success',
-                        $translator->trans('Product successfully duplicated.', [], 'Admin.Catalog.Notification')
-                    );
+                    $this->addFlash('success', $this->trans('Product successfully duplicated.', 'Admin.Catalog.Notification'));
                     $logger->info('Product duplicated: (from ' . $id . ' to ' . $duplicateProductId . ').');
                     $hookDispatcher->dispatchMultiple(
                         ['actionAdminDuplicateAfter', 'actionAdminProductsControllerDuplicateAfter'],
@@ -909,10 +880,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id]);
-                    $this->addFlash(
-                        'success',
-                        $translator->trans('Product successfully activated.', [], 'Admin.Catalog.Notification')
-                    );
+                    $this->addFlash('success', $this->trans('Product successfully activated.', 'Admin.Catalog.Notification'));
                     $logger->info('Product activated: ' . $id);
                     $hookDispatcher->dispatchMultiple(
                         ['actionAdminActivateAfter', 'actionAdminProductsControllerActivateAfter'],
@@ -926,10 +894,7 @@ class ProductController extends FrameworkBundleAdminController
                     );
                     // Hooks: managed in ProductUpdater
                     $productUpdater->activateProductIdList([$id], false);
-                    $this->addFlash(
-                        'success',
-                        $translator->trans('Product successfully deactivated.', [], 'Admin.Catalog.Notification')
-                    );
+                    $this->addFlash('success', $this->trans('Product successfully deactivated.', 'Admin.Catalog.Notification'));
                     $logger->info('Product deactivated: ' . $id);
                     $hookDispatcher->dispatchMultiple(
                         ['actionAdminDeactivateAfter', 'actionAdminProductsControllerDeactivateAfter'],
