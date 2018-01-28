@@ -957,38 +957,13 @@ class ProductController extends FrameworkBundleAdminController
         return $this->redirect($this->get('prestashop.core.admin.url_generator')->generate('admin_product_catalog'));
     }
 
+    /**
+     * @return CsvResponse
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
+     */
     public function exportAction()
     {
-        $productProvider = $this->get('prestashop.core.admin.data_provider.product_interface');
-
-        $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
-        $orderBy = $persistedFilterParameters['last_orderBy'];
-        $sortOrder = $persistedFilterParameters['last_sortOrder'];
-
-        // prepare callback to fetch data from DB
-        $dataCallback = function ($offset, $limit) use ($productProvider, $orderBy, $sortOrder) {
-            return $productProvider->getCatalogProductList($offset, $limit, $orderBy, $sortOrder, [], true, false);
-        };
-
-        $headersData = array(
-            'id_product' => 'Product ID',
-            'image_link' => $this->trans('Image','Admin.Global'),
-            'name' => $this->trans('Name', 'Admin.Global'),
-            'reference' => $this->trans('Reference', 'Admin.Global'),
-            'name_category' => $this->trans('Category', 'Admin.Global'),
-            'price' => $this->trans('Price (tax excl.)', 'Admin.Catalog.Feature'),
-            'price_final' => $this->trans('Price (tax incl.)', 'Admin.Catalog.Feature'),
-            'sav_quantity' => $this->trans('Quantity', 'Admin.Global'),
-            'badge_danger' => $this->trans('Status', 'Admin.Global'),
-            'position' => $this->trans('Position', 'Admin.Global'),
-        );
-
-        return (new CsvResponse())
-            ->setData($dataCallback)
-            ->setHeadersData($headersData)
-            ->setModeType(CsvResponse::MODE_OFFSET)
-            ->setLimit(5000)
-            ->setFileName('product_' . date('Y-m-d_His') . '.csv');
+        return $this->get('prestashop.core.product.csv_exporter')->export();
     }
 
     /**
