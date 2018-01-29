@@ -12,6 +12,7 @@ global.db_server = argv.DB_SERVER || "mysql";
 global.db_user = argv.DB_USER || "root";
 global.db_passwd = argv.DB_PASSWD || "doge";
 global.db_empty_password = !!argv.DB_EMPTY_PASSWD; //Cast as boolean
+global.selenium_url = argv.SELENIUM;
 
 global.module_tech_name = argv.MODULE || "gadwords";
 global.install_shop = argv.INSTALL || false;
