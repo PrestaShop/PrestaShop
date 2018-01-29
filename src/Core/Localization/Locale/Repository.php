@@ -28,8 +28,8 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Locale;
 
 use PrestaShop\Decimal\Operation\Rounding;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Number as CldNumber;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberRepository as CldrNumberRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -48,11 +48,11 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 class Repository implements RepositoryInterface
 {
     /**
-     * Repository used to retrieve low level CLDR number data bag
+     * Repository used to retrieve low level CLDR locale objects
      *
-     * @var CldrNumberRepository
+     * @var CldrLocaleRepository
      */
-    protected $cldrNumberRepository;
+    protected $cldrLocaleRepository;
 
     /**
      * Repository used to retrieve Currency objects
@@ -96,13 +96,13 @@ class Repository implements RepositoryInterface
     protected $locales;
 
     public function __construct(
-        CldrNumberRepository $cldrNumberRepository,
+        CldrLocaleRepository $cldrLocaleRepository,
         CurrencyRepository $currencyRepository,
         $roundingMode = Rounding::ROUND_HALF_UP,
         $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
         $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL
     ) {
-        $this->cldrNumberRepository = $cldrNumberRepository;
+        $this->cldrLocaleRepository = $cldrLocaleRepository;
         $this->currencyRepository   = $currencyRepository;
         $this->roundingMode         = $roundingMode;
         $this->numberingSystem      = $numberingSystem;
@@ -141,13 +141,13 @@ class Repository implements RepositoryInterface
      */
     protected function getNumberSpecification($localeCode)
     {
-        $cldrNumber = $this->cldrNumberRepository->getNumber($localeCode);
+        $cldrLocale = $this->cldrLocaleRepository->getLocale($localeCode);
 
-        if (null === $cldrNumber) {
-            throw new LocalizationException('CLDR Number data not found for locale "' . $localeCode . '"');
+        if (null === $cldrLocale) {
+            throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        return $this->buildNumberSpecification($cldrNumber);
+        return $this->buildNumberSpecification($cldrLocale);
     }
 
     /**
@@ -166,16 +166,16 @@ class Repository implements RepositoryInterface
      */
     protected function getPriceSpecifications($localeCode)
     {
-        $cldrNumber = $this->cldrNumberRepository->getNumber($localeCode);
-        if (null === $cldrNumber) {
-            throw new LocalizationException('CLDR Number data not found for locale "' . $localeCode . '"');
+        $cldrLocale = $this->cldrLocaleRepository->getLocale($localeCode);
+        if (null === $cldrLocale) {
+            throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
         $currencies = $this->currencyRepository->getInstalledCurrencies();
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
-            $priceSpecification = $this->buildPriceSpecification($cldrNumber, $currency, $localeCode);
+            $priceSpecification = $this->buildPriceSpecification($cldrLocale, $currency, $localeCode);
             $priceSpecifications->add(
                 $priceSpecification->getCurrencyCode(),
                 $priceSpecification
@@ -186,34 +186,34 @@ class Repository implements RepositoryInterface
     }
 
     /**
-     * Build a Number specification from a CLDR Number object
+     * Build a Number specification from a CLDR Locale object
      *
-     * @param CldNumber $cldrNumber
-     *  CldrNumber objects are low level data object extracted from CLDR data files
+     * @param CldrLocale $cldrLocale
+     *  This CldrLocale object is a low level data object extracted from CLDR data source
      *
      * @return NumberSpecification
      *
      * @throws LocalizationException
      */
-    protected function buildNumberSpecification($cldrNumber)
+    protected function buildNumberSpecification($cldrLocale)
     {
         return new NumberSpecification(
-            $cldrNumber->getPositivePattern(),
-            $cldrNumber->getNegativePattern(),
-            $cldrNumber->getSymbols(),
-            $cldrNumber->getMaxFractionDigits(),
-            $cldrNumber->getMinFractionDigits(),
-            $cldrNumber->getGroupingUsed(),
-            $cldrNumber->getPrimaryGroupSize(),
-            $cldrNumber->getSecondaryGroupSize()
+            $cldrLocale->getNumberPositivePattern(),
+            $cldrLocale->getNumberNegativePattern(),
+            $cldrLocale->getNumberSymbols(),
+            $cldrLocale->getNumberMaxFractionDigits(),
+            $cldrLocale->getNumberMinFractionDigits(),
+            $cldrLocale->getNumberGroupingUsed(),
+            $cldrLocale->getNumberPrimaryGroupSize(),
+            $cldrLocale->getNumberSecondaryGroupSize()
         );
     }
 
     /**
-     * Build a Price specification from a CLDR Number object and a Currency object
+     * Build a Price specification from a CLDR Locale object and a Currency object
      *
-     * @param CldNumber $cldrNumber
-     *  This CldrNumber object is a low level data bag extracted from CLDR data source
+     * @param CldrLocale $cldrLocale
+     *  This CldrLocale object is a low level data object extracted from CLDR data source
      *
      * @param Currency $currency
      *  This Currency object brings missing specification to format a number as a price
@@ -227,17 +227,17 @@ class Repository implements RepositoryInterface
      *
      * @throws LocalizationException
      */
-    protected function buildPriceSpecification(CldNumber $cldrNumber, Currency $currency, $localeCode)
+    protected function buildPriceSpecification(CldrLocale $cldrLocale, Currency $currency, $localeCode)
     {
         return new PriceSpecification(
-            $cldrNumber->getPositivePattern(),
-            $cldrNumber->getNegativePattern(),
-            $cldrNumber->getSymbols(),
-            $cldrNumber->getMaxFractionDigits(),
-            $cldrNumber->getMinFractionDigits(),
-            $cldrNumber->getGroupingUsed(),
-            $cldrNumber->getPrimaryGroupSize(),
-            $cldrNumber->getSecondaryGroupSize(),
+            $cldrLocale->getNumberPositivePattern(),
+            $cldrLocale->getNumberNegativePattern(),
+            $cldrLocale->getNumberSymbols(),
+            $cldrLocale->getNumberMaxFractionDigits(),
+            $cldrLocale->getNumberMinFractionDigits(),
+            $cldrLocale->getNumberGroupingUsed(),
+            $cldrLocale->getNumberPrimaryGroupSize(),
+            $cldrLocale->getNumberSecondaryGroupSize(),
             $this->currencyDisplayType,
             $currency->getSymbol($localeCode),
             $currency->getIsoCode()
