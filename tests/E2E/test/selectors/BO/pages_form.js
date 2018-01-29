@@ -13,11 +13,13 @@ module.exports = {
       category_form: '//*[@id="form-category"]',
       empty_category_form: '//*[@id="form-empty_categories"]',
       attribute_form: '//*[@id="form-attribute_group"]',
+      feature_form: '//*[@id="form-feature"]',
       manufacturer_form: '//*[@id="form-manufacturer"]',
+      supplier_form: '//*[@id="form-supplier"]',
       attachment_form: '//*[@id="form-attachment"]',
       cart_rule_form: '//*[@id="form-cart_rule"]',
-      search_box: '//*[@id="search"]' // Search products in stock page
-
+      cart_price_rule_form: '//*[@id="form-specific_price_rule"]',
+      search_box: '//*[@id="search"]' // Search products in stock and movements page
     },
     Customers: {
       customer_form: '//*[@id="form-customer"]',
@@ -33,6 +35,8 @@ module.exports = {
     },
     Modules: {
       modules_list: '//*[@id="modules-list-container-all"]',
+      modules_search_input: '.pstaggerAddTagInput', // search input in installed modules tab
+      modules_to_configure: '//*[@id="module-short-list-configure"]', // the text in notifications tab
       addons_search_form: '//*[@id="addons-search-form"]'
     },
     Design: {
@@ -53,18 +57,31 @@ module.exports = {
     },
     International: {
       localization_pack_select: '//*[@id="iso_localization_pack_chosen"]',
+      languages_form: '//*[@id="form-lang"]',
+      currency_form: '//*[@id="form-currency"]',
+      geolocation_by_address: '//*[@id="configuration_fieldset_geolocationConfiguration"]',
       zone_form: '//*[@id="form-zone"]',
+      country_form: '//*[@id="form-country"]',
+      state_form: '//*[@id="form-state"]',
       tax_from: '//*[@id="form-tax"]',
+      tax_rules_from: '//*[@id="form-tax_rules_group"]',
       translation_form: '//*[@id="typeTranslationForm"]',
     },
     ShopParameters: {
       general_form: '//*[@id="configuration_form"]',
       order_settings_form: '//*[@id="configuration_form"]',
+      statuses_form: '//*[@id="form-order_state"]',
       product_settings_form: '//*[@id="configuration_form"]',
       customers_form: '//*[@id="configuration_form"]',
+      groups_form: '//*[@id="form-group"]',
+      titles_form: '//*[@id="form-gender"]',
       contact_form: '//*[@id="form-contact"]',
+      stores_form: '//*[@id="form-store"]',
       meta_form: '//*[@id="form-meta"]', //SEO & URLs form
+      search_engine_form: '//*[@id="form-search_engine"]',
+      index_form: '//*[@id="refresh_index_form"]', //Referrers  tab
       alias_form: '//*[@id="form-alias"]', //Search page
+      tags_form: '//*[@id="form-tag"]',
       gamification_box: '//*[@id="intro_gamification"]',
     },
     AdvancedParameters: {
@@ -74,6 +91,8 @@ module.exports = {
       mail_form: '//*[@id="form-mail"]',
       preview_import_form: '//*[@id="preview_import"]',
       employee_form: '//*[@id="form-employee"]', //team page
+      profiles_form: '//*[@id="form-profile"]',
+      permissions_form: '//*[@id="access_form"]',
       request_sql_form: '//*[@id="request_sql_form"]', //database page
       log_form: '//*[@id="form-log"]',
       webservice_form: '//*[@id="form-webservice_account"]',
