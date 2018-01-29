@@ -329,7 +329,7 @@ class ModuleManager implements AddonManagerInterface
         $module = $this->moduleRepository->getModule($name);
 
         // Load and execute upgrade files
-        $result = $this->moduleUpdater->upgrade($name);
+        $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;
