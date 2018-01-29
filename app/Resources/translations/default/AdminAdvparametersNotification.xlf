@@ -1106,59 +1106,59 @@ File: admin-dev/backup.php:105</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="29be13f78208f2e848c6b6645a79f813">
         <source>Do you really want to remove the server %serverIp%:%serverPort% ?</source>
         <target>Do you really want to remove the server %serverIp%:%serverPort% ?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:61</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:85</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e0aa021e21dddbd6d8cecec71e9cf564">
         <source>OK</source>
         <target>OK</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:209</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:209</note>
       </trans-unit>
       <trans-unit id="2ad1ffcbe2184ed25baa66baece8908b">
         <source>Please fix the following error(s)</source>
         <target>Please fix the following error(s)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:212</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:212</note>
       </trans-unit>
       <trans-unit id="d5df5b42d8fa5fed36fbd1cda0112f40">
         <source>Checking files...</source>
         <target>Checking files...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:235</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:235</note>
       </trans-unit>
       <trans-unit id="a2db667abfde7a08ee094d460102f268">
         <source>Missing files</source>
         <target>Missing files</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:245</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:245</note>
       </trans-unit>
       <trans-unit id="b5871613cbf4ab8b21d528ff2576fcbf">
         <source>Updated files</source>
         <target>Updated files</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:246</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:246</note>
       </trans-unit>
       <trans-unit id="c49d6d58d1c98f34a15bbd169f82961a">
         <source>Changed/missing files have been detected.</source>
         <target>Changed/missing files have been detected.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:247</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:247</note>
       </trans-unit>
       <trans-unit id="4757718002cbae6feee5c372b66b6a29">
         <source>No change has been detected in your files.</source>
         <target>No change has been detected in your files.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:248</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:248</note>
       </trans-unit>
     </body>
   </file>

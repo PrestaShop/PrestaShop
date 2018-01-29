@@ -52,9 +52,9 @@ File: modules/ps_contactinfo/ps_contactinfo.tpl:32</note>
         <note>Context:
 File: modules/ps_contactinfo/ps_contactinfo.tpl:43</note>
       </trans-unit>
-      <trans-unit id="1b61f24345b084cbacad62fa2d22e59c">
-        <source>Email: %email%</source>
-        <target>Email: %email%</target>
+      <trans-unit id="a41346e4da379842644de7448cd7424e">
+        <source>Email: [1]%email%[/1]</source>
+        <target>Email: [1]%email%[/1]</target>
         <note>Context:
 File: modules/ps_contactinfo/ps_contactinfo.tpl:54</note>
       </trans-unit>
