@@ -28,6 +28,196 @@ File: classes/lang/ProfileLang.php:43</note>
       </trans-unit>
     </body>
   </file>
+  <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">
+        <source>Both</source>
+        <target>Both</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:122</note>
+      </trans-unit>
+      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
+        <source>Erase all</source>
+        <target>Erase all</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:259</note>
+      </trans-unit>
+      <trans-unit id="278c491bdd8a53618c149c4ac790da34">
+        <source>Template</source>
+        <target>Template</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:63</note>
+      </trans-unit>
+      <trans-unit id="5d6103b662f41b07e10687f03aca8fdc">
+        <source>Recipient</source>
+        <target>Recipient</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:62</note>
+      </trans-unit>
+      <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
+        <source>Subject</source>
+        <target>Subject</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:73</note>
+      </trans-unit>
+      <trans-unit id="7f8c0283f16925caed8e632086b81b9c">
+        <source>Sent</source>
+        <target>Sent</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:75</note>
+      </trans-unit>
+      <trans-unit id="ec76c5b544633d334c7a3f92db1c7efd">
+        <source>Send emails to</source>
+        <target>Send emails to</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:96</note>
+      </trans-unit>
+      <trans-unit id="982bb3f2cc4922620fd3aee7ff15b552">
+        <source>Never send emails (may be useful for testing purposes)</source>
+        <target>Never send emails (may be useful for testing purposes)</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:110</note>
+      </trans-unit>
+      <trans-unit id="e6095b01597caf275fb24fa766fb8a57">
+        <source>Set my own SMTP parameters (for advanced users ONLY)</source>
+        <target>Set my own SMTP parameters (for advanced users ONLY)</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:111</note>
+      </trans-unit>
+      <trans-unit id="970e79a141128a95d3c2f35f622b6710">
+        <source>Send email in HTML format</source>
+        <target>Send email in HTML format</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:120</note>
+      </trans-unit>
+      <trans-unit id="9f1b874f3886d361d6eb6b079639c385">
+        <source>Send email in text format</source>
+        <target>Send email in text format</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:121</note>
+      </trans-unit>
+      <trans-unit id="c63600a5ac5af840103d0ee9608e7b44">
+        <source>Log Emails</source>
+        <target>Log Emails</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:126</note>
+      </trans-unit>
+      <trans-unit id="c098053744ce979cbd030908105d54fe">
+        <source>Mail domain name</source>
+        <target>Mail domain name</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:138</note>
+      </trans-unit>
+      <trans-unit id="bdd48fb41b9d0a4a1051fa22a87eb5a2">
+        <source>SMTP server</source>
+        <target>SMTP server</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:145</note>
+      </trans-unit>
+      <trans-unit id="a7bfd8847270913b15396380c3627d76">
+        <source>SMTP username</source>
+        <target>SMTP username</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:151</note>
+      </trans-unit>
+      <trans-unit id="3cffa2fabd5519beaf4c2fbd0610899b">
+        <source>SMTP password</source>
+        <target>SMTP password</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:157</note>
+      </trans-unit>
+      <trans-unit id="d7f2615c71a1567cc13cf3a7f7de0aea">
+        <source>Encryption</source>
+        <target>Encryption</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:164</note>
+      </trans-unit>
+      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
+        <source>None</source>
+        <target>None</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:173</note>
+      </trans-unit>
+      <trans-unit id="099d7d04319e5191b7473e016c55e320">
+        <source>TLS</source>
+        <target>TLS</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:177</note>
+      </trans-unit>
+      <trans-unit id="ea52c36203c5f99c3ce2442d531b1a22">
+        <source>SSL</source>
+        <target>SSL</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:181</note>
+      </trans-unit>
+      <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
+        <source>Port number to use.</source>
+        <target>Port number to use.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:187</note>
+      </trans-unit>
+      <trans-unit id="a8a9e7c120e7020435d955d3a0c96471">
+        <source>Test your email configuration</source>
+        <target>Test your email configuration</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:197</note>
+      </trans-unit>
+      <trans-unit id="5f23f9739fa16efc7ddd06bb03096998">
+        <source>Send a test email to</source>
+        <target>Send a test email to</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:201</note>
+      </trans-unit>
+      <trans-unit id="16186ead9220c2a4646402c69109cfa0">
+        <source>Send a test email</source>
+        <target>Send a test email</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:211</note>
+      </trans-unit>
+      <trans-unit id="11812952ae95fbc6ebc323426262bb51">
+        <source>Use PHP's mail() function (recommended; works in most cases)</source>
+        <target>Use PHP's mail() function (recommended; works in most cases)</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:223</note>
+      </trans-unit>
+      <trans-unit id="94fc5d3be31c72a400c50aae395f1f1f">
+        <source>This is a test message. Your server is now configured to send email.</source>
+        <target>This is a test message. Your server is now configured to send email.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:235</note>
+      </trans-unit>
+      <trans-unit id="e379446940f88886aba80367a10fa4cc">
+        <source>Test message -- Prestashop</source>
+        <target>Test message -- Prestashop</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:236</note>
+      </trans-unit>
+      <trans-unit id="0bb7ea7550d2e7caf5e32329bc7423cd">
+        <source>A test email has been sent to the email address you provided.</source>
+        <target>A test email has been sent to the email address you provided.</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:237</note>
+      </trans-unit>
+      <trans-unit id="4e6ebf3087084e1fda3554d154851ef0">
+        <source>Error: Please check your configuration</source>
+        <target>Error: Please check your configuration</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:238</note>
+      </trans-unit>
+      <trans-unit id="678e00213ce73b9bbdefd0979507436c">
+        <source>This email address is not valid</source>
+        <target>This email address is not valid</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:240</note>
+      </trans-unit>
+      <trans-unit id="86c9ce4b2e3b43353a23861c053a594b">
+        <source>Back to the dashboard</source>
+        <target>Back to the dashboard</target>
+        <note>Context:
+File: controllers/admin/AdminEmailsController.php:287</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminImportController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d37c2bf1bd3143847fca087b354f920e">
@@ -670,196 +860,6 @@ File: controllers/admin/AdminLogsController.php:86</note>
         <target>Minimum severity level</target>
         <note>Context:
 File: controllers/admin/AdminLogsController.php:90</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminEmailsController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dcc459e0cef1e36a18a356fbc5789b16">
-        <source>Erase all</source>
-        <target>Erase all</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:259</note>
-      </trans-unit>
-      <trans-unit id="278c491bdd8a53618c149c4ac790da34">
-        <source>Template</source>
-        <target>Template</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:63</note>
-      </trans-unit>
-      <trans-unit id="5d6103b662f41b07e10687f03aca8fdc">
-        <source>Recipient</source>
-        <target>Recipient</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:62</note>
-      </trans-unit>
-      <trans-unit id="c7892ebbb139886662c6f2fc8c450710">
-        <source>Subject</source>
-        <target>Subject</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:73</note>
-      </trans-unit>
-      <trans-unit id="7f8c0283f16925caed8e632086b81b9c">
-        <source>Sent</source>
-        <target>Sent</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:75</note>
-      </trans-unit>
-      <trans-unit id="ec76c5b544633d334c7a3f92db1c7efd">
-        <source>Send emails to</source>
-        <target>Send emails to</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:96</note>
-      </trans-unit>
-      <trans-unit id="982bb3f2cc4922620fd3aee7ff15b552">
-        <source>Never send emails (may be useful for testing purposes)</source>
-        <target>Never send emails (may be useful for testing purposes)</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:110</note>
-      </trans-unit>
-      <trans-unit id="e6095b01597caf275fb24fa766fb8a57">
-        <source>Set my own SMTP parameters (for advanced users ONLY)</source>
-        <target>Set my own SMTP parameters (for advanced users ONLY)</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:111</note>
-      </trans-unit>
-      <trans-unit id="970e79a141128a95d3c2f35f622b6710">
-        <source>Send email in HTML format</source>
-        <target>Send email in HTML format</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:120</note>
-      </trans-unit>
-      <trans-unit id="9f1b874f3886d361d6eb6b079639c385">
-        <source>Send email in text format</source>
-        <target>Send email in text format</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:121</note>
-      </trans-unit>
-      <trans-unit id="130c5b3473c57faa76e2a1c54e26f88e">
-        <source>Both</source>
-        <target>Both</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:122</note>
-      </trans-unit>
-      <trans-unit id="c63600a5ac5af840103d0ee9608e7b44">
-        <source>Log Emails</source>
-        <target>Log Emails</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:126</note>
-      </trans-unit>
-      <trans-unit id="c098053744ce979cbd030908105d54fe">
-        <source>Mail domain name</source>
-        <target>Mail domain name</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:138</note>
-      </trans-unit>
-      <trans-unit id="bdd48fb41b9d0a4a1051fa22a87eb5a2">
-        <source>SMTP server</source>
-        <target>SMTP server</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:145</note>
-      </trans-unit>
-      <trans-unit id="a7bfd8847270913b15396380c3627d76">
-        <source>SMTP username</source>
-        <target>SMTP username</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:151</note>
-      </trans-unit>
-      <trans-unit id="3cffa2fabd5519beaf4c2fbd0610899b">
-        <source>SMTP password</source>
-        <target>SMTP password</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:157</note>
-      </trans-unit>
-      <trans-unit id="d7f2615c71a1567cc13cf3a7f7de0aea">
-        <source>Encryption</source>
-        <target>Encryption</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:164</note>
-      </trans-unit>
-      <trans-unit id="6adf97f83acf6453d4a6a4b1070f3754">
-        <source>None</source>
-        <target>None</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:173</note>
-      </trans-unit>
-      <trans-unit id="099d7d04319e5191b7473e016c55e320">
-        <source>TLS</source>
-        <target>TLS</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:177</note>
-      </trans-unit>
-      <trans-unit id="ea52c36203c5f99c3ce2442d531b1a22">
-        <source>SSL</source>
-        <target>SSL</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:181</note>
-      </trans-unit>
-      <trans-unit id="762160912d2bac8eb64bc00b711d6f6c">
-        <source>Port number to use.</source>
-        <target>Port number to use.</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:187</note>
-      </trans-unit>
-      <trans-unit id="a8a9e7c120e7020435d955d3a0c96471">
-        <source>Test your email configuration</source>
-        <target>Test your email configuration</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:197</note>
-      </trans-unit>
-      <trans-unit id="5f23f9739fa16efc7ddd06bb03096998">
-        <source>Send a test email to</source>
-        <target>Send a test email to</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:201</note>
-      </trans-unit>
-      <trans-unit id="16186ead9220c2a4646402c69109cfa0">
-        <source>Send a test email</source>
-        <target>Send a test email</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:211</note>
-      </trans-unit>
-      <trans-unit id="11812952ae95fbc6ebc323426262bb51">
-        <source>Use PHP's mail() function (recommended; works in most cases)</source>
-        <target>Use PHP's mail() function (recommended; works in most cases)</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:223</note>
-      </trans-unit>
-      <trans-unit id="94fc5d3be31c72a400c50aae395f1f1f">
-        <source>This is a test message. Your server is now configured to send email.</source>
-        <target>This is a test message. Your server is now configured to send email.</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:235</note>
-      </trans-unit>
-      <trans-unit id="e379446940f88886aba80367a10fa4cc">
-        <source>Test message -- Prestashop</source>
-        <target>Test message -- Prestashop</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:236</note>
-      </trans-unit>
-      <trans-unit id="0bb7ea7550d2e7caf5e32329bc7423cd">
-        <source>A test email has been sent to the email address you provided.</source>
-        <target>A test email has been sent to the email address you provided.</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:237</note>
-      </trans-unit>
-      <trans-unit id="4e6ebf3087084e1fda3554d154851ef0">
-        <source>Error: Please check your configuration</source>
-        <target>Error: Please check your configuration</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:238</note>
-      </trans-unit>
-      <trans-unit id="678e00213ce73b9bbdefd0979507436c">
-        <source>This email address is not valid</source>
-        <target>This email address is not valid</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:240</note>
-      </trans-unit>
-      <trans-unit id="86c9ce4b2e3b43353a23861c053a594b">
-        <source>Back to the dashboard</source>
-        <target>Back to the dashboard</target>
-        <note>Context:
-File: controllers/admin/AdminEmailsController.php:287</note>
       </trans-unit>
     </body>
   </file>

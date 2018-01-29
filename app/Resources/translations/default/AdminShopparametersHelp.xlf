@@ -842,15 +842,15 @@ File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.
         <note>Context:
 File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl:61</note>
       </trans-unit>
-      <trans-unit id="19e6272904f9f449ae490d69aa36cd6c">
-        <source>"_" will replace one character. If you want to use the real "_", you should type this: "\\_".</source>
-        <target>"_" will replace one character. If you want to use the real "_", you should type this: "\\_".</target>
+      <trans-unit id="cbafdc6f3bd8cbc410035a5cfcd7842e">
+        <source>_" will replace one character. If you want to use the real "_", you should type this: "\\_".</source>
+        <target>_" will replace one character. If you want to use the real "_", you should type this: "\\_".</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl:63</note>
       </trans-unit>
-      <trans-unit id="900b3ed6d62723c673b427a3f6e66669">
-        <source>"%" will replace any number of characters. If you want to use the real "%", you should type this: "\\%".</source>
-        <target>"%" will replace any number of characters. If you want to use the real "%", you should type this: "\\%".</target>
+      <trans-unit id="0d3b55664eac9a05aa79b197f396f4dc">
+        <source>%" will replace any number of characters. If you want to use the real "%", you should type this: "\\%".</source>
+        <target>%" will replace any number of characters. If you want to use the real "%", you should type this: "\\%".</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/referrers/helpers/form/form.tpl:64</note>
       </trans-unit>

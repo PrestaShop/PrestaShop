@@ -777,9 +777,9 @@ File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.
         <note>Context:
 File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:40</note>
       </trans-unit>
-      <trans-unit id="6b1fb1c361571071fe0f6e2055c39dcb">
-        <source>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</source>
-        <target>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations."</target>
+      <trans-unit id="553acf804efe9d99a96cc14026780010">
+        <source>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations.</source>
+        <target>After creating the language, you can import the content of the language pack, which you can download under "International -- Translations.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl:41</note>
       </trans-unit>
