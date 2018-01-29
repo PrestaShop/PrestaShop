@@ -48,7 +48,7 @@ require_once(dirname(__FILE__).'/../init.php');
 Upgrade::migrateSettingsFile();
 require_once(_PS_CONFIG_DIR_.'bootstrap.php');
 
-$logDir = _PS_ROOT_DIR_.'/app/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
+$logDir = _PS_ROOT_DIR_.'/var/logs/'.(_PS_MODE_DEV_ ? 'dev' : 'prod').'/';
 @mkdir($logDir, 0777, true);
 
 $upgrade = new Upgrade($logDir, dirname(dirname(__FILE__)).'/');
@@ -133,7 +133,7 @@ function displayHelp()
 PrestaShop upgrade
 
 This script can be called directly and is used by the 1-click upgrade module. It ouputs xml in the first case and json data for the module.
-It is mainly used for the database migration of your shop. Logs will be registered in your app/logs/<env> folder.
+It is mainly used for the database migration of your shop. Logs will be registered in your var/logs/<env> folder.
 ------------------
 Options
 --help               Display this message
