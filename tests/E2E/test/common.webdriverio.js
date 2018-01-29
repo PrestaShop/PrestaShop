@@ -91,12 +91,12 @@ function initCommands(client) {
       .selectByVisibleText(selector, value)
   });
 
-  client.addCommand('signInBO', function (selector, link = URL) {
+  client.addCommand('signInBO', function (selector, link = URL, login = 'demo@prestashop.com', password='prestashop_demo') {
     this.selector = globals.selector;
     return client
       .url('http://' + link + '/admin-dev')
-      .waitAndSetValue(selector.login_input, 'demo@prestashop.com')
-      .waitAndSetValue(selector.password_inputBO, 'prestashop_demo')
+      .waitAndSetValue(selector.login_input, login)
+      .waitAndSetValue(selector.password_inputBO, password)
       .waitForExistAndClick(selector.login_buttonBO)
       .waitForExist(selector.menuBO, 120000)
   });
@@ -118,7 +118,6 @@ function initCommands(client) {
       .waitForExistAndClick(selector.logo_home_page)
   });
 
-
   client.addCommand('signOutBO', function () {
     return client
       .deleteCookie();
@@ -136,7 +135,7 @@ function initCommands(client) {
       .url('http://' + URL)
       .waitForExistAndClick(selector.logo_home_page)
   });
-  
+
   client.addCommand('switchWindow', function (id) {
     return client
       .getTabIds()

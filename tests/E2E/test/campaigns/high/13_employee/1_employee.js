@@ -28,10 +28,23 @@ scenario('Check the employee creation', client => {
   test('should logout from the Back Office', () => client.signOutBO());
 }, 'common_client');
 
-scenario('Login with the new employee', client => {
-  test('should set "Email" input', () => client.waitAndSetValue(AccessPageBO.login_input, 'demo' + date_time + '@prestashop.com'));
-  test('should set "Password" input', () => client.waitAndSetValue(AccessPageBO.password_inputBO, '123456789'));
-  test('should click on "Save" button', () => client.waitForExistAndClick(AccessPageBO.login_buttonBO));
+scenario('Login with the new employee account', client => {
+  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, URL, 'demo' + date_time + '@prestashop.com' ,'123456789'));
   test('should go to orders page', () => client.waitForExistAndClick(Employee.orders_page));
+  test('should click on "employee info" icon', () => client.waitForExistAndClick(AccessPageBO.info_employee));
+  test('should click on "Sign out" icon', () => client.waitForVisibleAndClick(AccessPageBO.sign_out));
   test('should logout from the Back Office', () => client.signOutBO());
 }, 'common_client');
+
+scenario('Delete an employee', client => {
+  test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  test('should go to "Team" menu', () => client.goToSubtabMenuPage(Employee.advanced_menu, Employee.employee_menu));
+  test('should search the created employee', () => client.waitAndSetValue(Employee.email_search_input, 'demo' + date_time + '@prestashop.com'));
+  test('should click on "Search" button', () => client.waitForExistAndClick(Employee.search_button_team));
+  test('should check the result', () => client.checkTextValue(Employee.search_result,"1"));
+  test('should click dropdown-toggle button', () => client.waitForExistAndClick(Employee.dropdown_toggle));
+  test('should click on "Delete" link', () => client.waitForVisibleAndClick(Employee.delete_link));
+  test('should click on "OK" button in the pop-up', () => client.alertAccept());
+  test('should check the result', () => client.checkTextValue(Employee.search_result,"0"));
+  test('should click on "Reset" button', () => client.waitForExistAndClick(Employee.reset_search_button));
+}, 'common_client', true);
