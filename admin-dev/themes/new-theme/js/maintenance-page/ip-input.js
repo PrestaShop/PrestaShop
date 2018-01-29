@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2017 PrestaShop
  *
@@ -23,13 +22,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+const $ = window.$;
+const IpInput = {};
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+IpInput.addRemoteAddr = (event) => {
+  const input = $(event.target).prev('input');
+  const inputValue = input.val() || "";
+  const ip = event.target.dataset.ip || "";
+  if (inputValue.length > 0) {
+    if (input.val().indexOf(ip) < 0) {
+      input.val(input.val() + ',' + ip);
+    }
+  } else {
+    input.val(ip);
+  }
+};
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+IpInput.init = () => {
+    $("body").on("click", '.add_ip_button', IpInput.addRemoteAddr);
+};
 
-header('Location: ../../../../../../../');
-exit;
+export default IpInput;

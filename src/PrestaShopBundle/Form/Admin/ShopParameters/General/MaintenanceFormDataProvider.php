@@ -23,44 +23,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
- * PrestaShop forms needs custom domain name for field constraints
- * This feature is not available in Symfony so we need to inject the translator
- * for constraints messages only.
+ * This class is responsible of managing the data manipulated using forms
+ * in "Configure > Shop Parameters > General > Maintenance" page.
  */
-abstract class TranslatorAwareType extends AbstractType
+final class MaintenanceFormDataProvider implements FormDataProviderInterface
 {
-    private $translator;
-
     /**
-     * All languages available on shop. Used for translations
-     *
-     * @param array $locales
+     * @var MaintenanceConfiguration
      */
-    protected $locales;
+    protected $maintenanceConfiguration;
 
-    public function __construct(TranslatorInterface $translator, array $locales)
+    public function __construct(
+        MaintenanceConfiguration $maintenanceConfiguration
+    )
     {
-        $this->translator = $translator;
-        $this->locales = $locales;
+        $this->maintenanceConfiguration = $maintenanceConfiguration;
     }
 
     /**
-     * Get the translated chain from key
-     *
-     * @param $key the key to be translated
-     * @param $domain the domain to be selected
-     * @param $parameters Optional, pass parameters if needed (uncommon)
-     *
-     * @returns string
+     * {@inheritdoc}
      */
-    protected function trans($key, $domain, $parameters = array())
+    public function getData()
     {
-        return $this->translator->trans($key, $parameters, $domain);
+        return array(
+            'general' => $this->maintenanceConfiguration->getConfiguration(),
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->maintenanceConfiguration->updateConfiguration($data['general']);
     }
 }

@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
@@ -21,23 +22,31 @@
  * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
- *}
+ */
+namespace PrestaShopBundle\Form\Admin\Type;
 
-{extends file="helpers/options/options.tpl"}
-{block name="input"}
-	{if $field['type'] == 'maintenance_ip'}
-		{$field['script_ip']}
-		<div class="col-lg-9">
-			<div class="row">
-				<div class="col-lg-8">
-					<input type="text"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" />
-				</div>
-				<div class="col-lg-1">
-					{$field['link_remove_ip']}
-				</div>
-			</div>
-		</div>
-	{else}
-		{$smarty.block.parent}
-	{/if}
-{/block}
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+/**
+ * Extended input type for IP addresses
+ * Displays a bouton to add the user's one to the list.
+ */
+class IpAddressType extends TextType
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtendedType()
+    {
+        return TextType::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'ip_address_text';
+    }
+}
