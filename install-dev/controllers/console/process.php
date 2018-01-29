@@ -254,6 +254,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             'admin_email' =>            $this->datas->admin_email,
             'configuration_agrement' =>    true,
             'send_informations' => true,
+            'enable_ssl' => $this->datas->enable_ssl,
         ));
     }
 
