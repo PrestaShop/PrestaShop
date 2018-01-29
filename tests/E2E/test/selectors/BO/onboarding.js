@@ -6,7 +6,7 @@ module.exports = {
     stop_button: '.onboarding-button-stop',
     start_button: '//div[@class="onboarding-welcome"]//button[contains(text(), "Start")]',
     resume_button: '//*[@id="nav-sidebar"]//button[contains(@class, "resume")]',
-    ready_button: '//*[@id="onboarding-welcome"]//div[@class="modal-footer"]//button[contains(@class, "onboarding-button-next")]',
+    ready_button: '//*[@id="onboarding-welcome"]//button[contains(@class, "onboarding-button-next") and contains(text(), "I\'m ready")]',
     welcomeSteps: {
       next_button: '//div[contains(@class, "onboarding-tooltip")]//button[contains(@class, "onboarding-button-next")]',
       message_value: '//div[contains(@class, "onboarding-tooltip")]/div[@class="content"]',

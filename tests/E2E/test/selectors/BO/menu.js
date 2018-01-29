@@ -16,10 +16,14 @@ module.exports = {
         category_submenu: '//*[@id="subtab-AdminCategories"]/a',
         monitoring_submenu: '//*[@id="subtab-AdminTracking"]/a',
         attributes_features_submenu: '//*[@id="subtab-AdminParentAttributesGroups"]/a',
+        feature_tab: '//*[@id="content"]//div[@class="page-head-tabs"]/a[text()="Features"]',
         manufacturers_submenu: '//*[@id="subtab-AdminParentManufacturers"]/a',
+        supplier_tab: '//*[@id="content"]//div[@class="page-head-tabs"]/a[text()="Suppliers"]',
         files_submenu: '//*[@id="subtab-AdminAttachments"]/a',
         discounts_submenu: '//*[@id="subtab-AdminParentCartRules"]/a',
-        stocks_submenu: '//*[@id="subtab-AdminStockManagement"]/a'
+        carte_price_rule_tab: '//*[@id="content"]//div[@class="page-head-tabs"]/a[text()="Catalog Price Rules"]',
+        stocks_submenu: '//*[@id="subtab-AdminStockManagement"]/a',
+        movement_tab: '//*[@id="app"]//a[text()="Movements" and @role="tab"]'
       },
       Customers: {
         customers_menu: '//*[@id="subtab-AdminParentCustomer"]/a',
@@ -40,6 +44,8 @@ module.exports = {
       Modules: {
         modules_menu: '//*[@id="subtab-AdminParentModulesSf"]/a',
         modules_services_submenu: '//*[@id="subtab-AdminModulesSf"]/a',
+        installed_modules_tabs: '//*[@id="main-div"]//div[@class="page-head-tabs"]/a[text()="Installed modules"]',
+        notifications_tabs: '//*[@id="main-div"]//div[@class="page-head-tabs"]/a[text()="Notifications  "]',
         modules_catalog_submenu: '//*[@id="subtab-AdminAddonsCatalog"]/a'
       },
       Design: {
@@ -64,8 +70,14 @@ module.exports = {
       International: {
         international_menu: '//*[@id="subtab-AdminInternational"]/a',
         localization_submenu: '//*[@id="subtab-AdminParentLocalization"]/a',
+        languages_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Languages"]',
+        currencies_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Currencies"]',
+        geolocation_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Geolocation"]',
         locations_submenu: '//*[@id="subtab-AdminParentCountries"]/a',
+        countries_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Countries"]',
+        states_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="States"]',
         taxes_submenu: '//*[@id="subtab-AdminParentTaxes"]/a',
+        taxe_rules_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Tax Rules"]',
         translations_submenu: '//*[@id="subtab-AdminTranslations"]/a'
       }
     },
@@ -73,12 +85,20 @@ module.exports = {
       ShopParameters: {
         shop_parameters_menu: '//*[@id="subtab-ShopParameters"]/a',
         general_submenu: '//*[@id="subtab-AdminParentPreferences"]/a',
+        maintenance_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Maintenance"]',
         order_settings_submenu: '//*[@id="subtab-AdminParentOrderPreferences"]/a',
+        statuses_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Statuses"]',
         product_settings_submenu: '//*[@id="subtab-AdminPPreferences"]/a',
         customer_settings_submenu: '//*[@id="subtab-AdminParentCustomerPreferences"]/a',
+        groups_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Groups"]',
+        titles_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Titles"]',
         contact_submenu: '//*[@id="subtab-AdminParentStores"]/a',
+        stores_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Stores"]',
         traffic_seo_submenu: '//*[@id="subtab-AdminParentMeta"]/a',
+        search_engines_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Search Engines"]',
+        referrers_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Referrers"]',
         search_submenu: '//*[@id="subtab-AdminParentSearchConf"]/a',
+        tags_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Tags"]',
         merchant_expertise_submenu: '//*[@id="subtab-AdminGamification"]/a'
       },
       AdvancedParameters: {
@@ -89,6 +109,8 @@ module.exports = {
         email_submenu: '//*[@id="subtab-AdminEmails"]/a',
         import_submenu: '//*[@id="subtab-AdminImport"]/a',
         team_submenu: '//*[@id="subtab-AdminParentEmployees"]/a',
+        profiles_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Profiles"]',
+        permissions_tab: '//*[@id="main"]//div[@class="page-head-tabs"]/a[text()="Permissions"]',
         database_submenu: '//*[@id="subtab-AdminParentRequestSql"]/a',
         logs_submenu: '//*[@id="subtab-AdminLogs"]/a',
         webservice_submenu: '//*[@id="subtab-AdminWebservice"]/a',
