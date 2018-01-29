@@ -229,17 +229,17 @@ function loadPack() {
 	});
 }
 
-// array of product tab objects containing methods and dom bindings
+// Global object containing each product tab object methods and dom bindings
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
-var product_tabs = [];
+var product_tabs = product_tabs || {};
 
-product_tabs['Customization'] = new function(){
+product_tabs.Customization = new function(){
 	this.onReady = function(){
 		if (display_multishop_checkboxes)
 		ProductMultishop.checkAllCustomization();
 	}
 }
-product_tabs['Combinations'] = new function(){
+product_tabs.Combinations = new function(){
 	var self = this;
 	this.bindEdit = function(){
 		$('table.configuration').delegate('a.edit', 'click', function(e){
@@ -676,7 +676,7 @@ function handleSaveButtonsForPack()
 	return '';
 }
 
-product_tabs['Seo'] = new function(){
+product_tabs.Seo = new function(){
 	var self = this;
 
 	this.onReady = function() {
@@ -695,7 +695,7 @@ product_tabs['Seo'] = new function(){
 	};
 }
 
-product_tabs['Prices'] = new function(){
+product_tabs.Prices = new function(){
 	var self = this;
 	// Bind to show/hide new specific price form
 	this.toggleSpecificPrice = function (){
@@ -787,7 +787,7 @@ product_tabs['Prices'] = new function(){
 	};
 }
 
-product_tabs['Associations'] = new function(){
+product_tabs.Associations = new function(){
 	var self = this;
 	this.initAccessoriesAutocomplete = function (){
 		$('#product_autocomplete_input')
@@ -920,7 +920,7 @@ product_tabs['Associations'] = new function(){
 	};
 }
 
-product_tabs['Attachments'] = new function(){
+product_tabs.Attachments = new function(){
 	var self = this;
 	this.bindAttachmentEvents = function (){
 		$("#addAttachment").on('click', function() {
@@ -960,7 +960,7 @@ product_tabs['Attachments'] = new function(){
 	};
 }
 
-product_tabs['Shipping'] = new function(){
+product_tabs.Shipping = new function(){
 	var self = this;
 
 	this.bindCarriersEvents = function (){
@@ -996,7 +996,7 @@ product_tabs['Shipping'] = new function(){
 	};
 }
 
-product_tabs['Informations'] = new function(){
+product_tabs.Informations = new function(){
 	var self = this;
 	this.bindAvailableForOrder = function (){
 		$("#available_for_order").click(function()
@@ -1207,7 +1207,7 @@ product_tabs['Informations'] = new function(){
 	};
 }
 
-product_tabs['Pack'] = new function() {
+product_tabs.Pack = new function() {
 	var self = this;
 
 	this.bindPackEvents = function () {
@@ -1392,19 +1392,19 @@ product_tabs['Pack'] = new function() {
 	}
 }
 
-product_tabs['Images'] = new function(){
+product_tabs.Images = new function(){
 	this.onReady = function(){
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 	}
 }
 
-product_tabs['Features'] = new function(){
+product_tabs.Features = new function(){
 	this.onReady = function(){
 		displayFlags(languages, id_language, allowEmployeeFormLang);
 	}
 }
 
-product_tabs['Quantities'] = new function(){
+product_tabs.Quantities = new function(){
 	var self = this;
 	this.ajaxCall = function(data){
 		data.ajaxProductQuantity = 1;
@@ -1520,7 +1520,7 @@ product_tabs['Quantities'] = new function(){
 	};
 }
 
-product_tabs['Suppliers'] = new function(){
+product_tabs.Suppliers = new function(){
 	var self = this;
 
 	this.manageDefaultSupplier = function() {
@@ -1582,7 +1582,7 @@ product_tabs['Suppliers'] = new function(){
 	};
 }
 
-product_tabs['VirtualProduct'] = new function(){
+product_tabs.VirtualProduct = new function(){
 	var self = this;
 
 	this.onReady = function(){
@@ -1640,7 +1640,7 @@ product_tabs['VirtualProduct'] = new function(){
 	}
 }
 
-product_tabs['Warehouses'] = new function(){
+product_tabs.Warehouses = new function(){
 	var self = this;
 
 	this.onReady = function(){
