@@ -3,6 +3,7 @@ module.exports = {
     login_input: '#email',
     password_inputBO: '#passwd',
     login_buttonBO: '[name="submitLogin"]',
-    menuBO: '#nav-sidebar'
+    menuBO: '#nav-sidebar',
+    shopname: '//*[@id="header_shopname"]'
   }
 };

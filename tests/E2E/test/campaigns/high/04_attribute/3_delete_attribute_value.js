@@ -3,6 +3,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {AttributeSubMenu} = require('../../../selectors/BO/catalogpage/attribute_submenu');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 
 scenario('Delete "Attribute value"', () => {
   scenario('Login in the Back Office', client => {
@@ -10,7 +11,7 @@ scenario('Delete "Attribute value"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   scenario('Delete the created "Attribute value"', client => {
-    test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, AttributeSubMenu.submenu));
+    test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
     test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, 'attribute' + date_time));
     test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.selected_attribute));
     test('should delete the value of created attribute', () => client.clickOnAction(AttributeSubMenu.value_action_group_button, AttributeSubMenu.delete_value_button, 'delete'));

@@ -1,5 +1,6 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
+const {Menu} = require('../../../selectors/BO/menu.js');
 
 scenario('Catalog bulk action', () => {
 
@@ -9,7 +10,7 @@ scenario('Catalog bulk action', () => {
   }, 'catalogbulkaction');
 
   scenario('Disable the product list', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(CatalogPage.menu_button));
+    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
     test('should click on "Select all" radio', () => client.selectAllProducts(CatalogPage.select_all_product_button));
     test('should choose the "Deactivate selection" action', () => client.selectAction(CatalogPage, 2));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully deactivated.'));

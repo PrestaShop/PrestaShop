@@ -6,13 +6,14 @@ const {FeatureSubMenu} = require('../../../selectors/BO/catalogpage/feature_subm
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const common_scenarios = require('../02_product/product');
+const {Menu} = require('../../../selectors/BO/menu.js');
 
 var productData = {
   name: 'Feat',
   quantity: "10",
   price: '5',
   image_name: 'image_test.jpg',
-  feature:{
+  feature: {
     name: 'Feature',
     value: 'feature value'
   }
@@ -24,7 +25,7 @@ scenario('Create "Feature"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'attribute_and_feature');
   scenario('Create a new "Feature"', client => {
-    test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(CatalogPage.menu_button, AttributeSubMenu.submenu));
+    test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
     test('should click on "Feature" subtab', () => client.waitForExistAndClick(FeatureSubMenu.tabmenu));
     test('should click on "Add new feature" button', () => client.waitForExistAndClick(FeatureSubMenu.add_new_feature));
     test('should set the "Name" input', () => client.waitAndSetValue(FeatureSubMenu.name_input, productData.feature.name + date_time));
@@ -62,7 +63,7 @@ scenario('Check the feature creation', () => {
     test('should set the shop language to "English"', () => client.changeLanguage('english'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
-    test('should check that the name of created feature is : "'+ 'Feature' + date_time +'"', () => client.checkTextValue(SearchProductPage.feature_name, 'Feature' + date_time));
+    test('should check that the name of created feature is : "' + 'Feature' + date_time + '"', () => client.checkTextValue(SearchProductPage.feature_name, 'Feature' + date_time));
     test('should check that the value of created feature is : "Feature Value"', () => client.checkTextValue(SearchProductPage.feature_value, 'Feature Value'));
   }, 'attribute_and_feature');
   scenario('Logout from the Front Office', client => {

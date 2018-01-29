@@ -3,13 +3,14 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
 var data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
 scenario('Create Standard Product in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog"', () => client.waitForExistAndClick(AddProductPage.products_subtab));
+  test('should go to "Catalog"', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
   test('should click on "NEW PRODUCT"', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
   scenario('Edit Basic settings', client => {
