@@ -667,19 +667,25 @@ function init()
 
 	$('button.submitProductChange').unbind('click').click(function(e) {
 		e.preventDefault();
+		var $productLineRow = $(this).closest('tr.product-line-row');
+		var editProductQuantity = $productLineRow.find('td .edit_product_quantity').val();
+		var editProductPrice = $productLineRow.find('td .edit_product_price').val();
 
-		if ($(this).closest('tr.product-line-row').find('td .edit_product_quantity').val() <= 0)
-		{
+		if (editProductQuantity <= 0) {
 			jAlert(txt_add_product_no_product_quantity);
 			return false;
 		}
-		if ($(this).closest('tr.product-line-row').find('td .edit_product_price').val() <= 0)
-		{
-			jAlert(txt_add_product_no_product_price);
-			return false;
+
+		if (editProductPrice <= 0) {
+			var totalProduct = parseFloat($productLineRow.find('td.total_product').first().text());
+
+			if (totalProduct > 0) {
+				jAlert(txt_add_product_no_product_price);
+				return false;
+			}
 		}
-		if (confirm(txt_confirm))
-		{
+
+		if (confirm(txt_confirm)) {
 			var element = $(this);
 			var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 			query = 'ajax=1&token='+token+'&action=editProductOnOrder&id_order='+id_order+'&';
