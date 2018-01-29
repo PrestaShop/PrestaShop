@@ -982,7 +982,7 @@ class AdminControllerCore extends Controller
     {
         if (Validate::isLoadedObject($object = $this->loadObject())) {
             if (($object->deleteImage())) {
-                $redirect = self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$this->token;
+                $redirect = self::$currentIndex.'&update'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$this->token;
                 if (!$this->ajax) {
                     $this->redirect_after = $redirect;
                 } else {
