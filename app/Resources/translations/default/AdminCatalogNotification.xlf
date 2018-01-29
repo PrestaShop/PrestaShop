@@ -866,7 +866,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Stock/overview.html.twig:35</no
         <source>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</source>
         <target>You can't add or edit a product in this shop context: select a shop instead of a group of shops.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig:29</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/formDisable.html.twig:31</note>
       </trans-unit>
     </body>
   </file>
@@ -926,97 +926,97 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/form.html.twig:504</not
         <source>Duplication in progress...</source>
         <target>Duplication in progress...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:425</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:424</note>
       </trans-unit>
       <trans-unit id="1c4a67678ffecd99e46e9686e3639789">
         <source>Duplication failed.</source>
         <target>Duplication failed.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:427</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:426</note>
       </trans-unit>
       <trans-unit id="e927fc858b3eccca1323ed79add38ed6">
         <source>Activation in progress...</source>
         <target>Activation in progress...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:447</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:446</note>
       </trans-unit>
       <trans-unit id="0eb7963a4b19bb1a361d2dfb0ef13ccf">
         <source>Activation failed.</source>
         <target>Activation failed.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:449</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:448</note>
       </trans-unit>
       <trans-unit id="58b01b30d683cbdb393f9ede59bdb697">
         <source>Deactivation in progress...</source>
         <target>Deactivation in progress...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:469</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:468</note>
       </trans-unit>
       <trans-unit id="036a5e2d815eaa9bddaebf0c12f94e17">
         <source>Deactivation failed.</source>
         <target>Deactivation failed.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:471</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:470</note>
       </trans-unit>
       <trans-unit id="557c57932d4eb9b108efcf050b9db862">
         <source>Deletion in progress...</source>
         <target>Deletion in progress...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:491</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:490</note>
       </trans-unit>
       <trans-unit id="51d0bf7f10d8d28ecd64d2aa3a5ca141">
         <source>Deletion failed.</source>
         <target>Deletion failed.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:493</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:492</note>
       </trans-unit>
       <trans-unit id="fc483403c3f9b9aa31a570b83cdfa6f3">
         <source>Duplicating products</source>
         <target>Duplicating products</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:415</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:414</note>
       </trans-unit>
       <trans-unit id="34202dac3bbd97da03f56d3b2cf1386b">
         <source>Duplicating...</source>
         <target>Duplicating...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:419</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:418</note>
       </trans-unit>
       <trans-unit id="6d7447cf0c9efdaeb3a700de594a70cf">
         <source>Activating products</source>
         <target>Activating products</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:437</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:436</note>
       </trans-unit>
       <trans-unit id="b850e16adbf88a6b6cb724630eff2c97">
         <source>Activating...</source>
         <target>Activating...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:441</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:440</note>
       </trans-unit>
       <trans-unit id="c1714105baaadc64c8e502f13ca10988">
         <source>Deactivating products</source>
         <target>Deactivating products</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:459</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:458</note>
       </trans-unit>
       <trans-unit id="fe38be28e7e43dc0fb4c4d7ca1d60f90">
         <source>Deactivating...</source>
         <target>Deactivating...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:463</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:462</note>
       </trans-unit>
       <trans-unit id="ccfc7b0a56346cdac7fd40d2edd01c5a">
         <source>Deleting products</source>
         <target>Deleting products</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:481</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:480</note>
       </trans-unit>
       <trans-unit id="1294e8c29fb59da902198447bd9a256c">
         <source>Deleting...</source>
         <target>Deleting...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:485</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:484</note>
       </trans-unit>
     </body>
   </file>
@@ -1026,7 +1026,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:485</
         <source>If no carrier is selected then all the carriers will be available for customers orders.</source>
         <target>If no carrier is selected then all the carriers will be available for customers orders.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig:139</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form_shipping.html.twig:140</note>
       </trans-unit>
     </body>
   </file>

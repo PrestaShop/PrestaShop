@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/dashgoals/dashgoals.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d7e637a6e9ff116de2fa89551240a94d">
+        <source>Visits</source>
+        <target>Visits</target>
+        <note>Context:
+File: modules/dashgoals/dashgoals.php:191</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsforecast/statsforecast.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a28735af01fbb1e35371cb120985ac47">
+        <source>Registrations</source>
+        <target>Registrations</target>
+        <note>Context:
+File: modules/statsforecast/statsforecast.php:222</note>
+      </trans-unit>
+      <trans-unit id="ec0fc0100c4fc1ce4eea230c3dc10360">
+        <source>Undefined</source>
+        <target>Undefined</target>
+        <note>Context:
+File: modules/statsforecast/statsforecast.php:529</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsvisits/statsvisits.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ae5d01b6efa819cc7a7c05a8c57fcc2c">
+        <source>Visitors</source>
+        <target>Visitors</target>
+        <note>Context:
+File: modules/statsvisits/statsvisits.php:142</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statspersonalinfos/statspersonalinfos.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="88183b946cc5f0e8c96b2e66e1c74a7e">
+        <source>Unknown</source>
+        <target>Unknown</target>
+        <note>Context:
+File: modules/statspersonalinfos/statspersonalinfos.php:332</note>
+      </trans-unit>
+      <trans-unit id="63889cfb9d3cbe05d1bd2be5cc9953fd">
+        <source>Male</source>
+        <target>Male</target>
+        <note>Context:
+File: modules/statspersonalinfos/statspersonalinfos.php:217</note>
+      </trans-unit>
+      <trans-unit id="b719ce180ec7bd9641fece2f920f4817">
+        <source>Female</source>
+        <target>Female</target>
+        <note>Context:
+File: modules/statspersonalinfos/statspersonalinfos.php:218</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/statsproduct/statsproduct.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="df644ae155e79abf54175bd15d75f363">
+        <source>Product name</source>
+        <target>Product name</target>
+        <note>Context:
+File: modules/statsproduct/statsproduct.php:287</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

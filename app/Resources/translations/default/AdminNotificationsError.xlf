@@ -842,7 +842,7 @@ File: modules/blockreassurance/blockreassurance.php:226</note>
         <source>The voucher code is invalid.</source>
         <target>The voucher code is invalid.</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:154</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:155</note>
       </trans-unit>
     </body>
   </file>
@@ -1106,7 +1106,7 @@ File: controllers/admin/AdminNotFoundController.php:47</note>
         <source>You do not have permission to upload this.</source>
         <target>You do not have permission to upload this.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:397</note>
+File: controllers/admin/AdminThemesController.php:400</note>
       </trans-unit>
     </body>
   </file>

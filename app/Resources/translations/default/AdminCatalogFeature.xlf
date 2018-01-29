@@ -80,19 +80,19 @@ File: classes/lang/StockMvtReasonLang.php:65</note>
         <source>Category</source>
         <target>Category</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:239</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:238</note>
       </trans-unit>
       <trans-unit id="71d6cf2ac276a448f7845e8422fa0db3">
         <source>These products will be deleted for good. Please confirm.</source>
         <target>These products will be deleted for good. Please confirm.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:514</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:513</note>
       </trans-unit>
       <trans-unit id="3e1af49c086d77fb4f9826caec6dea12">
         <source>Delete products?</source>
         <target>Delete products?</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:503</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:502</note>
       </trans-unit>
     </body>
   </file>
@@ -602,29 +602,23 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories
         <note>Context:
 File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:35</note>
       </trans-unit>
-      <trans-unit id="1a6570d1068d7dd6f811ff022da8f76d">
-        <source>Main category</source>
-        <target>Main category</target>
-        <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:42</note>
-      </trans-unit>
       <trans-unit id="cb15931e1a86254a2440cb3bf0a52374">
         <source>Create a new category</source>
         <target>Create a new category</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:53</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:51</note>
       </trans-unit>
       <trans-unit id="b9a492bdfa9de54c963f71db20af3b94">
         <source>New category name</source>
         <target>New category name</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:60</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:58</note>
       </trans-unit>
       <trans-unit id="cff15d43797962a1e28c0515ab556743">
         <source>Create a category</source>
         <target>Create a category</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:80</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-categories.html.twig:78</note>
       </trans-unit>
     </body>
   </file>
@@ -2334,6 +2328,16 @@ File: src/Adapter/Product/AdminProductWrapper.php:378</note>
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_3_layout.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1a6570d1068d7dd6f811ff022da8f76d">
+        <source>Main category</source>
+        <target>Main category</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/bootstrap_3_layout.html.twig:167</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/TwigTemplateForm/typeahead.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d94d5f9a10b00bf59d7632a96ba7a1a0">
@@ -2532,7 +2536,7 @@ File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-
         <source>Please choose the warehouses associated with this product.</source>
         <target>Please choose the warehouses associated with this product.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig:32</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/Include/form-warehouse-combination.html.twig:34</note>
       </trans-unit>
     </body>
   </file>
