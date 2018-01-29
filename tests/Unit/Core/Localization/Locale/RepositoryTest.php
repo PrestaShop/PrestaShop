@@ -27,8 +27,8 @@
 namespace Tests\Unit\Core\Localization\Locale;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Number as CldrNumber;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberRepository as CldrNumberRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -49,35 +49,35 @@ class RepositoryTest extends TestCase
         /**
          * Mock the LocaleRepository dependencies :
          */
-        /** CLDR Number data bag */
-        $cldrNumber = $this->getMockBuilder(CldrNumber::class)
+        /** CLDR Locale data bag */
+        $cldrLocale = $this->getMockBuilder(CldrLocale::class)
             ->setMethods([
-                'getPositivePattern',
-                'getNegativePattern',
-                'getSymbols',
-                'getMaxFractionDigits',
-                'getMinFractionDigits',
-                'getGroupingUsed',
-                'getPrimaryGroupSize',
-                'getSecondaryGroupSize',
+                'getNumberPositivePattern',
+                'getNumberNegativePattern',
+                'getNumberSymbols',
+                'getNumberMaxFractionDigits',
+                'getNumberMinFractionDigits',
+                'getNumberGroupingUsed',
+                'getNumberPrimaryGroupSize',
+                'getNumberSecondaryGroupSize',
             ])
             ->getMock();
-        $cldrNumber->method('getPositivePattern')->willReturn('');
-        $cldrNumber->method('getNegativePattern')->willReturn('');
-        $cldrNumber->method('getSymbols')->willReturn([]);
-        $cldrNumber->method('getMaxFractionDigits')->willReturn(3);
-        $cldrNumber->method('getMinFractionDigits')->willReturn(0);
-        $cldrNumber->method('getGroupingUsed')->willReturn(true);
-        $cldrNumber->method('getPrimaryGroupSize')->willReturn(3);
-        $cldrNumber->method('getSecondaryGroupSize')->willReturn(3);
+        $cldrLocale->method('getNumberPositivePattern')->willReturn('');
+        $cldrLocale->method('getNumberNegativePattern')->willReturn('');
+        $cldrLocale->method('getNumberSymbols')->willReturn([]);
+        $cldrLocale->method('getNumberMaxFractionDigits')->willReturn(3);
+        $cldrLocale->method('getNumberMinFractionDigits')->willReturn(0);
+        $cldrLocale->method('getNumberGroupingUsed')->willReturn(true);
+        $cldrLocale->method('getNumberPrimaryGroupSize')->willReturn(3);
+        $cldrLocale->method('getNumberSecondaryGroupSize')->willReturn(3);
 
-        /** CLDR NumberRepository (returning the data bag) */
-        $cldrNumberRepository = $this->getMockBuilder(CldrNumberRepository::class)
+        /** CLDR LocaleRepository (returning the data bag) */
+        $cldrLocaleRepository = $this->getMockBuilder(CldrLocaleRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $cldrNumberRepository->method('getNumber')
+        $cldrLocaleRepository->method('getLocale')
             ->willReturnMap([
-                ['fr-FR', $cldrNumber],
+                ['fr-FR', $cldrLocale],
                 ['en-US', null],
             ]);
 
@@ -97,9 +97,9 @@ class RepositoryTest extends TestCase
         $currencyRepository->method('getInstalledCurrencies')
             ->willReturn([$currency]);
 
-        /** @var CldrNumberRepository $cldrNumberRepository */
+        /** @var CldrLocaleRepository $cldrLocaleRepository */
         /** @var CurrencyRepository $currencyRepository */
-        $this->localeRepository = new LocaleRepository($cldrNumberRepository, $currencyRepository);
+        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
     }
 
     /**

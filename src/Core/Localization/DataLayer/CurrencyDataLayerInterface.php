@@ -27,47 +27,49 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataBag;
+
 /**
- * Number data layer classes interface
+ * Currency data layer classes interface
  *
- * Describes the behavior of NumberDataLayer classes
+ * Describes the behavior of CurrencyDataLayer classes
  */
-interface NumberDataLayerInterface
+interface CurrencyDataLayerInterface
 {
     /**
-     * Read a field's value
+     * Read Currency by currency code
      *
-     * @param string $field
-     *  The field to read
+     * @param string $currencyCode
+     *  The currency code (ISO 4217)
      *
-     * @return mixed
-     *  The searched field's value
+     * @return CurrencyDataBag
+     *  The searched currency data
      */
-    public function read($field);
+    public function read($currencyCode);
 
     /**
-     * Write a field's value
+     * Write a currency data bag into the data source
      *
-     * @param $field
-     *  The field to write
+     * @param string $currencyCode
+     *  The currency code (ISO 4217)
      *
-     * @param $value
-     *  The value to write into this field
+     * @param CurrencyDataBag $currencyData
+     *  The currency data to write
      *
-     * @return mixed
-     *  The value to be written by the upper data layer
+     * @return CurrencyDataBag
+     *  The currency data to be written by the upper data layer
      */
-    public function write($field, $value);
+    public function write($currencyCode, CurrencyDataBag $currencyData);
 
     /**
      * Set the lower layer.
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param NumberDataLayerInterface $lowerLayer
+     * @param CurrencyDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(NumberDataLayerInterface $lowerLayer);
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
 }
