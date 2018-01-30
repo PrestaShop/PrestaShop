@@ -438,9 +438,9 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/tr
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:73</note>
       </trans-unit>
-      <trans-unit id="df80af80ac597d540a4d0d6f18c9d5ab">
-        <source>%s" will be replaced by a number.</source>
-        <target>%s" will be replaced by a number.</target>
+      <trans-unit id="06fb8ada95eab3e2b5d4a3e834a9ab10">
+        <source>"%s" will be replaced by a number.</source>
+        <target>"%s" will be replaced by a number.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:73</note>
       </trans-unit>
@@ -450,9 +450,9 @@ File: admin-dev/themes/default/template/controllers/translations/helpers/view/tr
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:74</note>
       </trans-unit>
-      <trans-unit id="eb683b8fbef42b06921f7c3643dcb8d5">
-        <source>%s" will be replaced by a string.</source>
-        <target>%s" will be replaced by a string.</target>
+      <trans-unit id="a24386154e350ad7c608af84cdb4be11">
+        <source>"%s" will be replaced by a string.</source>
+        <target>"%s" will be replaced by a string.</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/translations/helpers/view/translation_mails.tpl:74</note>
       </trans-unit>
