@@ -1,660 +1,420 @@
-$widthSidebarNav: 210px
-$widthSidebarSubmenu: 200px
-$menu-item-size: 34px
-$min-height: 950px
+.js-mobile-menu
+	display: none
+	float: left
+	cursor: pointer
+	padding-top: 0
+	margin-left: 0.6rem
+	margin-right: 0.6rem
+	font-size: 1.8rem
+	flex-direction: column
+	justify-content: center
 
-#nav-sidebar
-	position: fixed
-	width: $widthSidebarNav
-	overflow-y: scroll
-	padding-bottom: 85px
-	height: 100%
-	z-index: 500
-	background-color: $main-color
-	@include left(0)
-	ul.menu
-		.menu-collapse
-			.material-icons
-				font-size: 19px
+	+media-breakpoint-down(md)
+		display: inline-flex
 
-				&:last-child
-					margin-left: -19px
-		.line
-			border-bottom: 1px solid #bbcdd2
-			padding-top: 29px
-			margin-left: 15px
-		.categorytab
-			padding-top:    11px
-			margin-bottom:  5px
-			position:       relative
-			height:         39px
-			line-height:    24px
-			vertical-align: middle
-			font-weight:    bold
-			text-transform: uppercase
-			span
-				background: $main-color
-				padding:    0 15px
-				color:      #ffffff
-				position:   relative
-		margin: 15px 0 0 0
-		padding: 0
-		list-style: none !important
-		> li
-			&:first-of-type
-				margin-bottom: -15px
-			&.maintab
-				position: relative
-
-				&:not(#subtab-AdminParentModulesSf)
-					i.material-icons.extension
-						color: #6c868e
-
-				ul.submenu
-					display: none
-					padding: 0px
-					&.list-group
-						margin-bottom: 0
-					li
-						&:first-child
-							padding-top: 10px
-						&:last-child
-							padding-bottom: 12px
-						list-style: none !important
-						margin-left: 50px
-						a
-							color: $sidebar-menu-color
-							display: block
-							padding: 4px 8px
-							&:hover
-								color: $sidebar-menu-hover-color
-								text-decoration: none
-								background-color: #202226
-				a
-					white-space: nowrap
-					text-overflow: ellipsis
-					overflow: hidden
-					span
-						padding-left: 10px
-						vertical-align: middle
-				> a.title
-					text-align: left
-					display: block
-					position: relative
-					padding: 0 .35em 0 0
-					height: $menu-item-size
-					background-color: $main-color
-					color: $sidebar-menu-color
-					line-height: $menu-item-size
-					text-decoration: none
-					@include transition-property(background-color)
-					@include transition-duration(0.2s)
-					@include transition-timing-function(ease-out)
-					i
-						vertical-align: middle
-						width: 18px
-						font-size: 18px
-						margin-left: 15px
-						color: #ffffff
-
-						&.sub-tabs-arrow
-							display: none
-							color: #6c868e
-						@include transition-property(color)
-						@include transition-duration(0.4s)
-						@include transition-timing-function(ease-out)
-				&.open, &:hover:not(.open)
-					> a.title
-						color: $sidebar-menu-hover-color
-						background-color: #202226
-
-						.sub-tabs-arrow
-							display: block
-				&.open:not(.active)
-					&:before
-						content: ''
-						width: 0
-						height: 0
-						border-style: solid
-						border-width: 8px 10px 8px 0
-						border-color: transparent $main-color transparent transparent
-						background-color: transparent
-						margin-top: 6px
-						@media (min-height: $min-height)
-							margin-top: 10px
-						position: absolute
-						z-index: 1
-						right: 0
-				&.open
-					ul.submenu
-						display: block
-						background-color: #202226
-				&:last-child > a.title
-					border-bottom: none
-				&.active
-					& > a
-						&.title
-							border-left: 4px solid $brand-info
-					a, li.active a
-						color: $sidebar-menu-active-color
-
-						&.title
-							background-color: #202226
-						i
-							color: $brand-info
-							margin-left: 11px
-					@media (min-height: $min-height)
-						ul.submenu
-							body:not(.page-sidebar-closed) &
-								display: block
-								@include border-left(1px solid $sidebar-menu-bg-hover-color)
-								a
-									color: $sidebar-menu-color
-									padding: 5px 8px
-									padding-left: 38px
-									&:hover
-										color: $sidebar-menu-hover-color
-										background-color: $sidebar-menu-bg-hover-color
-										text-decoration: none
-								li.active a
-									color: $sidebar-menu-active-color
-									position: relative
-
-	@media (max-width: $screen-phone)
-		display: none
-
-@media (max-height: $min-height)
-	body:not(.page-sidebar-closed)
-		#nav-sidebar ul.menu li.maintab > a.title
-			font-size: 12px
-			height: 28px
-			line-height: 28px
-			i
-				width: 18px
-				@include text-align(right)
-		#nav-sidebar ul.menu li.maintab ul.submenu
-			@include padding(1px, 1px, 0, 1px)
-			li a
-				padding: 0 6px
-				height: 27px
-				line-height: 27px
-		#nav-sidebar ul.menu li.maintab.active ul.submenu
-			display: none
-		#nav-sidebar ul.menu li.maintab.active.open ul.submenu
-			display: block
-
-.page-sidebar
-	#content
-		@include margin-left($widthSidebarNav)
-
-.page-sidebar-closed
-	.menu-collapse
-		padding-right: 0
-		text-align: center
-	.categorytab
-		span
-			display: none
-	#nav-sidebar
-		overflow: visible
-		width: 50px
-		ul.menu
-			& > li:first-of-type
-				margin-bottom: 0
-			li.maintab
-				.title
-					span
-						padding-left: 25px
-				ul.submenu
-					display: none!important
-					position: relative
-					top: $menu-item-size
-					padding-top: 0!important
-
-					& > li
-						margin-left: 20px
-		li.searchtab
-			color: rgba(white,.5)
-			&:hover
-				cursor: pointer
-				color: white
-			&.search-expanded
-				width: 400px
-				background-color: darken($main-color,5%)
-				@include padding(14px, 13px, 0, 7px)
-				&:before
-					display: none
-				form .form-group
-					display: block
-		li.maintab.active ul.submenu
-			border: none!important
-		li
-			& > .line
-				padding-top: 14px
-				margin-bottom: 13px
-			& > .categorytab
-				display: none
-		.maintab
-			> a
-				> i
-					display: inline-block !important
-					font-size: 1.25rem
-				> span
-					display: none
-					& + i
-						display: none !important
-				&:hover
-					> span
-						display: inline-block
-		a.title
-			text-align: center
-			> span
-				display: none
-		@media (max-height: 870px)
-			> ul > li.maintab:hover#subtab-ShopParameters,
-			> ul > li.maintab:hover#subtab-AdminAdvancedParameters
-				ul.submenu
-					display: flex!important
-					flex-direction: column-reverse
-					top: 0!important
-					transform: rotate(180deg)
-					transform-origin: top
-					li
-						transform: rotate(180deg)
-		> ul > li.maintab:hover
-			width: 250px!important
-			position: relative
-			z-index: 500
-			a.title
-				@include text-align(left)
-				> span
-					display: inline-block
-			ul.submenu
-				position: absolute!important
-				display: block!important
-				top: $menu-item-size!important
-				width: 200px!important
-				@include rtl
-					right: 50px
-				@include ltr
-					left: 50px
-	#content
-		@include margin-left(55px)
-		@media (max-width: $screen-phone)
-			@include margin-left(0)
-	.submenu_expand
-		display: none
-
-#nav-topbar
-	position: fixed
-	height: 30px
-	top: 36px
-	width: 100%
-	z-index: 600
-	background-color: white
-	border: solid 1px white
-	@include padding(0, 40px, 0, 0)
-	ul.menu
-		margin: 0
-		padding: 0
-		display: block
-		list-style: none
-		li.maintab
-			border-right: solid 1px #E6E6E6
-		li.maintab:last-child
-			border: none
-		li.searchtab
-			width: 200px
-			@include margin-right(5px)
-			@include float(right)
-		li.maintab, li.subtab
-			height: 28px
-			padding: 0
-			margin: 0
-			list-style: none
-			position: relative
-			@include float(left)
-			> a
-				display: block
-				line-height: 27px
-				color: lighten($main-color,20%)
-				padding: 0 6px
-				margin: 0
-				font-size: 12px
-				i
-					margin: 0
-					width: 15px
-					color: lighten($main-color,10%)
-					background-color: transparent
-					font-size: 14px
-			&.active, &:hover
-				background-color: $brand-primary
-				> a
-					text-decoration: none
-					color: contrast-color($main-color, white, #333)
-					i
-						color: white
-
-		li.expanded > ul.submenu
-			display: block
-		ul.submenu
-			background-color: white
-			display: none
-			position: absolute
-			margin: 0
-			padding: 0
-			@include left(0)
-			top: 28px
-			width: 200px!important
-			@include box-shadow(rgba(black,0.3) 0 2px 4px)
-			> li
-				width: 200px
-				padding: 0
-				list-style: none
-				&:last-child > a
-					border: none
-				> a
-					display: block
-					@include padding(4px, 5px, 4px, 10px)
-					border-bottom: solid 1px #E6E6E6
-					&:hover
-						color: white
-						background-color: $brand-primary
-						text-decoration: none
-				&.active a
-					color: contrast-color($brand-primary, white, #333)
-					background-color: $brand-primary
-					border-bottom: solid 1px darken($brand-primary,10%)
-	#ellipsistab
-		display: block
-		width: 40px
-		height: 28px
-		padding: 0
-		margin: 0
-		position: absolute
-		@include right(0)
-		> a
-			text-align: center
-			font-size: 14px
-			line-height: 30px
-			color: $main-color
-			cursor: pointer
-		ul#ellipsis_submenu
-			@include right(0)
-			left: inherit
-			a.title
-				padding: 0 8px
-				@include text-align(left)
-			li.subtab.expanded > ul
-				top: 0
-				@include left(-200px)
-	.menu-collapse
-		display: none
-
-#header_infos .mobile-notifs
-	background-color: rgba(0,0,0,.8)
-	.notifications
-		background-color: white
-		height: 100%
-		margin-left: 40px
-	.nav-link::before
-		font-family: 'Material Icons'
-		display: block
-		font-size: 30px
-	#orders-tab::before
-		content: "\E8CB"
-	#customers-tab::before
-		content: "\E7FE"
-	#messages-tab::before
-		content: "\E0BE"
-	span[data-nb]
-		font-size: 0
-		&::before
-			position: absolute
-			display: inline-block
-			line-height: .875rem
-			height: .875rem
-			vertical-align: middle
-			position: absolute
-			top: 20px
-			right: 40px
-			color: #fff
-			background: #fb0
-			font-size: .5625rem
-			padding: 0 .25rem
-			border-radius: .625rem
-			content: attr(data-nb)
-#nav-mobile
+.nav-bar 
 	position: fixed
 	top: 0
-	width: 35px
-	height: 35px
-	z-index: 1100
-	@include left(0)
-	&.expanded
-		width: 100%
-		height: 100%
-		background: rgba(0,0,0,.7)
-		top: 60px
-		.menu-collapse
-			top: -60px
-			position: absolute
-			z-index: 1200
-			@include left(0)
-	#header_employee_box, .admin-link
-		display: none
-	#header_shop
-		float: none
-		.shop-list-title
-			width: 100%
-			text-transform: uppercase
-			font-size: 16px
+	bottom: 0
+	z-index: 502
+	background: $gray-dark-menu
+	width: $size-navbar-width
+	margin-top: $size-header-height
+	height: 100%
+	overflow-y: auto
+	transition: all .5s ease-out
+
+	.material-icons 
+		color: white
+		font-size: 1.188rem
+		line-height: inherit
+
+	&.mobile-nav 
+		margin-left: -100%
+		width: 70%
+
+		+media-breakpoint-only(sm) 
+			width: 60%
+
+		+media-breakpoint-only(md)
+			width: 40%
+
+		&.expanded 
+			display: block
+			margin-left: 0
+			overflow-y: scroll
+	
+		.onboarding-navbar 
+			display: none
+	
+		.panel-collapse 
+			padding-left: 0
+
+			.link-leveltwo .link 
+				padding-left: 0.75rem
+
+		.employee_avatar
+			text-decoration: none
 			text-align: center
-			font-weight: normal
-			.icon-caret-down
-				display: none
-			> a::after
+			padding-top: 1rem
+
+			.material-icons 
+				line-height: 3.75rem
+				font-size: 3.75rem
+
+				+media-breakpoint-down(md) 
+					line-height: 4.6875rem
+					font-size: 4.6875rem
+
+			span 
+				color: white
+				display: block
+				margin-bottom: 0.625rem
+
+				+media-breakpoint-down(md) 
+					font-size: 1.09375rem
+
+			img 
+				width: 3.75rem
+				height: 3.75rem
+
+				&.img-thumbnail
+					border-radius: 36px
+
+		.shop-list 
+			padding-bottom: 1rem
+			text-align: center
+			font-weight: bold
+
+			a 
+				+media-breakpoint-down(md) 
+					font-size: 1.09375rem
+
+		.main-menu
+			margin-top: 0.625rem
+
+			& > li:first-child
+				padding-bottom: 1rem
+
+		.shop-list-title 
+			color: $brand-primary
+			text-transform: uppercase
+			font-size: 1rem
+			text-align: center
+			margin-bottom: 0.9375rem
+			&::after 
 				font-family: 'Material Icons'
 				content: "\E313"
-				font-size: 20px
-				margin-left: 10px
+				font-size: 1.25rem
+				line-height: 1.375rem
+				margin-left: 0.625rem
 				vertical-align: bottom
-		#shop-list-collapse
-			background-color: white
-			list-style-type: none
-			text-align: left
+
+		.items-list 
 			padding-left: 0
-			margin-top: 10px
-			li
-				border-bottom: #BBCDD2 1px solid
-				height: 30px
-				padding-left: 30px
-				line-height: 50px
-				height: 50px
-				&.group
-					padding-left: 50px
-					a
-						color: #363A41
-						font-weight: bold
-						text-transform: none
-				&.shop
-					padding-left: 70px
-					text-transform: none
-					&.disabled a
-						color: #BBCDD2
-					a
-						color: #363A41
-					.link-shop
-						position: absolute
-						right: 20px
-						.material-icons
-							color: #6C868E
-							font-size: 20px
-	#header_shopname
-		.bootstrap &
-			float: none
-	#header_logout
-		border-bottom: 0
-		color: #bbcdd2
-	.onboarding-navbar.displayed
-		display: none
-	.icon-signout::before
-		font-family: 'Material Icons'
-		content: "\E8AC"
-		color: #bbcdd2
-		font-size: 25px
-	.shopname
-		text-align: center
-		margin: 15px 0
-		font-weight: bold
-	.username a
-		color: white
-	.employee_avatar
-		width: 60px
-		height: 60px
-	ul.menu
-		position: fixed
-		display: none
-		width: 90%
-		overflow: scroll
-		top: 60px
-		bottom: 0
-		background-color: #363A41
-		padding: 0
-		border-top: 1px black solid
-		list-style: none
-		margin-bottom: 0
-		@include transition(all 0.35s ease-out)
-		@include animate(fadeInLeft, 0.3s)
-		.img-thumbnail
-			padding: 0
-			border: 0
-		.username
-			font-size: 16px
-		> li.searchtab
-			padding: 15px
-			position: relative
-			@include box-shadow(rgba(black,0.1) 0 -3px 0 0 inset)
-			#bo_query
-				color: $main-color
-				background-color: lighten($main-color,60%)
-			.form-group
-				margin: 0
-			.clear_search
-				position: absolute
-				top: 5px
-				@include right(5px)
-		> li.maintab
-			background: $main-color
-			position: relative
-			.submenu
-				a
-					background-color: #282b30
-					padding-left: 40px
-				&.list-group
-					margin-bottom: 0
-			&#tab-SELL, &#tab-IMPROVE, &#tab-CONFIGURE
-				display: none
-			a
-				display: block
-				height: 50px
-				position: relative
-				border-bottom: 1px solid #6c868e
-				font-size: 16px
-				color: mix($main-color, contrast-color($main-color, white, #333), 30%)
-				background-color: $main-color
-				text-decoration: none
-				@include padding(15px, 0, 0, 15px)
-				@include transition-property(background-color)
-				@include transition-duration(0.4s)
-				@include transition-timing-function(ease-out)
-				i
-					color: rgba(white,.6)
-					vertical-align: middle
-					@include transition-property(color)
-					@include transition-duration(0.4s)
-					@include transition-timing-function(ease-out)
-				&:hover
-					background-color: lighten($main-color,10%)
-					color: white
-					i
-						color: white
-			> a > i
-				display: inline-block
-				height: $menu-item-size
-				width: $menu-item-size
-				font-size: 30px
-				line-height: $menu-item-size
+			a:focus 
+				background-color: transparent
+		
+			li 
+				background-color: white
+				border-bottom: $gray-light 1px solid
+				&.group a
+					padding: 0.9375rem 2.5rem
+					font-weight: bold
+			
+				&.shop 
+					padding: 0.9375rem 0.9375rem 0.9375rem 2.5rem
+					a 
+						display: inline-block
+						width: auto
+						&.link-shop 
+							float: right
+							.material-icons 
+								font-size: 1.25rem
+								color: $gray-medium
+
+			li:first-child a 
+				color: $brand-primary
+				text-transform: uppercase
+				font-size: 0.9375rem
+				padding: 0.9375rem 1.25rem
+
+.main-menu
+	padding: 0 0 5.313rem 0
+	margin: 0
+
+	.category-title > .title 
+		text-transform: uppercase
+
+	.link-levelone 
+		$padding-size: 1.25rem
+		display: block
+
+		&[data-submenu] 
+			+media-breakpoint-down(md) 
+				a.link 
+					font-size: 1.25rem
+					padding-top: 1.25rem
+					padding-bottom: 1.25rem
+					line-height: inherit
+
+					.material-icons 
+						font-size: 2rem
+						line-height: 2rem
+
+						&.sub-tabs-arrow 
+							padding-right: 1.2rem
+
+			&.has_submenu 
+				+media-breakpoint-down(md) 
+					.sub-tabs-arrow 
+						visibility: visible
+
+		&.-active
+			+media-breakpoint-down(md) 
+				border-right: none
+
+			> .link 
+				border-left: .25rem solid #25b9d7
+				padding-left: .638rem
+
+				.material-icons 
+					&:first-child 
+						color: #25b9d7
+
+		&:not(#subtab-AdminParentModulesSf) 
+			i.material-icons.extension 
+				color: #6c868e
+
+		> .link 
+			//+single-line-block($size-navbar-link-height)
+			font-size: .75rem
+			display: flex
+			height: initial
+			line-height: 1rem
+			align-items: end
+			color: $gray-dark-text
+			text-decoration: none
+			padding: 0.5rem .3125rem 0.5rem .938rem
+			word-wrap: break-word
+			white-space: initial
+			text-overflow: initial
+			overflow: hidden
+			+media-breakpoint-down(md) 
+				font-size: 1rem
+
+			span 
+				padding-left: .625rem
+
+			.sub-tabs-arrow
+				margin-left: auto
+				visibility: hidden
+				color: #6c868e
+				vertical-align: middle
+				line-height: inherit
+
+		&.ul-open,
+		&.-active,
+		&.-hover 
+			& > .link 
+				background: #202226
 				color: white
-				text-align: center
-				margin-top: -5px
-	#nav-mobile-submenu
-		a:not(#nav-mobile-submenu-back)
-			font-size: 1.2em
-			text-transform: none
-			@include padding-left(50px)
-	a#nav-mobile-submenu-back
-		background-color: darken($main-color,5%)
-		font-size: 1.5em
-	ul.menu.menu-close
-		@include animate(fadeOutLeft, 0.2s)
-	.menu-collapse
-		color: #6C868E
-		width: 35px
-		height: 35px
-		text-align: center
-		line-height: 2.3em
+				transition: background 300ms ease
+
+				+media-breakpoint-down(md) 
+					background: $gray-dark-menu
+
+			&.has_submenu 
+				.link 
+					.sub-tabs-arrow 
+						visibility: visible
+
+		> .submenu 
+			list-style: none
+			background: #202226
+			display: none
+			white-space: nowrap
+			padding-left: 2.75rem
+
+			& > li 
+				+media-breakpoint-down(md) 
+					a.link 
+						padding-top: 0.75rem
+						padding-bottom: 0.75rem
+
+				&:first-of-type 
+					padding-top: .625rem
+
+					+media-breakpoint-down(md) 
+						padding-top: 0
+
+				&:last-of-type 
+					padding-bottom: .750rem
+
+					+media-breakpoint-down(md) 
+						padding-bottom: 0
+
+						a.link 
+							padding-bottom: 1.5rem
+
+		&.ul-open,
+		&.-active 
+			.link 
+				background: #202226
+
+		&.open 
+			> .submenu 
+				display: block
+
+	.link-leveltwo 
+		@extend .link-levelone
+
+		&.-active 
+			> .link 
+				padding-left: 0
+				border-left: none
+				color: white
+
+		> .link 
+			height: initial
+			line-height: 0.9rem
+			padding: 0.3125rem 0.3rem 0.3125rem 0
+
+			+media-breakpoint-down(md) 
+				padding-top: 1.4rem
+				padding-bottom: 1.4rem
+				line-height: 1.6rem
+
+		> .link:hover 
+			color: $gray-dark-text-hover
+
+.category-title
+	display: block
+	font-weight: bold
+	font-size: 0.75rem
+	border-top: 1px solid #bbcdd2
+	margin: 1.813rem 0 0 .938rem
+	padding: .875rem 0 .750rem 0
+
+
+	+media-breakpoint-down(md)
+		display: none
+
+	& > .title 
+		color: white
+		background: $gray-dark-menu
 
 .menu-collapse
-	cursor: pointer
-	height: 13px
-	font-size: 2em
-	text-align: right
-	padding-right: 15px
-	margin-bottom: 19px
-	line-height: 13px
+	height: .813rem
+	font-size: 2rem
 	display: block
-	color: #BEBEBE
+	cursor: pointer
+	text-align: right
+	padding: .688rem .938rem 1.188rem 0
+	line-height: .813rem
+	color: $gray-dark-text
 
-.mobile-nav
-	#header_infos
-		@include box-shadow(rgba(black,0.7) 0 0 10px)
-	#content
-		h2.page-title
-			@include padding-left(10px!important)
-		h4.page-subtitle
-			@include left(10px!important)
-		ul.page-breadcrumb
-			@include left(10px!important)
-	.no-notification
-		top: 220px
-		left: 20px
+	+media-breakpoint-down(md)
+		display: none
+		padding-bottom: 1rem
 
-.page-topbar:not(.mobile-nav)
-	#main
-		padding-top: 64px
-	#content
-		@include margin-left(0)
-		.page-head
-			top: 66px
-		.page-title
-			@include padding-left(75px)
-		.page-subtitle
-			@include left(75px)
-		.page-breadcrumb
-			@include left(75px)
+	.material-icons 
+		color: #BEBEBE
 
-.page-sidebar-closed:not(.nav-topbar):not(.mobile-nav)
-	.searchtab
-		&:before
-			z-index: 1000
-			position: absolute
-			top: 16px
-			display: block
-			width: 28px
-			height: 28px
-			@include left(14px)
-			@extend .icon
-			@extend .icon-2x
-			@extend .icon-search
-		.form-group
-			display: none
+		&:last-child 
+			margin-left: -1.313rem
+
+.page-sidebar-closed:not(.mobile) 
+	.content-div, #content
+		transition: padding 1s ease
+
+	.menu-collapse 
+		transform: rotate(180deg)
+		padding-right: .8rem
+
+	.nav-bar 
+		overflow: visible
+		width: $size-navbar-width-mini
+
+		.main-menu 
+			.category-title > .title,
+			.link-levelone span 
+				display: none
+
+			.sub-tabs-arrow
+				display: none !important
+
+			.category-title 
+				margin-top: 0.8rem
+				padding-bottom: 0
+
+			.link-levelone 
+				position: relative
+
+				.link
+					line-height: initial
+
+				&:first-of-type 
+					margin-bottom: 0
+
+				&.-hover 
+					> .link 
+						transition: all 0s ease 0s
+						width: 14.6875rem
+
+						> span 
+							display: inline-block
+							padding-left: 1.563rem
+
+					ul.submenu 
+						position: absolute !important
+						display: block !important
+						top: 34px !important
+						width: 200px !important
+						left: 50px
+						padding-left: 5px
+
+				.link-leveltwo
+					height: 1.563rem
+
+					&:first-of-type 
+						padding-top: 0 !important
+						margin-top: .2rem
+
+					&:last-of-type 
+						padding-bottom: 0 !important
+						margin-bottom: 1rem
+
+					.link 
+						padding-left: 1.5rem
+
+		@media (max-height: 870px) 
+		#subtab-ShopParameters:hover,
+		#subtab-AdminAdvancedParameters:hover 
+			ul.submenu 
+				display: flex !important
+				flex-direction: column-reverse
+				top: 0 !important
+				transform: rotate(180deg)
+				transform-origin: top
+
+				li 
+					transform: rotate(180deg)
+
+					&:last-of-type 
+						margin-bottom: 0
+
+.mobile-layer
+	display: none
+	transition: all 0.2s ease-in-out
+	position: fixed
+	background: rgba(0,0,0,.7)
+	width: 100%
+	height: 100%
+	z-index: 501
+	top: 0
+	left: 0
+
+	&.expanded
+		display: block
+

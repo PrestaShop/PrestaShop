@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <nav class="nav-bar d-none d-md-block">
-  <span class="menu-collapse d-none d-lg-block">
+  <span class="menu-collapse">
     <i class="material-icons">chevron_left</i>
     <i class="material-icons">chevron_left</i>
   </span>
@@ -53,7 +53,7 @@
 
         {else}
 
-          <li class="category-title d-none d-lg-block {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
+          <li class="category-title {if $level1.current}-active{/if}" data-submenu="{$level1.id_tab}" id="tab-{$level1.class_name}">
               <span class="title">{$level1Name}</span>
           </li>
 
@@ -81,7 +81,7 @@
                     {$level2Name}
                     </span>
                       {if $level1.sub_tabs|@count}
-                          <i class="material-icons ml-auto sub-tabs-arrow">
+                          <i class="material-icons sub-tabs-arrow">
                               {if $level2.current}
                                   keyboard_arrow_up
                               {else}
