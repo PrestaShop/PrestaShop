@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class PaginationConfiguration is responsible for saving & loading pagination configuration for products
+ */
 class PaginationConfiguration implements DataConfigurationInterface
 {
     /**
