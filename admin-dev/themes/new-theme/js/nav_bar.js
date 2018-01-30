@@ -22,7 +22,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-import MobileDetect from 'mobile-detect';
 
 export default class NavBar {
   constructor() {
@@ -111,10 +110,6 @@ export default class NavBar {
     let $logout = $('#header_logout').addClass('link').removeClass('m-t-1').prop('outerHTML');
     let $employee = $('.employee_avatar').prop('outerHTML');
     let profileLink = $('.profile-link').attr('href');
-    let $shoplist = $('.shop-list');
-    let $shopText =  $('.shop-list .items-list .active a').html();
-
-    $shoplist.find('.link').removeClass('link');
 
     $('.nav-bar li.link-levelone.has_submenu:not(.open) a > i.material-icons.sub-tabs-arrow').text('keyboard_arrow_down');
     $('body').addClass('mobile');
@@ -131,16 +126,6 @@ export default class NavBar {
     $('.collapse').collapse({
       toggle: false
     });
-
-    if ($shoplist.hasClass('ps-dropdown')) {
-      $('.main-menu li:first').append(`<p class="shop-list-title"><a href="#shop-list-collapse" data-toggle="collapse" aria-expanded="true">${$shopText}</a></p>`);
-      $('.main-menu li:first').append( $('.shop-list .items-list').addClass('collapse').attr('id', 'shop-list-collapse'));
-      $('#shop-list-collapse').collapse({
-        toggle: true
-      });
-    } else {
-      $('.main-menu li:first').append( $('.shop-list'));
-    }
     $('.employee_avatar .material-icons, .employee_avatar span').wrap(`<a href="${profileLink}"></a>`);
     $('.js-mobile-menu').on('click', expand);
     $('.js-notifs_dropdown').css({
