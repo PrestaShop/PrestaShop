@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class PageConfiguration is responsible for saving & loading product page configuration
+ */
 class PageConfiguration implements DataConfigurationInterface
 {
     /**
