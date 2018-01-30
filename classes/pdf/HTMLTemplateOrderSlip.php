@@ -154,7 +154,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
             'invoice_address' => $formatted_invoice_address,
             'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
             'tax_excluded_display' => $tax_excluded_display,
-            'total_cart_rule' => $total_cart_rule
+            'total_cart_rule' => $total_cart_rule,
+            'shopAddress' => OrderInvoice::getCurrentFormattedShopAddress((int)$this->order->id_shop),
         ));
 
         $tpls = array(
