@@ -30,6 +30,9 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class StockConfiguration is responsible for saving & loading products stock configuration
+ */
 class StockConfiguration implements DataConfigurationInterface
 {
     /**
