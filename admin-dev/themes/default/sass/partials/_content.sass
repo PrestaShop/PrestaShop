@@ -7,6 +7,11 @@ body
 	color: $text-color
 	background-color: $body-bg
 	-webkit-tap-highlight-color: rgba(0,0,0,0)
+	&.mobile
+		#content.bootstrap
+			@media (max-width: $screen-lg)
+				padding-left: 0.625rem
+
 
 #main
 	z-index: 10
@@ -16,7 +21,7 @@ body
 	@include float(left)
 
 #content.bootstrap
-	padding: 120px 10px 0
+	padding: 120px 10px 0 225px
 	&.with-tabs
 		padding: 150px 10px 0
 	@include transition-property(margin)
@@ -210,3 +215,7 @@ body.display-modal
 .page-topbar
 	#help-container
 		margin-top: 140px
+
+.page-sidebar-closed:not(.mobile)
+	#content
+		padding-left: 3.125rem + (1.875rem / 2)
