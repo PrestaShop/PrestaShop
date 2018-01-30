@@ -26,55 +26,55 @@
 const $ = window.$;
 
 class StockManagementOptionHandler {
-    constructor() {
-        this.handle();
+  constructor() {
+    this.handle();
 
-        $('#form_stock_stock_management').on('change', this.handle.bind(this));
+    $('#form_stock_stock_management').on('change', this.handle.bind(this));
+  }
+
+  handle() {
+    const stockManagementVal = $('#form_stock_stock_management').val();
+    const isStockManagementEnabled = parseInt(stockManagementVal);
+
+    this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
+    this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
+  }
+
+  /**
+   * If stock managament is disabled
+   * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
+   * otherwise it should be enabled
+   *
+   * @param {int} isStockManagementEnabled
+   */
+  handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
+    const allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
+
+    if (isStockManagementEnabled) {
+        allowOrderingOosSelect.removeAttr('disabled');
+    } else {
+        allowOrderingOosSelect.val(1);
+        allowOrderingOosSelect.attr('disabled', 'disabled');
     }
+  }
 
-    handle() {
-        const stockManagementVal = $('#form_stock_stock_management').val();
-        const isStockManagementEnabled = parseInt(stockManagementVal);
+  /**
+   * If stock managament is disabled
+   * then 'Display available quantities on the product page' option must be No and disabled
+   * otherwise it should be enabled
+   *
+   * @param {int} isStockManagementEnabled
+   */
+  handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
+    const displayQuantitiesSelect = $('#form_page_display_quantities');
 
-        this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
-        this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
+    if (isStockManagementEnabled) {
+        displayQuantitiesSelect.removeAttr('disabled');
+    } else {
+        displayQuantitiesSelect.val(0);
+        displayQuantitiesSelect.attr('disabled', 'disabled');
     }
-
-    /**
-     * If stock managament is disabled
-     * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
-     * otherwise it should be enabled
-     *
-     * @param {int} isStockManagementEnabled
-     */
-    handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-        const allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
-
-        if (isStockManagementEnabled) {
-            allowOrderingOosSelect.removeAttr('disabled');
-        } else {
-            allowOrderingOosSelect.val(1);
-            allowOrderingOosSelect.attr('disabled', 'disabled');
-        }
-    }
-
-    /**
-     * If stock managament is disabled
-     * then 'Display available quantities on the product page' option must be No and disabled
-     * otherwise it should be enabled
-     *
-     * @param {int} isStockManagementEnabled
-     */
-    handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-        const displayQuantitiesSelect = $('#form_page_display_quantities');
-
-        if (isStockManagementEnabled) {
-            displayQuantitiesSelect.removeAttr('disabled');
-        } else {
-            displayQuantitiesSelect.val(0);
-            displayQuantitiesSelect.attr('disabled', 'disabled');
-        }
-    }
+  }
 }
 
 export default StockManagementOptionHandler;

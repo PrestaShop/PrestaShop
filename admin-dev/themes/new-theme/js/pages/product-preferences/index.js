@@ -29,6 +29,6 @@ import StockManagementOptionHandler from './stock-management-option-handler';
 const $ = window.$;
 
 $(() => {
-    new TranslatableInput();
-    new StockManagementOptionHandler();
+  new TranslatableInput();
+  new StockManagementOptionHandler();
 });
