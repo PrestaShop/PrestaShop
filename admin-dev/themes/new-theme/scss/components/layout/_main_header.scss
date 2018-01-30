@@ -22,19 +22,9 @@
     .notification-center .dropdown-menu {
       margin-top: 0.3125rem;
     }
-    > .material-icons {
+    > .material-icons:not(.js-mobile-menu) {
       padding-top: 0.625rem;
       font-size: 1.313rem;
-
-      &.js-mobile-menu {
-        cursor: pointer;
-        padding-top: 0;
-        margin-left: 0.6rem;
-        font-size: 1.8rem;
-        display: inline-flex;
-        flex-direction: column;
-        justify-content: center;
-      }
     }
   }
   > .logo {

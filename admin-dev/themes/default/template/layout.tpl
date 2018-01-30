@@ -95,4 +95,5 @@
 	</div>
 {/if}
 {$page}
+<div class="mobile-layer"></div>
 {$footer}
