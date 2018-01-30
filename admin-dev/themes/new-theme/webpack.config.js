@@ -50,7 +50,7 @@ let config = {
       './js/app/pages/translations',
     ],
     product_preferences: [
-      './js/product-preferences-page',
+      './js/pages/product-preferences',
     ]
   },
   output: {
