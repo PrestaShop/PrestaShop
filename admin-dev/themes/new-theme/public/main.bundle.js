@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2bb32c8bb1773d59ea56"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9fb66eb2d0922dcd7f7a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -26905,7 +26905,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__nav_bar_js__ = __webpack_require__(268);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__clickable_dropdown__ = __webpack_require__(265);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__clickable_dropdown___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__clickable_dropdown__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__product_page_index__ = __webpack_require__(273);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__product_page_index__ = __webpack_require__(274);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__translation_page_index__ = __webpack_require__(279);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__header_js__ = __webpack_require__(267);
 /**
@@ -56039,7 +56039,8 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 270 */
+/* 270 */,
+/* 271 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56125,7 +56126,7 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 271 */
+/* 272 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56203,7 +56204,7 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 272 */
+/* 273 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56389,17 +56390,17 @@ let setNotificationsNumber = function (id, number) {
 
 
 /***/ }),
-/* 273 */
+/* 274 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__product_header__ = __webpack_require__(276);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__product_search_autocomplete__ = __webpack_require__(277);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__category_tree__ = __webpack_require__(271);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__attributes__ = __webpack_require__(270);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__product_bulk_combinations__ = __webpack_require__(275);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nested_categories__ = __webpack_require__(274);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__combination__ = __webpack_require__(272);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__product_header__ = __webpack_require__(277);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__product_search_autocomplete__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__category_tree__ = __webpack_require__(272);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__attributes__ = __webpack_require__(271);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__product_bulk_combinations__ = __webpack_require__(276);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__nested_categories__ = __webpack_require__(275);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__combination__ = __webpack_require__(273);
 /**
  * 2007-2017 PrestaShop
  *
@@ -56456,7 +56457,7 @@ $(() => {
 
 
 /***/ }),
-/* 274 */
+/* 275 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56526,7 +56527,7 @@ $(() => {
 
 
 /***/ }),
-/* 275 */
+/* 276 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56820,7 +56821,7 @@ class Combination {
 
 
 /***/ }),
-/* 276 */
+/* 277 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56890,7 +56891,7 @@ class Combination {
 
 
 /***/ }),
-/* 277 */
+/* 278 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -57029,7 +57030,6 @@ class Combination {
 
 
 /***/ }),
-/* 278 */,
 /* 279 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

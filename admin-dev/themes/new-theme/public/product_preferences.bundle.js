@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2bb32c8bb1773d59ea56"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9fb66eb2d0922dcd7f7a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -717,7 +717,7 @@
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__ = __webpack_require__(266);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(278);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__ = __webpack_require__(270);
 /**
  * 2007-2018 PrestaShop
  *
@@ -749,8 +749,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 const $ = window.$;
 
 $(() => {
-    new __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__["a" /* default */]();
-    new __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__["a" /* default */]();
+  new __WEBPACK_IMPORTED_MODULE_0__components_translatable_input__["a" /* default */]();
+  new __WEBPACK_IMPORTED_MODULE_1__stock_management_option_handler__["a" /* default */]();
 });
 
 
@@ -814,7 +814,7 @@ class TranslatableInput {
 
 /***/ }),
 
-/***/ 278:
+/***/ 270:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -846,55 +846,55 @@ class TranslatableInput {
 const $ = window.$;
 
 class StockManagementOptionHandler {
-    constructor() {
-        this.handle();
+  constructor() {
+    this.handle();
 
-        $('#form_stock_stock_management').on('change', this.handle.bind(this));
+    $('#form_stock_stock_management').on('change', this.handle.bind(this));
+  }
+
+  handle() {
+    const stockManagementVal = $('#form_stock_stock_management').val();
+    const isStockManagementEnabled = parseInt(stockManagementVal);
+
+    this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
+    this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
+  }
+
+  /**
+   * If stock managament is disabled
+   * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
+   * otherwise it should be enabled
+   *
+   * @param {int} isStockManagementEnabled
+   */
+  handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
+    const allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
+
+    if (isStockManagementEnabled) {
+        allowOrderingOosSelect.removeAttr('disabled');
+    } else {
+        allowOrderingOosSelect.val(1);
+        allowOrderingOosSelect.attr('disabled', 'disabled');
     }
+  }
 
-    handle() {
-        const stockManagementVal = $('#form_stock_stock_management').val();
-        const isStockManagementEnabled = parseInt(stockManagementVal);
+  /**
+   * If stock managament is disabled
+   * then 'Display available quantities on the product page' option must be No and disabled
+   * otherwise it should be enabled
+   *
+   * @param {int} isStockManagementEnabled
+   */
+  handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
+    const displayQuantitiesSelect = $('#form_page_display_quantities');
 
-        this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
-        this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
+    if (isStockManagementEnabled) {
+        displayQuantitiesSelect.removeAttr('disabled');
+    } else {
+        displayQuantitiesSelect.val(0);
+        displayQuantitiesSelect.attr('disabled', 'disabled');
     }
-
-    /**
-     * If stock managament is disabled
-     * then 'Allow ordering of out-of-stock products' option must be Yes and disabled
-     * otherwise it should be enabled
-     *
-     * @param {int} isStockManagementEnabled
-     */
-    handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-        const allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
-
-        if (isStockManagementEnabled) {
-            allowOrderingOosSelect.removeAttr('disabled');
-        } else {
-            allowOrderingOosSelect.val(1);
-            allowOrderingOosSelect.attr('disabled', 'disabled');
-        }
-    }
-
-    /**
-     * If stock managament is disabled
-     * then 'Display available quantities on the product page' option must be No and disabled
-     * otherwise it should be enabled
-     *
-     * @param {int} isStockManagementEnabled
-     */
-    handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-        const displayQuantitiesSelect = $('#form_page_display_quantities');
-
-        if (isStockManagementEnabled) {
-            displayQuantitiesSelect.removeAttr('disabled');
-        } else {
-            displayQuantitiesSelect.val(0);
-            displayQuantitiesSelect.attr('disabled', 'disabled');
-        }
-    }
+  }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = (StockManagementOptionHandler);
