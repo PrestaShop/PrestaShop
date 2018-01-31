@@ -78,36 +78,6 @@ File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:28</note>
         <note>Context:
 File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:29</note>
       </trans-unit>
-      <trans-unit id="e82b76a36b23218201ac431c5c2da4c6">
-        <source>Please specify your order reference %s in the bankwire description.</source>
-        <target>Please specify your order reference %s in the bankwire description.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:34</note>
-      </trans-unit>
-      <trans-unit id="09e6ed8a978471819332e14dcc5cbe39">
-        <source>We've also sent you this information by e-mail.</source>
-        <target>We've also sent you this information by e-mail.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:35</note>
-      </trans-unit>
-      <trans-unit id="b9a1cae09e5754424e33764777cfcaa0">
-        <source>Your order will be sent as soon as we receive payment.</source>
-        <target>Your order will be sent as soon as we receive payment.</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:37</note>
-      </trans-unit>
-      <trans-unit id="1b22721c0967c351b34d82496917654f">
-        <source>If you have questions, comments or concerns, please contact our [1]expert customer support team[/1].</source>
-        <target>If you have questions, comments or concerns, please contact our [1]expert customer support team[/1].</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:39</note>
-      </trans-unit>
-      <trans-unit id="c00373052588907ffdd28d1866a75aee">
-        <source>We noticed a problem with your order. If you think this is an error, feel free to contact our [1]expert customer support team[/1].</source>
-        <target>We noticed a problem with your order. If you think this is an error, feel free to contact our [1]expert customer support team[/1].</target>
-        <note>Context:
-File: modules/ps_wirepayment/views/templates/hook/payment_return.tpl:43</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_wirepayment/views/templates/hook/ps_wirepayment_intro.tpl" source-language="en-US" target-language="en" datatype="plaintext">

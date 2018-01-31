@@ -320,49 +320,49 @@ File: controllers/admin/AdminTabsController.php:197</note>
         <source>Save</source>
         <target>Save</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:189</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:190</note>
       </trans-unit>
       <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
         <source>Settings</source>
         <target>Settings</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:158</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:161</note>
       </trans-unit>
       <trans-unit id="851bd83a102d143ee17d97f9e15e15af">
         <source>Google Analytics Tracking ID</source>
         <target>Google Analytics Tracking ID</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:163</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:166</note>
       </trans-unit>
       <trans-unit id="ad8e83a47926dcb12e8a8fccd7fcf604">
         <source>This information is available in your Google Analytics account</source>
         <target>This information is available in your Google Analytics account</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:167</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:170</note>
       </trans-unit>
       <trans-unit id="bcd08e73ca9d8bfed2cccd50dd6d8328">
         <source>Enable User ID tracking</source>
         <target>Enable User ID tracking</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:171</note>
-      </trans-unit>
-      <trans-unit id="9bda6a2c3edca377eb901d7ea57c8b06">
-        <source>The User ID is set at the property level. To find a property, click Admin, then select an account and a property. From the Property column, click Tracking Info then User ID</source>
-        <target>The User ID is set at the property level. To find a property, click Admin, then select an account and a property. From the Property column, click Tracking Info then User ID</target>
-        <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:173</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:174</note>
       </trans-unit>
       <trans-unit id="00d23a76e43b46dae9ec7aa9dcbebb32">
         <source>Enabled</source>
         <target>Enabled</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:178</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:203</note>
       </trans-unit>
       <trans-unit id="b9f5c797ebbf55adccdd8539a65a0241">
         <source>Disabled</source>
         <target>Disabled</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:183</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:208</note>
+      </trans-unit>
+      <trans-unit id="eaa289807715dff623c794d83941f3ab">
+        <source>Enable Cross-Domain tracking</source>
+        <target>Enable Cross-Domain tracking</target>
+        <note>Context:
+File: modules/ps_googleanalytics/ps_googleanalytics.php:197</note>
       </trans-unit>
     </body>
   </file>
@@ -402,11 +402,17 @@ File: admin-dev/themes/default/template/controllers/modules/configure.tpl:84</no
         <note>Context:
 File: admin-dev/themes/default/template/controllers/modules/configure.tpl:92</note>
       </trans-unit>
+      <trans-unit id="c439b45b0a80369402e0d6158b55590f">
+        <source>Generate RTL Stylesheets</source>
+        <target>Generate RTL Stylesheets</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/modules/configure.tpl:100</note>
+      </trans-unit>
       <trans-unit id="53103fcc4656f55c219b600ded3c7438">
         <source>Manage hooks</source>
         <target>Manage hooks</target>
         <note>Context:
-File: admin-dev/themes/default/template/controllers/modules/configure.tpl:99</note>
+File: admin-dev/themes/default/template/controllers/modules/configure.tpl:107</note>
       </trans-unit>
     </body>
   </file>
@@ -613,6 +619,42 @@ File: admin-dev/themes/default/template/helpers/options/options.tpl:82</note>
         <target>You can't change the value of this configuration field in the context of this shop.</target>
         <note>Context:
 File: admin-dev/themes/default/template/helpers/options/options.tpl:331</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/psaddonsconnect/psaddonsconnect.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="59c29985e3ebd042bef35631307d47a2">
+        <source>Tips and Updates module</source>
+        <target>Tips and Updates module</target>
+        <note>Context:
+File: modules/psaddonsconnect/psaddonsconnect.php:51</note>
+      </trans-unit>
+      <trans-unit id="475068f091f2d33ff771152fcc008714">
+        <source>Thanks to this module, connect to your Addons account from the dashboard of your back-office</source>
+        <target>Thanks to this module, connect to your Addons account from the dashboard of your back-office</target>
+        <note>Context:
+File: modules/psaddonsconnect/psaddonsconnect.php:52</note>
+      </trans-unit>
+      <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
+        <source>Are you sure you want to uninstall this module?</source>
+        <target>Are you sure you want to uninstall this module?</target>
+        <note>Context:
+File: modules/psaddonsconnect/psaddonsconnect.php:60
+ Comment: Confirm uninstall</note>
+      </trans-unit>
+      <trans-unit id="f87b9438e8de65a83e7a3ef56a9d23fb">
+        <source>There was an error during the installation. Please contact us through Addons website</source>
+        <target>There was an error during the installation. Please contact us through Addons website</target>
+        <note>Context:
+File: modules/psaddonsconnect/psaddonsconnect.php:83
+ Comment: if something wrong return false</note>
+      </trans-unit>
+      <trans-unit id="78d320af42aca685d1fcd1113f09939e">
+        <source>There was an error during the desinstallation. Please contact us through Addons website</source>
+        <target>There was an error during the desinstallation. Please contact us through Addons website</target>
+        <note>Context:
+File: modules/psaddonsconnect/psaddonsconnect.php:103</note>
       </trans-unit>
     </body>
   </file>
@@ -1028,6 +1070,324 @@ File: controllers/admin/AdminCustomerThreadsController.php:410</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/cronjobs/classes/CronJobsForms.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d4169d52732e9ae8df56d2cbcad81a94">
+        <source>Task description</source>
+        <target>Task description</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:225</note>
+      </trans-unit>
+      <trans-unit id="70d4968bea9a6e76c0333904b9d385e4">
+        <source>Update my currencies</source>
+        <target>Update my currencies</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:107</note>
+      </trans-unit>
+      <trans-unit id="0eff773cf33456a033e913f6ed18045c">
+        <source>Target link</source>
+        <target>Target link</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:226</note>
+      </trans-unit>
+      <trans-unit id="07045abc579615634804f42bc0b2b4bb">
+        <source>Enter a description for this task.</source>
+        <target>Enter a description for this task.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:106</note>
+      </trans-unit>
+      <trans-unit id="43773e69610c99be6c15daa4a2036443">
+        <source>Set the link of your cron task.</source>
+        <target>Set the link of your cron task.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:97</note>
+      </trans-unit>
+      <trans-unit id="3a21e2309e8e6aa3759e466154508f2c">
+        <source>Do not forget to use an absolute URL to make it valid! The link also has to be on the same domain as the shop.</source>
+        <target>Do not forget to use an absolute URL to make it valid! The link also has to be on the same domain as the shop.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:114</note>
+      </trans-unit>
+      <trans-unit id="be938fb8c5582085599dfa95368fb489">
+        <source>Task frequency</source>
+        <target>Task frequency</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:122</note>
+      </trans-unit>
+      <trans-unit id="b3364fad867d47ca61265fd315e4071e">
+        <source>At what time should this task be executed?</source>
+        <target>At what time should this task be executed?</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:123</note>
+      </trans-unit>
+      <trans-unit id="6c5d30049c4d8d644bd35650be4ac13a">
+        <source>On which day of the month should this task be executed?</source>
+        <target>On which day of the month should this task be executed?</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:132</note>
+      </trans-unit>
+      <trans-unit id="a1457ee25ec20fa032d37509b5a90a4e">
+        <source>On what month should this task be executed?</source>
+        <target>On what month should this task be executed?</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:141</note>
+      </trans-unit>
+      <trans-unit id="65f768d204a3118f426c756056bef1e1">
+        <source>On which day of the week should this task be executed?</source>
+        <target>On which day of the week should this task be executed?</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:150</note>
+      </trans-unit>
+      <trans-unit id="b3419e63398ccc41c062f36631bebd9a">
+        <source>Cron mode</source>
+        <target>Cron mode</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:172</note>
+      </trans-unit>
+      <trans-unit id="972e73b7a882d0802a4e3a16946a2f94">
+        <source>Basic</source>
+        <target>Basic</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:174</note>
+      </trans-unit>
+      <trans-unit id="eaf1dc6d93a18adb2619233d8e99c197">
+        <source>Use the PrestaShop cron tasks webservice to execute your tasks.</source>
+        <target>Use the PrestaShop cron tasks webservice to execute your tasks.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:175</note>
+      </trans-unit>
+      <trans-unit id="9b6545e4cea9b4ad4979d41bb9170e2b">
+        <source>Advanced</source>
+        <target>Advanced</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:176</note>
+      </trans-unit>
+      <trans-unit id="b6610b26530c9ee3d7bc4a478cf35299">
+        <source>For advanced users only: use your own crontab manager instead of PrestaShop cron tasks service.</source>
+        <target>For advanced users only: use your own crontab manager instead of PrestaShop cron tasks service.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:177</note>
+      </trans-unit>
+      <trans-unit id="2257d36bcb68362b24cf74f626bac599">
+        <source>The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.</source>
+        <target>The Advanced mode enables you to use your own cron tasks manager instead of PrestaShop cron tasks webservice.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:210</note>
+      </trans-unit>
+      <trans-unit id="43009010c8282eadc3f19f4b9c7c5ee4">
+        <source>First of all, make sure the 'curl' library is installed on your server.</source>
+        <target>First of all, make sure the 'curl' library is installed on your server.</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:211</note>
+      </trans-unit>
+      <trans-unit id="18028ef85b7ce8fbde749a2c49c6d18a">
+        <source>To execute your cron tasks, please insert the following line in your cron tasks manager:</source>
+        <target>To execute your cron tasks, please insert the following line in your cron tasks manager:</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:212</note>
+      </trans-unit>
+      <trans-unit id="03727ac48595a24daed975559c944a44">
+        <source>Day</source>
+        <target>Day</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:228</note>
+      </trans-unit>
+      <trans-unit id="7cbb885aa1164b390a0bc050a64e1812">
+        <source>Month</source>
+        <target>Month</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:229</note>
+      </trans-unit>
+      <trans-unit id="e59278675b8f1e052b22b7e5e7d65da7">
+        <source>Day of week</source>
+        <target>Day of week</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:230</note>
+      </trans-unit>
+      <trans-unit id="8cebfac3b4821cbc83041f5df54d7730">
+        <source>Last execution</source>
+        <target>Last execution</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:231</note>
+      </trans-unit>
+      <trans-unit id="1e3208e0b0d5de9281f88c34169cda6b">
+        <source>One shot</source>
+        <target>One shot</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:232</note>
+      </trans-unit>
+      <trans-unit id="4d3d769b812b6faa6b76e1a8abaece2d">
+        <source>Active</source>
+        <target>Active</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:233</note>
+      </trans-unit>
+      <trans-unit id="bdb6ae0d03e6793183349e00f67657f6">
+        <source>Module - Hook</source>
+        <target>Module - Hook</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:300</note>
+      </trans-unit>
+      <trans-unit id="02fd27d2951d00b83f111f63611ea863">
+        <source>Every hour</source>
+        <target>Every hour</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:319</note>
+      </trans-unit>
+      <trans-unit id="48bf14c419a1d441412510faf39c326d">
+        <source>Every day</source>
+        <target>Every day</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:306</note>
+      </trans-unit>
+      <trans-unit id="8ed91b71d01993965915f3b296c20336">
+        <source>Every month</source>
+        <target>Every month</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:341</note>
+      </trans-unit>
+      <trans-unit id="50875e72e1477618055d1508112199b4">
+        <source>Every day of the week</source>
+        <target>Every day of the week</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:352</note>
+      </trans-unit>
+      <trans-unit id="6e7b34fa59e1bd229b207892956dc41c">
+        <source>Never</source>
+        <target>Never</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:309</note>
+      </trans-unit>
+      <trans-unit id="16ed0a7b977ec3bbd23badfb5580d56f">
+        <source>Every day of the month</source>
+        <target>Every day of the month</target>
+        <note>Context:
+File: modules/cronjobs/classes/CronJobsForms.php:330</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
+        <source>Hour</source>
+        <target>Hour</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1382</note>
+      </trans-unit>
+      <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
+        <source>Now</source>
+        <target>Now</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1373</note>
+      </trans-unit>
+      <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
+        <source>Done</source>
+        <target>Done</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1374</note>
+      </trans-unit>
+      <trans-unit id="3964fd83339fec5014c831822005653a">
+        <source>Choose Time</source>
+        <target>Choose Time</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1380</note>
+      </trans-unit>
+      <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
+        <source>Time</source>
+        <target>Time</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1381</note>
+      </trans-unit>
+      <trans-unit id="62902641c38f3a4a8eb3212454360e24">
+        <source>Minute</source>
+        <target>Minute</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1383</note>
+      </trans-unit>
+      <trans-unit id="730224c4825ae2c174f4cdaff321520e">
+        <source>Transform a guest into a customer</source>
+        <target>Transform a guest into a customer</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:594</note>
+      </trans-unit>
+      <trans-unit id="e5bd639f4d74cf2c52afada77086f788">
+        <source>Process a standard refund</source>
+        <target>Process a standard refund</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:898</note>
+      </trans-unit>
+      <trans-unit id="c4b689eeebf8e942907a1cc1d086dba6">
+        <source>Process a partial refund</source>
+        <target>Process a partial refund</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:899</note>
+      </trans-unit>
+      <trans-unit id="cc61945cbbf46721a053467c395c666f">
+        <source>Refunded</source>
+        <target>Refunded</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:927</note>
+      </trans-unit>
+      <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
+        <source>Return products</source>
+        <target>Return products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1191</note>
+      </trans-unit>
+      <trans-unit id="74c06eb18eeb118d7b3c623d0c717290">
+        <source>Refund products</source>
+        <target>Refund products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1191</note>
+      </trans-unit>
+      <trans-unit id="4b8def9be8f45a8d6baea36b26868965">
+        <source>Cancel products</source>
+        <target>Cancel products</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1191</note>
+      </trans-unit>
+      <trans-unit id="867343577fa1f33caa632a19543bd252">
+        <source>Keywords</source>
+        <target>Keywords</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1260</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/cronjobs/cronjobs.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="682ee2e41e510efdbced967430173c66">
+        <source>Cron tasks manager</source>
+        <target>Cron tasks manager</target>
+        <note>Context:
+File: modules/cronjobs/cronjobs.php:67</note>
+      </trans-unit>
+      <trans-unit id="c75e110ddb05aea61563c50d7baf0ae0">
+        <source>Manage all your automated web tasks from a single interface.</source>
+        <target>Manage all your automated web tasks from a single interface.</target>
+        <note>Context:
+File: modules/cronjobs/cronjobs.php:68</note>
+      </trans-unit>
+      <trans-unit id="4093808c9781fb6ca2ed5ade71deff4d">
+        <source>To be able to use this module, please activate cURL (PHP extension).</source>
+        <target>To be able to use this module, please activate cURL (PHP extension).</target>
+        <note>Context:
+File: modules/cronjobs/cronjobs.php:71</note>
+      </trans-unit>
+      <trans-unit id="035d5cdab2c65ad42b303f8125025160">
+        <source>Cron tasks</source>
+        <target>Cron tasks</target>
+        <note>Context:
+File: modules/cronjobs/cronjobs.php:412</note>
+      </trans-unit>
+      <trans-unit id="6588952424b58b4c9fc9df026b668991">
+        <source>Add new task</source>
+        <target>Add new task</target>
+        <note>Context:
+File: modules/cronjobs/cronjobs.php:427</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="modules/gamification/controllers/admin/AdminGamificationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="3d4aafb2eedeba2fbf92e852f0af745a">
@@ -1098,7 +1458,7 @@ File: modules/gamification/controllers/admin/AdminGamificationController.php:90<
         <source>Become an e-commerce expert within the blink of an eye!</source>
         <target>Become an e-commerce expert within the blink of an eye!</target>
         <note>Context:
-File: modules/gamification/gamification.php:51</note>
+File: modules/gamification/gamification.php:54</note>
       </trans-unit>
     </body>
   </file>
@@ -1312,31 +1672,31 @@ File: controllers/admin/AdminModulesController.php:859</note>
         <source>Modules to update</source>
         <target>Modules to update</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1381</note>
+File: controllers/admin/AdminModulesController.php:1394</note>
       </trans-unit>
       <trans-unit id="0f0c014bcfe255c6749d8e665ff8bb4e">
         <source>Translate this module</source>
         <target>Translate this module</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1434</note>
+File: controllers/admin/AdminModulesController.php:1447</note>
       </trans-unit>
       <trans-unit id="7602b3edb382cf12573e156623fe9468">
         <source>This module cannot be installed</source>
         <target>This module cannot be installed</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1442</note>
+File: controllers/admin/AdminModulesController.php:1455</note>
       </trans-unit>
       <trans-unit id="ac8f751177ba1d91a0ab11d3650cdfaf">
         <source>Important Notice</source>
         <target>Important Notice</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1442</note>
+File: controllers/admin/AdminModulesController.php:1455</note>
       </trans-unit>
       <trans-unit id="c472f22a7459a000f0177a23fdc4212b">
         <source>This module is Untrusted for your country</source>
         <target>This module is Untrusted for your country</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1450</note>
+File: controllers/admin/AdminModulesController.php:1463</note>
       </trans-unit>
     </body>
   </file>
@@ -1524,6 +1884,62 @@ File: admin-dev/themes/default/template/controllers/themes/configurelayouts.tpl:
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b07242082d4a24b63951185a1bae15bb">
+        <source>You do not have permission to create this.</source>
+        <target>You do not have permission to create this.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:88</note>
+      </trans-unit>
+      <trans-unit id="9ad28fef1c6184adfe7397838891ba76">
+        <source>The Memcached server cannot be added.</source>
+        <target>The Memcached server cannot be added.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:116</note>
+      </trans-unit>
+      <trans-unit id="11a257a80f8c8d76132470b171de6795">
+        <source>You do not have permission to delete this.</source>
+        <target>You do not have permission to delete this.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:139</note>
+      </trans-unit>
+      <trans-unit id="bf4ddd37d9f82a3ad1f405891dfaa235">
+        <source>There was an error when attempting to delete the Memcached server.</source>
+        <target>There was an error when attempting to delete the Memcached server.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/MemcacheServerController.php:151</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
+        <source>Clear cache</source>
+        <target>Clear cache</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:50</note>
+      </trans-unit>
+      <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
+        <source>You do not have permission to update this.</source>
+        <target>You do not have permission to update this.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:96</note>
+      </trans-unit>
+      <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
+        <source>Successful update.</source>
+        <target>Successful update.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:107</note>
+      </trans-unit>
+      <trans-unit id="fd4adc19ae7e0f0391f617451f3729cf">
+        <source>All caches cleared successfully</source>
+        <target>All caches cleared successfully</target>
+        <note>Context:
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:124</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
@@ -1557,62 +1973,6 @@ File: admin-dev/themes/new-theme/template/page_header_toolbar.tpl:84</note>
         <target>This functionality has been disabled.</target>
         <note>Context:
 File: src/PrestaShopBundle/Controller/Admin/FrameworkBundleAdminController.php:205</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/AdvancedParameters/MemcacheServerController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b07242082d4a24b63951185a1bae15bb">
-        <source>You do not have permission to create this.</source>
-        <target>You do not have permission to create this.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/MemcacheServerController.php:88</note>
-      </trans-unit>
-      <trans-unit id="9ad28fef1c6184adfe7397838891ba76">
-        <source>The Memcached server cannot be added.</source>
-        <target>The Memcached server cannot be added.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/MemcacheServerController.php:116</note>
-      </trans-unit>
-      <trans-unit id="11a257a80f8c8d76132470b171de6795">
-        <source>You do not have permission to delete this.</source>
-        <target>You do not have permission to delete this.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/MemcacheServerController.php:139</note>
-      </trans-unit>
-      <trans-unit id="bf4ddd37d9f82a3ad1f405891dfaa235">
-        <source>There was an error when attempting to delete the Memcached server.</source>
-        <target>There was an error when attempting to delete the Memcached server.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/MemcacheServerController.php:151</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
-        <source>Clear cache</source>
-        <target>Clear cache</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php:50</note>
-      </trans-unit>
-      <trans-unit id="df3c280f0aaf0cb0d5c25ab322a8bcf9">
-        <source>You do not have permission to update this.</source>
-        <target>You do not have permission to update this.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php:96</note>
-      </trans-unit>
-      <trans-unit id="b4a34d3f58b039e7685c2e39b5413757">
-        <source>Successful update.</source>
-        <target>Successful update.</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php:107</note>
-      </trans-unit>
-      <trans-unit id="fd4adc19ae7e0f0391f617451f3729cf">
-        <source>All caches cleared successfully</source>
-        <target>All caches cleared successfully</target>
-        <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php:124</note>
       </trans-unit>
     </body>
   </file>
@@ -1668,6 +2028,16 @@ File: src/PrestaShopBundle/Form/Admin/AdvancedParameters/Performance/CachingType
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
+        <source>IP address</source>
+        <target>IP address</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:71</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="ddd8eef6f86868a07f62b0e3810711f0">
@@ -1690,13 +2060,143 @@ File: admin-dev/themes/default/template/controllers/modules/tab_modules_list.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae">
-        <source>IP address</source>
-        <target>IP address</target>
+      <trans-unit id="7be54024e8bcd26fb590144aac97ba5f">
+        <source><![CDATA[TIPS & UPDATES]]></source>
+        <target><![CDATA[TIPS & UPDATES]]></target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:47</note>
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:28</note>
+      </trans-unit>
+      <trans-unit id="cdcbcbc85ab3a853719bf11c276be7e1">
+        <source>Connect to your account right now to enjoy updates (security and features) on all of your modules.</source>
+        <target>Connect to your account right now to enjoy updates (security and features) on all of your modules.</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="1d73e09f3283e07069c6603eb3fabd6e">
+        <source>Once you are connected, you will also enjoy weekly tips directly from your back office.</source>
+        <target>Once you are connected, you will also enjoy weekly tips directly from your back office.</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:33</note>
+      </trans-unit>
+      <trans-unit id="78f1d8c0b05e45e2fd5e2a9549e87589">
+        <source>CONNECT TO PRESTASHOP MARKETPLACE</source>
+        <target>CONNECT TO PRESTASHOP MARKETPLACE</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:88</note>
+      </trans-unit>
+      <trans-unit id="8438266d57cf7e6781947849125ce017">
+        <source>Connect to PrestaShop marketplace</source>
+        <target>Connect to PrestaShop marketplace</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:49</note>
+      </trans-unit>
+      <trans-unit id="7b9a264ee201bb6ea740f2e5c9bbfb82">
+        <source>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet ?</source>
+        <target>Link your shop to your Addons account to automatically receive important updates for the modules you purchased. Don't have an account yet ?</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:55</note>
+      </trans-unit>
+      <trans-unit id="cedcf6fe65a8f2849fe11e316d6c9923">
+        <source>Sign up now</source>
+        <target>Sign up now</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:56</note>
+      </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30">
+        <source>Email address</source>
+        <target>Email address</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:60</note>
+      </trans-unit>
+      <trans-unit id="878530871f0db73f004f5bd6591eeb76">
+        <source>Remember me</source>
+        <target>Remember me</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:69</note>
+      </trans-unit>
+      <trans-unit id="df561d346c87373377e01ddc7e6d2456">
+        <source>LET'S GO !</source>
+        <target>LET'S GO !</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:72</note>
+      </trans-unit>
+      <trans-unit id="01a569ddc6cf67ddec2a683f0a5f5956">
+        <source>Forgot your password?</source>
+        <target>Forgot your password?</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:76</note>
+      </trans-unit>
+      <trans-unit id="c4ab50c3866c157bd46ed930ab305eb8">
+        <source>Tip of the moment</source>
+        <target>Tip of the moment</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:95</note>
+      </trans-unit>
+      <trans-unit id="754498b2927bb601e4072f1d7385b984">
+        <source>See the entire selection</source>
+        <target>See the entire selection</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:107</note>
+      </trans-unit>
+      <trans-unit id="bc74efcae6217e0f80935d5307ddfea0">
+        <source>Practical links</source>
+        <target>Practical links</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:108</note>
+      </trans-unit>
+      <trans-unit id="7f3ef03ec9e8db5866a9f02350cfe746">
+        <source>Modules to</source>
+        <target>Modules to</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:112</note>
+      </trans-unit>
+      <trans-unit id="43bcc86750a173fe79da9ed9fef3e689">
+        <source>increase your traffic</source>
+        <target>increase your traffic</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:110</note>
+      </trans-unit>
+      <trans-unit id="e397072999e5885f96e030977f733b3d">
+        <source>boost your conversions</source>
+        <target>boost your conversions</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:111</note>
+      </trans-unit>
+      <trans-unit id="a1f0d5a9b0ff22336dfa8b884a6ee990">
+        <source>increase your clients' average cart</source>
+        <target>increase your clients' average cart</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:112</note>
+      </trans-unit>
+      <trans-unit id="dd00e3e6f9adb69272dfad842320bd4e">
+        <source>Selection of modules recommended for</source>
+        <target>Selection of modules recommended for</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:113</note>
+      </trans-unit>
+      <trans-unit id="9494a44a23e3dbca3a5c8af826dd3c9c">
+        <source>your business sector</source>
+        <target>your business sector</target>
+        <note>Context:
+File: modules/psaddonsconnect/views/templates/hook/dashboard_zone_one.tpl:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dc647eb65e6711e155375218212b3964">
+        <source>Password</source>
+        <target>Password</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:68</note>
+      </trans-unit>
+      <trans-unit id="685de99eb748aa2bba879a87af2ffed4">
+        <source>Your password has been successfully changed.</source>
+        <target>Your password has been successfully changed.</target>
+        <note>Context:
+File: admin-dev/themes/default/template/controllers/login/content.tpl:118</note>
       </trans-unit>
     </body>
   </file>
@@ -1911,6 +2411,60 @@ File: modules/gsitemap/views/templates/admin/configuration.tpl:101</note>
         <target>uncheck all</target>
         <note>Context:
 File: modules/gsitemap/views/templates/admin/configuration.tpl:113</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ef7bd68a02b6b5656554f7a27d1c7bdf">
+        <source>Error!</source>
+        <target>Error!</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl:32</note>
+      </trans-unit>
+      <trans-unit id="dc3fd488f03d423a04da27ce66274c1b">
+        <source>Warning!</source>
+        <target>Warning!</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl:43</note>
+      </trans-unit>
+      <trans-unit id="402e7a087747cb56c718bde84651f96a">
+        <source>Success!</source>
+        <target>Success!</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/_configure/helpers/form/form.tpl:54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/cronjobs/views/templates/admin/configure.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="27c1f598c2b2b0a8e64424d257e8b398">
+        <source>What does this module do?</source>
+        <target>What does this module do?</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/configure.tpl:27</note>
+      </trans-unit>
+      <trans-unit id="c22203a97c7dd88dd68d1e864d46ee0c">
+        <source>Originally, cron is a Unix system tool that provides time-based job scheduling: you can create many cron jobs, which are then run periodically at fixed times, dates, or intervals.</source>
+        <target>Originally, cron is a Unix system tool that provides time-based job scheduling: you can create many cron jobs, which are then run periodically at fixed times, dates, or intervals.</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/configure.tpl:30</note>
+      </trans-unit>
+      <trans-unit id="d24ca73e026491b9610193f36d5edec8">
+        <source>This module provides you with a cron-like tool: you can create jobs which will call a given set of secure URLs to your PrestaShop store, thus triggering updates and other automated tasks.</source>
+        <target>This module provides you with a cron-like tool: you can create jobs which will call a given set of secure URLs to your PrestaShop store, thus triggering updates and other automated tasks.</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/configure.tpl:32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/cronjobs/views/templates/admin/task.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b43ff85c4fc17955aa3ba90827d65430">
+        <source>Do not forget to use an absolute URL in the target link to make it valid! The link also has to be on the same domain as the shop.</source>
+        <target>Do not forget to use an absolute URL in the target link to make it valid! The link also has to be on the same domain as the shop.</target>
+        <note>Context:
+File: modules/cronjobs/views/templates/admin/task.tpl:29</note>
       </trans-unit>
     </body>
   </file>
@@ -2160,121 +2714,121 @@ File: admin-dev/themes/default/template/layout-ajax.tpl:88</note>
         <source>Customers</source>
         <target>Customers</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
       </trans-unit>
       <trans-unit id="03de6422045e4ed3ac822c673ace32d1">
         <source>123.45.67.89</source>
         <target>123.45.67.89</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
       </trans-unit>
       <trans-unit id="f5945546981ef6e50e1fade1b386da04">
         <source>Search (e.g.: product reference, customer name…)</source>
         <target>Search (e.g.: product reference, customer name…)</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:37</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:36</note>
       </trans-unit>
       <trans-unit id="13787cfb1a15ae6690a29d3895c54de9">
         <source>Everywhere</source>
         <target>Everywhere</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:43</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:42</note>
       </trans-unit>
       <trans-unit id="2e67c0a79d35c15af2436c8d80ca072d">
         <source>What are you looking for?</source>
         <target>What are you looking for?</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:43</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:42</note>
       </trans-unit>
       <trans-unit id="c32516babc5b6c47eb8ce1bfc223253c">
         <source>Catalog</source>
         <target>Catalog</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:44</note>
       </trans-unit>
       <trans-unit id="7f704ff8964f7b5f3f9a6444d450b5f7">
         <source>Product name, SKU, reference...</source>
         <target>Product name, SKU, reference...</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:44</note>
       </trans-unit>
       <trans-unit id="855d2bf59043b81e76bc931e685a4f58">
         <source>by name</source>
         <target>by name</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
       </trans-unit>
       <trans-unit id="a3681587c5320489b6a3dd21282e254d">
         <source>Email, name...</source>
         <target>Email, name...</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:45</note>
       </trans-unit>
       <trans-unit id="399574be0ed95657dfac0e8d38374c62">
         <source>by ip address</source>
         <target>by ip address</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
       </trans-unit>
       <trans-unit id="16b2494238f8f996b09417d1dc56c795">
         <source>by IP address</source>
         <target>by IP address</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:46</note>
       </trans-unit>
       <trans-unit id="d79cf3f429596f77db95c65074663a54">
         <source>Order ID</source>
         <target>Order ID</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:47</note>
       </trans-unit>
       <trans-unit id="fce9a6a1bd2a2050eb86d33103f46fd3">
         <source>Invoices</source>
         <target>Invoices</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
       </trans-unit>
       <trans-unit id="4e065ba1bec1d62b2d5450256612fa96">
         <source>Invoice Number</source>
         <target>Invoice Number</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:48</note>
       </trans-unit>
       <trans-unit id="fc26e55e0993a75e892175deb02aae15">
         <source>Carts</source>
         <target>Carts</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
       </trans-unit>
       <trans-unit id="fc6dfe4f8b07fc04c99e27425f780754">
         <source>Cart ID</source>
         <target>Cart ID</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:49</note>
       </trans-unit>
       <trans-unit id="bf17ac149e2e7a530c677e9bd51d3fd2">
         <source>Modules</source>
         <target>Modules</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:51</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
       </trans-unit>
       <trans-unit id="07403a8bc81d7865c8e040e718ec7828">
         <source>Module name</source>
         <target>Module name</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:51</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:50</note>
       </trans-unit>
       <trans-unit id="0f544d682c3a664870f025f48c4b04b5">
         <source>SEARCH</source>
         <target>SEARCH</target>
         <note>Context:
-File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:54</note>
+File: admin-dev/themes/new-theme/template/components/layout/search_form.tpl:52</note>
       </trans-unit>
     </body>
   </file>
@@ -3004,94 +3558,6 @@ File: admin-dev/themes/default/template/helpers/form/form.tpl:639</note>
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="1e1cc9bdeb2f29f5480106aec7e9bc48">
-        <source>Now</source>
-        <target>Now</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1373</note>
-      </trans-unit>
-      <trans-unit id="f92965e2c8a7afb3c1b9a5c09a263636">
-        <source>Done</source>
-        <target>Done</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1374</note>
-      </trans-unit>
-      <trans-unit id="3964fd83339fec5014c831822005653a">
-        <source>Choose Time</source>
-        <target>Choose Time</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1380</note>
-      </trans-unit>
-      <trans-unit id="a76d4ef5f3f6a672bbfab2865563e530">
-        <source>Time</source>
-        <target>Time</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1381</note>
-      </trans-unit>
-      <trans-unit id="b55e509c697e4cca0e1d160a7806698f">
-        <source>Hour</source>
-        <target>Hour</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1382</note>
-      </trans-unit>
-      <trans-unit id="62902641c38f3a4a8eb3212454360e24">
-        <source>Minute</source>
-        <target>Minute</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1383</note>
-      </trans-unit>
-      <trans-unit id="730224c4825ae2c174f4cdaff321520e">
-        <source>Transform a guest into a customer</source>
-        <target>Transform a guest into a customer</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:594</note>
-      </trans-unit>
-      <trans-unit id="e5bd639f4d74cf2c52afada77086f788">
-        <source>Process a standard refund</source>
-        <target>Process a standard refund</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:898</note>
-      </trans-unit>
-      <trans-unit id="c4b689eeebf8e942907a1cc1d086dba6">
-        <source>Process a partial refund</source>
-        <target>Process a partial refund</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:899</note>
-      </trans-unit>
-      <trans-unit id="cc61945cbbf46721a053467c395c666f">
-        <source>Refunded</source>
-        <target>Refunded</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:927</note>
-      </trans-unit>
-      <trans-unit id="6a5efd211a422296eab4adc476c98f0e">
-        <source>Return products</source>
-        <target>Return products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1191</note>
-      </trans-unit>
-      <trans-unit id="74c06eb18eeb118d7b3c623d0c717290">
-        <source>Refund products</source>
-        <target>Refund products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1191</note>
-      </trans-unit>
-      <trans-unit id="4b8def9be8f45a8d6baea36b26868965">
-        <source>Cancel products</source>
-        <target>Cancel products</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1191</note>
-      </trans-unit>
-      <trans-unit id="867343577fa1f33caa632a19543bd252">
-        <source>Keywords</source>
-        <target>Keywords</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl:1260</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/helpers/form/form_group.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="c6155aaecccf794cd2a00fcc35898022">
@@ -3471,22 +3937,6 @@ File: admin-dev/themes/default/template/controllers/orders/_product_line.tpl:174
         <target>[undefined]</target>
         <note>Context:
 File: admin-dev/themes/default/template/controllers/carrier_wizard/summary.tpl:27</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/login/content.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dc647eb65e6711e155375218212b3964">
-        <source>Password</source>
-        <target>Password</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/login/content.tpl:68</note>
-      </trans-unit>
-      <trans-unit id="685de99eb748aa2bba879a87af2ffed4">
-        <source>Your password has been successfully changed.</source>
-        <target>Your password has been successfully changed.</target>
-        <note>Context:
-File: admin-dev/themes/default/template/controllers/login/content.tpl:118</note>
       </trans-unit>
     </body>
   </file>

@@ -318,7 +318,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/php-cssjanus/tree/patch-1"
             },
-            "time": "2018-01-08T09:57:29+00:00"
+            "time": "2018-01-08 09:57:29"
         },
         {
             "name": "curl/curl",
@@ -2631,6 +2631,7 @@
                 "xls",
                 "xlsx"
             ],
+            "abandoned": "phpoffice/phpspreadsheet",
             "time": "2015-05-01T07:00:55+00:00"
         },
         {
@@ -2731,16 +2732,16 @@
         },
         {
             "name": "prestashop/dashgoals",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashgoals.git",
-                "reference": "269db025a170b7c9f4f231157c635ca06b6b7f83"
+                "reference": "2a8d41bcc9f2b09924b5e82407bcd6d61ea61ab6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/269db025a170b7c9f4f231157c635ca06b6b7f83",
-                "reference": "269db025a170b7c9f4f231157c635ca06b6b7f83",
+                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/2a8d41bcc9f2b09924b5e82407bcd6d61ea61ab6",
+                "reference": "2a8d41bcc9f2b09924b5e82407bcd6d61ea61ab6",
                 "shasum": ""
             },
             "require": {
@@ -2749,7 +2750,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -2759,7 +2760,7 @@
             ],
             "description": "PrestaShop module dashgoals",
             "homepage": "https://github.com/PrestaShop/dashgoals",
-            "time": "2017-01-30T11:07:29+00:00"
+            "time": "2018-01-29T17:51:57+00:00"
         },
         {
             "name": "prestashop/dashproducts",
@@ -3725,7 +3726,7 @@
             ],
             "description": "PrestaShop Smarty version",
             "homepage": "https://github.com/PrestaShop/smarty",
-            "time": "2017-05-11T08:29:53+00:00"
+            "time": "2017-05-11 08:29:53"
         },
         {
             "name": "prestashop/statsbestcategories",
@@ -3761,16 +3762,16 @@
         },
         {
             "name": "prestashop/statsbestcustomers",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestcustomers.git",
-                "reference": "af70d4ef462e44077479d18feee01857549761f1"
+                "reference": "b0250e88e9144ca373d8006c922d3e84ea4987b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/af70d4ef462e44077479d18feee01857549761f1",
-                "reference": "af70d4ef462e44077479d18feee01857549761f1",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/b0250e88e9144ca373d8006c922d3e84ea4987b9",
+                "reference": "b0250e88e9144ca373d8006c922d3e84ea4987b9",
                 "shasum": ""
             },
             "require": {
@@ -3789,7 +3790,7 @@
             ],
             "description": "PrestaShop module statsbestcustomers",
             "homepage": "https://github.com/PrestaShop/statsbestcustomers",
-            "time": "2017-01-30T15:47:32+00:00"
+            "time": "2018-01-29T17:21:50+00:00"
         },
         {
             "name": "prestashop/statsbestmanufacturers",
@@ -4081,16 +4082,16 @@
         },
         {
             "name": "prestashop/statsforecast",
-            "version": "v2.0.1",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsforecast.git",
-                "reference": "f7b6175c109179f9070f7dfea52a7da947933274"
+                "reference": "8ecbeaef0e32657cf79000f95861e41e19e22d49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/f7b6175c109179f9070f7dfea52a7da947933274",
-                "reference": "f7b6175c109179f9070f7dfea52a7da947933274",
+                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/8ecbeaef0e32657cf79000f95861e41e19e22d49",
+                "reference": "8ecbeaef0e32657cf79000f95861e41e19e22d49",
                 "shasum": ""
             },
             "require": {
@@ -4099,7 +4100,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4109,7 +4110,7 @@
             ],
             "description": "PrestaShop module statsforecast",
             "homepage": "https://github.com/PrestaShop/statsforecast",
-            "time": "2017-01-31T17:20:09+00:00"
+            "time": "2018-01-29T18:37:54+00:00"
         },
         {
             "name": "prestashop/statslive",
@@ -4145,16 +4146,16 @@
         },
         {
             "name": "prestashop/statsnewsletter",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsnewsletter.git",
-                "reference": "c9ffc28d3afaa9a8cd0b45b0e2b2c2454182fa8e"
+                "reference": "7fd9a55c4b39eb034f73ef4723a1a83c6d73560e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsnewsletter/zipball/c9ffc28d3afaa9a8cd0b45b0e2b2c2454182fa8e",
-                "reference": "c9ffc28d3afaa9a8cd0b45b0e2b2c2454182fa8e",
+                "url": "https://api.github.com/repos/PrestaShop/statsnewsletter/zipball/7fd9a55c4b39eb034f73ef4723a1a83c6d73560e",
+                "reference": "7fd9a55c4b39eb034f73ef4723a1a83c6d73560e",
                 "shasum": ""
             },
             "require": {
@@ -4163,7 +4164,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4173,20 +4174,20 @@
             ],
             "description": "PrestaShop module statsnewsletter",
             "homepage": "https://github.com/PrestaShop/statsnewsletter",
-            "time": "2017-01-31T17:18:55+00:00"
+            "time": "2018-01-29T18:39:03+00:00"
         },
         {
             "name": "prestashop/statsorigin",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsorigin.git",
-                "reference": "489754d6f1d8970d360f479ed105a02b59ddbec0"
+                "reference": "24ca4f143a2f0b5d3d7bc817547df79f837faeb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsorigin/zipball/489754d6f1d8970d360f479ed105a02b59ddbec0",
-                "reference": "489754d6f1d8970d360f479ed105a02b59ddbec0",
+                "url": "https://api.github.com/repos/PrestaShop/statsorigin/zipball/24ca4f143a2f0b5d3d7bc817547df79f837faeb3",
+                "reference": "24ca4f143a2f0b5d3d7bc817547df79f837faeb3",
                 "shasum": ""
             },
             "require": {
@@ -4195,7 +4196,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4205,20 +4206,20 @@
             ],
             "description": "PrestaShop module statsorigin",
             "homepage": "https://github.com/PrestaShop/statsorigin",
-            "time": "2017-01-31T17:20:38+00:00"
+            "time": "2018-01-29T19:17:31+00:00"
         },
         {
             "name": "prestashop/statspersonalinfos",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statspersonalinfos.git",
-                "reference": "dcac5f7768a445ff6ec2267f60bd7c6491edb760"
+                "reference": "cc800a6ee0b8d48b5b00a56206cc92b0a0056d34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/dcac5f7768a445ff6ec2267f60bd7c6491edb760",
-                "reference": "dcac5f7768a445ff6ec2267f60bd7c6491edb760",
+                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/cc800a6ee0b8d48b5b00a56206cc92b0a0056d34",
+                "reference": "cc800a6ee0b8d48b5b00a56206cc92b0a0056d34",
                 "shasum": ""
             },
             "require": {
@@ -4227,7 +4228,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4237,20 +4238,20 @@
             ],
             "description": "PrestaShop module statspersonalinfos",
             "homepage": "https://github.com/PrestaShop/statspersonalinfos",
-            "time": "2017-01-31T17:21:36+00:00"
+            "time": "2018-01-29T18:41:52+00:00"
         },
         {
             "name": "prestashop/statsproduct",
-            "version": "v2.0.1",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsproduct.git",
-                "reference": "a4bf1ced5f6064702efd6690a56c1b83e36f507d"
+                "reference": "caf05aefabd63ac84e06bc2a0bdcf69f965d03c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/a4bf1ced5f6064702efd6690a56c1b83e36f507d",
-                "reference": "a4bf1ced5f6064702efd6690a56c1b83e36f507d",
+                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/caf05aefabd63ac84e06bc2a0bdcf69f965d03c4",
+                "reference": "caf05aefabd63ac84e06bc2a0bdcf69f965d03c4",
                 "shasum": ""
             },
             "require": {
@@ -4259,7 +4260,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4269,7 +4270,7 @@
             ],
             "description": "PrestaShop module statsproduct",
             "homepage": "https://github.com/PrestaShop/statsproduct",
-            "time": "2017-01-31T17:21:58+00:00"
+            "time": "2018-01-29T18:57:47+00:00"
         },
         {
             "name": "prestashop/statsregistrations",
@@ -4401,16 +4402,16 @@
         },
         {
             "name": "prestashop/statsvisits",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsvisits.git",
-                "reference": "6f4a6429aff506ff266ec6ecee5809e11f06b51a"
+                "reference": "c6255d571d3b1d2e8863d87482e0df42de862f96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/6f4a6429aff506ff266ec6ecee5809e11f06b51a",
-                "reference": "6f4a6429aff506ff266ec6ecee5809e11f06b51a",
+                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/c6255d571d3b1d2e8863d87482e0df42de862f96",
+                "reference": "c6255d571d3b1d2e8863d87482e0df42de862f96",
                 "shasum": ""
             },
             "require": {
@@ -4419,7 +4420,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4429,7 +4430,7 @@
             ],
             "description": "PrestaShop module statsvisits",
             "homepage": "https://github.com/PrestaShop/statsvisits",
-            "time": "2017-01-31T17:24:13+00:00"
+            "time": "2018-01-29T18:08:52+00:00"
         },
         {
             "name": "prestashop/translationtools-bundle",

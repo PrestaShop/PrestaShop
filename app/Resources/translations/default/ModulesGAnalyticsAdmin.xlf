@@ -24,13 +24,13 @@ File: modules/ps_googleanalytics/ps_googleanalytics.php:54</note>
         <source>Account ID updated successfully</source>
         <target>Account ID updated successfully</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:211</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:233</note>
       </trans-unit>
       <trans-unit id="8e7b67b44506b7ac6685da041a603044">
         <source>Settings for User ID updated successfully</source>
         <target>Settings for User ID updated successfully</target>
         <note>Context:
-File: modules/ps_googleanalytics/ps_googleanalytics.php:216</note>
+File: modules/ps_googleanalytics/ps_googleanalytics.php:243</note>
       </trans-unit>
     </body>
   </file>
