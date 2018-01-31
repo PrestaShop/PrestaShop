@@ -136,11 +136,13 @@ class OrderSlipCore extends ObjectModel
     public static function getOrdersSlip($customer_id, $order_id = false)
     {
         return Db::getInstance()->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'order_slip`
-		WHERE `id_customer` = '.(int)($customer_id).
-        ($order_id ? ' AND `id_order` = '.(int)($order_id) : '').'
-		ORDER BY `date_add` DESC');
+		SELECT os.*
+		FROM `'._DB_PREFIX_.'order_slip` os
+		LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = os.`id_order`)
+		WHERE os.`id_customer` = '.(int)($customer_id).
+        ($order_id ? ' AND os.`id_order` = '.(int)($order_id) : '').'
+		AND o.`current_state` != '.(int)Configuration::get('PS_OS_CANCELED').'
+		ORDER BY os.`date_add` DESC');
     }
 
     public static function getOrdersSlipDetail($id_order_slip = false, $id_order_detail = false)
