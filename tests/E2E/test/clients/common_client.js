@@ -71,7 +71,7 @@ class CommonClient {
   }
 
   takeScreenshot() {
-    return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${global.date_time}.png`);
+    return this.client.saveScreenshot(`test/screenshots/${this.client.desiredCapabilities.browserName}_exception_${new Date().getTime()}.png`);
   }
 
   changeLanguage(language) {
@@ -93,7 +93,11 @@ class CommonClient {
   }
 
   open() {
-    return this.client.init().windowHandleSize({width: 1280, height: 1024});
+    if (headless !== 'undefined' && headless) {
+      return this.client.init().windowHandleSize({width: 1280, height: 899});
+    } else {
+      return this.client.init().windowHandleSize({width: 1280, height: 1024});
+    }
   }
 
   close() {
