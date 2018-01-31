@@ -80,6 +80,7 @@ If you want to run only the high level and full configuration tests you can run 
 * **RCTARGET**: **(Required)** Last stable version location directory (example: /project/prestashop1724/)
 * **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to extract the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
 * **FILENAME**: **(Optional)** RC file name this parameter must be mentioned if the (RCLINK) option is not indicated
+* **HEADLESS**: **(Optional)** Set it to true to run tests in headless mode (default to false) (This option will not work perfectly if your chrome version is under 62.0.3175.0, especially for category, attribute and feature)
 
 #### Regular tests
 If you want to run only the most important partial configuration tests you can run the campaign **Regular**
