@@ -25,9 +25,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-class CurrencyDataBag
+class LocaleData
 {
 
 }

@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataBag;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 
 /**
  * Currency data layer classes interface
@@ -42,24 +42,24 @@ interface CurrencyDataLayerInterface
      * @param string $currencyCode
      *  The currency code (ISO 4217)
      *
-     * @return CurrencyDataBag
+     * @return CurrencyData
      *  The searched currency data
      */
     public function read($currencyCode);
 
     /**
-     * Write a currency data bag into the data source
+     * Write a currency data object into the data source
      *
      * @param string $currencyCode
      *  The currency code (ISO 4217)
      *
-     * @param CurrencyDataBag $currencyData
+     * @param CurrencyData $currencyData
      *  The currency data to write
      *
-     * @return CurrencyDataBag
+     * @return CurrencyData
      *  The currency data to be written by the upper data layer
      */
-    public function write($currencyCode, CurrencyDataBag $currencyData);
+    public function write($currencyCode, CurrencyData $currencyData);
 
     /**
      * Set the lower layer.
