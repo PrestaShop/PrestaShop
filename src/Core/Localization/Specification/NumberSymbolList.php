@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Specification;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
- * Number's symbols data bag. Regroups all symbols used when formatting a number
+ * Number's symbols data object. Regroups all symbols used when formatting a number
  * (decimal separator, thousands separator, etc.).
  */
 class NumberSymbolList

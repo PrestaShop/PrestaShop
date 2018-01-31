@@ -49,7 +49,7 @@ class RepositoryTest extends TestCase
         /**
          * Mock the LocaleRepository dependencies :
          */
-        /** CLDR Locale data bag */
+        /** CLDR Locale data object */
         $cldrLocale = $this->getMockBuilder(CldrLocale::class)
             ->setMethods([
                 'getNumberPositivePattern',
@@ -71,7 +71,7 @@ class RepositoryTest extends TestCase
         $cldrLocale->method('getNumberPrimaryGroupSize')->willReturn(3);
         $cldrLocale->method('getNumberSecondaryGroupSize')->willReturn(3);
 
-        /** CLDR LocaleRepository (returning the data bag) */
+        /** CLDR LocaleRepository (returning the data object) */
         $cldrLocaleRepository = $this->getMockBuilder(CldrLocaleRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
