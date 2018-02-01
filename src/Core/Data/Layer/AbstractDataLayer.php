@@ -111,10 +111,10 @@ abstract class AbstractDataLayer
      * Write request is propagated to lower layer, and the propagation result is actually written in
      * current layer (because lower layer might hydrate/update the data object).
      *
-     * @param $id
+     * @param mixed $id
      *  The data object identifier
      *
-     * @param $data
+     * @param mixed $data
      *  The data object to write
      *
      * @return mixed
@@ -156,10 +156,10 @@ abstract class AbstractDataLayer
     /**
      * Propagate write to lower layer
      *
-     * @param $id
+     * @param mixed $id
      *  The data object identifier
      *
-     * @param $data
+     * @param mixed $data
      *  The data object to write into this field
      *
      * @return mixed
@@ -300,7 +300,7 @@ abstract class AbstractDataLayer
      * @param mixed $id
      *  The data object identifier
      *
-     * @param $data
+     * @param mixed $data
      *  The data object to be written
      *
      * @return void

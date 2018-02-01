@@ -63,7 +63,7 @@ interface LocaleDataLayerInterface
      * @return CldrLocaleData
      *  The locale's CLDR data to be written by the upper data layer
      */
-    public function write($localeCode, CldrLocaleData $localeData);
+    public function write($localeCode, $localeData);
 
     /**
      * Set the lower layer.
