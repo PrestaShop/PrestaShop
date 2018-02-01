@@ -14,7 +14,7 @@
 							{$customization['customization_text']}
 
 							{if count($product['customization']) > 1}
-								{$product['customization_quantity']}
+								{$customization['customization_quantity']}
 							{/if}
 	{/foreach}
 {/foreach}
