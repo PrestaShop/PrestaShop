@@ -1000,7 +1000,7 @@ Quick View Styles
         right: 0;
         left: 0; }
     #product.content_only div.primary_block div.pb-right-column #attributes .attribute_list .form-control {
-      width: 230px; }
+      width: 100%; }
     #product.content_only div.primary_block div.pb-right-column .product_attributes,
     #product.content_only div.primary_block div.pb-right-column .box-cart-bottom {
       -moz-box-shadow: transparent 0px 0px 0px;
