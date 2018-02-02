@@ -14,5 +14,6 @@ module.exports = Object.assign(
   require('./category_submenu'),
   require('./attribute_submenu'),
   require('./Manufacturers'),
-  require('./stocksubmenu')
+  require('./stocksubmenu'),
+  require('./discount_submenu')
 );
