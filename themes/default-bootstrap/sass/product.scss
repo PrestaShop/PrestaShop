@@ -1121,6 +1121,9 @@ Quick View Styles
 							&:before,
 							&:after{
 								display: block;
+								@media (max-width: $screen-xs-max) { //max 479px
+									display: none;
+								}
 							}
 							span {
 								font-size: 20px;
@@ -1128,6 +1131,9 @@ Quick View Styles
 								@media (max-width: $screen-md-max) { //max 1199px
 									padding: 12px 22px 14px 70px;
 									font-size: 20px;
+								}
+								@media (max-width: $screen-xs-max) { //max 479px
+									padding: 8px 12px 10px;
 								}
 							}
 						}

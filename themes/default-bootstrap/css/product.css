@@ -995,6 +995,14 @@ Quick View Styles
             #product.content_only div.primary_block div.pb-right-column .box-info-product #add_to_cart .exclusive span {
               padding: 12px 22px 14px 70px;
               font-size: 20px; } }
+          @media (max-width: 479px) {
+            #product.content_only div.primary_block div.pb-right-column .box-info-product #add_to_cart .exclusive span {
+               padding: 8px 12px 10px;
+            }
+            #product.content_only div.primary_block div.pb-right-column .box-info-product #add_to_cart .exclusive:before, #product.content_only div.primary_block div.pb-right-column .box-info-product #add_to_cart .exclusive:after {
+              display: none;
+            }
+          }
       #product.content_only div.primary_block div.pb-right-column .box-info-product .box-cart-bottom {
         right: 0;
         left: 0; }
