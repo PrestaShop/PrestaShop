@@ -2,6 +2,31 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 
+/****Exemple of product data ****
+ * var productData = {
+ *  name: 'product_name',
+ *  reference: 'product_reference',
+ *  quantity: 'product_quantity',
+ *  price: 'product_price',
+ *  image_name: 'picture_file_name',
+ *  type: "product_type(standard, pack, virtual)",
+ *  attribute: {
+ *      name: 'attribute_name',
+ *      variation_quantity: 'product_variation_quantity'
+ *  },
+ *  feature: {
+ *      name: 'feature_name',
+ *      value: 'feature_value'
+ *  },
+ *  pricing: {
+ *      unitPrice: "product_unit_price",
+ *      unity: "product_unity",
+ *      wholesale: "product_wholesale",
+ *      type: 'percentage',
+ *      discount: 'product_discount'
+ *  }
+ * };
+ */
 module.exports = {
   createProduct: function (AddProductPage, productData) {
     scenario('Create a new product in the Back Office', client => {
@@ -44,6 +69,19 @@ module.exports = {
               .then(() => client.waitForExistAndClick(AddProductPage.add_feature_to_product_button));
           });
           test('should select the created feature', () => client.selectFeature(AddProductPage, productData['feature']['name'] + date_time, productData['feature']['value']));
+        }, 'product/product');
+      }
+
+      if(productData.hasOwnProperty('pricing')) {
+        scenario('Edit product pricing', client => {
+          test('should click on "Pricing"', () => client.scrollWaitForExistAndClick(AddProductPage.product_pricing_tab, 50));
+          test('should set the "Price per unit (tax excl.)"', () => client.waitAndSetValue(AddProductPage.unit_price, productData['pricing']['unitPrice']));
+          test('should set the "Unit"', () => client.waitAndSetValue(AddProductPage.unity, productData['pricing']['unity']));
+          test('should set the "Price (tax excl.)"', () => client.waitAndSetValue(AddProductPage.pricing_wholesale, productData['pricing']['wholesale']));
+          test('should click on "Add specific price" button', () => client.waitForExistAndClick(AddProductPage.pricing_add_specific_price_button));
+          test('should change the reduction type to "Percentage"', () => client.waitAndSelectByValue(AddProductPage.specific_price_reduction_type_select, productData['pricing']['type']));
+          test('should set the "Discount" input', () => client.waitAndSetValue(AddProductPage.specific_price_discount_input, productData['pricing']['discount']));
+          test('should click on "Apply" button', () => client.waitForExistAndClick(AddProductPage.specific_price_save_button));
         }, 'product/product');
       }
 
