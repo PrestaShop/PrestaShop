@@ -51,7 +51,6 @@ export default class Header {
       if (method === 'add' && name || method === 'remove') {
         let postLink = $(e.target).data('post-link');
         let quickLinkId = $(e.target).data('quicklink-id');
-        let rand = $(e.target).data('rand');
         let url = $(e.target).data('url');
         let icon = $(e.target).data('icon');
 
@@ -61,7 +60,7 @@ export default class Header {
             "cache-control": "no-cache"
           },
           async: true,
-          url: `${postLink}&action=GetUrl&rand=${rand}&ajax=1&method=${method}&id_quick_access=${quickLinkId}`,
+          url: `${postLink}&action=GetUrl&ajax=1&method=${method}&id_quick_access=${quickLinkId}`,
           data: {
             "url": url,
             "name": name,

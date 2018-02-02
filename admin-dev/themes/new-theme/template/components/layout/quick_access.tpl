@@ -18,7 +18,6 @@
         href="#"
         data-method="remove"
         data-quicklink-id="{$matchQuickLink}"
-        data-rand="{1|rand:200}"
         data-icon="{$quick_access_current_link_icon}"
         data-url="{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}"
         data-post-link="{$link->getAdminLink('AdminQuickAccesses')}"
@@ -32,7 +31,6 @@
       <a
         class="dropdown-item js-quick-link"
         href="#"
-        data-rand="{1|rand:200}"
         data-icon="{$quick_access_current_link_icon}"
         data-method="add"
         data-url="{$link->getQuickLink($smarty.server['REQUEST_URI']|escape:'javascript')}"
