@@ -195,7 +195,6 @@ span.view_scroll_spacer {
 
 #view_scroll_left,
 #view_scroll_right {
-  margin-top: 38px;
   height: 20px;
   width: 20px;
   line-height: 0;
@@ -937,7 +936,7 @@ Quick View Styles
       width: 38px;
       padding-left: 10px; }
     #product.content_only div.primary_block div.pb-left-column #thumbs_list {
-      width: 392px; }
+      width: 100%; }
   #product.content_only div.primary_block div.pb-center-column {
     padding: 20px 20px 60px 0px;
     width: 27.5%;
