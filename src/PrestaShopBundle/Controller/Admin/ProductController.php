@@ -847,7 +847,7 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 1.7.3.0, to be removed in 1.8 rely on CommonController::renderFieldAction
+     * @deprecated since 1.7.4.0, to be removed in 1.8 rely on CommonController::renderFieldAction
      * @throws \OutOfBoundsException
      * @throws \LogicException
      * @throws \PrestaShopException
