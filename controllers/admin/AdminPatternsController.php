@@ -37,7 +37,7 @@ class AdminPatternsControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
