@@ -27,9 +27,11 @@
 namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\DataLayer\LocaleCacheDataLayer;
 use Psr\Cache\CacheItemInterface;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class LocaleCacheDataLayerTest extends TestCase
 {
@@ -45,24 +47,16 @@ class LocaleCacheDataLayerTest extends TestCase
      */
     protected function setUp()
     {
-        $cacheAdapter = $this->createMock(AdapterInterface::class);
-        $cacheAdapter->method('getItem')
-            ->willReturnMap([
-                ['knownKey', $this->mockCacheItem('knownKey', true, 'known key result')],
-                ['unknownKey', $this->mockCacheItem('unknownKey', false)],
-            ]);
+        // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
+        $cacheAdapter = new ArrayAdapter();
+
+        // Prefill some cache values (for read test)
+        $item = $cacheAdapter->getItem('knownKey');
+        $item->set('known key result');
+        $cacheAdapter->save($item);
+
         /** @var AdapterInterface $cacheAdapter */
         $this->layer = new LocaleCacheDataLayer($cacheAdapter);
-    }
-
-    protected function mockCacheItem($key, $isHit, $value = null)
-    {
-        $cacheItem = $this->createMock(CacheItemInterface::class);
-        $cacheItem->method('getKey')->willReturn($key);
-        $cacheItem->method('isHit')->willReturn($isHit);
-        $cacheItem->method('get')->willReturn($value);
-
-        return $cacheItem;
     }
 
     /**
@@ -78,9 +72,11 @@ class LocaleCacheDataLayerTest extends TestCase
      */
     public function testRead($key, $expectedResult)
     {
+        $cachedData = $this->layer->read($key);
+
         $this->assertSame(
             $expectedResult,
-            $this->layer->read($key)
+            $cachedData
         );
     }
 
@@ -100,5 +96,37 @@ class LocaleCacheDataLayerTest extends TestCase
 
     public function testWrite()
     {
+        $data      = new LocaleData();
+        $data->foo = ['bar', 'baz'];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->layer->write('someKey', $data);
+        /** @noinspection end */
+
+        // Get value back from cache
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $cachedData = $this->layer->read('someKey');
+        /** @noinspection end */
+
+        $this->assertInstanceOf(
+            LocaleData::class,
+            $cachedData
+        );
+
+        $this->assertSame(
+            ['bar', 'baz'],
+            $cachedData->foo
+        );
+    }
+
+    protected function mockCacheItem($key, $isHit, $value = null)
+    {
+        $cacheItem = $this->createMock(CacheItemInterface::class);
+        $cacheItem->method('getKey')->willReturn($key);
+        $cacheItem->method('isHit')->willReturn($isHit);
+        $cacheItem->method('get')->willReturn($value);
+        $cacheItem->method('set')->willReturn(true);
+
+        return $cacheItem;
     }
 }
