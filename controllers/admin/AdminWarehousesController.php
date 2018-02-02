@@ -591,6 +591,9 @@ class AdminWarehousesControllerCore extends AdminController
         /** @var AddressCore $address */
         $address = new Address();
 
+        /** @var array $addressFields - The warehouse address fields */
+        $addressFields = array('alias', 'lastname', 'firstname', 'address1', 'address2', 'postcode', 'phone', 'id_country', 'id_state', 'city');
+
         if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0) {
             $address = new Address((int)Tools::getValue('id_address'));
         }
@@ -625,14 +628,20 @@ class AdminWarehousesControllerCore extends AdminController
         // checks address validity
         if (count($validation) > 0) {
             // if not valid
+            $hasAddressError = false;
 
-            foreach ($validation as $item) {
-                $this->errors[] = $item;
+            foreach ($validation as $key => $item) {
+                if (in_array($key, $addressFields)) {
+                    $hasAddressError = true;
+                    $this->errors[] = $item;
+                }
             }
 
-            $this->errors[] = Tools::displayError(
-                'The address is not correct. Please make sure all of the required fields are completed.'
-            );
+            if ($hasAddressError) {
+                $this->errors[] = Tools::displayError(
+                    'The address is not correct. Please make sure all of the required fields are completed.'
+                );
+            }
         } else {
             // valid
 
