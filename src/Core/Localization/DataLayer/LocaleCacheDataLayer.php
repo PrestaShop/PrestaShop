@@ -36,13 +36,14 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 /**
  * Locale cache data layer
  *
- * Reads / writes into
+ * Reads / writes into cache.
  */
 class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
      * Symfony Cache component adapter
      *
+     * Provides cached LocaleData objects
      * Implements PSR-6: Cache Interface (@see http://www.php-fig.org/psr/psr-6/)
      *
      * @var AdapterInterface
