@@ -21,7 +21,7 @@ module.exports = {
         supplier_tab: '//*[@id="content"]//div[@class="page-head-tabs"]/a[text()="Suppliers"]',
         files_submenu: '//*[@id="subtab-AdminAttachments"]/a',
         discounts_submenu: '//*[@id="subtab-AdminParentCartRules"]/a',
-        carte_price_rule_tab: '//*[@id="content"]//div[@class="page-head-tabs"]/a[text()="Catalog Price Rules"]',
+        catalog_price_rules_tab: '//*[@id="content"]//div[@class="page-head-tabs"]/a[text()="Catalog Price Rules"]',
         stocks_submenu: '//*[@id="subtab-AdminStockManagement"]/a',
         movement_tab: '//*[@id="app"]//a[text()="Movements" and @role="tab"]'
       },
