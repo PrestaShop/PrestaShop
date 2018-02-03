@@ -82,5 +82,16 @@
         {/if}
       </p>
     {/block}
+  {else}
+    {block name='product_contact_us'}
+      <a
+      role="button"
+      class="btn btn-primary btn-lg btn-block active"
+      href="{url entity='contact' params=['message' => {$page.meta.title}]}"
+      aria-pressed="true"
+      >
+        <i class="material-icons">&#xE0BE;</i> {l s='Contact us' d='Shop.Theme.Global'}
+      </a>
+    {/block}
   {/if}
 </div>
