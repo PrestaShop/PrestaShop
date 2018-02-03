@@ -663,11 +663,12 @@ class ImageCore extends ObjectModel
 
         if (!file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder())) {
             // Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-            $success = @mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true);
-            $chmod = @chmod(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights);
+            $umask = umask(0);
+            $success = mkdir(_PS_PROD_IMG_DIR_.$this->getImgFolder(), self::$access_rights, true);
+            umask($umask);
 
             // Create an index.php file in the new folder
-            if (($success || $chmod)
+            if (($success)
                 && !file_exists(_PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php')
                 && file_exists($this->source_index)) {
                 return @copy($this->source_index, _PS_PROD_IMG_DIR_.$this->getImgFolder().'index.php');
