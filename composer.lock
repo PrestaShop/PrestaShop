@@ -2972,16 +2972,16 @@
         },
         {
             "name": "prestashop/ps_banner",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_banner.git",
-                "reference": "078ffe994b38dc9685d0feb8a0f6a705830b2cb2"
+                "reference": "9616f7fc9cda997ef1860562d3212fd021205805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/078ffe994b38dc9685d0feb8a0f6a705830b2cb2",
-                "reference": "078ffe994b38dc9685d0feb8a0f6a705830b2cb2",
+                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/9616f7fc9cda997ef1860562d3212fd021205805",
+                "reference": "9616f7fc9cda997ef1860562d3212fd021205805",
                 "shasum": ""
             },
             "require": {
@@ -2990,7 +2990,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3000,7 +3000,7 @@
             ],
             "description": "PrestaShop module ps_banner",
             "homepage": "https://github.com/PrestaShop/ps_banner",
-            "time": "2017-05-09T09:57:07+00:00"
+            "time": "2018-02-05T21:44:48+00:00"
         },
         {
             "name": "prestashop/ps_categorytree",
@@ -3164,16 +3164,16 @@
         },
         {
             "name": "prestashop/ps_customersignin",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_customersignin.git",
-                "reference": "a642dcf03d444541fd706c2becd2ea49223da734"
+                "reference": "6168c4402656456b884178bc00c790a8579ecafa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_customersignin/zipball/a642dcf03d444541fd706c2becd2ea49223da734",
-                "reference": "a642dcf03d444541fd706c2becd2ea49223da734",
+                "url": "https://api.github.com/repos/PrestaShop/ps_customersignin/zipball/6168c4402656456b884178bc00c790a8579ecafa",
+                "reference": "6168c4402656456b884178bc00c790a8579ecafa",
                 "shasum": ""
             },
             "require": {
@@ -3182,7 +3182,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3192,7 +3192,7 @@
             ],
             "description": "PrestaShop - Customer 'Sign in' link",
             "homepage": "https://github.com/PrestaShop/ps_customersignin",
-            "time": "2017-02-01T13:02:21+00:00"
+            "time": "2018-02-02T10:01:01+00:00"
         },
         {
             "name": "prestashop/ps_customtext",
@@ -3327,16 +3327,16 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v2.0.1",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "c2272a288a46a9eb7e4b66f08ce135af37d1c6bf"
+                "reference": "4d34cbce0d5edce787c1914c25b405450b6055d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/c2272a288a46a9eb7e4b66f08ce135af37d1c6bf",
-                "reference": "c2272a288a46a9eb7e4b66f08ce135af37d1c6bf",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/4d34cbce0d5edce787c1914c25b405450b6055d7",
+                "reference": "4d34cbce0d5edce787c1914c25b405450b6055d7",
                 "shasum": ""
             },
             "require": {
@@ -3345,7 +3345,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3355,7 +3355,7 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
-            "time": "2017-05-09T09:57:15+00:00"
+            "time": "2018-02-05T21:41:01+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -3455,16 +3455,16 @@
         },
         {
             "name": "prestashop/ps_mainmenu",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_mainmenu.git",
-                "reference": "f652785fa046ad6bd4d4d8987839b37309e39527"
+                "reference": "4a16eeb69d06ba868ef5c1c26aa697e3d265f613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/f652785fa046ad6bd4d4d8987839b37309e39527",
-                "reference": "f652785fa046ad6bd4d4d8987839b37309e39527",
+                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/4a16eeb69d06ba868ef5c1c26aa697e3d265f613",
+                "reference": "4a16eeb69d06ba868ef5c1c26aa697e3d265f613",
                 "shasum": ""
             },
             "require": {
@@ -3473,7 +3473,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3483,7 +3483,7 @@
             ],
             "description": "PrestaShop - Main menu",
             "homepage": "https://github.com/PrestaShop/ps_mainmenu",
-            "time": "2017-02-14T08:11:36+00:00"
+            "time": "2018-02-05T21:56:20+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
