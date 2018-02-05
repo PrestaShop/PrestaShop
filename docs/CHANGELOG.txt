@@ -23,6 +23,41 @@ International Registred Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.6
 --------------------------------
+
+####################################
+#   v1.6.1.18 - (2018-02-05)
+####################################
+
+    BO: Move to HTTPS
+    BO: Update marketplace URL to http(S)
+    BO: Fix AdminController's processDeleteImage() redirect after URL
+    BO: Fix stock available after add product in order
+    BO: Fix selecting a product does not work on Mac
+    BO: Update AdminModulesController.php
+    BO: Fix Stock cover report stock out calculation
+    BO: Revert "Add paid order to stats dashboard even when there's no related invoice generated"
+
+    FO: Hide the password in the confirmation email
+    FO: Fix the blank page when no currency defined in the shop
+    FO: Fix the sorting problem with a descending order in the products filtering page
+    FO: Split width of summary invoice pdf
+    FO: Fix conditionals check in DiscountController
+    FO: Fix the email validator
+
+    CO: Fixed for duplication of product which has both combinations and specific prices
+    CO: Fix error 500, result of built-in function in write context
+    CO: Fix PHP 7.1 compatibility
+    CO: Increase limit message chars
+    CO: Fix PHP Warning when updating category with multishop
+    CO: Add DB prefix in delete() method all time $add_prefix is set to true
+    CO: Clean the DB after language delete
+    CO: Use english email template as fallback in getEmailTemplateContent
+
+    IN: Update Postal Code of South Korea
+
+    WS: Fix the update product web service
+
+
 ####################################
 #   v1.6.1.17 - (2017-09-07)
 ####################################
