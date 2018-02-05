@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_stock_available>
   <fields primary="id_stock_available" class="StockAvailable" null="1">
-    <field name="id_product" relation="product" />
+    <field name="id_product" relation="product"/>
     <field name="id_product_attribute" relation="product_attribute"/>
     <field name="id_shop"/>
     <field name="id_shop_group"/>
@@ -10,57 +10,72 @@
     <field name="out_of_stock"/>
   </fields>
   <entities>
-    <stock_available id="stock_available_1" id_product="1" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="1799" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_2" id_product="2" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="1799" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_3" id_product="3" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="899" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_4" id_product="4" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="900" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_5" id_product="5" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="3600" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_6" id_product="6" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="900" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_7" id_product="7" id_product_attribute="0" id_shop="1" id_shop_group="0" quantity="1800" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_8" id_product="1" id_product_attribute="1" id_shop="1" id_shop_group="0" quantity="299" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_9" id_product="1" id_product_attribute="2" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_10" id_product="1" id_product_attribute="3" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_11" id_product="1" id_product_attribute="4" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_12" id_product="1" id_product_attribute="5" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_13" id_product="1" id_product_attribute="6" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_14" id_product="2" id_product_attribute="7" id_shop="1" id_shop_group="0" quantity="299" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_15" id_product="2" id_product_attribute="8" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_16" id_product="2" id_product_attribute="9" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_17" id_product="2" id_product_attribute="10" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_18" id_product="2" id_product_attribute="11" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_19" id_product="2" id_product_attribute="12" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_20" id_product="3" id_product_attribute="13" id_shop="1" id_shop_group="0" quantity="299" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_21" id_product="3" id_product_attribute="14" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_22" id_product="3" id_product_attribute="15" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_23" id_product="4" id_product_attribute="16" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_24" id_product="4" id_product_attribute="17" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_25" id_product="4" id_product_attribute="18" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_26" id_product="5" id_product_attribute="19" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_27" id_product="5" id_product_attribute="20" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_28" id_product="5" id_product_attribute="21" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_29" id_product="5" id_product_attribute="22" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_30" id_product="5" id_product_attribute="23" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_31" id_product="5" id_product_attribute="24" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_32" id_product="5" id_product_attribute="25" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_33" id_product="5" id_product_attribute="26" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_34" id_product="5" id_product_attribute="27" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_35" id_product="5" id_product_attribute="28" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_36" id_product="5" id_product_attribute="29" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_37" id_product="5" id_product_attribute="30" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_38" id_product="6" id_product_attribute="31" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_39" id_product="6" id_product_attribute="32" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_40" id_product="6" id_product_attribute="33" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_41" id_product="7" id_product_attribute="34" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_42" id_product="7" id_product_attribute="35" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_43" id_product="7" id_product_attribute="36" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_44" id_product="7" id_product_attribute="37" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_45" id_product="7" id_product_attribute="38" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_46" id_product="7" id_product_attribute="39" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_47" id_product="6" id_product_attribute="40" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_48" id_product="6" id_product_attribute="41" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_49" id_product="6" id_product_attribute="42" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_50" id_product="4" id_product_attribute="43" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_51" id_product="4" id_product_attribute="44" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="2"/>
-    <stock_available id="stock_available_52" id_product="4" id_product_attribute="45" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_53" id_product="Hummingbird_printed_t-shirt" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="2400" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_54" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_46" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_55" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_47" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_56" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_48" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_57" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_49" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_58" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_50" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_59" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_51" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_60" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_52" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_61" id_product="Hummingbird_printed_t-shirt" id_product_attribute="product_attribute_53" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_71" id_product="Hummingbird_printed_sweater" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="1200" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_72" id_product="Hummingbird_printed_sweater" id_product_attribute="product_attribute_62" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_73" id_product="Hummingbird_printed_sweater" id_product_attribute="product_attribute_63" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_74" id_product="Hummingbird_printed_sweater" id_product_attribute="product_attribute_64" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_75" id_product="Hummingbird_printed_sweater" id_product_attribute="product_attribute_65" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_81" id_product="The_best_is_yet_to_come_Framed_poster" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="900" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_82" id_product="The_best_is_yet_to_come_Framed_poster" id_product_attribute="product_attribute_70" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_83" id_product="The_best_is_yet_to_come_Framed_poster" id_product_attribute="product_attribute_71" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_84" id_product="The_best_is_yet_to_come_Framed_poster" id_product_attribute="product_attribute_72" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_85" id_product="The_adventure_begins_Framed_poster" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="900" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_86" id_product="The_adventure_begins_Framed_poster" id_product_attribute="product_attribute_73" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_87" id_product="The_adventure_begins_Framed_poster" id_product_attribute="product_attribute_74" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_88" id_product="The_adventure_begins_Framed_poster" id_product_attribute="product_attribute_75" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_89" id_product="Today_is_a_good_day_Framed_poster" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="900" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_90" id_product="Today_is_a_good_day_Framed_poster" id_product_attribute="product_attribute_76" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_91" id_product="Today_is_a_good_day_Framed_poster" id_product_attribute="product_attribute_77" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_92" id_product="Today_is_a_good_day_Framed_poster" id_product_attribute="product_attribute_78" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_93" id_product="Mug_The_best_is_yet_to_come" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_94" id_product="Mug_The_adventure_begins" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_95" id_product="Mug_Today_is_a_good_day" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_96" id_product="1" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_97" id_product="2" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_98" id_product="3" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_99" id_product="4" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_100" id_product="5" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_101" id_product="6" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_102" id_product="7" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_103" id_product="Mountain_fox_cushion" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="600" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_104" id_product="Mountain_fox_cushion" id_product_attribute="product_attribute_79" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_105" id_product="Mountain_fox_cushion" id_product_attribute="product_attribute_80" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_106" id_product="Brown_bear_cushion" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="600" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_107" id_product="Brown_bear_cushion" id_product_attribute="product_attribute_81" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_108" id_product="Brown_bear_cushion" id_product_attribute="product_attribute_82" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_109" id_product="Hummingbird_cushion" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="600" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_110" id_product="Hummingbird_cushion" id_product_attribute="product_attribute_83" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_111" id_product="Hummingbird_cushion" id_product_attribute="product_attribute_84" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_112" id_product="Mountain_fox_-_Vector_graphics" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_113" id_product="Brown_bear_-_Vector_graphics" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_114" id_product="Hummingbird_-_Vector_graphics" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_115" id_product="Pack_Mug_Framed_poster" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="100" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_118" id_product="Mountain_fox_notebook" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="1200" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_119" id_product="Brown_bear_notebook" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="1200" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_120" id_product="Hummingbird_notebook" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="1200" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_121" id_product="9" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_122" id_product="11" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="0" depends_on_stock="0" out_of_stock="0"/>
+    <stock_available id="stock_available_123" id_product="Customizable_mug" id_product_attribute="" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_124" id_product="Mountain_fox_notebook" id_product_attribute="product_attribute_85" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_125" id_product="Mountain_fox_notebook" id_product_attribute="product_attribute_86" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_126" id_product="Mountain_fox_notebook" id_product_attribute="product_attribute_87" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_127" id_product="Mountain_fox_notebook" id_product_attribute="product_attribute_88" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_128" id_product="Brown_bear_notebook" id_product_attribute="product_attribute_89" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_129" id_product="Brown_bear_notebook" id_product_attribute="product_attribute_90" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_130" id_product="Brown_bear_notebook" id_product_attribute="product_attribute_91" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_131" id_product="Brown_bear_notebook" id_product_attribute="product_attribute_92" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_132" id_product="Hummingbird_notebook" id_product_attribute="product_attribute_93" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_133" id_product="Hummingbird_notebook" id_product_attribute="product_attribute_94" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_134" id_product="Hummingbird_notebook" id_product_attribute="product_attribute_95" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
+    <stock_available id="stock_available_135" id_product="Hummingbird_notebook" id_product_attribute="product_attribute_96" id_shop="1" id_shop_group="0" quantity="300" depends_on_stock="0" out_of_stock="2"/>
   </entities>
 </entity_stock_available>
