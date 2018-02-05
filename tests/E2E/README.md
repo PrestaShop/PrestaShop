@@ -49,24 +49,7 @@ Selenium started
 ```
 
 ### Launch test suite
-
-
-```
-➜ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName
-```
-* **URL**: **(Required)** Front office URL of your PrestaShop website (without the “http://”)
-* **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
-* **MODULE**: **(Required)** Module technical name to install (default to "gadwords")
-* **URLLASTSTABLEVERSION**: **(Required)** URL of the last stable version of PrestaShop (without the “http://”) from which you need to upgrade to the latest release candidate
-* **DB_SERVER**: **(Required)** DataBase server (default to "mysql")
-* **DB_USER**: **(Required)** DataBase user (default to "root")
-* **DB_PASSWD**: **(Optional)** DataBase password (default to "doge")
-* **DB_EMPTY_PASSWD**:**(Optional)** Boolean option : set it to **true** if you have no password
-* **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to extract the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
-* **RCTARGET**: **(Required)** Last stable version location directory (example: /project/prestashop1724/)
-* **FILENAME**: **(Optional)** RC file name this parameter must be mentioned if the (RCLINK) option is not indicated
-
-
+#### Specific test
 If you want to run test only on specific parts (for example products), you have to run this command:
 
 ```
@@ -74,8 +57,37 @@ If you want to run test only on specific parts (for example products), you have 
 ```
 
 * **path**: path of directory you want to test
+* **URL**: **(Required)** Front office URL of your PrestaShop website (without the “http://”)
+
+>Note:
+>If you have run only the 13_installation/1_installation_language_equal_to_country.js you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
+
+#### High tests
+If you want to run only the high level and full configuration tests you can run the campaign **High**
+
+```
+➜ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName
+```
+* **URL**: **(Required)** Front office URL of your PrestaShop website (without the “http://”)
+* **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
+* **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
+* **INSTALL**: **(Optional)** Boolean option : set it to **true** if you want to run the installation script (default to **false**)
+* **URLLASTSTABLEVERSION**: **(Required)** URL of the last stable version of PrestaShop (without the “http://”) from which you need to upgrade to the latest release candidate
+* **DB_SERVER**: **(Optional)** DataBase server (default to "mysql")
+* **DB_USER**: **(Optional)** DataBase user (default to "root")
+* **DB_PASSWD**: **(Optional)** DataBase password (default to "doge")
+* **DB_EMPTY_PASSWD**:**(Optional)** Boolean option : set it to **true** if you have no password
+* **RCTARGET**: **(Required)** Last stable version location directory (example: /project/prestashop1724/)
+* **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to extract the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
+* **FILENAME**: **(Optional)** RC file name this parameter must be mentioned if the (RCLINK) option is not indicated
+
+#### Regular tests
+If you want to run only the most important partial configuration tests you can run the campaign **Regular**
+```
+➜ npm run regular-test -- --URL=FrontOfficeURL --MODULE=DataTechNameModule --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser
+```
 
 >Notes:
->1) if you are running 01_order you must set the DIR option
->2) if you are running 10_module you must set the MODULE option
->3) If you are running all the test or only 13_installation you must set all the options (RCLink or FILENAME>)
+>1) if you are running high/01_order you must set the **DIR** option
+>2) if you are running high/10_module or regular/02_install_module.js you must set the **MODULE** option
+>3) If you are running all the test or only high/13_installation you must set **all the options** (RCLink or FILENAME)
