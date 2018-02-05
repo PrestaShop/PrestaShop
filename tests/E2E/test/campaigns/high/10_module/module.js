@@ -3,13 +3,13 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 module.exports = {
   checkConfigPage: function (client, ModulePage, moduleTechName) {
     test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.action_module_built_button));
-    test('should check the configuration page', () => client.checkTextValue(ModulePage.config_legend, moduleTechName));
+    test('should check the configuration page', () => client.checkTextValue(ModulePage.config_legend.replace("%moduleTechName", moduleTechName), moduleTechName));
   },
   installModule: function (client, ModulePage, AddProductPage, moduleTechName) {
     test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
-    test('should click on "Install" button', () => client.waitForExistAndClick(ModulePage.install_button));
+    test('should click on "Install" button', () => client.waitForExistAndClick(ModulePage.install_button.replace("%moduleTechName", moduleTechName)));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
