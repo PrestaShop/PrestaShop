@@ -29,5 +29,77 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 class LocaleData
 {
+    /**
+     * The locale code for this data (either language code or IETF tag)
+     *
+     * @var string
+     */
+    public $localeCode;
 
+    /**
+     * List of available numbering systems
+     * Array of strings (codes)
+     *
+     * @var array
+     */
+    public $numberingSystems;
+
+    /**
+     * Default numbering system
+     *
+     * @var string
+     */
+    public $defaultNumberingSystem;
+
+    /**
+     * Used to suppress groupings below a certain value
+     *
+     * 1 -> grouping starts at 4 figures integers (1,000 and more)
+     * 2 -> grouping starts at 5 figures integers (10,000 and more)
+     *
+     * @var int
+     */
+    public $minimumGroupingDigits;
+
+    /**
+     * Collection of all available symbols list (by numbering system)
+     *
+     * @var NumberSymbolList[]
+     */
+    public $numberSymbols;
+
+    /**
+     * Collection of all available decimal patterns (by numbering system)
+     * Array of strings (patterns)
+     *
+     * @var array
+     */
+    public $decimalPatterns;
+
+    /**
+     * Collection of all available percent patterns (by numbering system)
+     * Array of strings (patterns)
+     *
+     * @var array
+     */
+    public $percentPatterns;
+
+    /**
+     * Collection of all available currency patterns (by numbering system)
+     * Array of strings (patterns)
+     *
+     * @var array
+     */
+    public $currencyPatterns;
+
+    /**
+     * Parent locale code.
+     *
+     * This code can be an IETF tag, an ISO 639-1 language code or a specific code used in CLDR to identify special
+     * "parent" locale data files (eg: en_CH parent data will be found in en_150.xml instead of regular en.xml).
+     * Parent locale is used when some data is not found in current locale.
+     *
+     * @var string
+     */
+    public $parentLocale;
 }

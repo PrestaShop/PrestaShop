@@ -27,8 +27,9 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-interface ReaderInterface
+class Reader implements ReaderInterface
 {
+
     /**
      * Read locale data by locale code
      *
@@ -40,5 +41,8 @@ interface ReaderInterface
      * @return LocaleData
      *  A LocaleData object
      */
-    public function readLocaleData($localeCode);
+    public function readLocaleData($localeCode)
+    {
+        // TODO: Implement readLocaleData() method.
+    }
 }

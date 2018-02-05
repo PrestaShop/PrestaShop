@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
+use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
 
 /**
@@ -35,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
  * Provides reference data for locale, number specification, currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class LocaleReferenceDataLayer
+class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
      * CLDR files reader
@@ -45,4 +47,46 @@ class LocaleReferenceDataLayer
      * @var ReaderInterface
      */
     protected $reader;
+
+    /**
+     * @inheritdoc
+     */
+    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
+    {
+        $this->lowerDataLayer = $lowerLayer;
+
+        return $this;
+    }
+
+    /**
+     * Actually read a LocaleData object into the current layer
+     *
+     * Data is read from official CLDR file (via the CLDR files reader)
+     *
+     * @param string $localeCode
+     *  The LocaleData object identifier
+     *
+     * @return LocaleData|null
+     *  The wanted LocaleData object (null if not found)
+     */
+    protected function doRead($localeCode)
+    {
+        return $this->reader->readLocaleData($localeCode);
+    }
+
+    /**
+     * CLDR files are read only. Nothing can be written there.
+     *
+     * @param string $localeCode
+     *  The LocaleData object identifier
+     *
+     * @param LocaleData $data
+     *  The LocaleData object to be written
+     *
+     * @return void
+     */
+    protected function doWrite($localeCode, $data)
+    {
+        // Nothing.
+    }
 }
