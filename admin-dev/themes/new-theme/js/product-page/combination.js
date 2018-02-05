@@ -18,12 +18,12 @@ export default function() {
           getCombinations(response);
         }
       });
-      
+
     $('#create-combinations').click(function(event) {
       event.preventDefault();
       form.send(false, false, generate);
     });
-    
+
     let productDropzone = Dropzone.forElement('#product-images-dropzone');
     let updateCombinationImages = function () {
       var productAttributeIds = $.map($('.js-combinations-list .combination'), function (combination) {
@@ -38,10 +38,14 @@ export default function() {
 
     $(document).on('click', '#form .product-combination-image', function() {
       var input = $(this).find('input');
-      var isChecked = input.prop('checked');
-      input.prop('checked', isChecked ? false : true);
+      var isChecked = input.attr('checked') === 'checked';
+      if (isChecked) {
+        input.removeAttr('checked');
+      } else {
+        input.attr('checked', 'checked');
+      }
 
-      $(this).toggleClass('img-highlight', isChecked);
+      $(this).toggleClass('img-highlight', !isChecked);
       refreshDefaultImage();
     });
 
