@@ -43,27 +43,27 @@
   <entities>
     <orders id="orders_1" reference="XKBKNABJK" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_1" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="6" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="55.00" total_paid_tax_incl="55.00" total_paid_tax_excl="55.00" total_paid_real="0.00" total_products="53.00" total_products_wt="53.00" total_shipping="2.00" total_shipping_tax_incl="2.00" total_shipping_tax_excl="2.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0">
       <payment>Payment by check</payment>
-      <module>ps_checkpayment</module>
+      <module>cheque</module>
       <gift_message/>
     </orders>
     <orders id="orders_2" reference="OHSATSERP" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_2" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="1" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="75.90" total_paid_tax_incl="75.90" total_paid_tax_excl="75.90" total_paid_real="0.00" total_products="73.90" total_products_wt="73.90" total_shipping="2.00" total_shipping_tax_incl="2.00" total_shipping_tax_excl="2.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0">
       <payment>Payment by check</payment>
-      <module>ps_checkpayment</module>
+      <module>cheque</module>
       <gift_message/>
     </orders>
     <orders id="orders_3" reference="UOYEVOLI" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_3" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="8" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="76.01" total_paid_tax_incl="76.01" total_paid_tax_excl="76.01" total_paid_real="0.00" total_products="74.01" total_products_wt="74.01" total_shipping="2.00" total_shipping_tax_incl="2.00" total_shipping_tax_excl="2.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0">
       <payment>Payment by check</payment>
-      <module>ps_checkpayment</module>
+      <module>cheque</module>
       <gift_message/>
     </orders>
     <orders id="orders_4" reference="FFATNOMMJ" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_4" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="1" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="89.89" total_paid_tax_incl="89.89" total_paid_tax_excl="89.89" total_paid_real="0.00" total_products="87.89" total_products_wt="87.89" total_shipping="2.00" total_shipping_tax_incl="2.00" total_shipping_tax_excl="2.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0">
       <payment>Payment by check</payment>
-      <module>ps_checkpayment</module>
+      <module>cheque</module>
       <gift_message/>
     </orders>
     <orders id="orders_5" reference="KHWLILZLL" id_shop_group="1" id_shop="1" id_carrier="My_carrier" id_customer="John" id_cart="cart_5" id_currency="1" id_address_delivery="My_address" id_address_invoice="My_address" current_state="10" secure_key="b44a6d9efd7a0076a0fbce6b15eaf3b1" conversion_rate="1.000000" recyclable="0" gift="0" shipping_number="" total_discounts="0.00" total_discounts_tax_incl="0.00" total_paid="71.51" total_paid_tax_incl="71.51" total_paid_tax_excl="71.51" total_paid_real="0.00" total_products="69.51" total_products_wt="69.51" total_shipping="2.00" total_shipping_tax_incl="2.00" total_shipping_tax_excl="2.00" carrier_tax_rate="0.000" total_wrapping="0.00" total_wrapping_tax_incl="0.00" total_wrapping_tax_excl="0.00" invoice_number="0" delivery_number="0" invoice_date="0000-00-00 00:00:00" delivery_date="0000-00-00 00:00:00" valid="0">
       <payment>Bank wire</payment>
-      <module>ps_wirepayment</module>
+      <module>bankwire</module>
       <gift_message/>
     </orders>
   </entities>
