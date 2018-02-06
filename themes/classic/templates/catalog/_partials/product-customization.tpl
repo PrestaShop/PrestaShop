@@ -25,7 +25,7 @@
 <section class="product-customization">
   {if !$configuration.is_catalog}
     <div class="card card-block">
-      <h3 class="h4 card-title">{l s='Product customization' d='Shop.Theme.Catalog'}</h3>
+      <p class="h4 card-title">{l s='Product customization' d='Shop.Theme.Catalog'}</p>
       {l s='Don\'t forget to save your customization to be able to add to cart' d='Shop.Forms.Help'}
 
       {block name='product_customization_form'}
