@@ -53,6 +53,11 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "My carrier (Delivery next day!)"', () => client.scrollWaitForExistAndClick(AddProductPage.shipping_available_carriers, 50));
   }, 'product/product');
 
+  /**
+   * This scenario is based on the bug described in this ticket
+   * http://forge.prestashop.com/browse/BOOM-3165
+   * http://forge.prestashop.com/browse/BOOM-4469
+   **/
   scenario('Create product combinations', client => {
     test('should click on "Combinations"', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
     test('should choose the size "S" and color "Grey"', () => {
@@ -82,6 +87,12 @@ scenario('Create product with combination in the Back Office', client => {
     test('should go back to combination list', () => client.backToProduct());
     test('should check that combination\'s quantity is equal to "20"', () => client.checkAttributeValue(AddProductPage.combination_attribute_quantity.replace('%NUMBER', combinationId), 'value', "20"));
     test('should check that combination\'s picture is well updated', () => client.checkAttributeValue(AddProductPage.combination_attribute_image.replace('%NUMBER', combinationId), 'src', title_image, 'contain'));
+    test('should check that the "Impact on price (tax incl.) is equal to "15"', () => {
+      return promise
+        .then(() => client.goToEditCombination())
+        .then(() => client.checkAttributeValue(AddProductPage.combination_priceTI.replace('%NUMBER', combinationId), 'value', "15"))
+    });
+    test('should go back to combination list', () => client.backToProduct());
     test('should click on "Edit" second combination', () => {
       return promise
         .then(() => client.getCombinationData(2))
@@ -91,6 +102,12 @@ scenario('Create product with combination in the Back Office', client => {
     test('should go back to combination list', () => client.backToProduct());
     test('should check that combination\'s quantity is equal to "10"', () => client.checkAttributeValue(AddProductPage.combination_attribute_quantity.replace('%NUMBER', combinationId), 'value', "10"));
     test('should check that combination\'s picture is well updated', () => client.checkAttributeValue(AddProductPage.combination_attribute_image.replace('%NUMBER', combinationId), 'src', title_image, 'contain'));
+    test('should check that the "Impact on price (tax incl.) is equal to "20"', () => {
+      return promise
+        .then(() => client.goToEditCombination())
+        .then(() => client.checkAttributeValue(AddProductPage.combination_priceTI.replace('%NUMBER', global.combinationId), 'value', "20"))
+    });
+    test('should go back to combination list', () => client.backToProduct());
     test('should click on "Availability preferences"', () => client.scrollWaitForExistAndClick(AddProductPage.combination_availability_preferences, 50));
     test('should set the available label in stock', () => client.waitAndSetValue(AddProductPage.combination_label_in_stock, data.common.qty_msg_stock));
     test('should set the available label out of stock', () => client.waitAndSetValue(AddProductPage.combination_label_out_stock, data.common.qty_msg_unstock));
