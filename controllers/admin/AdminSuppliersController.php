@@ -452,6 +452,10 @@ class AdminSuppliersControllerCore extends AdminController
                 return;
             }
 
+            /** @var array $addressFields - The Supplier address fields */
+            $addressFields = array('alias', 'lastname', 'firstname', 'address1', 'address2', 'postcode', 'phone',
+                'phone_mobile', 'id_country', 'id_state', 'city');
+
             // updates/creates address if it does not exist
             if (Tools::isSubmit('id_address') && (int)Tools::getValue('id_address') > 0) {
                 $address = new Address((int)Tools::getValue('id_address'));
@@ -476,10 +480,20 @@ class AdminSuppliersControllerCore extends AdminController
 
             // checks address validity
             if (count($validation) > 0) {
-                foreach ($validation as $item) {
-                    $this->errors[] = $item;
+                $hasAddressError = false;
+
+                foreach ($validation as $field => $item) {
+                    if (in_array($field, $addressFields)) {
+                        $hasAddressError = true;
+                        $this->errors[] = $item;
+                    }
                 }
-                $this->errors[] = Tools::displayError('The address is not correct. Please make sure all of the required fields are completed.');
+
+                if ($hasAddressError) {
+                    $this->errors[] = Tools::displayError(
+                        'The address is not correct. Please make sure all of the required fields are completed.'
+                    );
+                }
             } else {
                 if (Tools::isSubmit('id_address') && Tools::getValue('id_address') > 0) {
                     $address->update();
