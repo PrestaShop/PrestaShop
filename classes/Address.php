@@ -458,4 +458,27 @@ class AddressCore extends ObjectModel
         }
         return array();
     }
+
+    /**
+     * @see ObjectModel::validateFields()
+     */
+    public function validateFields($die = true, $error_return = false)
+    {
+        /** @var array $skippedFields - List of fields that do not check them */
+        $skippedFields = array();
+
+        if ($this->id_manufacturer > 0) {
+            $skippedFields = array('vat_number', 'dni');
+        }
+
+        if (!empty($skippedFields)) {
+            foreach ($this->def['fields'] as $field => $data) {
+                if (in_array($field, $skippedFields)) {
+                    unset($this->def['fields'][$field]);
+                }
+            }
+        }
+
+        parent::validateFields($die, $error_return);
+    }
 }
