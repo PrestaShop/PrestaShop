@@ -471,8 +471,13 @@ class AddressCore extends ObjectModel
             $skippedFields = array('vat_number', 'dni');
         }
 
+        if ($this->id_supplier > 0) {
+            $skippedFields = array('company', 'vat_number', 'dni');
+        }
+
         if (!empty($skippedFields)) {
-            foreach ($this->def['fields'] as $field => $data) {
+            $fields = array_keys($this->def['fields']);
+            foreach ($fields as $field) {
                 if (in_array($field, $skippedFields)) {
                     unset($this->def['fields'][$field]);
                 }
