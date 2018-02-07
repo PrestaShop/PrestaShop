@@ -295,6 +295,13 @@ class CommonClient {
     return this.client.alertAccept();
   }
 
+  showElement(className, order) {
+    return this.client
+      .execute(function (className, order) {
+        document.querySelectorAll(className)[order].style.display = 'block';
+      }, className, order)
+  }
+
 }
 
 module.exports = CommonClient;
