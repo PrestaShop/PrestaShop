@@ -51,7 +51,7 @@ module.exports = {
     enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]',
     reset_module: '//*[@id="modules-list-container-native"]//button[contains(@class, "module_action_menu_reset")]',
     reset_button: '//*[@id="module-modal-confirm-welcome-reset"]//a[contains(@class, "module_action_modal_reset")]',
-
+    backdrop_modale:'//div[contains(@class, "fade show")]',
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
     modules_number: '[class="module-sorting-search-wording"]'
