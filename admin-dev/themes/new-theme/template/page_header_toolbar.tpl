@@ -28,6 +28,7 @@
 
   {block name=toolbarBox}
     <div class="toolbar-icons">
+      {hook h='displayDashboardToolbarTopMenu'}
       {foreach from=$toolbar_btn item=btn key=k}
         {if $k != 'back' && $k != 'modules-list'}
           {* TODO: REFACTOR ALL THIS THINGS *}
@@ -87,7 +88,7 @@
     </div>
   {/block}
   {if isset($headerTabContent)}
-      <div class="page-head-tabs">
+      <div class="page-head-tabs" id="head_tabs">
       {foreach $headerTabContent as $tabContent}
           {{$tabContent}}
       {/foreach}

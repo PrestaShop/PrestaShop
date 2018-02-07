@@ -9,8 +9,8 @@
 {if $collapse_menu} page-sidebar-closed{/if}
 *}
 
-<header>
-  <nav class="main-header">
+<header id="header">
+  <nav id="header_infos" class="main-header">
 
     <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
 
@@ -23,9 +23,9 @@
 
     {* Logo *}
     <i class="material-icons float-left px-1 js-mobile-menu d-md-none">menu</i>
-    <a class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+    <a id="header_logo" class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
 
-    <div class="component d-none d-md-inline-block">{include file="components/layout/quick_access.tpl"}</div>
+    <div class="component d-none d-md-flex" id="quick-access-container">{include file="components/layout/quick_access.tpl"}</div>
     <div class="component d-none d-md-inline-block col-md-4" id="header-search-container">{include file="components/layout/search_form.tpl"}</div>
 
     {if isset($debug_mode) && $debug_mode == true}
@@ -59,7 +59,7 @@
     </span>
     *}
   </nav>
-  {hook h='displayBackOfficeTop'}
+  {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
 </header>
 
 {include file='components/layout/nav_bar.tpl'}

@@ -28,6 +28,10 @@ var cldrLoadedCatalogs = [];
 var cldrLoaderError = false;
 var cldrCatalogsPath = (typeof baseDir !== 'undefined' ? baseDir : '') + 'translations/cldr/datas/';
 
+/* Variables avoiding several loading of the same file */
+var deferreds = [];
+var deferredUrls = [];
+
 /**
  * Will get list of CLDR catalogs by XHR.
  * Please do not call this directly except if you know what you do. Prefer to call the wrapper methods cldrForXXX()
@@ -77,14 +81,16 @@ function cldrLazyLoadCatalogs(catalogs, callback) {
 			return new Globalize(culture);
 		}
 	} else {
-		var deferreds = [];
 		catalogs.forEach(function(catalog) {
 			var url = cldrCatalogsPath + catalog.replace(/main\/[^\/]+/, 'main/'+culture) + '.json';
-			if ($.inArray(url, cldrLoadedCatalogs) === -1) {
+			if ($.inArray(url, cldrLoadedCatalogs) === -1 && $.inArray(url, deferredUrls) === -1) {
+				deferredUrls.push(url);
 				this.push($.get(url).done(function() {
 						cldrLoadedCatalogs.push(url);
 					}).fail(function() {
 						cldrLoaderError = true;
+					}).always(function() {
+						deferredUrls.splice(deferredUrls.indexOf(url), 1)
 					}));
 			}
 		}, deferreds);

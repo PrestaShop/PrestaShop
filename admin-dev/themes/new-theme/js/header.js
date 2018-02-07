@@ -102,8 +102,6 @@ export default class Header {
   initNotificationsToggle() {
     $('.notification.dropdown-toggle').on('click', () => {
       if(!$('.mobile-nav').hasClass('expanded')) {
-        $('.notification-center.dropdown').addClass('open');
-        $('.mobile-layer').addClass('expanded');
         this.updateEmployeeNotifications();
       }
     });
@@ -118,8 +116,6 @@ export default class Header {
           $('.mobile-layer').removeClass('expanded');
           refreshNotifications();
         }
-        $('div.notification-center.dropdown').removeClass('open');
-
       }
     });
 

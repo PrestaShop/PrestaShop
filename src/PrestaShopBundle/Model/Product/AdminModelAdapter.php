@@ -262,25 +262,25 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             $form_data['combinations'][$k]['attribute_weight_impact'] = 0;
             $form_data['combinations'][$k]['attribute_unit_impact'] = 0;
 
-            if ($combination['attribute_price'] > 0) {
+            $floatParser = new FloatParser();
+
+            if ($floatParser->fromString($combination['attribute_price']) > 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = 1;
-            } elseif ($combination['attribute_price'] < 0) {
+            } elseif ($floatParser->fromString($combination['attribute_price']) < 0) {
                 $form_data['combinations'][$k]['attribute_price_impact'] = -1;
             }
 
-            if ($combination['attribute_weight'] > 0) {
+            if ($floatParser->fromString($combination['attribute_weight']) > 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = 1;
-            } elseif ($combination['attribute_weight'] < 0) {
+            } elseif ($floatParser->fromString($combination['attribute_weight']) < 0) {
                 $form_data['combinations'][$k]['attribute_weight_impact'] = -1;
             }
 
-            if ($combination['attribute_unity'] > 0) {
+            if ($floatParser->fromString($combination['attribute_unity']) > 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = 1;
-            } elseif ($combination['attribute_unity'] < 0) {
+            } elseif ($floatParser->fromString($combination['attribute_unity']) < 0) {
                 $form_data['combinations'][$k]['attribute_unit_impact'] = -1;
             }
-
-            $floatParser = new FloatParser();
 
             $form_data['combinations'][$k]['attribute_price'] = abs(
                 $floatParser->fromString($combination['attribute_price'])

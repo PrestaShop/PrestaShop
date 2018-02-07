@@ -28,12 +28,12 @@
       <label>{{trans('search_label')}}</label>
       <div class="input-group">
         <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" :placeholder="trans('search_placeholder')" />
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-primary" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="material-icons">search</i>
-            {{trans('button_search')}}
-          </button>
-        </div>
+        <span class="input-group-btn">
+          <PSButton @click="onClick" class="search-button" :primary="true">
+              <i class="material-icons">search</i>
+              {{trans('button_search')}}
+          </PSButton>
+        </span>
       </div>
     </form>
   </div>
@@ -41,10 +41,12 @@
 
 <script>
   import PSTags from 'app/widgets/ps-tags';
+  import PSButton from 'app/widgets/ps-button';
 
   export default {
     components: {
       PSTags,
+      PSButton,
     },
     methods: {
       onClick() {

@@ -209,7 +209,7 @@
 	</td>
 	<td class="product_action text-right">
 		{* edit/delete controls *}
-		<div class="btn-group">
+		<div class="btn-group" id="btn_group_action">
 			<button type="button" class="btn btn-default edit_product_change_link">
 				<i class="icon-pencil"></i>
 				{l s='Edit' d='Admin.Actions'}

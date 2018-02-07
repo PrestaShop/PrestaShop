@@ -22,7 +22,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *#}
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
@@ -157,10 +157,10 @@
                         {% endif %}
                     </p>
                     <p>
-                        <strong>{{ 'Encryption:'|trans }}</strong> {{ smtp.encryption }}
+                        <strong>{{ 'Encryption:'|trans }}</strong> {{ system.smtp.encryption }}
                     </p>
                     <p>
-                        <strong>{{ 'SMTP port:'|trans }}</strong> {{ smtp.port }}
+                        <strong>{{ 'SMTP port:'|trans }}</strong> {{ system.smtp.port }}
                     </p>
                     {% endif %}
                 </div>
@@ -261,9 +261,9 @@
                     };
 
                     if (json.missing.length || json.updated.length)
-                        $('#changedFiles').html('<div class="alert alert-warning"><ul><li>'+ translations.changesDetected +'</li></ul></div>');
+                        $('#changedFiles').html('<div class="alert alert-warning" role="alert"><p class="alert-text">'+ translations.changesDetected +'</p></div>');
                     else
-                        $('#changedFiles').html('<div class="alert alert-success"><ul><li>'+ translations.noChangeDetected +'</li></ul></div>');
+                        $('#changedFiles').html('<div class="alert alert-success" role="alert"><p class="alert-text">'+ translations.noChangeDetected +'</p></div>');
 
                     $.each(tab, function(key, lang) {
                         if (json[key].length) {

@@ -25,6 +25,7 @@
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
+use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 
 class LanguageCore extends ObjectModel
 {
@@ -185,9 +186,13 @@ class LanguageCore extends ObjectModel
         if (!parent::add($autodate, $nullValues)) {
             return false;
         }
-        
+
         if ($this->is_rtl) {
-            self::installRtlStylesheets(true, false, null, null, (defined('PS_INSTALLATION_IN_PROGRESS') ? true : false));
+            self::getRtlStylesheetProcessor()
+                ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
+                ->setProcessBOTheme(true)
+                ->setProcessDefaultModules(true)
+                ->process();
         }
 
         if ($only_add) {
@@ -199,17 +204,21 @@ class LanguageCore extends ObjectModel
 
         return true;
     }
-    
+
     public function update($nullValues = false)
     {
         if (!parent::update($nullValues)) {
             return false;
         }
-        
-        if ($this->is_rtl) {
-             self::installRtlStylesheets(true, false);
+
+        // Generate RTL stylesheets if language is_rtl parameter changes
+		if ($this->is_rtl) {
+            self::getRtlStylesheetProcessor()
+                ->setProcessBOTheme(true)
+                ->setProcessDefaultModules(true)
+                ->process();
         }
- 
+
         return true;
     }
 
@@ -1335,37 +1344,33 @@ class LanguageCore extends ObjectModel
             }
         }
     }
-    
+
     /**
-     * Language::installRtlStylesheets()
-     * @param bool $bo_theme
-     * @param bool $fo_theme
-     * @param null $theme_name
-     * @param null $iso
-     * @param bool $install
-     * @param null $path
+     * Returns an RTL stylesheet processor instance
+     *
+     * @return RtlStylesheetProcessor
      */
-    public static function installRtlStylesheets($bo_theme = false, $fo_theme = false, $theme_name = null, $iso = null, $install = false, $path = null)
+    public static function getRtlStylesheetProcessor()
     {
-        $admin_dir = ($install) ? _PS_ROOT_DIR_.'/admin/' : _PS_ADMIN_DIR_.'/';
-        $front_dir = _PS_ROOT_DIR_.'/themes/';
-        if ($iso) {
-            $lang_pack = Language::getLangDetails($iso);
-            if (!$lang_pack['is_rtl']) {
-                return;
-            }
+        if (defined('_PS_ADMIN_DIR_')) {
+            $adminDir = _PS_ADMIN_DIR_;
+        } else {
+            $adminDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'admin';
+            $adminDir = (is_dir($adminDir)) ? $adminDir : ($adminDir.'-dev');
         }
-        
-        if ($bo_theme) {
-            \RTLGenerator::generate($admin_dir.'themes');
-        }
-        
-        if ($fo_theme) {
-            \RTLGenerator::generate($front_dir.($theme_name?$theme_name:'classic'));
-        }
-        
-        if ($path && is_dir($path)) {
-            \RTLGenerator::generate($path);
-        }
+
+        $themesDir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
+
+        $processor = new RtlStylesheetProcessor(
+            $adminDir,
+            $themesDir,
+            array(
+                _PS_MODULE_DIR_.'gamification',
+                _PS_MODULE_DIR_.'welcome',
+                _PS_MODULE_DIR_.'cronjobs',
+            )
+        );
+
+        return $processor;
     }
 }

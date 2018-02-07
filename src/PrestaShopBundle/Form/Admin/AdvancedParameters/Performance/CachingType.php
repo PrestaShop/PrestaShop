@@ -86,6 +86,7 @@ class CachingType extends TranslatorAwareType
                 'expanded' => true,
                 'choices_as_values' => true,
                 'required' => false,
+                'placeholder' => false
             ))
         ;
     }

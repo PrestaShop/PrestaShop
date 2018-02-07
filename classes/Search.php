@@ -203,11 +203,7 @@ class SearchCore
 
         foreach ($words as $key => $word) {
             if (!empty($word) && strlen($word) >= (int)Configuration::get('PS_SEARCH_MINWORDLEN')) {
-                $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
-                $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
-                $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
-                $start_pos = (int)$word[0] == '-';
-                $sql_param_search = $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
+                $sql_param_search = self::getSearchParamFromWord($word);
 
                 $intersect_array[] = 'SELECT DISTINCT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
@@ -872,5 +868,22 @@ class SearchCore
         }
 
         return Product::getProductsProperties((int)$id_lang, $result);
+    }
+
+    /**
+     * Prepare a word for the SQL requests (Remove hyphen if present, add percentage signs)
+     *
+     * @internal Public for tests
+     * @param string $word
+     * @return string
+     */
+    public static function getSearchParamFromWord($word)
+    {
+        $word = str_replace(array('%', '_'), array('\\%', '\\_'), $word);
+        $start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
+        $end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
+        $start_pos = (int)($word[0] == '-');
+
+        return $start_search.pSQL(Tools::substr($word, $start_pos, PS_SEARCH_MAX_WORD_LENGTH)).$end_search;
     }
 }

@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <section>
+  <section class="stock-movements">
     <PSTable class="mt-1">
       <thead>
         <tr>

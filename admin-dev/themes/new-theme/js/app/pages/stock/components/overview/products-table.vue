@@ -120,38 +120,3 @@
     },
   };
 </script>
-
-<style lang="sass" type="text/scss">
-  @import "../../../../../../scss/config/_settings.scss";
-  .table {
-    font-size: .9em;
-    table-layout: fixed;
-    width: 100%;
-    white-space: nowrap;
-    thead {
-      border:none;
-      th {
-        border:none;
-        border-bottom: 2px solid $brand-primary;
-        color: $gray-dark;
-        padding: 10px 0;
-        &.thead-title {
-          padding-left: 88px;
-        }
-        &:last-child {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          .material-icons {
-            margin-right: 5px;
-          }
-        }
-      }
-    }
-    tbody {
-      border: none;
-      tr {
-        border-bottom: $gray-light 1px solid;
-      }
-    }
-  }
-</style>

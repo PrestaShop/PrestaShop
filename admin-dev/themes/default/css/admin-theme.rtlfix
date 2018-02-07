@@ -1,5 +1,4 @@
-﻿
-.rtl-flip:not(.rtl-no-flip) {
+﻿.rtl-flip:not(.rtl-no-flip) {
   -moz-transform: scaleX(-1);
   -o-transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
@@ -63,4 +62,8 @@ svg {
 
 .mce-panel {
   right: auto;
+}
+
+.process-icon-rtl:before {
+  content : "\f1dd\f0d9";
 }

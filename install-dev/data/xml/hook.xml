@@ -196,6 +196,11 @@
       <title>Display new elements in the Back Office, tab AdminCustomers</title>
       <description>This hook launches modules when the AdminCustomers tab is displayed in the Back Office</description>
     </hook>
+    <hook id="displayAdminCustomersAddressesItemAction">
+      <name>displayAdminCustomersAddressesItemAction</name>
+      <title>Display new elements in the Back Office, tab AdminCustomers, Addresses actions</title>
+      <description>This hook launches modules when the Addresses list into the AdminCustomers tab is displayed in the Back Office</description>
+    </hook>
     <hook id="displayOrderConfirmation">
       <name>displayOrderConfirmation</name>
       <title>Order confirmation page</title>
@@ -740,6 +745,16 @@
       <name>displayAdminProductsCombinationBottom</name>
       <title>Display new elements in back office product page, Combination tab</title>
       <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
+    <hook id="displayDashboardToolbarTopMenu">
+      <name>displayDashboardToolbarTopMenu</name>
+      <title>Display new elements in back office page with a dashboard, on top Menu</title>
+      <description>This hook launches modules when a page with a dashboard is displayed</description>
+    </hook>
+    <hook id="displayDashboardToolbarIcons">
+      <name>displayDashboardToolbarIcons</name>
+      <title>Display new elements in back office page with dashboard, on icons list</title>
+      <description>This hook launches modules when the back office with dashboard is displayed</description>
     </hook>
   </entities>
 </entity_hook>

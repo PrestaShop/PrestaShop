@@ -2,6 +2,12 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="admin-dev/themes/default/template/footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="3dd9c50a1e72020b9cc83e92aa7d07b9">
+        <source>Load time: </source>
+        <target>Load time: </target>
+        <note>Context:
+File: admin-dev/themes/default/template/footer.tpl:34</note>
+      </trans-unit>
       <trans-unit id="bbaff12800505b22a853e8b7f4eb6a22">
         <source>Contact</source>
         <target>Contact</target>

@@ -29,8 +29,8 @@ export default function() {
 
   $('.js-nav-tabs li').each((index, item) => {
     navWidth += $(item).width();
-    $('.js-nav-tabs').width(navWidth);
   });
+  $('.js-nav-tabs').width(navWidth);
 
   $('.js-nav-tabs [data-toggle="tab"]').on('click', (e) => {
     if (!$(e.target).hasClass('active')) {

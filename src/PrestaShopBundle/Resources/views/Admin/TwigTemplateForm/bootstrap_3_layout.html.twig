@@ -162,9 +162,10 @@
 {%- endblock radio_widget %}
 
 {% block choice_tree_widget -%}
-    <div {{ block('widget_container_attributes') }}>
+    <div {{ block('widget_container_attributes') }} class="category-tree-overflow">
         <ul class="category-tree">
-        {%- for child in choices %}
+            <li class="form-control-label text-right main-category">{{ "Main category"|trans({}, 'Admin.Catalog.Feature') }}</li>
+            {%- for child in choices %}
             {{ block('choice_tree_item_widget') }}
         {% endfor -%}
         </ul>
@@ -183,21 +184,20 @@
                     {%- else -%}
                         {{ child.name }}
                     {% endif %}
+                    {% if defaultCategory is defined %}
+                        <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
+                    {% endif %}
                 </label>
-                {% if defaultCategory is defined %}
-                <div class="radio float-right">
-                    <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
-                </div>
-                {% endif %}
             </div>
         {%- else -%}
             <div class="radio">
-                <label><input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category">{{ child.name }}</label>
-                {% if defaultCategory is defined %}
-                <div class="radio float-right">
-                    <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
-                </div>
-                {% endif %}
+                <label>
+                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category">
+                    {{ child.name }}
+                    {% if defaultCategory is defined %}
+                        <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
+                    {% endif %}
+                </label>
             </div>
         {%- endif %}
         {% if child.children is defined %}
@@ -380,17 +380,30 @@
 
 {% block form_errors -%}
     {% if errors|length > 0 -%}
-    {% if form.parent %}<span class="help-block">{% else %}<div class="alert alert-danger">{% endif %}
-    <ul class="list-unstyled">
-        {%- for error in errors -%}
-    <li><span class="glyphicon glyphicon-exclamation-sign"></span> {{
-        error.messagePluralization is null
-        ? error.messageTemplate|trans(error.messageParameters, 'form_error')
-        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
-        }}
-    </li>
-{%- endfor -%}
-    </ul>
-    {% if form.parent %}</span>{% else %}</div>{% endif %}
+    <div class="alert alert-danger">
+        {%- if errors|length > 1 -%}
+            <ul class="alert-text">
+                {%- for error in errors -%}
+                    <li> {{
+                        error.messagePluralization is null
+                        ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+                        : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+                        }}
+                    </li>
+                {%- endfor -%}
+            </ul>
+        {%- else -%}
+            <div class="alert-text">
+            {%- for error in errors -%}
+                <p> {{
+                    error.messagePluralization is null
+                    ? error.messageTemplate|trans(error.messageParameters, 'form_error')
+                    : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'form_error')
+                    }}
+                </p>
+            {%- endfor -%}
+            </div>
+        {%- endif -%}
+    </div>
     {%- endif %}
 {%- endblock form_errors %}

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 use Symfony\Component\Translation\TranslatorInterface;
 use ProductSale;
+use Tools;
 
 class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 {
@@ -52,6 +53,14 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
         ProductSearchContext $context,
         ProductSearchQuery $query
     ) {
+        $sortBySales = (new SortOrder('product', 'sales', 'desc'))->setLabel(
+            $this->translator->trans('Sales, highest to lowest', array(), 'Shop.Theme.Catalog')
+        );
+
+        if (!Tools::getValue('order', 0)) {
+            $query->setSortOrder($sortBySales);
+        }
+
         if (!$products = ProductSale::getBestSales(
             $context->getIdLang(),
             $query->getPage(),
@@ -73,6 +82,7 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
 
             $result->setAvailableSortOrders(
                 array(
+                    $sortBySales,
                     (new SortOrder('product', 'name', 'asc'))->setLabel(
                         $this->translator->trans('Name, A to Z', array(), 'Shop.Theme.Catalog')
                     ),
