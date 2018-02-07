@@ -169,6 +169,8 @@ module.exports = {
     first_product_id: '//*[@id="product_catalog_list"]//tr[1]/td[1]/div/label',
     second_product_id: '//*[@id="product_catalog_list"]//tr[2]/td[1]/div/label',
     third_product_id: '//*[@id="product_catalog_list"]//tr[3]/td[1]/div/label',
-    status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]'
+    status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
+    first_product_status: '//*[@id="product_catalog_list"]//tr/td[8]/a/i[contains(@class, "action-%ACTION")]',
+    edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]'
   }
 };
