@@ -20,5 +20,6 @@ module.exports = {
     shipping_method: '//*[@id="order-details"]//li[3]',
     quantity_input: '//*[@id="main"]//div[contains(@class, "input-group")]//input[contains(@class, "js-cart-line-product-quantity")]',
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
+    alert: '//*[@id="notifications"]//article[contains(@class, "alert-danger")]'
   }
 };
