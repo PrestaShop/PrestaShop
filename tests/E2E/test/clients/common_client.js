@@ -284,7 +284,7 @@ class CommonClient {
   }
 
   pause(timeout) {
-    return this.client.pause(timeout);
+    return this.client.pause(timeout)
   }
 
   keys(button) {
@@ -300,6 +300,13 @@ class CommonClient {
       .execute(function (className, order) {
         document.querySelectorAll(className)[order].style.display = 'block';
       }, className, order)
+  }
+
+  checkIsNotVisible(selector) {
+    return this.client
+      .pause(2000)
+      .isVisible(selector)
+      .then((isVisible) => expect(isVisible).to.be.false)
   }
 
 }

@@ -25,6 +25,7 @@ module.exports = {
     test('should click on "Uninstall" button', () => client.waitForExistAndClick(ModulePage.uninstall_button));
     test('should click on "Yes, uninstall it" button', () => client.waitForVisibleAndClick(ModulePage.uninstall_module));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
+    test('should check that the backdrop is hidden', () => client.checkIsNotVisible(ModulePage.backdrop_modale));
     test('should check if the module ' + moduleTechName + ' was installed', () => client.checkTextValue(ModulePage.built_in_module, "0", "contain"));
   },
   disableModule: function (client, ModulePage, AddProductPage, moduleTechName) {
