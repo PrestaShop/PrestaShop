@@ -8388,6 +8388,7 @@ div.star.star_hover:after {
     #facebook_block,
     #cmsinfo_block {
       width: 100%;
+      height: 100%;
       min-height: 1px; } }
 
 #facebook_block h4 {
@@ -8411,11 +8412,16 @@ div.star.star_hover:after {
 
 #cmsinfo_block {
   border-left: 1px solid #d9d9d9; }
+  #cmsinfo_block img {
+    width: 100%;
+  }
   @media (max-width: 767px) {
     #cmsinfo_block {
       border: none;
       margin-top: 10px; } }
   #cmsinfo_block > div {
+    height: 100%;
+    overflow: auto;
     padding: 35px 10px 0 0; }
     @media (max-width: 767px) {
       #cmsinfo_block > div {
