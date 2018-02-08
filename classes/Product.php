@@ -3589,22 +3589,15 @@ class ProductCore extends ObjectModel
     *
     * @param int $id_product Product id
     * @param int $id_product_attribute Product attribute id (optional)
+    * @param bool|null $cache_is_pack
     * @return int Available quantities
     */
     public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
     {
-        if ((int)$cache_is_pack || ($cache_is_pack === null && Pack::isPack((int)$id_product))) {
-            if (!Pack::isInStock((int)$id_product)) {
-                return 0;
-            }
+        if (Pack::isPack((int)$id_product)) {
+            return Pack::getQuantity($id_product);
         }
-        $wantedQuantity = Tools::getValue('quantity_wanted', 0);
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
-
-        // Temp fix, Sorry :D. Work in progress in another branch.
-        if ($wantedQuantity > 0) {
-            $availableQuantity++;
-        }
         $nbProductInCart = 0;
         $cart = Context::getContext()->cart;
 
@@ -3617,7 +3610,7 @@ class ProductCore extends ObjectModel
         }
 
         // @since 1.5.0
-        return $availableQuantity - ($nbProductInCart + $wantedQuantity);
+        return $availableQuantity - $nbProductInCart;
     }
 
     /**
@@ -3705,22 +3698,20 @@ class ProductCore extends ObjectModel
     /**
      * Check product availability
      *
+     * True if available, false otherwise
+     *
      * @param int $qty Quantity desired
      * @return bool True if product is available with this quantity
      */
     public function checkQty($qty)
     {
-        $id_product_attribute = isset($this->id_product_attribute) ? $this->id_product_attribute : null;
-
-        if (Product::getQuantity($this->id, $id_product_attribute) < 0) {
-            return false;
-        }
-
         if ($this->isAvailableWhenOutOfStock(StockAvailable::outOfStock($this->id))) {
             return true;
         }
+        $id_product_attribute = isset($this->id_product_attribute) ? $this->id_product_attribute : null;
+        $availableQuantity = StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute);
 
-        return ($qty <= StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute));
+        return $qty <= $availableQuantity;
     }
 
     /**

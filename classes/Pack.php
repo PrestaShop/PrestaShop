@@ -158,7 +158,8 @@ class PackCore extends Product
     /**
      * Is the pack in stock and his associated products?
      *
-     * @param $id_product
+     * @param mixed $id_product
+     * @param mixed $wantedQuantity
      * @return bool
      */
     public static function isInStock($id_product, $wantedQuantity = null)
@@ -166,6 +167,8 @@ class PackCore extends Product
         if (!Pack::isFeatureActive()) {
             return true;
         }
+        $id_product = (int) $id_product;
+        $wantedQuantity = (int) $wantedQuantity;
         $items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
 
         if ($wantedQuantity === null
@@ -185,6 +188,48 @@ class PackCore extends Product
         }
 
         return true;
+    }
+
+    /**
+     * Return the minimum item quantity found in the pack
+     *
+     * @param int $id_product Product id
+     * @param int $id_product_attribute Product attribute id (optional)
+     * @param bool|null $cache_is_pack
+     * @return int
+     * @throws PrestaShopExceptionCore
+     */
+    public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
+    {
+        $id_product = (int) $id_product;
+        $id_product_attribute = (int) $id_product_attribute;
+        $cache_is_pack = (bool) $cache_is_pack;
+
+        if (!self::isPack($id_product)) {
+            throw new PrestaShopExceptionCore("Product with id $id_product is not a pack");
+        }
+        $packQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
+        $cart = Context::getContext()->cart;
+
+        if (!empty($cart)) {
+            $cartProduct = $cart->getProductQuantity($id_product);
+
+            if (!empty($cartProduct['deep_quantity'])) {
+                $packQuantity -= $cartProduct['deep_quantity'];
+            }
+        }
+        $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
+
+        foreach ($items as $item) {
+            $itemQuantity = Product::getQuantity($item->id);
+            $nbPackAvailableForItem = (int) ($itemQuantity / $item->pack_quantity);
+
+            if ($nbPackAvailableForItem < $packQuantity) {
+                $packQuantity = $nbPackAvailableForItem;
+            }
+        }
+
+        return $packQuantity;
     }
 
     public static function getItemTable($id_product, $id_lang, $full = false)

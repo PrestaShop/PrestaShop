@@ -40,10 +40,10 @@ class AddPackTest extends AbstractCartTest
         $idProductInPack = $productPack->id;
         $nbPack = \Product::getQuantity($idPack);
         $nbProduct = \Product::getQuantity($idProductInPack);
-        $this->assertEquals(10, $nbPack);
+        $this->assertEquals(5, $nbPack);
         $this->assertEquals(50, $nbProduct);
-        $this->assertTrue(\Pack::isInStock($idPack));
-        $this->assertTrue(\Pack::isInStock($idProductInPack));
+        $this->assertTrue(\Pack::isInStock($idPack, 5));
+        $this->assertFalse(\Pack::isInStock($idPack, 6));
     }
 
     public function testPackInCart()
@@ -57,7 +57,7 @@ class AddPackTest extends AbstractCartTest
 
         // Simple tests
         $this->assertTrue(\Pack::isPack($idPack));
-        $this->assertTrue($this->cart->updateQty(3, $idPack));
+        $this->assertTrue($this->cart->updateQty(2, $idPack));
         $this->assertTrue($this->cart->updateQty(30, $idProductInPack));
 
         $nbPackInCart = $this->cart->getProductQuantity($idPack);
@@ -65,11 +65,13 @@ class AddPackTest extends AbstractCartTest
         $cartProducts = $this->cart->getProducts(true);
 
         $this->assertCount(2, $cartProducts);
-        $this->assertEquals(3, $nbPackInCart['quantity']);
+        $this->assertEquals(2, $nbPackInCart['quantity']);
         $this->assertEquals(30, $nbProductInCart['quantity']);
+        $this->assertEquals(50, $nbProductInCart['deep_quantity']);
 
         foreach ($cartProducts as $cartProduct) {
             $this->assertContains($cartProduct['id_product'], array($idPack, $idProductInPack));
+            $this->assertEquals(0, \Product::getQuantity($cartProduct['id_product']));
         }
 
         // Unable to add more than in stock

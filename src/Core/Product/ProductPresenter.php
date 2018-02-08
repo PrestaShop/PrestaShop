@@ -430,18 +430,18 @@ class ProductPresenter
         Language $language
     ) {
         $show_price = $this->shouldShowPrice($settings, $product);
-
         $show_availability = $show_price && $settings->stock_management_enabled;
-
         $presentedProduct['show_availability'] = $show_availability;
+        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', 1);
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;
         }
 
         if ($show_availability) {
-            if ($product['quantity'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
                 $presentedProduct['availability_date'] = $product['available_date'];
+
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
@@ -452,9 +452,7 @@ class ProductPresenter
                 $presentedProduct['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'available';
-            } else if (!empty($product['quantity_wanted'])
-                && ($product['quantity'] + $product['quantity_wanted'] > 0)
-            ) {
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] >= 0) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     array(),
