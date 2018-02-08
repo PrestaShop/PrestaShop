@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Cart\Calculation\Taxes;
 
 use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
-class CartProductTest extends AbstractCartCalculationTest
+class CartTaxesTest extends AbstractCartCalculationTest
 {
 
     const TAX_RULE_GROUPID_1 = 32;

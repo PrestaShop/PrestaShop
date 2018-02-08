@@ -27,8 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
-use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class Fees
 {
@@ -68,6 +66,7 @@ class Fees
     public function processCalculation(
         Cart $cart,
         CartRowCollection $cartRowCollection,
+        $computePrecision,
         $id_carrier = null
     ) {
         if ($id_carrier === null) {
@@ -95,8 +94,6 @@ class Fees
         $this->finalShippingFees = clone($this->shippingFees);
 
         // wrapping fees
-        $configuration           = ServiceLocator::get(ConfigurationInterface::class);
-        $computePrecision        = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         $this->wrappingFees      = new AmountImmutable(
             \Tools::convertPrice(
                 \Tools::ps_round(

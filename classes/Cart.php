@@ -2147,20 +2147,21 @@ class CartCore extends ObjectModel
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);
-        /** @var ConfigurationInterface $configuration */
-        $configuration = ServiceLocator::get(ConfigurationInterface::class);
 
         // set cart rows (products)
+        $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
+        $precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $roundType = $this->configuration->get('PS_ROUND_TYPE');
         foreach ($products as $product) {
-            $calculator->addCartRow(new CartRow($product, $priceCalculator, $configuration));
+            $calculator->addCartRow(new CartRow($product, $priceCalculator, $useEcotax, $precision, $roundType));
         }
 
         // set cart rules
         foreach ($cartRules as $cartRule) {
             $calculator->addCartRule(new CartRuleData($cartRule));
         }
-
-        $calculator->processCalculation();
+        $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
+        $calculator->processCalculation($computePrecision);
 
         return $calculator;
     }
@@ -2283,6 +2284,14 @@ class CartCore extends ObjectModel
         if (!$this->addressFactory->addressExists($addressId)) {
             $addressId = null;
         }
+
+        return $addressId;
+    }
+
+    public function getTaxAddressId()
+    {
+        $taxAddressType = $this->configuration->get('PS_TAX_ADDRESS_TYPE');
+        $addressId = $this->$taxAddressType;
 
         return $addressId;
     }

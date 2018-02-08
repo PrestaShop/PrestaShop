@@ -112,16 +112,18 @@ class Calculator
     /**
      * run the whole calculation process: calculate rows, discounts, fees
      *
+     * @param $computePrecision
+     *
      * @return $this
      */
-    public function processCalculation()
+    public function processCalculation($computePrecision)
     {
         // calculate product rows
         foreach ($this->cartRows as $cartRow) {
             $this->calculateRowTotal($cartRow);
         }
         // calculate fees
-        $this->calculateFees();
+        $this->calculateFees($computePrecision);
         // calculate discounts
         $cartRuleCalculator = new CartRuleCalculator();
         $cartRuleCalculator->setCartRules($this->cartRules)
@@ -192,7 +194,7 @@ class Calculator
      *
      * @return Calculator
      */
-    public function setCart($cart)
+    protected function setCart($cart)
     {
         // reset state
         $this->isProcessed = false;
@@ -207,7 +209,7 @@ class Calculator
      *
      * @return Calculator
      */
-    public function setCarrierId($id_carrier)
+    protected function setCarrierId($id_carrier)
     {
         // reset state
         $this->isProcessed = false;
@@ -245,9 +247,11 @@ class Calculator
 
     /**
      * calculate wrapping and shipping fees
+     *
+     * @param $computePrecision
      */
-    protected function calculateFees()
+    protected function calculateFees($computePrecision)
     {
-        $this->fees->processCalculation($this->cart, $this->cartRows, $this->id_carrier);
+        $this->fees->processCalculation($this->cart, $this->cartRows, $computePrecision, $this->id_carrier);
     }
 }
