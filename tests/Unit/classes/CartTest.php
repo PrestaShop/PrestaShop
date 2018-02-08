@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Address;
 use Cart;
 use Order;
+use PrestaShop\PrestaShop\Tests\Unit\ContextMocker;
 use Tools;
 use Phake;
 
@@ -80,9 +81,17 @@ class FakeProductPriceCalculator
 
 class CartTest extends UnitTestCase
 {
+
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
     public function setUp()
     {
         parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator', $this->productPriceCalculator);
