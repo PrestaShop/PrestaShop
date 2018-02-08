@@ -66,17 +66,17 @@ class GeneralConfiguration implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $config)
     {
         $errors = [];
 
-        if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_CATALOG_MODE', (bool) $configuration['catalog_mode']);
-            $this->configuration->set('PS_NB_DAYS_NEW_PRODUCT', (int) $configuration['new_days_number']);
-            $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $configuration['short_description_limit']);
-            $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $configuration['quantity_discount']);
-            $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (bool) $configuration['force_friendly_url']);
-            $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (bool) $configuration['default_status']);
+        if ($this->validateConfiguration($config)) {
+            $this->configuration->set('PS_CATALOG_MODE', (bool) $config['catalog_mode']);
+            $this->configuration->set('PS_NB_DAYS_NEW_PRODUCT', (int) $config['new_days_number']);
+            $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $config['short_description_limit']);
+            $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
+            $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (bool) $config['force_friendly_url']);
+            $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (bool) $config['default_status']);
         }
 
         return $errors;

@@ -6,7 +6,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PaginationConfiguration implements DataConfigurationInterface
+class StockConfiguration implements DataConfigurationInterface
 {
     /**
      * @var Configuration
@@ -24,9 +24,9 @@ class PaginationConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'products_per_page' => $this->configuration->get('PS_PRODUCTS_PER_PAGE'),
-            'default_order_by' => $this->configuration->get('PS_PRODUCTS_ORDER_BY'),
-            'default_order_way' => $this->configuration->get('PS_PRODUCTS_ORDER_WAY'),
+            'allow_ordering_oos' => $this->configuration->get('PS_ORDER_OUT_OF_STOCK'),
+            'stock_management' => $this->configuration->get('PS_STOCK_MANAGEMENT'),
+            'in_stock_label' => [],
         ];
     }
 
@@ -35,27 +35,24 @@ class PaginationConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $config)
     {
-        $errors = [];
-
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_PRODUCTS_PER_PAGE', (int) $config['products_per_page']);
-            $this->configuration->set('PS_PRODUCTS_ORDER_BY', (int) $config['default_order_by']);
-            $this->configuration->set('PS_PRODUCTS_ORDER_WAY', (int) $config['default_order_way']);
+            $this->configuration->set('PS_ORDER_OUT_OF_STOCK', $config['allow_ordering_oos']);
+            $this->configuration->set('PS_STOCK_MANAGEMENT', $config['stock_management']);
+            $this->configuration->set('PS_LABEL_IN_STOCK_PRODUCTS', $config['in_stock_label']);
         }
-
-        return $errors;
     }
 
     /**
+     *
      * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {
         $resolver = new OptionsResolver();
         $resolver->setRequired([
-            'products_per_page',
-            'default_order_by',
-            'default_order_way',
+            'allow_ordering_oos',
+            'stock_management',
+            'in_stock_label',
         ]);
 
         $resolver->resolve($configuration);
