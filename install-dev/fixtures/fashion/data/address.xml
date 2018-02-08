@@ -30,21 +30,21 @@
       <city>Paris </city>
       <other/>
     </address>
-    <address id="supplier" id_country="US" id_state="state_32" id_customer="" id_manufacturer="" id_supplier="Fashion_Supplier" id_warehouse="0" alias="supplier" lastname="supplier" firstname="supplier" postcode="10153" phone="(212) 336-1440" phone_mobile="" vat_number="" dni="" active="1">
+    <address id="supplier" id_country="US" id_state="NY" id_customer="" id_manufacturer="" id_supplier="Fashion_Supplier" id_warehouse="0" alias="supplier" lastname="supplier" firstname="supplier" postcode="10153" phone="(212) 336-1440" phone_mobile="" vat_number="" dni="" active="1">
       <company>Fashion</company>
       <address1>767 Fifth Ave.</address1>
       <address2/>
       <city>New York</city>
       <other/>
     </address>
-    <address id="manufacturer" id_country="US" id_state="state_32" id_customer="" id_manufacturer="1" id_supplier="" id_warehouse="0" alias="manufacturer" lastname="manufacturer" firstname="manufacturer" postcode="10154" phone="(212) 336-1666" phone_mobile="" vat_number="" dni="" active="1">
+    <address id="manufacturer" id_country="US" id_state="NY" id_customer="" id_manufacturer="1" id_supplier="" id_warehouse="0" alias="manufacturer" lastname="manufacturer" firstname="manufacturer" postcode="10154" phone="(212) 336-1666" phone_mobile="" vat_number="" dni="" active="1">
       <company>Fashion</company>
       <address1>767 Fifth Ave.</address1>
       <address2/>
       <city>New York</city>
       <other/>
     </address>
-    <address id="My_address" id_country="US" id_state="state_9" id_customer="John" id_manufacturer="" id_supplier="" id_warehouse="0" alias="My address" lastname="DOE" firstname="John" postcode="33133" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
+    <address id="My_address" id_country="US" id_state="FL" id_customer="John" id_manufacturer="" id_supplier="" id_warehouse="0" alias="My address" lastname="DOE" firstname="John" postcode="33133" phone="0102030405" phone_mobile="" vat_number="" dni="" active="1">
       <company>My Company</company>
       <address1>16, Main street</address1>
       <address2>2nd floor</address2>
