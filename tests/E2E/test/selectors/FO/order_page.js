@@ -2,6 +2,7 @@ module.exports = {
   CheckoutOrderPage: {
     add_to_cart_button: '//*[@id="add-to-cart-or-refresh"]//button[contains(@class, "add-to-cart")]',
     proceed_to_checkout_modal_button: '//*[@id="blockcart-modal"]//div[@class="cart-content-btn"]//a',
+    continue_shopping_button: '//*[@id="blockcart-modal"]//div[@class="cart-content-btn"]//button',
     proceed_to_checkout_button: '//*[@id="main"]//div[contains(@class,"checkout")]//a',
     checkout_step2_continue_button: '//*[@id="checkout-addresses-step"]//button[contains(@name,"confirm-addresses")]',
     checkout_step3_continue_button: '//*[@id="js-delivery"]//button[@name="confirmDeliveryOption"]',
@@ -20,6 +21,7 @@ module.exports = {
     shipping_method: '//*[@id="order-details"]//li[3]',
     quantity_input: '//*[@id="main"]//div[contains(@class, "input-group")]//input[contains(@class, "js-cart-line-product-quantity")]',
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
-    alert: '//*[@id="notifications"]//article[contains(@class, "alert-danger")]'
+    alert: '//*[@id="notifications"]//article[contains(@class, "alert-danger")]',
+    cart_product_discount:'//*[@id="main"]//span[contains(@class,"discount-percentage")] '
   }
 };

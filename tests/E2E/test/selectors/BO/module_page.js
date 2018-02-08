@@ -37,7 +37,6 @@ module.exports = {
     uninstall_module: '//a[contains(@class,"module_action_modal_uninstall")]',
     disable_module: '//button[contains(@class,"module_action_menu_disable")]',
     confirmation_disable_module: '(//a[contains(@class,"module_action_modal_disable")])[1]',
-    enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]',
     module_autoUpgrade_menu: '//*[@id="subtab-AdminSelfUpgrade"]/a',
     rollback_selection: '//*[@id="restoreBackupContainer"]//select',
     rollback_version: '//*[@id="restoreBackupContainer"]//option[2]',
