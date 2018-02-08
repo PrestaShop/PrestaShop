@@ -17,6 +17,7 @@ module.exports = {
     order_total_price: '//*[@id="order-items"]/div[@class="order-confirmation-table"]//tr[1]/td[2]',
     order_shipping_prince_value: '//*[@id="order-items"]/div[@class="order-confirmation-table"]//tr[2]/td[2]',
     customer_name: '//*[@id="_desktop_user_info"]//a[@class="account"]/span',
-    shipping_method: '//*[@id="order-details"]//li[3]'
+    shipping_method: '//*[@id="order-details"]//li[3]',
+    quantity_input: '//*[@id="main"]//div[contains(@class, "input-group")]//input[contains(@class, "js-cart-line-product-quantity")]'
   }
 };
