@@ -36,7 +36,7 @@ module.exports = {
     }
   },
   aCustomizableProduct: {
-    id: 19
+    id: 1
     },
     order: {
       id: 5,
