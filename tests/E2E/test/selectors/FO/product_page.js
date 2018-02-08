@@ -17,7 +17,7 @@ module.exports = {
     see_all_products: '//*[@id="content"]//a[contains(@class, "all-product-link")]',
     first_product_all: '(//*[@id="js-product-list"]//article//a)[1]',
     pagination_next: '//*[@id="js-product-list"]//a[contains(@class, "next")]',
-
+    product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
     //Get the number of products in front office after clicking on "SEE ALL PRODUCTS" link
     products_number: '//*[@id="js-product-list-top"]//p'
   }

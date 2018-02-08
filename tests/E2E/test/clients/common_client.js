@@ -292,7 +292,7 @@ class CommonClient {
   }
 
   alertAccept() {
-    return this.client.alertAccept();
+    return this.client.alertAccept()
   }
 
   showElement(className, order) {
