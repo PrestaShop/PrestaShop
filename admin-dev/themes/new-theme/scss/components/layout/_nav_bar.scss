@@ -220,7 +220,7 @@
     }
 
     &:not(#subtab-AdminParentModulesSf) {
-      i.material-icons.extension {
+      i.material-icons.mi-extension {
         color: #6c868e;
       }
     }
@@ -482,6 +482,8 @@
     }
 
     @media (max-height: 870px) {
+      // this two tabs need to be flipped, otherwise
+      // css issue with bottom of the page
       #subtab-ShopParameters:hover,
       #subtab-AdminAdvancedParameters:hover {
         ul.submenu {

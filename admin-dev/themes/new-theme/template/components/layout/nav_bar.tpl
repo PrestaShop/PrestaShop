@@ -76,7 +76,7 @@
 
                 <li class="link-levelone{if $level2.sub_tabs|@count} has_submenu{/if}{$levelOneClass}" data-submenu="{$level2.id_tab}" id="subtab-{$level2.class_name}">
                   <a href="{$level2Href}" class="link">
-                    <i class="material-icons {$level2.icon}">{$level2.icon}</i>
+                    <i class="material-icons mi-{$level2.icon}">{$level2.icon}</i>
                     <span>
                     {$level2Name}
                     </span>
