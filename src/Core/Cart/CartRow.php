@@ -26,12 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
+use Address;
+use Cache;
 use Cart;
-use Context;
+use Customer;
+use Db;
+use Group;
 use Order;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use Tools;
+use PrestaShop\PrestaShop\Adapter\Tools;
 
 /**
  * represent a cart row, ie a product and a quantity, and some post-process data like cart rule applied
@@ -43,10 +46,9 @@ class CartRow
      */
     protected $priceCalculator;
 
-    /**
-     * @var ConfigurationInterface
-     */
-    protected $configuration;
+    protected $useEcotax;
+    protected $precision;
+    protected $roundType;
 
     /**
      * @var array previous data for product: array given by Cart::getProducts()
@@ -74,15 +76,19 @@ class CartRow
     protected $isProcessed = false;
 
     /**
-     * @param array $rowData array item given by Cart::getProducts()
+     * @param array           $rowData array item given by Cart::getProducts()
      * @param PriceCalculator $priceCalculator
-     * @param ConfigurationInterface $configuration
+     * @param                 $useEcotax
+     * @param                 $precision
+     * @param                 $roundType
      */
-    public function __construct($rowData, PriceCalculator $priceCalculator, ConfigurationInterface $configuration)
+    public function __construct($rowData, PriceCalculator $priceCalculator, $useEcotax, $precision, $roundType)
     {
         $this->setRowData($rowData);
         $this->priceCalculator = $priceCalculator;
-        $this->configuration   = $configuration;
+        $this->useEcotax   = $useEcotax;
+        $this->precision   = $precision;
+        $this->roundType   = $roundType;
     }
 
     /**
@@ -172,63 +178,96 @@ class CartRow
 
     protected function getProductPrice(Cart $cart, $rowData)
     {
-        $userEcotax    = $this->configuration->get('PS_USE_ECOTAX');
-
-        // Define virtual context to prevent case where the cart is not the in the global context
-        $virtualContext       = Context::getContext()->cloneContext();
-        $virtualContext->cart = $cart;
+        $productId = (int)$rowData['id_product'];
+        $quantity = (int) $rowData['cart_quantity'];
 
         $addressId = $cart->getProductAddressId($rowData);
+        if (!$addressId) {
+            $addressId = $cart->getTaxAddressId();
+        }
+        $address = Address::initialize($addressId, true);
+        $countryId = (int)$address->id_country;
+        $stateId = (int)$address->id_state;
+        $zipCode = $address->postcode;
+
+        $shopId = (int)$cart->id_shop;
+        $currencyId = (int)$cart->id_currency;
+
+        $groupId = null;
+        if ($cart->id_customer) {
+            $groupId = Customer::getDefaultGroupId((int)$cart->id_customer);
+        }
+        if (!$groupId) {
+            $groupId = (int)Group::getCurrent()->id;
+        }
+
+        $cartQuantity = 0;
+        if ((int)$cart->id) {
+            $cacheId = 'Product::getPriceStatic_'.(int)$productId.'-'.(int)$cart->id;
+            if (!Cache::isStored($cacheId) || ($cartQuantity = Cache::retrieve($cacheId) != (int)$quantity)) {
+                $sql = 'SELECT SUM(`quantity`)
+				FROM `'._DB_PREFIX_.'cart_product`
+				WHERE `id_product` = '.(int)$productId.'
+				AND `id_cart` = '.(int)$cart->id;
+                $cartQuantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+                Cache::store($cacheId, $cartQuantity);
+            } else {
+                $cartQuantity = Cache::retrieve($cacheId);
+            }
+        }
 
         // The $null variable below is not used,
         // but it is necessary to pass it to getProductPrice because
         // it expects a reference.
         $specificPriceOutput = null;
 
-        $quantity = (int) $rowData['cart_quantity'];
-
-        return new AmountImmutable(
-            $this->priceCalculator->getProductPrice(
-                (int) $rowData['id_product'],
-                true,
-                (int) $rowData['id_product_attribute'],
-                6,
-                null,
-                false,
-                true,
-                $quantity,
-                false,
-                (int) $cart->id_customer ? (int) $cart->id_customer : null,
-                (int) $cart->id,
-                $addressId,
-                $specificPriceOutput,
-                $userEcotax,
-                true,
-                $virtualContext,
-                true,
-                (int) $rowData['id_customization']
-            ),
-            $this->priceCalculator->getProductPrice(
-                (int) $rowData['id_product'],
-                false,
-                (int) $rowData['id_product_attribute'],
-                6,
-                null,
-                false,
-                true,
-                $quantity,
-                false,
-                (int) $cart->id_customer ? (int) $cart->id_customer : null,
-                (int) $cart->id,
-                $addressId,
-                $specificPriceOutput,
-                $userEcotax,
-                true,
-                $virtualContext,
-                true,
-                (int) $rowData['id_customization']
-            )
+        $priceTaxIncl = $this->priceCalculator->priceCalculation(
+            $shopId,
+            (int) $productId,
+            (int) $rowData['id_product_attribute'],
+            $countryId,
+            $stateId,
+            $zipCode,
+            $currencyId,
+            $groupId,
+            $quantity,
+            true,
+            6,
+            false,
+            true,
+            $this->useEcotax,
+            $specificPriceOutput,
+            true,
+            (int) $cart->id_customer ? (int) $cart->id_customer : null,
+            true,
+            (int) $cart->id,
+            $cartQuantity,
+            (int) $rowData['id_customization']
         );
+        $priceTaxExcl = $this->priceCalculator->priceCalculation(
+            $shopId,
+            (int) $productId,
+            (int) $rowData['id_product_attribute'],
+            $countryId,
+            $stateId,
+            $zipCode,
+            $currencyId,
+            $groupId,
+            $quantity,
+            false,
+            6,
+            false,
+            true,
+            $this->useEcotax,
+            $specificPriceOutput,
+            true,
+            (int) $cart->id_customer ? (int) $cart->id_customer : null,
+            true,
+            (int) $cart->id,
+            $cartQuantity,
+            (int) $rowData['id_customization']
+        );
+        return new AmountImmutable($priceTaxIncl, $priceTaxExcl);
     }
 
     protected function applyRound()
@@ -238,8 +277,8 @@ class CartRow
 
         $rowData  = $this->getRowData();
         $quantity = (int) $rowData['cart_quantity'];
-        $precision     = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-        switch ($this->configuration->get('PS_ROUND_TYPE')) {
+        $tools = new Tools;
+        switch ($this->roundType) {
             case Order::ROUND_TOTAL:
                 // do not round the line
                 $this->finalTotalPrice = new AmountImmutable(
@@ -250,8 +289,8 @@ class CartRow
             case Order::ROUND_LINE:
                 // round line result
                 $this->finalTotalPrice = new AmountImmutable(
-                    Tools::ps_round($this->initialUnitPrice->getTaxIncluded() * $quantity, $precision),
-                    Tools::ps_round($this->initialUnitPrice->getTaxExcluded() * $quantity, $precision)
+                    $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision),
+                    $tools->round($this->initialUnitPrice->getTaxExcluded() * $quantity, $this->precision)
                 );
                 break;
 
@@ -259,8 +298,8 @@ class CartRow
             default:
                 // round each item
                 $this->initialUnitPrice = new AmountImmutable(
-                    Tools::ps_round($this->initialUnitPrice->getTaxIncluded(), $precision),
-                    Tools::ps_round($this->initialUnitPrice->getTaxExcluded(), $precision)
+                    $tools->round($this->initialUnitPrice->getTaxIncluded(), $this->precision),
+                    $tools->round($this->initialUnitPrice->getTaxExcluded(), $this->precision)
                 );
                 $this->finalTotalPrice  = new AmountImmutable(
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,

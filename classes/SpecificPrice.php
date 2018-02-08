@@ -132,7 +132,7 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static $_no_specific_values = array();
 
-    static $psQtyDiscountOnCombination = null;
+    protected static $psQtyDiscountOnCombination = null;
 
     /**
      * Flush local cache
