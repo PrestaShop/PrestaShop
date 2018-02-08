@@ -1165,25 +1165,22 @@ class CartCore extends ObjectModel
             WHERE cp.`id_product_attribute` = '.(int)$id_product_attribute.'
             AND cp.`id_customization` = '.(int)$id_customization.'
             AND cp.`id_cart` = '.(int)$this->id;
+
+        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
+            $commonWhere .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
+        }
+
+        if ($id_customization) {
+            $commonWhere .= ' AND c.`id_customization` = '.(int)$id_customization;
+        }
         $firstUnionSql .=  $commonWhere;
         $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $id_product;
         $secondUnionSql .= $commonWhere;
         $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $id_product;
-
-        if (Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery()) {
-            $firstUnionSql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
-            $secondUnionSql .= ' AND cp.`id_address_delivery` = '.(int)$id_address_delivery;
-        }
-
-        if ($id_customization) {
-            $firstUnionSql .= ' AND c.`id_customization` = '.(int)$id_customization;
-            $secondUnionSql .= ' AND c.`id_customization` = '.(int)$id_customization;
-        }
         $parentSql = 'SELECT 
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity 
           FROM (' . $firstUnionSql . ' UNION ' . $secondUnionSql . ') as q';
-        $result = Db::getInstance()->getRow($parentSql);
 
         return Db::getInstance()->getRow($parentSql);
     }
@@ -1297,7 +1294,9 @@ class CartCore extends ObjectModel
 
         if ((int)$quantity <= 0) {
             return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-        } elseif (!$product->available_for_order || (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_'))) {
+        } elseif (!$product->available_for_order
+                || (Configuration::isCatalogMode() && !defined('_PS_ADMIN_DIR_'))
+        ) {
             return false;
         } else {
             /* Check if the product is already in the cart */
@@ -1306,34 +1305,35 @@ class CartCore extends ObjectModel
             /* Update quantity if product already exist */
             if (!empty($cartProductQuantity['quantity'])) {
                 $productQuantity = Product::getQuantity($id_product, $id_product_attribute);
+                $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
 
                 if ($operator == 'up') {
                     $updateQuantity = '+ ' . $quantity;
                     $newProductQuantity = $productQuantity - $quantity;
 
-                    if ($newProductQuantity < 0) {
+                    if ($newProductQuantity < 0 && !$availableOutOfStock) {
                         return false;
                     }
                 } else if ($operator == 'down') {
+                    $cartFirstLevelProductQuantity = $this->getProductQuantity((int) $id_product, (int) $id_product_attribute);
                     $updateQuantity = '- ' . $quantity;
                     $newProductQuantity = $productQuantity + $quantity;
+
+                    if ($cartFirstLevelProductQuantity['quantity'] <= 1) {
+                        return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
+                    }
                 } else {
                     return false;
                 }
-
-                if ($newProductQuantity < 0) {
-                    return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
-                } else {
-                    Db::getInstance()->execute(
-                        'UPDATE `'._DB_PREFIX_.'cart_product`
-                        SET `quantity` = `quantity` ' . $updateQuantity . '
-                        WHERE `id_product` = '.(int)$id_product.
-                        ' AND `id_customization` = '.(int)$id_customization.
-                        (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
-                        AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
-                        LIMIT 1'
-                    );
-                }
+                Db::getInstance()->execute(
+                    'UPDATE `'._DB_PREFIX_.'cart_product`
+                    SET `quantity` = `quantity` ' . $updateQuantity . '
+                    WHERE `id_product` = '.(int)$id_product.
+                    ' AND `id_customization` = '.(int)$id_customization.
+                    (!empty($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+                    AND `id_cart` = '.(int)$this->id.(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? ' AND `id_address_delivery` = '.(int)$id_address_delivery : '').'
+                    LIMIT 1'
+                );
             } elseif ($operator == 'up') {
                 /* Add product to the cart */
 
