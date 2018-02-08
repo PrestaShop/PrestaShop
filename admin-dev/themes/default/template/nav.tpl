@@ -34,7 +34,7 @@
 								{/if}
 								<li class="link-levelone{if $level_2.sub_tabs|@count} has_submenu{/if}{$mainTabClass}" id="subtab-{$level_2.class_name|escape:'html':'UTF-8'}" data-submenu="{$level_2.id_tab}">
 									<a href="{$level_2.href|escape:'html':'UTF-8'}" class="link">
-										<i class="material-icons {$level_2.icon}">{$level_2.icon}</i>
+										<i class="material-icons mi-{$level_2.icon}">{$level_2.icon}</i>
 										<span>
 											{if $level_2.name eq ''}{$level_2.class_name|escape:'html':'UTF-8'}{else}{$level_2.name|escape:'html':'UTF-8'}{/if}
 										</span>
