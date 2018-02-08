@@ -117,15 +117,15 @@ class StockManagementControllerTest extends ApiTestCase
             ),
             array(
                 array('page_index' => 1, 'page_size' => 2),
-                $expectedTotalPages = 23
+                $expectedTotalPages = 24
             ),
             array(
                 array('supplier_id' => 1, 'page_index' => 2, 'page_size' => 2),
-                $expectedTotalPages = 23
+                $expectedTotalPages = 24
             ),
             array(
                 array('supplier_id' => array(1, 2), 'page_index' => 2, 'page_size' => 2),
-                $expectedTotalPages = 23
+                $expectedTotalPages = 24
             ),
             array(
                 array('category_id' => 5, 'page_index' => 1, 'page_size' => 1),
