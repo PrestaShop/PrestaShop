@@ -52,6 +52,7 @@ class Configuration implements ConfigurationInterface
         if (ConfigurationLegacy::isLangKey($key)) {
             return ConfigurationLegacy::getInt($key);
         }
+
         return ConfigurationLegacy::get($key);
     }
 
