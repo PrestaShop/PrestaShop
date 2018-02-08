@@ -27,13 +27,15 @@
 namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 
 use PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration;
+use PrestaShop\PrestaShop\Adapter\Product\PageConfiguration;
+use PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class FormDataProvider implements FormDataProviderInterface
+class ProductPreferencesFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var GeneralConfiguration
@@ -41,11 +43,23 @@ class FormDataProvider implements FormDataProviderInterface
     private $generalConfiguration;
 
     /**
-     * @param GeneralConfiguration $generalConfiguration
+     * @var PaginationConfiguration
      */
-    public function __construct(GeneralConfiguration $generalConfiguration)
-    {
+    private $paginationConfiguration;
+
+    /**
+     * @var PageConfiguration
+     */
+    private $pageConfiguration;
+
+    public function __construct(
+        GeneralConfiguration $generalConfiguration,
+        PaginationConfiguration $paginationConfiguration,
+        PageConfiguration $pageConfiguration
+    ) {
         $this->generalConfiguration = $generalConfiguration;
+        $this->paginationConfiguration = $paginationConfiguration;
+        $this->pageConfiguration = $pageConfiguration;
     }
 
     /**
@@ -55,6 +69,8 @@ class FormDataProvider implements FormDataProviderInterface
     {
         return [
             'general' => $this->generalConfiguration->getConfiguration(),
+            'pagination' => $this->paginationConfiguration->getConfiguration(),
+            'page' => $this->pageConfiguration->getConfiguration(),
         ];
     }
 
@@ -63,6 +79,8 @@ class FormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        // TODO: Implement setData() method.
+        return $this->generalConfiguration->updateConfiguration($data['general']) +
+            $this->paginationConfiguration->updateConfiguration($data['pagination']) +
+            $this->pageConfiguration->updateConfiguration($data['page']);
     }
 }

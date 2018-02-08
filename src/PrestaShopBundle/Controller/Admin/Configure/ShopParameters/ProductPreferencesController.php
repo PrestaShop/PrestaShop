@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Voter\PageVoter;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,14 +38,21 @@ use Symfony\Component\HttpFoundation\Response;
 class ProductPreferencesController extends FrameworkBundleAdminController
 {
     /**
+     * Show product preferences form
+     *
      * @param Request $request
      *
      * @return Response
      */
     public function indexAction(Request $request)
     {
-        $form = $this->get('prestashop.admin.product_preferences.form_handler')->getForm();
         $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array($this->authorizationLevel($legacyController), [PageVoter::LEVEL_READ])) {
+            //@todo: reidirect employee to default page
+        }
+
+        $form = $this->get('prestashop.admin.product_preferences.form_handler')->getForm();
 
         $twigValues = [
             'layoutHeaderToolbarBtn' => [],
@@ -58,5 +67,50 @@ class ProductPreferencesController extends FrameworkBundleAdminController
         ];
 
         return $this->render('@ShopParameters/product_preferences.html.twig', $twigValues);
+    }
+
+    /**
+     * Process product preferences form
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processAction(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            $this->addFlash('error', $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_product_preferences');
+        }
+
+        $formHandler = $this->get('prestashop.admin.product_preferences.form_handler');
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            $errors = $formHandler->save($data);
+
+            if (0 === count($errors)) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            } else {
+                $this->flashErrors($errors);
+            }
+        }
+
+        return $this->redirectToRoute('admin_product_preferences');
     }
 }

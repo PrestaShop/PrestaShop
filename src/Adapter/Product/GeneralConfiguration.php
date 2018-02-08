@@ -28,9 +28,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This class loads and saves configuration for product
+ * This class loads and saves general configuration for product
  */
 class GeneralConfiguration implements DataConfigurationInterface
 {
@@ -67,7 +68,18 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        // TODO: Implement updateConfiguration() method.
+        $errors = [];
+
+        if ($this->validateConfiguration($configuration)) {
+            $this->configuration->set('PS_CATALOG_MODE', (bool) $configuration['catalog_mode']);
+            $this->configuration->set('PS_NB_DAYS_NEW_PRODUCT', (int) $configuration['new_days_number']);
+            $this->configuration->set('PS_PRODUCT_SHORT_DESC_LIMIT', (int) $configuration['short_description_limit']);
+            $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $configuration['quantity_discount']);
+            $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (bool) $configuration['force_friendly_url']);
+            $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (bool) $configuration['default_status']);
+        }
+
+        return $errors;
     }
 
     /**
@@ -75,6 +87,18 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        // TODO: Implement validateConfiguration() method.
+        $resolver = new OptionsResolver();
+        $resolver->setRequired([
+            'catalog_mode',
+            'new_days_number',
+            'short_description_limit',
+            'quantity_discount',
+            'force_friendly_url',
+            'default_status',
+        ]);
+
+        $resolver->resolve($configuration);
+
+        return true;
     }
 }

@@ -34,7 +34,7 @@ use Symfony\Component\Form\FormFactoryInterface;
  * Class manages the data manipulated using forms
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class FormHandler implements FormHandlerInterface
+class ProductPreferencesFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
@@ -65,6 +65,8 @@ class FormHandler implements FormHandlerInterface
     {
         $builder = $this->formFactory->createBuilder()
             ->add('general', GeneralType::class)
+            ->add('pagination', PaginationType::class)
+            ->add('page', PageType::class)
             ->setData($this->formDataProvider->getData())
         ;
 

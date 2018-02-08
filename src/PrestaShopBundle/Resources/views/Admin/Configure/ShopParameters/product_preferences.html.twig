@@ -25,62 +25,158 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
 
-{% set generalForm = form.general%}
+{% set generalForm, paginationForm, pageForm = form.general, form.pagination, form.page %}
 
 {% block content %}
     <div class="container">
         {{ form_start(form, {'attr': {'class': 'form'}}) }}
+        <div class="row">
             {% block product_preferences_general %}
-                <div class="row">
-                    <div class="col">
-                        <div class="card">
-                            <h3 class="card-header">
-                                <i class="material-icons">settings</i>
-                                {{ 'General'|trans }}
-                            </h3>
-                            <div class="card-block">
-                                <div class="card-text">
-                                    <div class="form-group">
-                                        {{ ps.label_with_help(('Catalog mode'|trans), ('When active all shopping features will be disabled.'|trans)) }}
-                                        {{ form_errors(generalForm.catalog_mode) }}
-                                        {{ form_widget(generalForm.catalog_mode) }}
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="form-control-label">
-                                            {{ 'Number of days for which the product is considered \'new\''|trans }}
-                                        </label>
-                                        {{ form_errors(generalForm.new_days_number) }}
-                                        {{ form_widget(generalForm.new_days_number) }}
-                                    </div>
-                                    <div class="form-group">
-                                        {{ ps.label_with_help(('Max size of short description'|trans), ('Set the maximum size of the short description (in numbers).'|trans)) }}
-                                        {{ form_errors(generalForm.short_description_limit) }}
-                                        {{ form_widget(generalForm.short_description_limit) }}
-                                    </div>
-                                    <div class="form-group">
-                                        {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans)) }}
-                                        {{ form_errors(generalForm.quantity_discount) }}
-                                        {{ form_widget(generalForm.quantity_discount) }}
-                                    </div>
-                                    <div class="form-group">
-                                        {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans)) }}
-                                        {{ form_errors(generalForm.force_friendly_url) }}
-                                        {{ form_widget(generalForm.force_friendly_url) }}
-                                    </div>
-                                    <div class="form-group">
-                                        {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans)) }}
-                                        {{ form_errors(generalForm.default_status) }}
-                                        {{ form_widget(generalForm.default_status) }}
-                                    </div>
+                <div class="col">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <i class="material-icons">settings</i> {{ 'General'|trans }}
+                        </h3>
+                        <div class="card-block">
+                            <div class="card-text">
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Catalog mode'|trans), ('When active all shopping features will be disabled.'|trans)) }}
+                                    {{ form_errors(generalForm.catalog_mode) }}
+                                    {{ form_widget(generalForm.catalog_mode) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        {{ 'Number of days for which the product is considered \'new\''|trans }}
+                                    </label>
+                                    {{ form_errors(generalForm.new_days_number) }}
+                                    {{ form_widget(generalForm.new_days_number) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Max size of short description'|trans), ('Set the maximum size of the short description (in numbers).'|trans)) }}
+                                    {{ form_errors(generalForm.short_description_limit) }}
+                                    {{ form_widget(generalForm.short_description_limit) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Quantity discounts based on'|trans), ('How to calculate quantity discounts.'|trans)) }}
+                                    {{ form_errors(generalForm.quantity_discount) }}
+                                    {{ form_widget(generalForm.quantity_discount) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Force update of friendly URL'|trans), ('When active, friendly URL will be updated on every save.'|trans)) }}
+                                    {{ form_errors(generalForm.force_friendly_url) }}
+                                    {{ form_widget(generalForm.force_friendly_url) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans)) }}
+                                    {{ form_errors(generalForm.default_status) }}
+                                    {{ form_widget(generalForm.default_status) }}
                                 </div>
                             </div>
-                            <div class="card-footer">
-                                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
                         </div>
                     </div>
                 </div>
             {% endblock %}
+
+            {% block product_preferences_pagination %}
+                <div class="col">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <i class="material-icons">settings</i> {{ 'Pagination'|trans }}
+                        </h3>
+                        <div class="card-block">
+                            <div class="card-text">
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Products per page'|trans), ('Number of products displayed per page. Default is 10.'|trans)) }}
+                                    {{ form_errors(paginationForm.products_per_page) }}
+                                    {{ form_widget(paginationForm.products_per_page) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Default order by'|trans), ('The order in which products are displayed in the product list.'|trans)) }}
+                                    {{ form_errors(paginationForm.default_order_by) }}
+                                    {{ form_widget(paginationForm.default_order_by) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Default order way'|trans), ('Default order way for product list.'|trans)) }}
+                                    {{ form_errors(paginationForm.default_order_way) }}
+                                    {{ form_widget(paginationForm.default_order_way) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+
+        <div class="row">
+            {% block product_preferences_page %}
+                <div class="col">
+                    <div class="card">
+                        <h3 class="card-header">
+                            <i class="material-icons">settings</i> {{ 'Product page'|trans }}
+                        </h3>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        {{ 'Display available quantities on the product page'|trans }}
+                                    </label>
+                                    {{ form_errors(pageForm.display_quantities) }}
+                                    {{ form_widget(pageForm.display_quantities) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Display remaining quantities when the quantity is lower than'|trans), ('Set to 0 to disable this feature.'|trans)) }}
+                                    {{ form_errors(pageForm.display_last_quantities) }}
+                                    {{ form_widget(pageForm.display_last_quantities) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        {{ 'Display unavailable product attributes on the product page'|trans }}
+                                    </label>
+                                    {{ form_errors(pageForm.display_unavailable_attributes) }}
+                                    {{ form_widget(pageForm.display_unavailable_attributes) }}
+                                </div>
+                                <div class="form-group">
+                                    {{ ps.label_with_help(('Display the \'add to cart\' button when a product has attributes'|trans), ('Display or hide the \'add to cart\' on category pages for products that have attributes forcing customers see product details.'|trans)) }}
+                                    {{ form_errors(pageForm.allow_add_variant_to_cart_from_listing) }}
+                                    {{ form_widget(pageForm.allow_add_variant_to_cart_from_listing) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        {{ 'Separator of attribute anchor on the product links'|trans }}
+                                    </label>
+                                    {{ form_errors(pageForm.attribute_anchor_separator) }}
+                                    {{ form_widget(pageForm.attribute_anchor_separator) }}
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                        {{ 'Display discounted price'|trans }}
+                                    </label>
+                                    {{ form_errors(pageForm.display_discount_price) }}
+                                    {{ form_widget(pageForm.display_discount_price) }}
+                                </div>
+
+                                {{ ps.warningtip('In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").'|trans) }}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+
+            {% block product_preferences_stock %}
+                <div class="col">
+
+                </div>
+            {% endblock %}
+        </div>
         {{ form_end(form) }}
     </div>
 {% endblock %}

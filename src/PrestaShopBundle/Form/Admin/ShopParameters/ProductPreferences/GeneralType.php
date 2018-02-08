@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -49,7 +49,7 @@ class GeneralType extends TranslatorAwareType
                 ],
                 'required' => true,
             ])
-            ->add('new_days_number', TextType::class, [
+            ->add('new_days_number', IntegerType::class, [
                 'required' => false,
             ])
             ->add('short_description_limit', TextWithUnitType::class, [
@@ -58,8 +58,8 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('quantity_discount', ChoiceType::class, [
                 'choices' => [
-                    'Products' => 0,       //@todo: move to constant
-                    'Combinations' => 1,   //@todo: move to constant
+                    'Products' => 0,
+                    'Combinations' => 1,
                 ],
                 'required' => true,
             ])

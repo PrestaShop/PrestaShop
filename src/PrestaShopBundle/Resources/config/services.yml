@@ -535,12 +535,14 @@ services:
           - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
 
     prestashop.admin.product_preferences.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\FormHandler'
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.admin.product_preferences.data_provider'
 
     prestashop.admin.product_preferences.data_provider:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\FormDataProvider'
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
         arguments:
             - '@prestashop.adapter.product_general.configruation'
+            - '@prestashop.adapter.product_pagination.configuration'
+            - '@prestashop.adapter.product_page.configuration'
