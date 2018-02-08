@@ -10,6 +10,13 @@ if (typeof install_shop !== 'undefined' && install_shop) {
       test('should go to install page ', () => client.localhost(URL));
     }, 'installation');
 
+    /**
+     * This scenario is based on the bug described in this ticket
+     * http://forge.prestashop.com/browse/BOOM-4400
+     */
+    commonInstallation.prestaShopInstall(Installation, "en", "iran");
+    /**** END ****/
+
     commonInstallation.prestaShopInstall(Installation, "en", "france");
 
     scenario('Login to the Front Office', client => {
