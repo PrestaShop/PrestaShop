@@ -183,7 +183,7 @@
 						color: #25b9d7
 
 		&:not(#subtab-AdminParentModulesSf) 
-			i.material-icons.extension 
+			i.material-icons.mi-extension
 				color: #6c868e
 
 		> .link 
@@ -388,21 +388,23 @@
 					.link 
 						padding-left: 1.5rem
 
-		@media (max-height: 870px) 
-		#subtab-ShopParameters:hover,
-		#subtab-AdminAdvancedParameters:hover 
-			ul.submenu 
-				display: flex !important
-				flex-direction: column-reverse
-				top: 0 !important
-				transform: rotate(180deg)
-				transform-origin: top
-
-				li 
+		@media (max-height: 870px)
+			// this two tabs need to be flipped, otherwise
+			// css issue with bottom of the page
+			#subtab-ShopParameters:hover,
+			#subtab-AdminAdvancedParameters:hover
+				ul.submenu
+					display: flex !important
+					flex-direction: column-reverse
+					top: 0 !important
 					transform: rotate(180deg)
+					transform-origin: top
 
-					&:last-of-type 
-						margin-bottom: 0
+					li
+						transform: rotate(180deg)
+
+						&:last-of-type
+							margin-bottom: 0
 
 .mobile-layer
 	display: none
