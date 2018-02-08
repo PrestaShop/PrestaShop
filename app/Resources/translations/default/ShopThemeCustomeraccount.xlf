@@ -578,19 +578,25 @@ File: themes/StarterTheme/templates/customer/authentication.tpl:34</note>
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="modules/ps_customersignin/ps_customersignin.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="2cbfb6731610056e1d0aaacde07096c1">
         <source>View my customer account</source>
         <target>View my customer account</target>
         <note>Context:
-File: themes/classic/modules/ps_customersignin/ps_customersignin.tpl:39</note>
+File: modules/ps_customersignin/ps_customersignin.tpl:4</note>
       </trans-unit>
       <trans-unit id="d4151a9a3959bdd43690735737034f27">
         <source>Log in to your customer account</source>
         <target>Log in to your customer account</target>
         <note>Context:
-File: themes/classic/modules/ps_customersignin/ps_customersignin.tpl:48</note>
+File: modules/ps_customersignin/ps_customersignin.tpl:6</note>
+      </trans-unit>
+      <trans-unit id="4b877ba8588b19f1b278510bf2b57ebb">
+        <source>Log me out</source>
+        <target>Log me out</target>
+        <note>Context:
+File: modules/ps_customersignin/ps_customersignin.tpl:3</note>
       </trans-unit>
     </body>
   </file>
