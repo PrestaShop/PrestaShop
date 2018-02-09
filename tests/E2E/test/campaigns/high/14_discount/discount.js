@@ -1,5 +1,6 @@
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {DiscountSubMenu} = require('../../../selectors/BO/catalogpage/discount_submenu');
+let promise = Promise.resolve();
 
 module.exports = {
   createCatalogPriceRules(name, type, reduction, quantity = 1) {
@@ -17,13 +18,19 @@ module.exports = {
   deleteCatalogPriceRules(name){
     scenario('Delete catalog price rules "'+ name +'', client => {
       test('should go to "Discounts" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu , Menu.Sell.Catalog.discounts_submenu));
-      test('should go to "Catalog Price Rules" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_price_rules_tab));
-      test('should set the Catalog Price Rules name', () => client.waitAndSetValue(DiscountSubMenu.catalogPriceRules.search_name_input, name));
-      test('should click on "Search" button', () => client.waitForExistAndClick(DiscountSubMenu.catalogPriceRules.search_button));
-      test('should click on the "dropdown toggle" button', () => client.waitForExistAndClick(DiscountSubMenu.catalogPriceRules.dropdown_button));
-      test('should click on the "Delete" button', () => client.waitForExistAndClick(DiscountSubMenu.catalogPriceRules.delete_button));
+      test('should go to "Catalog Price Rules" page', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_price_rules_tab))
+          .then(() => client.isVisible(DiscountSubMenu.catalogPriceRules.search_name_input))
+          .then(() => client.searchByName(name))
+      });
+      test('should delete the catalog rule price', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(DiscountSubMenu.catalogPriceRules.dropdown_button))
+          .then(() => client.waitForExistAndClick(DiscountSubMenu.catalogPriceRules.delete_button))
+      });
       test('should accept the confirmation alert', () => client.alertAccept());
       test('should check the success message appear', () => client.checkTextValue(DiscountSubMenu.catalogPriceRules.success_delete_message, 'Successful deletion.', "contain"));
-    }, 'common_client');
+    }, 'discount');
   }
 };

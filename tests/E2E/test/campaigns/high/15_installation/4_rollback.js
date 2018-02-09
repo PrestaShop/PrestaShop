@@ -13,6 +13,7 @@ let promise = Promise.resolve();
 
 var productData = {
   name: 'RollingBackProduct',
+  reference: 'product',
   quantity: "10",
   price: '5',
   image_name: 'image_test.jpg',

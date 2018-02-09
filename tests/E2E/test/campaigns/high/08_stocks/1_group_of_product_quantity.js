@@ -8,11 +8,13 @@ let promise = Promise.resolve();
 
 productData = [{
   name: 'FirstProduct',
+  reference: 'firstProduct',
   quantity: "100",
   price: '5',
   image_name: 'image_test.jpg',
 }, {
   name: 'SecondProduct',
+  reference: 'secondProduct',
   quantity: "100",
   price: '5',
   image_name: 'image_test.jpg',
