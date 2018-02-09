@@ -135,6 +135,7 @@ scenario('Check the standard product in the Front Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'product/product');
+
   scenario('Check that the standard product is well displayed in the Front Office', client => {
     test('should set the shop language to "English"', () => client.changeLanguage('english'));
     test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, data.standard.name + date_time));
@@ -143,16 +144,17 @@ scenario('Check the standard product in the Front Office', () => {
     test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
     test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
       return promise
-          .then(() => client.scrollTo(productPage.product_reference))
-          .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+        .then(() => client.scrollTo(productPage.product_reference))
+        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
     });
     test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
   }, 'product/product');
+
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {
       return promise
-          .then(() => client.scrollTo(AccessPageFO.sign_out_button))
-          .then(() => client.signOutFO(AccessPageFO))
+        .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+        .then(() => client.signOutFO(AccessPageFO))
     });
   }, 'product/product');
 }, 'product/product', true);

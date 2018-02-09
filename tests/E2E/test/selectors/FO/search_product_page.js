@@ -14,5 +14,6 @@ module.exports = {
     attribute_value_1: '//*[@id="add-to-cart-or-refresh"]/div[1]/div/ul/li[1]/label/span',
     attribute_value_2: '//*[@id="add-to-cart-or-refresh"]/div[1]/div/ul/li[2]/label/span',
     attribute_value_3: '//*[@id="add-to-cart-or-refresh"]/div[1]/div/ul/li[3]/label/span',
+    quick_view_first_product:'//*[@id="js-product-list"]//a[contains(@class,"quick-view")]'
   }
 };
