@@ -362,15 +362,16 @@ class StockManagerCore implements StockManagerInterface
                             continue;
                         }
 
-                        $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->query('
-							SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
-								IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
-							FROM `'._DB_PREFIX_.'stock_mvt` sm
-							LEFT JOIN `'._DB_PREFIX_.'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
-							WHERE sm.`sign` = 1
-							AND sm.`id_stock` = '.(int)$stock->id.'
-							GROUP BY sm.`id_stock_mvt`
-							ORDER BY sm.`date_add` DESC'
+                        $resource = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+                            SELECT sm.`id_stock_mvt`, sm.`date_add`, sm.`physical_quantity`,
+                            	IF ((sm2.`physical_quantity` is null), sm.`physical_quantity`, (sm.`physical_quantity` - SUM(sm2.`physical_quantity`))) as qty
+                            FROM `' . _DB_PREFIX_ . 'stock_mvt` sm
+                            LEFT JOIN `' . _DB_PREFIX_ . 'stock_mvt` sm2 ON sm2.`referer` = sm.`id_stock_mvt`
+                            WHERE sm.`sign` = 1
+                            AND sm.`id_stock` = ' . (int)$stock->id . '
+                            GROUP BY sm.`id_stock_mvt`
+                            ORDER BY sm.`date_add` DESC',
+                            false
                         );
 
                         while ($row = Db::getInstance()->nextRow($resource)) {
