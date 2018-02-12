@@ -1,5 +1,6 @@
 const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
+const {ProductList} = require('../../../selectors/BO/add_product_page');
 
 module.exports = {
   createProduct: function (AddProductPage, productData) {
@@ -55,7 +56,7 @@ module.exports = {
     }, 'product/product');
 
   },
-  
+
   checkProductBO(AddProductPage, productData) {
     scenario('Check the product creation in the Back Office', client => {
       test('should go to "Catalog"', () => client.goToCatalog());
@@ -68,5 +69,37 @@ module.exports = {
       test('should check the existence of product status', () => client.checkTextValue(AddProductPage.catalog_product_online, 'check'));
       test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
+  },
+
+  sortProduct: function(selector, sortBy) {
+    scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
+      test('should click on "Sort by ASC" icon', () => {
+        for (let j = 0; j < productsNumber; j++) {
+          promise = client.getProductsInformation(selector, j);
+        }
+        return promise
+          .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")))
+      });
+
+      test('should check that the products is well sorted by ASC', () => {
+        for (let j = 0; j < productsNumber; j++) {
+          promise = client.getProductsInformation(selector, j, true);
+        }
+        return promise
+          .then(() => client.sortTable("ASC", sortBy))
+          .then(() => client.checkSortProduct())
+      });
+
+      test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc")));
+
+      test('should check that the products is well sorted by DESC', () => {
+        for (let j = 0; j < productsNumber; j++) {
+          promise = client.getProductsInformation(selector, j, true);
+        }
+        return promise
+          .then(() => client.sortTable("DESC", sortBy))
+          .then(() => client.checkSortProduct())
+      });
+    }, 'product/product');
   }
 };

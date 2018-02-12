@@ -281,8 +281,8 @@ class CommonClient {
     }
   }
 
-  pause(timeout){
-    return this.client.pause(timeout)
+  pause(timeout) {
+    return this.client.pause(timeout);
   }
 
 }
