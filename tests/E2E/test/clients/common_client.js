@@ -11,8 +11,8 @@ class CommonClient {
     this.client = getClient();
   }
 
-  signInBO(selector, link) {
-    return this.client.signInBO(selector, link);
+  signInBO(selector, link, login, password) {
+    return this.client.signInBO(selector, link, login, password);
   }
 
   signOutBO() {
@@ -232,12 +232,12 @@ class CommonClient {
    */
   checkDocument(folderPath, fileName, text) {
     pdfUtil.pdfToText(folderPath + fileName + '.pdf', function (err, data) {
-      global.indexText=data.indexOf(text)
+      global.indexText = data.indexOf(text)
     });
 
     return this.client
       .pause(2000)
-      .then(()=> expect(global.indexText,text + "does not exist in the PDF document").to.not.equal(-1))
+      .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1))
   }
 
   waitForVisible(selector, timeout = 90000) {
@@ -289,6 +289,10 @@ class CommonClient {
 
   keys(button) {
     return this.client.keys(button)
+  }
+
+  alertAccept() {
+    return this.client.alertAccept();
   }
 
 }
