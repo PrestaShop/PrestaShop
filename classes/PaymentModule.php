@@ -212,6 +212,20 @@ abstract class PaymentModuleCore extends Module
         if (!isset($this->context)) {
             $this->context = Context::getContext();
         }
+        $products = $this->context->cart->getProducts();
+
+        foreach ($products as $product) {
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product['out_of_stock']);
+            $productQuantity = Product::getQuantity($product['id_product'], $product['id_product_attribute']);
+
+            if ($productQuantity < 0 && !$availableOutOfStock) {
+                $psShoppingCart = Module::getInstanceByName('ps_shoppingcart');
+
+                // Redirect to cart page because this product is no longer available with this quantity.
+                header("Location: {$psShoppingCart->getWidgetVariables(null, array())['cart_url']}");
+                exit;
+            }
+        }
         $this->context->cart = new Cart((int)$id_cart);
         $this->context->customer = new Customer((int)$this->context->cart->id_customer);
         // The tax cart is loaded before the customer so re-cache the tax calculation method
