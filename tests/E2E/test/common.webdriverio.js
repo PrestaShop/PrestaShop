@@ -150,16 +150,15 @@ module.exports = {
     if (client) {
       return client;
     } else {
-      if (typeof saucelabs !== 'undefined' && saucelabs != "None") {
-        client = webdriverio
-          .remote(options2)
-          .init()
-          .windowHandleMaximize()
-      } else {
-        client = webdriverio
-          .remote(options)
-          .windowHandleMaximize()
+      if (typeof headless !== 'undefined' && headless) {
+        options["desiredCapabilities"] = {
+          browserName: 'chrome',
+          chromeOptions: {
+            args: ['--headless', '--disable-gpu', '--window-size=1270,899']
+          }
+        }
       }
+      client = webdriverio.remote(options);
       initCommands(client);
       return client;
     }

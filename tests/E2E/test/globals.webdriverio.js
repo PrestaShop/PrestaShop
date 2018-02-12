@@ -22,6 +22,8 @@ global.rcLink = argv.RCLINK  || "" ; // Link for download The RC
 global.rcTarget = argv.RCTARGET    ; // Last stable version location directory
 global.filename = argv.FILENAME  || ""  ; // RC file name
 
+global.headless = argv.HEADLESS || false;
+
 global._projectdir = path.join(__dirname, '..', '..');
 global.new_customer_email = 'pub' + date_time + '@prestashop.com';
 global.categoryImage = path.join(__dirname, '', 'datas', 'category_image.png');
