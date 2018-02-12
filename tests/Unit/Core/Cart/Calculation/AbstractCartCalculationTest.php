@@ -37,13 +37,13 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
     protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
-        //$totalV1   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
+        $totalV1   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
         $totalV2   = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $carrierId);
         // here we round values to avoid round issues : rounding modes are tested by specific tests
         $expectedTotal = round($expectedTotal, 1);
-        //$totalV1       = round($totalV1, 1);
+        $totalV1       = round($totalV1, 1);
         if (!$knownToFailOnV1) {
-            //$this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
+            $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
         }
         $totalV2 = round($totalV2, 1);
         $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax incl)');
@@ -51,7 +51,7 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
 
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
     {
-        /*$carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
+        $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
         $totalV1   = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
         $totalV2   = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $carrierId);
         // here we round values to avoid round issues : rounding modes are tested by specific tests
@@ -61,6 +61,6 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
             $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax excl)');
         }
         $totalV2 = round($totalV2, 1);
-        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');*/
+        $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 }

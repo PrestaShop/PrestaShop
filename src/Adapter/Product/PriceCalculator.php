@@ -72,6 +72,32 @@ class PriceCalculator
         );
     }
 
+    /**
+     * Price calculation / Get product price
+     *
+     * @param int    $id_shop Shop id
+     * @param int    $id_product Product id
+     * @param int    $id_product_attribute Product attribute id
+     * @param int    $id_country Country id
+     * @param int    $id_state State id
+     * @param string $zipcode
+     * @param int    $id_currency Currency id
+     * @param int    $id_group Group id
+     * @param int    $quantity Quantity Required for Specific prices : quantity discount application
+     * @param bool   $use_tax with (1) or without (0) tax
+     * @param int    $decimals Number of decimals returned
+     * @param bool   $only_reduc Returns only the reduction amount
+     * @param bool   $use_reduc Set if the returned amount will include reduction
+     * @param bool   $with_ecotax insert ecotax in price output.
+     * @param null   $specific_price If a specific price applies regarding the previous parameters,
+     *                               this variable is filled with the corresponding SpecificPrice object
+     * @param bool   $use_group_reduction
+     * @param int    $id_customer
+     * @param bool   $use_customer_price
+     * @param int    $id_cart
+     * @param int    $real_quantity
+     * @return float Product price
+     **/
     public function priceCalculation(
         $id_shop,
         $id_product,
