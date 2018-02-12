@@ -64,7 +64,7 @@ class LocaleData
     /**
      * Collection of all available symbols list (by numbering system)
      *
-     * @var NumberSymbolList[]
+     * @var NumberSymbolsData[]
      */
     public $numberSymbols;
 
