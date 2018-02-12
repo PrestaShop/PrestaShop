@@ -112,8 +112,8 @@ class CartRow
      * @param GroupDataProvider    $groupDataProvider
      * @param Database             $databaseAdapter
      * @param bool                 $useEcotax
-     * @param                      $precision
-     * @param                      $roundType
+     * @param int                  $precision
+     * @param string               $roundType see self::ROUND_MODE_*
      */
     public function __construct(
         $rowData,

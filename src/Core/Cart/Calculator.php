@@ -112,7 +112,7 @@ class Calculator
     /**
      * run the whole calculation process: calculate rows, discounts, fees
      *
-     * @param $computePrecision
+     * @param int $computePrecision
      *
      * @return $this
      */
@@ -248,7 +248,7 @@ class Calculator
     /**
      * calculate wrapping and shipping fees
      *
-     * @param $computePrecision
+     * @param int $computePrecision
      */
     protected function calculateFees($computePrecision)
     {
