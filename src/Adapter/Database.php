@@ -26,6 +26,7 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
+use DbQuery;
 
 class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\DatabaseInterface
 {
@@ -50,5 +51,19 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     public function escape($unsafeData)
     {
         return Db::getInstance()->escape($unsafeData, true, true);
+    }
+
+    /**
+     * Returns a value from the first row, first column of a SELECT query
+     *
+     * @param bool           $useMaster
+     * @param string|DbQuery $sql
+     * @param bool           $use_cache
+     *
+     * @return string|false|null
+     */
+    public function getValue($useMaster, $sql, $use_cache = true)
+    {
+        return Db::getInstance($useMaster)->getValue($sql, $use_cache);
     }
 }

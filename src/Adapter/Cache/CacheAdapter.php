@@ -23,44 +23,44 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShop\PrestaShop\Adapter\Customer;
 
-use Symfony\Component\Process\Exception\LogicException;
-use Customer;
+namespace PrestaShop\PrestaShop\Adapter\Cache;
+
+use Cache;
 
 /**
- * This class will provide data from DB / ORM about Customer
+ * Adapter for generic cache methods
  */
-class CustomerDataProvider
+class CacheAdapter
 {
-    /**
-     * Get a customer
-     *
-     * @param int $id
-     *
-     * @throws LogicException If the customer id is not set
-     *
-     * @return object customer
-     */
-    public function getCustomer($id)
-    {
-        if (!$id) {
-            throw new LogicException('You need to provide a customer id', null, 5002);
-        }
 
-        $customer = new Customer($id);
-        return $customer;
+    /**
+     * @param string $key
+     * @param string $value
+     */
+    public function store($key, $value)
+    {
+        return Cache::store($key, $value);
     }
 
     /**
-     * Get Default Customer Group ID.
+     * @param string $key
      *
-     * @param int $idCustomer Customer ID
-     *
-     * @return mixed|null|string
+     * @return mixed
      */
-    public function getDefaultGroupId($idCustomer)
+    public function retrieve($key)
     {
-        return Customer::getDefaultGroupId($idCustomer);
+        return Cache::retrieve($key);
     }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function isStored($key)
+    {
+        return Cache::isStored($key);
+    }
+
 }

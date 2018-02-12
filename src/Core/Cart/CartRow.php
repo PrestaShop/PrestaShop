@@ -26,13 +26,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Cart;
 
-use Address;
-use Cache;
 use Cart;
-use Customer;
-use Db;
-use Group;
-use Order;
+use PrestaShop\PrestaShop\Adapter\AddressFactory;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Database;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\Tools;
 
@@ -41,10 +40,39 @@ use PrestaShop\PrestaShop\Adapter\Tools;
  */
 class CartRow
 {
+    const ROUND_MODE_ITEM  = 'item';
+    const ROUND_MODE_LINE  = 'line';
+    const ROUND_MODE_TOTAL = 'total';
+
     /**
      * @var PriceCalculator
      */
     protected $priceCalculator;
+
+    /**
+     * @var AddressFactory
+     */
+    protected $addressFactory;
+
+    /**
+     * @var CustomerDataProvider
+     */
+    protected $customerDataProvider;
+
+    /**
+     * @var GroupDataProvider
+     */
+    protected $groupDataProvider;
+
+    /**
+     * @var Database
+     */
+    protected $databaseAdapter;
+
+    /**
+     * @var CacheAdapter
+     */
+    protected $cacheAdapter;
 
     protected $useEcotax;
     protected $precision;
@@ -76,19 +104,39 @@ class CartRow
     protected $isProcessed = false;
 
     /**
-     * @param array           $rowData array item given by Cart::getProducts()
-     * @param PriceCalculator $priceCalculator
-     * @param                 $useEcotax
-     * @param                 $precision
-     * @param                 $roundType
+     * @param array                $rowData array item given by Cart::getProducts()
+     * @param PriceCalculator      $priceCalculator
+     * @param AddressFactory       $addressFactory
+     * @param CustomerDataProvider $customerDataProvider
+     * @param CacheAdapter         $cacheAdapter
+     * @param GroupDataProvider    $groupDataProvider
+     * @param Database             $databaseAdapter
+     * @param bool                 $useEcotax
+     * @param                      $precision
+     * @param                      $roundType
      */
-    public function __construct($rowData, PriceCalculator $priceCalculator, $useEcotax, $precision, $roundType)
-    {
+    public function __construct(
+        $rowData,
+        PriceCalculator $priceCalculator,
+        AddressFactory $addressFactory,
+        CustomerDataProvider $customerDataProvider,
+        CacheAdapter $cacheAdapter,
+        GroupDataProvider $groupDataProvider,
+        Database $databaseAdapter,
+        $useEcotax,
+        $precision,
+        $roundType
+    ) {
         $this->setRowData($rowData);
-        $this->priceCalculator = $priceCalculator;
-        $this->useEcotax   = $useEcotax;
-        $this->precision   = $precision;
-        $this->roundType   = $roundType;
+        $this->priceCalculator      = $priceCalculator;
+        $this->addressFactory       = $addressFactory;
+        $this->customerDataProvider = $customerDataProvider;
+        $this->cacheAdapter         = $cacheAdapter;
+        $this->groupDataProvider    = $groupDataProvider;
+        $this->databaseAdapter      = $databaseAdapter;
+        $this->useEcotax            = $useEcotax;
+        $this->precision            = $precision;
+        $this->roundType            = $roundType;
     }
 
     /**
@@ -178,41 +226,43 @@ class CartRow
 
     protected function getProductPrice(Cart $cart, $rowData)
     {
-        $productId = (int)$rowData['id_product'];
-        $quantity = (int) $rowData['cart_quantity'];
+        $productId = (int) $rowData['id_product'];
+        $quantity  = (int) $rowData['cart_quantity'];
 
         $addressId = $cart->getProductAddressId($rowData);
         if (!$addressId) {
             $addressId = $cart->getTaxAddressId();
         }
-        $address = Address::initialize($addressId, true);
-        $countryId = (int)$address->id_country;
-        $stateId = (int)$address->id_state;
-        $zipCode = $address->postcode;
+        $address   = $this->addressFactory->findOrCreate($addressId, true);
+        $countryId = (int) $address->id_country;
+        $stateId   = (int) $address->id_state;
+        $zipCode   = $address->postcode;
 
-        $shopId = (int)$cart->id_shop;
-        $currencyId = (int)$cart->id_currency;
+        $shopId     = (int) $cart->id_shop;
+        $currencyId = (int) $cart->id_currency;
 
         $groupId = null;
         if ($cart->id_customer) {
-            $groupId = Customer::getDefaultGroupId((int)$cart->id_customer);
+            $groupId = $this->customerDataProvider->getDefaultGroupId((int) $cart->id_customer);
         }
         if (!$groupId) {
-            $groupId = (int)Group::getCurrent()->id;
+            $groupId = (int) $this->groupDataProvider->getCurrent()->id;
         }
 
         $cartQuantity = 0;
-        if ((int)$cart->id) {
-            $cacheId = 'Product::getPriceStatic_'.(int)$productId.'-'.(int)$cart->id;
-            if (!Cache::isStored($cacheId) || ($cartQuantity = Cache::retrieve($cacheId) != (int)$quantity)) {
-                $sql = 'SELECT SUM(`quantity`)
-				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_product` = '.(int)$productId.'
-				AND `id_cart` = '.(int)$cart->id;
-                $cartQuantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-                Cache::store($cacheId, $cartQuantity);
+        if ((int) $cart->id) {
+            $cacheId = 'Product::getPriceStatic_' . (int) $productId . '-' . (int) $cart->id;
+            if (!$this->cacheAdapter->isStored($cacheId)
+                || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
+                                    != (int) $quantity)) {
+                $sql          = 'SELECT SUM(`quantity`)
+				FROM `' . _DB_PREFIX_ . 'cart_product`
+				WHERE `id_product` = ' . (int) $productId . '
+				AND `id_cart` = ' . (int) $cart->id;
+                $cartQuantity = (int) $this->databaseAdapter->getValue(_PS_USE_SQL_SLAVE_, $sql);
+                $this->cacheAdapter->store($cacheId, $cartQuantity);
             } else {
-                $cartQuantity = Cache::retrieve($cacheId);
+                $cartQuantity = $this->cacheAdapter->retrieve($cacheId);
             }
         }
 
@@ -267,6 +317,7 @@ class CartRow
             $cartQuantity,
             (int) $rowData['id_customization']
         );
+
         return new AmountImmutable($priceTaxIncl, $priceTaxExcl);
     }
 
@@ -277,16 +328,16 @@ class CartRow
 
         $rowData  = $this->getRowData();
         $quantity = (int) $rowData['cart_quantity'];
-        $tools = new Tools;
+        $tools    = new Tools;
         switch ($this->roundType) {
-            case Order::ROUND_TOTAL:
+            case self::ROUND_MODE_TOTAL:
                 // do not round the line
                 $this->finalTotalPrice = new AmountImmutable(
                     $this->initialUnitPrice->getTaxIncluded() * $quantity,
                     $this->initialUnitPrice->getTaxExcluded() * $quantity
                 );
                 break;
-            case Order::ROUND_LINE:
+            case self::ROUND_MODE_LINE:
                 // round line result
                 $this->finalTotalPrice = new AmountImmutable(
                     $tools->round($this->initialUnitPrice->getTaxIncluded() * $quantity, $this->precision),
@@ -294,7 +345,7 @@ class CartRow
                 );
                 break;
 
-            case Order::ROUND_ITEM:
+            case self::ROUND_MODE_ITEM:
             default:
                 // round each item
                 $this->initialUnitPrice = new AmountImmutable(
