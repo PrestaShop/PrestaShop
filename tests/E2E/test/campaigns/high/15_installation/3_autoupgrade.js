@@ -1,13 +1,10 @@
 const {Installation} = require('../../../selectors/BO/installation');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ModulePage} = require('../../../selectors/BO/module_page');
-const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
-const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {ShopParameter} = require('../../../selectors/BO/shopParameters/index');
-const {productPage} = require('../../../selectors/FO/product_page');
 
 const commonScenarios = require('../02_product/product');
 const commonInstallation = require('./common_installation');
@@ -36,7 +33,7 @@ scenario('The shop installation', client => {
           .then(() => client.linkAccess(rcLink))
           .then(() => client.WaitForDownload(Installation.download_version))
       })
-    };
+    }
     test('should go to the last stable version URL', () => client.localhost(UrlLastStableVersion));
   }, 'installation');
 
@@ -55,6 +52,18 @@ scenario('The shop installation', client => {
         .then(() => client.closeBoarding(OnBoarding.popup_close_button))
     });
   }, 'installation');
+
+  /**
+   * This scenario is based on the bug described in this ticket
+   * http://forge.prestashop.com/browse/BOOM-3195
+   **/
+
+  scenario('Install "Top-sellers block" and "New products block" modules From Cross selling', client => {
+    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_bestsellers");
+    moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "ps_newproducts");
+  }, 'installation');
+
+  /****** END *****/
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
@@ -103,6 +112,19 @@ scenario('The shop installation', client => {
   scenario('Login in the Front Office', client => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO, UrlLastStableVersion));
   }, 'installation');
+
+  /**
+   * This scenario is based on the bug described in this ticket
+   * http://forge.prestashop.com/browse/BOOM-3195
+   **/
+
+  scenario('Check the existence of "Top sellers block" and "New products block"', client => {
+    test('should set the language of shop to "English"', () => client.changeLanguage());
+    test('should check the existence of "Top sellers" block', () => client.waitForVisible(AccessPageFO.top_sellers_block));
+    test('should check the existence of "New products" block', () => client.waitForVisible(AccessPageFO.new_products_block));
+  }, 'installation');
+
+  /****** END *****/
 
   orderCommonScenarios.createOrder();
 
