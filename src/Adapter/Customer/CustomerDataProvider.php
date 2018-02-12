@@ -51,4 +51,16 @@ class CustomerDataProvider
         $customer = new Customer($id);
         return $customer;
     }
+
+    /**
+     * Get Default Customer Group ID.
+     *
+     * @param int $idCustomer Customer ID
+     *
+     * @return mixed|null|string
+     */
+    public function getDefaultGroupId($idCustomer)
+    {
+        return Customer::getDefaultGroupId($idCustomer);
+    }
 }

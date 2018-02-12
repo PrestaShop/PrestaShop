@@ -24,13 +24,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\AddressFactory;
+use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
+use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Adapter\Product\PriceCalculator;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Core\Cart\AmountImmutable;
+use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Core\Cart\Calculator;
 use PrestaShop\PrestaShop\Core\Cart\CartRow;
 use PrestaShop\PrestaShop\Core\Cart\CartRuleData;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 class CartCore extends ObjectModel
 {
@@ -2151,9 +2154,34 @@ class CartCore extends ObjectModel
         // set cart rows (products)
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
         $precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
-        $roundType = $this->configuration->get('PS_ROUND_TYPE');
+        $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
+        switch ($configRoundType) {
+            case Order::ROUND_TOTAL:
+                $roundType = CartRow::ROUND_MODE_TOTAL;
+                break;
+            case Order::ROUND_LINE:
+                $roundType = CartRow::ROUND_MODE_LINE;
+                break;
+            case Order::ROUND_ITEM:
+            default:
+            $roundType = CartRow::ROUND_MODE_ITEM;
+                break;
+        }
+
         foreach ($products as $product) {
-            $calculator->addCartRow(new CartRow($product, $priceCalculator, $useEcotax, $precision, $roundType));
+            $cartRow = new CartRow(
+                $product,
+                $priceCalculator,
+                new AddressFactory,
+                new CustomerDataProvider,
+                new CacheAdapter,
+                new GroupDataProvider,
+                new Database,
+                $useEcotax,
+                $precision,
+                $roundType
+            );
+            $calculator->addCartRow($cartRow);
         }
 
         // set cart rules

@@ -45,4 +45,15 @@ class GroupDataProvider
     {
         return Group::getGroups($id_lang, $id_shop);
     }
+
+    /**
+     * Return current group object
+     * Use context
+     *
+     * @return Group Group object
+     */
+    public static function getCurrent()
+    {
+        return Group::getCurrent();
+    }
 }
