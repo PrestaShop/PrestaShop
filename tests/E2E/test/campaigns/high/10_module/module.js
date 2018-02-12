@@ -55,5 +55,30 @@ module.exports = {
     test('should click on "Reset" button', () => client.waitForExistAndClick(ModulePage.reset_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should go to "Dashboard" page', () => client.waitForExistAndClick(Menu.dashboard_menu));
+  },
+  sortModule:function (client, ModulePage, sortType, attribute) {
+    test('should select sort by "'+sortType+'"', () => client.waitAndSelectByValue(ModulePage.sort_select, sortType));
+    test('should check sort modules by "'+sortType+'"', () => {
+      for (let i = 0; i < (parseInt((tab["modules_number"].match(/[0-9]+/g)[0]))); i++) {
+        promise = client.getModuleAttr(ModulePage.module_list, attribute, i)
+      }
+      if(sortType=="name"){
+        return promise
+          .then(() => client.checkSortByName((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
+      }else if(sortType=="price"){
+        return promise
+          .then(() => client.checkSortByIncPrice((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
+      }else if(sortType=="price-desc"){
+        return promise
+          .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
+      }else{
+        return promise
+        .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
+      }
+
+
+
+
+    });
   }
-};
+}
