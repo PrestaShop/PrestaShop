@@ -185,15 +185,17 @@ class CommonClient {
     }
   }
 
-  checkAttributeValue(selector, attribute, value, parameter = 'equal') {
+  checkAttributeValue(selector, attribute, value, parameter = 'equal', pause = 0) {
     switch (parameter) {
       case "contain":
         return this.client
+          .pause(pause)
           .waitForExist(selector, 90000)
           .then(() => this.client.getAttribute(selector, attribute))
           .then((text) => expect(text).to.be.contain(value));
       case "equal":
         return this.client
+          .pause(pause)
           .waitForExist(selector, 90000)
           .then(() => this.client.getAttribute(selector, attribute))
           .then((text) => expect(text).to.be.equal(value));
@@ -283,6 +285,10 @@ class CommonClient {
 
   pause(timeout) {
     return this.client.pause(timeout);
+  }
+
+  keys(button) {
+    return this.client.keys(button)
   }
 
 }
