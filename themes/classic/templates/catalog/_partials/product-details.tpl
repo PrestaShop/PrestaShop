@@ -35,7 +35,7 @@
     {/if}
   {/block}
 
-  {block name='product_availability_date'}
+  {block name='product_availability_date' && ({$smarty.now|date_format:'%Y-%m-%d'} < $product.availability_date)}
     {if $product.availability_date}
       <div class="product-availability-date">
         <label>{l s='Availability date:' d='Shop.Theme.Catalog'} </label>
