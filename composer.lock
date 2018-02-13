@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v1.0.20",
+            "version": "v1.0.21",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "f592c495f1c43851f5e3418cf9c2514e61d67e64"
+                "reference": "b4dc688b5f7f9645920f4c81703e83a45cab09c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/f592c495f1c43851f5e3418cf9c2514e61d67e64",
-                "reference": "f592c495f1c43851f5e3418cf9c2514e61d67e64",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/b4dc688b5f7f9645920f4c81703e83a45cab09c2",
+                "reference": "b4dc688b5f7f9645920f4c81703e83a45cab09c2",
                 "shasum": ""
             },
             "require": {
@@ -66,7 +66,7 @@
                 "doctrine",
                 "orm"
             ],
-            "time": "2017-12-01T10:02:05+00:00"
+            "time": "2018-01-27T07:05:10+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -1089,16 +1089,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "v2.5.13",
+            "version": "v2.5.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/doctrine2.git",
-                "reference": "93103f44a3e36e7b48165b6e6b736833f33b18ef"
+                "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/93103f44a3e36e7b48165b6e6b736833f33b18ef",
-                "reference": "93103f44a3e36e7b48165b6e6b736833f33b18ef",
+                "url": "https://api.github.com/repos/doctrine/doctrine2/zipball/810a7baf81462a5ddf10e8baa8cb94b6eec02754",
+                "reference": "810a7baf81462a5ddf10e8baa8cb94b6eec02754",
                 "shasum": ""
             },
             "require": {
@@ -1161,7 +1161,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2017-11-27T23:25:55+00:00"
+            "time": "2017-12-17T02:57:51+00:00"
         },
         {
             "name": "fig/link-util",
@@ -1270,21 +1270,22 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "5.3.1",
+            "version": "5.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8"
+                "reference": "f9acb4761844317e626a32259205bec1f1bc60d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/70f1fa53b71c4647bf2762c09068a95f77e12fb8",
-                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f9acb4761844317e626a32259205bec1f1bc60d2",
+                "reference": "f9acb4761844317e626a32259205bec1f1bc60d2",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/ringphp": "^1.1",
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "react/promise": "^2.2"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -1318,7 +1319,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15T19:28:39+00:00"
+            "time": "2018-01-15T07:18:01+00:00"
         },
         {
             "name": "guzzlehttp/log-subscriber",
@@ -1929,16 +1930,16 @@
         },
         {
             "name": "matthiasmullie/minify",
-            "version": "1.3.57",
+            "version": "1.3.59",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "7559ac0806f39f89f949c917e6612dda8154488b"
+                "reference": "62dac3bce06de66f0d71fe6490cf1c508d3c3ff7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/7559ac0806f39f89f949c917e6612dda8154488b",
-                "reference": "7559ac0806f39f89f949c917e6612dda8154488b",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/62dac3bce06de66f0d71fe6490cf1c508d3c3ff7",
+                "reference": "62dac3bce06de66f0d71fe6490cf1c508d3c3ff7",
                 "shasum": ""
             },
             "require": {
@@ -1985,20 +1986,20 @@
                 "minifier",
                 "minify"
             ],
-            "time": "2017-12-06T12:46:42+00:00"
+            "time": "2018-02-02T12:44:18+00:00"
         },
         {
             "name": "matthiasmullie/path-converter",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/path-converter.git",
-                "reference": "08551ec1b156e923c242a10ab484bd4d6ead6631"
+                "reference": "3082a6838be02b930239a97d38b5c9da4d693aca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/path-converter/zipball/08551ec1b156e923c242a10ab484bd4d6ead6631",
-                "reference": "08551ec1b156e923c242a10ab484bd4d6ead6631",
+                "url": "https://api.github.com/repos/matthiasmullie/path-converter/zipball/3082a6838be02b930239a97d38b5c9da4d693aca",
+                "reference": "3082a6838be02b930239a97d38b5c9da4d693aca",
                 "shasum": ""
             },
             "require": {
@@ -2034,7 +2035,7 @@
                 "paths",
                 "relative"
             ],
-            "time": "2017-01-26T08:54:49+00:00"
+            "time": "2018-02-02T11:30:10+00:00"
         },
         {
             "name": "maxmind-db/reader",
@@ -2094,16 +2095,16 @@
         },
         {
             "name": "maxmind/web-service-common",
-            "version": "v0.4.0",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maxmind/web-service-common-php.git",
-                "reference": "622f7c732a7f9c4c62497fc103939e042b6bdb88"
+                "reference": "61a9836fa3bb1743ab89752bae5005d71e78c73b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/622f7c732a7f9c4c62497fc103939e042b6bdb88",
-                "reference": "622f7c732a7f9c4c62497fc103939e042b6bdb88",
+                "url": "https://api.github.com/repos/maxmind/web-service-common-php/zipball/61a9836fa3bb1743ab89752bae5005d71e78c73b",
+                "reference": "61a9836fa3bb1743ab89752bae5005d71e78c73b",
                 "shasum": ""
             },
             "require": {
@@ -2136,27 +2137,27 @@
             ],
             "description": "Internal MaxMind Web Service API",
             "homepage": "https://github.com/maxmind/web-service-common-php",
-            "time": "2017-07-06T17:48:21+00:00"
+            "time": "2018-02-12T22:31:54+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
-            "version": "2.8.27",
+            "version": "2.8.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/serbanghita/Mobile-Detect.git",
-                "reference": "fd3aa7a352608cbb2d899a61e35530bd1c9004bc"
+                "reference": "5500bbbf312fe77ef0c7223858dad84fe49ee0c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/fd3aa7a352608cbb2d899a61e35530bd1c9004bc",
-                "reference": "fd3aa7a352608cbb2d899a61e35530bd1c9004bc",
+                "url": "https://api.github.com/repos/serbanghita/Mobile-Detect/zipball/5500bbbf312fe77ef0c7223858dad84fe49ee0c3",
+                "reference": "5500bbbf312fe77ef0c7223858dad84fe49ee0c3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "*"
+                "phpunit/phpunit": "~4.8.35||~5.7"
             },
             "type": "library",
             "autoload": {
@@ -2188,7 +2189,7 @@
                 "mobile detector",
                 "php mobile detect"
             ],
-            "time": "2017-12-03T15:42:01+00:00"
+            "time": "2017-12-18T10:38:51+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2679,6 +2680,7 @@
                 "xls",
                 "xlsx"
             ],
+            "abandoned": "phpoffice/phpspreadsheet",
             "time": "2015-05-01T07:00:55+00:00"
         },
         {
@@ -2779,16 +2781,16 @@
         },
         {
             "name": "prestashop/dashgoals",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/dashgoals.git",
-                "reference": "269db025a170b7c9f4f231157c635ca06b6b7f83"
+                "reference": "2a8d41bcc9f2b09924b5e82407bcd6d61ea61ab6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/269db025a170b7c9f4f231157c635ca06b6b7f83",
-                "reference": "269db025a170b7c9f4f231157c635ca06b6b7f83",
+                "url": "https://api.github.com/repos/PrestaShop/dashgoals/zipball/2a8d41bcc9f2b09924b5e82407bcd6d61ea61ab6",
+                "reference": "2a8d41bcc9f2b09924b5e82407bcd6d61ea61ab6",
                 "shasum": ""
             },
             "require": {
@@ -2797,7 +2799,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -2807,7 +2809,7 @@
             ],
             "description": "PrestaShop module dashgoals",
             "homepage": "https://github.com/PrestaShop/dashgoals",
-            "time": "2017-02-01T16:31:33+00:00"
+            "time": "2018-01-29T17:51:57+00:00"
         },
         {
             "name": "prestashop/dashproducts",
@@ -3019,16 +3021,16 @@
         },
         {
             "name": "prestashop/ps_banner",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_banner.git",
-                "reference": "078ffe994b38dc9685d0feb8a0f6a705830b2cb2"
+                "reference": "9616f7fc9cda997ef1860562d3212fd021205805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/078ffe994b38dc9685d0feb8a0f6a705830b2cb2",
-                "reference": "078ffe994b38dc9685d0feb8a0f6a705830b2cb2",
+                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/9616f7fc9cda997ef1860562d3212fd021205805",
+                "reference": "9616f7fc9cda997ef1860562d3212fd021205805",
                 "shasum": ""
             },
             "require": {
@@ -3037,7 +3039,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3047,7 +3049,7 @@
             ],
             "description": "PrestaShop module ps_banner",
             "homepage": "https://github.com/PrestaShop/ps_banner",
-            "time": "2017-05-09T09:57:07+00:00"
+            "time": "2018-02-05T21:44:48+00:00"
         },
         {
             "name": "prestashop/ps_categorytree",
@@ -3211,16 +3213,16 @@
         },
         {
             "name": "prestashop/ps_customersignin",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_customersignin.git",
-                "reference": "a642dcf03d444541fd706c2becd2ea49223da734"
+                "reference": "6168c4402656456b884178bc00c790a8579ecafa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_customersignin/zipball/a642dcf03d444541fd706c2becd2ea49223da734",
-                "reference": "a642dcf03d444541fd706c2becd2ea49223da734",
+                "url": "https://api.github.com/repos/PrestaShop/ps_customersignin/zipball/6168c4402656456b884178bc00c790a8579ecafa",
+                "reference": "6168c4402656456b884178bc00c790a8579ecafa",
                 "shasum": ""
             },
             "require": {
@@ -3229,7 +3231,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3239,7 +3241,7 @@
             ],
             "description": "PrestaShop - Customer 'Sign in' link",
             "homepage": "https://github.com/PrestaShop/ps_customersignin",
-            "time": "2017-02-01T16:40:08+00:00"
+            "time": "2018-02-02T10:01:01+00:00"
         },
         {
             "name": "prestashop/ps_customtext",
@@ -3374,16 +3376,16 @@
         },
         {
             "name": "prestashop/ps_imageslider",
-            "version": "v2.0.1",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_imageslider.git",
-                "reference": "c2272a288a46a9eb7e4b66f08ce135af37d1c6bf"
+                "reference": "4d34cbce0d5edce787c1914c25b405450b6055d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/c2272a288a46a9eb7e4b66f08ce135af37d1c6bf",
-                "reference": "c2272a288a46a9eb7e4b66f08ce135af37d1c6bf",
+                "url": "https://api.github.com/repos/PrestaShop/ps_imageslider/zipball/4d34cbce0d5edce787c1914c25b405450b6055d7",
+                "reference": "4d34cbce0d5edce787c1914c25b405450b6055d7",
                 "shasum": ""
             },
             "require": {
@@ -3392,7 +3394,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3402,7 +3404,7 @@
             ],
             "description": "PrestaShop - Image slider",
             "homepage": "https://github.com/PrestaShop/ps_imageslider",
-            "time": "2017-05-09T09:57:15+00:00"
+            "time": "2018-02-05T21:41:01+00:00"
         },
         {
             "name": "prestashop/ps_languageselector",
@@ -3502,16 +3504,16 @@
         },
         {
             "name": "prestashop/ps_mainmenu",
-            "version": "v2.0.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_mainmenu.git",
-                "reference": "f652785fa046ad6bd4d4d8987839b37309e39527"
+                "reference": "4a16eeb69d06ba868ef5c1c26aa697e3d265f613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/f652785fa046ad6bd4d4d8987839b37309e39527",
-                "reference": "f652785fa046ad6bd4d4d8987839b37309e39527",
+                "url": "https://api.github.com/repos/PrestaShop/ps_mainmenu/zipball/4a16eeb69d06ba868ef5c1c26aa697e3d265f613",
+                "reference": "4a16eeb69d06ba868ef5c1c26aa697e3d265f613",
                 "shasum": ""
             },
             "require": {
@@ -3520,7 +3522,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3530,7 +3532,7 @@
             ],
             "description": "PrestaShop - Main menu",
             "homepage": "https://github.com/PrestaShop/ps_mainmenu",
-            "time": "2017-02-14T08:11:36+00:00"
+            "time": "2018-02-05T21:56:20+00:00"
         },
         {
             "name": "prestashop/ps_searchbar",
@@ -3758,16 +3760,16 @@
         },
         {
             "name": "prestashop/statsbestcustomers",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestcustomers.git",
-                "reference": "af70d4ef462e44077479d18feee01857549761f1"
+                "reference": "b0250e88e9144ca373d8006c922d3e84ea4987b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/af70d4ef462e44077479d18feee01857549761f1",
-                "reference": "af70d4ef462e44077479d18feee01857549761f1",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/b0250e88e9144ca373d8006c922d3e84ea4987b9",
+                "reference": "b0250e88e9144ca373d8006c922d3e84ea4987b9",
                 "shasum": ""
             },
             "require": {
@@ -3786,7 +3788,7 @@
             ],
             "description": "PrestaShop module statsbestcustomers",
             "homepage": "https://github.com/PrestaShop/statsbestcustomers",
-            "time": "2017-02-01T16:30:07+00:00"
+            "time": "2018-01-29T17:21:50+00:00"
         },
         {
             "name": "prestashop/statsbestmanufacturers",
@@ -4078,16 +4080,16 @@
         },
         {
             "name": "prestashop/statsforecast",
-            "version": "v2.0.1",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsforecast.git",
-                "reference": "f7b6175c109179f9070f7dfea52a7da947933274"
+                "reference": "8ecbeaef0e32657cf79000f95861e41e19e22d49"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/f7b6175c109179f9070f7dfea52a7da947933274",
-                "reference": "f7b6175c109179f9070f7dfea52a7da947933274",
+                "url": "https://api.github.com/repos/PrestaShop/statsforecast/zipball/8ecbeaef0e32657cf79000f95861e41e19e22d49",
+                "reference": "8ecbeaef0e32657cf79000f95861e41e19e22d49",
                 "shasum": ""
             },
             "require": {
@@ -4096,7 +4098,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4106,7 +4108,7 @@
             ],
             "description": "PrestaShop module statsforecast",
             "homepage": "https://github.com/PrestaShop/statsforecast",
-            "time": "2017-02-01T16:33:09+00:00"
+            "time": "2018-01-29T18:37:54+00:00"
         },
         {
             "name": "prestashop/statslive",
@@ -4142,16 +4144,16 @@
         },
         {
             "name": "prestashop/statsnewsletter",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsnewsletter.git",
-                "reference": "c9ffc28d3afaa9a8cd0b45b0e2b2c2454182fa8e"
+                "reference": "7fd9a55c4b39eb034f73ef4723a1a83c6d73560e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsnewsletter/zipball/c9ffc28d3afaa9a8cd0b45b0e2b2c2454182fa8e",
-                "reference": "c9ffc28d3afaa9a8cd0b45b0e2b2c2454182fa8e",
+                "url": "https://api.github.com/repos/PrestaShop/statsnewsletter/zipball/7fd9a55c4b39eb034f73ef4723a1a83c6d73560e",
+                "reference": "7fd9a55c4b39eb034f73ef4723a1a83c6d73560e",
                 "shasum": ""
             },
             "require": {
@@ -4160,7 +4162,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4170,20 +4172,20 @@
             ],
             "description": "PrestaShop module statsnewsletter",
             "homepage": "https://github.com/PrestaShop/statsnewsletter",
-            "time": "2017-02-01T16:29:27+00:00"
+            "time": "2018-01-29T18:39:03+00:00"
         },
         {
             "name": "prestashop/statsorigin",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsorigin.git",
-                "reference": "489754d6f1d8970d360f479ed105a02b59ddbec0"
+                "reference": "24ca4f143a2f0b5d3d7bc817547df79f837faeb3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsorigin/zipball/489754d6f1d8970d360f479ed105a02b59ddbec0",
-                "reference": "489754d6f1d8970d360f479ed105a02b59ddbec0",
+                "url": "https://api.github.com/repos/PrestaShop/statsorigin/zipball/24ca4f143a2f0b5d3d7bc817547df79f837faeb3",
+                "reference": "24ca4f143a2f0b5d3d7bc817547df79f837faeb3",
                 "shasum": ""
             },
             "require": {
@@ -4192,7 +4194,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4202,20 +4204,20 @@
             ],
             "description": "PrestaShop module statsorigin",
             "homepage": "https://github.com/PrestaShop/statsorigin",
-            "time": "2017-02-01T16:33:56+00:00"
+            "time": "2018-01-29T19:17:31+00:00"
         },
         {
             "name": "prestashop/statspersonalinfos",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statspersonalinfos.git",
-                "reference": "dcac5f7768a445ff6ec2267f60bd7c6491edb760"
+                "reference": "cc800a6ee0b8d48b5b00a56206cc92b0a0056d34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/dcac5f7768a445ff6ec2267f60bd7c6491edb760",
-                "reference": "dcac5f7768a445ff6ec2267f60bd7c6491edb760",
+                "url": "https://api.github.com/repos/PrestaShop/statspersonalinfos/zipball/cc800a6ee0b8d48b5b00a56206cc92b0a0056d34",
+                "reference": "cc800a6ee0b8d48b5b00a56206cc92b0a0056d34",
                 "shasum": ""
             },
             "require": {
@@ -4224,7 +4226,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4234,20 +4236,20 @@
             ],
             "description": "PrestaShop module statspersonalinfos",
             "homepage": "https://github.com/PrestaShop/statspersonalinfos",
-            "time": "2017-02-01T16:34:02+00:00"
+            "time": "2018-01-29T18:41:52+00:00"
         },
         {
             "name": "prestashop/statsproduct",
-            "version": "v2.0.1",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsproduct.git",
-                "reference": "a4bf1ced5f6064702efd6690a56c1b83e36f507d"
+                "reference": "caf05aefabd63ac84e06bc2a0bdcf69f965d03c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/a4bf1ced5f6064702efd6690a56c1b83e36f507d",
-                "reference": "a4bf1ced5f6064702efd6690a56c1b83e36f507d",
+                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/caf05aefabd63ac84e06bc2a0bdcf69f965d03c4",
+                "reference": "caf05aefabd63ac84e06bc2a0bdcf69f965d03c4",
                 "shasum": ""
             },
             "require": {
@@ -4256,7 +4258,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4266,7 +4268,7 @@
             ],
             "description": "PrestaShop module statsproduct",
             "homepage": "https://github.com/PrestaShop/statsproduct",
-            "time": "2017-02-01T16:30:44+00:00"
+            "time": "2018-01-29T18:57:47+00:00"
         },
         {
             "name": "prestashop/statsregistrations",
@@ -4398,16 +4400,16 @@
         },
         {
             "name": "prestashop/statsvisits",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsvisits.git",
-                "reference": "6f4a6429aff506ff266ec6ecee5809e11f06b51a"
+                "reference": "c6255d571d3b1d2e8863d87482e0df42de862f96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/6f4a6429aff506ff266ec6ecee5809e11f06b51a",
-                "reference": "6f4a6429aff506ff266ec6ecee5809e11f06b51a",
+                "url": "https://api.github.com/repos/PrestaShop/statsvisits/zipball/c6255d571d3b1d2e8863d87482e0df42de862f96",
+                "reference": "c6255d571d3b1d2e8863d87482e0df42de862f96",
                 "shasum": ""
             },
             "require": {
@@ -4416,7 +4418,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -4426,7 +4428,7 @@
             ],
             "description": "PrestaShop module statsvisits",
             "homepage": "https://github.com/PrestaShop/statsvisits",
-            "time": "2017-02-01T16:31:01+00:00"
+            "time": "2018-01-29T18:08:52+00:00"
         },
         {
             "name": "prestashop/translationtools-bundle",
@@ -4489,16 +4491,16 @@
         },
         {
             "name": "prestashop/welcome",
-            "version": "v4.0.0",
+            "version": "v4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/welcome.git",
-                "reference": "138bc56ecdd73289427fc309c92800dc982a7978"
+                "reference": "73f2668def9607fbf68c269632bd997abae2931a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/138bc56ecdd73289427fc309c92800dc982a7978",
-                "reference": "138bc56ecdd73289427fc309c92800dc982a7978",
+                "url": "https://api.github.com/repos/PrestaShop/welcome/zipball/73f2668def9607fbf68c269632bd997abae2931a",
+                "reference": "73f2668def9607fbf68c269632bd997abae2931a",
                 "shasum": ""
             },
             "require": {
@@ -4523,7 +4525,7 @@
             ],
             "description": "Welcome module for PrestaShop helping the users to create products.",
             "homepage": "https://github.com/PrestaShop/welcome",
-            "time": "2017-12-08T11:01:44+00:00"
+            "time": "2018-01-02T16:25:48+00:00"
         },
         {
             "name": "psr/cache",
@@ -4864,16 +4866,16 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v3.0.28",
+            "version": "v3.0.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "65eadf9e3fd5c47eee7986b306a5aed8affe6496"
+                "reference": "bb907234df776b68922eb4b25bfa061683597b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/65eadf9e3fd5c47eee7986b306a5aed8affe6496",
-                "reference": "65eadf9e3fd5c47eee7986b306a5aed8affe6496",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/bb907234df776b68922eb4b25bfa061683597b6a",
+                "reference": "bb907234df776b68922eb4b25bfa061683597b6a",
                 "shasum": ""
             },
             "require": {
@@ -4930,20 +4932,20 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2017-10-12T17:37:20+00:00"
+            "time": "2017-12-14T19:03:23+00:00"
         },
         {
             "name": "sensiolabs/security-checker",
-            "version": "v4.1.6",
+            "version": "v4.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/security-checker.git",
-                "reference": "387b6a3b723ba35588b33d5f8d14e28ed608bd30"
+                "reference": "d539ccba2b4dce515de04f16b7ed7ae5b9eeb434"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/387b6a3b723ba35588b33d5f8d14e28ed608bd30",
-                "reference": "387b6a3b723ba35588b33d5f8d14e28ed608bd30",
+                "url": "https://api.github.com/repos/sensiolabs/security-checker/zipball/d539ccba2b4dce515de04f16b7ed7ae5b9eeb434",
+                "reference": "d539ccba2b4dce515de04f16b7ed7ae5b9eeb434",
                 "shasum": ""
             },
             "require": {
@@ -4975,7 +4977,7 @@
                 }
             ],
             "description": "A security checker for your composer.lock",
-            "time": "2017-10-29T18:48:08+00:00"
+            "time": "2018-01-11T05:54:03+00:00"
         },
         {
             "name": "shudrum/array-finder",
@@ -5072,16 +5074,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.8",
+            "version": "v5.4.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517"
+                "reference": "7ffc1ea296ed14bf8260b6ef11b80208dbadba91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/9a06dc570a0367850280eefd3f1dc2da45aef517",
-                "reference": "9a06dc570a0367850280eefd3f1dc2da45aef517",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/7ffc1ea296ed14bf8260b6ef11b80208dbadba91",
+                "reference": "7ffc1ea296ed14bf8260b6ef11b80208dbadba91",
                 "shasum": ""
             },
             "require": {
@@ -5116,13 +5118,13 @@
                 }
             ],
             "description": "Swiftmailer, free feature-rich PHP mailer",
-            "homepage": "http://swiftmailer.org",
+            "homepage": "https://swiftmailer.symfony.com",
             "keywords": [
                 "email",
                 "mail",
                 "mailer"
             ],
-            "time": "2017-05-01T15:54:03+00:00"
+            "time": "2018-01-23T07:37:21+00:00"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -5189,16 +5191,16 @@
         },
         {
             "name": "symfony/polyfill-apcu",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-apcu.git",
-                "reference": "04f62674339602def515bff4bc6901fc1d4951e8"
+                "reference": "e8ae2136ddb53dea314df56fcd88e318ab936c00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/04f62674339602def515bff4bc6901fc1d4951e8",
-                "reference": "04f62674339602def515bff4bc6901fc1d4951e8",
+                "url": "https://api.github.com/repos/symfony/polyfill-apcu/zipball/e8ae2136ddb53dea314df56fcd88e318ab936c00",
+                "reference": "e8ae2136ddb53dea314df56fcd88e318ab936c00",
                 "shasum": ""
             },
             "require": {
@@ -5207,7 +5209,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -5241,20 +5243,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-10-11T12:05:26+00:00"
+            "time": "2018-01-30T19:27:44+00:00"
         },
         {
             "name": "symfony/polyfill-intl-icu",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-icu.git",
-                "reference": "d2bb2ef00dd8605d6fbd4db53ed4af1395953497"
+                "reference": "254919c03761d46c29291616576ed003f10e91c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-icu/zipball/d2bb2ef00dd8605d6fbd4db53ed4af1395953497",
-                "reference": "d2bb2ef00dd8605d6fbd4db53ed4af1395953497",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-icu/zipball/254919c03761d46c29291616576ed003f10e91c1",
+                "reference": "254919c03761d46c29291616576ed003f10e91c1",
                 "shasum": ""
             },
             "require": {
@@ -5267,7 +5269,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -5299,20 +5301,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-10-11T12:05:26+00:00"
+            "time": "2018-01-30T19:27:44+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296"
+                "reference": "78be803ce01e55d3491c1397cf1c64beb9c1b63b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
-                "reference": "2ec8b39c38cb16674bbf3fea2b6ce5bf117e1296",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/78be803ce01e55d3491c1397cf1c64beb9c1b63b",
+                "reference": "78be803ce01e55d3491c1397cf1c64beb9c1b63b",
                 "shasum": ""
             },
             "require": {
@@ -5324,7 +5326,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -5358,20 +5360,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-10-11T12:05:26+00:00"
+            "time": "2018-01-30T19:27:44+00:00"
         },
         {
             "name": "symfony/polyfill-php56",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php56.git",
-                "reference": "265fc96795492430762c29be291a371494ba3a5b"
+                "reference": "ebc999ce5f14204c5150b9bd15f8f04e621409d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/265fc96795492430762c29be291a371494ba3a5b",
-                "reference": "265fc96795492430762c29be291a371494ba3a5b",
+                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/ebc999ce5f14204c5150b9bd15f8f04e621409d8",
+                "reference": "ebc999ce5f14204c5150b9bd15f8f04e621409d8",
                 "shasum": ""
             },
             "require": {
@@ -5381,7 +5383,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -5414,20 +5416,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-10-11T12:05:26+00:00"
+            "time": "2018-01-30T19:27:44+00:00"
         },
         {
             "name": "symfony/polyfill-php70",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php70.git",
-                "reference": "0442b9c0596610bd24ae7b5f0a6cdbbc16d9fcff"
+                "reference": "3532bfcd8f933a7816f3a0a59682fc404776600f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/0442b9c0596610bd24ae7b5f0a6cdbbc16d9fcff",
-                "reference": "0442b9c0596610bd24ae7b5f0a6cdbbc16d9fcff",
+                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/3532bfcd8f933a7816f3a0a59682fc404776600f",
+                "reference": "3532bfcd8f933a7816f3a0a59682fc404776600f",
                 "shasum": ""
             },
             "require": {
@@ -5437,7 +5439,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -5473,20 +5475,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-10-11T12:05:26+00:00"
+            "time": "2018-01-30T19:27:44+00:00"
         },
         {
             "name": "symfony/polyfill-util",
-            "version": "v1.6.0",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-util.git",
-                "reference": "6e719200c8e540e0c0effeb31f96bdb344b94176"
+                "reference": "e17c808ec4228026d4f5a8832afa19be85979563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/6e719200c8e540e0c0effeb31f96bdb344b94176",
-                "reference": "6e719200c8e540e0c0effeb31f96bdb344b94176",
+                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/e17c808ec4228026d4f5a8832afa19be85979563",
+                "reference": "e17c808ec4228026d4f5a8832afa19be85979563",
                 "shasum": ""
             },
             "require": {
@@ -5495,7 +5497,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
@@ -5525,7 +5527,7 @@
                 "polyfill",
                 "shim"
             ],
-            "time": "2017-10-11T12:05:26+00:00"
+            "time": "2018-01-31T18:08:44+00:00"
         },
         {
             "name": "symfony/swiftmailer-bundle",
@@ -5588,16 +5590,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v3.3.14",
+            "version": "v3.3.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "8e2b473de636a65a018b370d5e88778a260f0e33"
+                "reference": "98e128ccee7afff6313dc3e9cce619f6e1caedbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/8e2b473de636a65a018b370d5e88778a260f0e33",
-                "reference": "8e2b473de636a65a018b370d5e88778a260f0e33",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/98e128ccee7afff6313dc3e9cce619f6e1caedbc",
+                "reference": "98e128ccee7afff6313dc3e9cce619f6e1caedbc",
                 "shasum": ""
             },
             "require": {
@@ -5615,7 +5617,6 @@
                 "symfony/polyfill-mbstring": "~1.0",
                 "symfony/polyfill-php56": "~1.0",
                 "symfony/polyfill-php70": "~1.0",
-                "symfony/polyfill-util": "~1.0",
                 "twig/twig": "~1.34|~2.4"
             },
             "conflict": {
@@ -5738,7 +5739,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2017-12-04T22:26:41+00:00"
+            "time": "2018-01-29T11:42:20+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -6179,16 +6180,16 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.7.3",
+            "version": "1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "e4ed002c67da8eceb0eb8ddb8b3847bb53c5c2bf"
+                "reference": "9f901e29c93dae4aa77c0bb161df4276f9c9a1be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/e4ed002c67da8eceb0eb8ddb8b3847bb53c5c2bf",
-                "reference": "e4ed002c67da8eceb0eb8ddb8b3847bb53c5c2bf",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/9f901e29c93dae4aa77c0bb161df4276f9c9a1be",
+                "reference": "9f901e29c93dae4aa77c0bb161df4276f9c9a1be",
                 "shasum": ""
             },
             "require": {
@@ -6200,7 +6201,7 @@
             },
             "require-dev": {
                 "phpspec/phpspec": "^2.5|^3.2",
-                "phpunit/phpunit": "^4.8.35 || ^5.7"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5"
             },
             "type": "library",
             "extra": {
@@ -6238,7 +6239,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-11-24T13:59:53+00:00"
+            "time": "2018-02-11T18:49:29+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6491,16 +6492,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "5.7.25",
+            "version": "5.7.27",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4b1c822a68ae6577df38a59eb49b046712ec0f6a"
+                "reference": "b7803aeca3ccb99ad0a506fa80b64cd6a56bbc0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4b1c822a68ae6577df38a59eb49b046712ec0f6a",
-                "reference": "4b1c822a68ae6577df38a59eb49b046712ec0f6a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b7803aeca3ccb99ad0a506fa80b64cd6a56bbc0c",
+                "reference": "b7803aeca3ccb99ad0a506fa80b64cd6a56bbc0c",
                 "shasum": ""
             },
             "require": {
@@ -6524,7 +6525,7 @@
                 "sebastian/global-state": "^1.1",
                 "sebastian/object-enumerator": "~2.0",
                 "sebastian/resource-operations": "~1.0",
-                "sebastian/version": "~1.0.3|~2.0",
+                "sebastian/version": "^1.0.6|^2.0.1",
                 "symfony/yaml": "~2.1|~3.0|~4.0"
             },
             "conflict": {
@@ -6569,7 +6570,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-11-14T14:50:51+00:00"
+            "time": "2018-02-01T05:50:59+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -7145,16 +7146,16 @@
         },
         {
             "name": "symfony/phpunit-bridge",
-            "version": "v3.4.1",
+            "version": "v3.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "9ecf83a2628b4668f02e680f65357c62600749fc"
+                "reference": "6a65b09b666f975dd70ec2bb9e9b1a87dbb02aca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/9ecf83a2628b4668f02e680f65357c62600749fc",
-                "reference": "9ecf83a2628b4668f02e680f65357c62600749fc",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/6a65b09b666f975dd70ec2bb9e9b1a87dbb02aca",
+                "reference": "6a65b09b666f975dd70ec2bb9e9b1a87dbb02aca",
                 "shasum": ""
             },
             "require": {
@@ -7174,6 +7175,10 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.4-dev"
+                },
+                "thanks": {
+                    "name": "phpunit/phpunit",
+                    "url": "https://github.com/sebastianbergmann/phpunit"
                 }
             },
             "autoload": {
@@ -7203,20 +7208,20 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-12-04T20:23:06+00:00"
+            "time": "2018-01-21T19:05:02+00:00"
         },
         {
             "name": "webmozart/assert",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozart/assert.git",
-                "reference": "2db61e59ff05fe5126d152bd0655c9ea113e550f"
+                "reference": "0df1908962e7a3071564e857d86874dad1ef204a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/2db61e59ff05fe5126d152bd0655c9ea113e550f",
-                "reference": "2db61e59ff05fe5126d152bd0655c9ea113e550f",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/0df1908962e7a3071564e857d86874dad1ef204a",
+                "reference": "0df1908962e7a3071564e857d86874dad1ef204a",
                 "shasum": ""
             },
             "require": {
@@ -7253,7 +7258,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:58+00:00"
+            "time": "2018-01-29T19:49:41+00:00"
         }
     ],
     "aliases": [],
