@@ -58,12 +58,12 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
      *
      * @param bool           $useMaster
      * @param string|DbQuery $sql
-     * @param bool           $use_cache
+     * @param bool           $useCache
      *
      * @return string|false|null
      */
-    public function getValue($useMaster, $sql, $use_cache = true)
+    public function getValue($useMaster, $sql, $useCache = true)
     {
-        return Db::getInstance($useMaster)->getValue($sql, $use_cache);
+        return Db::getInstance($useMaster)->getValue($sql, $useCache);
     }
 }
