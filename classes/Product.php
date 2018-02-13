@@ -1415,7 +1415,7 @@ class ProductCore extends ObjectModel
             return false;
         }
 
-	Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
+        Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 
         return $id_product_attribute;
     }
