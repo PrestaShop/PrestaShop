@@ -12,7 +12,7 @@ if (isset($_POST['submit'])) {
 
     if (isset($_GET['fldr'])
         && !empty($_GET['fldr'])
-        && preg_match('/\.{1,2}[\/|\\\]/', urldecode($_GET['fldr'])) === 0
+        && preg_match('/\.{1,2}[\/|\\\]?/', urldecode($_GET['fldr'])) === 0
     ) {
         $subdir = str_replace("\0", '', urldecode(trim($_GET['fldr'], '/').'/'));
     } else {
