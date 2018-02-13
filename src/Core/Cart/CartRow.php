@@ -44,6 +44,8 @@ class CartRow
     const ROUND_MODE_LINE  = 'line';
     const ROUND_MODE_TOTAL = 'total';
 
+    const PRODUCT_PRICE_CACHE_ID_PATTERN = "Product::getPriceStatic_%d-%d";
+
     /**
      * @var PriceCalculator
      */
@@ -251,7 +253,7 @@ class CartRow
 
         $cartQuantity = 0;
         if ((int) $cart->id) {
-            $cacheId = 'Product::getPriceStatic_' . (int) $productId . '-' . (int) $cart->id;
+            $cacheId = sprintf(self::PRODUCT_PRICE_CACHE_ID_PATTERN, (int) $productId, (int) $cart->id);
             if (!$this->cacheAdapter->isStored($cacheId)
                 || ($cartQuantity = $this->cacheAdapter->retrieve($cacheId)
                                     != (int) $quantity)) {
