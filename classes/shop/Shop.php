@@ -1232,4 +1232,22 @@ class ShopCore extends ObjectModel
             ($delete ? ' AND entity.deleted = 0' : '')
         );
     }
+
+    /**
+     * Check if the store has more than one root category
+     *
+     * @return bool -return true if the store has more than one root category
+     */
+    public function hasManyRootCategories()
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(`id_category`)
+            FROM `' . _DB_PREFIX_ . 'category`
+            WHERE `active` = 1 
+            AND `is_root_category` = 1',
+            false
+        );
+
+        return ($result > 1);
+    }
 }

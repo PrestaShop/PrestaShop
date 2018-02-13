@@ -474,6 +474,11 @@ class AdminCategoriesControllerCore extends AdminController
         }
 
         $thumb_size = file_exists($thumb) ? filesize($thumb) / 1000 : false;
+        $sohpsList = Shop::getContextListShopID();
+        $hasManyRootCategories = (
+            (is_array($sohpsList) && sizeof($sohpsList) > 1)
+            && $context->shop->hasManyRootCategories()
+        );
 
         $this->fields_form = array(
             'tinymce' => true,
@@ -518,7 +523,7 @@ class AdminCategoriesControllerCore extends AdminController
                         'id'                  => 'categories-tree',
                         'selected_categories' => $selected_categories,
                         'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null,
-                        'root_category'       => $context->shop->getCategory()
+                        'root_category'       => $hasManyRootCategories ? Configuration::get('PS_ROOT_CATEGORY') : $context->shop->getCategory()
                     )
                 ),
                 array(
