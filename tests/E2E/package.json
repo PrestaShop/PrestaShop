@@ -8,7 +8,8 @@
     "start-selenium": "node_modules/selenium-standalone/bin/selenium-standalone start",
     "high-test": "node_modules/mocha/bin/mocha test/campaigns/high/*",
     "regular-test": "node_modules/mocha/bin/mocha test/campaigns/regular/*",
-    "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$path"
+    "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$path",
+    "concat-files-report": "cd email_sender && ../node_modules/gulp-cli/bin/gulp.js"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,10 @@
     "chai": "^4.1.2",
     "chai-string": "^1.4.0",
     "dateformat": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
     "mochawesome": "^2.3.0",
     "nodemailer": "^4.0.1",
     "pdf-to-text": "0.0.6",
