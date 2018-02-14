@@ -123,11 +123,11 @@ class LocaleData
 
         if (isset($localeData->numberSymbols)) {
             foreach ($localeData->numberSymbols as $numberingSystem => $symbolsData) {
-                if (!isset($this->numberingSystems[$numberingSystem])) {
-                    $this->numberingSystems[$numberingSystem] = $symbolsData;
+                if (!isset($this->numberSymbols[$numberingSystem])) {
+                    $this->numberSymbols[$numberingSystem] = $symbolsData;
                     continue;
                 }
-                $this->numberingSystems[$numberingSystem]->override($symbolsData);
+                $this->numberSymbols[$numberingSystem]->override($symbolsData);
             }
         }
 
