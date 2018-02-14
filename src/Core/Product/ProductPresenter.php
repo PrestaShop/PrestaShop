@@ -433,7 +433,7 @@ class ProductPresenter
 
         $presentedProduct['show_availability'] = $show_availability;
 
-        if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
+        if (isset($product['available_date']) && date('Y-m-d') > $product['available_date']) {
             $product['available_date'] = null;
         }
 
@@ -476,6 +476,10 @@ class ProductPresenter
             $presentedProduct['availability_message'] = null;
             $presentedProduct['availability_date'] = null;
             $presentedProduct['availability'] = null;
+        }
+
+        if ($presentedProduct['availability_date'] < date('Y-m-d')) {
+            
         }
 
         return $presentedProduct;
