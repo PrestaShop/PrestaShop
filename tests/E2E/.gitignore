@@ -3,4 +3,4 @@ node_modules/*
 .idea/*
 **.log
 **/mochawesome-report
-email_sender/test_report_*.html
+email_sender/test_report.html
