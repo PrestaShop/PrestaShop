@@ -307,6 +307,9 @@ class Reader implements ReaderInterface
      *
      * @return LocaleData
      *  The mapped locale data
+     *
+     * @todo use root aliases to fill up missing values (e.g.: missing symbols for exotic numbering systems).
+     * @see  http://cldr.unicode.org/development/development-process/design-proposals/resolution-of-cldr-files
      */
     protected function mapLocaleData(SimplexmlElement $xmlLocaleData, $supplementalData)
     {
@@ -339,52 +342,57 @@ class Reader implements ReaderInterface
         }
         // Symbols (by numbering system)
         if (isset($numbersData->symbols)) {
-            foreach ($numbersData->symbols as $symbol) {
+            foreach ($numbersData->symbols as $symbolsNode) {
+                if (isset($symbolsNode->alias)) {
+                    // TODO here is the alias pointing to the data to be used for this specific numbering system (xpath)
+                    // @see <project root>/localization/CLDR/core/common/main/root.xml
+                    continue;
+                }
                 $symbolsList = new NumberSymbolsData();
-                if (isset($symbol->decimal)) {
-                    $symbolsList->decimal = (string)$symbol->decimal;
+                if (isset($symbolsNode->decimal)) {
+                    $symbolsList->decimal = (string)$symbolsNode->decimal;
                 }
-                if (isset($symbol->group)) {
-                    $symbolsList->group = (string)$symbol->group;
+                if (isset($symbolsNode->group)) {
+                    $symbolsList->group = (string)$symbolsNode->group;
                 }
-                if (isset($symbol->list)) {
-                    $symbolsList->list = (string)$symbol->list;
+                if (isset($symbolsNode->list)) {
+                    $symbolsList->list = (string)$symbolsNode->list;
                 }
-                if (isset($symbol->percentSign)) {
-                    $symbolsList->percentSign = (string)$symbol->percentSign;
+                if (isset($symbolsNode->percentSign)) {
+                    $symbolsList->percentSign = (string)$symbolsNode->percentSign;
                 }
-                if (isset($symbol->minusSign)) {
-                    $symbolsList->minusSign = (string)$symbol->minusSign;
+                if (isset($symbolsNode->minusSign)) {
+                    $symbolsList->minusSign = (string)$symbolsNode->minusSign;
                 }
-                if (isset($symbol->plusSign)) {
-                    $symbolsList->plusSign = (string)$symbol->plusSign;
+                if (isset($symbolsNode->plusSign)) {
+                    $symbolsList->plusSign = (string)$symbolsNode->plusSign;
                 }
-                if (isset($symbol->exponential)) {
-                    $symbolsList->exponential = (string)$symbol->exponential;
+                if (isset($symbolsNode->exponential)) {
+                    $symbolsList->exponential = (string)$symbolsNode->exponential;
                 }
-                if (isset($symbol->superscriptingExponent)) {
-                    $symbolsList->superscriptingExponent = (string)$symbol->superscriptingExponent;
+                if (isset($symbolsNode->superscriptingExponent)) {
+                    $symbolsList->superscriptingExponent = (string)$symbolsNode->superscriptingExponent;
                 }
-                if (isset($symbol->perMille)) {
-                    $symbolsList->perMille = (string)$symbol->perMille;
+                if (isset($symbolsNode->perMille)) {
+                    $symbolsList->perMille = (string)$symbolsNode->perMille;
                 }
-                if (isset($symbol->infinity)) {
-                    $symbolsList->infinity = (string)$symbol->infinity;
+                if (isset($symbolsNode->infinity)) {
+                    $symbolsList->infinity = (string)$symbolsNode->infinity;
                 }
-                if (isset($symbol->nan)) {
-                    $symbolsList->nan = (string)$symbol->nan;
+                if (isset($symbolsNode->nan)) {
+                    $symbolsList->nan = (string)$symbolsNode->nan;
                 }
-                if (isset($symbol->timeSeparator)) {
-                    $symbolsList->timeSeparator = (string)$symbol->timeSeparator;
+                if (isset($symbolsNode->timeSeparator)) {
+                    $symbolsList->timeSeparator = (string)$symbolsNode->timeSeparator;
                 }
-                if (isset($symbol->currencyDecimal)) {
-                    $symbolsList->currencyDecimal = (string)$symbol->currencyDecimal;
+                if (isset($symbolsNode->currencyDecimal)) {
+                    $symbolsList->currencyDecimal = (string)$symbolsNode->currencyDecimal;
                 }
-                if (isset($symbol->currencyGroup)) {
-                    $symbolsList->currencyGroup = (string)$symbol->currencyGroup;
+                if (isset($symbolsNode->currencyGroup)) {
+                    $symbolsList->currencyGroup = (string)$symbolsNode->currencyGroup;
                 }
 
-                $localeData->numberSymbols[(string)$symbol['numberSystem']] = $symbolsList;
+                $localeData->numberSymbols[(string)$symbolsNode['numberSystem']] = $symbolsList;
             }
         }
         // Decimal patterns (by numbering system)
