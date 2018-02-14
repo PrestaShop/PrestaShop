@@ -478,10 +478,6 @@ class ProductPresenter
             $presentedProduct['availability'] = null;
         }
 
-        if ($presentedProduct['availability_date'] < date('Y-m-d')) {
-            
-        }
-
         return $presentedProduct;
     }
 
