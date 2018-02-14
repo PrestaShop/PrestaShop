@@ -322,6 +322,7 @@ class SpecificPriceCore extends ObjectModel
             $ending = $now;
         }
         $id_customer = (int)$id_customer;
+        $id_cart = (int)$id_cart;
 
         $query_extra = '';
 
