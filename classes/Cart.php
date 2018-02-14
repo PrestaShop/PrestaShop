@@ -3038,7 +3038,7 @@ class CartCore extends ObjectModel
             $this->id_carrier = $this->getIdCarrierFromDeliveryOption($delivery_option);
         }
 
-        $this->delivery_option = serialize($delivery_option);
+        $this->delivery_option = json_encode($delivery_option);
     }
 
     /**
@@ -3084,7 +3084,7 @@ class CartCore extends ObjectModel
 
         // The delivery option was selected
         if (isset($this->delivery_option) && $this->delivery_option != '') {
-            $delivery_option = Tools::unSerialize($this->delivery_option);
+            $delivery_option = json_decode($this->delivery_option, true);
             $validated = true;
             foreach ($delivery_option as $id_address => $key) {
                 if (!isset($delivery_option_list[$id_address][$key])) {
