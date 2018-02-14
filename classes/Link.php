@@ -759,7 +759,7 @@ class LinkCore
         }
 
         $idLang = Context::getContext()->language->id;
-        
+
         return '/'.basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params, false);
     }
 
