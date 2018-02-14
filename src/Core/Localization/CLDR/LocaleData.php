@@ -40,7 +40,7 @@ class LocaleData
      * List of available numbering systems
      * Array of strings (codes)
      *
-     * @var array
+     * @var string[]
      */
     public $numberingSystems;
 
@@ -72,7 +72,7 @@ class LocaleData
      * Collection of all available decimal patterns (by numbering system)
      * Array of strings (patterns)
      *
-     * @var array
+     * @var string[]
      */
     public $decimalPatterns;
 
@@ -80,7 +80,7 @@ class LocaleData
      * Collection of all available percent patterns (by numbering system)
      * Array of strings (patterns)
      *
-     * @var array
+     * @var string[]
      */
     public $percentPatterns;
 
@@ -88,18 +88,67 @@ class LocaleData
      * Collection of all available currency patterns (by numbering system)
      * Array of strings (patterns)
      *
-     * @var array
+     * @var string[]
      */
     public $currencyPatterns;
 
     /**
-     * Parent locale code.
+     * Override this object's data with another LocaleData object
      *
-     * This code can be an IETF tag, an ISO 639-1 language code or a specific code used in CLDR to identify special
-     * "parent" locale data files (eg: en_CH parent data will be found in en_150.xml instead of regular en.xml).
-     * Parent locale is used when some data is not found in current locale.
+     * @param LocaleData $localeData
+     *  Locale data to use for the override
      *
-     * @var string
+     * @return $this
+     *  Fluent interface
      */
-    public $parentLocale;
+    public function overrideWith(LocaleData $localeData)
+    {
+        if (isset($localeData->localeCode)) {
+            $this->localeCode = $localeData->localeCode;
+        }
+
+        if (isset($localeData->numberingSystems)) {
+            foreach ($localeData->numberingSystems as $name => $value) {
+                $this->numberingSystems[$name] = $value;
+            }
+        }
+
+        if (isset($localeData->defaultNumberingSystem)) {
+            $this->defaultNumberingSystem = $localeData->defaultNumberingSystem;
+        }
+
+        if (isset($localeData->minimumGroupingDigits)) {
+            $this->minimumGroupingDigits = $localeData->minimumGroupingDigits;
+        }
+
+        if (isset($localeData->numberSymbols)) {
+            foreach ($localeData->numberSymbols as $numberingSystem => $symbolsData) {
+                if (!isset($this->numberingSystems[$numberingSystem])) {
+                    $this->numberingSystems[$numberingSystem] = $symbolsData;
+                    continue;
+                }
+                $this->numberingSystems[$numberingSystem]->override($symbolsData);
+            }
+        }
+
+        if (isset($localeData->decimalPatterns)) {
+            foreach ($localeData->decimalPatterns as $numberingSystem => $pattern) {
+                $this->decimalPatterns[$numberingSystem] = $pattern;
+            }
+        }
+
+        if (isset($localeData->percentPatterns)) {
+            foreach ($localeData->percentPatterns as $numberingSystem => $pattern) {
+                $this->percentPatterns[$numberingSystem] = $pattern;
+            }
+        }
+
+        if (isset($localeData->currencyPatterns)) {
+            foreach ($localeData->currencyPatterns as $numberingSystem => $pattern) {
+                $this->currencyPatterns[$numberingSystem] = $pattern;
+            }
+        }
+
+        return $this;
+    }
 }

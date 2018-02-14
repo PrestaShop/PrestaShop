@@ -153,4 +153,74 @@ class NumberSymbolsData
      * @var string
      */
     public $currencyGroup;
+
+    /**
+     * Override this object's symbols with another NumberSymbolsData object
+     *
+     * @param NumberSymbolsData $symbolsData
+     *  Symbols to use for the override
+     *
+     * @return $this
+     *  Fluent interface
+     */
+    public function override(NumberSymbolsData $symbolsData)
+    {
+        if (isset($symbolsData->decimal)) {
+            $this->decimal = $symbolsData->decimal;
+        }
+
+        if (isset($symbolsData->group)) {
+            $this->group = $symbolsData->group;
+        }
+
+        if (isset($symbolsData->list)) {
+            $this->list = $symbolsData->list;
+        }
+
+        if (isset($symbolsData->percentSign)) {
+            $this->percentSign = $symbolsData->percentSign;
+        }
+
+        if (isset($symbolsData->minusSign)) {
+            $this->minusSign = $symbolsData->minusSign;
+        }
+
+        if (isset($symbolsData->plusSign)) {
+            $this->plusSign = $symbolsData->plusSign;
+        }
+
+        if (isset($symbolsData->exponential)) {
+            $this->exponential = $symbolsData->exponential;
+        }
+
+        if (isset($symbolsData->superscriptingExponent)) {
+            $this->superscriptingExponent = $symbolsData->superscriptingExponent;
+        }
+
+        if (isset($symbolsData->perMille)) {
+            $this->perMille = $symbolsData->perMille;
+        }
+
+        if (isset($symbolsData->infinity)) {
+            $this->infinity = $symbolsData->infinity;
+        }
+
+        if (isset($symbolsData->nan)) {
+            $this->nan = $symbolsData->nan;
+        }
+
+        if (isset($symbolsData->timeSeparator)) {
+            $this->timeSeparator = $symbolsData->timeSeparator;
+        }
+
+        if (isset($symbolsData->currencyDecimal)) {
+            $this->currencyDecimal = $symbolsData->currencyDecimal;
+        }
+
+        if (isset($symbolsData->currencyGroup)) {
+            $this->currencyGroup = $symbolsData->currencyGroup;
+        }
+
+        return $this;
+    }
 }

@@ -77,14 +77,14 @@ class Reader implements ReaderInterface
         $this->validateLocaleCode($localeCode);
         $this->initSupplementalData();
 
-        $localeData = new LocaleData();
-        $lookup     = $this->buildLookup($localeCode);
+        $finalData = new LocaleData();
+        $lookup    = $this->getLookup($localeCode);
         foreach ($lookup as $thisLocaleCode) {
             $partialData = $this->getLocaleData($thisLocaleCode);
-            $localeData  = $this->overrideData($localeData, $partialData); // TODO how should we do this ?
+            $finalData   = $finalData->overrideWith($partialData);
         }
 
-        return $localeData;
+        return $finalData;
     }
 
     /**
@@ -99,7 +99,7 @@ class Reader implements ReaderInterface
      * @throws LocalizationException
      *  When locale code is invalid
      */
-    public function validateLocaleCode($localeCode)
+    protected function validateLocaleCode($localeCode)
     {
         if (!preg_match('#^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)*$#', $localeCode)) {
             throw new LocalizationException('Invalid locale code');
@@ -147,7 +147,7 @@ class Reader implements ReaderInterface
      *
      * @see http://www.unicode.org/reports/tr35/tr35.html#Lookup
      */
-    protected function buildLookup($localeCode)
+    protected function getLookup($localeCode)
     {
         $lookup = [$localeCode];
 
