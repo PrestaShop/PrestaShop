@@ -1,15 +1,20 @@
 # PrestaShop Functional Tests
 ## Summary
-These tests are running using the awesome **[mocha](https://mochajs.org/)** test runner, using the **[chai](http://chaijs.com/)** assertions framework with the expect syntax.
-They are using also **[webdriver.io](http://webdriver.io/)** that allows you to perform almost any action a browser would do using a fluent promise-based API.
-Until we can do more documentation, please have a look at the existing tests and at the **[WebDriver.io](http://webdriver.io/api.html)** API.
+PrestaShop functional end2end tests are based on the following stack:
+* [mocha](https://mochajs.org/)
+* [chai](http://chaijs.com/)
+* [webdriver.io](http://webdriver.io/)
+* [selenium](http://www.seleniumhq.org/)
+* [PageObject pattern](https://martinfowler.com/bliki/PageObject.html)
 
 ## Requirements 
+### Software needed
 To run these tests you have to install
 * [node.js](https://nodejs.org/en/download/)
 * [npm](https://www.npmjs.com/get-npm)
 * [java](https://java.com/fr/download/)
-* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html?brand=CHBD&gclid=EAIaIQobChMIva2UgZTN2AIVjjgbCh2kcA9MEAAYASAAEgKC8fD_BwE)
+* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+* [mysql](https://www.mysql.com)
 * poppler-utils for Ubuntu users
 > Note:
 > To install poppler-utils execute:
@@ -20,35 +25,65 @@ To run these tests you have to install
 > brew install xpdf
 
 
-## How to run the tests
-To use the following test suites, you need to install PrestaShop in **English** with setting country to **France** (or you may change some assertions like the separator “,” or “.”, “€” or “$” or “£” or …) You need to create a user in Back Office with **SuperAdmin** rights and the following information:
-
+### PrestaShop
+* Prestashop with the following requirements:
+- Installation in **English** with setting country to **France** (or you may change some assertions like the separator “,” or “.”, “€” or “$” or “£” or …) 
+- A user in Back Office with **SuperAdmin** rights and the following information:
 * **Login**: demo@prestashop.com
 * **Password**: prestashop_demo
 
-### Package install
+This command line does it for you (you need a mysql user presta:presta with the right to create a database on localhost)
+```
+php install/index_cli.php --language=en --country=fr --domain=localhost --db_server=localhostr --db_user=presta --db_name=presta --db_password=presta --firstname=Foo --lastname=Bar --email=demo@prestashop.com --password=prestashop_demo --db_create=1
+```
+> Note:
+> Or you can run the installation script via the npm script specific-test
+
+
+### npm dependencies
 
 To install npm dependencies, selenium-server, chromedriver and geckodriver you have to run this command on the root directory of the functional tests
 ```
-➜  cd tests/E2E
-➜  npm install
+cd tests/E2E
+npm install
 ```
+## How to run the tests
+You will need two shell windows, one to run selenium, one to run the tests.
 
 ### Launch selenium-standalone
 
 Then you have to launch selenium-standalone 
 ```
-➜  npm run start-selenium
+npm run start-selenium
 ```
 
-Expected
+Wait until you see:
 
 ```
 ...
 Selenium started
 ```
 
+### Check it is working
+
+```
+npm run sanity-check
+```
+
 ### Launch test suite
+
+#### Regular tests
+If you want to run only the most important partial configuration tests you can run the campaign **Regular**
+```
+npm run test -- --URL=FrontOfficeURL
+```
+If you want to launch installation before running tests you have to add your database parameters :
+
+```
+npm run regular-test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser --MODULE=DataTechNameModule
+```
+ 
+
 #### Specific test
 If you want to run test only on specific parts (for example products), you have to run this command:
 
@@ -63,7 +98,7 @@ If you want to run test only on specific parts (for example products), you have 
 >If you have run only the 13_installation/1_installation_language_equal_to_country.js you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
 
 #### High tests
-If you want to run only the high level and full configuration tests you can run the campaign **High**
+If you want to run the high level and full configuration tests you can run the campaign **High**
 
 ```
 ➜ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName
@@ -81,12 +116,6 @@ If you want to run only the high level and full configuration tests you can run 
 * **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to extract the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
 * **FILENAME**: **(Optional)** RC file name this parameter must be mentioned if the (RCLINK) option is not indicated
 * **HEADLESS**: **(Optional)** Set it to true to run tests in headless mode (default to false) (This option will not work perfectly if your chrome version is under 62.0.3175.0, especially for category, attribute and feature)
-
-#### Regular tests
-If you want to run only the most important partial configuration tests you can run the campaign **Regular**
-```
-➜ npm run regular-test -- --URL=FrontOfficeURL --MODULE=DataTechNameModule --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser
-```
 
 >Notes:
 >1) if you are running high/01_order you must set the **DIR** option
