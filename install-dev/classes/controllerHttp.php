@@ -386,7 +386,7 @@ class InstallControllerHttp
     public function getTailoredHelp()
     {
         /* Link to support on addons */
-        return $this->translator->trans('http://addons.prestashop.com/en/388-support', array(), 'Install');
+        return $this->translator->trans('https://addons.prestashop.com/en/388-support', array(), 'Install');
     }
 
     /**

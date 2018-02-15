@@ -67,7 +67,7 @@
 				{l s='Forum' d='Admin.Navigation.Footer'}
 			</a>
 			/&nbsp;
-			<a href="http://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+			<a href="https://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
 				<i class="icon-puzzle-piece"></i>
 				{l s='Addons' d='Admin.Navigation.Footer'}
 			</a>
