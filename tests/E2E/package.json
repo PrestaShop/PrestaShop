@@ -7,8 +7,9 @@
     "install": "node_modules/selenium-standalone/bin/selenium-standalone install",
     "start-selenium": "node_modules/selenium-standalone/bin/selenium-standalone start",
     "high-test": "node_modules/mocha/bin/mocha test/campaigns/high/*",
-    "regular-test": "node_modules/mocha/bin/mocha test/campaigns/regular/*",
+    "test": "node_modules/mocha/bin/mocha test/campaigns/regular/*",
     "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$path",
+    "sanity-check": "curl http://localhost:4444/wd/hub/status | json_pp ",
     "concat-files-report": "cd email_sender && ../node_modules/gulp-cli/bin/gulp.js"
   },
   "repository": {
