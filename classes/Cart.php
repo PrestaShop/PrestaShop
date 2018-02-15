@@ -3086,16 +3086,20 @@ class CartCore extends ObjectModel
         if (isset($this->delivery_option) && $this->delivery_option != '') {
             $delivery_option = json_decode($this->delivery_option, true);
             $validated = true;
-            foreach ($delivery_option as $id_address => $key) {
-                if (!isset($delivery_option_list[$id_address][$key])) {
-                    $validated = false;
-                    break;
-                }
-            }
 
-            if ($validated) {
-                $cache[$cache_id] = $delivery_option;
-                return $delivery_option;
+            if (is_array($delivery_option)) {
+                foreach ($delivery_option as $id_address => $key) {
+                    if (!isset($delivery_option_list[$id_address][$key])) {
+                        $validated = false;
+                        break;
+                    }
+                }
+
+                if ($validated) {
+                    $cache[$cache_id] = $delivery_option;
+
+                    return $delivery_option;
+                }
             }
         }
 
