@@ -36,6 +36,8 @@ class Reader implements ReaderInterface
     const CLDR_MAIN         = 'localization/CLDR/core/common/main/';
     const CLDR_SUPPLEMENTAL = 'localization/CLDR/core/common/supplemental/';
 
+    const CLDR_ROOT_LOCALE = 'root';
+
     const SUPPL_DATA_CURRENCY       = 'currencyData';
     const SUPPL_DATA_LANGUAGE       = 'languageData';
     const SUPPL_DATA_NUMBERING      = 'numberingSystems';
@@ -74,7 +76,7 @@ class Reader implements ReaderInterface
         // CLDR filenames use a different notation from IETF.
         $localeCode = str_replace('-', '_', $localeCode);
 
-        $this->validateLocaleCode($localeCode);
+        $this->validateLocaleCodeForFilenames($localeCode);
         $this->initSupplementalData();
 
         $finalData = new LocaleData();
@@ -90,7 +92,7 @@ class Reader implements ReaderInterface
     /**
      * Validate a locale code
      *
-     * If the passed code doesn't respect the IETF locale tag notation, an exception will be raised
+     * If the passed code doesn't respect the CLDR files naming style, an exception will be raised
      * eg : "fr_FR" and "en_001" are valid
      *
      * @param $localeCode
@@ -99,7 +101,7 @@ class Reader implements ReaderInterface
      * @throws LocalizationException
      *  When locale code is invalid
      */
-    protected function validateLocaleCode($localeCode)
+    protected function validateLocaleCodeForFilenames($localeCode)
     {
         if (!preg_match('#^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)*$#', $localeCode)) {
             throw new LocalizationException('Invalid locale code');
@@ -173,7 +175,7 @@ class Reader implements ReaderInterface
     protected function getParentLocale($localeCode)
     {
         // root is the... root of all CLDR locales' data. Then no parent.
-        if ('root' == $localeCode) {
+        if (self::CLDR_ROOT_LOCALE == $localeCode) {
             return null;
         }
 
@@ -197,7 +199,7 @@ class Reader implements ReaderInterface
         }
 
         // The "top level" case. When only language code is left in $localeCode : 'en', 'fr'... then parent is "root".
-        return 'root';
+        return self::CLDR_ROOT_LOCALE;
     }
 
     /**
@@ -630,12 +632,12 @@ class Reader implements ReaderInterface
      */
     protected function extractParentLocale(SimplexmlElement $parentLocaleXmlData, $localeTag)
     {
-        if ('root' === $localeTag) {
+        if (self::CLDR_ROOT_LOCALE === $localeTag) {
             return null;
         }
         $parts = $this->getLocaleParts($localeTag);
         if (empty($parts['region'])) {
-            return 'root';
+            return self::CLDR_ROOT_LOCALE;
         }
         $code    = $parts['language'] . '_' . $parts['region'];
         $results = $parentLocaleXmlData->xpath("//parentLocale[contains(@locales, '$code')]");
