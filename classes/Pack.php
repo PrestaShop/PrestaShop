@@ -158,8 +158,8 @@ class PackCore extends Product
     /**
      * Is the pack in stock and his associated products?
      *
-     * @param mixed $id_product
-     * @param mixed $wantedQuantity
+     * @param int|null $id_product
+     * @param int|null $wantedQuantity
      * @return bool
      */
     public static function isInStock($id_product, $wantedQuantity = null)
