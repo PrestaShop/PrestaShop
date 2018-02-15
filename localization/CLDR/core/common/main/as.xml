@@ -1,0 +1,4719 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
+<!-- Copyright © 1991-2017 Unicode, Inc.
+For terms of use, see http://www.unicode.org/copyright.html
+Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
+CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
+
+Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/ for derived annotations.
+-->
+<ldml>
+	<identity>
+		<version number="$Revision: 13705 $"/>
+		<language type="as"/>
+	</identity>
+	<localeDisplayNames>
+		<localeDisplayPattern>
+			<localePattern>{0} ({1})</localePattern>
+			<localeSeparator>{0}, {1}</localeSeparator>
+			<localeKeyTypePattern>{0}: {1}</localeKeyTypePattern>
+		</localeDisplayPattern>
+		<languages>
+			<language type="as">অসমীয়া</language>
+			<language type="es_419">লেটিন আমেৰিকান স্পেনিচ</language>
+			<language type="ie" draft="unconfirmed">উপস্থাপন ভাষা</language>
+			<language type="km" draft="unconfirmed">কম্বোডিয়ান</language>
+		</languages>
+		<scripts>
+			<script type="Beng">বঙালী</script>
+		</scripts>
+		<territories>
+			<territory type="053">অস্ট্রেলেশিয়া</territory>
+			<territory type="054">ম্যালেনেশিয়া</territory>
+			<territory type="057">মাইক্রোনেশিয়ান অঞ্চল (অনুবাদ সংকেত: সতর্কতা, ডানদিকে তথ্য প্যানেল দেখুন।)</territory>
+			<territory type="AC">অ্যাসেনশন আইল্যান্ড</territory>
+			<territory type="AD">এ্যান্ডোরা</territory>
+			<territory type="AE">UAE</territory>
+			<territory type="AF">আফগানিস্তান</territory>
+			<territory type="AI">এ্যাঙ্গুইলা</territory>
+			<territory type="AL">আল্বেনিয়া</territory>
+			<territory type="AM">আরমেনিয়া</territory>
+			<territory type="AO">অ্যাঙ্গোলা</territory>
+			<territory type="AQ">এন্টাৰ্টিকা</territory>
+			<territory type="AR">আর্জিণ্টিনা</territory>
+			<territory type="AS">আমেরিকান সামোয়া</territory>
+			<territory type="AT">অস্ট্রিয়া</territory>
+			<territory type="AU">অস্ট্রেলিয়া</territory>
+			<territory type="AX">আলে্যান্ড দ্বীপপুঞ্জ</territory>
+			<territory type="AZ">আজেরবাইজান</territory>
+			<territory type="BA">বসনিয়া ও হারজেগোভিনা</territory>
+			<territory type="BD">বাংলাদেশ</territory>
+			<territory type="BE">বেলজিয়াম</territory>
+			<territory type="BF">বুর্কিনা ফাসো</territory>
+			<territory type="BG">বুলগেরিয়া</territory>
+			<territory type="BH">বাহরাইন</territory>
+			<territory type="BI">বুরুন্ডি</territory>
+			<territory type="BJ">বেনিন</territory>
+			<territory type="BN">ব্রুনেই</territory>
+			<territory type="BO">বোলিভিয়া</territory>
+			<territory type="BR">ব্রাজিল</territory>
+			<territory type="BT">ভুটান</territory>
+			<territory type="BV">বভেট দ্বীপ</territory>
+			<territory type="BW">বোট্স্বানা</territory>
+			<territory type="BY">বেলারুশ</territory>
+			<territory type="CC">কোকোস (কিলিং) দ্বীপপুঞ্জ</territory>
+			<territory type="CD">কঙ্গো - কিনসাসা</territory>
+			<territory type="CD" alt="variant">কঙ্গো (DRC)</territory>
+			<territory type="CF">মধ্য আফ্রিকান প্রজাতন্ত্র</territory>
+			<territory type="CG">কঙ্গো - ব্রাজাভিল</territory>
+			<territory type="CG" alt="variant">কঙ্গো (প্রজাতন্ত্র)</territory>
+			<territory type="CH">সুইজর্লণ্ড</territory>
+			<territory type="CI">আইভরি কোস্ট</territory>
+			<territory type="CK">কুক দ্বীপপুঞ্জ</territory>
+			<territory type="CL">চিলি</territory>
+			<territory type="CM">ক্যামেরুন</territory>
+			<territory type="CN">চীন</territory>
+			<territory type="CO">কলোমবিয়া</territory>
+			<territory type="CP">ক্লিপারটন দ্বীপ</territory>
+			<territory type="CV">কেপ ভার্দে</territory>
+			<territory type="CX">ক্রিস্টমাস দ্বীপ</territory>
+			<territory type="CY">সাইপ্রাসদ্বিপ</territory>
+			<territory type="CZ" alt="variant">চেক প্রজাতন্ত্র</territory>
+			<territory type="DE">জাৰ্মানি</territory>
+			<territory type="DG">দিয়েগো গার্সিয়া</territory>
+			<territory type="DJ">জিবুতি</territory>
+			<territory type="DK">ডেন্মার্ক্</territory>
+			<territory type="DZ">আলজেরিয়া</territory>
+			<territory type="EA">কিউটা &amp; ম্লিলা</territory>
+			<territory type="EC">ইকোয়াডর</territory>
+			<territory type="EE">এস্তোনিয়াদেশ</territory>
+			<territory type="EG">মিশর</territory>
+			<territory type="EH">পশ্চিম সাহারা</territory>
+			<territory type="ER">ইরিত্রিয়া</territory>
+			<territory type="ES">স্পেন</territory>
+			<territory type="ET">ইথিওপিয়া</territory>
+			<territory type="FI">ফিনল্যাণ্ড</territory>
+			<territory type="FJ">ফিজি</territory>
+			<territory type="FK">ফকল্যান্ড দ্বীপপুঞ্জ</territory>
+			<territory type="FM">মাইক্রোনেশিয়া</territory>
+			<territory type="FO">ফারো দ্বীপপুঞ্জ</territory>
+			<territory type="FR">ফ্ৰান্স</territory>
+			<territory type="GA">গাবোনবাদ্যযন্ত্র</territory>
+			<territory type="GB">সংযুক্ত ৰাজ্য</territory>
+			<territory type="GB" alt="short">যুক্তরাজ্য</territory>
+			<territory type="GE">জর্জিয়া</territory>
+			<territory type="GF">একটি দেশের নাম</territory>
+			<territory type="GG">গেঁজি</territory>
+			<territory type="GH">ঘানা</territory>
+			<territory type="GI">জিব্রালটার</territory>
+			<territory type="GM">গাম্বিয়াদেশ</territory>
+			<territory type="GN">গিনি</territory>
+			<territory type="GQ">নিরক্ষীয় গিনি</territory>
+			<territory type="GR">গ্রীস</territory>
+			<territory type="GS">দক্ষিণ জৰ্জিয়া আৰু দক্ষিণ চেণ্ডৱিচ্‌ দ্বীপপুঞ্জ</territory>
+			<territory type="GU">গুয়াম</territory>
+			<territory type="GW">গিনি-বিসাউ</territory>
+			<territory type="GY">গায়ানা</territory>
+			<territory type="HK">হংকং এসএআর চীন</territory>
+			<territory type="HK" alt="short">হংকং</territory>
+			<territory type="HM">হাৰ্ড দ্বীপ আৰু মেক্‌ডোনাল্ড দ্বীপ</territory>
+			<territory type="HR">ক্রোয়েশিয়া</territory>
+			<territory type="HU">হাঙ্গেরি</territory>
+			<territory type="IC">ক্যানারি দ্বীপপুঞ্জ</territory>
+			<territory type="ID">ইন্দোনেশিয়া</territory>
+			<territory type="IE">আয়ারল্যাণ্ড</territory>
+			<territory type="IL">ইস্রায়েল</territory>
+			<territory type="IM">আইল অফ ম্যান</territory>
+			<territory type="IN">ভারত</territory>
+			<territory type="IO">ব্ৰিটিশ্ব ইণ্ডিয়ান মহাসাগৰৰ অঞ্চল</territory>
+			<territory type="IQ">ইরাক</territory>
+			<territory type="IR">ইরান</territory>
+			<territory type="IS">আইস্ল্যাণ্ড</territory>
+			<territory type="IT">ইটালি</territory>
+			<territory type="JE">জার্সি</territory>
+			<territory type="JO">জর্ডন</territory>
+			<territory type="JP">জাপান</territory>
+			<territory type="KE">কেনিয়া</territory>
+			<territory type="KG">কিরগিজস্তান</territory>
+			<territory type="KH">কাম্বোজ</territory>
+			<territory type="KI">কিরিবাতি</territory>
+			<territory type="KM">কমোরোস</territory>
+			<territory type="KP">উত্তর কোরিয়া</territory>
+			<territory type="KR">দক্ষিণ কোরিয়া</territory>
+			<territory type="KW">কুয়েত</territory>
+			<territory type="KZ">কাজাকস্থান</territory>
+			<territory type="LA">লাত্তস</territory>
+			<territory type="LB">লেবানন</territory>
+			<territory type="LI">লিচেনস্টেইন</territory>
+			<territory type="LK">শ্রীলংকা</territory>
+			<territory type="LR">লাইবেরিয়া</territory>
+			<territory type="LS">লেসোথো</territory>
+			<territory type="LT">লিত্ভা</territory>
+			<territory type="LU">লাক্সেমবার্গ</territory>
+			<territory type="LV">ল্যাট্ভিআ</territory>
+			<territory type="LY">লিবিয়া</territory>
+			<territory type="MA">মরক্কো</territory>
+			<territory type="MC">মোনাকো</territory>
+			<territory type="MD">মোল্দাভিয়া</territory>
+			<territory type="ME">মন্টিনিগ্রো</territory>
+			<territory type="MG">ম্যাডাগ্যাস্কার</territory>
+			<territory type="MH">মার্শাল দ্বীপপুঞ্জ</territory>
+			<territory type="MK">ম্যাসাডোনিয়া</territory>
+			<territory type="ML">মালি</territory>
+			<territory type="MM">মায়ানমার (বার্মা)</territory>
+			<territory type="MN">মঙ্গোলিআ</territory>
+			<territory type="MO">ম্যাকাও এসএআর চীন</territory>
+			<territory type="MO" alt="short">ম্যাকা</territory>
+			<territory type="MP">উত্তর মারিয়ানা দ্বীপপুঞ্জ</territory>
+			<territory type="MR">মরিতানিয়া</territory>
+			<territory type="MT">মালটা</territory>
+			<territory type="MU">মরিশাস</territory>
+			<territory type="MV">মালদ্বীপ</territory>
+			<territory type="MW">মালাউই</territory>
+			<territory type="MY">মাল্যাশিয়া</territory>
+			<territory type="MZ">মোজাম্বিক</territory>
+			<territory type="NA">নামিবিয়া</territory>
+			<territory type="NC">নতুন ক্যালেডোনিয়া</territory>
+			<territory type="NE">নাইজারনদী</territory>
+			<territory type="NF">নরফোক দ্বীপ</territory>
+			<territory type="NG">নাইজিরিয়াদেশ</territory>
+			<territory type="NL">নেদারল্যান্ডস</territory>
+			<territory type="NO">নরত্তএদেশ</territory>
+			<territory type="NP">নেপাল</territory>
+			<territory type="NR">নাউরু</territory>
+			<territory type="NU">নিউই</territory>
+			<territory type="NZ">নিউজিল্যান্ড</territory>
+			<territory type="OM">ওমান</territory>
+			<territory type="PE">পেরু</territory>
+			<territory type="PF">ফরাসি পলিনেশিয়া</territory>
+			<territory type="PG">পাপুয়া নিউ গিনি</territory>
+			<territory type="PH">ফিলিপাইন</territory>
+			<territory type="PK">পাকিস্তান</territory>
+			<territory type="PL">পোল্যান্ড</territory>
+			<territory type="PN">পিটকেয়ার্ন দ্বীপপুঞ্জ</territory>
+			<territory type="PS">ফিলিস্তিন অঞ্চল</territory>
+			<territory type="PS" alt="short">ফিলিস্তিন</territory>
+			<territory type="PT">পর্তুগাল</territory>
+			<territory type="PW">পালাউ</territory>
+			<territory type="PY">প্যারাগুয়ে</territory>
+			<territory type="QA">কাতার</territory>
+			<territory type="RE">সাক্ষাৎ</territory>
+			<territory type="RO">রুমানিয়া</territory>
+			<territory type="RS">সার্বিয়া</territory>
+			<territory type="RU">রাশিয়া</territory>
+			<territory type="RW">রুয়ান্ডা</territory>
+			<territory type="SA">সৌদি আরব</territory>
+			<territory type="SB">সলোমান দ্বীপপুঞ্জ</territory>
+			<territory type="SC">সিসিলি</territory>
+			<territory type="SD">সুদান</territory>
+			<territory type="SE">সুইডেন</territory>
+			<territory type="SG">সিঙ্গাপুর</territory>
+			<territory type="SH">সেন্ট হেলেনা</territory>
+			<territory type="SI">স্লোভানিয়া</territory>
+			<territory type="SJ">সাভালবার্ড ও জান মেন</territory>
+			<territory type="SK">শ্লোভাকিয়া</territory>
+			<territory type="SL">সিয়েরা লিওন</territory>
+			<territory type="SM">সান মেরিনো</territory>
+			<territory type="SN">সেনেগাল</territory>
+			<territory type="SO">সোমালিয়া</territory>
+			<territory type="SR">সুরিনাম</territory>
+			<territory type="SS">দক্ষিণ সুদান</territory>
+			<territory type="ST">সাও টোম এবং প্রিনসিপে</territory>
+			<territory type="SY">সিরিয়া</territory>
+			<territory type="SZ">সোয়াজিল্যান্ড</territory>
+			<territory type="TA">ট্রিস্টান ডা কুনা</territory>
+			<territory type="TD">মত্স্যবিশেষ</territory>
+			<territory type="TF">দক্ষিণ ফ্ৰান্সৰ অঞ্চল</territory>
+			<territory type="TG">যাও</territory>
+			<territory type="TH">থাইল্যান্ড</territory>
+			<territory type="TJ">তাজিকস্থান</territory>
+			<territory type="TK">টোকেলাউ</territory>
+			<territory type="TL">পূর্ব তিমুর</territory>
+			<territory type="TM">তুর্কমেনিয়া</territory>
+			<territory type="TN">টিউনিস্</territory>
+			<territory type="TO">টাঙ্গা</territory>
+			<territory type="TR">তুরস্ক</territory>
+			<territory type="TV">টুভালু</territory>
+			<territory type="TW">তাইওয়ান</territory>
+			<territory type="TZ">তাঞ্জানিয়া</territory>
+			<territory type="UA">ইউক্রেইন্</territory>
+			<territory type="UG">উগান্ডা</territory>
+			<territory type="UM">ইউ এস আউটলিং আইল্যান্ডস</territory>
+			<territory type="US">যুক্তৰাষ্ট্ৰ</territory>
+			<territory type="UY">উরুগুয়ে</territory>
+			<territory type="UZ">উজ্বেকিস্থান</territory>
+			<territory type="VA">ভ্যাটিকান সিটি</territory>
+			<territory type="VE">ভেনেজুয়েলা</territory>
+			<territory type="VN">ভিয়েতনাম</territory>
+			<territory type="VU">ভানুয়াতু</territory>
+			<territory type="WF">ওয়ালিস ও ফুটুনা</territory>
+			<territory type="WS">সামোয়া</territory>
+			<territory type="XK">কসোভো</territory>
+			<territory type="YE">ইমেন</territory>
+			<territory type="YT">মায়োত্তে</territory>
+			<territory type="ZA">দক্ষিন আফ্রিকা</territory>
+			<territory type="ZM">জাম্বিয়া</territory>
+			<territory type="ZW">জিম্বাবুয়ে</territory>
+			<territory type="ZZ">অজ্ঞাত অঞ্চল</territory>
+		</territories>
+		<keys>
+			<key type="calendar" draft="contributed">পঞ্জিকা</key>
+			<key type="collation" draft="contributed">শৰীকৰণ</key>
+			<key type="currency" draft="contributed">মুদ্ৰা</key>
+		</keys>
+		<types>
+			<type key="calendar" type="buddhist" draft="contributed">বৌদ্ধ পঞ্জিকা</type>
+			<type key="calendar" type="chinese" draft="contributed">চীনা পঞ্জিকা</type>
+			<type key="calendar" type="gregorian">গ্ৰিগোৰীয় পঞ্জিকা</type>
+			<type key="calendar" type="hebrew" draft="contributed">হীব্ৰু পঞ্জিকা</type>
+			<type key="calendar" type="indian" draft="contributed">ভাৰতীয় ৰাষ্ট্ৰীয় পঞ্জিকা</type>
+			<type key="calendar" type="islamic" draft="contributed">ইচলামী পঞ্জিকা</type>
+			<type key="calendar" type="islamic-civil" draft="contributed">ইচলামী-নাগৰিকৰ পঞ্জিকা</type>
+			<type key="calendar" type="iso8601">iso8601</type>
+			<type key="calendar" type="japanese" draft="contributed">জাপানী পঞ্জিকা</type>
+			<type key="calendar" type="roc" draft="contributed">চীনা গণৰাজ্যৰ পঞ্জিকা</type>
+			<type key="collation" type="big5han" draft="contributed">পৰম্পৰাগত চীনা শৃঙ্খলাবদ্ধ কৰাৰ ক্ৰম - Big5</type>
+			<type key="collation" type="gb2312han" draft="contributed">সৰল চীনা শৃঙ্খলাবদ্ধ কৰাৰ ক্ৰম - GB2312</type>
+			<type key="collation" type="phonebook" draft="contributed">টেলিফোন বহিৰ মতেশৃঙ্খলাবদ্ধ কৰাৰ ক্ৰম</type>
+			<type key="collation" type="pinyin" draft="contributed">পিন্‌য়িন শৃঙ্খলাবদ্ধ কৰাৰ ক্ৰম</type>
+			<type key="collation" type="standard">standard</type>
+			<type key="collation" type="stroke" draft="contributed">স্ট্ৰোক শৃঙ্খলাবদ্ধ কৰাৰ ক্ৰম</type>
+			<type key="collation" type="traditional" draft="contributed">পৰম্পৰাগতভাবে শৃঙ্খলাবদ্ধ কৰাৰ ক্ৰম</type>
+			<type key="numbers" type="beng">beng</type>
+			<type key="numbers" type="latn">latn</type>
+		</types>
+		<measurementSystemNames>
+			<measurementSystemName type="metric">মেট্ৰিক</measurementSystemName>
+			<measurementSystemName type="UK">UK</measurementSystemName>
+			<measurementSystemName type="US">US</measurementSystemName>
+		</measurementSystemNames>
+		<codePatterns>
+			<codePattern type="language">{0}</codePattern>
+			<codePattern type="script">{0}</codePattern>
+			<codePattern type="territory">{0}</codePattern>
+		</codePatterns>
+	</localeDisplayNames>
+	<characters>
+		<exemplarCharacters>[\u09BC অ আ ই ঈ উ ঊ ঋ এ ঐ ও ঔ ং \u0981 ঃ ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড {ড\u09BC} ঢ {ঢ\u09BC} ণ ত থ দ ধ ন প ফ ব ভ ম য {য\u09BC} ৰ ল ৱ শ ষ স হ {ক\u09CDষ} া ি ী \u09C1 \u09C2 \u09C3 ে ৈ ো ৌ \u09CD]</exemplarCharacters>
+		<exemplarCharacters type="auxiliary">[\u200C\u200D ৲ ৎ র]</exemplarCharacters>
+		<exemplarCharacters type="index" draft="unconfirmed">[অ আ ই ঈ উ ঊ ঋ ৠ ঌ ৡ এ ঐ ও ঔ ক খ গ ঘ ঙ চ ছ জ ঝ ঞ ট ঠ ড ঢ ণ ৎ ত থ দ ধ ন প ফ ব ভ ম য ৰ ল ৱ শ ষ স হ ঽ]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- , . % ‰ + 0০ 1১ 2২ 3৩ 4৪ 5৫ 6৬ 7৭ 8৮ 9৯]</exemplarCharacters>
+		<ellipsis type="final">{0}…</ellipsis>
+		<ellipsis type="initial">…{0}</ellipsis>
+		<ellipsis type="medial">{0}…{1}</ellipsis>
+		<ellipsis type="word-final">{0} …</ellipsis>
+		<ellipsis type="word-initial">… {0}</ellipsis>
+		<ellipsis type="word-medial">{0} … {1}</ellipsis>
+		<moreInformation>?</moreInformation>
+	</characters>
+	<delimiters>
+		<quotationStart>“</quotationStart>
+		<quotationEnd>”</quotationEnd>
+		<alternateQuotationStart>‘</alternateQuotationStart>
+		<alternateQuotationEnd>’</alternateQuotationEnd>
+	</delimiters>
+	<dates>
+		<calendars>
+			<calendar type="generic">
+				<dateFormats>
+					<dateFormatLength type="full">
+						<dateFormat>
+							<pattern>G y MMMM d, EEEE</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="long">
+						<dateFormat>
+							<pattern>G y MMMM d</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="medium">
+						<dateFormat>
+							<pattern>G y MMM d</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="short">
+						<dateFormat>
+							<pattern>GGGGG y-MM-dd</pattern>
+						</dateFormat>
+					</dateFormatLength>
+				</dateFormats>
+				<dateTimeFormats>
+					<dateTimeFormatLength type="full">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="long">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="medium">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="short">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<availableFormats>
+						<dateFormatItem id="d">d</dateFormatItem>
+						<dateFormatItem id="E">ccc</dateFormatItem>
+						<dateFormatItem id="Ed">d, E</dateFormatItem>
+						<dateFormatItem id="Ehm">E h:mm a</dateFormatItem>
+						<dateFormatItem id="EHm">E HH:mm</dateFormatItem>
+						<dateFormatItem id="Ehms">E h:mm:ss a</dateFormatItem>
+						<dateFormatItem id="EHms">E HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="Gy">G y</dateFormatItem>
+						<dateFormatItem id="GyMMM">G y MMM</dateFormatItem>
+						<dateFormatItem id="GyMMMd">G y MMM d</dateFormatItem>
+						<dateFormatItem id="GyMMMEd">G y MMM d, E</dateFormatItem>
+						<dateFormatItem id="h">h a</dateFormatItem>
+						<dateFormatItem id="H">HH</dateFormatItem>
+						<dateFormatItem id="hm">h:mm a</dateFormatItem>
+						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
+						<dateFormatItem id="hms">h:mm:ss a</dateFormatItem>
+						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="M">L</dateFormatItem>
+						<dateFormatItem id="Md">MM-dd</dateFormatItem>
+						<dateFormatItem id="MEd">MM-dd, E</dateFormatItem>
+						<dateFormatItem id="MMM">LLL</dateFormatItem>
+						<dateFormatItem id="MMMd">MMM d</dateFormatItem>
+						<dateFormatItem id="MMMEd">MMM d, E</dateFormatItem>
+						<dateFormatItem id="MMMMd">MMMM d</dateFormatItem>
+						<dateFormatItem id="ms">mm:ss</dateFormatItem>
+						<dateFormatItem id="y">G y</dateFormatItem>
+						<dateFormatItem id="yyyy">G y</dateFormatItem>
+						<dateFormatItem id="yyyyM">GGGGG y-MM</dateFormatItem>
+						<dateFormatItem id="yyyyMd">GGGGG y-MM-dd</dateFormatItem>
+						<dateFormatItem id="yyyyMEd">GGGGG y-MM-dd, E</dateFormatItem>
+						<dateFormatItem id="yyyyMMM">G y MMM</dateFormatItem>
+						<dateFormatItem id="yyyyMMMd">G y MMM d</dateFormatItem>
+						<dateFormatItem id="yyyyMMMEd">G y MMM d, E</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM">G y MMMM</dateFormatItem>
+						<dateFormatItem id="yyyyQQQ">G y QQQ</dateFormatItem>
+						<dateFormatItem id="yyyyQQQQ">G y QQQQ</dateFormatItem>
+					</availableFormats>
+					<intervalFormats>
+						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="d">
+							<greatestDifference id="d">d–d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="M">
+							<greatestDifference id="M">MM–MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Md">
+							<greatestDifference id="d">MM-dd – MM-dd</greatestDifference>
+							<greatestDifference id="M">MM-dd – MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MEd">
+							<greatestDifference id="d">MM-dd, E – MM-dd, E</greatestDifference>
+							<greatestDifference id="M">MM-dd, E – MM-dd, E</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMM">
+							<greatestDifference id="M">LLL–LLL</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMd">
+							<greatestDifference id="d">MMM d–d</greatestDifference>
+							<greatestDifference id="M">MMM d – MMM d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMEd">
+							<greatestDifference id="d">MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="M">MMM d, E – MMM d, E</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="y">
+							<greatestDifference id="y">G y–y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yM">
+							<greatestDifference id="M">GGGGG y-MM – y-MM</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM – y-MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="d">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM-dd – y-MM-dd</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMEd">
+							<greatestDifference id="d">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+							<greatestDifference id="M">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+							<greatestDifference id="y">GGGGG y-MM-dd, E – y-MM-dd, E</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMM">
+							<greatestDifference id="M">G y MMM–MMM</greatestDifference>
+							<greatestDifference id="y">G y MMM – y MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMd">
+							<greatestDifference id="d">G y MMM d–d</greatestDifference>
+							<greatestDifference id="M">G y MMM d – MMM d</greatestDifference>
+							<greatestDifference id="y">G y MMM d – y MMM d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMEd">
+							<greatestDifference id="d">G y MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="M">G y MMM d, E – MMM d, E</greatestDifference>
+							<greatestDifference id="y">G y MMM d, E – y MMM d, E</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMM">
+							<greatestDifference id="M">G y MMMM–MMMM</greatestDifference>
+							<greatestDifference id="y">G y MMMM – y MMMM</greatestDifference>
+						</intervalFormatItem>
+					</intervalFormats>
+				</dateTimeFormats>
+			</calendar>
+			<calendar type="gregorian">
+				<months>
+					<monthContext type="format">
+						<monthWidth type="abbreviated">
+							<month type="1">জানু</month>
+							<month type="2">ফেব্ৰু</month>
+							<month type="3">মাৰ্চ</month>
+							<month type="4">এপ্ৰিল</month>
+							<month type="5">মে’</month>
+							<month type="6">জুন</month>
+							<month type="7">জুলাই</month>
+							<month type="8">আগ</month>
+							<month type="9">ছেপ্তে</month>
+							<month type="10">অক্টো</month>
+							<month type="11">নৱে</month>
+							<month type="12">ডিচে</month>
+						</monthWidth>
+						<monthWidth type="narrow">
+							<month type="1">জ</month>
+							<month type="2">ফ</month>
+							<month type="3">ম</month>
+							<month type="4">এ</month>
+							<month type="5">ম</month>
+							<month type="6">জ</month>
+							<month type="7">জ</month>
+							<month type="8">আ</month>
+							<month type="9">ছ</month>
+							<month type="10">অ</month>
+							<month type="11">ন</month>
+							<month type="12">ড</month>
+						</monthWidth>
+						<monthWidth type="wide">
+							<month type="1">জানুৱাৰী</month>
+							<month type="2">ফেব্ৰুৱাৰী</month>
+							<month type="3">মাৰ্চ</month>
+							<month type="4">এপ্ৰিল</month>
+							<month type="5">মে’</month>
+							<month type="6">জুন</month>
+							<month type="7">জুলাই</month>
+							<month type="8">আগষ্ট</month>
+							<month type="9">ছেপ্তেম্বৰ</month>
+							<month type="10">অক্টোবৰ</month>
+							<month type="11">নৱেম্বৰ</month>
+							<month type="12">ডিচেম্বৰ</month>
+						</monthWidth>
+					</monthContext>
+					<monthContext type="stand-alone">
+						<monthWidth type="abbreviated">
+							<month type="1">জানু</month>
+							<month type="2">ফেব্ৰু</month>
+							<month type="3">মাৰ্চ</month>
+							<month type="4">এপ্ৰিল</month>
+							<month type="5">মে’</month>
+							<month type="6">জুন</month>
+							<month type="7">জুলাই</month>
+							<month type="8">আগ</month>
+							<month type="9">ছেপ্তে</month>
+							<month type="10">অক্টো</month>
+							<month type="11">নৱে</month>
+							<month type="12">ডিচে</month>
+						</monthWidth>
+						<monthWidth type="narrow">
+							<month type="1">1</month>
+							<month type="2">2</month>
+							<month type="3">3</month>
+							<month type="4">4</month>
+							<month type="5">5</month>
+							<month type="6">6</month>
+							<month type="7">7</month>
+							<month type="8">8</month>
+							<month type="9">9</month>
+							<month type="10">10</month>
+							<month type="11">11</month>
+							<month type="12">12</month>
+						</monthWidth>
+						<monthWidth type="wide">
+							<month type="1">জানুৱাৰী</month>
+							<month type="2">ফেব্ৰুৱাৰী</month>
+							<month type="3">মাৰ্চ</month>
+							<month type="4">এপ্ৰিল</month>
+							<month type="5">মে’</month>
+							<month type="6">জুন</month>
+							<month type="7">জুলাই</month>
+							<month type="8">আগষ্ট</month>
+							<month type="9">ছেপ্তেম্বৰ</month>
+							<month type="10">অক্টোবৰ</month>
+							<month type="11">নৱেম্বৰ</month>
+							<month type="12">ডিচেম্বৰ</month>
+						</monthWidth>
+					</monthContext>
+				</months>
+				<days>
+					<dayContext type="format">
+						<dayWidth type="abbreviated">
+							<day type="sun">দেও</day>
+							<day type="mon">সোম</day>
+							<day type="tue">মঙ্গল</day>
+							<day type="wed">বুধ</day>
+							<day type="thu">বৃহ</day>
+							<day type="fri">শুক্ৰ</day>
+							<day type="sat">শনি</day>
+						</dayWidth>
+						<dayWidth type="narrow">
+							<day type="sun">দ</day>
+							<day type="mon">স</day>
+							<day type="tue">ম</day>
+							<day type="wed">ব</day>
+							<day type="thu">ব</day>
+							<day type="fri">শ</day>
+							<day type="sat">শ</day>
+						</dayWidth>
+						<dayWidth type="short">
+							<day type="sun">দেও</day>
+							<day type="mon">সোম</day>
+							<day type="tue">মঙ্গল</day>
+							<day type="wed">বুধ</day>
+							<day type="thu">বৃহ</day>
+							<day type="fri">শুক্ৰ</day>
+							<day type="sat">শনি</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun">দেওবাৰ</day>
+							<day type="mon">সোমবাৰ</day>
+							<day type="tue">মঙ্গলবাৰ</day>
+							<day type="wed">বুধবাৰ</day>
+							<day type="thu">বৃহস্পতিবাৰ</day>
+							<day type="fri">শুক্ৰবাৰ</day>
+							<day type="sat">শনিবাৰ</day>
+						</dayWidth>
+					</dayContext>
+					<dayContext type="stand-alone">
+						<dayWidth type="abbreviated">
+							<day type="sun">দেও</day>
+							<day type="mon">সোম</day>
+							<day type="tue">মঙ্গল</day>
+							<day type="wed">বুধ</day>
+							<day type="thu">বৃহ</day>
+							<day type="fri">শুক্ৰ</day>
+							<day type="sat">শনি</day>
+						</dayWidth>
+						<dayWidth type="narrow">
+							<day type="sun">দ</day>
+							<day type="mon">স</day>
+							<day type="tue">ম</day>
+							<day type="wed">ব</day>
+							<day type="thu">ব</day>
+							<day type="fri">শ</day>
+							<day type="sat">শ</day>
+						</dayWidth>
+						<dayWidth type="short">
+							<day type="sun">দেও</day>
+							<day type="mon">সোম</day>
+							<day type="tue">মঙ্গল</day>
+							<day type="wed">বুধ</day>
+							<day type="thu">বৃহ</day>
+							<day type="fri">শুক্ৰ</day>
+							<day type="sat">শনি</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun">দেওবাৰ</day>
+							<day type="mon">সোমবাৰ</day>
+							<day type="tue">মঙ্গলবাৰ</day>
+							<day type="wed">বুধবাৰ</day>
+							<day type="thu">বৃহস্পতিবাৰ</day>
+							<day type="fri">শুক্ৰবাৰ</day>
+							<day type="sat">শনিবাৰ</day>
+						</dayWidth>
+					</dayContext>
+				</days>
+				<quarters>
+					<quarterContext type="format">
+						<quarterWidth type="abbreviated">
+							<quarter type="1">তি1</quarter>
+							<quarter type="2">তি2</quarter>
+							<quarter type="3">তি3</quarter>
+							<quarter type="4">তি4</quarter>
+						</quarterWidth>
+						<quarterWidth type="narrow">
+							<quarter type="1">1</quarter>
+							<quarter type="2">2</quarter>
+							<quarter type="3">3</quarter>
+							<quarter type="4">4</quarter>
+						</quarterWidth>
+						<quarterWidth type="wide">
+							<quarter type="1">প্ৰথম প্ৰহৰ</quarter>
+							<quarter type="2">দ্বিতীয় প্ৰহৰ</quarter>
+							<quarter type="3">তৃতীয় প্ৰহৰ</quarter>
+							<quarter type="4">চতুৰ্থ প্ৰহৰ</quarter>
+						</quarterWidth>
+					</quarterContext>
+					<quarterContext type="stand-alone">
+						<quarterWidth type="abbreviated">
+							<quarter type="1">তি1</quarter>
+							<quarter type="2">তি2</quarter>
+							<quarter type="3">তি3</quarter>
+							<quarter type="4">তি4</quarter>
+						</quarterWidth>
+						<quarterWidth type="narrow">
+							<quarter type="1">1</quarter>
+							<quarter type="2">2</quarter>
+							<quarter type="3">3</quarter>
+							<quarter type="4">4</quarter>
+						</quarterWidth>
+						<quarterWidth type="wide">
+							<quarter type="1">প্ৰথম তিনিমাহ</quarter>
+							<quarter type="2">দ্বিতীয় তিনিমাহ</quarter>
+							<quarter type="3">তৃতীয় তিনিমাহ</quarter>
+							<quarter type="4">চতুৰ্থ তিনিমাহ</quarter>
+						</quarterWidth>
+					</quarterContext>
+				</quarters>
+				<dayPeriods>
+					<dayPeriodContext type="format">
+						<dayPeriodWidth type="abbreviated">
+							<dayPeriod type="am">পূৰ্বাহ্ণ</dayPeriod>
+							<dayPeriod type="pm">অপৰাহ্ণ</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="narrow">
+							<dayPeriod type="am">পূৰ্বাহ্ণ</dayPeriod>
+							<dayPeriod type="pm">অপৰাহ্ণ</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="wide">
+							<dayPeriod type="am">পূৰ্বাহ্ণ</dayPeriod>
+							<dayPeriod type="pm">অপৰাহ্ণ</dayPeriod>
+						</dayPeriodWidth>
+					</dayPeriodContext>
+					<dayPeriodContext type="stand-alone">
+						<dayPeriodWidth type="abbreviated">
+							<dayPeriod type="am">পূৰ্বাহ্ণ</dayPeriod>
+							<dayPeriod type="pm">অপৰাহ্ণ</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="narrow">
+							<dayPeriod type="am">পূৰ্বাহ্ণ</dayPeriod>
+							<dayPeriod type="pm">অপৰাহ্ণ</dayPeriod>
+						</dayPeriodWidth>
+						<dayPeriodWidth type="wide">
+							<dayPeriod type="am">পূৰ্বাহ্ণ</dayPeriod>
+							<dayPeriod type="pm">অপৰাহ্ণ</dayPeriod>
+						</dayPeriodWidth>
+					</dayPeriodContext>
+				</dayPeriods>
+				<eras>
+					<eraNames>
+						<era type="0">খ্ৰীষ্টপূৰ্ব</era>
+						<era type="1">খ্ৰীষ্টাব্দ</era>
+					</eraNames>
+					<eraAbbr>
+						<era type="0">খ্ৰী.পূ.</era>
+						<era type="1">খ্ৰী.দ.</era>
+						<era type="1" alt="variant">খ্ৰীঃদঃ</era>
+					</eraAbbr>
+				</eras>
+				<dateFormats>
+					<dateFormatLength type="full">
+						<dateFormat>
+							<pattern>EEEE, d MMMM, y</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="long">
+						<dateFormat>
+							<pattern>d MMMM, y</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="medium">
+						<dateFormat>
+							<pattern>dd-MM-y</pattern>
+						</dateFormat>
+					</dateFormatLength>
+					<dateFormatLength type="short">
+						<dateFormat>
+							<pattern>d-M-y</pattern>
+						</dateFormat>
+					</dateFormatLength>
+				</dateFormats>
+				<timeFormats>
+					<timeFormatLength type="full">
+						<timeFormat>
+							<pattern>h.mm.ss a zzzz</pattern>
+						</timeFormat>
+					</timeFormatLength>
+					<timeFormatLength type="long">
+						<timeFormat>
+							<pattern>h.mm.ss a z</pattern>
+						</timeFormat>
+					</timeFormatLength>
+					<timeFormatLength type="medium">
+						<timeFormat>
+							<pattern>h.mm.ss a</pattern>
+						</timeFormat>
+					</timeFormatLength>
+					<timeFormatLength type="short">
+						<timeFormat>
+							<pattern>h.mm. a</pattern>
+						</timeFormat>
+					</timeFormatLength>
+				</timeFormats>
+				<dateTimeFormats>
+					<dateTimeFormatLength type="full">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="long">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="medium">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<dateTimeFormatLength type="short">
+						<dateTimeFormat>
+							<pattern>{1} {0}</pattern>
+						</dateTimeFormat>
+					</dateTimeFormatLength>
+					<availableFormats>
+						<dateFormatItem id="Bh">B h</dateFormatItem>
+						<dateFormatItem id="Bhm">B h:mm</dateFormatItem>
+						<dateFormatItem id="Bhms">B h:mm:ss</dateFormatItem>
+						<dateFormatItem id="d">d</dateFormatItem>
+						<dateFormatItem id="E">ccc</dateFormatItem>
+						<dateFormatItem id="EBhm">E B h:mm</dateFormatItem>
+						<dateFormatItem id="EBhms">E B h:mm:ss</dateFormatItem>
+						<dateFormatItem id="Ed">E d</dateFormatItem>
+						<dateFormatItem id="Ehm">E a h:mm</dateFormatItem>
+						<dateFormatItem id="EHm">E HH:mm</dateFormatItem>
+						<dateFormatItem id="Ehms">E a h:mm:ss</dateFormatItem>
+						<dateFormatItem id="EHms">E HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="Gy">G y</dateFormatItem>
+						<dateFormatItem id="GyMMM">G y MMM</dateFormatItem>
+						<dateFormatItem id="GyMMMd">G y MMM d</dateFormatItem>
+						<dateFormatItem id="GyMMMEd">G y MMM d, E</dateFormatItem>
+						<dateFormatItem id="h">a h</dateFormatItem>
+						<dateFormatItem id="H">HH</dateFormatItem>
+						<dateFormatItem id="hm">a h:mm</dateFormatItem>
+						<dateFormatItem id="Hm">HH:mm</dateFormatItem>
+						<dateFormatItem id="hms">a h:mm:ss</dateFormatItem>
+						<dateFormatItem id="Hms">HH:mm:ss</dateFormatItem>
+						<dateFormatItem id="hmsv">a h:mm:ss v</dateFormatItem>
+						<dateFormatItem id="Hmsv">HH:mm:ss v</dateFormatItem>
+						<dateFormatItem id="hmv">a h:mm v</dateFormatItem>
+						<dateFormatItem id="Hmv">HH:mm v</dateFormatItem>
+						<dateFormatItem id="M">L</dateFormatItem>
+						<dateFormatItem id="Md">dd-MM</dateFormatItem>
+						<dateFormatItem id="MEd">E, dd-MM</dateFormatItem>
+						<dateFormatItem id="MMM">LLL</dateFormatItem>
+						<dateFormatItem id="MMMd">d MMM</dateFormatItem>
+						<dateFormatItem id="MMMEd">E, d MMM</dateFormatItem>
+						<dateFormatItem id="MMMMd">d MMMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="one">MMMMৰ সপ্তাহ W</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="other">MMMMৰ সপ্তাহ W</dateFormatItem>
+						<dateFormatItem id="ms">mm:ss</dateFormatItem>
+						<dateFormatItem id="y">y</dateFormatItem>
+						<dateFormatItem id="yM">MM-y</dateFormatItem>
+						<dateFormatItem id="yMd">dd-MM-y</dateFormatItem>
+						<dateFormatItem id="yMEd">E, dd-MM-y</dateFormatItem>
+						<dateFormatItem id="yMMM">MMM y</dateFormatItem>
+						<dateFormatItem id="yMMMd">d MMM y</dateFormatItem>
+						<dateFormatItem id="yMMMEd">E, d MMM y</dateFormatItem>
+						<dateFormatItem id="yMMMM">MMMM y</dateFormatItem>
+						<dateFormatItem id="yQQQ">QQQ y</dateFormatItem>
+						<dateFormatItem id="yQQQQ">QQQQ y</dateFormatItem>
+						<dateFormatItem id="yw" count="one">Yৰ সপ্তাহ w</dateFormatItem>
+						<dateFormatItem id="yw" count="other">Yৰ সপ্তাহ w</dateFormatItem>
+					</availableFormats>
+					<appendItems>
+						<appendItem request="Timezone">{0} {1}</appendItem>
+					</appendItems>
+					<intervalFormats>
+						<intervalFormatFallback>{0} – {1}</intervalFormatFallback>
+						<intervalFormatItem id="d">
+							<greatestDifference id="d">d–d</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="h">
+							<greatestDifference id="a">a h – a h</greatestDifference>
+							<greatestDifference id="h">a h–h</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="H">
+							<greatestDifference id="H">HH–HH</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="hm">
+							<greatestDifference id="a">a h:mm – a h:mm</greatestDifference>
+							<greatestDifference id="h">a h:mm–h:mm</greatestDifference>
+							<greatestDifference id="m">a h:mm–h:mm</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Hm">
+							<greatestDifference id="H">HH:mm–HH:mm</greatestDifference>
+							<greatestDifference id="m">HH:mm–HH:mm</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="hmv">
+							<greatestDifference id="a">a h:mm – a h:mm v</greatestDifference>
+							<greatestDifference id="h">a h:mm–h:mm v</greatestDifference>
+							<greatestDifference id="m">a h:mm–h:mm v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Hmv">
+							<greatestDifference id="H">HH:mm–HH:mm v</greatestDifference>
+							<greatestDifference id="m">HH:mm–HH:mm v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="hv">
+							<greatestDifference id="a">a h – a h v</greatestDifference>
+							<greatestDifference id="h">a h–h v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Hv">
+							<greatestDifference id="H">HH–HH v</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="M">
+							<greatestDifference id="M">MM–MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="Md">
+							<greatestDifference id="d">dd-MM – dd-MM</greatestDifference>
+							<greatestDifference id="M">dd-MM – dd-MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MEd">
+							<greatestDifference id="d">E, dd-MM – E, dd-MM</greatestDifference>
+							<greatestDifference id="M">E, dd-MM – E, dd-MM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMM">
+							<greatestDifference id="M">LLL–LLL</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMd">
+							<greatestDifference id="d">d MMM–d</greatestDifference>
+							<greatestDifference id="M">d MMM – d MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="MMMEd">
+							<greatestDifference id="d">E, d MMM – E, d MMM</greatestDifference>
+							<greatestDifference id="M">E, d MMM – E, d MMM</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="y">
+							<greatestDifference id="y">y–y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yM">
+							<greatestDifference id="M">MM-y – MM-y</greatestDifference>
+							<greatestDifference id="y">MM-y – MM-y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMd">
+							<greatestDifference id="d">dd-MM-y – dd-MM-y</greatestDifference>
+							<greatestDifference id="M">dd-MM-y – dd-MM-y</greatestDifference>
+							<greatestDifference id="y">dd-MM-y – dd-MM-y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMEd">
+							<greatestDifference id="d">dd-MM-y, E – dd-MM-y</greatestDifference>
+							<greatestDifference id="M">dd-MM-y, E – dd-MM-y</greatestDifference>
+							<greatestDifference id="y">dd-MM-y, E – dd-MM-y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMM">
+							<greatestDifference id="M">MMM–MMM y</greatestDifference>
+							<greatestDifference id="y">MMM y – MMM y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMd">
+							<greatestDifference id="d">d–d MMM y</greatestDifference>
+							<greatestDifference id="M">d MMM y – d MMM</greatestDifference>
+							<greatestDifference id="y">d MMM y – d MMM y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMEd">
+							<greatestDifference id="d">E, d MMM y – E, d MMM</greatestDifference>
+							<greatestDifference id="M">E, d MMM y – E, d MMM</greatestDifference>
+							<greatestDifference id="y">E, d MMM y – d MMM y</greatestDifference>
+						</intervalFormatItem>
+						<intervalFormatItem id="yMMMM">
+							<greatestDifference id="M">MMMM–MMMM y</greatestDifference>
+							<greatestDifference id="y">MMMM y – MMMM y</greatestDifference>
+						</intervalFormatItem>
+					</intervalFormats>
+				</dateTimeFormats>
+			</calendar>
+		</calendars>
+		<fields>
+			<field type="era">
+				<displayName>যুগ</displayName>
+			</field>
+			<field type="era-short">
+				<displayName>যুগ</displayName>
+			</field>
+			<field type="era-narrow">
+				<displayName>যুগ</displayName>
+			</field>
+			<field type="year">
+				<displayName>বছৰ</displayName>
+				<relative type="-1">যোৱা বছৰ</relative>
+				<relative type="0">এই বছৰ</relative>
+				<relative type="1">অহা বছৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বছৰত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বছৰত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বছৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বছৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="year-short">
+				<displayName>বছৰ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বছৰত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বছৰত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বছৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বছৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="year-narrow">
+				<displayName>বছৰ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বছৰত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বছৰত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বছৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বছৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="quarter">
+				<displayName>তিনি মাহ</displayName>
+				<relative type="-1">যোৱা তিনি মাহ</relative>
+				<relative type="0">এই তিনি মাহ</relative>
+				<relative type="1">অহা তিনি মাহ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} তিনি মাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} তিনি মাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} তিনি মাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} তিনি মাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="quarter-short">
+				<displayName>তিনি মাহ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} তিনি মাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} তিনি মাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} তিনি মাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} তিনি মাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="quarter-narrow">
+				<displayName>তিনি মাহ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} তিনি মাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} তিনি মাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} তিনি মাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} তিনি মাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="month">
+				<displayName>মাহ</displayName>
+				<relative type="-1">যোৱা মাহ</relative>
+				<relative type="0">এই মাহ</relative>
+				<relative type="1">অহা মাহ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="month-short">
+				<displayName>মাহ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="month-narrow">
+				<displayName>মাহ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="week">
+				<displayName>সপ্তাহ</displayName>
+				<relative type="-1">যোৱা সপ্তাহ</relative>
+				<relative type="0">এই সপ্তাহ</relative>
+				<relative type="1">অহা সপ্তাহ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} সপ্তাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সপ্তাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} সপ্তাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সপ্তাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+				<relativePeriod>{0}ৰ সপ্তাহ</relativePeriod>
+			</field>
+			<field type="week-short">
+				<displayName>সপ্তাহ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} সপ্তাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সপ্তাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} সপ্তাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সপ্তাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+				<relativePeriod>{0}ৰ সপ্তাহ</relativePeriod>
+			</field>
+			<field type="week-narrow">
+				<displayName>সপ্তাহ</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} সপ্তাহত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সপ্তাহত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} সপ্তাহ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সপ্তাহ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+				<relativePeriod>{0}ৰ সপ্তাহ</relativePeriod>
+			</field>
+			<field type="weekOfMonth">
+				<displayName>মাহৰ সপ্তাহ</displayName>
+			</field>
+			<field type="weekOfMonth-short">
+				<displayName>মাহৰ সপ্তাহ</displayName>
+			</field>
+			<field type="weekOfMonth-narrow">
+				<displayName>মাহৰ সপ্তাহ</displayName>
+			</field>
+			<field type="day">
+				<displayName>দিন</displayName>
+				<relative type="-2">পৰহি</relative>
+				<relative type="-1">কালি</relative>
+				<relative type="0">আজি</relative>
+				<relative type="1">কাইলৈ</relative>
+				<relative type="2">পৰহিলৈ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} দিনত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দিনত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} দিন পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দিন পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="day-short">
+				<displayName>দিন</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} দিনত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দিনত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} দিন পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দিন পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="day-narrow">
+				<displayName>দিন</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} দিনত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দিনত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} দিন পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দিন পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="dayOfYear">
+				<displayName>বছৰৰ দিন</displayName>
+			</field>
+			<field type="dayOfYear-short">
+				<displayName>বছৰৰ দিন</displayName>
+			</field>
+			<field type="dayOfYear-narrow">
+				<displayName>বছৰৰ দিন</displayName>
+			</field>
+			<field type="weekday">
+				<displayName>সপ্তাহৰ দিন</displayName>
+			</field>
+			<field type="weekday-short">
+				<displayName>সপ্তাহৰ দিন</displayName>
+			</field>
+			<field type="weekday-narrow">
+				<displayName>সপ্তাহৰ দিন</displayName>
+			</field>
+			<field type="weekdayOfMonth">
+				<displayName>মাহৰ সপ্তাহৰ দিন</displayName>
+			</field>
+			<field type="weekdayOfMonth-short">
+				<displayName>মাহৰ সপ্তাহৰ দিন</displayName>
+			</field>
+			<field type="weekdayOfMonth-narrow">
+				<displayName>মাহৰ সপ্তাহৰ দিন</displayName>
+			</field>
+			<field type="sun">
+				<relative type="-1">যোৱা দেওবাৰ</relative>
+				<relative type="0">এই দেওবাৰ</relative>
+				<relative type="1">অহা দেওবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} দেওবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দেওবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} দেওবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দেওবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="sun-short">
+				<relative type="-1">যোৱা দেওবাৰ</relative>
+				<relative type="0">এই দেওবাৰ</relative>
+				<relative type="1">অহা দেওবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} দেওবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দেওবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} দেওবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দেওবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="sun-narrow">
+				<relative type="-1">যোৱা দেওবাৰ</relative>
+				<relative type="0">এই দেওবাৰ</relative>
+				<relative type="1">অহা দেওবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} দেওবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দেওবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} দেওবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} দেওবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="mon">
+				<relative type="-1">যোৱা সোমবাৰ</relative>
+				<relative type="0">এই সোমবাৰ</relative>
+				<relative type="1">অহা সোমবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} সোমবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সোমবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} সোমবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সোমবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="mon-short">
+				<relative type="-1">যোৱা সোমবাৰ</relative>
+				<relative type="0">এই সোমবাৰ</relative>
+				<relative type="1">অহা সোমবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} সোমবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সোমবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} সোমবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সোমবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="mon-narrow">
+				<relative type="-1">যোৱা সোম</relative>
+				<relative type="0">এই সোম</relative>
+				<relative type="1">অহা সোম</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} সোমে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সোমে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} সোমৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} সোমৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="tue">
+				<relative type="-1">যোৱা মঙ্গলবাৰ</relative>
+				<relative type="0">এই মঙ্গলবাৰ</relative>
+				<relative type="1">অহা মঙ্গলবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মঙ্গলবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মঙ্গলবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মঙ্গলবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মঙ্গলবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="tue-short">
+				<relative type="-1">যোৱা মঙ্গল</relative>
+				<relative type="0">এই মঙ্গল</relative>
+				<relative type="1">অহা মঙ্গল</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মঙ্গলে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মঙ্গলে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মঙ্গলৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মঙ্গলৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="tue-narrow">
+				<relative type="-1">যোৱা মঙ্গল</relative>
+				<relative type="0">এই মঙ্গল</relative>
+				<relative type="1">অহা মঙ্গল</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মঙ্গলে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মঙ্গলে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মঙ্গলৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মঙ্গলৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="wed">
+				<relative type="-1">যোৱা বুধবাৰ</relative>
+				<relative type="0">এই বুধবাৰ</relative>
+				<relative type="1">অহা বুধবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বুধবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বুধবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বুধবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বুধবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="wed-short">
+				<relative type="-1">যোৱা বুধ</relative>
+				<relative type="0">এই বুধ</relative>
+				<relative type="1">অহা বুধ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বুধে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বুধে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বুধৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বুধৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="wed-narrow">
+				<relative type="-1">যোৱা বুধ</relative>
+				<relative type="0">এই বুধ</relative>
+				<relative type="1">অহা বুধ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বুধে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বুধে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বুধৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বুধৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="thu">
+				<relative type="-1">যোৱা বৃহস্পতিবাৰ</relative>
+				<relative type="0">এই বৃহস্পতিবাৰ</relative>
+				<relative type="1">অহা বৃহস্পতিবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বৃহস্পতিবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বৃহস্পতিবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বৃহস্পতিবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বৃহস্পতিবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="thu-short">
+				<relative type="-1">যোৱা বৃহস্পতি</relative>
+				<relative type="0">এই বৃহস্পতি</relative>
+				<relative type="1">অহা বৃহস্পতি</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বৃহস্পতিয়ে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বৃহস্পতিয়ে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বৃহস্পতিৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বৃহস্পতিৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="thu-narrow">
+				<relative type="-1">যোৱা বৃহস্পতি</relative>
+				<relative type="0">এই বৃহস্পতি</relative>
+				<relative type="1">অহা বৃহস্পতি</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} বৃহস্পতিয়ে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বৃহস্পতিয়ে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} বৃহস্পতিৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} বৃহস্পতিৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="fri">
+				<relative type="-1">যোৱা শুক্ৰবাৰ</relative>
+				<relative type="0">এই শুক্ৰবাৰ</relative>
+				<relative type="1">অহা শুক্ৰবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} শুক্ৰবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শুক্ৰবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} শুক্ৰবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শুক্ৰবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="fri-short">
+				<relative type="-1">যোৱা শুক্ৰ</relative>
+				<relative type="0">এই শুক্ৰ</relative>
+				<relative type="1">অহা শুক্ৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} শুকুৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শুকুৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} শুক্ৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শুক্ৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="fri-narrow">
+				<relative type="-1">যোৱা শুক্ৰ</relative>
+				<relative type="0">এই শুক্ৰ</relative>
+				<relative type="1">অহা শুক্ৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} শুকুৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শুকুৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} শুক্ৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শুক্ৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="sat">
+				<relative type="-1">যোৱা শনিবাৰ</relative>
+				<relative type="0">এই শনিবাৰ</relative>
+				<relative type="1">অহা শনিবাৰ</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} শনিবাৰে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শনিবাৰে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} শনিবাৰৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শনিবাৰৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="sat-short">
+				<relative type="-1">যোৱা শনি</relative>
+				<relative type="0">এই শনি</relative>
+				<relative type="1">অহা শনি</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} শনিয়ে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শনিয়ে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} শনিৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শনিৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="sat-narrow">
+				<relative type="-1">যোৱা শনি</relative>
+				<relative type="0">এই শনি</relative>
+				<relative type="1">অহা শনি</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} শনিয়ে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শনিয়ে</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} শনিৰ পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} শনিৰ পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="dayperiod-short">
+				<displayName>পূৰ্বাহ্ণ/অপৰাহ্ণ</displayName>
+			</field>
+			<field type="dayperiod">
+				<displayName>পূৰ্বাহ্ণ/অপৰাহ্ণ</displayName>
+			</field>
+			<field type="dayperiod-narrow">
+				<displayName>পূৰ্বাহ্ণ/অপৰাহ্ণ</displayName>
+			</field>
+			<field type="hour">
+				<displayName>ঘণ্টা</displayName>
+				<relative type="0">এইটো ঘণ্টাত</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} ঘণ্টাত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ঘণ্টাত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} ঘণ্টা পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ঘণ্টা পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="hour-short">
+				<displayName>ঘণ্টা</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} ঘণ্টাত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ঘণ্টাত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} ঘণ্টা পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ঘণ্টা পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="hour-narrow">
+				<displayName>ঘণ্টা</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} ঘণ্টাত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ঘণ্টাত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} ঘণ্টা পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ঘণ্টা পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="minute">
+				<displayName>মিনিট</displayName>
+				<relative type="0">এইটো মিনিটত</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মিনিটত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মিনিটত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মিনিট পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মিনিট পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="minute-short">
+				<displayName>মিনিট</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মিনিটত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মিনিটত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মিনিট পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মিনিট পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="minute-narrow">
+				<displayName>মিনিট</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} মিনিটত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মিনিটত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} মিনিট পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} মিনিট পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="second">
+				<displayName>ছেকেণ্ড</displayName>
+				<relative type="0">এতিয়া</relative>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} ছেকেণ্ডত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ছেকেণ্ডত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} ছেকেণ্ড পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ছেকেণ্ড পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="second-short">
+				<displayName>ছেকেণ্ড</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} ছেকেণ্ডত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ছেকেণ্ডত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} ছেকেণ্ড পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ছেকেণ্ড পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="second-narrow">
+				<displayName>ছেকেণ্ড</displayName>
+				<relativeTime type="future">
+					<relativeTimePattern count="one">{0} ছেকেণ্ডত</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ছেকেণ্ডত</relativeTimePattern>
+				</relativeTime>
+				<relativeTime type="past">
+					<relativeTimePattern count="one">{0} ছেকেণ্ড পূৰ্বে</relativeTimePattern>
+					<relativeTimePattern count="other">{0} ছেকেণ্ড পূৰ্বে</relativeTimePattern>
+				</relativeTime>
+			</field>
+			<field type="zone">
+				<displayName>ক্ষেত্ৰ</displayName>
+			</field>
+			<field type="zone-short">
+				<displayName>ক্ষেত্ৰ</displayName>
+			</field>
+			<field type="zone-narrow">
+				<displayName>ক্ষেত্ৰ</displayName>
+			</field>
+		</fields>
+		<timeZoneNames>
+			<hourFormat>+HH:mm;-HH:mm</hourFormat>
+			<gmtFormat>GMT{0}</gmtFormat>
+			<gmtZeroFormat>GMT</gmtZeroFormat>
+			<regionFormat>{0}</regionFormat>
+			<regionFormat type="daylight">{0} (+1)</regionFormat>
+			<regionFormat type="standard">{0} (+0)</regionFormat>
+			<fallbackFormat>{1} ({0})</fallbackFormat>
+			<zone type="Etc/UTC">
+				<long>
+					<standard>সমন্বিত সাৰ্বজনীন সময়</standard>
+				</long>
+			</zone>
+			<zone type="Etc/Unknown">
+				<exemplarCity>অজ্ঞাত চহৰ</exemplarCity>
+			</zone>
+			<zone type="America/St_Barthelemy">
+				<exemplarCity>St. Barthelemy</exemplarCity>
+			</zone>
+			<zone type="America/Curacao">
+				<exemplarCity>Curacao</exemplarCity>
+			</zone>
+			<zone type="Europe/London">
+				<long>
+					<daylight>ব্ৰিটিচ গ্ৰীষ্মকালীন সময়</daylight>
+				</long>
+			</zone>
+			<zone type="Europe/Dublin">
+				<long>
+					<daylight>আইৰিচ মান সময়</daylight>
+				</long>
+			</zone>
+			<zone type="Asia/Rangoon">
+				<exemplarCity>য়াঙ্গুন</exemplarCity>
+			</zone>
+			<zone type="America/Asuncion">
+				<exemplarCity>Asuncion</exemplarCity>
+			</zone>
+			<zone type="Indian/Reunion">
+				<exemplarCity>Reunion</exemplarCity>
+			</zone>
+			<zone type="Africa/Sao_Tome">
+				<exemplarCity>Sao Tome</exemplarCity>
+			</zone>
+			<zone type="Europe/Uzhgorod">
+				<exemplarCity>Uzhgorod</exemplarCity>
+			</zone>
+			<zone type="Asia/Saigon">
+				<exemplarCity>Ho Chi Minh</exemplarCity>
+			</zone>
+			<metazone type="Afghanistan">
+				<long>
+					<standard>আফগানিস্তান সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Africa_Central">
+				<long>
+					<standard>মধ্য আফ্রিকা সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Africa_Eastern">
+				<long>
+					<standard>পূর্ব আফ্রিকা সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Africa_Southern">
+				<long>
+					<standard>দক্ষিণ আফ্রিকা মান সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Africa_Western">
+				<long>
+					<generic>পশ্চিম আফ্রিকা সময়</generic>
+					<standard>পশ্চিম আফ্রিকার মান সময়</standard>
+					<daylight>পশ্চিম আফ্রিকার গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Amazon">
+				<long>
+					<generic>আমজান সময়</generic>
+					<standard>আমজান মান সময়</standard>
+					<daylight>আমজান গ্রীষ্মের সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Apia">
+				<long>
+					<generic>আপিয়া সময়</generic>
+					<standard>আপিয়া স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>আপিয়া ডেলাইট টাইম</daylight>
+				</long>
+			</metazone>
+			<metazone type="Arabian">
+				<long>
+					<generic>আরবীয় সময়</generic>
+					<standard>আরবীয় মান সময়</standard>
+					<daylight>আরবীয় দিনের আলো</daylight>
+				</long>
+			</metazone>
+			<metazone type="Argentina">
+				<long>
+					<generic>আৰ্জেণ্টিনা সময়</generic>
+					<standard>আৰ্জেণ্টিনা মান সময়</standard>
+					<daylight>আৰ্জেণ্টিনা গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Argentina_Western">
+				<long>
+					<generic>ওয়েস্টার্ন আর্জেন্টিনা সময়</generic>
+					<standard>ওয়েস্টার্ন আর্জেন্টিনা মান সময়</standard>
+					<daylight>ওয়েস্টার্ন আর্জেন্টিনা গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Armenia">
+				<long>
+					<generic>আর্মেনিয়া টাইম</generic>
+					<standard>আর্মেনিয়া স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>আর্মেনিয়া গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Australia_Central">
+				<long>
+					<generic>কেন্দ্রীয় অস্ট্রেলিয়া সময়</generic>
+					<standard>অস্ট্রেলিয়ান কেন্দ্রীয় স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>অস্ট্রেলিয়ান কেন্দ্রীয় দিবালোক সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Australia_CentralWestern">
+				<long>
+					<generic>অস্ট্রেলিয়ান সেন্ট্রাল ওয়েস্টার্ন টাইম</generic>
+					<standard>অস্ট্রেলিয়ান সেন্ট্রাল ওয়েস্টার্ন স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>অস্ট্রেলিয়ান সেন্ট্রাল ওয়েস্টার্ন ডেলাইট টাইম</daylight>
+				</long>
+			</metazone>
+			<metazone type="Australia_Eastern">
+				<long>
+					<generic>পূর্ব অস্ট্রেলিয়া সময়</generic>
+					<standard>অস্ট্রেলিয়ান ইস্টার্ন স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>অস্ট্রেলিয়ান পূর্ব দিবালোক সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Australia_Western">
+				<long>
+					<generic>ওয়েস্টার্ন অস্ট্রেলিয়া টাইম</generic>
+					<standard>অস্ট্রেলিয়ান ওয়েস্টার্ন স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>অস্ট্রেলিয়ান ওয়েস্টার্ন ডেলাইট টাইম</daylight>
+				</long>
+			</metazone>
+			<metazone type="Azerbaijan">
+				<long>
+					<generic>আজারবাইজান সময়</generic>
+					<standard>আজারবাইজান স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>আজারবাইজান গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Azores">
+				<long>
+					<generic>Azores সময়</generic>
+					<standard>Azores মান সময়</standard>
+					<daylight>Azores গ্রীষ্মের সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Bangladesh">
+				<long>
+					<generic>বাংলাদেশ সময়</generic>
+					<standard>বাংলাদেশ স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>বাংলাদেশ গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Bhutan">
+				<long>
+					<standard>ভুটান টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Bolivia">
+				<long>
+					<standard>বলিভিয়া সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Brasilia">
+				<long>
+					<generic>ব্ৰাছিলিয়া সময়</generic>
+					<standard>ব্ৰাছিলিয়া মান সময়</standard>
+					<daylight>ব্ৰাছিলিয়া গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Brunei">
+				<long>
+					<standard>ব্রুনেই দারুসসালাম সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Cape_Verde">
+				<long>
+					<generic>কেপ ভার্দে সময়</generic>
+					<standard>কেপ ওয়ার্ড স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>কেপ ভার্দে গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Chamorro">
+				<long>
+					<standard>চামেরো স্ট্যান্ডার্ড টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Chatham">
+				<long>
+					<generic>চ্যাথাম টাইম</generic>
+					<standard>চ্যাথাম স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>চ্যাথাম ডেইলাইট টাইম</daylight>
+				</long>
+			</metazone>
+			<metazone type="Chile">
+				<long>
+					<generic>চিলি সময়</generic>
+					<standard>চিলি স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>চিলি গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="China">
+				<long>
+					<generic>চীন সময়</generic>
+					<standard>চীন স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>চীন ডেইলাইট টাইম</daylight>
+				</long>
+			</metazone>
+			<metazone type="Choibalsan">
+				<long>
+					<generic>চিব্বালান টাইম</generic>
+					<standard>চিব্বলসন স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>চিব্বলসন গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Christmas">
+				<long>
+					<standard>ক্রিসমাস আইল্যান্ড সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Cocos">
+				<long>
+					<standard>কোকোস দ্বীপপুঞ্জ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Colombia">
+				<long>
+					<generic>কলম্বিয়া সময়</generic>
+					<standard>কলম্বিয়া মান সময়</standard>
+					<daylight>কলম্বিয়া গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Cook">
+				<long>
+					<generic>কুক দ্বীপপুঞ্জ সময়</generic>
+					<standard>কুক দ্বীপপুঞ্জ স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>কুক দ্বীপপুঞ্জ হাফ গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Davis">
+				<long>
+					<standard>ডেভিস টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="DumontDUrville">
+				<long>
+					<standard>ডামমন্ট-ডি‘উরিভ্যাল টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="East_Timor">
+				<long>
+					<standard>পূর্ব তিমুর সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Easter">
+				<long>
+					<generic>ইষ্টাৰ দ্বীপ সময়</generic>
+					<standard>ইষ্টাৰ দ্বীপ মান সময়</standard>
+					<daylight>ইষ্টাৰ দ্বীপ গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Ecuador">
+				<long>
+					<standard>ইকুৱেডৰ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Europe_Central">
+				<long>
+					<generic>কেন্দ্রীয় ইউরোপীয় সময়</generic>
+					<standard>কেন্দ্রীয় ইউরোপীয় স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>মধ্য ইউরোপীয় গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Europe_Eastern">
+				<long>
+					<generic>পূর্ব ইউরোপীয় সময়</generic>
+					<standard>পূর্ব ইউরোপীয় মান সময়</standard>
+					<daylight>পূর্ব ইউরোপীয় গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Europe_Further_Eastern">
+				<long>
+					<standard>আরও পূর্ব ইউরোপীয় সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Europe_Western">
+				<long>
+					<generic>পশ্চিম ইউরোপীয় সময়</generic>
+					<standard>পশ্চিম ইউরোপীয় মান সময়</standard>
+					<daylight>পশ্চিম ইউরোপীয় গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Falkland">
+				<long>
+					<generic>ফকল্যান্ড দ্বীপপুঞ্জ সময়</generic>
+					<standard>ফকল্যান্ড দ্বীপ স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ফকল্যান্ড দ্বীপপুঞ্জ গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Fiji">
+				<long>
+					<generic>ফিজি সময়</generic>
+					<standard>ফিজি স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ফিজি গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="French_Guiana">
+				<long>
+					<standard>ফরাসি গায়ানা সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="French_Southern">
+				<long>
+					<standard>ফরাসি দক্ষিণ ও অ্যান্টার্কটিক সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Galapagos">
+				<long>
+					<standard>গালাপাগোস টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Gambier">
+				<long>
+					<standard>গাম্বুর সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Georgia">
+				<long>
+					<generic>জর্জিয়া টাইম</generic>
+					<standard>জর্জিয়া স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>জর্জিয়া গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Gilbert_Islands">
+				<long>
+					<standard>গিলবার্ট দ্বীপপুঞ্জ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="GMT">
+				<long>
+					<standard>মক্কার সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Gulf">
+				<long>
+					<standard>উপসাগরীয় স্ট্যান্ডার্ড টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Guyana">
+				<long>
+					<standard>গায়ানা টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Hong_Kong">
+				<long>
+					<generic>হংকং সময়</generic>
+					<standard>হংকং স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>হংকং গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Hovd">
+				<long>
+					<generic>হওড টাইম</generic>
+					<standard>হোভড স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>হওগড গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="India">
+				<long>
+					<standard>ভাৰতীয় সময়</standard>
+				</long>
+				<short>
+					<standard>ভা. স.</standard>
+				</short>
+			</metazone>
+			<metazone type="Indian_Ocean">
+				<long>
+					<standard>ভারত মহাসাগর সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Indochina">
+				<long>
+					<standard>ইন্দোচীনা টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Indonesia_Central">
+				<long>
+					<standard>মধ্য ইন্দোনেশিয়া সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Indonesia_Eastern">
+				<long>
+					<standard>ইস্টার্ন ইন্দোনেশিয়া সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Indonesia_Western">
+				<long>
+					<standard>ওয়েস্টার্ন ইন্দোনেশিয়া সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Iran">
+				<long>
+					<generic>ইরান সময়</generic>
+					<standard>ইরান স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ইরান দিবালোক সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Irkutsk">
+				<long>
+					<generic>ইর্কুক্স্ক সময়</generic>
+					<standard>ইঙ্কুক্টক স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ইর্কুষস্ক গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Israel">
+				<long>
+					<generic>ইস্রায়েল সময়</generic>
+					<standard>ইস্রায়েল স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ইস্রায়েল দিবালোক সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Japan">
+				<long>
+					<generic>জাপান সময়</generic>
+					<standard>জাপান স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>জাপান দিনের হালকা সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Kazakhstan_Eastern">
+				<long>
+					<standard>পূর্ব কাজাখস্তান সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Kazakhstan_Western">
+				<long>
+					<standard>পশ্চিম কাসাবালান সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Korea">
+				<long>
+					<generic>কোরিয়ান সময়</generic>
+					<standard>কোরিয়ান স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>কোরিয়ান দিনের আলো</daylight>
+				</long>
+			</metazone>
+			<metazone type="Kosrae">
+				<long>
+					<standard>কোসরা টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Krasnoyarsk">
+				<long>
+					<generic>ক্রোশোয়েয়ার্স্ক টাইম</generic>
+					<standard>ক্রোশনোয়ার্স্ক মান সময়</standard>
+					<daylight>ক্রোয়েশোয়ারস্ক গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Line_Islands">
+				<long>
+					<standard>লাইন দ্বীপপুঞ্জ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Lord_Howe">
+				<long>
+					<generic>লর্ড হাভী সময়</generic>
+					<standard>লর্ড হাভী স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>লর্ড হ্যালো দিবালোক সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Macquarie">
+				<long>
+					<standard>ম্যাককুরি আইল্যান্ড টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Magadan">
+				<long>
+					<generic>ম্যাগাদান টাইম</generic>
+					<standard>ম্যাগাদান মান সময়</standard>
+					<daylight>ম্যাগাদান গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Malaysia">
+				<long>
+					<standard>মালয়েশিয়া সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Maldives">
+				<long>
+					<standard>মালদ্বীপের সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Marquesas">
+				<long>
+					<standard>মারকাসাস সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Marshall_Islands">
+				<long>
+					<standard>মার্শাল দ্বীপপুঞ্জ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Mauritius">
+				<long>
+					<generic>Mauritus সময়</generic>
+					<standard>Mauritius মান সময়</standard>
+					<daylight>Mauritius গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Mawson">
+				<long>
+					<standard>মোসন টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Mongolia">
+				<long>
+					<generic>উলানবাটার টাইম</generic>
+					<standard>উলানবাটার মান সময়</standard>
+					<daylight>উলানবাটার গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Moscow">
+				<long>
+					<generic>মস্কো সময়</generic>
+					<standard>মস্কো স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>মস্কো গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Myanmar">
+				<long>
+					<standard>মায়ানমার টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Nauru">
+				<long>
+					<standard>নাউরু টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Nepal">
+				<long>
+					<standard>নেপাল সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="New_Caledonia">
+				<long>
+					<generic>নিউ ক্যালেডোনিয়া সময়</generic>
+					<standard>নিউ ক্যালেডোনিয়া স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>নিউ ক্যালেডোনিয়া গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="New_Zealand">
+				<long>
+					<generic>নিউজিল্যান্ড সময়</generic>
+					<standard>নিউজিল্যান্ড স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>নিউজিল্যান্ড ডেলাইট টাইম</daylight>
+				</long>
+			</metazone>
+			<metazone type="Niue">
+				<long>
+					<standard>নিউইয় টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Norfolk">
+				<long>
+					<standard>নরফোক দ্বীপ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Noronha">
+				<long>
+					<generic>ফাৰ্নাণ্ডো ডি নোৰোন্বা</generic>
+					<standard>ফাৰ্নাণ্ডো ডি নোৰোন্বা মান সময়</standard>
+					<daylight>ফাৰ্নাণ্ডো ডি নোৰোন্বা গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Novosibirsk">
+				<long>
+					<generic>নোভোসিবিরস্ক সময়</generic>
+					<standard>নোভোসিবিরস্ক স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>নোভোসিবিরস্ক গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Omsk">
+				<long>
+					<generic>Omsk সময়</generic>
+					<standard>Omsk আদর্শ সময়</standard>
+					<daylight>Omsk গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Pakistan">
+				<long>
+					<generic>পাকিস্তান টাইম</generic>
+					<standard>পাকিস্তান স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>পাকিস্তান গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Palau">
+				<long>
+					<standard>পালাউ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Papua_New_Guinea">
+				<long>
+					<standard>পাপুয়া নিউ গিনি সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Paraguay">
+				<long>
+					<generic>পাৰাগুৱে সময়</generic>
+					<standard>পাৰাগুৱে মান সময়</standard>
+					<daylight>পাৰাগুৱে গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Peru">
+				<long>
+					<generic>পেরু সময়</generic>
+					<standard>পেরু মান সময়</standard>
+					<daylight>পেরু গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Philippines">
+				<long>
+					<generic>ফিলিপাইন টাইম</generic>
+					<standard>ফিলিপাইন স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ফিলিপাইন গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Phoenix_Islands">
+				<long>
+					<standard>ফিনিক্স দ্বীপপুঞ্জ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Pitcairn">
+				<long>
+					<standard>পিটারকনার টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Ponape">
+				<long>
+					<standard>পনাপ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Pyongyang">
+				<long>
+					<standard>পিয়ংইয়ং টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Reunion">
+				<long>
+					<standard>রিয়ানিয়ন টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Rothera">
+				<long>
+					<standard>রোথেরা টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Sakhalin">
+				<long>
+					<generic>সাখালিন টাইম</generic>
+					<standard>সাখালিন মান টাইম</standard>
+					<daylight>সাখালিন গ্রীষ্মের সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Samoa">
+				<long>
+					<generic>সামোয়া সময়</generic>
+					<standard>সামোয়া স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>সামোয়া ডেলাইট সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Seychelles">
+				<long>
+					<standard>সেশেলস সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Singapore">
+				<long>
+					<standard>সিঙ্গাপুর স্ট্যান্ডার্ড টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Solomon">
+				<long>
+					<standard>সলোমন দ্বীপপুঞ্জ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="South_Georgia">
+				<long>
+					<standard>দক্ষিণ জর্জিয়া টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Suriname">
+				<long>
+					<standard>সুরিনাম টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Syowa">
+				<long>
+					<standard>Syowa টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Tahiti">
+				<long>
+					<standard>তাহিতি টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Taipei">
+				<long>
+					<generic>তাইপে সময়</generic>
+					<standard>তাইপে স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>তাইপে দিনের হালকা সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Tajikistan">
+				<long>
+					<standard>তাজিকিস্তান টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Tokelau">
+				<long>
+					<standard>টোকেলাউ সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Tonga">
+				<long>
+					<generic>টোঙ্গা টাইম</generic>
+					<standard>টোঙ্গা স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>টঙ্গা গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Truk">
+				<long>
+					<standard>চুুক টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Turkmenistan">
+				<long>
+					<generic>তুর্কমেনিস্তান সময়</generic>
+					<standard>তুর্কমেনিস্তান মান সময়</standard>
+					<daylight>তুর্কমেনিস্তান গ্রীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Tuvalu">
+				<long>
+					<standard>টুভালু সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Uruguay">
+				<long>
+					<generic>উৰুগুৱে সময়</generic>
+					<standard>উৰুগুৱে মান সময়</standard>
+					<daylight>উৰুগুৱে গ্ৰীষ্ম সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Uzbekistan">
+				<long>
+					<generic>উজবেকিস্তান সময়</generic>
+					<standard>উজবেকিস্তান মান সময়</standard>
+					<daylight>উজবেকিস্তান গ্রীষ্মের সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Vanuatu">
+				<long>
+					<generic>ভানুয়াতু সময়</generic>
+					<standard>ভানুয়াতু স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ভানুয়াতু গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Venezuela">
+				<long>
+					<standard>ভেনিজুয়েলা সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Vladivostok">
+				<long>
+					<generic>ভ্লাদভোস্টক টাইম</generic>
+					<standard>ভ্লাদভোস্টোক স্ট্যান্ডার্ড টাইম</standard>
+					<daylight>ভ্লাদভোস্টক সামার সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Volgograd">
+				<long>
+					<generic>ভলগোগ্রাদ টাইম</generic>
+					<standard>ভোলগোগ্রাদ মান সময়</standard>
+					<daylight>ভলগোগ্রেড গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Vostok">
+				<long>
+					<standard>ভোস্টোক টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Wake">
+				<long>
+					<standard>ওয়াক আইল্যান্ড টাইম</standard>
+				</long>
+			</metazone>
+			<metazone type="Wallis">
+				<long>
+					<standard>ওয়ালিস ও ফুটুনা সময়</standard>
+				</long>
+			</metazone>
+			<metazone type="Yakutsk">
+				<long>
+					<generic>Yakutsk সময়</generic>
+					<standard>Yakutsk মান সময়</standard>
+					<daylight>Yakutsk গ্রীষ্মের সময়</daylight>
+				</long>
+			</metazone>
+			<metazone type="Yekaterinburg">
+				<long>
+					<generic>ইয়েকাতেরিনবার্গ সময়</generic>
+					<standard>ইয়েকাতেরিনবার্গ স্ট্যান্ডার্ড সময়</standard>
+					<daylight>ইয়েকাতেরিনবার্গ গ্রীষ্মকালীন সময়</daylight>
+				</long>
+			</metazone>
+		</timeZoneNames>
+	</dates>
+	<numbers>
+		<defaultNumberingSystem>beng</defaultNumberingSystem>
+		<otherNumberingSystems>
+			<native>beng</native>
+		</otherNumberingSystems>
+		<minimumGroupingDigits draft="contributed">1</minimumGroupingDigits>
+		<symbols>
+			<timeSeparator draft="unconfirmed">.</timeSeparator>
+		</symbols>
+		<symbols numberSystem="beng">
+			<decimal>.</decimal>
+			<group>,</group>
+			<percentSign>%</percentSign>
+			<plusSign>+</plusSign>
+			<minusSign>-</minusSign>
+			<exponential>E</exponential>
+			<superscriptingExponent>×</superscriptingExponent>
+			<perMille>‰</perMille>
+			<infinity>∞</infinity>
+			<nan>NaN</nan>
+		</symbols>
+		<symbols numberSystem="latn">
+			<decimal>.</decimal>
+			<group>,</group>
+			<percentSign>%</percentSign>
+			<plusSign>+</plusSign>
+			<minusSign>-</minusSign>
+			<exponential>E</exponential>
+			<superscriptingExponent>×</superscriptingExponent>
+			<perMille>‰</perMille>
+			<infinity>∞</infinity>
+			<nan>NaN</nan>
+		</symbols>
+		<decimalFormats numberSystem="beng">
+			<decimalFormatLength>
+				<decimalFormat>
+					<pattern>#,##,##0.###</pattern>
+				</decimalFormat>
+			</decimalFormatLength>
+		</decimalFormats>
+		<decimalFormats numberSystem="latn">
+			<decimalFormatLength>
+				<decimalFormat>
+					<pattern>#,##,##0.###</pattern>
+				</decimalFormat>
+			</decimalFormatLength>
+			<decimalFormatLength type="long">
+				<decimalFormat>
+					<pattern type="1000" count="one">0 হাজাৰ</pattern>
+					<pattern type="1000" count="other">0 হাজাৰ</pattern>
+					<pattern type="10000" count="one">00 হাজাৰ</pattern>
+					<pattern type="10000" count="other">00 হাজাৰ</pattern>
+					<pattern type="100000" count="one">0 লাখ</pattern>
+					<pattern type="100000" count="other">0 লাখ</pattern>
+					<pattern type="1000000" count="one">00 লাখ</pattern>
+					<pattern type="1000000" count="other">00 লাখ</pattern>
+					<pattern type="10000000" count="one">0 কোটি</pattern>
+					<pattern type="10000000" count="other">0 কোটি</pattern>
+					<pattern type="100000000" count="one">00 কোটি</pattern>
+					<pattern type="100000000" count="other">00 কোটি</pattern>
+					<pattern type="1000000000" count="one">0 আৰব</pattern>
+					<pattern type="1000000000" count="other">0 আৰব</pattern>
+					<pattern type="10000000000" count="one">00 আৰব</pattern>
+					<pattern type="10000000000" count="other">00 আৰব</pattern>
+					<pattern type="100000000000" count="one">0 খৰব</pattern>
+					<pattern type="100000000000" count="other">0 খৰব</pattern>
+					<pattern type="1000000000000" count="one">00 খৰব</pattern>
+					<pattern type="1000000000000" count="other">00 খৰব</pattern>
+					<pattern type="10000000000000" count="one">000 খৰব</pattern>
+					<pattern type="10000000000000" count="other">000 খৰব</pattern>
+					<pattern type="100000000000000" count="one">0000 খৰব</pattern>
+					<pattern type="100000000000000" count="other">0000 খৰব</pattern>
+				</decimalFormat>
+			</decimalFormatLength>
+			<decimalFormatLength type="short">
+				<decimalFormat>
+					<pattern type="1000" count="one">0 হাজাৰ</pattern>
+					<pattern type="1000" count="other">0 হাজাৰ</pattern>
+					<pattern type="10000" count="one">00 হাজাৰ</pattern>
+					<pattern type="10000" count="other">00 হাজাৰ</pattern>
+					<pattern type="100000" count="one">0 লাখ</pattern>
+					<pattern type="100000" count="other">0 লাখ</pattern>
+					<pattern type="1000000" count="one">00 লাখ</pattern>
+					<pattern type="1000000" count="other">00 লাখ</pattern>
+					<pattern type="10000000" count="one">0 ক'.'</pattern>
+					<pattern type="10000000" count="other">0 ক'.'</pattern>
+					<pattern type="100000000" count="one">00 ক'.'</pattern>
+					<pattern type="100000000" count="other">00 ক'.'</pattern>
+					<pattern type="1000000000" count="one">0 আ'.'</pattern>
+					<pattern type="1000000000" count="other">0 আ'.'</pattern>
+					<pattern type="10000000000" count="one">00 আ'.'</pattern>
+					<pattern type="10000000000" count="other">00 আ'.'</pattern>
+					<pattern type="100000000000" count="one">0 খ'.'</pattern>
+					<pattern type="100000000000" count="other">0 খ'.'</pattern>
+					<pattern type="1000000000000" count="one">00 খ'.'</pattern>
+					<pattern type="1000000000000" count="other">00 খ'.'</pattern>
+					<pattern type="10000000000000" count="one">0 তিল</pattern>
+					<pattern type="10000000000000" count="other">0 তিল</pattern>
+					<pattern type="100000000000000" count="one">00 তিল</pattern>
+					<pattern type="100000000000000" count="other">00 তিল</pattern>
+				</decimalFormat>
+			</decimalFormatLength>
+		</decimalFormats>
+		<scientificFormats numberSystem="beng">
+			<scientificFormatLength>
+				<scientificFormat>
+					<pattern>#E0</pattern>
+				</scientificFormat>
+			</scientificFormatLength>
+		</scientificFormats>
+		<scientificFormats numberSystem="latn">
+			<scientificFormatLength>
+				<scientificFormat>
+					<pattern>#E0</pattern>
+				</scientificFormat>
+			</scientificFormatLength>
+		</scientificFormats>
+		<percentFormats numberSystem="beng">
+			<percentFormatLength>
+				<percentFormat>
+					<pattern>#,##,##0%</pattern>
+				</percentFormat>
+			</percentFormatLength>
+		</percentFormats>
+		<percentFormats numberSystem="latn">
+			<percentFormatLength>
+				<percentFormat>
+					<pattern>#,##,##0%</pattern>
+				</percentFormat>
+			</percentFormatLength>
+		</percentFormats>
+		<currencyFormats numberSystem="beng">
+			<currencyFormatLength>
+				<currencyFormat type="standard">
+					<pattern>¤ #,##,##0.00</pattern>
+				</currencyFormat>
+			</currencyFormatLength>
+		</currencyFormats>
+		<currencyFormats numberSystem="latn">
+			<currencyFormatLength>
+				<currencyFormat type="standard">
+					<pattern>¤ #,##,##0.00</pattern>
+				</currencyFormat>
+				<currencyFormat type="accounting">
+					<pattern>¤ #,##,##0.00</pattern>
+				</currencyFormat>
+			</currencyFormatLength>
+			<currencyFormatLength type="short">
+				<currencyFormat type="standard">
+					<pattern type="1000" count="one">¤ 0 হাজাৰ</pattern>
+					<pattern type="1000" count="other">¤ 0 হাজাৰ</pattern>
+					<pattern type="10000" count="one">¤ 00 হাজাৰ</pattern>
+					<pattern type="10000" count="other">¤ 00 হাজাৰ</pattern>
+					<pattern type="100000" count="one">¤ 000 লাখ</pattern>
+					<pattern type="100000" count="other">¤ 000 লাখ</pattern>
+					<pattern type="1000000" count="one">¤ 00 লাখ</pattern>
+					<pattern type="1000000" count="other">¤ 00 লাখ</pattern>
+					<pattern type="10000000" count="one">¤ 0 ক'.'</pattern>
+					<pattern type="10000000" count="other">¤ 0 ক'.'</pattern>
+					<pattern type="100000000" count="one">¤ 00 ক'.'</pattern>
+					<pattern type="100000000" count="other">¤ 00 ক'.'</pattern>
+					<pattern type="1000000000" count="one">¤0 আ'.'</pattern>
+					<pattern type="1000000000" count="other">¤0 আ'.'</pattern>
+					<pattern type="10000000000" count="one">¤00 আ'.'</pattern>
+					<pattern type="10000000000" count="other">¤00 আ'.'</pattern>
+					<pattern type="100000000000" count="one">¤0 খ'.'</pattern>
+					<pattern type="100000000000" count="other">¤0 খ'.'</pattern>
+					<pattern type="1000000000000" count="one">¤00 খ'.'</pattern>
+					<pattern type="1000000000000" count="other">¤00 খ'.'</pattern>
+					<pattern type="10000000000000" count="one">¤0 তিল</pattern>
+					<pattern type="10000000000000" count="other">¤0 তিল</pattern>
+					<pattern type="100000000000000" count="one">¤00 তিল</pattern>
+					<pattern type="100000000000000" count="other">¤00 তিল</pattern>
+				</currencyFormat>
+			</currencyFormatLength>
+			<unitPattern count="one">{0} {1}</unitPattern>
+			<unitPattern count="other">{0} {1}</unitPattern>
+		</currencyFormats>
+		<currencies>
+			<currency type="AED">
+				<symbol draft="contributed">AED</symbol>
+			</currency>
+			<currency type="AFN">
+				<symbol draft="contributed">AFN</symbol>
+			</currency>
+			<currency type="ALL">
+				<symbol draft="contributed">ALL</symbol>
+			</currency>
+			<currency type="AMD">
+				<symbol draft="contributed">AMD</symbol>
+			</currency>
+			<currency type="ANG">
+				<symbol draft="contributed">ANG</symbol>
+			</currency>
+			<currency type="AOA">
+				<symbol draft="contributed">AOA</symbol>
+				<symbol alt="narrow" draft="contributed">Kz</symbol>
+			</currency>
+			<currency type="ARS">
+				<symbol draft="contributed">ARS</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="AUD">
+				<displayName>অস্ট্রেলিয়ান ডলার</displayName>
+				<displayName count="one">অস্ট্রেলিয়ান ডলার</displayName>
+				<displayName count="other">অস্ট্রেলিয়ান ডলার</displayName>
+				<symbol draft="contributed">A$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="AWG">
+				<symbol draft="contributed">AWG</symbol>
+			</currency>
+			<currency type="AZN">
+				<symbol draft="contributed">AZN</symbol>
+			</currency>
+			<currency type="BAM">
+				<symbol draft="contributed">BAM</symbol>
+				<symbol alt="narrow" draft="contributed">KM</symbol>
+			</currency>
+			<currency type="BBD">
+				<symbol draft="contributed">BBD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="BDT">
+				<symbol draft="contributed">BDT</symbol>
+				<symbol alt="narrow" draft="contributed">৳</symbol>
+			</currency>
+			<currency type="BGN">
+				<symbol draft="contributed">BGN</symbol>
+			</currency>
+			<currency type="BHD">
+				<symbol draft="contributed">BHD</symbol>
+			</currency>
+			<currency type="BIF">
+				<symbol draft="contributed">BIF</symbol>
+			</currency>
+			<currency type="BMD">
+				<symbol draft="contributed">BMD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="BND">
+				<symbol draft="contributed">BND</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="BOB">
+				<symbol draft="contributed">BOB</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="BRL">
+				<symbol draft="contributed">R$</symbol>
+				<symbol alt="narrow" draft="contributed">R$</symbol>
+			</currency>
+			<currency type="BSD">
+				<symbol draft="contributed">BSD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="BTN">
+				<symbol draft="contributed">BTN</symbol>
+			</currency>
+			<currency type="BWP">
+				<symbol draft="contributed">BWP</symbol>
+				<symbol alt="narrow" draft="contributed">P</symbol>
+			</currency>
+			<currency type="BYN">
+				<symbol draft="contributed">BYN</symbol>
+				<symbol alt="narrow" draft="contributed">р.</symbol>
+			</currency>
+			<currency type="BZD">
+				<symbol draft="contributed">BZD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="CAD">
+				<symbol draft="contributed">CA$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="CDF">
+				<symbol draft="contributed">CDF</symbol>
+			</currency>
+			<currency type="CHF">
+				<symbol draft="contributed">CHF</symbol>
+			</currency>
+			<currency type="CLP">
+				<symbol draft="contributed">CLP</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="CNH">
+				<symbol draft="contributed">CNH</symbol>
+			</currency>
+			<currency type="CNY">
+				<symbol draft="contributed">CN¥</symbol>
+				<symbol alt="narrow" draft="contributed">¥</symbol>
+			</currency>
+			<currency type="COP">
+				<symbol draft="contributed">COP</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="CRC">
+				<symbol draft="contributed">CRC</symbol>
+				<symbol alt="narrow" draft="contributed">₡</symbol>
+			</currency>
+			<currency type="CUC">
+				<symbol draft="contributed">CUC</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="CUP">
+				<symbol draft="contributed">CUP</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="CVE">
+				<symbol draft="contributed">CVE</symbol>
+			</currency>
+			<currency type="CZK">
+				<symbol draft="contributed">CZK</symbol>
+				<symbol alt="narrow" draft="contributed">Kč</symbol>
+			</currency>
+			<currency type="DJF">
+				<symbol draft="contributed">DJF</symbol>
+			</currency>
+			<currency type="DKK">
+				<symbol draft="contributed">DKK</symbol>
+				<symbol alt="narrow" draft="contributed">kr</symbol>
+			</currency>
+			<currency type="DOP">
+				<symbol draft="contributed">DOP</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="DZD">
+				<symbol draft="contributed">DZD</symbol>
+			</currency>
+			<currency type="EGP">
+				<symbol draft="contributed">EGP</symbol>
+				<symbol alt="narrow" draft="contributed">E£</symbol>
+			</currency>
+			<currency type="ERN">
+				<symbol draft="contributed">ERN</symbol>
+			</currency>
+			<currency type="ETB">
+				<symbol draft="contributed">ETB</symbol>
+			</currency>
+			<currency type="EUR">
+				<displayName>ইউরোর</displayName>
+				<displayName count="one">ইউরোর</displayName>
+				<displayName count="other">ইউরোর</displayName>
+				<symbol draft="contributed">€</symbol>
+				<symbol alt="narrow" draft="contributed">€</symbol>
+			</currency>
+			<currency type="FJD">
+				<displayName>ফিজিয়ান ডলার</displayName>
+				<displayName count="one">ফিজিয়ান ডলার</displayName>
+				<displayName count="other">ফিজিয়ান ডলার</displayName>
+				<symbol draft="contributed">FJD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="FKP">
+				<symbol draft="contributed">FKP</symbol>
+				<symbol alt="narrow" draft="contributed">£</symbol>
+			</currency>
+			<currency type="GBP">
+				<symbol draft="contributed">£</symbol>
+				<symbol alt="narrow" draft="contributed">£</symbol>
+			</currency>
+			<currency type="GEL">
+				<symbol draft="contributed">GEL</symbol>
+				<symbol alt="narrow" draft="contributed">₾</symbol>
+			</currency>
+			<currency type="GHS">
+				<symbol draft="contributed">GHS</symbol>
+			</currency>
+			<currency type="GIP">
+				<symbol draft="contributed">GIP</symbol>
+				<symbol alt="narrow" draft="contributed">£</symbol>
+			</currency>
+			<currency type="GMD">
+				<symbol draft="contributed">GMD</symbol>
+			</currency>
+			<currency type="GNF">
+				<symbol draft="contributed">GNF</symbol>
+				<symbol alt="narrow" draft="contributed">FG</symbol>
+			</currency>
+			<currency type="GTQ">
+				<symbol draft="contributed">GTQ</symbol>
+				<symbol alt="narrow" draft="contributed">Q</symbol>
+			</currency>
+			<currency type="GYD">
+				<symbol draft="contributed">GYD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="HKD">
+				<symbol draft="contributed">HK$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="HNL">
+				<symbol draft="contributed">HNL</symbol>
+				<symbol alt="narrow" draft="contributed">L</symbol>
+			</currency>
+			<currency type="HRK">
+				<symbol draft="contributed">HRK</symbol>
+				<symbol alt="narrow" draft="contributed">kn</symbol>
+			</currency>
+			<currency type="HTG">
+				<symbol draft="contributed">HTG</symbol>
+			</currency>
+			<currency type="HUF">
+				<symbol draft="contributed">HUF</symbol>
+				<symbol alt="narrow" draft="contributed">Ft</symbol>
+			</currency>
+			<currency type="IDR">
+				<symbol draft="contributed">IDR</symbol>
+				<symbol alt="narrow" draft="contributed">Rp</symbol>
+			</currency>
+			<currency type="ILS">
+				<symbol draft="contributed">₪</symbol>
+				<symbol alt="narrow" draft="contributed">₪</symbol>
+			</currency>
+			<currency type="INR">
+				<symbol draft="contributed">₹</symbol>
+				<symbol alt="narrow" draft="contributed">₹</symbol>
+			</currency>
+			<currency type="IQD">
+				<symbol draft="contributed">IQD</symbol>
+			</currency>
+			<currency type="IRR">
+				<symbol draft="contributed">IRR</symbol>
+			</currency>
+			<currency type="ISK">
+				<symbol draft="contributed">ISK</symbol>
+				<symbol alt="narrow" draft="contributed">kr</symbol>
+			</currency>
+			<currency type="JMD">
+				<symbol draft="contributed">JMD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="JOD">
+				<symbol draft="contributed">JOD</symbol>
+			</currency>
+			<currency type="JPY">
+				<symbol draft="contributed">JP¥</symbol>
+				<symbol alt="narrow" draft="contributed">¥</symbol>
+			</currency>
+			<currency type="KES">
+				<symbol draft="contributed">KES</symbol>
+			</currency>
+			<currency type="KGS">
+				<symbol draft="contributed">KGS</symbol>
+			</currency>
+			<currency type="KHR">
+				<symbol draft="contributed">KHR</symbol>
+				<symbol alt="narrow" draft="contributed">៛</symbol>
+			</currency>
+			<currency type="KMF">
+				<symbol draft="contributed">KMF</symbol>
+				<symbol alt="narrow" draft="contributed">CF</symbol>
+			</currency>
+			<currency type="KPW">
+				<symbol draft="contributed">KPW</symbol>
+				<symbol alt="narrow" draft="contributed">₩</symbol>
+			</currency>
+			<currency type="KRW">
+				<symbol draft="contributed">₩</symbol>
+				<symbol alt="narrow" draft="contributed">₩</symbol>
+			</currency>
+			<currency type="KWD">
+				<symbol draft="contributed">KWD</symbol>
+			</currency>
+			<currency type="KYD">
+				<symbol draft="contributed">KYD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="KZT">
+				<symbol draft="contributed">KZT</symbol>
+				<symbol alt="narrow" draft="contributed">₸</symbol>
+			</currency>
+			<currency type="LAK">
+				<symbol draft="contributed">LAK</symbol>
+				<symbol alt="narrow" draft="contributed">₭</symbol>
+			</currency>
+			<currency type="LBP">
+				<symbol draft="contributed">LBP</symbol>
+				<symbol alt="narrow" draft="contributed">L£</symbol>
+			</currency>
+			<currency type="LKR">
+				<symbol draft="contributed">LKR</symbol>
+				<symbol alt="narrow" draft="contributed">Rs</symbol>
+			</currency>
+			<currency type="LRD">
+				<symbol draft="contributed">LRD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="LYD">
+				<symbol draft="contributed">LYD</symbol>
+			</currency>
+			<currency type="MAD">
+				<symbol draft="contributed">MAD</symbol>
+			</currency>
+			<currency type="MDL">
+				<symbol draft="contributed">MDL</symbol>
+			</currency>
+			<currency type="MGA">
+				<symbol draft="contributed">MGA</symbol>
+				<symbol alt="narrow" draft="contributed">Ar</symbol>
+			</currency>
+			<currency type="MKD">
+				<symbol draft="contributed">MKD</symbol>
+			</currency>
+			<currency type="MMK">
+				<symbol draft="contributed">MMK</symbol>
+				<symbol alt="narrow" draft="contributed">K</symbol>
+			</currency>
+			<currency type="MNT">
+				<symbol draft="contributed">MNT</symbol>
+				<symbol alt="narrow" draft="contributed">₮</symbol>
+			</currency>
+			<currency type="MOP">
+				<symbol draft="contributed">MOP</symbol>
+			</currency>
+			<currency type="MRO">
+				<symbol draft="contributed">MRO</symbol>
+			</currency>
+			<currency type="MUR">
+				<symbol draft="contributed">MUR</symbol>
+				<symbol alt="narrow" draft="contributed">Rs</symbol>
+			</currency>
+			<currency type="MVR">
+				<symbol draft="contributed">MVR</symbol>
+			</currency>
+			<currency type="MWK">
+				<symbol draft="contributed">MWK</symbol>
+			</currency>
+			<currency type="MXN">
+				<symbol draft="contributed">MX$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="MYR">
+				<symbol draft="contributed">MYR</symbol>
+				<symbol alt="narrow" draft="contributed">RM</symbol>
+			</currency>
+			<currency type="MZN">
+				<symbol draft="contributed">MZN</symbol>
+			</currency>
+			<currency type="NAD">
+				<symbol draft="contributed">NAD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="NGN">
+				<symbol draft="contributed">NGN</symbol>
+				<symbol alt="narrow" draft="contributed">₦</symbol>
+			</currency>
+			<currency type="NIO">
+				<symbol draft="contributed">NIO</symbol>
+				<symbol alt="narrow" draft="contributed">C$</symbol>
+			</currency>
+			<currency type="NOK">
+				<symbol draft="contributed">NOK</symbol>
+				<symbol alt="narrow" draft="contributed">kr</symbol>
+			</currency>
+			<currency type="NPR">
+				<symbol draft="contributed">NPR</symbol>
+				<symbol alt="narrow" draft="contributed">Rs</symbol>
+			</currency>
+			<currency type="NZD">
+				<displayName>নিউজিল্যান্ড ডলার</displayName>
+				<displayName count="one">নিউজিল্যান্ড ডলার</displayName>
+				<displayName count="other">নিউজিল্যান্ড ডলার</displayName>
+				<symbol draft="contributed">NZ$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="OMR">
+				<symbol draft="contributed">OMR</symbol>
+			</currency>
+			<currency type="PAB">
+				<symbol draft="contributed">PAB</symbol>
+			</currency>
+			<currency type="PEN">
+				<symbol draft="contributed">PEN</symbol>
+			</currency>
+			<currency type="PGK">
+				<displayName>পাপুয়া নিউ গিনিন কেনিয়া</displayName>
+				<displayName count="one">পাপুয়া নিউ গিনিন কেনিয়া</displayName>
+				<displayName count="other">পাপুয়া নিউ গিনিন কেনিয়া</displayName>
+				<symbol draft="contributed">PGK</symbol>
+			</currency>
+			<currency type="PHP">
+				<displayName>ফিলিপাইন পেসো</displayName>
+				<displayName count="one">ফিলিপাইন পেসো</displayName>
+				<displayName count="other">ফিলিপাইন পেসো</displayName>
+				<symbol draft="contributed">PHP</symbol>
+				<symbol alt="narrow" draft="contributed">₱</symbol>
+			</currency>
+			<currency type="PKR">
+				<symbol draft="contributed">PKR</symbol>
+				<symbol alt="narrow" draft="contributed">Rs</symbol>
+			</currency>
+			<currency type="PLN">
+				<symbol draft="contributed">PLN</symbol>
+				<symbol alt="narrow" draft="contributed">zł</symbol>
+			</currency>
+			<currency type="PYG">
+				<symbol draft="contributed">PYG</symbol>
+				<symbol alt="narrow" draft="contributed">₲</symbol>
+			</currency>
+			<currency type="QAR">
+				<symbol draft="contributed">QAR</symbol>
+			</currency>
+			<currency type="RON">
+				<symbol draft="contributed">RON</symbol>
+				<symbol alt="narrow" draft="contributed">lei</symbol>
+			</currency>
+			<currency type="RSD">
+				<symbol draft="contributed">RSD</symbol>
+			</currency>
+			<currency type="RUB">
+				<symbol draft="contributed">RUB</symbol>
+				<symbol alt="narrow" draft="contributed">₽</symbol>
+			</currency>
+			<currency type="RWF">
+				<symbol draft="contributed">RWF</symbol>
+				<symbol alt="narrow" draft="contributed">RF</symbol>
+			</currency>
+			<currency type="SAR">
+				<symbol draft="contributed">SAR</symbol>
+			</currency>
+			<currency type="SBD">
+				<displayName>সলোমন দ্বীপপুঞ্জ ডলার</displayName>
+				<displayName count="one">সলোমন দ্বীপপুঞ্জ ডলার</displayName>
+				<displayName count="other">সলোমন দ্বীপপুঞ্জ ডলার</displayName>
+				<symbol draft="contributed">SBD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="SCR">
+				<symbol draft="contributed">SCR</symbol>
+			</currency>
+			<currency type="SDG">
+				<symbol draft="contributed">SDG</symbol>
+			</currency>
+			<currency type="SEK">
+				<symbol draft="contributed">SEK</symbol>
+				<symbol alt="narrow" draft="contributed">kr</symbol>
+			</currency>
+			<currency type="SGD">
+				<displayName>সিঙ্গাপুর ডলার</displayName>
+				<displayName count="one">সিঙ্গাপুর ডলার</displayName>
+				<displayName count="other">সিঙ্গাপুর ডলার</displayName>
+				<symbol draft="contributed">SGD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="SHP">
+				<symbol draft="contributed">SHP</symbol>
+				<symbol alt="narrow" draft="contributed">£</symbol>
+			</currency>
+			<currency type="SLL">
+				<symbol draft="contributed">SLL</symbol>
+			</currency>
+			<currency type="SOS">
+				<symbol draft="contributed">SOS</symbol>
+			</currency>
+			<currency type="SRD">
+				<symbol draft="contributed">SRD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="SSP">
+				<symbol draft="contributed">SSP</symbol>
+				<symbol alt="narrow" draft="contributed">£</symbol>
+			</currency>
+			<currency type="STD">
+				<symbol draft="contributed">STD</symbol>
+				<symbol alt="narrow" draft="contributed">Db</symbol>
+			</currency>
+			<currency type="SYP">
+				<symbol draft="contributed">SYP</symbol>
+				<symbol alt="narrow" draft="contributed">£</symbol>
+			</currency>
+			<currency type="SZL">
+				<symbol draft="contributed">SZL</symbol>
+			</currency>
+			<currency type="THB">
+				<displayName>থাই বাত</displayName>
+				<displayName count="one">থাই বাত</displayName>
+				<displayName count="other">থাই বাত</displayName>
+				<symbol draft="contributed">THB</symbol>
+				<symbol alt="narrow" draft="contributed">฿</symbol>
+			</currency>
+			<currency type="TJS">
+				<symbol draft="contributed">TJS</symbol>
+			</currency>
+			<currency type="TMT">
+				<symbol draft="contributed">TMT</symbol>
+			</currency>
+			<currency type="TND">
+				<symbol draft="contributed">TND</symbol>
+			</currency>
+			<currency type="TOP">
+				<displayName>টোঙ্গান পাংগা</displayName>
+				<displayName count="one">টোঙ্গান পাংগা</displayName>
+				<displayName count="other">টোঙ্গান পাংগা</displayName>
+				<symbol draft="contributed">TOP</symbol>
+				<symbol alt="narrow" draft="contributed">T$</symbol>
+			</currency>
+			<currency type="TRY">
+				<symbol draft="contributed">TRY</symbol>
+				<symbol alt="narrow" draft="contributed">₺</symbol>
+				<symbol alt="variant" draft="contributed">TL</symbol>
+			</currency>
+			<currency type="TTD">
+				<symbol draft="contributed">TTD</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="TWD">
+				<symbol draft="contributed">NT$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="TZS">
+				<symbol draft="contributed">TZS</symbol>
+			</currency>
+			<currency type="UAH">
+				<symbol draft="contributed">UAH</symbol>
+				<symbol alt="narrow" draft="contributed">₴</symbol>
+			</currency>
+			<currency type="UGX">
+				<symbol draft="contributed">UGX</symbol>
+			</currency>
+			<currency type="USD">
+				<symbol draft="contributed">US$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="UYU">
+				<symbol draft="contributed">UYU</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="UZS">
+				<symbol draft="contributed">UZS</symbol>
+			</currency>
+			<currency type="VEF">
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VND">
+				<displayName>ভিয়েতনামী ডং</displayName>
+				<displayName count="one">ভিয়েতনামী ডং</displayName>
+				<displayName count="other">ভিয়েতনামী ডং</displayName>
+				<symbol draft="contributed">₫</symbol>
+				<symbol alt="narrow" draft="contributed">₫</symbol>
+			</currency>
+			<currency type="VUV">
+				<displayName>ভানুয়াতু ভাতু</displayName>
+				<displayName count="one">ভানুয়াতু ভাতু</displayName>
+				<displayName count="other">ভানুয়াতু ভাতু</displayName>
+				<symbol draft="contributed">VUV</symbol>
+			</currency>
+			<currency type="WST">
+				<displayName>সামোয়ান তাল</displayName>
+				<displayName count="one">সামোয়ান তাল</displayName>
+				<displayName count="other">সামোয়ান তাল</displayName>
+				<symbol draft="contributed">WST</symbol>
+			</currency>
+			<currency type="XAF">
+				<symbol draft="contributed">FCFA</symbol>
+			</currency>
+			<currency type="XCD">
+				<symbol draft="contributed">EC$</symbol>
+				<symbol alt="narrow" draft="contributed">$</symbol>
+			</currency>
+			<currency type="XOF">
+				<symbol draft="contributed">CFA</symbol>
+			</currency>
+			<currency type="XPF">
+				<displayName>CFP ফ্রাঙ্ক</displayName>
+				<displayName count="one">CFP ফ্রাঙ্ক</displayName>
+				<displayName count="other">CFP ফ্রাঙ্ক</displayName>
+				<symbol draft="contributed">CFPF</symbol>
+			</currency>
+			<currency type="YER">
+				<symbol draft="contributed">YER</symbol>
+			</currency>
+			<currency type="ZAR">
+				<symbol draft="contributed">ZAR</symbol>
+				<symbol alt="narrow" draft="contributed">R</symbol>
+			</currency>
+			<currency type="ZMW">
+				<symbol draft="contributed">ZMW</symbol>
+				<symbol alt="narrow" draft="contributed">ZK</symbol>
+			</currency>
+		</currencies>
+		<miscPatterns numberSystem="latn">
+			<pattern type="atLeast">⩾{0}</pattern>
+			<pattern type="range">{0}–{1}</pattern>
+		</miscPatterns>
+		<minimalPairs>
+			<pluralMinimalPairs count="one">আপোনালৈ {0} টা বাৰ্তা আহিছে;আপুনিসেইটোপঢ়িব বিচাৰেনে?</pluralMinimalPairs>
+			<pluralMinimalPairs count="other">{0} দিন</pluralMinimalPairs>
+		</minimalPairs>
+	</numbers>
+	<units>
+		<unitLength type="long">
+			<compoundUnit type="per">
+				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<unit type="acceleration-g-force">
+				<displayName>g-force</displayName>
+				<unitPattern count="one">{0} G</unitPattern>
+				<unitPattern count="other">{0} G</unitPattern>
+			</unit>
+			<unit type="acceleration-meter-per-second-squared">
+				<displayName>m/s²</displayName>
+				<unitPattern count="one">{0} m/s²</unitPattern>
+				<unitPattern count="other">{0} m/s²</unitPattern>
+			</unit>
+			<unit type="angle-revolution">
+				<displayName>বিপ্লব</displayName>
+				<unitPattern count="one">{0}বিপ্লব</unitPattern>
+				<unitPattern count="other">{0}বিপ্লব</unitPattern>
+			</unit>
+			<unit type="angle-radian">
+				<displayName>রেডিয়ানে</displayName>
+				<unitPattern count="one">{0}রেডিয়ানে</unitPattern>
+				<unitPattern count="other">{0}রেডিয়ানে</unitPattern>
+			</unit>
+			<unit type="angle-degree">
+				<displayName>ডিগ্রী</displayName>
+				<unitPattern count="one">{0}ডিগ্রী</unitPattern>
+				<unitPattern count="other">{0}ডিগ্রী</unitPattern>
+			</unit>
+			<unit type="angle-arc-minute">
+				<displayName>arcmin</displayName>
+				<unitPattern count="one">{0}′</unitPattern>
+				<unitPattern count="other">{0}′</unitPattern>
+			</unit>
+			<unit type="angle-arc-second">
+				<displayName>চাপসেকেন্ড</displayName>
+				<unitPattern count="one">{0}চাপসেকেন্ড</unitPattern>
+				<unitPattern count="other">{0}চাপসেকেন্ড</unitPattern>
+			</unit>
+			<unit type="area-square-kilometer">
+				<displayName>km²</displayName>
+				<unitPattern count="one">{0} km²</unitPattern>
+				<unitPattern count="other">{0} km²</unitPattern>
+				<perUnitPattern>{0}/km²</perUnitPattern>
+			</unit>
+			<unit type="area-hectare">
+				<displayName>hectare</displayName>
+				<unitPattern count="one">{0} ha</unitPattern>
+				<unitPattern count="other">{0} ha</unitPattern>
+			</unit>
+			<unit type="area-square-meter">
+				<displayName>m²</displayName>
+				<unitPattern count="one">{0} m²</unitPattern>
+				<unitPattern count="other">{0} m²</unitPattern>
+				<perUnitPattern>{0}/m²</perUnitPattern>
+			</unit>
+			<unit type="area-square-centimeter">
+				<displayName>cm²</displayName>
+				<unitPattern count="one">{0} cm²</unitPattern>
+				<unitPattern count="other">{0} cm²</unitPattern>
+				<perUnitPattern>{0}/cm²</perUnitPattern>
+			</unit>
+			<unit type="area-square-mile">
+				<displayName>mi²</displayName>
+				<unitPattern count="one">{0} mi²</unitPattern>
+				<unitPattern count="other">{0} mi²</unitPattern>
+				<perUnitPattern>{0}/mi²</perUnitPattern>
+			</unit>
+			<unit type="area-acre">
+				<displayName>acre</displayName>
+				<unitPattern count="one">{0} ac</unitPattern>
+				<unitPattern count="other">{0} ac</unitPattern>
+			</unit>
+			<unit type="area-square-yard">
+				<displayName>yd²</displayName>
+				<unitPattern count="one">{0} yd²</unitPattern>
+				<unitPattern count="other">{0} yd²</unitPattern>
+			</unit>
+			<unit type="area-square-foot">
+				<displayName>ft²</displayName>
+				<unitPattern count="one">{0} ft²</unitPattern>
+				<unitPattern count="other">{0} ft²</unitPattern>
+			</unit>
+			<unit type="area-square-inch">
+				<displayName>in²</displayName>
+				<unitPattern count="one">{0} in²</unitPattern>
+				<unitPattern count="other">{0} in²</unitPattern>
+				<perUnitPattern>{0}/in²</perUnitPattern>
+			</unit>
+			<unit type="concentr-karat">
+				<displayName>kt</displayName>
+				<unitPattern count="one">{0} kt</unitPattern>
+				<unitPattern count="other">{0} kt</unitPattern>
+			</unit>
+			<unit type="concentr-milligram-per-deciliter">
+				<displayName>প্রতি দশমিক মিলিগ্রাম</displayName>
+				<unitPattern count="one">{0}প্রতি দশমিক মিলিগ্রাম</unitPattern>
+				<unitPattern count="other">{0}প্রতি দশমিক মিলিগ্রাম</unitPattern>
+			</unit>
+			<unit type="concentr-millimole-per-liter">
+				<displayName>লিটার প্রতি মিলি মিলস</displayName>
+				<unitPattern count="one">{0}লিটার প্রতি মিলি মিলস</unitPattern>
+				<unitPattern count="other">{0}লিটার প্রতি মিলি মিলস</unitPattern>
+			</unit>
+			<unit type="concentr-part-per-million">
+				<displayName>প্রতি লক্ষে</displayName>
+				<unitPattern count="one">{0}প্রতি লক্ষে</unitPattern>
+				<unitPattern count="other">{0} ppm</unitPattern>
+			</unit>
+			<unit type="consumption-liter-per-kilometer">
+				<displayName>কিলোমিটার প্রতি লিটার</displayName>
+				<unitPattern count="one">{0}কিলোমিটার প্রতি লিটার</unitPattern>
+				<unitPattern count="other">{0}কিলোমিটার প্রতি লিটার</unitPattern>
+			</unit>
+			<unit type="consumption-liter-per-100kilometers">
+				<displayName>প্রতি 100 কিলোমিটার লাইট</displayName>
+				<unitPattern count="one">{0}প্রতি 100 কিলোমিটার লাইট</unitPattern>
+				<unitPattern count="other">{0}প্রতি 100 কিলোমিটার লাইট</unitPattern>
+			</unit>
+			<unit type="consumption-mile-per-gallon">
+				<displayName>গ্যালন প্রতি মাইল</displayName>
+				<unitPattern count="one">{0}গ্যালন প্রতি মাইল</unitPattern>
+				<unitPattern count="other">{0}গ্যালন প্রতি মাইল</unitPattern>
+			</unit>
+			<unit type="consumption-mile-per-gallon-imperial">
+				<displayName>মাইল প্রতি Imp পয়সের পাঁচ সের</displayName>
+				<unitPattern count="one">মাইল {0}প্রতি Imp পয়সের পাঁচ সের</unitPattern>
+				<unitPattern count="other">মাইল {0}প্রতি Imp পয়সের পাঁচ সের</unitPattern>
+			</unit>
+			<unit type="digital-terabyte">
+				<displayName>TB</displayName>
+				<unitPattern count="one">{0} TB</unitPattern>
+				<unitPattern count="other">{0} TB</unitPattern>
+			</unit>
+			<unit type="digital-terabit">
+				<displayName>Tb</displayName>
+				<unitPattern count="one">{0} Tb</unitPattern>
+				<unitPattern count="other">{0} Tb</unitPattern>
+			</unit>
+			<unit type="digital-gigabyte">
+				<displayName>GB</displayName>
+				<unitPattern count="one">{0} GB</unitPattern>
+				<unitPattern count="other">{0} GB</unitPattern>
+			</unit>
+			<unit type="digital-gigabit">
+				<displayName>Gb</displayName>
+				<unitPattern count="one">{0} Gb</unitPattern>
+				<unitPattern count="other">{0} Gb</unitPattern>
+			</unit>
+			<unit type="digital-megabyte">
+				<displayName>MB</displayName>
+				<unitPattern count="one">{0} MB</unitPattern>
+				<unitPattern count="other">{0} MB</unitPattern>
+			</unit>
+			<unit type="digital-megabit">
+				<displayName>Mb</displayName>
+				<unitPattern count="one">{0} Mb</unitPattern>
+				<unitPattern count="other">{0} Mb</unitPattern>
+			</unit>
+			<unit type="digital-kilobyte">
+				<displayName>kB</displayName>
+				<unitPattern count="one">{0} kB</unitPattern>
+				<unitPattern count="other">{0} kB</unitPattern>
+			</unit>
+			<unit type="digital-kilobit">
+				<displayName>kb</displayName>
+				<unitPattern count="one">{0} kb</unitPattern>
+				<unitPattern count="other">{0} kb</unitPattern>
+			</unit>
+			<unit type="digital-byte">
+				<displayName>byte</displayName>
+				<unitPattern count="one">{0} byte</unitPattern>
+				<unitPattern count="other">{0} byte</unitPattern>
+			</unit>
+			<unit type="digital-bit">
+				<displayName>bit</displayName>
+				<unitPattern count="one">{0} bit</unitPattern>
+				<unitPattern count="other">{0} bit</unitPattern>
+			</unit>
+			<unit type="duration-century">
+				<displayName>শতাব্দী</displayName>
+				<unitPattern count="one">{0} শতাব্দী</unitPattern>
+				<unitPattern count="other">{0} শতাব্দী</unitPattern>
+			</unit>
+			<unit type="duration-year">
+				<displayName>বছৰ</displayName>
+				<unitPattern count="one">{0} বছৰ</unitPattern>
+				<unitPattern count="other">{0} বছৰ</unitPattern>
+				<perUnitPattern>{0} প্ৰতি বছৰ</perUnitPattern>
+			</unit>
+			<unit type="duration-month">
+				<displayName>মাহ</displayName>
+				<unitPattern count="one">{0} মাহ</unitPattern>
+				<unitPattern count="other">{0} মাহ</unitPattern>
+				<perUnitPattern>{0} প্ৰতি মাহ</perUnitPattern>
+			</unit>
+			<unit type="duration-week">
+				<displayName>সপ্তাহ</displayName>
+				<unitPattern count="one">{0} সপ্তাহ</unitPattern>
+				<unitPattern count="other">{0} সপ্তাহ</unitPattern>
+				<perUnitPattern>{0} প্ৰতি সপ্তাহ</perUnitPattern>
+			</unit>
+			<unit type="duration-day">
+				<displayName>দিন</displayName>
+				<unitPattern count="one">{0} দিন</unitPattern>
+				<unitPattern count="other">{0} দিন</unitPattern>
+				<perUnitPattern>{0} প্ৰতি দিন</perUnitPattern>
+			</unit>
+			<unit type="duration-hour">
+				<displayName>ঘণ্টা</displayName>
+				<unitPattern count="one">{0} ঘণ্টা</unitPattern>
+				<unitPattern count="other">{0} ঘণ্টা</unitPattern>
+				<perUnitPattern>{0} প্ৰতি ঘণ্টা</perUnitPattern>
+			</unit>
+			<unit type="duration-minute">
+				<displayName>মিনিট</displayName>
+				<unitPattern count="one">{0} মিনিট</unitPattern>
+				<unitPattern count="other">{0} মিনিট</unitPattern>
+				<perUnitPattern>{0} প্ৰতি মিনিট</perUnitPattern>
+			</unit>
+			<unit type="duration-second">
+				<displayName>ছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} ছেকেণ্ড</unitPattern>
+				<unitPattern count="other">{0} ছেকেণ্ড</unitPattern>
+				<perUnitPattern>{0} প্ৰতি ছেকেণ্ড</perUnitPattern>
+			</unit>
+			<unit type="duration-millisecond">
+				<displayName>মিলিছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} মিলিছেকেণ্ড</unitPattern>
+				<unitPattern count="other">{0} মিলিছেকেণ্ড</unitPattern>
+			</unit>
+			<unit type="duration-microsecond">
+				<displayName>মাইক্ৰছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} মাইক্ৰছেকেণ্ড</unitPattern>
+				<unitPattern count="other">{0} মাইক্ৰছেকেণ্ড</unitPattern>
+			</unit>
+			<unit type="duration-nanosecond">
+				<displayName>নেনোছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} নেনোছেকেণ্ড</unitPattern>
+				<unitPattern count="other">{0} নেনোছেকেণ্ড</unitPattern>
+			</unit>
+			<unit type="electric-ampere">
+				<displayName>amp</displayName>
+				<unitPattern count="one">{0} A</unitPattern>
+				<unitPattern count="other">{0} A</unitPattern>
+			</unit>
+			<unit type="electric-milliampere">
+				<displayName>mA</displayName>
+				<unitPattern count="one">{0} mA</unitPattern>
+				<unitPattern count="other">{0} mA</unitPattern>
+			</unit>
+			<unit type="electric-ohm">
+				<displayName>ohm</displayName>
+				<unitPattern count="one">{0} Ω</unitPattern>
+				<unitPattern count="other">{0} Ω</unitPattern>
+			</unit>
+			<unit type="electric-volt">
+				<displayName>volt</displayName>
+				<unitPattern count="one">{0} V</unitPattern>
+				<unitPattern count="other">{0} V</unitPattern>
+			</unit>
+			<unit type="energy-kilocalorie">
+				<displayName>kcal</displayName>
+				<unitPattern count="one">{0} kcal</unitPattern>
+				<unitPattern count="other">{0} kcal</unitPattern>
+			</unit>
+			<unit type="energy-calorie">
+				<displayName>cal</displayName>
+				<unitPattern count="one">{0} cal</unitPattern>
+				<unitPattern count="other">{0} cal</unitPattern>
+			</unit>
+			<unit type="energy-foodcalorie">
+				<displayName>Cal</displayName>
+				<unitPattern count="one">{0} Cal</unitPattern>
+				<unitPattern count="other">{0} Cal</unitPattern>
+			</unit>
+			<unit type="energy-kilojoule">
+				<displayName>kJ</displayName>
+				<unitPattern count="one">{0} kJ</unitPattern>
+				<unitPattern count="other">{0} kJ</unitPattern>
+			</unit>
+			<unit type="energy-joule">
+				<displayName>joule</displayName>
+				<unitPattern count="one">{0} J</unitPattern>
+				<unitPattern count="other">{0} J</unitPattern>
+			</unit>
+			<unit type="energy-kilowatt-hour">
+				<displayName>kWh</displayName>
+				<unitPattern count="one">{0} kWh</unitPattern>
+				<unitPattern count="other">{0} kWh</unitPattern>
+			</unit>
+			<unit type="frequency-gigahertz">
+				<displayName>GHz</displayName>
+				<unitPattern count="one">{0} GHz</unitPattern>
+				<unitPattern count="other">{0} GHz</unitPattern>
+			</unit>
+			<unit type="frequency-megahertz">
+				<displayName>MHz</displayName>
+				<unitPattern count="one">{0} MHz</unitPattern>
+				<unitPattern count="other">{0} MHz</unitPattern>
+			</unit>
+			<unit type="frequency-kilohertz">
+				<displayName>kHz</displayName>
+				<unitPattern count="one">{0} kHz</unitPattern>
+				<unitPattern count="other">{0} kHz</unitPattern>
+			</unit>
+			<unit type="frequency-hertz">
+				<displayName>Hz</displayName>
+				<unitPattern count="one">{0} Hz</unitPattern>
+				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="length-kilometer">
+				<displayName>km</displayName>
+				<unitPattern count="one">{0} km</unitPattern>
+				<unitPattern count="other">{0} km</unitPattern>
+				<perUnitPattern>{0}/km</perUnitPattern>
+			</unit>
+			<unit type="length-meter">
+				<displayName>meter</displayName>
+				<unitPattern count="one">{0} m</unitPattern>
+				<unitPattern count="other">{0} m</unitPattern>
+				<perUnitPattern>{0}/m</perUnitPattern>
+			</unit>
+			<unit type="length-decimeter">
+				<displayName>dm</displayName>
+				<unitPattern count="one">{0} dm</unitPattern>
+				<unitPattern count="other">{0} dm</unitPattern>
+			</unit>
+			<unit type="length-centimeter">
+				<displayName>cm</displayName>
+				<unitPattern count="one">{0} cm</unitPattern>
+				<unitPattern count="other">{0} cm</unitPattern>
+				<perUnitPattern>{0}/cm</perUnitPattern>
+			</unit>
+			<unit type="length-millimeter">
+				<displayName>mm</displayName>
+				<unitPattern count="one">{0} mm</unitPattern>
+				<unitPattern count="other">{0} mm</unitPattern>
+			</unit>
+			<unit type="length-micrometer">
+				<displayName>µm</displayName>
+				<unitPattern count="one">{0} µm</unitPattern>
+				<unitPattern count="other">{0} µm</unitPattern>
+			</unit>
+			<unit type="length-nanometer">
+				<displayName>nm</displayName>
+				<unitPattern count="one">{0} nm</unitPattern>
+				<unitPattern count="other">{0} nm</unitPattern>
+			</unit>
+			<unit type="length-picometer">
+				<displayName>pm</displayName>
+				<unitPattern count="one">{0} pm</unitPattern>
+				<unitPattern count="other">{0} pm</unitPattern>
+			</unit>
+			<unit type="length-mile">
+				<displayName>mi</displayName>
+				<unitPattern count="one">{0} mi</unitPattern>
+				<unitPattern count="other">{0} mi</unitPattern>
+			</unit>
+			<unit type="length-yard">
+				<displayName>yd</displayName>
+				<unitPattern count="one">{0} yd</unitPattern>
+				<unitPattern count="other">{0} yd</unitPattern>
+			</unit>
+			<unit type="length-foot">
+				<displayName>ft</displayName>
+				<unitPattern count="one">{0} ft</unitPattern>
+				<unitPattern count="other">{0} ft</unitPattern>
+				<perUnitPattern>{0}/ft</perUnitPattern>
+			</unit>
+			<unit type="length-inch">
+				<displayName>in</displayName>
+				<unitPattern count="one">{0} in</unitPattern>
+				<unitPattern count="other">{0} in</unitPattern>
+				<perUnitPattern>{0}/in</perUnitPattern>
+			</unit>
+			<unit type="length-parsec">
+				<displayName>pc</displayName>
+				<unitPattern count="one">{0} pc</unitPattern>
+				<unitPattern count="other">{0} pc</unitPattern>
+			</unit>
+			<unit type="length-light-year">
+				<displayName>ly</displayName>
+				<unitPattern count="one">{0} ly</unitPattern>
+				<unitPattern count="other">{0} ly</unitPattern>
+			</unit>
+			<unit type="length-astronomical-unit">
+				<displayName>au</displayName>
+				<unitPattern count="one">{0} au</unitPattern>
+				<unitPattern count="other">{0} au</unitPattern>
+			</unit>
+			<unit type="length-nautical-mile">
+				<displayName>nmi</displayName>
+				<unitPattern count="one">{0} nmi</unitPattern>
+				<unitPattern count="other">{0} nmi</unitPattern>
+			</unit>
+			<unit type="length-mile-scandinavian">
+				<displayName>smi</displayName>
+				<unitPattern count="one">{0} smi</unitPattern>
+				<unitPattern count="other">{0} smi</unitPattern>
+			</unit>
+			<unit type="length-point">
+				<displayName>pt</displayName>
+				<unitPattern count="one">{0} pt</unitPattern>
+				<unitPattern count="other">{0} pt</unitPattern>
+			</unit>
+			<unit type="light-lux">
+				<displayName>দীপনমাত্রা</displayName>
+				<unitPattern count="one">{0}দীপনমাত্রা</unitPattern>
+				<unitPattern count="other">{0}দীপনমাত্রা</unitPattern>
+			</unit>
+			<unit type="mass-metric-ton">
+				<displayName>মেট্রিক টন</displayName>
+				<unitPattern count="one">{0} মেট্রিক টন</unitPattern>
+				<unitPattern count="other">{0} metric tons</unitPattern>
+			</unit>
+			<unit type="mass-kilogram">
+				<displayName>কিলোগ্রাম</displayName>
+				<unitPattern count="one">{0}কিলোগ্রাম</unitPattern>
+				<unitPattern count="other">{0}কিলোগ্রাম</unitPattern>
+				<perUnitPattern>{0}কিলোগ্রাম প্রতি</perUnitPattern>
+			</unit>
+			<unit type="mass-gram">
+				<displayName>gram</displayName>
+				<unitPattern count="one">{0} g</unitPattern>
+				<unitPattern count="other">{0} g</unitPattern>
+				<perUnitPattern>{0}/g</perUnitPattern>
+			</unit>
+			<unit type="mass-milligram">
+				<displayName>mg</displayName>
+				<unitPattern count="one">{0} mg</unitPattern>
+				<unitPattern count="other">{0} mg</unitPattern>
+			</unit>
+			<unit type="mass-microgram">
+				<displayName>µg</displayName>
+				<unitPattern count="one">{0} µg</unitPattern>
+				<unitPattern count="other">{0} µg</unitPattern>
+			</unit>
+			<unit type="mass-ton">
+				<displayName>tn</displayName>
+				<unitPattern count="one">{0} tn</unitPattern>
+				<unitPattern count="other">{0} tn</unitPattern>
+			</unit>
+			<unit type="mass-pound">
+				<displayName>lb</displayName>
+				<unitPattern count="one">{0} lb</unitPattern>
+				<unitPattern count="other">{0} lb</unitPattern>
+				<perUnitPattern>{0}/lb</perUnitPattern>
+			</unit>
+			<unit type="mass-ounce">
+				<displayName>oz</displayName>
+				<unitPattern count="one">{0} oz</unitPattern>
+				<unitPattern count="other">{0} oz</unitPattern>
+				<perUnitPattern>{0}/oz</perUnitPattern>
+			</unit>
+			<unit type="mass-ounce-troy">
+				<displayName>oz t</displayName>
+				<unitPattern count="one">{0} oz t</unitPattern>
+				<unitPattern count="other">{0} oz t</unitPattern>
+			</unit>
+			<unit type="mass-carat">
+				<displayName>CD</displayName>
+				<unitPattern count="one">{0} CD</unitPattern>
+				<unitPattern count="other">{0} CD</unitPattern>
+			</unit>
+			<unit type="power-gigawatt">
+				<displayName>GW</displayName>
+				<unitPattern count="one">{0} GW</unitPattern>
+				<unitPattern count="other">{0} GW</unitPattern>
+			</unit>
+			<unit type="power-megawatt">
+				<displayName>MW</displayName>
+				<unitPattern count="one">{0} MW</unitPattern>
+				<unitPattern count="other">{0} MW</unitPattern>
+			</unit>
+			<unit type="power-kilowatt">
+				<displayName>kW</displayName>
+				<unitPattern count="one">{0} kW</unitPattern>
+				<unitPattern count="other">{0} kW</unitPattern>
+			</unit>
+			<unit type="power-watt">
+				<displayName>watt</displayName>
+				<unitPattern count="one">{0} W</unitPattern>
+				<unitPattern count="other">{0} W</unitPattern>
+			</unit>
+			<unit type="power-milliwatt">
+				<displayName>mW</displayName>
+				<unitPattern count="one">{0} mW</unitPattern>
+				<unitPattern count="other">{0} mW</unitPattern>
+			</unit>
+			<unit type="power-horsepower">
+				<displayName>hp</displayName>
+				<unitPattern count="one">{0} hp</unitPattern>
+				<unitPattern count="other">{0} hp</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
+			</unit>
+			<unit type="pressure-millimeter-of-mercury">
+				<displayName>মেরি এর মিলিমিটার</displayName>
+				<unitPattern count="one">{0}মেরি এর মিলিমিটার</unitPattern>
+				<unitPattern count="other">{0}মেরি এর মিলিমিটার</unitPattern>
+			</unit>
+			<unit type="pressure-pound-per-square-inch">
+				<displayName>প্রতি ইঞ্চি এক পাউন্ড</displayName>
+				<unitPattern count="one">{0}প্রতি ইঞ্চি এক পাউন্ড</unitPattern>
+				<unitPattern count="other">{0}প্রতি ইঞ্চি এক পাউন্ড</unitPattern>
+			</unit>
+			<unit type="pressure-inch-hg">
+				<displayName>পার্সি এর ইঞ্চি</displayName>
+				<unitPattern count="one">{0}পার্সি এর ইঞ্চি</unitPattern>
+				<unitPattern count="other">{0}পার্সি এর ইঞ্চি</unitPattern>
+			</unit>
+			<unit type="pressure-millibar">
+				<displayName>mbar</displayName>
+				<unitPattern count="one">{0} millibar</unitPattern>
+				<unitPattern count="other">{0} millibars</unitPattern>
+			</unit>
+			<unit type="speed-kilometer-per-hour">
+				<displayName>km/h</displayName>
+				<unitPattern count="one">{0} km/h</unitPattern>
+				<unitPattern count="other">{0} km/h</unitPattern>
+			</unit>
+			<unit type="speed-meter-per-second">
+				<displayName>m/s</displayName>
+				<unitPattern count="one">{0} m/s</unitPattern>
+				<unitPattern count="other">{0} m/s</unitPattern>
+			</unit>
+			<unit type="speed-mile-per-hour">
+				<displayName>mi/h</displayName>
+				<unitPattern count="one">{0} mi/h</unitPattern>
+				<unitPattern count="other">{0} mi/h</unitPattern>
+			</unit>
+			<unit type="speed-knot">
+				<displayName>kn</displayName>
+				<unitPattern count="one">{0} kn</unitPattern>
+				<unitPattern count="other">{0} kn</unitPattern>
+			</unit>
+			<unit type="temperature-generic">
+				<displayName>°</displayName>
+				<unitPattern count="one">{0}°</unitPattern>
+				<unitPattern count="other">{0}°</unitPattern>
+			</unit>
+			<unit type="temperature-celsius">
+				<displayName>°C</displayName>
+				<unitPattern count="one">{0}°C</unitPattern>
+				<unitPattern count="other">{0}°C</unitPattern>
+			</unit>
+			<unit type="temperature-fahrenheit">
+				<displayName>°F</displayName>
+				<unitPattern count="one">{0}°F</unitPattern>
+				<unitPattern count="other">{0}°F</unitPattern>
+			</unit>
+			<unit type="temperature-kelvin">
+				<displayName>K</displayName>
+				<unitPattern count="one">{0} K</unitPattern>
+				<unitPattern count="other">{0} K</unitPattern>
+			</unit>
+			<unit type="volume-cubic-kilometer">
+				<displayName>km³</displayName>
+				<unitPattern count="one">{0} km³</unitPattern>
+				<unitPattern count="other">{0} km³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-meter">
+				<displayName>m³</displayName>
+				<unitPattern count="one">{0} m³</unitPattern>
+				<unitPattern count="other">{0} m³</unitPattern>
+				<perUnitPattern>{0}/m³</perUnitPattern>
+			</unit>
+			<unit type="volume-cubic-centimeter">
+				<displayName>cm³</displayName>
+				<unitPattern count="one">{0} cm³</unitPattern>
+				<unitPattern count="other">{0} cm³</unitPattern>
+				<perUnitPattern>{0}/cm³</perUnitPattern>
+			</unit>
+			<unit type="volume-cubic-mile">
+				<displayName>mi³</displayName>
+				<unitPattern count="one">{0} mi³</unitPattern>
+				<unitPattern count="other">{0} mi³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-yard">
+				<displayName>yd³</displayName>
+				<unitPattern count="one">{0} yd³</unitPattern>
+				<unitPattern count="other">{0} yd³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-foot">
+				<displayName>ft³</displayName>
+				<unitPattern count="one">{0} ft³</unitPattern>
+				<unitPattern count="other">{0} ft³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-inch">
+				<displayName>in³</displayName>
+				<unitPattern count="one">{0} in³</unitPattern>
+				<unitPattern count="other">{0} in³</unitPattern>
+			</unit>
+			<unit type="volume-megaliter">
+				<displayName>ML</displayName>
+				<unitPattern count="one">{0} ML</unitPattern>
+				<unitPattern count="other">{0} ML</unitPattern>
+			</unit>
+			<unit type="volume-hectoliter">
+				<displayName>hL</displayName>
+				<unitPattern count="one">{0} hL</unitPattern>
+				<unitPattern count="other">{0} hL</unitPattern>
+			</unit>
+			<unit type="volume-liter">
+				<displayName>liter</displayName>
+				<unitPattern count="one">{0} l</unitPattern>
+				<unitPattern count="other">{0} l</unitPattern>
+				<perUnitPattern>{0}/l</perUnitPattern>
+			</unit>
+			<unit type="volume-deciliter">
+				<displayName>dL</displayName>
+				<unitPattern count="one">{0} dL</unitPattern>
+				<unitPattern count="other">{0} dL</unitPattern>
+			</unit>
+			<unit type="volume-centiliter">
+				<displayName>cL</displayName>
+				<unitPattern count="one">{0} cL</unitPattern>
+				<unitPattern count="other">{0} cL</unitPattern>
+			</unit>
+			<unit type="volume-milliliter">
+				<displayName>mL</displayName>
+				<unitPattern count="one">{0} mL</unitPattern>
+				<unitPattern count="other">{0} mL</unitPattern>
+			</unit>
+			<unit type="volume-pint-metric">
+				<displayName>mpt</displayName>
+				<unitPattern count="one">{0} mpt</unitPattern>
+				<unitPattern count="other">{0} mpt</unitPattern>
+			</unit>
+			<unit type="volume-cup-metric">
+				<displayName>mcup</displayName>
+				<unitPattern count="one">{0} mc</unitPattern>
+				<unitPattern count="other">{0} mc</unitPattern>
+			</unit>
+			<unit type="volume-acre-foot">
+				<displayName>ac ft</displayName>
+				<unitPattern count="one">{0} ac ft</unitPattern>
+				<unitPattern count="other">{0} ac ft</unitPattern>
+			</unit>
+			<unit type="volume-gallon">
+				<displayName>US gal</displayName>
+				<unitPattern count="one">{0} gal US</unitPattern>
+				<unitPattern count="other">{0} gal US</unitPattern>
+				<perUnitPattern>{0}/gal US</perUnitPattern>
+			</unit>
+			<unit type="volume-gallon-imperial">
+				<displayName>Imp. gal</displayName>
+				<unitPattern count="one">{0} gal Imp.</unitPattern>
+				<unitPattern count="other">{0} gal Imp.</unitPattern>
+				<perUnitPattern>{0}/gal Imp.</perUnitPattern>
+			</unit>
+			<unit type="volume-quart">
+				<displayName>qt</displayName>
+				<unitPattern count="one">{0} qt</unitPattern>
+				<unitPattern count="other">{0} qt</unitPattern>
+			</unit>
+			<unit type="volume-pint">
+				<displayName>pt</displayName>
+				<unitPattern count="one">{0} pt</unitPattern>
+				<unitPattern count="other">{0} pt</unitPattern>
+			</unit>
+			<unit type="volume-cup">
+				<displayName>cup</displayName>
+				<unitPattern count="one">{0} c</unitPattern>
+				<unitPattern count="other">{0} c</unitPattern>
+			</unit>
+			<unit type="volume-fluid-ounce">
+				<displayName>fl oz</displayName>
+				<unitPattern count="one">{0} fl oz</unitPattern>
+				<unitPattern count="other">{0} fl oz</unitPattern>
+			</unit>
+			<unit type="volume-tablespoon">
+				<displayName>tbsp</displayName>
+				<unitPattern count="one">{0} tbsp</unitPattern>
+				<unitPattern count="other">{0} tbsp</unitPattern>
+			</unit>
+			<unit type="volume-teaspoon">
+				<displayName>tsp</displayName>
+				<unitPattern count="one">{0} tsp</unitPattern>
+				<unitPattern count="other">{0} tsp</unitPattern>
+			</unit>
+			<coordinateUnit>
+				<coordinateUnitPattern type="east">{0} পূর্ব</coordinateUnitPattern>
+				<coordinateUnitPattern type="north">{0}উত্তর</coordinateUnitPattern>
+				<coordinateUnitPattern type="south">{0}দক্ষিণ</coordinateUnitPattern>
+				<coordinateUnitPattern type="west">{0}পশ্চিমে</coordinateUnitPattern>
+			</coordinateUnit>
+		</unitLength>
+		<unitLength type="short">
+			<compoundUnit type="per">
+				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<unit type="acceleration-g-force">
+				<displayName>g-force</displayName>
+				<unitPattern count="one">{0} G</unitPattern>
+				<unitPattern count="other">{0} G</unitPattern>
+			</unit>
+			<unit type="acceleration-meter-per-second-squared">
+				<displayName>m/s²</displayName>
+				<unitPattern count="one">{0} m/s²</unitPattern>
+				<unitPattern count="other">{0} m/s²</unitPattern>
+			</unit>
+			<unit type="angle-revolution">
+				<displayName>rev</displayName>
+				<unitPattern count="one">{0} rev</unitPattern>
+				<unitPattern count="other">{0} rev</unitPattern>
+			</unit>
+			<unit type="angle-radian">
+				<displayName>রেডিয়ানে</displayName>
+				<unitPattern count="one">{0} rad</unitPattern>
+				<unitPattern count="other">{0} rad</unitPattern>
+			</unit>
+			<unit type="angle-degree">
+				<displayName>ডিগ্রী</displayName>
+				<unitPattern count="one">{0}°</unitPattern>
+				<unitPattern count="other">{0}°</unitPattern>
+			</unit>
+			<unit type="angle-arc-minute">
+				<displayName>arcmin</displayName>
+				<unitPattern count="one">{0}′</unitPattern>
+				<unitPattern count="other">{0}′</unitPattern>
+			</unit>
+			<unit type="angle-arc-second">
+				<displayName>arcsec</displayName>
+				<unitPattern count="one">{0}″</unitPattern>
+				<unitPattern count="other">{0}″</unitPattern>
+			</unit>
+			<unit type="area-square-kilometer">
+				<displayName>km²</displayName>
+				<unitPattern count="one">{0} km²</unitPattern>
+				<unitPattern count="other">{0} km²</unitPattern>
+				<perUnitPattern>{0}/km²</perUnitPattern>
+			</unit>
+			<unit type="area-hectare">
+				<displayName>hectare</displayName>
+				<unitPattern count="one">{0} ha</unitPattern>
+				<unitPattern count="other">{0} ha</unitPattern>
+			</unit>
+			<unit type="area-square-meter">
+				<displayName>m²</displayName>
+				<unitPattern count="one">{0} m²</unitPattern>
+				<unitPattern count="other">{0} m²</unitPattern>
+				<perUnitPattern>{0}/m²</perUnitPattern>
+			</unit>
+			<unit type="area-square-centimeter">
+				<displayName>cm²</displayName>
+				<unitPattern count="one">{0} cm²</unitPattern>
+				<unitPattern count="other">{0} cm²</unitPattern>
+				<perUnitPattern>{0}/cm²</perUnitPattern>
+			</unit>
+			<unit type="area-square-mile">
+				<displayName>mi²</displayName>
+				<unitPattern count="one">{0} mi²</unitPattern>
+				<unitPattern count="other">{0} mi²</unitPattern>
+				<perUnitPattern>{0}/mi²</perUnitPattern>
+			</unit>
+			<unit type="area-acre">
+				<displayName>acre</displayName>
+				<unitPattern count="one">{0} ac</unitPattern>
+				<unitPattern count="other">{0} ac</unitPattern>
+			</unit>
+			<unit type="area-square-yard">
+				<displayName>yd²</displayName>
+				<unitPattern count="one">{0} yd²</unitPattern>
+				<unitPattern count="other">{0} yd²</unitPattern>
+			</unit>
+			<unit type="area-square-foot">
+				<displayName>ft²</displayName>
+				<unitPattern count="one">{0} ft²</unitPattern>
+				<unitPattern count="other">{0} ft²</unitPattern>
+			</unit>
+			<unit type="area-square-inch">
+				<displayName>in²</displayName>
+				<unitPattern count="one">{0} in²</unitPattern>
+				<unitPattern count="other">{0} in²</unitPattern>
+				<perUnitPattern>{0}/in²</perUnitPattern>
+			</unit>
+			<unit type="concentr-karat">
+				<displayName>kt</displayName>
+				<unitPattern count="one">{0} kt</unitPattern>
+				<unitPattern count="other">{0} kt</unitPattern>
+			</unit>
+			<unit type="concentr-milligram-per-deciliter">
+				<displayName>mg/dL</displayName>
+				<unitPattern count="one">{0} mg/dL</unitPattern>
+				<unitPattern count="other">{0} mg/dL</unitPattern>
+			</unit>
+			<unit type="concentr-millimole-per-liter">
+				<displayName>mmol/L</displayName>
+				<unitPattern count="one">{0} mmol/L</unitPattern>
+				<unitPattern count="other">{0} mmol/L</unitPattern>
+			</unit>
+			<unit type="concentr-part-per-million">
+				<displayName>প্রতি লক্ষে</displayName>
+				<unitPattern count="one">{0} ppm</unitPattern>
+				<unitPattern count="other">{0} ppm</unitPattern>
+			</unit>
+			<unit type="consumption-liter-per-kilometer">
+				<displayName>কিলোমিটার প্রতি লিটার</displayName>
+				<unitPattern count="one">{0} L/km</unitPattern>
+				<unitPattern count="other">{0} L/km</unitPattern>
+			</unit>
+			<unit type="consumption-liter-per-100kilometers">
+				<displayName>প্রতি 100 কিলোমিটার লাইট</displayName>
+				<unitPattern count="one">{0} L/100km</unitPattern>
+				<unitPattern count="other">{0} L/100km</unitPattern>
+			</unit>
+			<unit type="consumption-mile-per-gallon">
+				<displayName>mpg US</displayName>
+				<unitPattern count="one">{0} mpg US</unitPattern>
+				<unitPattern count="other">{0} mpg US</unitPattern>
+			</unit>
+			<unit type="consumption-mile-per-gallon-imperial">
+				<displayName>mpg Imp.</displayName>
+				<unitPattern count="one">{0} mpg Imp.</unitPattern>
+				<unitPattern count="other">{0} mpg Imp.</unitPattern>
+			</unit>
+			<unit type="digital-terabyte">
+				<displayName>TB</displayName>
+				<unitPattern count="one">{0} TB</unitPattern>
+				<unitPattern count="other">{0} TB</unitPattern>
+			</unit>
+			<unit type="digital-terabit">
+				<displayName>Tb</displayName>
+				<unitPattern count="one">{0} Tb</unitPattern>
+				<unitPattern count="other">{0} Tb</unitPattern>
+			</unit>
+			<unit type="digital-gigabyte">
+				<displayName>GB</displayName>
+				<unitPattern count="one">{0} GB</unitPattern>
+				<unitPattern count="other">{0} GB</unitPattern>
+			</unit>
+			<unit type="digital-gigabit">
+				<displayName>Gb</displayName>
+				<unitPattern count="one">{0} Gb</unitPattern>
+				<unitPattern count="other">{0} Gb</unitPattern>
+			</unit>
+			<unit type="digital-megabyte">
+				<displayName>MB</displayName>
+				<unitPattern count="one">{0} MB</unitPattern>
+				<unitPattern count="other">{0} MB</unitPattern>
+			</unit>
+			<unit type="digital-megabit">
+				<displayName>Mb</displayName>
+				<unitPattern count="one">{0} Mb</unitPattern>
+				<unitPattern count="other">{0} Mb</unitPattern>
+			</unit>
+			<unit type="digital-kilobyte">
+				<displayName>kB</displayName>
+				<unitPattern count="one">{0} kB</unitPattern>
+				<unitPattern count="other">{0} kB</unitPattern>
+			</unit>
+			<unit type="digital-kilobit">
+				<displayName>kb</displayName>
+				<unitPattern count="one">{0} kb</unitPattern>
+				<unitPattern count="other">{0} kb</unitPattern>
+			</unit>
+			<unit type="digital-byte">
+				<displayName>byte</displayName>
+				<unitPattern count="one">{0} byte</unitPattern>
+				<unitPattern count="other">{0} byte</unitPattern>
+			</unit>
+			<unit type="digital-bit">
+				<displayName>bit</displayName>
+				<unitPattern count="one">{0} bit</unitPattern>
+				<unitPattern count="other">{0} bit</unitPattern>
+			</unit>
+			<unit type="duration-century">
+				<displayName>শতিকা</displayName>
+				<unitPattern count="one">{0} শতিকা</unitPattern>
+				<unitPattern count="other">{0} শতিকা</unitPattern>
+			</unit>
+			<unit type="duration-year">
+				<displayName>বছৰ</displayName>
+				<unitPattern count="one">{0} বছৰ</unitPattern>
+				<unitPattern count="other">{0} বছৰ</unitPattern>
+				<perUnitPattern>{0}/বছৰ</perUnitPattern>
+			</unit>
+			<unit type="duration-month">
+				<displayName>মাহ</displayName>
+				<unitPattern count="one">{0} মাহ</unitPattern>
+				<unitPattern count="other">{0} মাহ</unitPattern>
+				<perUnitPattern>{0}/মাহ</perUnitPattern>
+			</unit>
+			<unit type="duration-week">
+				<displayName>সপ্তাহ</displayName>
+				<unitPattern count="one">{0} সপ্তাহ</unitPattern>
+				<unitPattern count="other">{0} সপ্তাহ</unitPattern>
+				<perUnitPattern>{0}/সপ্তাহ</perUnitPattern>
+			</unit>
+			<unit type="duration-day">
+				<displayName>দিন</displayName>
+				<unitPattern count="one">{0} দিন</unitPattern>
+				<unitPattern count="other">{0} দিন</unitPattern>
+				<perUnitPattern>{0}/দিন</perUnitPattern>
+			</unit>
+			<unit type="duration-hour">
+				<displayName>ঘণ্টা</displayName>
+				<unitPattern count="one">{0} ঘণ্টা</unitPattern>
+				<unitPattern count="other">{0} ঘণ্টা</unitPattern>
+				<perUnitPattern>{0}/ঘণ্টা</perUnitPattern>
+			</unit>
+			<unit type="duration-minute">
+				<displayName>মিনিট</displayName>
+				<unitPattern count="one">{0} মিনিট</unitPattern>
+				<unitPattern count="other">{0} মিনিট</unitPattern>
+				<perUnitPattern>{0}/মিনিট</perUnitPattern>
+			</unit>
+			<unit type="duration-second">
+				<displayName>ছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} ছেকেণ্ড</unitPattern>
+				<unitPattern count="other">{0} ছেকেণ্ড</unitPattern>
+				<perUnitPattern>{0}/ছেকেণ্ড</perUnitPattern>
+			</unit>
+			<unit type="duration-millisecond">
+				<displayName>মিলিছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} মিঃছেঃ</unitPattern>
+				<unitPattern count="other">{0} মিঃছেঃ</unitPattern>
+			</unit>
+			<unit type="duration-microsecond">
+				<displayName>মাইক্ৰছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} মাঃছেঃ</unitPattern>
+				<unitPattern count="other">{0} মাঃছেঃ</unitPattern>
+			</unit>
+			<unit type="duration-nanosecond">
+				<displayName>নেনোছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} নেঃছেঃ</unitPattern>
+				<unitPattern count="other">{0} নেঃছেঃ</unitPattern>
+			</unit>
+			<unit type="electric-ampere">
+				<displayName>amp</displayName>
+				<unitPattern count="one">{0} A</unitPattern>
+				<unitPattern count="other">{0} A</unitPattern>
+			</unit>
+			<unit type="electric-milliampere">
+				<displayName>mA</displayName>
+				<unitPattern count="one">{0} mA</unitPattern>
+				<unitPattern count="other">{0} mA</unitPattern>
+			</unit>
+			<unit type="electric-ohm">
+				<displayName>ohm</displayName>
+				<unitPattern count="one">{0} Ω</unitPattern>
+				<unitPattern count="other">{0} Ω</unitPattern>
+			</unit>
+			<unit type="electric-volt">
+				<displayName>volt</displayName>
+				<unitPattern count="one">{0} V</unitPattern>
+				<unitPattern count="other">{0} V</unitPattern>
+			</unit>
+			<unit type="energy-kilocalorie">
+				<displayName>kcal</displayName>
+				<unitPattern count="one">{0} kcal</unitPattern>
+				<unitPattern count="other">{0} kcal</unitPattern>
+			</unit>
+			<unit type="energy-calorie">
+				<displayName>cal</displayName>
+				<unitPattern count="one">{0} cal</unitPattern>
+				<unitPattern count="other">{0} cal</unitPattern>
+			</unit>
+			<unit type="energy-foodcalorie">
+				<displayName>Cal</displayName>
+				<unitPattern count="one">{0} Cal</unitPattern>
+				<unitPattern count="other">{0} Cal</unitPattern>
+			</unit>
+			<unit type="energy-kilojoule">
+				<displayName>kJ</displayName>
+				<unitPattern count="one">{0} kJ</unitPattern>
+				<unitPattern count="other">{0} kJ</unitPattern>
+			</unit>
+			<unit type="energy-joule">
+				<displayName>joule</displayName>
+				<unitPattern count="one">{0} J</unitPattern>
+				<unitPattern count="other">{0} J</unitPattern>
+			</unit>
+			<unit type="energy-kilowatt-hour">
+				<displayName>kWh</displayName>
+				<unitPattern count="one">{0} kWh</unitPattern>
+				<unitPattern count="other">{0} kWh</unitPattern>
+			</unit>
+			<unit type="frequency-gigahertz">
+				<displayName>GHz</displayName>
+				<unitPattern count="one">{0} GHz</unitPattern>
+				<unitPattern count="other">{0} GHz</unitPattern>
+			</unit>
+			<unit type="frequency-megahertz">
+				<displayName>MHz</displayName>
+				<unitPattern count="one">{0} MHz</unitPattern>
+				<unitPattern count="other">{0} MHz</unitPattern>
+			</unit>
+			<unit type="frequency-kilohertz">
+				<displayName>kHz</displayName>
+				<unitPattern count="one">{0} kHz</unitPattern>
+				<unitPattern count="other">{0} kHz</unitPattern>
+			</unit>
+			<unit type="frequency-hertz">
+				<displayName>Hz</displayName>
+				<unitPattern count="one">{0} Hz</unitPattern>
+				<unitPattern count="other">{0} Hz</unitPattern>
+			</unit>
+			<unit type="length-kilometer">
+				<displayName>km</displayName>
+				<unitPattern count="one">{0} km</unitPattern>
+				<unitPattern count="other">{0} km</unitPattern>
+				<perUnitPattern>{0}/km</perUnitPattern>
+			</unit>
+			<unit type="length-meter">
+				<displayName>meter</displayName>
+				<unitPattern count="one">{0} m</unitPattern>
+				<unitPattern count="other">{0} m</unitPattern>
+				<perUnitPattern>{0}/m</perUnitPattern>
+			</unit>
+			<unit type="length-decimeter">
+				<displayName>dm</displayName>
+				<unitPattern count="one">{0} dm</unitPattern>
+				<unitPattern count="other">{0} dm</unitPattern>
+			</unit>
+			<unit type="length-centimeter">
+				<displayName>cm</displayName>
+				<unitPattern count="one">{0} cm</unitPattern>
+				<unitPattern count="other">{0} cm</unitPattern>
+				<perUnitPattern>{0}/cm</perUnitPattern>
+			</unit>
+			<unit type="length-millimeter">
+				<displayName>mm</displayName>
+				<unitPattern count="one">{0} mm</unitPattern>
+				<unitPattern count="other">{0} mm</unitPattern>
+			</unit>
+			<unit type="length-micrometer">
+				<displayName>µm</displayName>
+				<unitPattern count="one">{0} µm</unitPattern>
+				<unitPattern count="other">{0} µm</unitPattern>
+			</unit>
+			<unit type="length-nanometer">
+				<displayName>nm</displayName>
+				<unitPattern count="one">{0} nm</unitPattern>
+				<unitPattern count="other">{0} nm</unitPattern>
+			</unit>
+			<unit type="length-picometer">
+				<displayName>pm</displayName>
+				<unitPattern count="one">{0} pm</unitPattern>
+				<unitPattern count="other">{0} pm</unitPattern>
+			</unit>
+			<unit type="length-mile">
+				<displayName>mi</displayName>
+				<unitPattern count="one">{0} mi</unitPattern>
+				<unitPattern count="other">{0} mi</unitPattern>
+			</unit>
+			<unit type="length-yard">
+				<displayName>yd</displayName>
+				<unitPattern count="one">{0} yd</unitPattern>
+				<unitPattern count="other">{0} yd</unitPattern>
+			</unit>
+			<unit type="length-foot">
+				<displayName>ft</displayName>
+				<unitPattern count="one">{0} ft</unitPattern>
+				<unitPattern count="other">{0} ft</unitPattern>
+				<perUnitPattern>{0}/ft</perUnitPattern>
+			</unit>
+			<unit type="length-inch">
+				<displayName>in</displayName>
+				<unitPattern count="one">{0} in</unitPattern>
+				<unitPattern count="other">{0} in</unitPattern>
+				<perUnitPattern>{0}/in</perUnitPattern>
+			</unit>
+			<unit type="length-parsec">
+				<displayName>pc</displayName>
+				<unitPattern count="one">{0} pc</unitPattern>
+				<unitPattern count="other">{0} pc</unitPattern>
+			</unit>
+			<unit type="length-light-year">
+				<displayName>ly</displayName>
+				<unitPattern count="one">{0} ly</unitPattern>
+				<unitPattern count="other">{0} ly</unitPattern>
+			</unit>
+			<unit type="length-astronomical-unit">
+				<displayName>au</displayName>
+				<unitPattern count="one">{0} au</unitPattern>
+				<unitPattern count="other">{0} au</unitPattern>
+			</unit>
+			<unit type="length-nautical-mile">
+				<displayName>nmi</displayName>
+				<unitPattern count="one">{0} nmi</unitPattern>
+				<unitPattern count="other">{0} nmi</unitPattern>
+			</unit>
+			<unit type="length-mile-scandinavian">
+				<displayName>smi</displayName>
+				<unitPattern count="one">{0} smi</unitPattern>
+				<unitPattern count="other">{0} smi</unitPattern>
+			</unit>
+			<unit type="length-point">
+				<displayName>pt</displayName>
+				<unitPattern count="one">{0} pt</unitPattern>
+				<unitPattern count="other">{0} pt</unitPattern>
+			</unit>
+			<unit type="light-lux">
+				<displayName>দীপনমাত্রা</displayName>
+				<unitPattern count="one">{0} lx</unitPattern>
+				<unitPattern count="other">{0} lx</unitPattern>
+			</unit>
+			<unit type="mass-metric-ton">
+				<displayName>t</displayName>
+				<unitPattern count="one">{0} t</unitPattern>
+				<unitPattern count="other">{0} t</unitPattern>
+			</unit>
+			<unit type="mass-kilogram">
+				<displayName>কিলোগ্রাম</displayName>
+				<unitPattern count="one">{0}কিলোগ্রাম</unitPattern>
+				<unitPattern count="other">{0}কিলোগ্রাম</unitPattern>
+				<perUnitPattern>{0}/কিলোগ্রাম</perUnitPattern>
+			</unit>
+			<unit type="mass-gram">
+				<displayName>gram</displayName>
+				<unitPattern count="one">{0} g</unitPattern>
+				<unitPattern count="other">{0} g</unitPattern>
+				<perUnitPattern>{0}/g</perUnitPattern>
+			</unit>
+			<unit type="mass-milligram">
+				<displayName>mg</displayName>
+				<unitPattern count="one">{0} mg</unitPattern>
+				<unitPattern count="other">{0} mg</unitPattern>
+			</unit>
+			<unit type="mass-microgram">
+				<displayName>µg</displayName>
+				<unitPattern count="one">{0} µg</unitPattern>
+				<unitPattern count="other">{0} µg</unitPattern>
+			</unit>
+			<unit type="mass-ton">
+				<displayName>tn</displayName>
+				<unitPattern count="one">{0} tn</unitPattern>
+				<unitPattern count="other">{0} tn</unitPattern>
+			</unit>
+			<unit type="mass-pound">
+				<displayName>lb</displayName>
+				<unitPattern count="one">{0} lb</unitPattern>
+				<unitPattern count="other">{0} lb</unitPattern>
+				<perUnitPattern>{0}/lb</perUnitPattern>
+			</unit>
+			<unit type="mass-ounce">
+				<displayName>oz</displayName>
+				<unitPattern count="one">{0} oz</unitPattern>
+				<unitPattern count="other">{0} oz</unitPattern>
+				<perUnitPattern>{0}/oz</perUnitPattern>
+			</unit>
+			<unit type="mass-ounce-troy">
+				<displayName>oz t</displayName>
+				<unitPattern count="one">{0} oz t</unitPattern>
+				<unitPattern count="other">{0} oz t</unitPattern>
+			</unit>
+			<unit type="mass-carat">
+				<displayName>CD</displayName>
+				<unitPattern count="one">{0} CD</unitPattern>
+				<unitPattern count="other">{0} CD</unitPattern>
+			</unit>
+			<unit type="power-gigawatt">
+				<displayName>GW</displayName>
+				<unitPattern count="one">{0} GW</unitPattern>
+				<unitPattern count="other">{0} GW</unitPattern>
+			</unit>
+			<unit type="power-megawatt">
+				<displayName>MW</displayName>
+				<unitPattern count="one">{0} MW</unitPattern>
+				<unitPattern count="other">{0} MW</unitPattern>
+			</unit>
+			<unit type="power-kilowatt">
+				<displayName>kW</displayName>
+				<unitPattern count="one">{0} kW</unitPattern>
+				<unitPattern count="other">{0} kW</unitPattern>
+			</unit>
+			<unit type="power-watt">
+				<displayName>watt</displayName>
+				<unitPattern count="one">{0} W</unitPattern>
+				<unitPattern count="other">{0} W</unitPattern>
+			</unit>
+			<unit type="power-milliwatt">
+				<displayName>mW</displayName>
+				<unitPattern count="one">{0} mW</unitPattern>
+				<unitPattern count="other">{0} mW</unitPattern>
+			</unit>
+			<unit type="power-horsepower">
+				<displayName>hp</displayName>
+				<unitPattern count="one">{0} hp</unitPattern>
+				<unitPattern count="other">{0} hp</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
+			</unit>
+			<unit type="pressure-millimeter-of-mercury">
+				<displayName>মেরি এর মিলিমিটার</displayName>
+				<unitPattern count="one">{0}মেরি এর মিলিমিটার</unitPattern>
+				<unitPattern count="other">{0}মেরি এর মিলিমিটার</unitPattern>
+			</unit>
+			<unit type="pressure-pound-per-square-inch">
+				<displayName>psi</displayName>
+				<unitPattern count="one">{0} psi</unitPattern>
+				<unitPattern count="other">{0} psi</unitPattern>
+			</unit>
+			<unit type="pressure-inch-hg">
+				<displayName>পার্সি এর ইঞ্চি</displayName>
+				<unitPattern count="one">{0}পার্সি এর ইঞ্চি</unitPattern>
+				<unitPattern count="other">{0}পার্সি এর ইঞ্চি</unitPattern>
+			</unit>
+			<unit type="pressure-millibar">
+				<displayName>mbar</displayName>
+				<unitPattern count="one">{0} mbar</unitPattern>
+				<unitPattern count="other">{0} mbar</unitPattern>
+			</unit>
+			<unit type="speed-kilometer-per-hour">
+				<displayName>km/h</displayName>
+				<unitPattern count="one">{0} km/h</unitPattern>
+				<unitPattern count="other">{0} km/h</unitPattern>
+			</unit>
+			<unit type="speed-meter-per-second">
+				<displayName>m/s</displayName>
+				<unitPattern count="one">{0} m/s</unitPattern>
+				<unitPattern count="other">{0} m/s</unitPattern>
+			</unit>
+			<unit type="speed-mile-per-hour">
+				<displayName>mi/h</displayName>
+				<unitPattern count="one">{0} mi/h</unitPattern>
+				<unitPattern count="other">{0} mi/h</unitPattern>
+			</unit>
+			<unit type="speed-knot">
+				<displayName>kn</displayName>
+				<unitPattern count="one">{0} kn</unitPattern>
+				<unitPattern count="other">{0} kn</unitPattern>
+			</unit>
+			<unit type="temperature-generic">
+				<displayName>°</displayName>
+				<unitPattern count="one">{0}°</unitPattern>
+				<unitPattern count="other">{0}°</unitPattern>
+			</unit>
+			<unit type="temperature-celsius">
+				<displayName>°C</displayName>
+				<unitPattern count="one">{0}°C</unitPattern>
+				<unitPattern count="other">{0}°C</unitPattern>
+			</unit>
+			<unit type="temperature-fahrenheit">
+				<displayName>°F</displayName>
+				<unitPattern count="one">{0}°F</unitPattern>
+				<unitPattern count="other">{0}°F</unitPattern>
+			</unit>
+			<unit type="temperature-kelvin">
+				<displayName>K</displayName>
+				<unitPattern count="one">{0} K</unitPattern>
+				<unitPattern count="other">{0} K</unitPattern>
+			</unit>
+			<unit type="volume-cubic-kilometer">
+				<displayName>km³</displayName>
+				<unitPattern count="one">{0} km³</unitPattern>
+				<unitPattern count="other">{0} km³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-meter">
+				<displayName>m³</displayName>
+				<unitPattern count="one">{0} m³</unitPattern>
+				<unitPattern count="other">{0} m³</unitPattern>
+				<perUnitPattern>{0}/m³</perUnitPattern>
+			</unit>
+			<unit type="volume-cubic-centimeter">
+				<displayName>cm³</displayName>
+				<unitPattern count="one">{0} cm³</unitPattern>
+				<unitPattern count="other">{0} cm³</unitPattern>
+				<perUnitPattern>{0}/cm³</perUnitPattern>
+			</unit>
+			<unit type="volume-cubic-mile">
+				<displayName>mi³</displayName>
+				<unitPattern count="one">{0} mi³</unitPattern>
+				<unitPattern count="other">{0} mi³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-yard">
+				<displayName>yd³</displayName>
+				<unitPattern count="one">{0} yd³</unitPattern>
+				<unitPattern count="other">{0} yd³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-foot">
+				<displayName>ft³</displayName>
+				<unitPattern count="one">{0} ft³</unitPattern>
+				<unitPattern count="other">{0} ft³</unitPattern>
+			</unit>
+			<unit type="volume-cubic-inch">
+				<displayName>in³</displayName>
+				<unitPattern count="one">{0} in³</unitPattern>
+				<unitPattern count="other">{0} in³</unitPattern>
+			</unit>
+			<unit type="volume-megaliter">
+				<displayName>ML</displayName>
+				<unitPattern count="one">{0} ML</unitPattern>
+				<unitPattern count="other">{0} ML</unitPattern>
+			</unit>
+			<unit type="volume-hectoliter">
+				<displayName>hL</displayName>
+				<unitPattern count="one">{0} hL</unitPattern>
+				<unitPattern count="other">{0} hL</unitPattern>
+			</unit>
+			<unit type="volume-liter">
+				<displayName>liter</displayName>
+				<unitPattern count="one">{0} l</unitPattern>
+				<unitPattern count="other">{0} l</unitPattern>
+				<perUnitPattern>{0}/l</perUnitPattern>
+			</unit>
+			<unit type="volume-deciliter">
+				<displayName>dL</displayName>
+				<unitPattern count="one">{0} dL</unitPattern>
+				<unitPattern count="other">{0} dL</unitPattern>
+			</unit>
+			<unit type="volume-centiliter">
+				<displayName>cL</displayName>
+				<unitPattern count="one">{0} cL</unitPattern>
+				<unitPattern count="other">{0} cL</unitPattern>
+			</unit>
+			<unit type="volume-milliliter">
+				<displayName>mL</displayName>
+				<unitPattern count="one">{0} mL</unitPattern>
+				<unitPattern count="other">{0} mL</unitPattern>
+			</unit>
+			<unit type="volume-pint-metric">
+				<displayName>mpt</displayName>
+				<unitPattern count="one">{0} mpt</unitPattern>
+				<unitPattern count="other">{0} mpt</unitPattern>
+			</unit>
+			<unit type="volume-cup-metric">
+				<displayName>mcup</displayName>
+				<unitPattern count="one">{0} mc</unitPattern>
+				<unitPattern count="other">{0} mc</unitPattern>
+			</unit>
+			<unit type="volume-acre-foot">
+				<displayName>ac ft</displayName>
+				<unitPattern count="one">{0} ac ft</unitPattern>
+				<unitPattern count="other">{0} ac ft</unitPattern>
+			</unit>
+			<unit type="volume-gallon">
+				<displayName>US gal</displayName>
+				<unitPattern count="one">{0} gal US</unitPattern>
+				<unitPattern count="other">{0} gal US</unitPattern>
+				<perUnitPattern>{0}/gal US</perUnitPattern>
+			</unit>
+			<unit type="volume-gallon-imperial">
+				<displayName>Imp. gal</displayName>
+				<unitPattern count="one">{0} gal Imp.</unitPattern>
+				<unitPattern count="other">{0} gal Imp.</unitPattern>
+				<perUnitPattern>{0}/gal Imp.</perUnitPattern>
+			</unit>
+			<unit type="volume-quart">
+				<displayName>qt</displayName>
+				<unitPattern count="one">{0} qt</unitPattern>
+				<unitPattern count="other">{0} qt</unitPattern>
+			</unit>
+			<unit type="volume-pint">
+				<displayName>pt</displayName>
+				<unitPattern count="one">{0} pt</unitPattern>
+				<unitPattern count="other">{0} pt</unitPattern>
+			</unit>
+			<unit type="volume-cup">
+				<displayName>cup</displayName>
+				<unitPattern count="one">{0} c</unitPattern>
+				<unitPattern count="other">{0} c</unitPattern>
+			</unit>
+			<unit type="volume-fluid-ounce">
+				<displayName>fl oz</displayName>
+				<unitPattern count="one">{0} fl oz</unitPattern>
+				<unitPattern count="other">{0} fl oz</unitPattern>
+			</unit>
+			<unit type="volume-tablespoon">
+				<displayName>tbsp</displayName>
+				<unitPattern count="one">{0} tbsp</unitPattern>
+				<unitPattern count="other">{0} tbsp</unitPattern>
+			</unit>
+			<unit type="volume-teaspoon">
+				<displayName>tsp</displayName>
+				<unitPattern count="one">{0} tsp</unitPattern>
+				<unitPattern count="other">{0} tsp</unitPattern>
+			</unit>
+			<coordinateUnit>
+				<coordinateUnitPattern type="east">{0} E</coordinateUnitPattern>
+				<coordinateUnitPattern type="north">{0}N</coordinateUnitPattern>
+				<coordinateUnitPattern type="south">{0}S</coordinateUnitPattern>
+				<coordinateUnitPattern type="west">{0}W</coordinateUnitPattern>
+			</coordinateUnit>
+		</unitLength>
+		<unitLength type="narrow">
+			<compoundUnit type="per">
+				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<unit type="consumption-liter-per-100kilometers">
+				<displayName>L/100km</displayName>
+				<unitPattern count="one">{0} L/100km</unitPattern>
+				<unitPattern count="other">{0} L/100km</unitPattern>
+			</unit>
+			<unit type="duration-year">
+				<displayName>বছৰ</displayName>
+				<unitPattern count="one">{0} বছৰ</unitPattern>
+				<unitPattern count="other">{0} বছৰ</unitPattern>
+			</unit>
+			<unit type="duration-month">
+				<displayName>মাহ</displayName>
+				<unitPattern count="one">{0} মাহ</unitPattern>
+				<unitPattern count="other">{0} মাহ</unitPattern>
+			</unit>
+			<unit type="duration-week">
+				<displayName>সপ্তাহ</displayName>
+				<unitPattern count="one">{0} সপ্তাহ</unitPattern>
+				<unitPattern count="other">{0} সপ্তাহ</unitPattern>
+			</unit>
+			<unit type="duration-day">
+				<displayName>দিন</displayName>
+				<unitPattern count="one">{0} দিন</unitPattern>
+				<unitPattern count="other">{0} দিন</unitPattern>
+			</unit>
+			<unit type="duration-hour">
+				<displayName>ঘণ্টা</displayName>
+				<unitPattern count="one">{0} ঘণ্টা</unitPattern>
+				<unitPattern count="other">{0} ঘণ্টা</unitPattern>
+			</unit>
+			<unit type="duration-minute">
+				<displayName>মিনিট</displayName>
+				<unitPattern count="one">{0} মিনিট</unitPattern>
+				<unitPattern count="other">{0} মিনিট</unitPattern>
+			</unit>
+			<unit type="duration-second">
+				<displayName>ছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} ছেকেণ্ড</unitPattern>
+				<unitPattern count="other">{0} ছেকেণ্ড</unitPattern>
+			</unit>
+			<unit type="duration-millisecond">
+				<displayName>মিলিছেকেণ্ড</displayName>
+				<unitPattern count="one">{0} মিঃছেঃ</unitPattern>
+				<unitPattern count="other">{0} মিঃছেঃ</unitPattern>
+			</unit>
+			<unit type="length-kilometer">
+				<displayName>km</displayName>
+				<unitPattern count="one">{0} km</unitPattern>
+				<unitPattern count="other">{0} km</unitPattern>
+			</unit>
+			<unit type="length-meter">
+				<displayName>meter</displayName>
+				<unitPattern count="one">{0} m</unitPattern>
+				<unitPattern count="other">{0} m</unitPattern>
+			</unit>
+			<unit type="length-centimeter">
+				<displayName>cm</displayName>
+				<unitPattern count="one">{0} cm</unitPattern>
+				<unitPattern count="other">{0} cm</unitPattern>
+			</unit>
+			<unit type="length-millimeter">
+				<displayName>mm</displayName>
+				<unitPattern count="one">{0} mm</unitPattern>
+				<unitPattern count="other">{0} mm</unitPattern>
+			</unit>
+			<unit type="mass-kilogram">
+				<displayName>কিলোগ্রাম</displayName>
+				<unitPattern count="one">{0}kg</unitPattern>
+				<unitPattern count="other">{0}kg</unitPattern>
+			</unit>
+			<unit type="mass-gram">
+				<displayName>gram</displayName>
+				<unitPattern count="one">{0} g</unitPattern>
+				<unitPattern count="other">{0} g</unitPattern>
+			</unit>
+			<unit type="speed-kilometer-per-hour">
+				<displayName>km/h</displayName>
+				<unitPattern count="one">{0} km/h</unitPattern>
+				<unitPattern count="other">{0} km/h</unitPattern>
+			</unit>
+			<unit type="temperature-celsius">
+				<displayName>°C</displayName>
+				<unitPattern count="one">{0}°C</unitPattern>
+				<unitPattern count="other">{0}°C</unitPattern>
+			</unit>
+			<unit type="volume-liter">
+				<displayName>liter</displayName>
+				<unitPattern count="one">{0} l</unitPattern>
+				<unitPattern count="other">{0} l</unitPattern>
+			</unit>
+			<coordinateUnit>
+				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>
+				<coordinateUnitPattern type="north">{0}N</coordinateUnitPattern>
+				<coordinateUnitPattern type="south">{0}S</coordinateUnitPattern>
+				<coordinateUnitPattern type="west">{0}W</coordinateUnitPattern>
+			</coordinateUnit>
+		</unitLength>
+		<durationUnit type="hm">
+			<durationUnitPattern>h:mm</durationUnitPattern>
+		</durationUnit>
+		<durationUnit type="hms">
+			<durationUnitPattern>h:mm:ss</durationUnitPattern>
+		</durationUnit>
+		<durationUnit type="ms">
+			<durationUnitPattern>m:ss</durationUnitPattern>
+		</durationUnit>
+	</units>
+	<listPatterns>
+		<listPattern>
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="or">
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, বা {1}</listPatternPart>
+			<listPatternPart type="2">{0} বা {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="standard-short">
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="unit">
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="unit-narrow">
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="unit-short">
+			<listPatternPart type="start">{0}, {1}</listPatternPart>
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
+		</listPattern>
+	</listPatterns>
+	<posix>
+		<messages>
+			<yesstr>yes:y</yesstr>
+			<nostr>no:n</nostr>
+		</messages>
+	</posix>
+</ldml>

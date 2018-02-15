@@ -36,13 +36,14 @@ use Symfony\Component\Cache\Adapter\AdapterInterface;
 /**
  * Locale cache data layer
  *
- * Reads / writes into
+ * Reads / writes into cache.
  */
 class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
 {
     /**
      * Symfony Cache component adapter
      *
+     * Provides cached LocaleData objects
      * Implements PSR-6: Cache Interface (@see http://www.php-fig.org/psr/psr-6/)
      *
      * @var AdapterInterface
@@ -72,17 +73,17 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
     /**
      * Actually read a LocaleData object into the current layer
      *
-     * Might be a file access, cache read, DB select...
+     * Data is read from passed cache adapter
      *
-     * @param mixed $id
+     * @param string $localeCode
      *  The LocaleData object identifier
      *
      * @return LocaleData|null
      *  The wanted LocaleData object (null if not found)
      */
-    protected function doRead($id)
+    protected function doRead($localeCode)
     {
-        $cacheItem = $this->cache->getItem($id);
+        $cacheItem = $this->cache->getItem($localeCode);
 
         return $cacheItem->isHit()
             ? $cacheItem->get()
@@ -108,7 +109,7 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
      *
      * Might be a file edit, cache update, DB insert/update...
      *
-     * @param mixed $id
+     * @param mixed $localeCode
      *  The LocaleData object identifier
      *
      * @param LocaleData $data
@@ -119,9 +120,9 @@ class LocaleCacheDataLayer extends AbstractDataLayer implements LocaleDataLayerI
      * @throws DataLayerException
      *  When write fails
      */
-    protected function doWrite($id, $data)
+    protected function doWrite($localeCode, $data)
     {
-        $cacheItem = $this->cache->getItem($id);
+        $cacheItem = $this->cache->getItem($localeCode);
         $cacheItem->set($data);
 
         $saved = $this->cache->save($cacheItem);
