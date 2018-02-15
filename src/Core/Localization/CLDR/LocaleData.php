@@ -127,7 +127,7 @@ class LocaleData
                     $this->numberSymbols[$numberingSystem] = $symbolsData;
                     continue;
                 }
-                $this->numberSymbols[$numberingSystem]->override($symbolsData);
+                $this->numberSymbols[$numberingSystem]->overrideWith($symbolsData);
             }
         }
 

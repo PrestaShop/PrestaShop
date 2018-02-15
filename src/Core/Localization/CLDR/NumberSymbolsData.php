@@ -163,7 +163,7 @@ class NumberSymbolsData
      * @return $this
      *  Fluent interface
      */
-    public function override(NumberSymbolsData $symbolsData)
+    public function overrideWith(NumberSymbolsData $symbolsData)
     {
         if (isset($symbolsData->decimal)) {
             $this->decimal = $symbolsData->decimal;
