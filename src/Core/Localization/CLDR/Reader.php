@@ -415,16 +415,17 @@ class Reader implements ReaderInterface
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string)$format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system :
-                if ($alias = $format->alias) {
-                    if (preg_match(
+                $alias = $format->alias;
+                if ($alias
+                    && preg_match(
                         "#^\.\.\/decimalFormats\[@numberSystem='([^)]+)'\]$#",
                         (string)$alias['path'],
                         $matches
-                    )) {
-                        $aliasNumSys                                = $matches[1];
-                        $localeData->decimalPatterns[$numberSystem] = $localeData->decimalPatterns[$aliasNumSys];
-                        continue;
-                    }
+                    )
+                ) {
+                    $aliasNumSys                                = $matches[1];
+                    $localeData->decimalPatterns[$numberSystem] = $localeData->decimalPatterns[$aliasNumSys];
+                    continue;
                 }
             }
         }
@@ -444,16 +445,17 @@ class Reader implements ReaderInterface
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string)$format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system :
-                if ($alias = $format->alias) {
-                    if (preg_match(
+                $alias = $format->alias;
+                if ($alias
+                    && preg_match(
                         "#^\.\.\/percentFormats\[@numberSystem='([^)]+)'\]$#",
                         (string)$alias['path'],
                         $matches
-                    )) {
-                        $aliasNumSys                                = $matches[1];
-                        $localeData->percentPatterns[$numberSystem] = $localeData->percentPatterns[$aliasNumSys];
-                        continue;
-                    }
+                    )
+                ) {
+                    $aliasNumSys                                = $matches[1];
+                    $localeData->percentPatterns[$numberSystem] = $localeData->percentPatterns[$aliasNumSys];
+                    continue;
                 }
             }
         }
@@ -474,16 +476,17 @@ class Reader implements ReaderInterface
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string)$format['numberSystem'];
                 // If alias is set, we just copy data from another numbering system :
-                if ($alias = $format->alias) {
-                    if (preg_match(
+                $alias = $format->alias;
+                if ($alias
+                    && preg_match(
                         "#^\.\.\/currencyFormats\[@numberSystem='([^)]+)'\]$#",
                         (string)$alias['path'],
                         $matches
-                    )) {
-                        $aliasNumSys                                 = $matches[1];
-                        $localeData->currencyPatterns[$numberSystem] = $localeData->currencyPatterns[$aliasNumSys];
-                        continue;
-                    }
+                    )
+                ) {
+                    $aliasNumSys                                 = $matches[1];
+                    $localeData->currencyPatterns[$numberSystem] = $localeData->currencyPatterns[$aliasNumSys];
+                    continue;
                 }
             }
         }
