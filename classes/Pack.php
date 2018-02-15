@@ -191,7 +191,7 @@ class PackCore extends Product
     }
 
     /**
-     * Return the minimum item quantity found in the pack
+     * Returns the available quantity of a given pack
      *
      * @param int $id_product Product id
      * @param int $id_product_attribute Product attribute id (optional)
