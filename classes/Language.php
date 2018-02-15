@@ -26,6 +26,7 @@
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
+use PrestaShopBundle\Translation\Translator;
 
 class LanguageCore extends ObjectModel
 {
@@ -424,9 +425,9 @@ class LanguageCore extends ObjectModel
         /* @var Shop[] $shops */
         $shops = Shop::getShopsCollection(false);
         foreach ($shops as $shop) {
-            // retrieve current language to duplicate database rows
+            // retrieve default language to duplicate database rows
             // this language is used later to untranslate/retranslate rows
-            $id_lang = Context::getContext()->language->id;
+            $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
 
             foreach ($langTables as $name) {
                 preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
@@ -461,7 +462,7 @@ class LanguageCore extends ObjectModel
                         $sql .= '(
 							SELECT `'.bqSQL($column['Field']).'`
 							FROM `'.bqSQL($name).'` tl
-							WHERE tl.`id_lang` = '.(int) $id_lang.'
+							WHERE tl.`id_lang` = '.(int) $defaultLangId.'
 							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shop->id : '').'
 							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $name)).'`.`'.bqSQL($identifier).'`
 						),';
@@ -1294,6 +1295,10 @@ class LanguageCore extends ObjectModel
             return;
         }
 
+        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+        $defaultLanguage = new Language($defaultLangId);
+        $translatorDefaultLanguage = Context::getContext()->getTranslatorFromLocale($defaultLanguage->locale);
+
         $translator = Context::getContext()->getTranslator();
 
         $classObject = new $className($lang->locale);
@@ -1326,7 +1331,7 @@ class LanguageCore extends ObjectModel
                             continue;
                         }
 
-                        $untranslated = $translator->getSourceString($data[$toUpdate], $classObject->getDomain());
+                        $untranslated = $translatorDefaultLanguage->getSourceString($data[$toUpdate], $classObject->getDomain());
                         $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
 
                         if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
