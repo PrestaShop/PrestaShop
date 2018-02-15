@@ -3,7 +3,7 @@ module.exports = {
     first_product: '(//*[@id="content"]//h1[@itemprop="name"])[1]',
     first_product_size: '//*[@id="group_1"]',
     first_product_quantity: '//*[@id="quantity_wanted"]',
-    first_product_color: '//*[@id="group_3"]/li[2]/label/input',
+    first_product_color: '//*[@id="group_2"]/li[2]/label/input',
     first_product_discount: '//*[@id="content"]/section/div/article[1]//span[contains(@class, "discount-percentage")]',
     product_name: '(//*[@id="main"]//h1[@itemprop="name"])[1]',
     product_price: '(//*[@id="main"]//span[@itemprop="price"])[1]',

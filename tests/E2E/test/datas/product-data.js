@@ -47,11 +47,11 @@ module.exports = {
     product_reference: "new product automate",
     pack: {
       pack1: {
-        search: "Printed Dress",
+        search: "The adventure begins Framed",
         quantity: "1"
       },
       pack2: {
-        search: "Printed Chiffon Dress",
+        search: "Today is a good day Framed",
         quantity: "3"
       }
     },
@@ -111,6 +111,6 @@ module.exports = {
         name: "perso_file",
       }
     },
-    search_related_products: "Printed Dress (ref: demo_3)//Printed Summer Dress (ref: demo_5)",
+    search_related_products: "Hummingbird printed t-shirt (ref: demo_1)//The best is yet to come' Framed poster (ref: demo_6)",
   }
 };

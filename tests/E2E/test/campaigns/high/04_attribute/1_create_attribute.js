@@ -7,7 +7,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const common_scenarios = require('../02_product/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
 
-var productData = {
+let productData = {
   name: 'Att',
   quantity: "10",
   price: '5',

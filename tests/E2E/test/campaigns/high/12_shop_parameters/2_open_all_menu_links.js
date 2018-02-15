@@ -30,7 +30,7 @@ scenario('Open all menu links in the Back Office', () => {
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.files_submenu, PagesForm.Catalog.attachment_form, "Files");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.discounts_submenu, PagesForm.Catalog.cart_rule_form, "Discounts", "Carte Rules");
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.discounts_submenu, PagesForm.Catalog.cart_price_rule_form, "Discounts", "Carte Price Rules", 0, Menu.Sell.Catalog.catalog_price_rules_tab);
-      common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu, PagesForm.Catalog.search_box, "Stocks", "Stock");
+      common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu, PagesForm.Catalog.search_box, "Stocks", "Stock", 2000);
       common.clickOnMenuLinksAndCheckElement(client, Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu, PagesForm.Catalog.search_box, "Stocks", "Movements", 0, Menu.Sell.Catalog.movement_tab);
     }, 'common_client');
     scenario('Check all the menu links of "Customers" in the Back Office', client => {
