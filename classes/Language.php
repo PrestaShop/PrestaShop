@@ -1299,6 +1299,7 @@ class LanguageCore extends ObjectModel
         $defaultLanguage = new Language($defaultLangId);
         $translatorDefaultLanguage = Context::getContext()->getTranslatorFromLocale($defaultLanguage->locale);
 
+        /** @var DataLangCore $classObject */
         $classObject = new $className($lang->locale);
 
         $keys = $classObject->getKeys();

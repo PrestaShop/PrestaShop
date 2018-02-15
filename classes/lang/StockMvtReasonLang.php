@@ -32,39 +32,4 @@ class StockMvtReasonLangCore extends DataLangCore
     protected $keys = array('id_stock_mvt_reason');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Increase')
-                    => $this->translator->trans('Increase', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Decrease')
-                    => $this->translator->trans('Decrease', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Customer Order')
-                    => $this->translator->trans('Customer Order', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Adjustment following an inventory of stock')
-                    => $this->translator->trans('Adjustment following an inventory of stock', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Transfer to another warehouse')
-                    => $this->translator->trans('Transfer to another warehouse', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Transfer from another warehouse')
-                    => $this->translator->trans('Transfer from another warehouse', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Supply Order')
-                    => $this->translator->trans('Supply Order', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Product Return')
-                => $this->translator->trans('Product Return', array(), 'Admin.Catalog.Feature', $this->locale),
-
-                md5('Manual Entry')
-                => $this->translator->trans('Manual Entry', array(), 'Admin.Catalog.Feature', $this->locale),
-
-            ),
-        );
-    }
 }

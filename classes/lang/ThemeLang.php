@@ -32,26 +32,4 @@ class ThemeLangCore extends DataLangCore
     protected $keys = array();
 
     protected $fieldsToUpdate = array('name', 'description');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Full Width') => $this->translator->trans('Full width', array(), 'Admin.Design.Feature', $this->locale),
-                md5('Three Columns') => $this->translator->trans('Three columns', array(), 'Admin.Design.Feature', $this->locale),
-                md5('Two Columns, small left column') => $this->translator->trans('Two columns, small left column', array(), 'Admin.Design.Feature', $this->locale),
-                md5('Two Columns, small right column') => $this->translator->trans('Two columns, small right column', array(), 'Admin.Design.Feature', $this->locale),
-            ),
-            'description' => array(
-                md5('No side columns, ideal for distraction-free pages such as product pages.') =>
-                    $this->translator->trans('No side columns, ideal for distraction-free pages such as product pages.', array(), 'Admin.Design.Feature', $this->locale),
-                md5('One large central column and 2 side columns.') =>
-                    $this->translator->trans('One large central column and 2 side columns.', array(), 'Admin.Design.Feature', $this->locale),
-                md5('Two columns with a small left column') =>
-                    $this->translator->trans('Two columns with a small left column.', array(), 'Admin.Design.Feature', $this->locale),
-                md5('Two columns with a small right column') =>
-                    $this->translator->trans('Two columns with a small right column.', array(), 'Admin.Design.Feature', $this->locale),
-            ),
-        );
-    }
 }
