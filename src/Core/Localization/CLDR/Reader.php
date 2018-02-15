@@ -213,6 +213,8 @@ class Reader implements ReaderInterface
      * @param string $localeCode The output locale code (in which language do you want the currency data ?)
      *
      * @return array The currency data
+     *
+     * @throws LocalizationException
      */
     public function getCurrencyByIsoCode($isoCode, $localeCode)
     {
@@ -520,6 +522,7 @@ class Reader implements ReaderInterface
      * @param string $localeTag    The output locale tag (in which language do you want the currency data ?)
      *
      * @return array
+     * @throws LocalizationException
      */
     protected function readCurrencyData($currencyCode, $localeTag)
     {
@@ -602,8 +605,6 @@ class Reader implements ReaderInterface
      * @param string $currencyCode                  The target currency
      *
      * @return array The supplemental data
-     *
-     * @throws InvalidArgumentException
      */
     protected function extractCurrencySupplementalData(SimplexmlElement $supplementalXmlData, $currencyCode)
     {
