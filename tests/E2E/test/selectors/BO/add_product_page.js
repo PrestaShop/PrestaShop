@@ -88,7 +88,7 @@ module.exports = {
     combination_size_s: '//*[@id="attribute-group-1"]/div/div[1]/label',
     combination_size_m: '//*[@id="attribute-group-1"]/div/div[2]/label',
     combination_color_gray: '//*[@id="attribute-group-3"]/div/div[1]/label',
-    combination_color_beige: '//*[@id="attribute-group-3"]/div/div[3]/label',
+    combination_color_beige: '//*[@id="attribute-group-2"]//label[@for="attribute-7"]',
     combination_generate_button: '//*[@id="create-combinations"]',
     combination_impact_price_input: '//*[@id="attribute_%NUMBER"]/td[@class="attribute-price"]//input',
     combination_final_price_span: '//*[@id="attribute_%NUMBER"]/td[contains(@class, "attribute-finalprice")]/span',
@@ -157,9 +157,11 @@ module.exports = {
     catalog_product_online: '//*[@id="product_catalog_list"]/div[2]/div/table/tbody/tr/td[8]/a/i',
     catalog_reset_filter: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[2]/th[9]/button[2]',
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
+
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
-    catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[1]/div',
-    catalog_third_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/ul/li[2]/div',
+    catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
+
+
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
     category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]'
   },

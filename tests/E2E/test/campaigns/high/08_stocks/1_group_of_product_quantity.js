@@ -12,12 +12,14 @@ productData = [{
   quantity: "100",
   price: '5',
   image_name: 'image_test.jpg',
+  reference: 'first_product'
 }, {
   name: 'SecondProduct',
   reference: 'secondProduct',
   quantity: "100",
   price: '5',
   image_name: 'image_test.jpg',
+  reference: 'second_product'
 }];
 
 scenario('Modify quantity and check the movement of a group of product', client => {

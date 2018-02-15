@@ -6,7 +6,7 @@ var argv = require('minimist')(process.argv.slice(2));
 var pdfUtil = require('pdf-to-text');
 
 global.date_time = new Date().getTime();
-global.URL = argv.URL;
+global.URL = argv.URL || "localhost";
 
 global.db_server = argv.DB_SERVER || "mysql";
 global.db_user = argv.DB_USER || "root";

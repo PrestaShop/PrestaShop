@@ -37,8 +37,6 @@ class Product extends CommonClient {
       .waitForExistAndClick(AddProductPage.catalog_home)
       .waitForExistAndClick(AddProductPage.catalog_first_element_radio)
       .waitForExistAndClick(AddProductPage.catalog_second_element_radio)
-      .scrollTo(AddProductPage.catalog_third_element_radio, 50)
-      .waitForExistAndClick(AddProductPage.catalog_third_element_radio)
   }
 
   associatedFile() {

@@ -16,8 +16,8 @@ scenario('Create a pack of products in the Back Office', client => {
   scenario('Edit the Basic settings', client => {
     test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.pack.name + date_time));
     test('should select the "Pack of products"', () => client.waitAndSelectByValue(AddProductPage.product_type, 1));
-    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack1.search,data.pack.pack.pack1.quantity));
-    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack2.search,data.pack.pack.pack2.quantity));
+    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack1.search, data.pack.pack.pack1.quantity));
+    test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack2.search, data.pack.pack.pack2.quantity));
     test('set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
     test('should upload the product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
     test('should click on "CREATE A CATEGORY"', () => client.scrollWaitForExistAndClick(AddProductPage.product_create_category_btn, 50));
@@ -135,24 +135,24 @@ scenario('Check the pack product in the Front Office', () => {
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product name is equal to "' + (data.pack.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.pack.name + date_time).toUpperCase()));
     test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
-    test('should check that the first product pack name is equal to "Printed Dress Size-S Color-Orange"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 1), 'Printed Dress Size-S Color-Orange'));
-    test('should check that the first product pack price is equal to "€31.19"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€31.19'));
+    test('should check that the first product pack name is equal to "The adventure begins Framed poster Dimension-40x60cm"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 1), 'The adventure begins Framed poster Dimension-40x60cm'));
+    test('should check that the first product pack price is equal to "€34.80"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€34.80'));
     test('should check that the first product pack quantity is equal to "1"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 1), 'x 1'));
-    test('should check that the second product pack name is equal to "Printed Chiffon Dress Size-S Color-Yellow"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 2), 'Printed Chiffon Dress Size-S Color-Yellow'));
-    test('should check that the second product pack price is equal to "€19.68"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 2), '€19.68'));
+    test('should check that the second product pack name is equal to "Today is a good day Framed poster Dimension-40x60cm"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 2), 'Today is a good day Framed poster Dimension-40x60cm'));
+    test('should check that the second product pack price is equal to "€34.80"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 2), '€34.80'));
     test('should check that the second product pack quantity is equal to "3"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 2), 'x 3'));
     test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
       return promise
-          .then(() => client.scrollTo(productPage.product_reference))
-          .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+        .then(() => client.scrollTo(productPage.product_reference))
+        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
     });
     test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {
       return promise
-          .then(() => client.scrollTo(AccessPageFO.sign_out_button))
-          .then(() => client.signOutFO(AccessPageFO))
+        .then(() => client.scrollTo(AccessPageFO.sign_out_button))
+        .then(() => client.signOutFO(AccessPageFO))
     });
   }, 'product/product');
 }, 'product/product', true);

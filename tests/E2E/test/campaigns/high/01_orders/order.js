@@ -11,7 +11,7 @@ module.exports = {
       test('should set the language of shop to "English"', () => client.changeLanguage());
       test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product));
       test('should select product "size M" ', () => client.waitAndSelectByValue(productPage.first_product_size, '2'));
-      test('should select product "color blue"', () => client.waitForExistAndClick(productPage.first_product_color));
+      test('should select product "color Black"', () => client.waitForExistAndClick(productPage.first_product_color));
       test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, "4"));
       test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
@@ -84,15 +84,14 @@ module.exports = {
       }, 'common_client');
     }, 'common_client');
   },
-  createOrderBO: function (OrderPage, CreateOrder) {
+  createOrderBO: function (OrderPage, CreateOrder, productData) {
     scenario('Create order in the Back Office', client => {
       test('should go to orders list', () => client.goToSubtabMenuPage(OrderPage.orders_subtab, OrderPage.order_submenu));
       test('should click on "Add new order" button', () => client.waitForExistAndClick(CreateOrder.new_order_button));
       test('should search for a customer', () => client.waitAndSetValue(CreateOrder.customer_search_input, 'john doe'));
       test('should choose the customer', () => client.waitForExistAndClick(CreateOrder.choose_customer_button));
-      test('should search for a product by name', () => client.waitAndSetValue(CreateOrder.product_search_input, 'Blouse'));
-      test('should set the product type', () => client.waitAndSelectByValue(CreateOrder.product_select, '2'));
-      test('should set the product combination', () => client.waitAndSelectByValue(CreateOrder.product_combination, '8'));
+      test('should search for a product by name', () => client.waitAndSetValue(CreateOrder.product_search_input, productData.name + global.date_time));
+      test('should set the product combination', () => client.waitAndSelectByValue(CreateOrder.product_combination, global.combinationId));
       test('should set the product quantity', () => client.waitAndSetValue(CreateOrder.quantity_input, '4'));
       test('should click on "Add to cart" button', () => client.scrollWaitForExistAndClick(CreateOrder.add_to_cart_button));
       test('should get the basic product price', () => client.getTextInVar(CreateOrder.basic_price_value, global.basic_price));

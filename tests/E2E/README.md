@@ -10,10 +10,10 @@ PrestaShop functional end2end tests are based on the following stack:
 ## Requirements 
 ### Software needed
 To run these tests you have to install
-* [node.js](https://nodejs.org/en/download/)
-* [npm](https://www.npmjs.com/get-npm)
-* [java](https://java.com/fr/download/)
-* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html)
+* [node.js](https://nodejs.org/en/download/), the minimum required version is 4.0.0
+* [npm](https://www.npmjs.com/get-npm), the minimum required version is 2.14.2
+* [java](https://java.com/fr/download/), the minimum required version is 8
+* [Google Chrome](https://www.google.com/chrome/browser/desktop/index.html), the minimum required version is 58
 * [mysql](https://www.mysql.com)
 * poppler-utils for Ubuntu users
 > Note:
@@ -73,14 +73,17 @@ npm run sanity-check
 ### Launch test suite
 
 #### Regular tests
-If you want to run only the most important partial configuration tests you can run the campaign **Regular**
+If you want to run only the most important partial configuration tests and you have PrestaShop installed on **localhost** you can simply run the campaign **Regular**
 ```
-npm run test -- --URL=FrontOfficeURL
+npm test
 ```
-If you want to launch installation before running tests you have to add your database parameters :
+If you want to 
+  * Launch installation before running tests => you have to add your database parameters 
+  * Specify an URL for your shop => you have to set the **URL** parameter
+  * Specify a module to install => you have to set the **MODULE** parameter
 
 ```
-npm run regular-test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser --MODULE=DataTechNameModule
+npm test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser --MODULE=DataTechNameModule
 ```
  
 
@@ -91,8 +94,8 @@ If you want to run test only on specific parts (for example products), you have 
 ➜ path=high/02_product npm run specific-test -- --URL=FrontOfficeURL
 ```
 
-* **path**: path of directory you want to test
-* **URL**: **(Required)** Front office URL of your PrestaShop website (without the “http://”)
+* **path**: **(Required)** path of directory you want to test
+* **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
 
 >Note:
 >If you have run only the 13_installation/1_installation_language_equal_to_country.js you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
@@ -103,7 +106,7 @@ If you want to run the high level and full configuration tests you can run the c
 ```
 ➜ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName
 ```
-* **URL**: **(Required)** Front office URL of your PrestaShop website (without the “http://”)
+* **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
 * **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
 * **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
 * **INSTALL**: **(Optional)** Boolean option : set it to **true** if you want to run the installation script (default to **false**)

@@ -38,7 +38,7 @@ module.exports = {
       test('should set the "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, productData["price"]));
       test('should upload the first product picture', () => client.uploadPicture(productData["image_name"], AddProductPage.picture));
 
-      if (productData.hasOwnProperty('type')) {
+      if (productData.hasOwnProperty('type') && productData.type === 'pack') {
         scenario('Add the created product to pack', client => {
           test('should select the "Pack of products"', () => client.waitAndSelectByValue(AddProductPage.product_type, 1));
           test('should add products to the pack', () => client.addPackProduct(productData['product']['name'] + date_time, productData['product']['quantity']));
@@ -50,15 +50,24 @@ module.exports = {
           test('should select the "Product with combination" radio button', () => client.scrollWaitForExistAndClick(AddProductPage.variations_type_button));
           test('should go to "Combinations" tab', () => client.scrollWaitForExistAndClick(AddProductPage.variations_tab));
           test('should select the variation', () => {
-            return promise
-              .then(() => client.waitAndSetValue(AddProductPage.variations_input, productData['attribute']['name'] + date_time + " : All"))
-              .then(() => client.waitForExistAndClick(AddProductPage.variations_select));
+            if (productData.type === 'combination') {
+              return promise
+                .then(() => client.createCombination(AddProductPage.combination_size_m, AddProductPage.combination_color_beige))
+            } else {
+              return promise
+                .then(() => client.waitAndSetValue(AddProductPage.variations_input, productData['attribute']['name'] + date_time + " : All"))
+                .then(() => client.waitForExistAndClick(AddProductPage.variations_select));
+            }
           });
-          test('should click on "Generate" button', () => client.waitForExistAndClick(AddProductPage.variations_generate));
+          test('should click on "Generate" button', () => {
+            return promise
+              .then(() => client.waitForExistAndClick(AddProductPage.variations_generate))
+              .then(() => client.getCombinationData(1))
+          });
           test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
           test('should select all the generated variations', () => client.waitForVisibleAndClick(AddProductPage.var_selected));
           test('should set the "Variations quantity" input', () => client.setVariationsQuantity(AddProductPage, productData['attribute']['variation_quantity']));
-        }, 'product/product');
+        }, 'product/create_combinations');
       }
 
       if (productData.hasOwnProperty('feature')) {

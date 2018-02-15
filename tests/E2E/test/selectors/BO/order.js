@@ -37,7 +37,7 @@ module.exports = {
     payment: '//*[@id="payment_module_name"]',
     total_shipping:'//*[@id="total_shipping"]',
     create_order_button: '//*[@id="summary_part"]//button[@name="submitAddOrder"]',
-    product_combination: '//*[@id="ipa_2"]',
+    product_combination: '//*[@class="id_product_attribute"]',
     basic_price_value: '//*[@id="customer_cart"]//tr[1]//input[@class="product_unit_price"]',
     product_select:'//*[@id="id_product"]'
   }
