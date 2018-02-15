@@ -26,7 +26,7 @@
   <li class="brand">
     <div class="brand-img"><a href="{$brand.url}"><img src="{$brand.image}" alt="{$brand.name}"></a></div>
     <div class="brand-infos">
-      <h3><a href="{$brand.url}">{$brand.name}</a></h3>
+      <p><a href="{$brand.url}">{$brand.name}</a></p>
       {$brand.text nofilter}
     </div>
     <div class="brand-products">
