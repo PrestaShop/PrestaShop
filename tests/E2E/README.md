@@ -83,34 +83,54 @@ If you want to
   * Specify a module to install => you have to set the **MODULE** parameter
 
 ```
-npm test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser --MODULE=DataTechNameModule
+npm test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser --LANGUAGE=language --COUNTRY=country --MODULE=DataTechNameModule
 ```
- 
+* **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
+* **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
+* **INSTALL**: **(Optional)** Boolean option : set it to **true** if you want to run the installation script (default to **false**)
+* **LANGUAGE**: **(Optional)** Language to install with (default to "en")
+* **COUNTRY**: **(Optional)** Country to install with (default o "france")
+* **DB_SERVER**: **(Optional)** DataBase server (default to "mysql")
+* **DB_USER**: **(Optional)** DataBase user (default to "root")
+* **DB_PASSWD**: **(Optional)** DataBase password (default to "doge")
+* **DB_EMPTY_PASSWD**:**(Optional)** Boolean option : set it to **true** if you have no password
 
 #### Specific test
 If you want to run test only on specific parts (for example products), you have to run this command:
 
 ```
-➜ path=high/02_product npm run specific-test -- --URL=FrontOfficeURL
+path=high/02_product npm run specific-test -- --URL=FrontOfficeURL
 ```
 
 * **path**: **(Required)** path of directory you want to test
 * **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
 
->Note:
->If you have run only the 13_installation/1_installation_language_equal_to_country.js you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
+>Notes:
+>1) if you are running high/01_order you must set the **DIR** option
+>2) if you are running high/10_module or regular/02_install_module.js you must set the **MODULE** option
+>3) If you have run only the install_upgrade/01_install.js with language different and country different from "en" and "france" you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
 
 #### High tests
 If you want to run the high level and full configuration tests you can run the campaign **High**
 
 ```
-➜ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName
+npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --MODULE=DataTechNameModule
 ```
 * **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
 * **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
 * **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
-* **INSTALL**: **(Optional)** Boolean option : set it to **true** if you want to run the installation script (default to **false**)
+
+#### Install and Autoupgrade
+If you want to run the Install, Autoupgrade and Rollback tests you can run the campaign **install_upgrade**
+```
+npm run install-upgrade-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --URLLASTSTABLEVERSION=LaststableversionURL --DB_SERVER=DataBaseServer --DB_USER=DataBaseUser --DB_PASSWD=DataBasePassword --RCLINK=RCDownloadlink --RCTARGET=LastStableVersionLocation --FILENAME=RCFileName --LANGUAGE=language --COUNTRY=country
+```
+
+* **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
+* **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
 * **URLLASTSTABLEVERSION**: **(Required)** URL of the last stable version of PrestaShop (without the “http://”) from which you need to upgrade to the latest release candidate
+* **LANGUAGE**: **(Optional)** Language to install with (default to "en")
+* **COUNTRY**: **(Optional)** Country to install with (default o "france")
 * **DB_SERVER**: **(Optional)** DataBase server (default to "mysql")
 * **DB_USER**: **(Optional)** DataBase user (default to "root")
 * **DB_PASSWD**: **(Optional)** DataBase password (default to "doge")
@@ -118,9 +138,9 @@ If you want to run the high level and full configuration tests you can run the c
 * **RCTARGET**: **(Required)** Last stable version location directory (example: /project/prestashop1724/)
 * **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to extract the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
 * **FILENAME**: **(Optional)** RC file name this parameter must be mentioned if the (RCLINK) option is not indicated
-* **HEADLESS**: **(Optional)** Set it to true to run tests in headless mode (default to false) (This option will not work perfectly if your chrome version is under 62.0.3175.0, especially for category, attribute and feature)
 
->Notes:
->1) if you are running high/01_order you must set the **DIR** option
->2) if you are running high/10_module or regular/02_install_module.js you must set the **MODULE** option
->3) If you are running all the test or only high/13_installation you must set **all the options** (RCLink or FILENAME)
+
+>Note:
+> If you want to run tests in headless mode you can set the option --HEADLESS to true (This option will not work perfectly if your chrome version is under 62.0.3175.0, especially for category, attribute and feature tests)
+>
+> **HEADLESS**: **(Optional)** Set it to true to run tests in headless mode (default to false) 

@@ -1,13 +1,13 @@
-const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {ModulePage} = require('../../../selectors/BO/module_page');
-const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
-const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const {AccessPageFO} = require('../../../selectors/FO/access_page');
-const {ShopParameter} = require('../../../selectors/BO/shopParameters/index');
+const {AccessPageBO} = require('../../selectors/BO/access_page');
+const {ModulePage} = require('../../selectors/BO/module_page');
+const {AddProductPage} = require('../../selectors/BO/add_product_page');
+const {SearchProductPage} = require('../../selectors/FO/search_product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
+const {AccessPageFO} = require('../../selectors/FO/access_page');
+const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
 
-const commonScenarios = require('../02_product/product');
-const orderCommonScenarios = require('../01_orders/order');
+const commonScenarios = require('../high/02_product/product');
+const orderCommonScenarios = require('../high/01_orders/order');
 
 let promise = Promise.resolve();
 
@@ -19,7 +19,7 @@ var productData = {
   image_name: 'image_test.jpg',
 };
 
-scenario('The shop installation', client => {
+scenario('The shop installation', () => {
 
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
