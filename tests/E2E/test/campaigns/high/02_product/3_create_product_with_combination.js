@@ -107,7 +107,28 @@ scenario('Create product with combination in the Back Office', client => {
         .then(() => client.goToEditCombination())
         .then(() => client.checkAttributeValue(AddProductPage.combination_priceTI.replace('%NUMBER', global.combinationId), 'value', "20"))
     });
-    test('should go back to combination list', () => client.backToProduct());
+    /**
+     * This scenario is based on the bug described in this ticket
+     * http://forge.prestashop.com/browse/BOOM-3704
+     **/
+    test('should set the "Impact on price" to "2,5"', () => {
+      return promise
+        .then(() => client.showElement("td.attribute-price", 1))
+        .then(() => client.waitAndSetValue(AddProductPage.combination_impact_price_input.replace('%NUMBER', global.combinationId), '2,5'))
+    });
+    test('should click on "Basic settings"', () => client.scrollWaitForExistAndClick(AddProductPage.basic_settings_tab, 50));
+    test('should set the "Tax exclude" price', () => {
+      return promise
+        .then(() => client.scrollTo(AddProductPage.priceTE_shortcut, 50))
+        .then(() => client.waitAndSetValue(AddProductPage.priceTE_shortcut, data.common.priceTE));
+    });
+    test('should click on "Combinations"', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
+    test('should check that the final price is equal to "26.666666 €"', () => {
+      return promise
+        .then(() => client.showElement("td.attribute-finalprice", 1))
+        .then(() => client.checkTextValue(AddProductPage.combination_final_price_span.replace('%NUMBER', global.combinationId), "26.666666"))
+    });
+    /**** END ****/
     test('should click on "Availability preferences"', () => client.scrollWaitForExistAndClick(AddProductPage.combination_availability_preferences, 50));
     test('should set the available label in stock', () => client.waitAndSetValue(AddProductPage.combination_label_in_stock, data.common.qty_msg_stock));
     test('should set the available label out of stock', () => client.waitAndSetValue(AddProductPage.combination_label_out_stock, data.common.qty_msg_unstock));
