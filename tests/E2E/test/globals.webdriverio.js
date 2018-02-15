@@ -8,6 +8,8 @@ var pdfUtil = require('pdf-to-text');
 global.date_time = new Date().getTime();
 global.URL = argv.URL || "localhost";
 
+global.install_language = argv.LANGUAGE || "en";
+global.install_country = argv.COUNTRY || "france";
 global.db_server = argv.DB_SERVER || "mysql";
 global.db_user = argv.DB_USER || "root";
 global.db_passwd = argv.DB_PASSWD || "doge";
