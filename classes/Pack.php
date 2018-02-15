@@ -197,7 +197,7 @@ class PackCore extends Product
      * @param int $id_product_attribute Product attribute id (optional)
      * @param bool|null $cache_is_pack
      * @return int
-     * @throws PrestaShopExceptionCore
+     * @throws PrestaShopException
      */
     public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
     {
@@ -206,7 +206,7 @@ class PackCore extends Product
         $cache_is_pack = (bool) $cache_is_pack;
 
         if (!self::isPack($id_product)) {
-            throw new PrestaShopExceptionCore("Product with id $id_product is not a pack");
+            throw new PrestaShopException("Product with id $id_product is not a pack");
         }
         $packQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
         $cart = Context::getContext()->cart;
