@@ -18,6 +18,7 @@ let promise = Promise.resolve();
 
 var productData = {
   name: 'UpgradeProduct',
+  reference: 'product',
   quantity: "10",
   price: '5',
   image_name: 'image_test.jpg',
