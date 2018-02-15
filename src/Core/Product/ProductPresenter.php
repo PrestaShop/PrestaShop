@@ -459,7 +459,7 @@ class ProductPresenter
                 $presentedProduct['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'available';
-            } elseif ($product['quantity_all_versions']) {
+            } elseif ($product['quantity_all_versions'] > 0) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),
