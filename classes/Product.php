@@ -553,6 +553,11 @@ class ProductCore extends ObjectModel
 
     public function update($null_values = false)
     {
+        if (is_array($this->update_fields)
+            && array_key_exists('unit_price', $this->update_fields)) {
+            $this->update_fields['unit_price_ratio'] = $this->update_fields['unit_price'];
+        }
+
         $return = parent::update($null_values);
         $this->setGroupReduction();
 
