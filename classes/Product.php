@@ -3698,10 +3698,8 @@ class ProductCore extends ObjectModel
     /**
      * Check product availability
      *
-     * True if available, false otherwise
-     *
      * @param int $qty Quantity desired
-     * @return bool True if product is available with this quantity
+     * @return bool True if product is available with this quantity, false otherwise
      */
     public function checkQty($qty)
     {
