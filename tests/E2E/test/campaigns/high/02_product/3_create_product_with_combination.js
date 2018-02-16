@@ -62,9 +62,9 @@ scenario('Create product with combination in the Back Office', client => {
     test('should click on "Combinations"', () => client.scrollWaitForExistAndClick(AddProductPage.product_combinations_tab, 50));
     test('should choose the size "S" and color "Grey"', () => {
       return promise
-        .then(() => client.createCombination(AddProductPage.combination_size_s, AddProductPage.combination_color_gray))
+        .then(() => client.createCombination(AddProductPage.combination_size_s, AddProductPage.combination_color_grey))
         .then(() => client.getTextInVar(AddProductPage.combination_size_s, "first_size"))
-        .then(() => client.getTextInVar(AddProductPage.combination_color_gray, "first_color"))
+        .then(() => client.getTextInVar(AddProductPage.combination_color_grey, "first_color"))
         .then(() => productVariations.push([tab["first_size"], tab["first_color"]]))
     });
     test('should click on "Generate" button', () => client.waitForExistAndClick(AddProductPage.combination_generate_button));
@@ -107,6 +107,7 @@ scenario('Create product with combination in the Back Office', client => {
         .then(() => client.goToEditCombination())
         .then(() => client.checkAttributeValue(AddProductPage.combination_priceTI.replace('%NUMBER', global.combinationId), 'value', "20"))
     });
+    test('should go back to combination list', () => client.backToProduct());
     /**
      * This scenario is based on the bug described in this ticket
      * http://forge.prestashop.com/browse/BOOM-3704
@@ -192,6 +193,7 @@ scenario('Check the product creation in the Back Office', client => {
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
+
 scenario('Check the product with combination in the Front Office', () => {
   scenario('Login in the Front Office', client => {
     test('should open the browser', () => client.open());
@@ -222,3 +224,4 @@ scenario('Check the product with combination in the Front Office', () => {
     });
   }, 'product/product');
 }, 'product/product', true);
+

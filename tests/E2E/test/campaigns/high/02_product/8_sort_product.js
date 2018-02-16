@@ -10,10 +10,14 @@ scenario('Check the sort of products in the Back Office', client => {
   test('should go to "Catalog" page', () => {
     return promise
       .then(() => client.waitForExistAndClick(AddProductPage.products_subtab, 2000))
-      .then(() => client.getProductsNumber('product_catalog_list'));
+      .then(() => client.getProductsNumber(ProductList.pagination_products));
   });
 
   common_scenarios.sortProduct(ProductList.product_id, 'id_product');
   common_scenarios.sortProduct(ProductList.product_name, 'name');
   common_scenarios.sortProduct(ProductList.product_reference, 'reference');
+
+  scenario('Back to the default sort', client => {
+    test('should click on "Sort by ASC" icon By ID', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", 'id_product').replace("%W", "asc")));
+  }, 'product/product');
 }, 'product/product', true);

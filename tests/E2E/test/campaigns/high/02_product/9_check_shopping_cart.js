@@ -45,7 +45,7 @@ scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity 
           .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
       });
       test('should search for product by name', () => client.searchProductByName(productData.name + date_time));
-      test('should disable the product "' + productData.name + date_time +'"', () => client.waitForExistAndClick(ProductList.first_product_status.replace('%ACTION', 'enabled')));
+      test('should disable the product "' + productData.name + date_time + '"', () => client.waitForExistAndClick(ProductList.first_product_status.replace('%ACTION', 'enabled')));
     }, 'product/check_product');
     scenario('Check that the shopping cart dosen\'t allow checkout in the Front Office', client => {
       test('should go to "Home" page', () => {
@@ -68,12 +68,14 @@ scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity 
         return promise
           .then(() => client.switchWindow(0))
           .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
+          .then(() => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
       });
       test('should search for product by name', () => client.searchProductByName(productData.name + date_time));
-      test('should enable the product "' + productData.name + date_time +'"', () => client.waitForExistAndClick(ProductList.first_product_status.replace('%ACTION', 'disabled')));
+      test('should enable the product "' + productData.name + date_time + '"', () => client.waitForExistAndClick(ProductList.first_product_status.replace('%ACTION', 'disabled')));
+      test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
     }, 'product/check_product');
     scenario('Edit the product quantity in the Back Office', client => {
-      test('should click on "Edit" button of the product' + productData.name + date_time +'"', () => client.waitForExistAndClick(ProductList.edit_button));
+      test('should click on "Edit" button of the product' + productData.name + date_time + '"', () => client.waitForExistAndClick(ProductList.edit_button));
       test('should click on "Quantities"', () => client.scrollWaitForExistAndClick(AddProductPage.product_quantities_tab, 50));
       test('should set the "Quantity"', () => client.waitAndSetValue(AddProductPage.product_quantity_input, '-1'));
       test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));

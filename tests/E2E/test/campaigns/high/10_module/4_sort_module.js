@@ -8,7 +8,7 @@ scenario('Check sort module by "Name"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'module');
-  /**@TODO we can add contact form search after we merge **/
+
   scenario('Check the sort module by name ', client => {
     test('should go to "Modules" page', () => client.goToSubtabMenuPage(ModulePage.modules_subtab, ModulePage.modules_subtab));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'contact form'));
@@ -23,4 +23,4 @@ scenario('Check sort module by "Name"', () => {
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'module')
-}, 'module');
+}, 'module', true);

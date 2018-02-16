@@ -120,6 +120,10 @@ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --MODULE=DataT
 * **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
 * **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
 
+>Notes:
+>
+> It's not recommended to run all the campaign high tests together, it's safer to run them one by one using the script specific-test.
+
 #### Install and Autoupgrade
 If you want to run the Install, Autoupgrade and Rollback tests you can run the campaign **install_upgrade**
 ```
