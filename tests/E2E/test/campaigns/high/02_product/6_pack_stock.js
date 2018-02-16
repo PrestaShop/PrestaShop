@@ -9,7 +9,7 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../02_product/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
 
-var productData = [{
+let productData = [{
   name: 'A',
   quantity: "50",
   price: '5',
@@ -44,7 +44,7 @@ scenario('Create standard product "A" and pack product "B" in the Back Office', 
 }, 'product/product', true);
 
 scenario('Check "Orders"', () => {
-  scenario('Login in the Back Office', client => {
+  scenario('Login in the Front Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'product/product');

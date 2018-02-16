@@ -2,7 +2,7 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {accountPage} = require('../../../selectors/FO/add_account_page');
 
-var data = require('./../../../datas/customer_and_address_data');
+let data = require('./../../../datas/customer_and_address_data');
 let promise = Promise.resolve();
 
 module.exports = {
@@ -15,7 +15,7 @@ module.exports = {
       test('should set the product "quantity"', () => client.waitAndSetValue(productPage.first_product_quantity, "4"));
       test('should click on "Add to cart" button  ', () => client.waitForExistAndClick(CheckoutOrderPage.add_to_cart_button));
       test('should click on proceed to checkout button 1', () => client.waitForVisibleAndClick(CheckoutOrderPage.proceed_to_checkout_modal_button));
-	    /**
+      /**
        * This scenario is based on the bug described in this ticket
        * http://forge.prestashop.com/browse/BOOM-4132
        */
@@ -27,6 +27,7 @@ module.exports = {
       test('should check that the quantity is equal to "5"', () => client.checkAttributeValue(CheckoutOrderPage.quantity_input, 'value', '5', 'equal', 1000));
       test('should change quantity to "4" using the keyboard without pushing "Enter"', () => client.waitAndSetValue(CheckoutOrderPage.quantity_input, '4'));
       test('should check that the quantity is equal to "4"', () => client.checkAttributeValue(CheckoutOrderPage.quantity_input, 'value', '4', 'equal', 1000));
+      /**** END ****/
       test('should click on proceed to checkout button 2', () => client.waitForExistAndClick(CheckoutOrderPage.proceed_to_checkout_button));
 
       if (authentication === "create_account") {

@@ -85,9 +85,9 @@ module.exports = {
     shipping_available_carriers: '//*[@id="form_step4_selectedCarriers_1"]',
     product_combinations_tab: '//*[@id="tab_step3"]/a',
     product_combinations: '//*[@id="show_variations_selector"]/div[2]/label/input',
-    combination_size_s: '//*[@id="attribute-group-1"]/div/div[1]/label',
-    combination_size_m: '//*[@id="attribute-group-1"]/div/div[2]/label',
-    combination_color_gray: '//*[@id="attribute-group-3"]/div/div[1]/label',
+    combination_size_s: '//*[@id="attribute-group-1"]//label[@for="attribute-1"]',
+    combination_size_m: '//*[@id="attribute-group-1"]//label[@for="attribute-2"]',
+    combination_color_grey: '//*[@id="attribute-group-2"]//label[@for="attribute-5"]',
     combination_color_beige: '//*[@id="attribute-group-2"]//label[@for="attribute-7"]',
     combination_generate_button: '//*[@id="create-combinations"]',
     combination_impact_price_input: '//*[@id="attribute_%NUMBER"]/td[@class="attribute-price"]//input',
@@ -176,6 +176,7 @@ module.exports = {
     third_product_id: '//*[@id="product_catalog_list"]//tr[3]/td[1]/div/label',
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
     first_product_status: '//*[@id="product_catalog_list"]//tr/td[8]/a/i[contains(@class, "action-%ACTION")]',
-    edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]'
+    edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
+    pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]'
   }
 };

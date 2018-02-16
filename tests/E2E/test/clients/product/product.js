@@ -19,8 +19,8 @@ class Product extends CommonClient {
       .then((text) => global.productIdElement[1] = text)
       .then(() => this.client.getText(ProductList.third_product_id))
       .then((text) => global.productIdElement[2] = text)
-      .then((text) => expect(Number(global.productIdElement[0])).to.be.above(Number(global.productIdElement[1])))
-      .then((text) => expect(Number(global.productIdElement[1])).to.be.above(Number(global.productIdElement[2])));
+      .then((text) => expect(Number(global.productIdElement[0])).to.be.below(Number(global.productIdElement[1])))
+      .then((text) => expect(Number(global.productIdElement[1])).to.be.below(Number(global.productIdElement[2])));
   }
 
   checkCategoryRadioButton(categoryValue) {
@@ -149,14 +149,24 @@ class Product extends CommonClient {
    * @returns {*}
    */
   getProductsNumber(selector) {
-    return this.client
-      .execute(function (selector) {
-        var count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
-        return count;
-      }, selector)
-      .then((count) => {
-        global.productsNumber = count.value;
-      })
+    if (global.isVisible) {
+      return this.client
+        .getText(selector)
+        .then((count) => {
+          global.productsNumber = count.match(/[0-9]+/g)[2];
+        })
+
+    } else {
+      selector = 'product_catalog_list';
+      return this.client
+        .execute(function (selector) {
+          let count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
+          return count;
+        }, selector)
+        .then((count) => {
+          global.productsNumber = count.value;
+        })
+    }
   }
 
   /**
@@ -210,7 +220,7 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             sort_mode === 'ASC' ? this.sortByAsc(type) : this.sortByDesc(type);
-          }, 1000 * productsNumber)
+          }, 1000 * global.productsNumber)
       })
   }
 
@@ -225,7 +235,7 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             expect(productsTable).to.deep.equal(productsSortedTable);
-          }, 1000 * productsNumber)
+          }, 1000 * global.productsNumber)
       })
   }
 
