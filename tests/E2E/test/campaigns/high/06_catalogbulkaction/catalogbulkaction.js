@@ -38,9 +38,10 @@ scenario('Catalog bulk action', () => {
     test('should choose the "Duplicate selection" action', () => client.selectAction(CatalogPage, 3));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully duplicated.'));
     test('should check that the products were duplicated', () => {
+      let number = typeof global.productsNumber !== 'undefined' ? parseInt(global.productsNumber) : 0;
       return promise
-        .then(() => client.isVisible(ProductList.pagination_products))
-        .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(productsNumber) + 20, 'contain'))
+        .then(() => client.getProductPageNumber('product_catalog_list'))
+        .then(() => client.checkTextValue(ProductList.pagination_products, parseInt(global.productsPageNumber) + number, 'contain'))
     });
   }, 'catalogbulkaction');
 

@@ -130,7 +130,7 @@ module.exports = {
   sortProduct: function (selector, sortBy) {
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
       test('should click on "Sort by ASC" icon', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
+        for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j);
         }
         return promise
@@ -138,7 +138,7 @@ module.exports = {
       });
 
       test('should check that the products is well sorted by ASC', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
+        for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
@@ -149,7 +149,7 @@ module.exports = {
       test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc")));
 
       test('should check that the products is well sorted by DESC', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
+        for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
