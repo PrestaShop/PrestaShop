@@ -54,3 +54,5 @@ INSERT IGNORE INTO `PREFIX_authorization_role` (`slug`) VALUES
   ('ROLE_MOD_TAB_DEFAULT_READ'),
   ('ROLE_MOD_TAB_DEFAULT_UPDATE'),
   ('ROLE_MOD_TAB_DEFAULT_DELETE');
+
+ALTER TABLE `PREFIX_order_detail` DROP KEY product_id, ADD KEY product_id (product_id, product_attribute_id);
