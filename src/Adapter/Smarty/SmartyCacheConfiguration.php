@@ -52,8 +52,8 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
     {
         return array(
             'template_compilation' => $this->configuration->get('PS_SMARTY_FORCE_COMPILE'),
-            'cache' => (bool)$this->configuration->get('PS_SMARTY_CACHE'),
-            'multi_front_optimization' => (bool)$this->configuration->get('PS_SMARTY_LOCAL'),
+            'cache' => $this->configuration->getBoolean('PS_SMARTY_CACHE'),
+            'multi_front_optimization' => $this->configuration->getBoolean('PS_SMARTY_LOCAL'),
             'caching_type' => $this->configuration->get('PS_SMARTY_CACHING_TYPE'),
             'clear_cache' => $this->configuration->get('PS_SMARTY_CLEAR_CACHE'),
             'smarty_console' => $this->configuration->get('PS_SMARTY_CONSOLE'),

@@ -48,9 +48,9 @@ class NotificationsConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'show_notifs_new_orders' => (bool)$this->configuration->get('PS_SHOW_NEW_ORDERS'),
-            'show_notifs_new_customers' => (bool)$this->configuration->get('PS_SHOW_NEW_CUSTOMERS'),
-            'show_notifs_new_messages' => (bool)$this->configuration->get('PS_SHOW_NEW_MESSAGES'),
+            'show_notifs_new_orders' => $this->configuration->getBoolean('PS_SHOW_NEW_ORDERS'),
+            'show_notifs_new_customers' => $this->configuration->getBoolean('PS_SHOW_NEW_CUSTOMERS'),
+            'show_notifs_new_messages' => $this->configuration->getBoolean('PS_SHOW_NEW_MESSAGES'),
         );
     }
 
