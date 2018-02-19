@@ -214,6 +214,10 @@ class ProductPresenter
 
     protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
+        if($product['active'] == 0) {
+            return false;
+        }
+        
         if (($product['customizable'] == 2 || !empty($product['customization_required']))) {
             $shouldEnable = false;
 
