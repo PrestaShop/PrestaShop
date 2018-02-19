@@ -81,7 +81,7 @@ class ThemeManagerBuilder
             $shop = $this->context->shop;
         }
 
-        $configuration = new Configuration($shop);
+        $configuration = new Configuration();
         $configuration->restrictUpdatesTo($shop);
 
         return new ThemeRepository(
