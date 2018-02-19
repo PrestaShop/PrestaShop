@@ -9,11 +9,14 @@ services:
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=120", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=prestashop-web", "--SELENIUM=selenium-chrome"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=200", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/regular/*", "--URL=prestashop-web", "--DIR=/home/seluser/Downloads/"]
     volumes:
       - ./screenshots/:/home/test/screenshots/
+      - downloads:/home/seluser/Downloads
+      - /home/thomas/Téléchargements:/home/seluser/Downloads
     networks:
       - default
+      - dockernet
 
   prestashop:
     build: docker_prestashop/
@@ -21,13 +24,19 @@ services:
       DB_SERVER: db
       PS_INSTALL_AUTO: 1
       PS_COUNTRY: fr
-      PS_DEV_MODE: 0
+      PS_DEV_MODE: 1
       PS_DOMAIN: prestashop-web
       PS_FOLDER_ADMIN: admin-dev
       PS_FOLDER_INSTALL: install-dev
     depends_on:
       - "db"
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    ports:
+        - 8002:80
+    volumes:
+        - ../../:/var/www/html/
+        - ps_config:/var/www/html/config
+        - ps_var:/var/www/html/var
     networks:
       default:
           aliases:
@@ -37,6 +46,8 @@ services:
     image: selenium/standalone-chrome
     ports:
       - 4444:4444
+    volumes:
+        - downloads:/home/seluser/Downloads
     networks:
       default:
           aliases:
@@ -48,6 +59,11 @@ services:
       MYSQL_ROOT_PASSWORD: admin
     networks:
       - default
+
+volumes:
+    ps_var:
+    ps_config:
+    downloads:
 
 networks:
   default:
