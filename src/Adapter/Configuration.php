@@ -26,25 +26,75 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Exception\NotImplementedException;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Shop;
 use Combination;
 use Feature;
 use Configuration as ConfigurationLegacy;
 
-class Configuration implements ConfigurationInterface
+class Configuration extends ParameterBag implements ConfigurationInterface
 {
     private $shop;
+
+    public function __construct(array $parameters = array())
+    {
+        // Do nothing
+        if (count($parameters)) {
+            throw new \LogicException('No parameter can be handled in constructor. Use method set() instead.');
+        }
+    }
+
+    /**
+     * @throws NotImplementedException
+     */
+    public function all()
+    {
+        throw new NotImplementedException();
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function keys()
+    {
+        return array_keys($this->all());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function replace(array $parameters = array())
+    {
+        $this->add($parameters);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function add(array $parameters = array())
+    {
+        foreach ($parameters as $key => $value) {
+            $this->set($key, $value);
+        }
+    }
 
     /**
      * Returns constant defined by given $key if exists or check directly into PrestaShop
      * \Configuration
-     * @param $key
+     *
+     * @param string $key
+     * @param mixed $default The default value if the parameter key does not exist
      * @return mixed
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
         if (defined($key)) {
             return constant($key);
+        }
+
+        if (!ConfigurationLegacy::hasKey($key)) {
+            return $default;
         }
 
         // if the key is multi lang related, we return an array with the value per language.
@@ -52,6 +102,7 @@ class Configuration implements ConfigurationInterface
         if (ConfigurationLegacy::isLangKey($key)) {
             return ConfigurationLegacy::getInt($key);
         }
+
         return ConfigurationLegacy::get($key);
     }
 
@@ -89,12 +140,20 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Unset configuration value
-     * @param $key
-     * @return $this
-     * @throws \Exception
+     * {@inheritdoc}
      */
-    public function delete($key)
+    public function has($key)
+    {
+        return ConfigurationLegacy::hasKey($key);
+    }
+
+    /**
+     * Removes a configuration key.
+     * 
+     * @param type $key
+     * @return type
+     */
+    public function remove($key)
     {
         $success = \Configuration::deleteByName(
             $key
@@ -105,6 +164,35 @@ class Configuration implements ConfigurationInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Unset configuration value
+     * @param $key
+     * @return $this
+     * @throws \Exception
+     *
+     * @deprecated since version 1.7.4.0
+     */
+    public function delete($key)
+    {
+        $this->remove($key);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->all());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function count()
+    {
+        return count($this->all());
     }
 
     /**
