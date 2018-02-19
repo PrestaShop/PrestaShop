@@ -13,8 +13,8 @@ var options = {
   port: 4444,
   deprecationWarnings: false
 };
-if (typeof global.selenium_url !== 'undefined') {
-  options.host = global.selenium_url;
+if (typeof process.env.SELENIUM_HOST !== 'undefined') {
+  options.host = process.env.SELENIUM_HOST;
 }
 
 var options2 = {
