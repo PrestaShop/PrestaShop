@@ -23,6 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 import $ from 'jquery';
+import prestashop from 'prestashop';
 
 $(document).ready(function () {
   createProductSpin();
@@ -93,27 +94,25 @@ $(document).ready(function () {
 
   function createProductSpin()
   {
-    let quantityInput = $('#quantity_wanted');
-    quantityInput.TouchSpin({
+    const $quantityInput = $('#quantity_wanted');
+
+    $quantityInput.TouchSpin({
       verticalbuttons: true,
       verticalupclass: 'material-icons touchspin-up',
       verticaldownclass: 'material-icons touchspin-down',
       buttondown_class: 'btn btn-touchspin js-touchspin',
       buttonup_class: 'btn btn-touchspin js-touchspin',
-      min: parseInt(quantityInput.attr('min'), 10),
+      min: parseInt($quantityInput.attr('min'), 10),
       max: 1000000
     });
 
-    var quantity = quantityInput.val();
-    quantityInput.on('keyup change', function (event) {
-      const newQuantity = $(this).val();
-      if (newQuantity !== quantity) {
-        quantity = newQuantity;
-        let $productRefresh = $('.product-refresh');
-        $(event.currentTarget).trigger('touchspin.stopspin');
-        $productRefresh.trigger('click', {eventType: 'updatedProductQuantity'});
-      }
-      event.preventDefault();
+    $('body').on('change', '#quantity_wanted', function(e) {
+      $(e.currentTarget).trigger('touchspin.stopspin');
+      prestashop.emit('updateProduct', {
+          eventType: 'updatedProductQuantity',
+          event: e
+      });
+      e.preventDefault();
 
       return false;
     });
