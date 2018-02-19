@@ -12,7 +12,7 @@ services:
       - "prestashop"
 #      - "selenium-chrome"
 #    command: ["/tmp/wait-for-it.sh", "--timeout=200", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=prestashop-web", "--SELENIUM=selenium-chrome", "--DIR=/home/seluser/Downloads/"]
-    command: ["/tmp/wait-for-it.sh", "--timeout=200", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/high/*", "--URL=localhost:8002", "--SELENIUM=192.168.0.1", "--DIR=/home/seluser/Downloads/"]
+    command: ["/tmp/wait-for-it.sh", "--timeout=300", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/regular/*", "--URL=localhost:8002", "--SELENIUM=192.168.0.1", "--DIR=/home/seluser/Downloads/"]
     volumes:
       - ./screenshots/:/home/test/screenshots/
 #      - downloads:/home/seluser/Downloads
@@ -27,7 +27,7 @@ services:
       DB_SERVER: db
       PS_INSTALL_AUTO: 1
       PS_COUNTRY: fr
-      PS_DEV_MODE: 0
+      PS_DEV_MODE: 1
 #      PS_DOMAIN: prestashop-web
       PS_DOMAIN: localhost:8002
       PS_FOLDER_ADMIN: admin-dev
