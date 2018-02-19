@@ -427,60 +427,75 @@ class LanguageCore extends ObjectModel
         foreach ($shops as $shop) {
             // retrieve default language to duplicate database rows
             // this language is used later to untranslate/retranslate rows
-            $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
+            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
 
             foreach ($langTables as $name) {
-                preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
-                $identifier = 'id_'.$m[1];
-
-                $fields = '';
-                // We will check if the table contains a column "id_shop"
-                // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
-                $shop_field_exists = $primary_key_exists = false;
-                $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
-                foreach ($columns as $column) {
-                    $fields .= '`'.$column['Field'].'`, ';
-                    if ($column['Field'] == 'id_shop') {
-                        $shop_field_exists = true;
-                    }
-                    if ($column['Field'] == $identifier) {
-                        $primary_key_exists = true;
-                    }
-                }
-                $fields = rtrim($fields, ', ');
-
-                if (!$primary_key_exists) {
-                    continue;
-                }
-
-                $sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
-
-                // For each column, copy data from default language
-                reset($columns);
-                foreach ($columns as $column) {
-                    if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
-                        $sql .= '(
-							SELECT `'.bqSQL($column['Field']).'`
-							FROM `'.bqSQL($name).'` tl
-							WHERE tl.`id_lang` = '.(int) $defaultLangId.'
-							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shop->id : '').'
-							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $name)).'`.`'.bqSQL($identifier).'`
-						),';
-                    } else {
-                        $sql .= '`'.bqSQL($column['Field']).'`,';
-                    }
-                }
-                $sql = rtrim($sql, ', ');
-                $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'` ';
-
-                // prevent insert with where initial data exists
-                $sql .= ' WHERE `'.bqSQL($identifier).'` IN (SELECT `'.bqSQL($identifier).'` FROM `'.bqSQL($name).'`) )';
-
-                $return &= Db::getInstance()->execute($sql);
+                $return &= $this->duplicateRowsFromDefaultShopLang($name, $shopDefaultLangId, $shop->id);
             }
         }
 
         return $return;
+    }
+
+    /**
+     * duplicate translated rows from xxx_lang tables
+     * from the shop default language
+     *
+     * @param $tableName
+     * @param $shopDefaultLangId
+     * @param $shopId
+     *
+     * @return bool
+     * @throws \PrestaShopDatabaseException
+     */
+    private function duplicateRowsFromDefaultShopLang($tableName, $shopDefaultLangId, $shopId){
+        preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $tableName, $m);
+        $identifier = 'id_'.$m[1];
+
+        $fields = '';
+        // We will check if the table contains a column "id_shop"
+        // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
+        $shop_field_exists = $primary_key_exists = false;
+        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$tableName.'`');
+        foreach ($columns as $column) {
+            $fields .= '`'.$column['Field'].'`, ';
+            if ($column['Field'] == 'id_shop') {
+                $shop_field_exists = true;
+            }
+            if ($column['Field'] == $identifier) {
+                $primary_key_exists = true;
+            }
+        }
+        $fields = rtrim($fields, ', ');
+
+        if (!$primary_key_exists) {
+            return;
+        }
+
+        $sql = 'INSERT IGNORE INTO `'.$tableName.'` ('.$fields.') (SELECT ';
+
+        // For each column, copy data from default language
+        reset($columns);
+        foreach ($columns as $column) {
+            if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
+                $sql .= '(
+							SELECT `'.bqSQL($column['Field']).'`
+							FROM `'.bqSQL($tableName).'` tl
+							WHERE tl.`id_lang` = '.(int) $shopDefaultLangId.'
+							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shopId : '').'
+							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $tableName)).'`.`'.bqSQL($identifier).'`
+						),';
+            } else {
+                $sql .= '`'.bqSQL($column['Field']).'`,';
+            }
+        }
+        $sql = rtrim($sql, ', ');
+        $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $tableName)).'` ';
+
+        // prevent insert with where initial data exists
+        $sql .= ' WHERE `'.bqSQL($identifier).'` IN (SELECT `'.bqSQL($identifier).'` FROM `'.bqSQL($tableName).'`) )';
+
+        return Db::getInstance()->execute($sql);
     }
 
     /**
