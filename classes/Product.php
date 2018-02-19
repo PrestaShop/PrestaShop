@@ -6057,44 +6057,99 @@ class ProductCore extends ObjectModel
         return !empty($attributes);
     }
 
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
+    /**
+     * Get an id_product_attribute by an id_product and one or more
+     * id_attribute.
+     *
+     * e.g: id_product 8 with id_attribute 4 (size medium) and
+     * id_attribute 5 (color blue) returns id_product_attribute 9 which
+     * is the dress size medium and color blue.
+     *
+     * @param int $idProduct
+     * @param int|int[] $idAttributes
+     * @param bool $findBest
+     * @return int
+     * @throws PrestaShopException
+     */
+    public static function getIdProductAttributeByIdAttributes($idProduct, $idAttributes, $findBest = false)
     {
-        if (!is_array($id_attributes)) {
-            return 0;
+        $idProduct = (int) $idProduct;
+
+        if (!is_array($idAttributes)) {
+            if (is_numeric($idAttributes)) {
+                $idAttributes = array((int) $idAttributes);
+            } else {
+                throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
+            }
         }
+        $idProductAttribute =  Db::getInstance()->getValue('
+            SELECT 
+                pac.`id_product_attribute`
+            FROM 
+                `' . _DB_PREFIX_ . 'product_attribute_combination` pac
+                INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+            WHERE 
+                id_product = ' . $idProduct . ' 
+                AND id_attribute IN (' . implode(',', array_map('intval', $idAttributes)) . ')
+            GROUP BY 
+                id_product_attribute
+            HAVING 
+                COUNT(id_product) = ' . count($idAttributes)
+        );
 
-        $id_product_attribute =  Db::getInstance()->getValue('
-        SELECT pac.`id_product_attribute`
-        FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-        WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $id_attributes)).')
-        GROUP BY id_product_attribute
-        HAVING COUNT(id_product) = '.count($id_attributes));
-
-        if ($id_product_attribute === false && $find_best) {
+        if ($idProductAttribute === false && $find_best) {
             //find the best possible combination
-            //first we order $id_attributes by the group position
+            //first we order $idAttributes by the group position
             $orderred = array();
-            $result = Db::getInstance()->executeS('SELECT `id_attribute` FROM `'._DB_PREFIX_.'attribute` a
-            INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
-            WHERE `id_attribute` IN ('.implode(',', array_map('intval', $id_attributes)).') ORDER BY g.`position` ASC');
+            $result = Db::getInstance()->executeS('
+                SELECT 
+                    `id_attribute` 
+                FROM 
+                    `'._DB_PREFIX_.'attribute` a
+                    INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
+                WHERE 
+                    `id_attribute` IN ('.implode(',', array_map('intval', $idAttributes)).') 
+                ORDER BY 
+                    g.`position` ASC'
+            );
 
             foreach ($result as $row) {
                 $orderred[] = $row['id_attribute'];
             }
 
-            while ($id_product_attribute === false && count($orderred) > 0) {
+            while ($idProductAttribute === false && count($orderred) > 0) {
                 array_pop($orderred);
-                $id_product_attribute =  Db::getInstance()->getValue('
-                SELECT pac.`id_product_attribute`
-                FROM `'._DB_PREFIX_.'product_attribute_combination` pac
-                INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
-                WHERE id_product = '.(int)$id_product.' AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
-                GROUP BY id_product_attribute
-                HAVING COUNT(id_product) = '.count($orderred));
+                $idProductAttribute =  Db::getInstance()->getValue('
+                    SELECT 
+                        pac.`id_product_attribute`
+                    FROM 
+                        `'._DB_PREFIX_.'product_attribute_combination` pac
+                        INNER JOIN `'._DB_PREFIX_.'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
+                    WHERE 
+                        id_product = '.(int)$idProduct.' 
+                        AND id_attribute IN ('.implode(',', array_map('intval', $orderred)).')
+                    GROUP BY 
+                        id_product_attribute
+                    HAVING 
+                        COUNT(id_product) = '.count($orderred)
+                );
             }
         }
-        return $id_product_attribute;
+
+        if (empty($idProductAttribute)) {
+            throw new PrestaShopException('Can not retrieve the id_product_attribute');
+        }
+
+        return $idProductAttribute;
+    }
+
+    /**
+     * @deprecated 1.7.3.1
+     * @see Product::getIdProductAttributeByIdAttributes()
+     */
+    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
+    {
+        return self::getIdProductAttributeByIdAttributes($id_product, $id_attributes, $find_best);
     }
 
     /**
