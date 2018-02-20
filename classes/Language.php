@@ -452,13 +452,13 @@ class LanguageCore extends ObjectModel
         preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $tableName, $m);
         $identifier = 'id_'.$m[1];
 
-        $fields = '';
+        $fields = [];
         // We will check if the table contains a column "id_shop"
         // If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
         $shop_field_exists = $primary_key_exists = false;
         $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$tableName.'`');
         foreach ($columns as $column) {
-            $fields .= '`'.$column['Field'].'`, ';
+            $fields[]= '`'.$column['Field'].'`';
             if ($column['Field'] == 'id_shop') {
                 $shop_field_exists = true;
             }
@@ -466,7 +466,7 @@ class LanguageCore extends ObjectModel
                 $primary_key_exists = true;
             }
         }
-        $fields = rtrim($fields, ', ');
+        $fields = implode(',', $fields);
 
         if (!$primary_key_exists) {
             return;
@@ -476,20 +476,21 @@ class LanguageCore extends ObjectModel
 
         // For each column, copy data from default language
         reset($columns);
+        $selectQueries = [];
         foreach ($columns as $column) {
             if ($identifier != $column['Field'] && $column['Field'] != 'id_lang') {
-                $sql .= '(
+                $selectQueries[] = '(
 							SELECT `'.bqSQL($column['Field']).'`
 							FROM `'.bqSQL($tableName).'` tl
 							WHERE tl.`id_lang` = '.(int) $shopDefaultLangId.'
 							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int) $shopId : '').'
 							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $tableName)).'`.`'.bqSQL($identifier).'`
-						),';
+						)';
             } else {
-                $sql .= '`'.bqSQL($column['Field']).'`,';
+                $selectQueries[] = '`'.bqSQL($column['Field']).'`';
             }
         }
-        $sql = rtrim($sql, ', ');
+        $sql .= implode(',', $selectQueries);
         $sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $tableName)).'` ';
 
         // prevent insert with where initial data exists
@@ -1310,10 +1311,6 @@ class LanguageCore extends ObjectModel
             return;
         }
 
-        $defaultLangId = Configuration::get('PS_LANG_DEFAULT');
-        $defaultLanguage = new Language($defaultLangId);
-        $translatorDefaultLanguage = Context::getContext()->getTranslatorFromLocale($defaultLanguage->locale);
-
         /** @var DataLangCore $classObject */
         $classObject = new $className($lang->locale);
 
@@ -1321,46 +1318,74 @@ class LanguageCore extends ObjectModel
         $fieldsToUpdate = $classObject->getFieldsToUpdate();
 
         if (!empty($keys) && !empty($fieldsToUpdate)) {
+            $shops = Shop::getShopsCollection(false);
+            foreach ($shops as $shop) {
+                static::updateMultilangFromClassForShop($table, $classObject, $lang, $shop, $keys, $fieldsToUpdate);
+            }
+        }
+    }
 
-            // get table data
-            $tableData = Db::getInstance()->executeS('SELECT * FROM `' . bqSQL($table) . '`
-                WHERE `id_lang` = "' . (int)$lang->id . '"', true, false);
+    private static function updateMultilangFromClassForShop($tableName, $classObject, $lang, $shop, $keys, $fieldsToUpdate)
+    {
+        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+        $shopDefaultLanguage = new Language($shopDefaultLangId);
+        $translatorDefaultShopLanguage = Context::getContext()->getTranslatorFromLocale($shopDefaultLanguage->locale);
 
-            if (!empty($tableData)) {
-                foreach ($tableData as $data) {
-                    $updateWhere = '';
-                    $updateField = '';
+        $shopFieldExists = $primary_key_exists = false;
+        $columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$tableName.'`');
+        foreach ($columns as $column) {
+            $fields[]= '`'.$column['Field'].'`';
+            if ($column['Field'] == 'id_shop') {
+                $shopFieldExists = true;
+            }
+        }
 
-                    // Construct update where
-                    foreach ($keys as $key) {
-                        if (!empty($updateWhere)) {
-                            $updateWhere .= ' AND ';
-                        }
-                        $updateWhere .= '`'.bqSQL($key).'` = "' . pSQL($data[$key]) . '"';
+        // get table data
+        $tableData = Db::getInstance()->executeS(
+            'SELECT * FROM `' . bqSQL($tableName) . '`
+            WHERE `id_lang` = "' . (int) $lang->id . '"'
+            . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : ''),
+            true,
+            false
+        );
+
+        if (!empty($tableData)) {
+            foreach ($tableData as $data) {
+                $updateWhere = '';
+                $updateField = '';
+
+                // Construct update where
+                foreach ($keys as $key) {
+                    if (!empty($updateWhere)) {
+                        $updateWhere .= ' AND ';
+                    }
+                    $updateWhere .= '`'.bqSQL($key).'` = "' . pSQL($data[$key]) . '"';
+                }
+
+                // Construct update field
+                foreach ($fieldsToUpdate as $toUpdate) {
+                    if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
+                        continue;
                     }
 
-                    // Construct update field
-                    foreach ($fieldsToUpdate as $toUpdate) {
-                        if ('url_rewrite' === $toUpdate && self::$locale_crowdin_lang === $lang->locale) {
-                            continue;
+                    $untranslated = $translatorDefaultShopLanguage->getSourceString($data[$toUpdate], $classObject->getDomain());
+                    $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
+
+                    if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
+                        if (!empty($updateField)) {
+                            $updateField .= ' , ';
                         }
-
-                        $untranslated = $translatorDefaultLanguage->getSourceString($data[$toUpdate], $classObject->getDomain());
-                        $translatedField = $classObject->getFieldValue($toUpdate, $untranslated);
-
-                        if (!empty($translatedField) && $translatedField != $data[$toUpdate]) {
-                            if (!empty($updateField)) {
-                                $updateField .= ' , ';
-                            }
-                            $updateField .= '`'.bqSQL($toUpdate).'` = "' . pSQL($translatedField) . '"';
-                        }
+                        $updateField .= '`'.bqSQL($toUpdate).'` = "' . pSQL($translatedField) . '"';
                     }
+                }
 
-                    // Update table
-                    if (!empty($updateWhere) && !empty($updateField)) {
-                        $sql = 'UPDATE `' . bqSQL($table) . '` SET ' . $updateField . ' WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int)$lang->id . '" LIMIT 1;';
-                        Db::getInstance()->execute($sql);
-                    }
+                // Update table
+                if (!empty($updateWhere) && !empty($updateField)) {
+                    $sql = 'UPDATE `' . bqSQL($tableName) . '` SET ' . $updateField . ' 
+                    WHERE ' . $updateWhere . ' AND `id_lang` = "' . (int) $lang->id . '"
+                    ' . ($shopFieldExists ? ' AND `id_shop` = ' . (int) $shop->id : '') . '
+                    LIMIT 1;';
+                    Db::getInstance()->execute($sql);
                 }
             }
         }
