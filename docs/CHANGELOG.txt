@@ -23,6 +23,19 @@ International Registered Trademark & Property of PrestaShop SA
 
 Release Notes for PrestaShop 1.7
 --------------------------------
+
+####################################
+#   v1.7.2.5 - (2018-10-21)
+####################################
+- Back Office:
+  - Bug fix:
+    - #8755: Fix directory listing
+    - #8772: Replace serialize with json_encode
+
+- Core:
+  - Bug fix:
+    - #8591: Update Translation Bundle version in composer
+
 ####################################
 #   v1.7.2.4 - (2017-10-24)
 ####################################

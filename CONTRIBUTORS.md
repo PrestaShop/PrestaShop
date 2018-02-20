@@ -11,6 +11,7 @@ GitHub contributors:
 - Agence CINS
 - Agnes
 - Alban DEFLANDRE
+- Alban L
 - Aleksander Palyan
 - Alessandro Corbelli
 - Alex Even
