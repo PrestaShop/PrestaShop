@@ -131,8 +131,8 @@ class WebTestCase extends TestCase
             ->getMock();
 
         $values = array(
-            array('_PS_MODE_DEMO_', true),
-            array('_PS_MODULE_DIR_', __DIR__.'/../../../resources/modules/'),
+            array('_PS_MODE_DEMO_', null, true),
+            array('_PS_MODULE_DIR_', null, __DIR__.'/../../../resources/modules/'),
         );
 
         $configurationMock->method('get')

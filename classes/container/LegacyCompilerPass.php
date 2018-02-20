@@ -48,7 +48,7 @@ class LegacyCompilerPass implements CompilerPassInterface
         ], $container);
 
         $container->set('context', $context);
-        $container->set('configuration', new Configuration($context->shop));
+        $container->set('configuration', new Configuration());
         $container->set('db', Db::getInstance());
         $container->set('shop', $context->shop);
         $container->set('employee', $context->employee);
