@@ -1980,22 +1980,9 @@ class AdminControllerCore extends Controller
                 unset($tabs[$index]);
                 continue;
             }
-
-            $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
-            $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
-
-            // retrocompatibility : change png to gif if icon not exists
-            if (!$img_exists_cache) {
-                $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-            }
-
-            if ($img_exists_cache) {
-                $path_img = $img = $img_exists_cache;
-            } else {
-                $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../img/t/'.$tab['class_name'].'.png';
-            }
+            $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
+            // Relative link will always work, whatever the base uri set in the admin
+            $img = '../img/t/'.$tab['class_name'].'.png';
 
             if (trim($tab['module']) != '') {
                 $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
