@@ -469,7 +469,7 @@ class LanguageCore extends ObjectModel
         $fields = implode(',', $fields);
 
         if (!$primary_key_exists) {
-            return;
+            return true;
         }
 
         $sql = 'INSERT IGNORE INTO `'.$tableName.'` ('.$fields.') (SELECT ';
@@ -1325,6 +1325,18 @@ class LanguageCore extends ObjectModel
         }
     }
 
+    /**
+     * untranslate then re-translate duplicated rows in tables with pattern xxx_lang
+     *
+     * @param string   $tableName
+     * @param DataLang $classObject
+     * @param string   $lang
+     * @param Shop     $shop
+     * @param array    $keys
+     * @param array    $fieldsToUpdate
+     *
+     * @throws \PrestaShopDatabaseException
+     */
     private static function updateMultilangFromClassForShop($tableName, $classObject, $lang, $shop, $keys, $fieldsToUpdate)
     {
         $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
