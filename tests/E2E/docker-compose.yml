@@ -9,14 +9,13 @@ services:
     depends_on:
       - "prestashop"
       - "selenium-chrome"
-    command: ["/tmp/wait-for-it.sh", "--timeout=200", "--strict", "prestashop:80", "--", "/tmp/node_modules/mocha/bin/mocha /tmp/test/campaigns/regular/*", "--URL=prestashop-web", "--DIR=/home/seluser/Downloads/"]
+    working_dir: /tmp
+    command: ["/tmp/wait-for-it.sh", "--timeout=300", "--strict", "prestashop-web:80", "--", "npm test", "--URL=prestashop-web"]
     volumes:
       - ./screenshots/:/home/test/screenshots/
       - downloads:/home/seluser/Downloads
-      - /home/thomas/Téléchargements:/home/seluser/Downloads
     networks:
       - default
-      - dockernet
 
   prestashop:
     build: docker_prestashop/
@@ -44,8 +43,6 @@ services:
 
   selenium-chrome:
     image: selenium/standalone-chrome
-    ports:
-      - 4444:4444
     volumes:
         - downloads:/home/seluser/Downloads
     networks:
