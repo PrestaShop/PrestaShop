@@ -107,3 +107,10 @@ span.twitter-typeahead {
     display: block;
   }
 }
+
+// Needed to override the default inline style of modal header in translations-app
+.translations-app{
+  .modal-header{
+    display: initial;
+  }
+}
