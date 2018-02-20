@@ -32,7 +32,3 @@ if (!defined('PS_ADMIN_DIR')) {
 }
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
-
-if (PHP_VERSION_ID < 70000) {
-    $loader = require_once(dirname(__FILE__).'/../var/bootstrap.php.cache');
-}

@@ -40,7 +40,7 @@ class Configuration extends ParameterBag implements ConfigurationInterface
     public function __construct(array $parameters = array())
     {
         // Do nothing
-        if (count($parameters)) {
+        if (!empty($parameters)) {
             throw new \LogicException('No parameter can be handled in constructor. Use method set() instead.');
         }
     }

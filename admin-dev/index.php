@@ -60,10 +60,6 @@ if (!isset($_REQUEST['controller']) && isset($_REQUEST['tab'])) {
     $_REQUEST['controller'] = strtolower($_REQUEST['tab']);
 }
 
-// Prepare Symfony kernel to resolve route.
-if (PHP_VERSION_ID < 70000) {
-    $loader = require_once __DIR__.'/../var/bootstrap.php.cache';
-}
 // Enable APC for autoloading to improve performance.
 // You should change the ApcClassLoader first argument to a unique prefix
 // in order to prevent cache key conflicts with other applications
