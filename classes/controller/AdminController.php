@@ -1980,20 +1980,7 @@ class AdminControllerCore extends Controller
                 unset($tabs[$index]);
                 continue;
             }
-            $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
-            // Relative link will always work, whatever the base uri set in the admin
-            $img = '../img/t/'.$tab['class_name'].'.png';
 
-            if (trim($tab['module']) != '') {
-                $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
-            }
-
-            // retrocompatibility
-            if (!file_exists($path_img)) {
-                $img = str_replace('png', 'gif', $img);
-            }
             // tab[class_name] does not contains the "Controller" suffix
             if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $this->controller_name) {
                 $tabs[$index]['current'] = true;
@@ -2001,11 +1988,10 @@ class AdminControllerCore extends Controller
             } else {
                 $tabs[$index]['current'] = false;
             }
-
-            $tabs[$index]['img'] = $img;
+            $tabs[$index]['img'] = null;
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
-
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
             if (isset($tabs[$index]['sub_tabs'][0])) {
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
             } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {
