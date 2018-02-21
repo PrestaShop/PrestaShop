@@ -93,6 +93,13 @@ class LocaleData
     public $currencyPatterns;
 
     /**
+     * All currencies, by ISO code
+     *
+     * @var CurrencyData[]
+     */
+    public $currencies;
+
+    /**
      * Override this object's data with another LocaleData object
      *
      * @param LocaleData $localeData
@@ -146,6 +153,16 @@ class LocaleData
         if (isset($localeData->currencyPatterns)) {
             foreach ($localeData->currencyPatterns as $numberingSystem => $pattern) {
                 $this->currencyPatterns[$numberingSystem] = $pattern;
+            }
+        }
+
+        if (isset($localeData->currencies)) {
+            foreach ($localeData->currencies as $code => $currencyData) {
+                if (!isset($this->currencies[$code])) {
+                    $this->currencies[$code] = $currencyData;
+                    continue;
+                }
+                $this->currencies[$code]->overrideWith($currencyData);
             }
         }
 

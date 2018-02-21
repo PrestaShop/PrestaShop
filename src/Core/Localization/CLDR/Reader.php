@@ -54,6 +54,13 @@ class Reader implements ReaderInterface
      * @var SimplexmlElement
      */
     protected $supplementalXml;
+
+    /**
+     * Additional data about numbering systems
+     * Mainly used for digits (they depend on numbering system)
+     *
+     * @var SimpleXMLElement
+     */
     protected $numberingSystemsXml;
 
     /**
@@ -300,12 +307,16 @@ class Reader implements ReaderInterface
     protected function mapLocaleData(SimplexmlElement $xmlLocaleData, $supplementalData)
     {
         $localeData = new LocaleData();
+
+        // Geo
         if (isset($xmlLocaleData->identity->language)) {
             $localeData->localeCode = (string)$xmlLocaleData->identity->language['type'];
         }
         if (isset($xmlLocaleData->identity->territory)) {
             $localeData->localeCode .= '-' . $xmlLocaleData->identity->territory['type'];
         }
+
+        // Numbers
         $numbersData = $xmlLocaleData->numbers;
         // Default numbering system.
         if (isset($numbersData->defaultNumberingSystem)) {
@@ -475,11 +486,60 @@ class Reader implements ReaderInterface
             }
         }
 
+        // Currencies
+        $currencyData = $numbersData->currencies;
+        if (isset($currencyData->currency)) {
+            foreach ($currencyData->currency as $currencyNode) {
+                $currencyCode = (string)$currencyNode['type'];
+
+                $currencyData          = new CurrencyData();
+                $currencyData->isoCode = $currencyCode;
+
+                // Symbols
+                foreach ($currencyNode->symbol as $symbolNode) {
+                    $type = (string)$symbolNode['alt'];
+                    if (empty($type)) {
+                        $type = 'default';
+                    }
+                    $currencyData->symbols[$type] = (string)$symbolNode;
+                }
+
+                // Names
+                foreach ($currencyNode->displayName as $nameNode) {
+                    $countContext = 'default';
+                    if (!empty($nameNode['count'])) {
+                        $countContext = (string)$nameNode['count'];
+                    }
+                    $currencyData->displayNames[$countContext] = (string)$nameNode;
+                }
+
+                // Supplemental (fraction digits and numeric iso code)
+                $codesMapping = $this->supplementalXml->supplementalData->xpath(
+                    '//codeMappings/currencyCodes[@type="' . $currencyCode . '"]'
+                );
+
+                if (!empty($codesMapping)) {
+                    /** @var SimplexmlElement $codesMapping */
+                    $codesMapping                 = $codesMapping[0];
+                    $currencyData->numericIsoCode = (int)(string)$codesMapping->attributes()->numeric;
+                }
+
+                $fractionsData = $this->supplementalXml->supplementalData->xpath(
+                    '//currencyData/fractions/info[@iso4217="' . $currencyCode . '"]'
+                );
+
+                if (!empty($fractionsData)) {
+                    /** @var SimplexmlElement $fractionsData */
+                    $fractionsData               = $fractionsData[0];
+                    $currencyData->decimalDigits = (int)(string)$fractionsData->attributes()->digits;
+                }
+
+                $localeData->currencies[$currencyCode] = $currencyData;
+            }
+        }
+
         return $localeData;
     }
-
-
-
 
     /**
      * Extract parent locale code
