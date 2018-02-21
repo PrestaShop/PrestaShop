@@ -4514,6 +4514,7 @@ class ProductCore extends ObjectModel
         $customized_datas = array();
 
         foreach ($result as $row) {
+            $row['value'] = stripslashes(nl2br($row['value']));	
             $customized_datas[(int)$row['id_product']][(int)$row['id_product_attribute']][(int)$row['id_address_delivery']][(int)$row['id_customization']]['datas'][(int)$row['type']][] = $row;
         }
 
