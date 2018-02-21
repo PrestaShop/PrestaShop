@@ -1269,6 +1269,21 @@ class FrontControllerCore extends Controller
     }
 
     /**
+     * Checks if guest token is valid
+     *
+     * @since 1.6.1.7
+     * @return bool
+     */
+    public function isGuestTokenValid()
+    {
+        if (!Configuration::get('PS_TOKEN_ENABLE')) {
+            return true;
+        }
+
+        return (strcasecmp(Tools::getGuestToken(false), Tools::getValue('token')) == 0);
+    }
+
+    /**
      * Adds a media file(s) (CSS, JS) to page header
      *
      * @param string|array $media_uri Path to file, or an array of paths like: array(array(uri => media_type), ...)

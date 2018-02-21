@@ -1210,6 +1210,23 @@ class ToolsCore
     }
 
     /**
+    * Get guest token to prevent CSRF
+    *
+    * @param string $token token to encrypt
+    */
+    public static function getGuestToken($page = true, Context $context = null)
+    {
+        if (!$context) {
+            $context = Context::getContext();
+        }
+        if ($page === true) {
+            return (Tools::encrypt($context->cookie->id_guest.Tools::getRemoteAddr().$_SERVER['SCRIPT_NAME']));
+        } else {
+            return (Tools::encrypt($context->cookie->id_guest.Tools::getRemoteAddr().$page));
+        }
+    }
+
+    /**
     * Tokenize a string
     *
     * @param string $string string to encript
