@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 
 /**
  * Currency data layer classes interface
@@ -59,7 +59,7 @@ interface CurrencyDataLayerInterface
      * @return CurrencyData
      *  The currency data to be written by the upper data layer
      */
-    public function write($currencyCode, CurrencyData $currencyData);
+    public function write($currencyCode, $currencyData);
 
     /**
      * Set the lower layer.
