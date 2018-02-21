@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 
 /**
  * Locale data layer classes interface
@@ -44,7 +44,7 @@ interface LocaleDataLayerInterface
      *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *  eg: fr-FR, en-US
      *
-     * @return CldrLocaleData
+     * @return LocaleData
      *  The searched locale's CLDR data
      */
     public function read($localeCode);
@@ -57,10 +57,10 @@ interface LocaleDataLayerInterface
      *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *  eg: fr-FR, en-US
      *
-     * @param CldrLocaleData $localeData
+     * @param LocaleData $localeData
      *  The locale's CLDR data to write
      *
-     * @return CldrLocaleData
+     * @return LocaleData
      *  The locale's CLDR data to be written by the upper data layer
      */
     public function write($localeCode, $localeData);
