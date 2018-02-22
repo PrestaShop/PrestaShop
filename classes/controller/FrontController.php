@@ -506,7 +506,7 @@ class FrontControllerCore extends Controller
         }
         /* /patch */
         $templateVars = array(
-            'cart' => $this->cart_presenter->present($this->context->cart),
+            'cart' => $cleancart,
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectPresenter->present($this->context->language),
