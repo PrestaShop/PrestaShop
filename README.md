@@ -134,7 +134,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 Getting support
 --------
 
-If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-170x-in-development/
+If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-172x-current/
 
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
