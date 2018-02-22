@@ -25,9 +25,9 @@
 
 $(document).ready(function() {
 	$(document).on('change', '#our_price_display', function(e){
-		updateLoyaltyView($('#our_price_display').attr('content'));
+		updateLoyaltyView(priceWithDiscountsDisplay);
 	})
-	updateLoyaltyView($('#our_price_display').attr('content'));
+	updateLoyaltyView(priceWithDiscountsDisplay);
 });
 
 function updateLoyaltyView(new_price) {
