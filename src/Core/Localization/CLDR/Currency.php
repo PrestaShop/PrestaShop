@@ -1,0 +1,152 @@
+<?php
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
+
+class Currency
+{
+    /**
+     * Alphabetic ISO 4217 currency code
+     *
+     * @var string
+     */
+    public $isoCode;
+
+    /**
+     * Numeric ISO 4217 currency code
+     *
+     * @var string
+     */
+    public $numericIsoCode;
+
+    /**
+     * Number of decimal digits to display for a price in this currency
+     *
+     * @var int
+     */
+    public $decimalDigits;
+
+    /**
+     * Possible names depending on count context.
+     *
+     * e.g. : "Used currency is dollar" (default), "I need one dollar" (one), "I need five dollars" (other)
+     * [
+     *     'default' => 'dollar',
+     *     'one'     => 'dollar',
+     *     'other'   => 'dollars',
+     * ]
+     *
+     * @var string[]
+     */
+    public $displayNames;
+
+    /**
+     * Possible symbols (PrestaShop is using narrow)
+     *
+     * e.g.:
+     * [
+     *     'default' => 'US$',
+     *     'narrow' => '$',
+     * ]
+     *
+     * @var string[]
+     */
+    public $symbols;
+
+    public function __construct(CurrencyData $currencyData)
+    {
+        $this->isoCode        = $currencyData->isoCode;
+        $this->numericIsoCode = $currencyData->numericIsoCode;
+        $this->decimalDigits  = $currencyData->decimalDigits;
+        $this->displayNames   = $currencyData->displayNames;
+        $this->symbols        = $currencyData->symbols;
+    }
+
+    /**
+     * Get the ISO code of this currency
+     *
+     * @return string
+     *  The currency's ISO 4217 code
+     */
+    public function getIsoCode()
+    {
+        return $this->isoCode;
+    }
+
+    /**
+     * Get the numeric ISO code of this currency
+     *
+     * @return string
+     *  The currency's ISO 4217 numeric code
+     */
+    public function getNumericIsoCode()
+    {
+        return $this->numericIsoCode;
+    }
+
+    /**
+     * Get the number of decimal digits to display when formatting a price with this currency
+     *
+     * @return int
+     *  The number of decimal digits to display
+     */
+    public function getDecimalDigits()
+    {
+        return $this->decimalDigits;
+    }
+
+    /**
+     * Get the display name for the passed count context
+     *
+     * @param string $countContext
+     *  The count context
+     *  "default" = talking about the currency (e.g.: "used currency is Euro")
+     *  "one"     = talking about one unit of this currency (e.g.: "one euro")
+     *  "other"   = talking about several units of this currency (e.g.: "ten euros")
+     *
+     * @return string
+     *  The wanted display name
+     */
+    public function getDisplayName($countContext = 'default')
+    {
+        return $this->displayNames[$countContext];
+    }
+
+    /**
+     * Get the symbol of this currency. Narrow symbol is returned by default.
+     *
+     * @param string $type
+     *  Possible value : "default" ("$") and "narrow" ("US$")
+     *
+     * @return string
+     *  The currency's symbol
+     */
+    public function getSymbols($type = 'narrow')
+    {
+        return $this->symbols[$type];
+    }
+}

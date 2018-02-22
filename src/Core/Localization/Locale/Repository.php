@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\Repository as CurrencyRepository;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
@@ -37,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Number\Formatter as NumberFormatter;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection as PriceSpecificationMap;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 
 /**
@@ -195,12 +197,13 @@ class Repository implements RepositoryInterface
      *
      * @throws LocalizationException
      */
-    protected function buildNumberSpecification($cldrLocale)
+    protected function buildNumberSpecification(CldrLocale $cldrLocale)
     {
+        // TODO replace with real methods (or implement these methods)
         return new NumberSpecification(
-            $cldrLocale->getNumberPositivePattern(),
-            $cldrLocale->getNumberNegativePattern(),
-            $cldrLocale->getNumberSymbols(),
+            $this->getPositivePattern($cldrLocale->getDecimalPattern()),
+            $this->getNegativePattern($cldrLocale->getDecimalPattern()),
+            $this->computeNumberSymbolLists($cldrLocale->getAllNumberSymbols()),
             $cldrLocale->getNumberMaxFractionDigits(),
             $cldrLocale->getNumberMinFractionDigits(),
             $cldrLocale->getNumberGroupingUsed(),
@@ -229,10 +232,11 @@ class Repository implements RepositoryInterface
      */
     protected function buildPriceSpecification(CldrLocale $cldrLocale, Currency $currency, $localeCode)
     {
+        // TODO replace with real methods (or implement these methods)
         return new PriceSpecification(
-            $cldrLocale->getNumberPositivePattern(),
-            $cldrLocale->getNumberNegativePattern(),
-            $cldrLocale->getNumberSymbols(),
+            $this->getPositivePattern($cldrLocale->getCurrencyPattern()),
+            $this->getNegativePattern($cldrLocale->getCurrencyPattern()),
+            $this->computeNumberSymbolLists($cldrLocale->getAllNumberSymbols()),
             $cldrLocale->getNumberMaxFractionDigits(),
             $cldrLocale->getNumberMinFractionDigits(),
             $cldrLocale->getNumberGroupingUsed(),
@@ -241,6 +245,92 @@ class Repository implements RepositoryInterface
             $this->currencyDisplayType,
             $currency->getSymbol($localeCode),
             $currency->getIsoCode()
+        );
+    }
+
+    /**
+     * Extract the positive pattern from a CLDR formatting pattern
+     * Works with any formatting pattern (number, price, percentage)
+     *
+     * @param string $pattern
+     *  The CLDR pattern
+     *
+     * @return string
+     *  The extracted positive pattern
+     */
+    protected function getPositivePattern($pattern)
+    {
+        $patterns = explode(';', $pattern);
+
+        return $patterns[0];
+    }
+
+    /**
+     * Extract the negative pattern from a CLDR formatting pattern
+     * Works with any formatting pattern (number, price, percentage)
+     *
+     * @param string $pattern
+     *  The CLDR pattern
+     *
+     * @return string
+     *  The extracted negative pattern
+     */
+    protected function getNegativePattern($pattern)
+    {
+        $patterns = explode(';', $pattern);
+
+        return isset($patterns[1])
+            ? $patterns[1]
+            : '-' . $patterns[0];
+    }
+
+    /**
+     * Convert a list of CLDR number symbols data into a list of NumberSymbolList objects
+     *
+     * @param NumberSymbolsData[] $allNumberSymbolsData
+     *  All the CLDR number symbols data indexed by numbering system
+     *
+     * @return NumberSymbolList[]
+     *
+     * @throws LocalizationException
+     *  If passed data is invalid
+     */
+    protected function computeNumberSymbolLists($allNumberSymbolsData)
+    {
+        $symbolsLists = [];
+        foreach ($allNumberSymbolsData as $numberingSystem => $numberSymbolsData) {
+            $symbolsLists[$numberingSystem] = $this->getNumberSymbolList($numberSymbolsData);
+        }
+
+        return $symbolsLists;
+    }
+
+    /**
+     * Get a NumberSymbolList object from a CLDR NumberSymbolsData object
+     *
+     * @param NumberSymbolsData $symbolsData
+     *  Data that will be used to build the NumberSymbolList object
+     *
+     * @return NumberSymbolList
+     *  An immutable NumberSymbolList object
+     *
+     * @throws LocalizationException
+     *  If passed data is invalid
+     */
+    protected function getNumberSymbolList(NumberSymbolsData $symbolsData)
+    {
+        return new NumberSymbolList(
+            $symbolsData->decimal,
+            $symbolsData->group,
+            $symbolsData->list,
+            $symbolsData->percentSign,
+            $symbolsData->minusSign,
+            $symbolsData->plusSign,
+            $symbolsData->exponential,
+            $symbolsData->superscriptingExponent,
+            $symbolsData->perMille,
+            $symbolsData->infinity,
+            $symbolsData->nan
         );
     }
 }
