@@ -110,8 +110,10 @@ class CommonClient {
       .waitForExistAndClick(selector, timeout);
   }
 
-  waitAndSetValue(selector, value, timeout = 90000) {
-    return this.client.waitAndSetValue(selector, value, timeout);
+  waitAndSetValue(selector, value, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .waitAndSetValue(selector, value, timeout);
   }
 
   scrollTo(selector, margin) {
@@ -145,18 +147,25 @@ class CommonClient {
       .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
   }
 
-  getTextInVar(selector, globalVar, split = false) {
+  getTextInVar(selector, globalVar, split = false, timeout = 90000) {
     if (split) {
       return this.client
-        .waitForExist(selector, 9000)
+        .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
         .then((variable) => global.tab[globalVar] = variable.split(': ')[1])
     } else {
       return this.client
-        .waitForExist(selector, 9000)
+        .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
         .then((variable) => global.tab[globalVar] = variable)
     }
+  }
+
+  getAttributeInVar(selector, attribute, globalVar, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+      .then(() => this.client.getAttribute(selector, attribute))
+      .then((variable) => global.tab[globalVar] = variable)
   }
 
   checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0) {
