@@ -111,10 +111,11 @@ class MailCore extends ObjectModel
 
         $theme_path = _PS_THEME_DIR_;
 
-        // Get the path of theme by id_shop if exist
+        // Get shop name and the path of theme by id_shop if exist
         if (is_numeric($id_shop) && $id_shop) {
             $shop = new Shop((int)$id_shop);
             $theme_name = $shop->getTheme();
+            $configuration['PS_SHOP_NAME'] = $shop->name;
 
             if (_THEME_NAME_ != $theme_name) {
                 $theme_path = _PS_ROOT_DIR_.'/themes/'.$theme_name.'/';
@@ -295,7 +296,7 @@ class MailCore extends ObjectModel
             }
 
             /* Create mail and attach differents parts */
-            $subject = '['.Configuration::get('PS_SHOP_NAME', null, null, $id_shop).'] '.$subject;
+            $subject = '['.$configuration['PS_SHOP_NAME'].'] '.$subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -333,7 +334,7 @@ class MailCore extends ObjectModel
                 Context::getContext()->link = new Link();
             }
 
-            $template_vars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $id_shop));
+            $template_vars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $template_vars['{shop_url}'] = Context::getContext()->link->getPageLink('index', true, Context::getContext()->language->id, null, false, $id_shop);
             $template_vars['{my_account_url}'] = Context::getContext()->link->getPageLink('my-account', true, Context::getContext()->language->id, null, false, $id_shop);
             $template_vars['{guest_tracking_url}'] = Context::getContext()->link->getPageLink('guest-tracking', true, Context::getContext()->language->id, null, false, $id_shop);
