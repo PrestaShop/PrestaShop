@@ -276,6 +276,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     public function processInstallTheme()
     {
         $this->initializeContext();
+        Search::indexation(true);
         $this->model_install->installTheme();
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());

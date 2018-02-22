@@ -1096,7 +1096,9 @@ class Install extends AbstractInstall
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
 
-        Search::indexation(true);
+        if ($entity === null) {
+            Search::indexation(true);
+        }
 
         // Update fixtures lang
         foreach ($languages as $lang) {
