@@ -236,12 +236,11 @@ class ConfigurationTestCore
             $full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
             return false;
         }
+        closedir($dh);
         $dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
         if (@file_put_contents($dummy, 'test')) {
             @unlink($dummy);
             if (!$recursive) {
-                closedir($dh);
-
                 return true;
             }
         } elseif (!is_writable($dir)) {
@@ -250,16 +249,14 @@ class ConfigurationTestCore
         }
 
         if ($recursive) {
-            while (($file = readdir($dh)) !== false) {
-                if (is_dir($dir.DIRECTORY_SEPARATOR.$file) && $file != '.' && $file != '..' && $file != '.svn') {
-                    if (!ConfigurationTest::test_dir($relative_dir.DIRECTORY_SEPARATOR.$file, $recursive, $full_report)) {
+            foreach (glob('*', GLOB_ONLYDIR|GLOB_NOSORT) as $file) {
+                if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
+                    if (!ConfigurationTest::test_dir($relative_dir . DIRECTORY_SEPARATOR . $file, $recursive, $full_report)) {
                         return false;
                     }
                 }
             }
         }
-
-        closedir($dh);
 
         return true;
     }
