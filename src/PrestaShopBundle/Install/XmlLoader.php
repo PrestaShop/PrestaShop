@@ -261,7 +261,8 @@ class XmlLoader
             throw new PrestashopInstallerException('List of fields not found for entity '.$entity);
         }
 
-        if ($this->isMultilang($entity)) {
+        $is_multi_lang_entity = $this->isMultilang($entity);
+        if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
             $xml_langs = array();
             $default_lang = null;
@@ -298,7 +299,7 @@ class XmlLoader
 
             // Load multilang data
             $data_lang = array();
-            if ($this->isMultilang($entity)) {
+            if ($is_multi_lang_entity) {
                 $xpath_query = $entity.'[@id="'.$identifier.'"]';
                 foreach ($xml_langs as $id_lang => $xml_lang) {
                     if (!$xml_lang) {
