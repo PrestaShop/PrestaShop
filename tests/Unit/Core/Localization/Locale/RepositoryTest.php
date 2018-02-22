@@ -51,6 +51,7 @@ class RepositoryTest extends TestCase
          */
         /** CLDR Locale data object */
         $cldrLocale = $this->getMockBuilder(CldrLocale::class)
+            ->disableOriginalConstructor()
             ->setMethods([
                 'getNumberPositivePattern',
                 'getNumberNegativePattern',

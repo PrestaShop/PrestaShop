@@ -28,35 +28,39 @@
 namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 /**
- * Locale reference data layer
+ * Currency reference data layer
  *
- * Provides reference data for locale, number specification, currencies...
+ * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLayerInterface
+class CurrencyReferenceDataLayer extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
-     * CLDR files reader
+     * CLDR locale repository
      *
      * Provides LocaleData objects
      *
-     * @var ReaderInterface
+     * @var LocaleRepository
      */
-    protected $reader;
+    protected $cldrLocaleRepository;
 
-    public function __construct(ReaderInterface $reader)
+    protected $localeCode;
+
+    public function __construct(LocaleRepository $cldrLocaleRepository, $localeCode)
     {
-        $this->reader = $reader;
+        $this->cldrLocaleRepository = $cldrLocaleRepository;
+        $this->localeCode           = $localeCode;
     }
 
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -64,19 +68,25 @@ class LocaleReferenceDataLayer extends AbstractDataLayer implements LocaleDataLa
     }
 
     /**
-     * Actually read a LocaleData object into the current layer
+     * Actually read a CurrencyData object into the current layer
      *
-     * Data is read from official CLDR file (via the CLDR files reader)
+     * Data is read from official CLDR files (via the CLDR LocaleRepository)
      *
-     * @param string $localeCode
-     *  The LocaleData object identifier
+     * @param string $currencyCode
+     *  The CurrencyData object identifier
      *
-     * @return LocaleData|null
-     *  The wanted LocaleData object (null if not found)
+     * @return CurrencyData|null
+     *  The wanted CurrencyData object (null if not found)
      */
-    protected function doRead($localeCode)
+    protected function doRead($currencyCode)
     {
-        return $this->reader->readLocaleData($localeCode);
+        $cldrLocale = $this->cldrLocaleRepository->getLocale($this->localeCode);
+
+        if (empty($cldrLocale)) {
+            return null;
+        }
+
+        return $cldrLocale->getCurrency($currencyCode);
     }
 
     /**
