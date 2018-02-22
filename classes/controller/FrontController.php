@@ -26,6 +26,11 @@
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ConfigurationFilter;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CustomerFilter;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ShopFilter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -494,17 +499,6 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
-        /* Begin patch to purge sensible data from cart to avoid expose them in html page */
-        $cleancart = $this->cart_presenter->present($this->context->cart);
-        if (count($cleancart['products']) > 0) {
-            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
-                unset($cleancart['products'][$idx_cart_line]['id_supplier']);
-                unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
-                unset($cleancart['products'][$idx_cart_line]['wholesale_price']);
-                unset($cleancart['products'][$idx_cart_line]['embedded_attributes']);
-            }
-        }
-        /* /patch */
         $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
@@ -523,7 +517,51 @@ class FrontControllerCore extends Controller
         );
 
         $this->context->smarty->assign($templateVars);
-        Media::addJsDef(array('prestashop' => $templateVars));
+
+        Media::addJsDef(array (
+            'prestashop' => $this->buildFrontEndObject($templateVars)
+        ));
+    }
+
+    /**
+     * Builds the "prestashop" javascript object that will be inserted in the front end
+     *
+     * @param array $templateVars Variables to be inserted in the template (see FrontController::assignGeneralPurposeVariables)
+     *
+     * @return array Variables to be inserted in the "prestashop" javascript object
+     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     */
+    protected function buildFrontEndObject($templateVars)
+    {
+        // keep whitelisted cart product data only
+        if (isset($templateVars['cart']['products']) && is_array($templateVars['cart']['products'])) {
+            $templateVars['cart']['products'] = $this
+                ->getProductListOutputFilter()
+                ->filter($templateVars['cart']['products']);
+        }
+
+        // keep whitelisted customer data only
+        if (isset($templateVars['customer']) && is_array($templateVars['customer'])) {
+            $templateVars['customer'] = $this
+                ->getCustomerOutputFilter()
+                ->filter($templateVars['customer']);
+        }
+
+        // keep whitelisted shop data only
+        if (isset($templateVars['shop']) && is_array($templateVars['shop'])) {
+            $templateVars['shop'] = $this
+                ->getShopOutputFilter()
+                ->filter($templateVars['shop']);
+        }
+
+        // keep whitelisted configuration data only
+        if (isset($templateVars['configuration']) && is_array($templateVars['configuration'])) {
+            $templateVars['configuration'] = $this
+                ->getConfigurationOutputFilter()
+                ->filter($templateVars['configuration']);
+        }
+
+        return $templateVars;
     }
 
     /**
@@ -1324,7 +1362,7 @@ class FrontControllerCore extends Controller
         }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
-        
+
         $content_only = (int) Tools::getValue('content_only');
 
         if ($overridden_layout = Hook::exec(
@@ -1949,5 +1987,50 @@ class FrontControllerCore extends Controller
         $container->compile();
 
         return $container;
+    }
+
+    /**
+     * Returns an object that filters the Product list to be sent to the browser
+     *
+     * @return CollectionFilter
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     */
+    protected function getProductListOutputFilter()
+    {
+        return (new CollectionFilter())
+            ->queue([
+                new ProductFilter()
+            ]);
+    }
+
+    /**
+     * Returns an object that filters the Customer object to be sent to the browser
+     *
+     * @return CustomerFilter
+     */
+    protected function getCustomerOutputFilter()
+    {
+        return new CustomerFilter();
+    }
+
+    /**
+     * Returns an object that filters the Shop object to be sent to the browser
+     *
+     * @return ShopFilter
+     */
+    protected function getShopOutputFilter()
+    {
+        return new ShopFilter();
+    }
+
+    /**
+     * Returns an object that filters the Configuration object to be sent to the browser
+     *
+     * @return ConfigurationFilter
+     */
+    protected function getConfigurationOutputFilter()
+    {
+        return new ConfigurationFilter();
     }
 }
