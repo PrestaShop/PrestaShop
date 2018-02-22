@@ -38,7 +38,7 @@ function updateLoyaltyView(new_price) {
 	var total_points = points_in_cart + points;
 	var voucher = total_points * point_value;
 
-	if (none_award == 0 && productPriceTaxIncluded != new_price) {
+	if (none_award == 0 && productPriceWithoutReduction != new_price) {
 		$('#loyalty').html(loyalty_already);
 	}
 	else if (!points) {
