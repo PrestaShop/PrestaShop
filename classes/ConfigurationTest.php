@@ -249,11 +249,9 @@ class ConfigurationTestCore
         }
 
         if ($recursive) {
-            foreach (glob('*', GLOB_ONLYDIR|GLOB_NOSORT) as $file) {
-                if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
-                    if (!ConfigurationTest::test_dir($relative_dir . DIRECTORY_SEPARATOR . $file, $recursive, $full_report)) {
-                        return false;
-                    }
+            foreach (Tools::getDirectories($dir) as $file) {
+                if (!ConfigurationTest::test_dir($relative_dir . DIRECTORY_SEPARATOR . $file, $recursive, $full_report)) {
+                    return false;
                 }
             }
         }
