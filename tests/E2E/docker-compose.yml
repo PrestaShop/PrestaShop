@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+  tests:
+    build: .
+    environment:
+      SELENIUM_HOST: selenium-chrome
+      URL: prestashop-web
+    depends_on:
+      - "prestashop"
+      - "selenium-chrome"
+    working_dir: /tmp
+    command: ["/tmp/wait-for-it.sh", "--timeout=300", "--strict", "prestashop-web:80", "--", "npm test", "--URL=prestashop-web"]
+    volumes:
+      - ./screenshots/:/home/test/screenshots/
+      - downloads:/home/seluser/Downloads
+    networks:
+      - default
+
+  prestashop:
+    build: docker_prestashop/
+    environment:
+      DB_SERVER: db
+      PS_INSTALL_AUTO: 1
+      PS_COUNTRY: fr
+      PS_DEV_MODE: 1
+      PS_DOMAIN: prestashop-web
+      PS_FOLDER_ADMIN: admin-dev
+      PS_FOLDER_INSTALL: install-dev
+    depends_on:
+      - "db"
+    command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "db:3306", "--", "/tmp/docker_run.sh"]
+    ports:
+        - 8002:80
+    volumes:
+        - ../../:/var/www/html/
+        - ps_config:/var/www/html/config
+        - ps_var:/var/www/html/var
+    networks:
+      default:
+          aliases:
+              - prestashop-web
+
+  selenium-chrome:
+    image: selenium/standalone-chrome
+    volumes:
+        - downloads:/home/seluser/Downloads
+    networks:
+      default:
+          aliases:
+              - selenium-chrome
+
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+    networks:
+      - default
+
+volumes:
+    ps_var:
+    ps_config:
+    downloads:
+
+networks:
+  default:
