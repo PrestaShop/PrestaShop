@@ -264,6 +264,19 @@ class ConfigurationTestCore
         return true;
     }
 
+    public static function __callStatic($name, $arguments)
+    {
+        static $recursiveTests = [
+            'test_img_dir',
+            'test_module_dir',
+            'test_mails_dir',
+            'test_translations_dir',
+            'test_config_sf2_dir'
+        ];
+
+        return ConfigurationTest::test_dir($arguments[0], in_array($name, $recursiveTests));
+    }
+
     public static function test_file($file_relative)
     {
         $file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file_relative;
@@ -271,74 +284,9 @@ class ConfigurationTestCore
         return file_exists($file) && is_writable($file);
     }
 
-    public static function test_config_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
     public static function test_sitemap($dir)
     {
         return ConfigurationTest::test_file($dir);
-    }
-
-    public static function test_root_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_log_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_admin_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_img_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_module_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_cache_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_tools_v2_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_cache_v2_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_download_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_mails_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_translations_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_config_sf2_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir, true);
     }
 
     public static function test_theme_lang_dir($dir)
@@ -369,16 +317,6 @@ class ConfigurationTestCore
         }
 
         return ConfigurationTest::test_dir($dir, true);
-    }
-
-    public static function test_customizable_products_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
-    }
-
-    public static function test_virtual_products_dir($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
     }
 
     public static function test_mbstring()
@@ -422,10 +360,5 @@ class ConfigurationTestCore
         }
 
         return true;
-    }
-
-    public static function test_translations_sf2($dir)
-    {
-        return ConfigurationTest::test_dir($dir);
     }
 }
