@@ -39,7 +39,7 @@ class AdminThemesCatalogControllerCore extends AdminController
         $iso_currency = $this->context->currency->iso_code;
         $iso_country = $this->context->country->iso_code;
         $activity = Configuration::get('PS_SHOP_ACTIVITY');
-        $addons_url = 'http://addons.prestashop.com/iframe/search-1.7.php?psVersion='._PS_VERSION_.'&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int)$activity.'&parentUrl='.$parent_domain.'&onlyThemes=1';
+        $addons_url = 'https://addons.prestashop.com/iframe/search-1.7.php?psVersion='._PS_VERSION_.'&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int)$activity.'&parentUrl='.$parent_domain.'&onlyThemes=1';
         $addons_content = Tools::file_get_contents($addons_url);
 
         $this->context->smarty->assign(array(

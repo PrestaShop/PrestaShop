@@ -39,7 +39,7 @@ if (Tools::isSubmit('ajaxReferrers')) {
 }
 
 if (Tools::getValue('page') == 'prestastore' && @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)) {
-    readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
+    readfile('https://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
 }
 
 if (Tools::isSubmit('getAvailableFields') && Tools::isSubmit('entity')) {

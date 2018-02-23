@@ -1559,7 +1559,7 @@ class AdminControllerCore extends Controller
 
         $this->addPageHeaderToolBarModulesListButton();
 
-        $this->context->smarty->assign('help_link', 'http://help.prestashop.com/'.Language::getIsoById($this->context->employee->id_lang).'/doc/'
+        $this->context->smarty->assign('help_link', 'https://help.prestashop.com/'.Language::getIsoById($this->context->employee->id_lang).'/doc/'
             .Tools::getValue('controller').'?version='._PS_VERSION_.'&country='.Language::getIsoById($this->context->employee->id_lang));
     }
 
@@ -2321,7 +2321,7 @@ class AdminControllerCore extends Controller
         $this->modals[] = array(
             'modal_id' => 'modal_addons_connect',
             'modal_class' => 'modal-md',
-            'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
+            'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="https://addons.prestashop.com/'
             .'?utm_source=back-office&utm_medium=modules'
             .'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
             .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'">PrestaShop Addons</a>',

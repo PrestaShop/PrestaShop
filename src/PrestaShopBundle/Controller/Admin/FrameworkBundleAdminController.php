@@ -162,7 +162,7 @@ class FrameworkBundleAdminController extends Controller
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('http://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
+        $docLink = urlencode('https://help.prestashop.com/'.$legacyContext->getEmployeeLanguageIso().'/doc/'
             .$section.'?version='._PS_VERSION_.'&country='.$legacyContext->getEmployeeLanguageIso());
 
         return $this->generateUrl('admin_common_sidebar', [
