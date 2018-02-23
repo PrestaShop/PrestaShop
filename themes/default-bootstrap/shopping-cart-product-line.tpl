@@ -49,7 +49,7 @@
 				{if isset($product.is_discounted) && $product.is_discounted && isset($product.reduction_applies) && $product.reduction_applies}
                 	<li class="price-percent-reduction small">
             			{if !$priceDisplay}
-            				{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
+            				{if isset($product.reduction_type) && $product.reduction_type === 'amount'}
                     			{assign var='priceReduction' value=($product.price_wt - $product.price_without_specific_price)}
                     			{assign var='symbol' value=$currency->sign}
                     		{else}
@@ -57,7 +57,7 @@
                     			{assign var='symbol' value='%'}
                     		{/if}
 						{else}
-							{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
+							{if isset($product.reduction_type) && $product.reduction_type === 'amount'}
 								{assign var='priceReduction' value=($product.price - $product.price_without_specific_price)}
 								{assign var='symbol' value=$currency->sign}
 							{else}
