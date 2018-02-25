@@ -53,6 +53,11 @@ class StockRepository extends StockManagementRepository
      */
     private $orderStates = array();
 
+    /**
+     * @var array
+     */
+    private $totalCombinations = array();
+
    /**
      * StockRepository constructor.
      * @param ContainerInterface $container
@@ -230,18 +235,31 @@ class StockRepository extends StockManagementRepository
             $orderByClause = $this->orderByProductIds();
         }
 
+        $combinationNameQuery = $this->getCombinationNameSubquery();
+        $productFeaturesQuery = $this->getProductFeaturesSubquery();
+        $productAttributesQuery = $this->getProductAttributesSubquery();
+        $combinationCoverIdQuery = $this->getCombinationCoverIdSubquery();
+
         return str_replace(
             array(
                 '{and_where}',
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
+                '{combination_name}',
+                '{product_features}',
+                '{product_attributes}',
+                '{combination_cover_id}'
             ),
             array(
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
+                $combinationNameQuery,
+                $productFeaturesQuery,
+                $productAttributesQuery,
+                $combinationCoverIdQuery
             ),
             'SELECT SQL_CALC_FOUND_ROWS
           p.id_product                                                                      AS product_id,
@@ -260,7 +278,11 @@ class StockRepository extends StockManagementRepository
              COALESCE(ps.low_stock_threshold,
                       "N/A"))                                                               AS product_low_stock_threshold,
           IF(COALESCE(pa.id_product_attribute, 0) > 0, IF(sa.quantity <= pas.low_stock_threshold, 1, 0),
-             IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert
+             IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert,
+          {combination_name},
+          {product_features},
+          {product_attributes},
+          {combination_cover_id} 
         FROM {table_prefix}product p
           LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
           LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id)
@@ -318,12 +340,8 @@ class StockRepository extends StockManagementRepository
     private function addCombinationsAndFeatures(array $rows)
     {
         array_walk($rows, function (&$row) {
-            $this->addProductFeatures($row);
             if ($row['combination_id'] != 0) {
-                $this->addTotalCombinations($row);
-                $this->addCombinationName($row);
-                $this->addCombinationCoverId($row);
-                $this->addProductAttributes($row);
+                $row['total_combinations'] = $this->getTotalCombinations($row);
             } else {
                 $row['total_combinations'] = 'N/A';
                 $row['combination_name'] = 'N/A';
@@ -336,18 +354,26 @@ class StockRepository extends StockManagementRepository
     }
 
     /**
+     * Compute the number of combinations associated with a product
+     *
      * @param array $row
+     *
+     * @return string
      */
-    private function addTotalCombinations(array &$row)
+    private function getTotalCombinations(array $row)
     {
-        $query = 'SELECT COUNT(*) total_combinations
-                    FROM '.$this->tablePrefix.'product_attribute pa
-                    WHERE id_product=:id_product';
-        $statement = $this->connection->prepare($query);
-        $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
-        $statement->execute();
-        $row['total_combinations'] = $statement->fetchColumn(0);
-        $statement->closeCursor();
+        if (!isset($this->totalCombinations[$row['product_id']])) {
+            $query = 'SELECT COUNT(*) total_combinations
+                        FROM ' . $this->tablePrefix . 'product_attribute pa
+                        WHERE id_product=:id_product';
+            $statement = $this->connection->prepare($query);
+            $statement->bindValue('id_product', (int)$row['product_id'], \PDO::PARAM_INT);
+            $statement->execute();
+            $this->totalCombinations[$row['product_id']] = $statement->fetchColumn(0);
+            $statement->closeCursor();
+        }
+
+        return $this->totalCombinations[$row['product_id']];
     }
 
     private function addEditProductLink(array $rows)
