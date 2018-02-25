@@ -179,7 +179,6 @@ abstract class QueryParamsCollection
      */
     protected function parsePaginationParams(array $queryParams)
     {
-
         if (!array_key_exists('page_index', $queryParams)) {
             $queryParams['page_index'] = $this->getDefaultPageIndex();
         }
@@ -213,7 +212,8 @@ abstract class QueryParamsCollection
     /**
      * @return array
      */
-    protected function getValidPaginationParams() {
+    protected function getValidPaginationParams()
+    {
         return array(
             'page_size',
             'page_index',
@@ -367,7 +367,7 @@ abstract class QueryParamsCollection
             return ':' . $column . '_' . $index;
         }, array_keys($value));
 
-        $filters[] = sprintf('AND {%s} IN (%s)', $column,  implode(',', $placeholders));
+        $filters[] = sprintf('AND {%s} IN (%s)', $column, implode(',', $placeholders));
 
         return $filters;
     }
@@ -686,7 +686,11 @@ abstract class QueryParamsCollection
                 '{product_name} LIKE :keyword_%d OR ' .
                 '{combination_name} LIKE :keyword_%d' .
                 ')',
-                $index, $index, $index, $index);
+                $index,
+                $index,
+                $index,
+                $index
+            );
         }, range(0, count($this->queryParams['filter']['keywords']) - 1));
 
         $filters[self::SQL_CLAUSE_HAVING] = implode("\n", $parts);
@@ -709,10 +713,10 @@ abstract class QueryParamsCollection
 
     protected function isTimestamp($timestamp)
     {
-        $check = (is_int($timestamp) OR is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
+        $check = (is_int($timestamp) || is_float($timestamp)) ? $timestamp : (string) (int) $timestamp;
 
         return  ($check === $timestamp)
-            AND ( (int) $timestamp <=  PHP_INT_MAX)
-            AND ( (int) $timestamp >= ~PHP_INT_MAX);
+            && ((int) $timestamp <=  PHP_INT_MAX)
+            && ((int) $timestamp >= ~PHP_INT_MAX);
     }
 }
