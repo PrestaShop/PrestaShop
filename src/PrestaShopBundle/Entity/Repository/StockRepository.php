@@ -236,9 +236,6 @@ class StockRepository extends StockManagementRepository
         }
 
         $combinationNameQuery = $this->getCombinationNameSubquery();
-        $productFeaturesQuery = $this->getProductFeaturesSubquery();
-        $productAttributesQuery = $this->getProductAttributesSubquery();
-        $combinationCoverIdQuery = $this->getCombinationCoverIdSubquery();
 
         return str_replace(
             array(
@@ -246,20 +243,14 @@ class StockRepository extends StockManagementRepository
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
-                '{combination_name}',
-                '{product_features}',
-                '{product_attributes}',
-                '{combination_cover_id}'
+                '{combination_name}'
             ),
             array(
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
-                $combinationNameQuery,
-                $productFeaturesQuery,
-                $productAttributesQuery,
-                $combinationCoverIdQuery
+                $combinationNameQuery
             ),
             'SELECT SQL_CALC_FOUND_ROWS
           p.id_product                                                                      AS product_id,
@@ -279,10 +270,7 @@ class StockRepository extends StockManagementRepository
                       "N/A"))                                                               AS product_low_stock_threshold,
           IF(COALESCE(pa.id_product_attribute, 0) > 0, IF(sa.quantity <= pas.low_stock_threshold, 1, 0),
              IF(sa.quantity <= ps.low_stock_threshold, 1, 0))                               AS product_low_stock_alert,
-          {combination_name},
-          {product_features},
-          {product_attributes},
-          {combination_cover_id} 
+          {combination_name}
         FROM {table_prefix}product p
           LEFT JOIN {table_prefix}product_attribute pa ON (p.id_product = pa.id_product)
           LEFT JOIN {table_prefix}product_lang pl ON (p.id_product = pl.id_product AND pl.id_lang = :language_id)
@@ -337,16 +325,14 @@ class StockRepository extends StockManagementRepository
         return $rows;
     }
 
-    private function addCombinationsAndFeatures(array $rows)
+    protected function addCombinationsAndFeatures(array $rows)
     {
+        $rows = parent::addCombinationsAndFeatures($rows);
         array_walk($rows, function (&$row) {
             if ($row['combination_id'] != 0) {
                 $row['total_combinations'] = $this->getTotalCombinations($row);
             } else {
                 $row['total_combinations'] = 'N/A';
-                $row['combination_name'] = 'N/A';
-                $row['combination_cover_id'] = 0;
-                $row['product_attributes'] = '';
             }
         });
 
