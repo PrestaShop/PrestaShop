@@ -74,11 +74,15 @@ class StockMovementRepository extends StockManagementRepository
         $andWhereClause = '',
         $having = '',
         $orderByClause = null
-    )
-    {
+    ) {
         if (is_null($orderByClause)) {
             $orderByClause = $this->orderByMovementsIds();
         }
+
+        $combinationNameQuery = $this->getCombinationNameSubquery();
+        $productFeaturesQuery = $this->getProductFeaturesSubquery();
+        $productAttributesQuery = $this->getProductAttributesSubquery();
+        $combinationCoverIdQuery = $this->getCombinationCoverIdSubquery();
 
         return str_replace(
             array(
@@ -86,12 +90,20 @@ class StockMovementRepository extends StockManagementRepository
                 '{having}',
                 '{order_by}',
                 '{table_prefix}',
+                '{combination_name}',
+                '{product_features}',
+                '{product_attributes}',
+                '{combination_cover_id}'
             ),
             array(
                 $andWhereClause,
                 $having,
                 $orderByClause,
                 $this->tablePrefix,
+                $combinationNameQuery,
+                $productFeaturesQuery,
+                $productAttributesQuery,
+                $combinationCoverIdQuery
             ),
             'SELECT SQL_CALC_FOUND_ROWS
               sm.id_stock_mvt,
@@ -115,7 +127,11 @@ class StockMovementRepository extends StockManagementRepository
               pl.name                                     AS product_name,
               p.id_supplier                               AS supplier_id,
               COALESCE(s.name, "N/A")                     AS supplier_name,
-              COALESCE(ic.id_image, 0)                    AS product_cover_id
+              COALESCE(ic.id_image, 0)                    AS product_cover_id,
+              {combination_name},
+              {product_features},
+              {product_attributes},
+              {combination_cover_id}
            FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_mvt_reason_lang smrl ON (
               smrl.id_stock_mvt_reason = sm.id_stock_mvt_reason
@@ -185,12 +201,7 @@ class StockMovementRepository extends StockManagementRepository
     private function addCombinationsAndFeatures(array $rows)
     {
         array_walk($rows, function (&$row) {
-            $this->addProductFeatures($row);
-            if ($row['combination_id'] != 0) {
-                $this->addCombinationName($row);
-                $this->addCombinationCoverId($row);
-                $this->addProductAttributes($row);
-            } else {
+            if ($row['combination_id'] == 0) {
                 $row['combination_name'] = 'N/A';
                 $row['combination_cover_id'] = 0;
                 $row['product_attributes'] = '';
