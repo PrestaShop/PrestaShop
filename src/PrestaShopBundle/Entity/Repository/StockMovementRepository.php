@@ -52,8 +52,7 @@ class StockMovementRepository extends StockManagementRepository
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         $tablePrefix
-    )
-    {
+    ) {
         parent::__construct(
             $container,
             $connection,
@@ -162,7 +161,8 @@ class StockMovementRepository extends StockManagementRepository
             GROUP BY sm.id_stock_mvt
             HAVING 1 {having}
             {order_by}
-        ');
+        '
+        );
     }
 
     /**
@@ -209,7 +209,9 @@ class StockMovementRepository extends StockManagementRepository
      */
     public function getEmployees()
     {
-        $query = str_replace('{table_prefix}', $this->tablePrefix,
+        $query = str_replace(
+            '{table_prefix}',
+            $this->tablePrefix,
             'SELECT DISTINCT sm.id_employee, CONCAT(sm.employee_lastname, \' \', sm.employee_firstname) AS name
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)
@@ -245,7 +247,9 @@ class StockMovementRepository extends StockManagementRepository
             $groupBy = 'GROUP BY id_stock_mvt_reason';
         }
 
-        $query = str_replace('{table_prefix}', $this->tablePrefix,
+        $query = str_replace(
+            '{table_prefix}',
+            $this->tablePrefix,
             'SELECT '.$select.'
             FROM {table_prefix}stock_mvt sm
             INNER JOIN {table_prefix}stock_available sa ON (sa.id_stock_available = sm.id_stock)

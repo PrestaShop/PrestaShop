@@ -115,8 +115,7 @@ abstract class StockManagementRepository
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
         $tablePrefix
-    )
-    {
+    ) {
         $this->container = $container;
         $this->connection = $connection;
         $this->em = $entityManager;
@@ -333,8 +332,7 @@ abstract class StockManagementRepository
         Statement $statement,
         QueryParamsCollection $queryParams = null,
         ProductIdentity $productIdentity = null
-    )
-    {
+    ) {
         $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
         $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
         $statement->bindValue('state', Product::STATE_SAVED, PDO::PARAM_INT);
@@ -545,5 +543,4 @@ abstract class StockManagementRepository
 
         return $rows;
     }
-
 }

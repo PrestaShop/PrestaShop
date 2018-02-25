@@ -58,16 +58,16 @@ class StockRepository extends StockManagementRepository
      */
     private $totalCombinations = array();
 
-   /**
-     * StockRepository constructor.
-     * @param ContainerInterface $container
-     * @param Connection $connection
-     * @param EntityManager $entityManager
-     * @param ContextAdapter $contextAdapter
-     * @param ImageManager $imageManager
-     * @param StockManager $stockManager
-     * @param $tablePrefix
-     */
+    /**
+      * StockRepository constructor.
+      * @param ContainerInterface $container
+      * @param Connection $connection
+      * @param EntityManager $entityManager
+      * @param ContextAdapter $contextAdapter
+      * @param ImageManager $imageManager
+      * @param StockManager $stockManager
+      * @param $tablePrefix
+      */
     public function __construct(
         ContainerInterface $container,
         Connection $connection,
@@ -76,8 +76,7 @@ class StockRepository extends StockManagementRepository
         ImageManager $imageManager,
         StockManager $stockManager,
         $tablePrefix
-    )
-    {
+    ) {
         parent::__construct(
             $container,
             $connection,
@@ -229,8 +228,7 @@ class StockRepository extends StockManagementRepository
         $andWhereClause = '',
         $having = '',
         $orderByClause = null
-    )
-    {
+    ) {
         if (is_null($orderByClause)) {
             $orderByClause = $this->orderByProductIds();
         }
@@ -292,7 +290,8 @@ class StockRepository extends StockManagementRepository
         GROUP BY p.id_product, pa.id_product_attribute
         HAVING 1 {having}
         {order_by}
-        ');
+        '
+        );
     }
 
     /**
