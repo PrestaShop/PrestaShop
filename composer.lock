@@ -318,7 +318,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/php-cssjanus/tree/patch-1"
             },
-            "time": "2018-01-08 09:57:29"
+            "time": "2018-01-08T09:57:29+00:00"
         },
         {
             "name": "curl/curl",
@@ -3260,16 +3260,16 @@
         },
         {
             "name": "prestashop/ps_facetedsearch",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_facetedsearch.git",
-                "reference": "0efaa397bdfd71c1b179b45df1d04733f1161be4"
+                "reference": "ddc3e6c0772e62b75717b5d2f0cf83b836397e02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/0efaa397bdfd71c1b179b45df1d04733f1161be4",
-                "reference": "0efaa397bdfd71c1b179b45df1d04733f1161be4",
+                "url": "https://api.github.com/repos/PrestaShop/ps_facetedsearch/zipball/ddc3e6c0772e62b75717b5d2f0cf83b836397e02",
+                "reference": "ddc3e6c0772e62b75717b5d2f0cf83b836397e02",
                 "shasum": ""
             },
             "require": {
@@ -3281,7 +3281,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3291,7 +3291,7 @@
             ],
             "description": "PrestaShop module ps_facetedsearch",
             "homepage": "https://github.com/PrestaShop/ps_facetedsearch",
-            "time": "2017-12-07T17:34:13+00:00"
+            "time": "2018-02-19T15:32:21+00:00"
         },
         {
             "name": "prestashop/ps_featuredproducts",
@@ -3726,7 +3726,7 @@
             ],
             "description": "PrestaShop Smarty version",
             "homepage": "https://github.com/PrestaShop/smarty",
-            "time": "2017-05-11 08:29:53"
+            "time": "2017-05-11T08:29:53+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
