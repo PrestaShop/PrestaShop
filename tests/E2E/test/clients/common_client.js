@@ -144,7 +144,7 @@ class CommonClient {
     return this.client
       .scrollTo(selector, value)
       .waitForExist(selector, 90000)
-      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture));
   }
 
   getTextInVar(selector, globalVar, split = false, timeout = 90000) {
@@ -152,12 +152,12 @@ class CommonClient {
       return this.client
         .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable.split(': ')[1])
+        .then((variable) => global.tab[globalVar] = variable.split(': ')[1]);
     } else {
       return this.client
         .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable)
+        .then((variable) => global.tab[globalVar] = variable);
     }
   }
 
@@ -165,7 +165,7 @@ class CommonClient {
     return this.client
       .waitForExist(selector, timeout)
       .then(() => this.client.getAttribute(selector, attribute))
-      .then((variable) => global.tab[globalVar] = variable)
+      .then((variable) => global.tab[globalVar] = variable);
   }
 
   checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0) {
@@ -229,7 +229,7 @@ class CommonClient {
   searchByValue(search_input, search_button, value) {
     return this.client
       .waitAndSetValue(search_input, value)
-      .waitForExistAndClick(search_button)
+      .waitForExistAndClick(search_button);
   }
 
   /**
@@ -246,12 +246,12 @@ class CommonClient {
 
     return this.client
       .pause(2000)
-      .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1))
+      .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1));
   }
 
   waitForVisible(selector, timeout = 90000) {
     return this.client
-      .waitForVisible(selector, timeout)
+      .waitForVisible(selector, timeout);
   }
 
   accessToBO(selector) {
@@ -279,7 +279,7 @@ class CommonClient {
     return this.client
       .pause(pause)
       .isExisting(selector)
-      .then((isExisting) => expect(isExisting).to.be.true)
+      .then((isExisting) => expect(isExisting).to.be.true);
   }
 
   isSelected(selector, pause = 0) {
@@ -287,7 +287,14 @@ class CommonClient {
       .pause(pause)
       .scrollTo(selector)
       .isSelected(selector)
-      .then((isExisting) => expect(isExisting).to.be.true)
+      .then((isExisting) => expect(isExisting).to.be.true);
+  }
+
+  isNotExisting(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .isExisting(selector)
+      .then((isExisting) => expect(isExisting).to.be.false);
   }
 
   clickOnResumeButton(selector) {
@@ -295,20 +302,20 @@ class CommonClient {
       return this.client
         .click(selector)
     } else {
-      return this.client.pause(1000)
+      return this.client.pause(1000);
     }
   }
 
   pause(timeout) {
-    return this.client.pause(timeout)
+    return this.client.pause(timeout);
   }
 
   keys(button) {
-    return this.client.keys(button)
+    return this.client.keys(button);
   }
 
   alertAccept() {
-    return this.client.alertAccept()
+    return this.client.alertAccept();
   }
 
   showElement(className, order) {
@@ -322,7 +329,7 @@ class CommonClient {
     return this.client
       .pause(2000)
       .isVisible(selector)
-      .then((isVisible) => expect(isVisible).to.be.false)
+      .then((isVisible) => expect(isVisible).to.be.false);
   }
 
   editObjectData(object) {

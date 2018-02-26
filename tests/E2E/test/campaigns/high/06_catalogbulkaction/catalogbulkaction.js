@@ -45,10 +45,30 @@ scenario('Catalog bulk action', () => {
     });
   }, 'catalogbulkaction');
 
-  scenario('Enable the product list', client => {
+  scenario('delete the duplicated products list with bulk action', client => {
+    test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
+    test('should click on the "ENTER" key', () => client.keys('Enter'));
     test('should click on "Select all" radio', () => client.selectAllProducts(CatalogPage.select_all_product_button));
-    test('should choose the "Activate selection" action', () => client.selectAction(CatalogPage, 1));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully activated.'));
+    test('should click on the "Bulk actions" button', () => client.waitForExistAndClick(CatalogPage.action_group_button));
+    test('should click on the "Delete selection" button', () => client.waitForExistAndClick(CatalogPage.action_button.replace("%ID", 4)));
+    test('should click on the "delete now" button', () => client.waitForVisibleAndClick(CatalogPage.delete_confirmation));
+    test('should verify the appearance of the green validation message', () => {
+      return promise
+        .then(() => client.waitForVisible(CatalogPage.green_validation, 90000))
+        .then(() => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully deleted.'));
+    });
+    test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
+    scenario('should check that the duplicate product has been deleted', client => {
+      test('should set the search input to "copy" to search for the duplicated products', () => client.waitAndSetValue(CatalogPage.name_search_input, "copy"));
+      test('should click on the "ENTER" key', () => client.keys('Enter'));
+      test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain"));
+      test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
+    }, 'catalogbulkaction');
+
   }, 'catalogbulkaction');
+
+  scenario('Logout from the Back Office', client => {
+    test('should logout successfully from Back Office', () => client.signOutBO());
+  }, 'product/product');
 
 }, 'catalogbulkaction', true);
