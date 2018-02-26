@@ -28,5 +28,12 @@ namespace PrestaShop\PrestaShop\Core\Filter;
 
 interface FilterInterface
 {
+    /**
+     * Performs a filter on the subject object.
+     *
+     * @param mixed $subject Subject to filter.
+     *
+     * @return mixed Filtered subject.
+     */
     public function filter($subject);
 }
