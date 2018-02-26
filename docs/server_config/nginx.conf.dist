@@ -151,6 +151,10 @@ server {
 
     # PHP FPM part
     location ~ [^/]\.php(/|$) {
+        # Prevent click-jacking
+        add_header Content-Security-Policy "frame-ancestors 'self';";
+        add_header X-Frame-Options "SAMEORIGIN";
+
         # Verify that the file exists, redirect to index if not
         try_files $fastcgi_script_name /index.php$uri&$args;
 
