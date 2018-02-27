@@ -48,6 +48,64 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedResult, $result);
     }
 
+    public function testKeysCanBeRemovedFromWhitelist()
+    {
+        $subject = [
+            'foo' => 'something',
+            'bar' => null,
+            'baz' => [],
+        ];
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'foo', 'bar'
+        ]);
+
+        $expected = [
+            'foo' => 'something',
+            'bar' => null,
+        ];
+
+        $this->assertSame($expected, $filter->filter($subject));
+
+        // remove 'foo' from whitelist and filter again
+        $filter->removeFromWhitelist('foo');
+        $expected = [
+            'bar' => null,
+        ];
+
+        $this->assertSame($expected, $filter->filter($subject));
+    }
+
+    public function testKeysCanBeAddedToWhitelist()
+    {
+        $subject = [
+            'foo' => 'something',
+            'bar' => null,
+            'baz' => [],
+        ];
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'foo'
+        ]);
+
+        $expected = [
+            'foo' => 'something',
+        ];
+
+        $this->assertSame($expected, $filter->filter($subject));
+
+        // add 'bar' to the whitelist and filter again
+        $filter->whitelist(['bar']);
+        $expected = [
+            'foo' => 'something',
+            'bar' => null,
+        ];
+
+        $this->assertSame($expected, $filter->filter($subject));
+    }
+
     public function provideTestCases()
     {
         $basicArray = [
@@ -116,7 +174,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
                 'whitelist' => [],
                 'expected'  => [],
             ],
-            'nested sanitizer' => [
+            'nested filter' => [
                 'subject'   => $nestedArray,
                 'whitelist' => [
                     'foo',
