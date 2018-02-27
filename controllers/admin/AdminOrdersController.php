@@ -2850,7 +2850,11 @@ class AdminOrdersControllerCore extends AdminController
                 $left_to_reinject -= $quantity_to_reinject;
                 if (Pack::isPack((int)$product->id)) {
                     // Gets items
-                    if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
+                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
+                    ) {
                         $products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
                         // Foreach item
                         foreach ($products_pack as $product_pack) {
@@ -2867,8 +2871,14 @@ class AdminOrdersControllerCore extends AdminController
                             }
                         }
                     }
-                    if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-                            ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
+
+                    if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
+                        || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                        || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
+                                || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                        )
+                    ) {
                         $manager->addProduct(
                                 $order_detail->product_id,
                                 $order_detail->product_attribute_id,

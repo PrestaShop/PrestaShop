@@ -26,6 +26,34 @@
 
 class PackCore extends Product
 {
+    /**
+     * Only decrement pack quantity
+     *
+     * @var string
+     */
+    CONST STOCK_TYPE_PACK_ONLY = 0;
+
+    /**
+     * Only decrement pack products quantities
+     *
+     * @var string
+     */
+    CONST STOCK_TYPE_PRODUCTS_ONLY = 1;
+
+    /**
+     * Decrement pack quantity and pack products quantities
+     *
+     * @var string
+     */
+    CONST STOCK_TYPE_PACK_BOTH = 2;
+
+    /**
+     * Use pack quantity default setting
+     *
+     * @var string
+     */
+    CONST STOCK_TYPE_DEFAULT = 3;
+
     protected static $cachePackItems = array();
     protected static $cacheIsPack = array();
     protected static $cacheIsPacked = array();
@@ -158,33 +186,31 @@ class PackCore extends Product
     /**
      * Is the pack in stock and his associated products?
      *
+     * @todo actually return true even if the pack feature is not active.
+     *       Should throws an exception instead.
+     *       Developers should first test if product is a pack
+     *       and next if it's in stock.
+     *
+     * @inheritdoc
      * @param int|null $id_product
      * @param int|null $wantedQuantity
+     * @param Cart|null $cart
      * @return bool
      */
-    public static function isInStock($id_product, $wantedQuantity = null)
+    public static function isInStock($id_product, $wantedQuantity = 1, Cart $cart = null)
     {
         if (!Pack::isFeatureActive()) {
             return true;
         }
         $id_product = (int) $id_product;
         $wantedQuantity = (int) $wantedQuantity;
-        $items = Pack::getItems((int)$id_product, Configuration::get('PS_LANG_DEFAULT'));
+        $product = new Product($id_product, false);
+        $packQuantity = self::getQuantity($id_product, null, null, $cart);
 
-        if ($wantedQuantity === null
-            || ((int) $wantedQuantity <= 0)
-        ) {
-            $wantedQuantity = Tools::getValue('quantity_wanted', 1);
-        }
-
-        foreach ($items as $item) {
-            /** @var Product $item */
-            // Updated for 1.5.0
-            if (Product::getQuantity($item->id) < ($item->pack_quantity * $wantedQuantity)
-                && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock)
-            ) {
-                return false;
-            }
+        if ($product->isAvailableWhenOutOfStock($product->out_of_stock)) {
+            return true;
+        } else if ($wantedQuantity > $packQuantity) {
+            return false;
         }
 
         return true;
@@ -196,11 +222,16 @@ class PackCore extends Product
      * @param int $id_product Product id
      * @param int $id_product_attribute Product attribute id (optional)
      * @param bool|null $cache_is_pack
+     * @param Cart $cart
      * @return int
      * @throws PrestaShopException
      */
-    public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
-    {
+    public static function getQuantity(
+        $id_product,
+        $id_product_attribute = null,
+        $cache_is_pack = null,
+        Cart $cart = null
+    ) {
         $id_product = (int) $id_product;
         $id_product_attribute = (int) $id_product_attribute;
         $cache_is_pack = (bool) $cache_is_pack;
@@ -208,24 +239,66 @@ class PackCore extends Product
         if (!self::isPack($id_product)) {
             throw new PrestaShopException("Product with id $id_product is not a pack");
         }
-        $packQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
-        $cart = Context::getContext()->cart;
 
-        if (!empty($cart)) {
+        // Initialize
+        $product = new Product($id_product, false);
+        $packQuantity = 0;
+        $packQuantityInStock = StockAvailable::getQuantityAvailableByProduct(
+            $id_product,
+            $id_product_attribute
+        );
+        $packStockType = $product->pack_stock_type;
+        $allPackStockType = array(
+            self::STOCK_TYPE_PACK_ONLY,
+            self::STOCK_TYPE_PRODUCTS_ONLY,
+            self::STOCK_TYPE_PACK_BOTH,
+            self::STOCK_TYPE_DEFAULT
+        );
+
+        if (!in_array($packStockType, $allPackStockType)) {
+            throw new PrestaShopException('Unknown pack stock type');
+        }
+
+        // If no pack stock or shop default, set it
+        if (empty($packStockType)
+            || $packStockType == self::STOCK_TYPE_DEFAULT
+        ) {
+            $packStockType = Configuration::get('PS_PACK_STOCK_TYPE');
+        }
+
+        // Initialize with pack quantity if not only products
+        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_ONLY, self::STOCK_TYPE_PACK_BOTH))) {
+            $packQuantity = $packQuantityInStock;
+        }
+
+        // Set pack quantity to the minimum quantity of pack, or
+        // product pack
+        if (in_array($packStockType, array(self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY))) {
+            $items = array_values(Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT')));
+
+            foreach ($items as $index => $item) {
+                $itemQuantity = Product::getQuantity($item->id, null, null, $cart);
+                $nbPackAvailableForItem = (int) ($itemQuantity / $item->pack_quantity);
+
+                // Initialize packQuantity with the first product quantity
+                // if pack decrement stock type is products only
+                if ($index === 0
+                    && $packStockType == self::STOCK_TYPE_PRODUCTS_ONLY
+                ) {
+                    $packQuantity = $nbPackAvailableForItem;
+
+                    continue;
+                }
+
+                if ($nbPackAvailableForItem < $packQuantity) {
+                    $packQuantity = $nbPackAvailableForItem;
+                }
+            }
+        } else if (!empty($cart)) {
             $cartProduct = $cart->getProductQuantity($id_product);
 
             if (!empty($cartProduct['deep_quantity'])) {
                 $packQuantity -= $cartProduct['deep_quantity'];
-            }
-        }
-        $items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
-
-        foreach ($items as $item) {
-            $itemQuantity = Product::getQuantity($item->id);
-            $nbPackAvailableForItem = (int) ($itemQuantity / $item->pack_quantity);
-
-            if ($nbPackAvailableForItem < $packQuantity) {
-                $packQuantity = $nbPackAvailableForItem;
             }
         }
 

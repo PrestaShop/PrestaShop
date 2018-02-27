@@ -210,7 +210,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function initContent()
     {
         if (!$this->errors) {
-            if (Pack::isPack((int) $this->product->id) && !Pack::isInStock((int) $this->product->id)) {
+            if (Pack::isPack((int) $this->product->id)
+                && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
+            ) {
                 $this->product->quantity = 0;
             }
 

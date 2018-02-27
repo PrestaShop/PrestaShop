@@ -1150,7 +1150,8 @@ class CartCore extends ObjectModel
           FROM `'._DB_PREFIX_.'cart_product` cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
           FROM `'._DB_PREFIX_.'cart_product` cp' .
-            ' JOIN `'._DB_PREFIX_.'pack` p ON cp.`id_product` = p.`id_product_pack`';
+            ' JOIN `'._DB_PREFIX_.'pack` p ON cp.`id_product` = p.`id_product_pack`' .
+            ' JOIN `'._DB_PREFIX_.'product` pr ON p.`id_product_pack` = pr.`id_product`';
 
         if ($id_customization) {
             $customizationJoin = '
@@ -1177,6 +1178,10 @@ class CartCore extends ObjectModel
         $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $id_product;
         $secondUnionSql .= $commonWhere;
         $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $id_product;
+        $secondUnionSql .= ' AND pr.`pack_stock_type` IN (' .
+            Pack::STOCK_TYPE_PRODUCTS_ONLY . ',' .
+            Pack::STOCK_TYPE_PACK_BOTH .
+        ')';
         $parentSql = 'SELECT 
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity 
@@ -1304,7 +1309,7 @@ class CartCore extends ObjectModel
 
             /* Update quantity if product already exist */
             if (!empty($cartProductQuantity['quantity'])) {
-                $productQuantity = Product::getQuantity($id_product, $id_product_attribute);
+                $productQuantity = Product::getQuantity($id_product, $id_product_attribute, null, $this);
                 $availableOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
 
                 if ($operator == 'up') {
@@ -1346,7 +1351,7 @@ class CartCore extends ObjectModel
 
                 // Quantity for product pack
                 if (Pack::isPack($id_product)) {
-                    $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute);
+                    $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
                 }
 
                 if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {

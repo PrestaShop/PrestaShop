@@ -254,7 +254,7 @@ class ProductCore extends ObjectModel
     /**
      * @var int tell the type of stock management to apply on the pack
      */
-    public $pack_stock_type = 3;
+    public $pack_stock_type = Pack::STOCK_TYPE_DEFAULT;
 
     /**
      * Type of delivery time
@@ -3590,16 +3590,20 @@ class ProductCore extends ObjectModel
     * @param int $id_product Product id
     * @param int $id_product_attribute Product attribute id (optional)
     * @param bool|null $cache_is_pack
+    * @param Cart|null $cart
     * @return int Available quantities
     */
-    public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
-    {
+    public static function getQuantity(
+        $id_product,
+        $id_product_attribute = null,
+        $cache_is_pack = null,
+        Cart $cart = null
+    ) {
         if (Pack::isPack((int)$id_product)) {
-            return Pack::getQuantity($id_product);
+            return Pack::getQuantity($id_product, $id_product_attribute, $cache_is_pack, $cart);
         }
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute);
         $nbProductInCart = 0;
-        $cart = Context::getContext()->cart;
 
         if (!empty($cart)) {
             $cartProduct = $cart->getProductQuantity($id_product);
@@ -4720,7 +4724,8 @@ class ProductCore extends ObjectModel
         $row['quantity'] = Product::getQuantity(
             (int)$row['id_product'],
             0,
-            isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+            isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
+            $context->cart
         );
 
         $row['quantity_all_versions'] = $row['quantity'];
@@ -4729,7 +4734,8 @@ class ProductCore extends ObjectModel
             $row['quantity'] = Product::getQuantity(
                 (int)$row['id_product'],
                 $id_product_attribute,
-                isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+                isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null,
+                $context->cart
             );
 
             $row['available_date'] = Product::getAvailableDate(
@@ -4752,7 +4758,8 @@ class ProductCore extends ObjectModel
         $row['pack'] = (!isset($row['cache_is_pack']) ? Pack::isPack($row['id_product']) : (int)$row['cache_is_pack']);
         $row['packItems'] = $row['pack'] ? Pack::getItemTable($row['id_product'], $id_lang) : array();
         $row['nopackprice'] = $row['pack'] ? Pack::noPackPrice($row['id_product']) : 0;
-        if ($row['pack'] && !Pack::isInStock($row['id_product'])) {
+
+        if ($row['pack'] && !Pack::isInStock($row['id_product'], $quantity, $context->cart)) {
             $row['quantity'] = 0;
         }
 

@@ -30,69 +30,199 @@ use PrestaShop\PrestaShop\Tests\Unit\Core\Cart\AbstractCartTest;
 
 class AddPackTest extends AbstractCartTest
 {
-    public function testProductQuantity()
+    /** @var int */
+    const ID_PACK_FIXTURE = 6;
+
+    /** @var int */
+    const ID_PRODUCT_IN_PACK_FIXTURE = 5;
+
+    /**
+     * Object from test database
+     *
+     * @var int
+     */
+    protected $pack;
+
+    /**
+     * Object from test database
+     *
+     * @var int
+     */
+    protected $productInPack;
+
+    /**
+     * Populate pack and product in pack properties from the test database
+     */
+    public function setUp()
     {
-        $idProductInPackFixture = 5;
-        $idPackFixture = 6;
-        $pack = $this->getProductFromFixtureId($idPackFixture);
-        $productPack = $this->getProductFromFixtureId($idProductInPackFixture);
-        $idPack = $pack->id;
-        $idProductInPack = $productPack->id;
-        $nbPack = \Product::getQuantity($idPack);
-        $nbProduct = \Product::getQuantity($idProductInPack);
-        $this->assertEquals(5, $nbPack);
-        $this->assertEquals(50, $nbProduct);
-        $this->assertTrue(\Pack::isInStock($idPack, 5));
-        $this->assertFalse(\Pack::isInStock($idPack, 6));
+        parent::setUp();
+        $this->pack = $this->getProductFromFixtureId(self::ID_PACK_FIXTURE);
+        $this->productInPack = $this->getProductFromFixtureId(self::ID_PRODUCT_IN_PACK_FIXTURE);
     }
 
-    public function testPackInCart()
+    public function testProductStockNumberMatch()
     {
-        $idProductInPackFixture = 5;
-        $idPackFixture = 6;
-        $pack = $this->getProductFromFixtureId($idPackFixture);
-        $productPack = $this->getProductFromFixtureId($idProductInPackFixture);
-        $idPack = $pack->id;
-        $idProductInPack = $productPack->id;
+        // Pack type decrement pack only
+        \Configuration::set('PS_PACK_STOCK_TYPE', \Pack::STOCK_TYPE_PACK_ONLY);
+        $nbPack = \Product::getQuantity($this->pack->id);
+        $nbProduct = \Product::getQuantity($this->productInPack->id);
+        $this->assertEquals(10, $nbPack);
+        $this->assertEquals(50, $nbProduct);
 
-        // Simple tests
-        $this->assertTrue(\Pack::isPack($idPack));
-        $this->assertTrue($this->cart->updateQty(2, $idPack));
-        $this->assertTrue($this->cart->updateQty(30, $idProductInPack));
+        // Pack type decrement products only
+        \Configuration::set('PS_PACK_STOCK_TYPE', \Pack::STOCK_TYPE_PRODUCTS_ONLY);
+        $nbPack = \Product::getQuantity($this->pack->id);
+        $nbProduct = \Product::getQuantity($this->productInPack->id);
+        $this->assertEquals(5, $nbPack);
+        $this->assertEquals(50, $nbProduct);
 
-        $nbPackInCart = $this->cart->getProductQuantity($idPack);
-        $nbProductInCart = $this->cart->getProductQuantity($idProductInPack);
+        // Pack type decrement pack and products
+        \Configuration::set('PS_PACK_STOCK_TYPE', \Pack::STOCK_TYPE_PACK_BOTH);
+        $nbPack = \Product::getQuantity($this->pack->id);
+        $nbProduct = \Product::getQuantity($this->productInPack->id);
+        $this->assertEquals(5, $nbPack);
+        $this->assertEquals(50, $nbProduct);
+    }
+
+    public function testPackIsInStock()
+    {
+        // Pack type decrement pack only
+        \Configuration::set('PS_PACK_STOCK_TYPE', \Pack::STOCK_TYPE_PACK_ONLY);
+        $this->assertTrue(\Pack::isInStock($this->pack->id, 10));
+        $this->assertFalse(\Pack::isInStock($this->pack->id, 11));
+
+        // Pack type decrement products only
+        \Configuration::set('PS_PACK_STOCK_TYPE', \Pack::STOCK_TYPE_PRODUCTS_ONLY);
+        $this->assertTrue(\Pack::isInStock($this->pack->id, 5));
+        $this->assertFalse(\Pack::isInStock($this->pack->id, 6));
+
+        // Pack type decrement pack and products
+        \Configuration::set('PS_PACK_STOCK_TYPE', \Pack::STOCK_TYPE_PACK_BOTH);
+        $this->assertTrue(\Pack::isInStock($this->pack->id, 5));
+        $this->assertFalse(\Pack::isInStock($this->pack->id, 6));
+    }
+
+    public function testPackIsPack()
+    {
+        $this->assertTrue(\Pack::isPack($this->pack->id));
+    }
+
+    public function testProductsQuantitiesInCart()
+    {
+        // Pack type decrement pack only
+        $this->pack->pack_stock_type = \Pack::STOCK_TYPE_PACK_ONLY;
+        $this->pack->update();
+        $this->calculProductsQuantitiesinCart(2, 2, 30, 30, 8, 20);
+
+        // Pack type decrement product only
+        $this->pack->pack_stock_type = \Pack::STOCK_TYPE_PRODUCTS_ONLY;
+        $this->pack->update();
+        $this->calculProductsQuantitiesinCart(2, 2, 30, 50, 0, 0);
+
+        // Pack type decrement pack and product
+        $this->pack->pack_stock_type = \Pack::STOCK_TYPE_PACK_BOTH;
+        $this->pack->update();
+        $this->calculProductsQuantitiesinCart(2, 2, 30, 50, 0, 0);
+    }
+
+    /**
+     * @param int $packQuantity
+     * @param int $packDeepQuantity
+     * @param int $productQuantity
+     * @param int $productDeepQuantity
+     * @param int $packLeftExpected
+     * @param int $productLeftExpected
+     * @return $this
+     */
+    private function calculProductsQuantitiesIncart(
+        $packQuantity,
+        $packDeepQuantity,
+        $productQuantity,
+        $productDeepQuantity,
+        $packLeftExpected,
+        $productLeftExpected
+    ) {
+        $this->assertTrue($this->cart->updateQty(2, $this->pack->id));
+        $this->assertTrue($this->cart->updateQty(30, $this->productInPack->id));
+
+        $nbPackInCart = $this->cart->getProductQuantity($this->pack->id);
+        $nbProductInCart = $this->cart->getProductQuantity($this->productInPack->id);
+
+        $this->assertEquals($packQuantity, $nbPackInCart['quantity']);
+        $this->assertEquals($packDeepQuantity, $nbPackInCart['deep_quantity']);
+        $this->assertEquals($productQuantity, $nbProductInCart['quantity']);
+        $this->assertEquals($productDeepQuantity, $nbProductInCart['deep_quantity']);
+
         $cartProducts = $this->cart->getProducts(true);
-
         $this->assertCount(2, $cartProducts);
-        $this->assertEquals(2, $nbPackInCart['quantity']);
-        $this->assertEquals(30, $nbProductInCart['quantity']);
-        $this->assertEquals(50, $nbProductInCart['deep_quantity']);
 
         foreach ($cartProducts as $cartProduct) {
-            $this->assertContains($cartProduct['id_product'], array($idPack, $idProductInPack));
-            $this->assertEquals(0, \Product::getQuantity($cartProduct['id_product']));
-        }
+            $this->assertContains($cartProduct['id_product'], array($this->pack->id, $this->productInPack->id));
 
-        // Unable to add more than in stock
+            if ($cartProduct['id_product'] == $this->pack->id) {
+                $this->assertEquals($packLeftExpected, \Product::getQuantity($cartProduct['id_product'], null, null, $this->cart));
+            } else {
+                $this->assertEquals($productLeftExpected, \Product::getQuantity($cartProduct['id_product'], null, null, $this->cart));
+            }
+        }
         $this->resetCart();
 
-        if (!$pack->isAvailableWhenOutOfStock((int) $pack->out_of_stock)) {
-            $this->assertFalse($this->cart->updateQty(11, $idPack));
-        } else {
-            $this->assertTrue($this->cart->updateQty(11, $idPack));
-        }
+        return $this;
+    }
 
-        if (!$productPack->isAvailableWhenOutOfStock((int) $productPack->out_of_stock)) {
-            $this->assertFalse($this->cart->updateQty(60, $idProductInPack));
-        } else {
-            $this->assertTrue($this->cart->updateQty(60, $idProductInPack));
-        }
+    public function testAddProductsOutOfStockInCart()
+    {
+        // Test pack out of stock disabled
+        \StockAvailable::setProductOutOfStock($this->pack->id, false);
+        $this->assertFalse($this->cart->updateQty(11, $this->pack->id));
+        $outOfStock = \StockAvailable::outOfStock($this->pack->id);
+        $this->assertEquals(0, $this->pack->isAvailableWhenOutOfStock($outOfStock));
 
-        // Unable to add pack with product out of stock
+        // Test pack out of stock enabled
+        \StockAvailable::setProductOutOfStock($this->pack->id, true);
+        $this->assertTrue($this->cart->updateQty(11, $this->pack->id));
+        $outOfStock = \StockAvailable::outOfStock($this->pack->id);
+        $this->assertEquals(1, $this->pack->isAvailableWhenOutOfStock($outOfStock));
+
+        // Test pack out of stock disabled
+        \StockAvailable::setProductOutOfStock($this->productInPack->id, false);
+        $this->assertFalse($this->cart->updateQty(51, $this->productInPack->id));
+        $outOfStock = \StockAvailable::outOfStock($this->productInPack->id);
+        $this->assertEquals(0, $this->pack->isAvailableWhenOutOfStock($outOfStock));
+
+        // Test pack out of stock enabled
+        \StockAvailable::setProductOutOfStock($this->productInPack->id, true);
+        $this->assertTrue($this->cart->updateQty(51, $this->productInPack->id));
+        $outOfStock = \StockAvailable::outOfStock($this->productInPack->id);
+        $this->assertEquals(1, $this->pack->isAvailableWhenOutOfStock($outOfStock));
+    }
+
+    public function testUnableToAddPackOutOfStock()
+    {
+        // Pack type decrement pack only
+        $this->pack->pack_stock_type = \Pack::STOCK_TYPE_PACK_ONLY;
+        $this->pack->update();
+        \StockAvailable::setProductOutOfStock($this->pack->id, false);
+        $this->assertTrue($this->cart->updateQty(9, $this->pack->id));
+        $this->assertFalse(\Pack::isInStock($this->pack->id, 2, $this->cart));
+        $this->assertTrue(\Pack::isInStock($this->pack->id, 1, $this->cart));
         $this->resetCart();
-        $this->assertTrue($this->cart->updateQty(40, $idProductInPack));
-        $this->assertFalse(\Pack::isInStock($idPack, 2));
-        $this->assertTrue(\Pack::isInStock($idPack, 1));
+
+        // Pack type decrement product only
+        $this->pack->pack_stock_type = \Pack::STOCK_TYPE_PRODUCTS_ONLY;
+        $this->pack->update();
+        \StockAvailable::setProductOutOfStock($this->pack->id, false);
+        $this->assertTrue($this->cart->updateQty(40, $this->productInPack->id));
+        $this->assertFalse(\Pack::isInStock($this->pack->id, 2, $this->cart));
+        $this->assertTrue(\Pack::isInStock($this->pack->id, 1, $this->cart));
+        $this->resetCart();
+
+        // Pack type decrement pack and product
+        $this->pack->pack_stock_type = \Pack::STOCK_TYPE_PACK_BOTH;
+        $this->pack->update();
+        \StockAvailable::setProductOutOfStock($this->pack->id, false);
+        $this->assertTrue($this->cart->updateQty(40, $this->productInPack->id));
+        $this->assertFalse(\Pack::isInStock($this->pack->id, 2, $this->cart));
+        $this->assertTrue(\Pack::isInStock($this->pack->id, 1, $this->cart));
     }
 }
