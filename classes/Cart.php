@@ -458,25 +458,27 @@ class CartCore extends ObjectModel
      * Get Cart Rules
      *
      *
-     * @param int $filter Filter enum:
-     *                    - FILTER_ACTION_ALL
-     *                    - FILTER_ACTION_SHIPPING
-     *                    - FILTER_ACTION_REDUCTION
-     *                    - FILTER_ACTION_GIFT
-     *                    - FILTER_ACTION_ALL_NOCAP
+     * @param int  $filter Filter enum:
+     *                     - FILTER_ACTION_ALL
+     *                     - FILTER_ACTION_SHIPPING
+     *                     - FILTER_ACTION_REDUCTION
+     *                     - FILTER_ACTION_GIFT
+     *                     - FILTER_ACTION_ALL_NOCAP
+     *
+     * @param bool $withAutomaticCartRules get the cart rules without code (ie always applying)
      *
      * @return array|false|mysqli_result|null|PDOStatement|resource Database result
      */
-    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL)
+    public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $withAutomaticCartRules = true)
     {
         // If the cart has not been saved, then there can't be any cart rule applied
         if (!CartRule::isFeatureActive() || !$this->id) {
             return array();
         }
 
-        $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter;
+        $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter.'-'.($withAutomaticCartRules ? '1' : '0');
         if (!Cache::isStored($cache_key)) {
-            $result = Db::getInstance()->executeS(
+            $activatedCartRulesRows = Db::getInstance()->executeS(
                 'SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
                 FROM `'._DB_PREFIX_.'cart_cart_rule` cd
                 LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
@@ -490,6 +492,28 @@ class CartCore extends ObjectModel
                 '.($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
                 .' ORDER by cr.priority ASC'
             );
+            $result = $activatedCartRulesRows;
+            if ($withAutomaticCartRules) {
+                $genericSql           = 'SELECT cr.*, crl.`id_lang`, crl.`name`, ' . (int) $this->id . ' AS `id_cart`
+                FROM `' . _DB_PREFIX_ . 'cart_rule` cr
+                LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
+                    cr.`id_cart_rule` = crl.`id_cart_rule`
+                    AND crl.id_lang = ' . (int) $this->id_lang . '
+                )
+                WHERE `code` = "" AND `active` = 1
+                ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
+                ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
+                ' . ($filter == CartRule::FILTER_ACTION_REDUCTION
+                        ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
+                                        . ' ORDER by cr.priority ASC';
+                $genericCartRulesRows = Db::getInstance()->executeS($genericSql);
+                foreach ($genericCartRulesRows as $genericCartRulesRow) {
+                    $cartRule = new CartRule($genericCartRulesRow['id_cart_rule'], (int) $this->id_lang);
+                    if ($cartRule->checkValidity(\Context::getContext(), false, false)) {
+                        $result[] = $genericCartRulesRow;
+                    }
+                }
+            }
             Cache::store($cache_key, $result);
         } else {
             $result = Cache::retrieve($cache_key);

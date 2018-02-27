@@ -743,7 +743,7 @@ class CartRuleCore extends ObjectModel
                 $cartTotal += $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_SHIPPING);
             }
             $products = $context->cart->getProducts();
-            $cart_rules = $context->cart->getCartRules();
+            $cart_rules = $context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
 
             foreach ($cart_rules as &$cart_rule) {
                 if ($cart_rule['gift_product']) {
@@ -769,7 +769,7 @@ class CartRuleCore extends ObjectModel
         $nb_products = Cart::getNbProducts($context->cart->id);
         $otherCartRules = array();
         if ($check_carrier) {
-            $otherCartRules = $context->cart->getCartRules();
+            $otherCartRules = $context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
         }
         if (count($otherCartRules)) {
             foreach ($otherCartRules as $otherCartRule) {
