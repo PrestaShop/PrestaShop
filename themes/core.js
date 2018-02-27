@@ -2558,6 +2558,12 @@
 	        var updateUrl = $quantityWantedInput.data('update-url');
 	        var preview = (0, _common.psGetRequestParameter)('preview');
 	
+	        // New request only if new value
+	        if (event.type === 'keyup' && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')) {
+	            return;
+	        }
+	        $quantityWantedInput.data('old-value', $quantityWantedInput.val());
+	
 	        if (currentRequestDelayedId) {
 	            clearTimeout(currentRequestDelayedId);
 	        }

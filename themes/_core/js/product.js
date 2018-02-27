@@ -55,6 +55,14 @@ $(document).ready(function () {
         const updateUrl = $quantityWantedInput.data('update-url');
         const preview = psGetRequestParameter('preview');
 
+        // New request only if new value
+        if (event.type === 'keyup'
+            && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+        ) {
+            return;
+        }
+        $quantityWantedInput.data('old-value', $quantityWantedInput.val());
+
         if (currentRequestDelayedId) {
             clearTimeout(currentRequestDelayedId);
         }
