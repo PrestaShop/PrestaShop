@@ -62,6 +62,15 @@ class CollectionFilter implements FilterInterface
     }
 
     /**
+     * Returns the current queue
+     * @return FilterInterface[]
+     */
+    public function getQueue()
+    {
+        return $this->filters;
+    }
+
+    /**
      * Filters the provided subject
      *
      * @param array $subject Collection to filter

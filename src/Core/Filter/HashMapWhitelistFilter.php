@@ -77,6 +77,7 @@ class HashMapWhitelistFilter implements FilterInterface
     protected $whitelistItems = [];
 
     /**
+     * Nested filters, indexed by $keyToKeep
      * @var FilterInterface[]
      */
     protected $filters = [];
@@ -100,6 +101,49 @@ class HashMapWhitelistFilter implements FilterInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Removes the provided key from the whitelist
+     *
+     * @param string|int $key
+     *
+     * @return $this
+     *
+     * @throws FilterException if $key is not scalar
+     */
+    public function removeFromWhitelist($key)
+    {
+        if (!is_scalar($key)) {
+            throw new FilterException(
+                sprintf( "Invalid parameter %s", print_r($key, true))
+            );
+        }
+
+        unset($this->whitelistItems[$key]);
+        unset($this->filters[$key]);
+
+        return $this;
+    }
+
+    /**
+     * Returns the white list
+     *
+     * @return true[]
+     */
+    public function getWhitelistItems()
+    {
+        return $this->whitelistItems;
+    }
+
+    /**
+     * Returns the ested filters, indexed by $keyToKeep
+     *
+     * @return FilterInterface[]
+     */
+    public function getFilters()
+    {
+        return $this->filters;
     }
 
     /**
