@@ -26,10 +26,12 @@
 
 namespace Tests\Unit\Core\Cart;
 
+use Cache;
 use Cart;
 use CartRule;
 use Configuration;
 use Context;
+use Db;
 use Tests\TestCase\IntegrationTestCase;
 use Product;
 use StockAvailable;
@@ -213,7 +215,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
             $cartRule->reduction_percent = $cartRuleData['percent'];
             $cartRule->reduction_amount  = $cartRuleData['amount'];
             $cartRule->name              = array(Configuration::get('PS_LANG_DEFAULT') => 'foo');
-            $cartRule->code              = 'bar';
+            if (!empty($cartRuleData['code'])) {
+                $cartRule->code = $cartRuleData['code'];
+            }
             $cartRule->priority          = $cartRuleData['priority'];
             $cartRule->quantity          = 1000;
             $cartRule->quantity_per_user = 1000;
@@ -241,6 +245,9 @@ abstract class AbstractCartTest extends IntegrationTestCase
             $now->add(new \DateInterval('P1Y'));
             $cartRule->date_to = $now->format('Y-m-d H:i:s');
             $cartRule->active  = 1;
+            if (!empty($cartRuleData['carrierRestrictionIds'])) {
+                $cartRule->carrier_restriction = 1;
+            }
             $cartRule->add();
             $this->cartRules[$k] = $cartRule;
         }
