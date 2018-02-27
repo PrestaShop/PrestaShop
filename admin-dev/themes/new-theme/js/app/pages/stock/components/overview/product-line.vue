@@ -24,24 +24,26 @@
  *-->
 <template>
   <tr :class="{'low-stock':lowStock}">
-    <td class="d-flex align-items-center">
-      <PSCheckbox
-        :id="id"
-        :ref="id"
-        :model="product"
-        @checked="productChecked"
-      />
-      <PSMedia
-        class="d-flex align-items-center ml-2"
-        :thumbnail="thumbnail"
-      >
-        <p>
-          {{ product.product_name }}
-          <small v-if="hasCombination"><br />
-            {{ combinationName }}
-          </small>
-        </p>
-      </PSMedia>
+    <td>
+      <div class="d-flex align-items-center">
+        <PSCheckbox
+          :id="id"
+          :ref="id"
+          :model="product"
+          @checked="productChecked"
+        />
+        <PSMedia
+          class="d-flex align-items-center ml-2"
+          :thumbnail="thumbnail"
+        >
+          <p>
+            {{ product.product_name }}
+            <small v-if="hasCombination"><br />
+              {{ combinationName }}
+            </small>
+          </p>
+        </PSMedia>
+      </div>
     </td>
     <td>
       {{ reference }}
@@ -170,35 +172,3 @@
     },
   };
 </script>
-
-<style lang="sass" type="text/scss" scoped>
-  @import "../../../../../../scss/config/_settings.scss";
-  .qty-update {
-    color: $brand-primary;
-    .material-icons {
-      vertical-align: middle;
-    }
-  }
-  .checkbox {
-    width: 5%;
-  }
-  .enable {
-    color: $success;
-  }
-  .disable {
-    color: $danger;
-  }
-  .low-stock {
-    background: $danger-hover;
-    .stock-warning {
-      color: $danger;
-      font-weight: bold;
-      &.ico {
-        border: 1px solid $danger;
-        background: lighten($danger, 30%);
-        padding: 0 5px;
-        cursor: pointer;
-      }
-    }
-  }
-</style>

@@ -434,31 +434,31 @@ File: modules/ps_wirepayment/ps_wirepayment.php:152</note>
         <source>Image</source>
         <target>Image</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:224</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:223</note>
       </trans-unit>
       <trans-unit id="52f5e0bc3859bc5f5e25130b6c7e8881">
         <source>Position</source>
         <target>Position</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:270</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:269</note>
       </trans-unit>
       <trans-unit id="78d811e98514cd165dda532286610fd2">
         <source>Min</source>
         <target>Min</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:334</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:333</note>
       </trans-unit>
       <trans-unit id="6a061313d22e51e0f25b7cd4dc065233">
         <source>Max</source>
         <target>Max</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:335</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:334</note>
       </trans-unit>
       <trans-unit id="dddc702fcffceb2ac77291954897d747">
         <source>SQL query</source>
         <target>SQL query</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:521</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Product/catalog.html.twig:520</note>
       </trans-unit>
     </body>
   </file>
@@ -680,13 +680,13 @@ File: controllers/admin/AdminGendersController.php:119</note>
         <source>Lastname</source>
         <target>Lastname</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:204</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:205</note>
       </trans-unit>
       <trans-unit id="04176f095283bc729f1e3926967e7034">
         <source>Firstname</source>
         <target>Firstname</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:208</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:209</note>
       </trans-unit>
     </body>
   </file>
@@ -1734,7 +1734,7 @@ File: src/PrestaShopBundle/Form/Admin/Product/ProductSpecificPrice.php:183</note
         <source>Loading...</source>
         <target>Loading...</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/layout.html.twig:100</note>
+File: src/PrestaShopBundle/Resources/views/Admin/layout.html.twig:94</note>
       </trans-unit>
     </body>
   </file>

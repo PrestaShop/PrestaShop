@@ -16,37 +16,37 @@ File: classes/controller/FrontController.php:322</note>
         <source>The uploaded file is too large.</source>
         <target>The uploaded file is too large.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:406</note>
+File: controllers/admin/AdminThemesController.php:409</note>
       </trans-unit>
       <trans-unit id="4a9fdf95b29176bd9260016655a80852">
         <source>Your RTL stylesheets has been generated successfully</source>
         <target>Your RTL stylesheets has been generated successfully</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:331</note>
+File: controllers/admin/AdminThemesController.php:334</note>
       </trans-unit>
       <trans-unit id="9ccfef29efe298e9a48295a69436e11f">
         <source><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></source>
         <target><![CDATA[Your theme has been correctly reset to its default settings. You may want to regenerate your images. See the Improve > Design > Images Settings screen for the 'Regenerate thumbnails' button.]]></target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:346</note>
+File: controllers/admin/AdminThemesController.php:349</note>
       </trans-unit>
       <trans-unit id="1ecb89bb5b6dce906edaf8e12968c167">
         <source>Invalid file format.</source>
         <target>Invalid file format.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:441</note>
+File: controllers/admin/AdminThemesController.php:444</note>
       </trans-unit>
       <trans-unit id="d4c8009943f24c4318bef97058cc6ffa">
         <source>Failed to move uploaded file.</source>
         <target>Failed to move uploaded file.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:454</note>
+File: controllers/admin/AdminThemesController.php:457</note>
       </trans-unit>
       <trans-unit id="3cb5c48f468125102a98fe83a277029d">
         <source>Warning: if no email logo is available, the main logo will be used instead.</source>
         <target>Warning: if no email logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:500</note>
+File: controllers/admin/AdminThemesController.php:503</note>
       </trans-unit>
     </body>
   </file>

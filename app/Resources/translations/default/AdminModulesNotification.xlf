@@ -370,13 +370,13 @@ File: controllers/admin/AdminModulesController.php:899</note>
         <source>The following module(s) could not be uninstalled properly: %s.</source>
         <target>The following module(s) could not be uninstalled properly: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1036</note>
+File: controllers/admin/AdminModulesController.php:1038</note>
       </trans-unit>
       <trans-unit id="89bbb6a140e2fc5ff52b2211083a2721">
         <source>The following module(s) could not be installed properly: %s.</source>
         <target>The following module(s) could not be installed properly: %s.</target>
         <note>Context:
-File: controllers/admin/AdminModulesController.php:1038</note>
+File: controllers/admin/AdminModulesController.php:1040</note>
       </trans-unit>
     </body>
   </file>

@@ -44,6 +44,7 @@
 <style lang="sass" scoped>
   @import "../../../../scss/config/_settings.scss";
   .ps-sort {
+    cursor: pointer;
     background: transparent;
     border: none;
     outline: none;

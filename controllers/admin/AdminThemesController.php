@@ -326,7 +326,10 @@ class AdminThemesControllerCore extends AdminController
                 $this->redirect_after = $this->context->link->getAdminLink('AdminThemes');
             }
         } elseif (Tools::isSubmit('submitGenerateRTL') && Tools::getValue('PS_GENERATE_RTL')) {
-            Language::installRtlStylesheets(false, true, Tools::getValue('PS_THEMES_LIST'));
+            Language::getRtlStylesheetProcessor()
+                ->setProcessFOThemes(array(Tools::getValue('PS_THEMES_LIST')))
+                ->setRegenerate(true)
+                ->process();
             $this->confirmations[] = $this->trans(
                 'Your RTL stylesheets has been generated successfully',
                 array(),
@@ -540,7 +543,7 @@ class AdminThemesControllerCore extends AdminController
                 )
             ),
         );
-		
+
         if (in_array("1", array_column($this->_languages, 'is_rtl'))) {
             $themes_list = array();
             $allThemes = $this->theme_repository->getList();

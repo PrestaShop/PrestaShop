@@ -18,12 +18,6 @@ File: modules/ps_supplierlist/views/templates/_partials/supplier_form.tpl:28</no
         <note>Context:
 File: modules/ps_supplierlist/views/templates/hook/ps_supplierlist.tpl:29</note>
       </trans-unit>
-      <trans-unit id="496689fbd342f80d30f1f266d060415a">
-        <source>No supplier</source>
-        <target>No supplier</target>
-        <note>Context:
-File: modules/ps_supplierlist/views/templates/hook/ps_supplierlist.tpl:36</note>
-      </trans-unit>
     </body>
   </file>
 </xliff>

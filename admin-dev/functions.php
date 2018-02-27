@@ -488,11 +488,11 @@ function runAdminTab($tab, $ajax_mode = false)
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
                                         if (strncmp($key, $table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
-                                            $cookie->$key = !is_array($value) ? $value : serialize($value);
+                                            $cookie->$key = !is_array($value) ? $value : json_encode($value);
                                         }
                                     }
                                 } elseif (strncmp($key, $admin_obj->table.'Filter_', 7) === 0 || strncmp($key, 'submitFilter', 12) === 0) {
-                                    $cookie->$key = !is_array($value) ? $value : serialize($value);
+                                    $cookie->$key = !is_array($value) ? $value : json_encode($value);
                                 }
                             }
                         }

@@ -417,37 +417,79 @@ File: controllers/admin/AdminAdminPreferencesController.php:146</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="30c802194b54f04e24a2abdc774c2f7e">
         <source>Should be enabled if you want to avoid to store the smarty cache on NFS.</source>
         <target>Should be enabled if you want to avoid to store the smarty cache on NFS.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:56</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:56</note>
+      </trans-unit>
+      <trans-unit id="853f64470ff7bb429d4d1febf19a2d58">
+        <source>Enable or disable debug mode.</source>
+        <target>Enable or disable debug mode.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:98</note>
       </trans-unit>
       <trans-unit id="bb3656a5447418f8f2644f3ac91b5c6f">
         <source>Some features can be disabled in order to improve performance.</source>
         <target>Some features can be disabled in order to improve performance.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:122</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:122</note>
+      </trans-unit>
+      <trans-unit id="dadb7368382c41e65db131dde4acbddd">
+        <source>Choose "No" to disable Product Combinations.</source>
+        <target>Choose "No" to disable Product Combinations.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:125</note>
       </trans-unit>
       <trans-unit id="31d21c53f8b07a3adcac80c8fab067db">
         <source>You cannot set this parameter to No when combinations are already used by some of your products</source>
         <target>You cannot set this parameter to No when combinations are already used by some of your products</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:131</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:131</note>
+      </trans-unit>
+      <trans-unit id="755b5f88357c721918923199f02a127d">
+        <source>Choose "No" to disable Product Features.</source>
+        <target>Choose "No" to disable Product Features.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:135</note>
+      </trans-unit>
+      <trans-unit id="07e451f21d83658a364e0548c86926b3">
+        <source>Choose "No" to disable Customer Groups.</source>
+        <target>Choose "No" to disable Customer Groups.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:140</note>
       </trans-unit>
       <trans-unit id="ecffc19cb5ada347980c0fd06ca337f4">
         <source>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</source>
         <target>CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.4+. Otherwise, CCC will cause problems.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:162</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:162</note>
       </trans-unit>
       <trans-unit id="021007c7da195ab112330b846e0b1cbb">
         <source>This will add directives to your .htaccess file, which should improve caching and compression.</source>
         <target>This will add directives to your .htaccess file, which should improve caching and compression.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:175</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:175</note>
+      </trans-unit>
+      <trans-unit id="7d7364eb90dcf245641e4139c6ab1a7c">
+        <source>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the second domain of your shop, (e.g. myshop-media-server-1.com). If you do not have another domain, leave this field blank.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:202</note>
+      </trans-unit>
+      <trans-unit id="80ca4dd5f99b6572c93cec540caff504">
+        <source>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the third domain of your shop, (e.g. myshop-media-server-2.com). If you do not have another domain, leave this field blank.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:207</note>
+      </trans-unit>
+      <trans-unit id="1e4e1915fcb0b296ce2ffb029b27d730">
+        <source>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</source>
+        <target>Name of the fourth domain of your shop, (e.g. myshop-media-server-3.com). If you do not have another domain, leave this field blank.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:212</note>
       </trans-unit>
     </body>
   </file>

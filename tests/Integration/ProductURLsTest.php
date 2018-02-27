@@ -79,10 +79,10 @@ class ProductURLsTest extends IntegrationTestCase
     public function test_url_takes_variant_into_account__with_url_rewriting()
     {
         $this->enableURLRewriting();
-        $filename = basename($this->getURL(1, 6)['path']);
+        $filename = basename($this->getURL(1, 2)['path']);
 
         $this->assertEquals(
-            '1-6-faded-short-sleeves-tshirt.html',
+            '1-2-hummingbird-printed-t-shirt.html',
             $filename
         );
     }
@@ -93,7 +93,7 @@ class ProductURLsTest extends IntegrationTestCase
         $filename = basename($this->getURL(1, null)['path']);
 
         $this->assertEquals(
-            '1-faded-short-sleeves-tshirt.html',
+            '1-hummingbird-printed-t-shirt.html',
             $filename
         );
     }
