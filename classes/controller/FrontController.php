@@ -29,7 +29,6 @@ use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
 use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
 use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ConfigurationFilter;
 use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CustomerFilter;
-use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter;
 use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ShopFilter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
@@ -1993,15 +1992,10 @@ class FrontControllerCore extends Controller
      * Returns an object that filters the Product list to be sent to the browser
      *
      * @return CollectionFilter
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
      */
     protected function getProductListOutputFilter()
     {
-        return (new CollectionFilter())
-            ->queue([
-                new ProductFilter()
-            ]);
+        return $this->get('prestashop.core.filter.front_end_object.product_collection');
     }
 
     /**
@@ -2011,7 +2005,7 @@ class FrontControllerCore extends Controller
      */
     protected function getCustomerOutputFilter()
     {
-        return new CustomerFilter();
+        return $this->get('prestashop.core.filter.front_end_object.customer');
     }
 
     /**
@@ -2021,7 +2015,7 @@ class FrontControllerCore extends Controller
      */
     protected function getShopOutputFilter()
     {
-        return new ShopFilter();
+        return $this->get('prestashop.core.filter.front_end_object.shop');
     }
 
     /**
@@ -2031,6 +2025,6 @@ class FrontControllerCore extends Controller
      */
     protected function getConfigurationOutputFilter()
     {
-        return new ConfigurationFilter();
+        return $this->get('prestashop.core.filter.front_end_object.configuration');
     }
 }
