@@ -3,3 +3,32 @@ parameters:
 services:
     hashing:
         class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+
+    prestashop.core.filter.front_end_object.product:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter
+
+    prestashop.core.filter.front_end_object.search_result_product:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\SearchResultProductFilter
+
+    prestashop.core.filter.front_end_object.customer:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CustomerFilter
+
+    prestashop.core.filter.front_end_object.shop:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ShopFilter
+
+    prestashop.core.filter.front_end_object.configuration:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ConfigurationFilter
+
+    prestashop.core.filter.front_end_object.product_collection:
+        class: PrestaShop\PrestaShop\Core\Filter\CollectionFilter
+        calls:
+            - method: queue
+              arguments:
+                - ['@prestashop.core.filter.front_end_object.product']
+
+    prestashop.core.filter.front_end_object.search_result_product_collection:
+        class: PrestaShop\PrestaShop\Core\Filter\CollectionFilter
+        calls:
+            - method: queue
+              arguments:
+                - ['@prestashop.core.filter.front_end_object.search_result_product']

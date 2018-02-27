@@ -26,7 +26,6 @@
 
 
 use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
-use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\Pagination;
@@ -506,40 +505,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function prepareProductArrayForAjaxReturn(array $products)
     {
-        $filter = (new CollectionFilter())
-            ->queue([
-                (new HashMapWhitelistFilter())
-                    ->whitelist([
-                        'id_product',
-                        'price',
-                        'reference',
-                        'active',
-                        'description_short',
-                        'link',
-                        'link_rewrite',
-                        'name',
-                        'manufacturer_name',
-                        'position',
-                        'cover',
-                        'url',
-                        'canonical_url',
-                        'add_to_cart_url',
-                        'has_discount',
-                        'discount_type',
-                        'discount_percentage',
-                        'discount_percentage_absolute',
-                        'discount_amount',
-                        'price_amount',
-                        'regular_price_amount',
-                        'regular_price',
-                        'discount_to_display',
-                        'labels',
-                        'main_variants',
-                        'unit_price',
-                        'tax_name',
-                        'rate',
-                    ])
-            ]);
+        $filter = $this->get('prestashop.core.filter.front_end_object.search_result_product_collection');
 
         return $filter->filter($products);
     }
@@ -553,8 +519,6 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      * If we're not doing AJAX, then render the whole page with the given template.
      *
      * @param string $template the template for this page
-     *
-     * @return no return
      */
     protected function doProductSearch($template, $params = array(), $locale = null)
     {
