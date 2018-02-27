@@ -517,8 +517,8 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
         if (Shop::isTableAssociated($this->def['table'])) {
             $id_shop_list = Shop::getContextListShopID();
-            if (count($this->id_shop_list) > 0) {
-                $id_shop_list = $this->id_shop_list;
+            if (count($id_shop_list) > 0) {
+                $this->id_shop_list = $id_shop_list;
             }
         }
 
