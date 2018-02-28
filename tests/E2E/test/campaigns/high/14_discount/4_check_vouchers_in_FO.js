@@ -8,26 +8,26 @@ const common_discount_scenarios = require('./discount');
 const common_scenarios = require('../02_product/product');
 let promise = Promise.resolve();
 
-var cartRuleData = [
+let cartRuleData = [
   {
     name: 'Percent1 50%',
     customer_email: 'pub@prestashop.com',
     minimum_amount: '20',
-    reduction_type: 'percent',
+    type: 'percent',
     reduction: '50'
   },
   {
     name: 'Percent2 50%',
     customer_email: 'pub@prestashop.com',
     minimum_amount: '20',
-    reduction_type: 'percent',
+    type: 'percent',
     reduction: '50'
   },
   {
     name: 'Amount €20',
     customer_email: 'pub@prestashop.com',
     minimum_amount: '20',
-    reduction_type: 'amount',
+    type: 'amount',
     reduction: '20'
   }
 ];
@@ -47,9 +47,10 @@ scenario('Create a new "Cart Rule" in the Back Office', () => {
   }, 'discount');
   for (let i = 0; i < cartRuleData.length; i++) {
     common_discount_scenarios.createCartRule(cartRuleData[i], 'codePromo' + (i+1));
+    common_discount_scenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i+1));
   }
   scenario('Logout from the Back Office', client => {
-    test('should logout successfully from Back Office', () => client.signOutBO());
+    test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'discount');
 }, 'discount', true);
 
@@ -60,7 +61,7 @@ scenario('Create product in the Back Office', () => {
   }, 'product/product');
   common_scenarios.createProduct(AddProductPage, productData);
   scenario('Logout from the Back Office', client => {
-    test('should logout successfully from Back Office', () => client.signOutBO());
+    test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'product/product');
 }, 'product/product', true);
 
@@ -115,6 +116,6 @@ scenario('Delete "Cart Rule" in the Back Office', () => {
     common_discount_scenarios.deleteCartRule(cartRuleData[i].name);
   }
   scenario('Logout from the Back Office', client => {
-    test('should logout successfully from Back Office', () => client.signOutBO());
+    test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'discount');
 }, 'discount', true);

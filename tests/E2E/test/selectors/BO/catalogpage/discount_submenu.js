@@ -34,7 +34,10 @@ module.exports = {
       search_button:'//*[@id="submitFilterButtoncart_rule"]',
       dropdown_button:'(//*[@id="form-cart_rule"]//button[contains(@data-toggle,"dropdown")])[1]',
       delete_button:'//*[@id="form-cart_rule"]//a[contains(@class,"delete")]',
-      success_delete_message:'//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]'
+      success_delete_message:'//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
+      filter_name_input: '//*[@id="table-cart_rule"]//input[@name="cart_ruleFilter_name"]',
+      filter_search_button: '//*[@id="submitFilterButtoncart_rule"]',
+      edit_button: '//*[@id="table-cart_rule"]//a[@title="Edit"]'
     }
   }
 };
