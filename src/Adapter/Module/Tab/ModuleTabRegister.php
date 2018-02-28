@@ -40,6 +40,8 @@ use TabCore as Tab;
 
 class ModuleTabRegister
 {
+    const suffix = '_MTR';
+
     private $defaultParent = 'DEFAULT';
     /**
      * @var LangRepository
@@ -205,6 +207,13 @@ class ModuleTabRegister
         }, $this->getModuleAdminControllers($moduleName));
     }
 
+    /**
+     * From the name given by the module maintainer, associate a value per language
+     * installed on the shop
+     *
+     * @param mixed $names
+     * @return array Name to use for each installed language
+     */
     protected function getTabNames($names)
     {
         $translatedNames = array();
@@ -247,16 +256,7 @@ class ModuleTabRegister
         $tab->module = $module->get('name');
         $tab->name = $this->getTabNames($data->get('name', $tab->class_name));
         $tab->icon = $data->get('icon');
-
-        // Handle parent menu
-        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
-        if (!empty($parentClassName)) {
-            $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
-        } elseif (true === $tab->active) {
-            $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($this->defaultParent);
-        } else {
-            $tab->id_parent = 0;
-        }
+        $tab->id_parent = $this->findParentId($data);
 
         if (!$tab->save()) {
             throw new Exception(
@@ -265,5 +265,57 @@ class ModuleTabRegister
                     array('%name%' => $tab->name),
                     'Admin.Modules.Notification'));
         }
+    }
+
+    /**
+     * Find the parent ID from the given tab context
+     *
+     * @param ParameterBag $data The structure of the tab.
+     * @return int ID of the parent, 0 if none
+     */
+    protected function findParentId(ParameterBag $data)
+    {
+        $idParent = 0;
+        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
+        if (!empty($parentClassName)) {
+            // Could be a previously duicated tab
+            $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName.self::suffix);
+            if (!$idParent) {
+                $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
+            }
+        } elseif (true === $data->getBoolean('visible', true)) {
+            $idParent = (int)$this->tabRepository->findOneIdByClassName($this->defaultParent);
+        }
+        return $this->duplicateParentIfAlone($idParent);
+    }
+
+    /**
+     * When the tab you add is the first child of a parent tab, we must duplicate it in the children
+     * or its link will be overriden.
+     *
+     * @param int $idParent
+     * @return int new parent ID
+     */
+    protected function duplicateParentIfAlone($idParent)
+    {
+        // If the given parent has already children, don't touch anything
+        if ($idParent === 0 || count($this->tabRepository->findByParentId($idParent))) {
+            return $idParent;
+        }
+
+        $currentTab = new Tab($idParent);
+        $newTab = clone($currentTab);
+        $newTab->id = 0;
+        $newTab->id_parent = $currentTab->id_parent;
+        $newTab->class_name = $currentTab->class_name.self::suffix;
+        $newTab->save();
+
+        // Second save in order to get the proper position (add() resets it)
+        $newTab->position = $currentTab->position;
+        $newTab->save();
+
+        $currentTab->id_parent = $newTab->id;
+        $currentTab->save();
+        return $newTab->id;
     }
 }
