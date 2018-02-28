@@ -50,6 +50,12 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 class Repository implements RepositoryInterface
 {
     /**
+     * Max number of digits to use in the fraction part of a decimal number
+     * This is a default value
+     */
+    const MAX_FRACTION_DIGITS = 3;
+
+    /**
      * Repository used to retrieve low level CLDR locale objects
      *
      * @var CldrLocaleRepository
@@ -97,18 +103,36 @@ class Repository implements RepositoryInterface
      */
     protected $locales;
 
+    /**
+     * Should we group digits in a number's integer part ?
+     *
+     * @var bool
+     */
+    protected $numberGroupingUsed;
+
+    /**
+     * Max number of digits to display in a number's decimal part
+     *
+     * @var int
+     */
+    protected $maxFractionDigits;
+
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
         CurrencyRepository $currencyRepository,
         $roundingMode = Rounding::ROUND_HALF_UP,
         $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
-        $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL
+        $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
+        $groupingUsed = true,
+        $maxFractionDigits = self::MAX_FRACTION_DIGITS
     ) {
         $this->cldrLocaleRepository = $cldrLocaleRepository;
         $this->currencyRepository   = $currencyRepository;
         $this->roundingMode         = $roundingMode;
         $this->numberingSystem      = $numberingSystem;
         $this->currencyDisplayType  = $currencyDisplayType;
+        $this->numberGroupingUsed   = $groupingUsed;
+        $this->maxFractionDigits    = $maxFractionDigits;
     }
 
     /**
@@ -199,16 +223,18 @@ class Repository implements RepositoryInterface
      */
     protected function buildNumberSpecification(CldrLocale $cldrLocale)
     {
-        // TODO replace with real methods (or implement these methods)
+        $decimalPattern = $cldrLocale->getDecimalPattern();
+        $numbersSymbols = $cldrLocale->getAllNumberSymbols();
+
         return new NumberSpecification(
-            $this->getPositivePattern($cldrLocale->getDecimalPattern()),
-            $this->getNegativePattern($cldrLocale->getDecimalPattern()),
-            $this->computeNumberSymbolLists($cldrLocale->getAllNumberSymbols()),
-            $cldrLocale->getNumberMaxFractionDigits(),
-            $cldrLocale->getNumberMinFractionDigits(),
-            $cldrLocale->getNumberGroupingUsed(),
-            $cldrLocale->getNumberPrimaryGroupSize(),
-            $cldrLocale->getNumberSecondaryGroupSize()
+            $this->getPositivePattern($decimalPattern),
+            $this->getNegativePattern($decimalPattern),
+            $this->computeNumberSymbolLists($numbersSymbols),
+            $this->maxFractionDigits,
+            $this->getMinFractionDigits($decimalPattern),
+            $this->numberGroupingUsed,
+            $this->getPrimaryGroupSize($decimalPattern),
+            $this->getSecondaryGroupSize($decimalPattern)
         );
     }
 
@@ -232,16 +258,18 @@ class Repository implements RepositoryInterface
      */
     protected function buildPriceSpecification(CldrLocale $cldrLocale, Currency $currency, $localeCode)
     {
-        // TODO replace with real methods (or implement these methods)
+        $currencyPattern = $cldrLocale->getCurrencyPattern();
+        $numbersSymbols  = $cldrLocale->getAllNumberSymbols();
+
         return new PriceSpecification(
-            $this->getPositivePattern($cldrLocale->getCurrencyPattern()),
-            $this->getNegativePattern($cldrLocale->getCurrencyPattern()),
-            $this->computeNumberSymbolLists($cldrLocale->getAllNumberSymbols()),
-            $cldrLocale->getNumberMaxFractionDigits(),
-            $cldrLocale->getNumberMinFractionDigits(),
-            $cldrLocale->getNumberGroupingUsed(),
-            $cldrLocale->getNumberPrimaryGroupSize(),
-            $cldrLocale->getNumberSecondaryGroupSize(),
+            $this->getPositivePattern($currencyPattern),
+            $this->getNegativePattern($currencyPattern),
+            $this->computeNumberSymbolLists($numbersSymbols),
+            $this->maxFractionDigits,
+            $this->getMinFractionDigits($currencyPattern),
+            $this->numberGroupingUsed,
+            $this->getPrimaryGroupSize($currencyPattern),
+            $this->getSecondaryGroupSize($currencyPattern),
             $this->currencyDisplayType,
             $currency->getSymbol($localeCode),
             $currency->getIsoCode()
@@ -332,5 +360,87 @@ class Repository implements RepositoryInterface
             $symbolsData->infinity,
             $symbolsData->nan
         );
+    }
+
+    /**
+     * Extract the min number of fraction digits from a number pattern (decimal, currency, percentage)
+     *
+     * @param string $pattern
+     *  The formatting pattern to use for extraction
+     *
+     * @return int
+     *  The min number of fraction digits to display in the final number
+     */
+    protected function getMinFractionDigits($pattern)
+    {
+        $dotPos = (int)strpos($pattern, '.');
+
+        return substr_count($pattern, '0', $dotPos);
+    }
+
+    /**
+     * Get the max number of fraction digits when displaying a decimal number
+     *
+     * @return int
+     *  The max number of fraction digits to display in the final number
+     */
+    protected function getMaxFractionDigits()
+    {
+        return $this->maxFractionDigits;
+    }
+
+    /**
+     * Should we group digits when displaying a number ?
+     *
+     * @return bool
+     *  True if digits should be grouped
+     */
+    protected function getNumberGroupingUsed()
+    {
+        return $this->numberGroupingUsed;
+    }
+
+    /**
+     * Get the primary digits group size from a number formatting pattern
+     *
+     * @param string $pattern
+     *  The CLDR number formatting pattern (e.g.: #,##0.###)
+     *
+     * @return int
+     *  The primary group size of the passed pattern
+     */
+    protected function getPrimaryGroupSize($pattern)
+    {
+        $parts       = explode('.', $pattern);
+        $integerPart = $parts[0];
+        $groups      = explode(',', $integerPart);
+        $nbGroups    = count($groups);
+
+        return strlen($groups[$nbGroups - 1]);
+    }
+
+    /**
+     * Get the secondary digits group size from a number formatting pattern
+     * e.g.: with    #,##0.### => No secondary group. Will return primary group size.
+     * e.g.: with #,##,##0.### => Secondary group size is 2, primary group size is 3.
+     *
+     * @param string $pattern
+     *  The CLDR number formatting pattern
+     *
+     * @return int
+     *  The secondary group size of the passed pattern
+     */
+    protected function getSecondaryGroupSize($pattern)
+    {
+        $parts       = explode('.', $pattern);
+        $integerPart = $parts[0];
+        $groups      = explode(',', $integerPart);
+        $nbGroups    = count($groups);
+
+        if ($nbGroups > 2) {
+            return strlen($groups[$nbGroups - 2]);
+        }
+
+        return strlen($groups[$nbGroups - 1]);
     }
 }

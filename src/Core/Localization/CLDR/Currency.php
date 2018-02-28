@@ -27,8 +27,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+
 class Currency
 {
+    const SYMBOL_TYPE_DEFAULT = 'default';
+    const SYMBOL_TYPE_NARROW  = 'narrow';
+
     /**
      * Alphabetic ISO 4217 currency code
      *
@@ -144,9 +149,16 @@ class Currency
      *
      * @return string
      *  The currency's symbol
+     *
+     * @throws LocalizationException
+     *  When an invalid symbol type is passed
      */
-    public function getSymbols($type = 'narrow')
+    public function getSymbol($type = self::SYMBOL_TYPE_NARROW)
     {
+        if (!in_array($type, [self::SYMBOL_TYPE_NARROW, self::SYMBOL_TYPE_DEFAULT])) {
+            throw new LocalizationException('Unknown symbol type');
+        }
+
         return $this->symbols[$type];
     }
 }

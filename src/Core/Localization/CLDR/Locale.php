@@ -210,7 +210,7 @@ class Locale
             $numberingSystem = $this->getDefaultNumberingSystem();
         }
         if (!isset($this->decimalPatterns[$numberingSystem])) {
-            throw new LocalizationException('Invalid numbering system : ' . $numberingSystem);
+            throw new LocalizationException('No decimal pattern found for numbering system : ' . $numberingSystem);
         }
 
         return $this->decimalPatterns[$numberingSystem];
@@ -235,7 +235,7 @@ class Locale
             $numberingSystem = $this->getDefaultNumberingSystem();
         }
         if (!isset($this->percentPatterns[$numberingSystem])) {
-            throw new LocalizationException('Invalid numbering system : ' . $numberingSystem);
+            throw new LocalizationException('No percent pattern found for numbering system : ' . $numberingSystem);
         }
 
         return $this->percentPatterns[$numberingSystem];
@@ -260,7 +260,7 @@ class Locale
             $numberingSystem = $this->getDefaultNumberingSystem();
         }
         if (!isset($this->currencyPatterns[$numberingSystem])) {
-            throw new LocalizationException('Invalid numbering system : ' . $numberingSystem);
+            throw new LocalizationException('No currency pattern found for numbering system : ' . $numberingSystem);
         }
 
         return $this->currencyPatterns[$numberingSystem];
