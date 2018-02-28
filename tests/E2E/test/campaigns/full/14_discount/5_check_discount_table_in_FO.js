@@ -38,7 +38,8 @@ scenario('Create "Tax rules" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  common_scenarios.createTaxRule(taxData);
+  common_scenarios.createTaxRule(taxData.name + date_time, taxData.tax_value);
+  common_scenarios.checkTaxRule(taxData.name + date_time);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
