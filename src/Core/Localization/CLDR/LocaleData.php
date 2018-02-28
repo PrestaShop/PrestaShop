@@ -31,6 +31,7 @@ class LocaleData
 {
     /**
      * The locale code for this data (either language code or IETF tag)
+     * e.G.: 'fr', 'fr-FR'...
      *
      * @var string
      */
