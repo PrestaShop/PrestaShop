@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Currency\RepositoryInterface as CurrencyRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataRepositoryInterface as CurrencyDataRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataSourceInterface as CurrencyDataSourceInterface;
 
 /**
  * Currency repository class
@@ -46,15 +46,15 @@ class Repository implements CurrencyRepositoryInterface
     protected $currencies;
 
     /**
-     * @var CurrencyDataRepositoryInterface
+     * @var CurrencyDataSourceInterface
      */
-    protected $dataRepository;
+    protected $dataSource;
 
-    public function __construct(CurrencyDataRepositoryInterface $dataRepository)
+
+    public function __construct(CurrencyDataSourceInterface $dataSource)
     {
-        $this->dataRepository = $dataRepository;
+        $this->dataSource = $dataSource;
     }
-
 
     /**
      * @inheritdoc
@@ -62,16 +62,16 @@ class Repository implements CurrencyRepositoryInterface
     public function getCurrency($currencyCode)
     {
         if (!isset($this->currencies[$currencyCode])) {
-            $data = $this->dataRepository->getDataByCurrencyCode($currencyCode);
+            $data = $this->dataSource->getDataByCurrencyCode($currencyCode);
 
             $this->currencies[$currencyCode] = new Currency(
-                $data['isActive'],
-                $data['conversionRate'],
-                $data['isoCode'],
-                $data['numericIsoCode'],
-                $data['symbols'],
-                $data['precision'],
-                $data['names']
+                $data->isActive,
+                $data->conversionRate,
+                $data->isoCode,
+                $data->numericIsoCode,
+                $data->symbols,
+                $data->precision,
+                $data->names
             );
         }
 
