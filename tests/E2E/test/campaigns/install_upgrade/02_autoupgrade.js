@@ -67,7 +67,7 @@ scenario('The shop installation', () => {
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
-    test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.action_module_built_button));
+    test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join(autoupgrade)));
     test('should deactivate the shop', () => {
       return promise
         .then(() => client.waitForVisibleElement(ModulePage.confirm_maintenance_shop_icon))

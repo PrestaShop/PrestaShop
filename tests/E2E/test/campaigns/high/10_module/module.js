@@ -2,7 +2,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 
 module.exports = {
   checkConfigPage: function (client, ModulePage, moduleTechName) {
-    test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.action_module_built_button));
+    test('should click on "Configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join(moduleTechName)));
     test('should check the configuration page', () => client.checkTextValue(ModulePage.config_legend.replace("%moduleTechName", moduleTechName), moduleTechName));
   },
   installModule: function (client, ModulePage, AddProductPage, moduleTechName) {
@@ -14,16 +14,16 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should check if the module ' + moduleTechName + ' was installed', () => client.checkTextValue(ModulePage.built_in_module, "1", "contain"));
+    test('should check if the module ' + moduleTechName + ' was installed', () => client.isExisting(ModulePage.installed_module_div.replace('%moduleTechName', moduleTechName)));
   },
   uninstallModule: function (client, ModulePage, AddProductPage, moduleTechName) {
     test('should go to "Module" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_services_submenu));
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.option_button));
-    test('should click on "Uninstall" button', () => client.waitForExistAndClick(ModulePage.uninstall_button));
-    test('should click on "Yes, uninstall it" button', () => client.waitForVisibleAndClick(ModulePage.uninstall_module));
+    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName)));
+    test('should click on "Uninstall" button', () => client.waitForExistAndClick(ModulePage.uninstall_button.split('%moduleTechName').join(moduleTechName)));
+    test('should click on "Yes, uninstall it" button', () => client.waitForVisibleAndClick(ModulePage.uninstall_module_modal));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should check that the backdrop is hidden', () => client.checkIsNotVisible(ModulePage.backdrop_modale));
     test('should check if the module ' + moduleTechName + ' was installed', () => client.checkTextValue(ModulePage.built_in_module, "0", "contain"));
@@ -33,8 +33,8 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.option_button));
-    test('should click on "Disable" button', () => client.waitForExistAndClick(ModulePage.disable_module));
+    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName)));
+    test('should click on "Disable" button', () => client.waitForExistAndClick(ModulePage.disable_module.split('%moduleTechName').join(moduleTechName)));
     test('should click on "Yes, disable it" button', () => client.waitForVisibleAndClick(ModulePage.confirmation_disable_module));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
   },
@@ -43,7 +43,7 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for ' + moduleTechName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should click on "Enable" button', () => client.waitForExistAndClick(ModulePage.enable_module));
+    test('should click on "Enable" button', () => client.waitForExistAndClick(ModulePage.enable_module.split('%moduleTechName').join(moduleTechName)));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
   },
   resetModule: function (client, ModulePage, AddProductPage, Menu, moduleName, moduleTechName) {
@@ -51,7 +51,7 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for ' + moduleName + ' module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.option_button));
+    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName)));
     test('should click on "Reset" action', () => client.waitForExistAndClick(ModulePage.reset_module));
     test('should click on "Reset" button', () => client.waitForExistAndClick(ModulePage.reset_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
@@ -74,7 +74,7 @@ module.exports = {
           .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
       }else{
         return promise
-        .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
+          .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
       }
 
 
