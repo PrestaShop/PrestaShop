@@ -79,6 +79,7 @@ class ModuleTabUnregister
 
         foreach ($tabs as $tab) {
             $this->unregisterTab($tab);
+            $this->removeDuplicatedParent($tab);
         }
     }
 
@@ -101,6 +102,38 @@ class ModuleTabUnregister
                         '%name%' => $tab->getClassName(),
                     ),
                     'Admin.Modules.Notification'));
+        }
+    }
+
+    /**
+     * When we add a level of children in the menu tabs, we created a dummy parent.
+     * We must delete it when it has no more children than the original tab.
+     *
+     * @param Tab $tab
+     */
+    private function removeDuplicatedParent(Tab $tab)
+    {
+        $remainingChildren = $this->tabRepository->findByParentId($tab->getIdParent());
+        if (count($remainingChildren) > 1) {
+            return;
+        }
+
+        $parent = $this->tabRepository->find($tab->getIdParent());
+        $child = end($remainingChildren);
+
+        // We know we have a tab to delete if the parent name is the remaining child name+_MTR
+        if ($parent->getClassName() === $child->getClassName().ModuleTabRegister::suffix) {
+            $legacyTabParent = new TabClass($parent->getId());
+            // Setting a wrong id_parent will prevent the children to move
+            $legacyTabParent->id_parent = -1;
+            $legacyTabParent->delete();
+
+            $legacyTab = new TabClass($child->getId());
+            $legacyTab->id_parent = $parent->getIdParent();
+            $legacyTab->save();
+            // Updating the id_parent will override the position, that's why we save 2 times
+            $legacyTab->position = $parent->getPosition();
+            $legacyTab->save();
         }
     }
 }
