@@ -119,7 +119,7 @@ class Currency implements CurrencyInterface
      * @param int $precision
      *  Number of decimal digits to use with this currency
      *
-     * @param string [] $names
+     * @param string[] $names
      *  the currency's name, by locale code
      *
      */

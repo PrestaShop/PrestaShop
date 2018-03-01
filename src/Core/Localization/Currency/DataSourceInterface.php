@@ -31,14 +31,14 @@ namespace PrestaShop\PrestaShop\Core\Localization\Currency;
  *
  * Describes the behavior of currency DataRepository classes
  */
-interface DataRepositoryInterface
+interface DataSourceInterface
 {
     /**
      * Get complete currency data by currency code
      *
      * @param string $currencyCode
      *
-     * @return array
+     * @return CurrencyData
      *  The currency data
      */
     public function getDataByCurrencyCode($currencyCode);
