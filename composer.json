@@ -156,19 +156,19 @@
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
         ],
         "phpunit-controllers": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",
