@@ -30,6 +30,11 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use SimpleXMLElement;
 
+/**
+ * CLDR files reader class
+ *
+ * This class provides CLDR LocaleData objects built with data coming from official CLDR xml data files.
+ */
 class Reader implements ReaderInterface
 {
     const CLDR_ROOT         = 'localization/CLDR/';
@@ -211,26 +216,6 @@ class Reader implements ReaderInterface
 
         // The "top level" case. When only language code is left in $localeCode : 'en', 'fr'... then parent is "root".
         return self::CLDR_ROOT_LOCALE;
-    }
-
-    /**
-     * Extracts the relevant parts of an IETF locale tag
-     *
-     * @param string $localeTag The locale tag (e.g.: fr-FR, en-US...)
-     *
-     * @return array The indexed locale parts (e.g.: ['langage' => 'en', 'region' => 'US'])
-     */
-    protected function getLocaleParts($localeTag)
-    {
-        $expl  = explode('-', $localeTag);
-        $parts = [
-            'language' => $expl[0],
-        ];
-        if (!empty($expl[1])) {
-            $parts['region'] = $expl[1];
-        }
-
-        return $parts;
     }
 
     /**
@@ -539,33 +524,6 @@ class Reader implements ReaderInterface
         }
 
         return $localeData;
-    }
-
-    /**
-     * Extract parent locale code
-     *
-     * @param SimplexmlElement $parentLocaleXmlData
-     * @param string $localeTag
-     *
-     * @return mixed|string
-     */
-    protected function extractParentLocale(SimplexmlElement $parentLocaleXmlData, $localeTag)
-    {
-        if (self::CLDR_ROOT_LOCALE === $localeTag) {
-            return null;
-        }
-        $parts = $this->getLocaleParts($localeTag);
-        if (empty($parts['region'])) {
-            return self::CLDR_ROOT_LOCALE;
-        }
-        $code    = $parts['language'] . '_' . $parts['region'];
-        $results = $parentLocaleXmlData->xpath("//parentLocale[contains(@locales, '$code')]");
-        if (empty($results)) {
-            return $parts['language'];
-        }
-        $node = $results[0];
-
-        return (string)$node['parent'];
     }
 
     /**
