@@ -40,7 +40,7 @@ use TabCore as Tab;
 
 class ModuleTabRegister
 {
-    const suffix = '_MTR';
+    const SUFFIX = '_MTR';
 
     private $defaultParent = 'DEFAULT';
     /**
@@ -279,7 +279,7 @@ class ModuleTabRegister
         $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
         if (!empty($parentClassName)) {
             // Could be a previously duicated tab
-            $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName.self::suffix);
+            $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName.self::SUFFIX);
             if (!$idParent) {
                 $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
             }
@@ -307,7 +307,7 @@ class ModuleTabRegister
         $newTab = clone($currentTab);
         $newTab->id = 0;
         $newTab->id_parent = $currentTab->id_parent;
-        $newTab->class_name = $currentTab->class_name.self::suffix;
+        $newTab->class_name = $currentTab->class_name.self::SUFFIX;
         $newTab->save();
 
         // Second save in order to get the proper position (add() resets it)
