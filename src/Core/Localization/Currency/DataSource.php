@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2018 PrestaShop
  *
@@ -25,19 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
+namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\LocaleDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyDataLayerInterface;
 
-/**
- * LocaleDataSource provides CLDR LocaleData objects
- *
- * This class uses Locale data layers as middlewares stack to read CLDR data.
- */
-class LocaleDataSource
+class DataSource implements DataSourceInterface
 {
     /**
-     * @var LocaleDataLayerInterface
+     * @var CurrencyDataLayerInterface
      */
     protected $topLayer;
 
@@ -47,23 +41,26 @@ class LocaleDataSource
     }
 
     /**
-     * @param string $localeCode
+     * Get complete currency data by currency code
      *
-     * @return LocaleData
+     * @param string $currencyCode
+     *
+     * @return CurrencyData
+     *  The currency data
      */
-    public function getLocaleData($localeCode)
+    public function getDataByCurrencyCode($currencyCode)
     {
-        return $this->topLayer->read($localeCode);
+        return $this->topLayer->read($currencyCode);
     }
 
     /**
      * Chain locale data layers together, in the passed order.
      *
-     * @param LocaleDataLayerInterface[] $layers
+     * @param CurrencyDataLayerInterface[] $layers
      *  The layers to chain.
      *  First will be the top layer. Last one will be the lowest layer.
      *
-     * @return null|LocaleDataLayerInterface
+     * @return null|CurrencyDataLayerInterface
      *  The top layer
      */
     protected function chainLayers($layers)
