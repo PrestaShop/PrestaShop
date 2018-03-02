@@ -184,28 +184,29 @@ class PackCore extends Product
     }
 
     /**
-     * Is the pack in stock and his associated products?
+     * Indicates if a pack and its associated products are available for orders in the desired quantity.
      *
-     * @todo actually return true even if the pack feature is not active.
-     *       Should throws an exception instead.
+     * @todo This method returns true even if the pack feature is not active.
+     *       Should throw an exception instead.
      *       Developers should first test if product is a pack
-     *       and next if it's in stock.
+     *       and then if it's in stock.
      *
-     * @inheritdoc
-     * @param int|null $id_product
-     * @param int|null $wantedQuantity
+     * @param int $idProduct
+     * @param int $wantedQuantity
      * @param Cart|null $cart
+     *
      * @return bool
+     * @throws PrestaShopException
      */
-    public static function isInStock($id_product, $wantedQuantity = 1, Cart $cart = null)
+    public static function isInStock($idProduct, $wantedQuantity = 1, Cart $cart = null)
     {
         if (!Pack::isFeatureActive()) {
             return true;
         }
-        $id_product = (int) $id_product;
+        $idProduct = (int) $idProduct;
         $wantedQuantity = (int) $wantedQuantity;
-        $product = new Product($id_product, false);
-        $packQuantity = self::getQuantity($id_product, null, null, $cart);
+        $product = new Product($idProduct, false);
+        $packQuantity = self::getQuantity($idProduct, null, null, $cart);
 
         if ($product->isAvailableWhenOutOfStock($product->out_of_stock)) {
             return true;
