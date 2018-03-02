@@ -8,9 +8,8 @@ bash $TRAVIS_BUILD_DIR/travis-scripts/install-prestashop
 
 echo "* Installing functional tests ...";
 
-git clone https://github.com/PrestaShop/PSFunctionalTests.git
-cd $TRAVIS_BUILD_DIR/PSFunctionalTests && npm install && cd test/itg/1.7
+cd $TRAVIS_BUILD_DIR/tests/E2E && npm install
 
 echo "* Running functional tests ...";
-$TRAVIS_BUILD_DIR/PSFunctionalTests/node_modules/mocha/bin/mocha index.webdriverio.js -c --URL=localhost  --MODULE=None --SAUCELABS=None -t 200000
+npm test -- --MODULE=ps_legalcompliance
 exit $?
