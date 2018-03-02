@@ -267,18 +267,36 @@ class Locale
     }
 
     /**
-     * Get data for a given currency
+     * Get a given CLDR Currency
      *
      * @param string $currencyCode
      *  An ISO 4217 currency code
      *
      * @return null|Currency
-     *  The wanted currency data. Null if this currency is not available for this locale.
+     *  The wanted CLDR Currency. Null if this currency is not available for this locale.
      */
     public function getCurrency($currencyCode)
     {
         if (!empty($this->currencies[$currencyCode])) {
             return new Currency($this->currencies[$currencyCode]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get CLDR data of a given currency
+     *
+     * @param string $currencyCode
+     *  An ISO 4217 currency code
+     *
+     * @return null|CurrencyData
+     *  The wanted currency data. Null if this currency is not available for this locale.
+     */
+    public function getCurrencyData($currencyCode)
+    {
+        if (!empty($this->currencies[$currencyCode])) {
+            return $this->currencies[$currencyCode];
         }
 
         return null;

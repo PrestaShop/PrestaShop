@@ -30,14 +30,14 @@ namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 
 /**
- * Locale data layer classes interface
+ * CLDR Locale data layer classes interface
  *
- * Describes the behavior of LocaleDataLayer classes
+ * Describes the behavior of CldrLocaleDataLayer classes
  */
 interface CldrLocaleDataLayerInterface
 {
     /**
-     * Read locale data by locale code
+     * Read CLDR locale data by locale code
      *
      * @param string $localeCode
      *  The locale code (simplified IETF tag syntax)

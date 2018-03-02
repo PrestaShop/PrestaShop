@@ -66,15 +66,15 @@ class CldrLocaleCacheDataLayer extends AbstractDataLayer implements CldrLocaleDa
     }
 
     /**
-     * Actually read a LocaleData object into the current layer
+     * Actually read a CLDR LocaleData object into the current layer
      *
      * Data is read from passed cache adapter
      *
      * @param string $localeCode
-     *  The LocaleData object identifier
+     *  The CLDR LocaleData object identifier
      *
      * @return LocaleData|null
-     *  The wanted LocaleData object (null if not found)
+     *  The wanted CLDR LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -108,7 +108,7 @@ class CldrLocaleCacheDataLayer extends AbstractDataLayer implements CldrLocaleDa
      *  The LocaleData object identifier
      *
      * @param LocaleData $data
-     *  The LocaleData object to be written
+     *  The CLDR LocaleData object to be written
      *
      * @return void
      *

@@ -64,15 +64,15 @@ class CldrLocaleReferenceDataLayer extends AbstractDataLayer implements CldrLoca
     }
 
     /**
-     * Actually read a LocaleData object into the current layer
+     * Actually read a CLDR LocaleData object into the current layer
      *
      * Data is read from official CLDR file (via the CLDR files reader)
      *
      * @param string $localeCode
-     *  The LocaleData object identifier
+     *  The CLDR LocaleData object identifier
      *
      * @return LocaleData|null
-     *  The wanted LocaleData object (null if not found)
+     *  The wanted CLDR LocaleData object (null if not found)
      */
     protected function doRead($localeCode)
     {
@@ -83,10 +83,10 @@ class CldrLocaleReferenceDataLayer extends AbstractDataLayer implements CldrLoca
      * CLDR files are read only. Nothing can be written there.
      *
      * @param string $localeCode
-     *  The LocaleData object identifier
+     *  The CLDR LocaleData object identifier
      *
      * @param LocaleData $data
-     *  The LocaleData object to be written
+     *  The CLDR LocaleData object to be written
      *
      * @return void
      */
