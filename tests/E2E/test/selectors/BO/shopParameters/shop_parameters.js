@@ -22,5 +22,24 @@ module.exports = {
       friendly_url_button: '//*[@id="conf_id_PS_REWRITING_SETTINGS"]//label[contains(@for, "%s")]',
       save_button: '//*[@id="meta_form"]//button[text()=" Save"]'
     }
+  },
+  Contact: {
+    Contacts: {
+      add_new_contact_button: '//*[@id="page-header-desc-contact-new_contact"]',
+      title_input: '//*[@id="name_1"]',
+      email_address_input: '//*[@id="email"]',
+      save_messages_button: '//*[@id="fieldset_0"]//label[@for="customer_service_on"]',
+      description_textarea: '//*[@id="description_1"]',
+      save_button: '//*[@id="contact_form_submit_btn"]',
+      filter_title_input: '//*[@id="table-contact"]//input[@name="contactFilter_name"]',
+      filter_search_button: '//*[@id="submitFilterButtoncontact"]',
+      edit_button: '//*[@id="table-contact"]/tbody//a[@title="Edit"]',
+      dropdown_button: '//*[@id="table-contact"]/tbody//button[@data-toggle="dropdown"]',
+      delete_button: '//*[@id="table-contact"]/tbody//a[@title="Delete"]',
+      bulk_action_button: '//*[@id="bulk_action_menu_contact"]',
+      bulk_actions_select_all_button: '//*[@id="form-contact"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "true")]',
+      bulk_actions_delete_button: '//*[@id="form-contact"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecontact")]',
+      empty_list: '//*[@id="table-contact"]/tbody//td[@class="list-empty"]'
+    }
   }
 };

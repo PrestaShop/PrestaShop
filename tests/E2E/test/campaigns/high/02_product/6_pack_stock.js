@@ -1,6 +1,5 @@
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const {ShopParameter} = require('../../../selectors/BO/shopParameters/index');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
