@@ -294,7 +294,7 @@ class LocaleTest extends TestCase
 
     /**
      * Given a valid CLDR Locale object
-     * When asking to this locale a given currency
+     * When asking to this locale a given CLDR currency
      * Then the expected CLDR Currency should be retrieved. Or null if the currency code was unknown.
      */
     public function testGetCurrency()
@@ -314,6 +314,31 @@ class LocaleTest extends TestCase
         $this->assertNull(
             $this->cldrLocale->getCurrency('FOO'),
             'When asking for an unknown currency, null should be returned'
+        );
+    }
+
+    /**
+     * Given a valid CLDR Locale object
+     * When asking to this locale a given CLDR currency data
+     * Then the expected CLDR CurrencyData object should be retrieved. Or null if the currency code was unknown.
+     */
+    public function testGetCurrencyData()
+    {
+        $currencyData = $this->cldrLocale->getCurrencyData('PCE');
+
+        $this->assertInstanceOf(
+            CurrencyData::class,
+            $currencyData
+        );
+
+        $this->assertSame(
+            $this->stubCurrencyData->isoCode,
+            $currencyData->isoCode
+        );
+
+        $this->assertNull(
+            $this->cldrLocale->getCurrency('FOO'),
+            'When asking for an unknown currency data, null should be returned'
         );
     }
 }

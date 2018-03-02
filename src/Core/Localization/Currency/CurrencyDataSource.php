@@ -26,15 +26,21 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrCurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyDataLayerInterface;
 
-class DataSource implements DataSourceInterface
+class CurrencyDataSource implements DataSourceInterface
 {
     /**
-     * @var CldrCurrencyDataLayerInterface
+     * @var CurrencyDataLayerInterface
      */
     protected $topLayer;
 
+    /**
+     * CurrencyDataSource constructor needs an array of CurrencyDataLayer objects.
+     * These layers will be chained and will act as a middleware stack.
+     *
+     * @param CurrencyDataLayerInterface[] $layers
+     */
     public function __construct($layers)
     {
         $this->topLayer = $this->chainLayers($layers);
@@ -54,13 +60,13 @@ class DataSource implements DataSourceInterface
     }
 
     /**
-     * Chain locale data layers together, in the passed order.
+     * Chain currency data layers together, in the passed order.
      *
-     * @param CldrCurrencyDataLayerInterface[] $layers
+     * @param CurrencyDataLayerInterface[] $layers
      *  The layers to chain.
-     *  First will be the top layer. Last one will be the lowest layer.
+     *  First one will be the top layer. Last one will be the lowest layer.
      *
-     * @return null|CldrCurrencyDataLayerInterface
+     * @return null|CurrencyDataLayerInterface
      *  The top layer
      */
     protected function chainLayers($layers)

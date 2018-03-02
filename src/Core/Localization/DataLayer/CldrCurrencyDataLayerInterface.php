@@ -30,9 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 
 /**
- * Currency data layer classes interface
+ * CLDR Currency data layer classes interface
  *
- * Describes the behavior of CurrencyDataLayer classes
+ * Describes the behavior of CldrCurrencyDataLayer classes
  */
 interface CldrCurrencyDataLayerInterface
 {
@@ -43,7 +43,7 @@ interface CldrCurrencyDataLayerInterface
      *  The currency code (ISO 4217)
      *
      * @return CurrencyData
-     *  The searched currency data
+     *  The searched CLDR currency data
      */
     public function read($currencyCode);
 

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 
 /**
- * Currency reference data layer
+ * CLDR Currency reference data layer
  *
  * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
@@ -68,15 +68,15 @@ class CldrCurrencyReferenceDataLayer extends AbstractDataLayer implements CldrCu
     }
 
     /**
-     * Actually read a CurrencyData object into the current layer
+     * Actually read a CLDR CurrencyData object into the current layer
      *
      * Data is read from official CLDR files (via the CLDR LocaleRepository)
      *
      * @param string $currencyCode
-     *  The CurrencyData object identifier
+     *  The CLDR CurrencyData object identifier
      *
      * @return CurrencyData|null
-     *  The wanted CurrencyData object (null if not found)
+     *  The wanted CLDR CurrencyData object (null if not found)
      */
     protected function doRead($currencyCode)
     {
@@ -86,7 +86,7 @@ class CldrCurrencyReferenceDataLayer extends AbstractDataLayer implements CldrCu
             return null;
         }
 
-        return $cldrLocale->getCurrency($currencyCode);
+        return $cldrLocale->getCurrencyData($currencyCode);
     }
 
     /**

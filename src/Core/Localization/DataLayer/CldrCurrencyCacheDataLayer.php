@@ -61,15 +61,15 @@ class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurren
     }
 
     /**
-     * Actually read a CurrencyData object into the current layer
+     * Actually read a CLDR CurrencyData object into the current layer
      *
      * Might be a file access, cache read, DB select...
      *
      * @param mixed $currencyCode
-     *  The CurrencyData object identifier
+     *  The CLDR CurrencyData object identifier
      *
      * @return CurrencyData|null
-     *  The wanted CurrencyData object (null if not found)
+     *  The wanted CLDR CurrencyData object (null if not found)
      */
     protected function doRead($currencyCode)
     {
@@ -95,7 +95,7 @@ class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurren
     }
 
     /**
-     * Actually write a CurrencyData object into the current layer
+     * Actually write a CLDR CurrencyData object into the current layer
      *
      * Might be a file edit, cache update, DB insert/update...
      *
