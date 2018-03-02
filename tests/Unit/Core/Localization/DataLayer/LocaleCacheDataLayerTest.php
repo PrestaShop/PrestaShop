@@ -28,7 +28,7 @@ namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\LocaleCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleCacheDataLayer;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -37,7 +37,7 @@ class LocaleCacheDataLayerTest extends TestCase
     /**
      * The tested data layer
      *
-     * @var LocaleCacheDataLayer
+     * @var CldrLocaleCacheDataLayer
      */
     protected $layer;
 
@@ -50,7 +50,7 @@ class LocaleCacheDataLayerTest extends TestCase
         $cacheAdapter = new ArrayAdapter();
 
         /** @var AdapterInterface $cacheAdapter */
-        $this->layer = new LocaleCacheDataLayer($cacheAdapter);
+        $this->layer = new CldrLocaleCacheDataLayer($cacheAdapter);
     }
 
     public function testReadWrite()

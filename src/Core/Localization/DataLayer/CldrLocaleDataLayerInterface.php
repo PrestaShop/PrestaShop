@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
  *
  * Describes the behavior of LocaleDataLayer classes
  */
-interface LocaleDataLayerInterface
+interface CldrLocaleDataLayerInterface
 {
     /**
      * Read locale data by locale code
@@ -70,10 +70,10 @@ interface LocaleDataLayerInterface
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param LocaleDataLayerInterface $lowerLayer
+     * @param CldrLocaleDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer);
+    public function setLowerLayer(CldrLocaleDataLayerInterface $lowerLayer);
 }

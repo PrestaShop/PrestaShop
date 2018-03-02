@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
  * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class CurrencyReferenceDataLayer extends AbstractDataLayer implements CurrencyDataLayerInterface
+class CldrCurrencyReferenceDataLayer extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
 {
     /**
      * CLDR locale repository
@@ -60,7 +60,7 @@ class CurrencyReferenceDataLayer extends AbstractDataLayer implements CurrencyDa
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
