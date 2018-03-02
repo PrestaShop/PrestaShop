@@ -50,6 +50,10 @@ class LocaleRepository
     {
         $localeData = $this->dataSource->getLocaleData($localeCode);
 
+        if (null === $localeData) {
+            return null;
+        }
+
         return new CldrLocale($localeData);
     }
 }
