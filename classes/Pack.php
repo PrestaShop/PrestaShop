@@ -31,28 +31,28 @@ class PackCore extends Product
      *
      * @var string
      */
-    CONST STOCK_TYPE_PACK_ONLY = 0;
+    const STOCK_TYPE_PACK_ONLY = 0;
 
     /**
      * Only decrement pack products quantities
      *
      * @var string
      */
-    CONST STOCK_TYPE_PRODUCTS_ONLY = 1;
+    const STOCK_TYPE_PRODUCTS_ONLY = 1;
 
     /**
      * Decrement pack quantity and pack products quantities
      *
      * @var string
      */
-    CONST STOCK_TYPE_PACK_BOTH = 2;
+    const STOCK_TYPE_PACK_BOTH = 2;
 
     /**
      * Use pack quantity default setting
      *
      * @var string
      */
-    CONST STOCK_TYPE_DEFAULT = 3;
+    const STOCK_TYPE_DEFAULT = 3;
 
     protected static $cachePackItems = array();
     protected static $cacheIsPack = array();
