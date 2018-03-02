@@ -840,6 +840,20 @@ class CarrierCore extends ObjectModel
         if (!in_array('id_shop_group', $keys)) {
             $keys[] = 'id_shop_group';
         }
+        
+        $deleted_carrier_ids = array();
+        if ($delete) {
+            $deleted_carriers = Db::getInstance()->executeS('
+                SELECT `id_carrier` 
+                FROM `'._DB_PREFIX_.'carrier` 
+                WHERE `id_reference` = '.(int)$this->id_reference
+            );
+            if (is_array($deleted_carriers) && count($deleted_carriers) > 0) {
+                foreach ($deleted_carriers as $carrier) {
+                    $deleted_carrier_ids[] = $carrier['id_carrier'];
+                }
+            }
+        }
 
         $sql = 'INSERT INTO `'._DB_PREFIX_.'delivery` ('.implode(', ', $keys).') VALUES ';
         foreach ($price_list as $values) {
@@ -850,12 +864,12 @@ class CarrierCore extends ObjectModel
                 $values['id_shop_group'] = (Shop::getContext() != Shop::CONTEXT_ALL) ? Shop::getContextShopGroupID() : null;
             }
 
-            if ($delete) {
+            if ($delete && count($deleted_carrier_ids) > 0) {
                 Db::getInstance()->execute(
                     'DELETE FROM `'._DB_PREFIX_.'delivery`
                     WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
-                    AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
-                    AND id_carrier='.(int)$values['id_carrier'].
+                    AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop_group`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
+                    AND id_carrier IN ("'.implode('","', $deleted_carrier_ids).'") '.
                     ($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)').
                     ($values['id_range_weight'] !== null ? ' AND id_range_weight='.(int)$values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)').'
 					AND id_zone='.(int)$values['id_zone']
