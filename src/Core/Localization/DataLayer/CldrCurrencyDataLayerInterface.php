@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
  *
  * Describes the behavior of CurrencyDataLayer classes
  */
-interface CurrencyDataLayerInterface
+interface CldrCurrencyDataLayerInterface
 {
     /**
      * Read Currency by currency code
@@ -66,10 +66,10 @@ interface CurrencyDataLayerInterface
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param CurrencyDataLayerInterface $lowerLayer
+     * @param CldrCurrencyDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
+    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer);
 }

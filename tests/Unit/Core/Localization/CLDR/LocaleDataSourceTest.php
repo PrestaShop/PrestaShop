@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\LocaleDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleDataLayerInterface;
 
 class LocaleDataSourceTest extends TestCase
 {
@@ -67,7 +67,7 @@ class LocaleDataSourceTest extends TestCase
         $this->frStubLocaleData = $this->getStubLocaleData('fr-FR');
         $this->enStubLocaleData = $this->getStubLocaleData('en-US');
 
-        $layer = $this->createMock(LocaleDataLayerInterface::class);
+        $layer = $this->createMock(CldrLocaleDataLayerInterface::class);
         $layer->method('read')
             ->willReturnMap([
                 ['fr-FR', $this->frStubLocaleData],
