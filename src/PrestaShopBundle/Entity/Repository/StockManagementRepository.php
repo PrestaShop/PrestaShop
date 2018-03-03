@@ -162,7 +162,7 @@ abstract class StockManagementRepository
      */
     protected function addImageThumbnailPaths(array $rows)
     {
-        array_walk($rows, function (&$row) {
+        foreach ($rows as &$row) {
             $row['product_thumbnail'] = 'N/A';
             $row['combination_thumbnail'] = 'N/A';
 
@@ -177,7 +177,7 @@ abstract class StockManagementRepository
                     $row['combination_cover_id']
                 );
             }
-        });
+        }
 
         return $rows;
     }
@@ -529,7 +529,7 @@ abstract class StockManagementRepository
      */
     protected function addCombinationsAndFeatures(array $rows)
     {
-        array_walk($rows, function (&$row) {
+        foreach ($rows as &$row) {
             $row['product_features'] = $this->getProductFeatures($row);
             if ($row['combination_id'] != 0) {
                 $row['combination_cover_id'] = $this->getCombinationCoverId($row);
@@ -539,7 +539,7 @@ abstract class StockManagementRepository
                 $row['combination_cover_id'] = 0;
                 $row['product_attributes'] = '';
             }
-        });
+        }
 
         return $rows;
     }

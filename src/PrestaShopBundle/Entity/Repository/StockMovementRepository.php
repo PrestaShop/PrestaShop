@@ -192,13 +192,18 @@ class StockMovementRepository extends StockManagementRepository
      */
     private function addOrderLink(array $rows)
     {
-        array_walk($rows, function (&$row) {
+        foreach ($rows as &$row) {
             if ($row['id_order']) {
-                $row['order_link'] = $this->contextAdapter->getContext()->link->getAdminLink('AdminOrders', true, array(), array('vieworder' => true, 'id_order' => (int)$row['id_order']));
+                $row['order_link'] = $this->contextAdapter->getContext()->link->getAdminLink(
+                    'AdminOrders',
+                    true,
+                    array(),
+                    array('vieworder' => true, 'id_order' => (int)$row['id_order'])
+                );
             } else {
                 $row['order_link'] = 'N/A';
             }
-        });
+        }
 
         return $rows;
     }

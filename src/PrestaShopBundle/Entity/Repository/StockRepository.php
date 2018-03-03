@@ -327,13 +327,13 @@ class StockRepository extends StockManagementRepository
     protected function addCombinationsAndFeatures(array $rows)
     {
         $rows = parent::addCombinationsAndFeatures($rows);
-        array_walk($rows, function (&$row) {
+        foreach ($rows as &$row) {
             if ($row['combination_id'] != 0) {
                 $row['total_combinations'] = $this->getTotalCombinations($row);
             } else {
                 $row['total_combinations'] = 'N/A';
             }
-        });
+        }
 
         return $rows;
     }
@@ -365,7 +365,7 @@ class StockRepository extends StockManagementRepository
     {
         $router = $this->container->get('router');
 
-        array_walk($rows, function (&$row) use ($router) {
+        foreach ($rows as &$row) {
             $row['combinations_product_url'] = $router->generate('api_stock_list_product_combinations', array(
                 'productId' => $row['product_id'],
             ));
@@ -380,7 +380,7 @@ class StockRepository extends StockManagementRepository
                     'productId' => $row['product_id'],
                 ));
             }
-        });
+        }
 
         return $rows;
     }
