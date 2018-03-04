@@ -84,7 +84,7 @@ class AttributeGroupCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function add($autoDate = true, $nullValues = false)
+    public function add($autoDate = true)
     {
         if ($this->group_type == 'color') {
             $this->is_color_group = 1;
