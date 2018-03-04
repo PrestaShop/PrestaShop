@@ -152,7 +152,7 @@ class AttributeCore extends ObjectModel
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      */
-    public function add($autoDate = true, $nullValues = false)
+    public function add($autoDate = true)
     {
         if ($this->position <= 0) {
             $this->position = Attribute::getHigherPosition($this->id_attribute_group) + 1;
