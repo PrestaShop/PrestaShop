@@ -437,17 +437,18 @@ class CartCore extends ObjectModel
     /**
      * Get Cart Rules
      *
-     *
-     * @param int  $filter Filter enum:
+     * @param int $filter Filter enum:
      *                     - FILTER_ACTION_ALL
      *                     - FILTER_ACTION_SHIPPING
      *                     - FILTER_ACTION_REDUCTION
      *                     - FILTER_ACTION_GIFT
      *                     - FILTER_ACTION_ALL_NOCAP
      *
-     * @param bool $withAutomaticCartRules get the cart rules without code (ie always applying)
+     * @param bool $withAutomaticCartRules Include cart rules without code (ie always applying)
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Database result
+     * @return array
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function getCartRules($filter = CartRule::FILTER_ACTION_ALL, $withAutomaticCartRules = true)
     {
