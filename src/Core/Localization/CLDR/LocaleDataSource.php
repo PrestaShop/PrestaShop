@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 /**
  * LocaleDataSource provides CLDR LocaleData objects
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleDataLayerInterfa
 class LocaleDataSource
 {
     /**
-     * @var LocaleDataLayerInterface
+     * @var CldrLocaleDataLayerInterface
      */
     protected $topLayer;
 
@@ -45,7 +45,7 @@ class LocaleDataSource
      * LocaleDataSource constructor needs an array of CldrLocaleDataLayer objects.
      * These layers will be chained and will act as a middleware stack.
      *
-     * @param LocaleDataLayerInterface[] $layers
+     * @param CldrLocaleDataLayerInterface[] $layers
      */
     public function __construct($layers)
     {
@@ -65,11 +65,11 @@ class LocaleDataSource
     /**
      * Chain locale data layers together, in the passed order.
      *
-     * @param LocaleDataLayerInterface[] $layers
+     * @param CldrLocaleDataLayerInterface[] $layers
      *  The layers to chain.
      *  First one will be the top layer. Last one will be the lowest layer.
      *
-     * @return null|LocaleDataLayerInterface
+     * @return null|CldrLocaleDataLayerInterface
      *  The top layer
      */
     protected function chainLayers($layers)

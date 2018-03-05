@@ -28,10 +28,9 @@ namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyReferenceDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference as CurrencyReferenceDataLayer;
 
 class CurrencyReferenceTest extends TestCase
 {
@@ -47,7 +46,7 @@ class CurrencyReferenceTest extends TestCase
      */
     protected function setUp()
     {
-        $stubCurrencyData      = new CurrencyData();
+        $stubCurrencyData      = new CldrCurrencyData();
         $stubCurrencyData->foo = ['bar', 'baz'];
 
         // This fake CLDR Locale will be returned by the fake CLDR LocaleRepository
@@ -74,7 +73,7 @@ class CurrencyReferenceTest extends TestCase
     }
 
     /**
-     * Given a valid CldrCurrencyReferenceDataLayer object
+     * Given a valid CLDR CurrencyReference DataLayer object
      * When asking it for a given currency's data
      * Then the expected CLDR CurrencyData object should be retrieved, of null if currency is unknown.
      */

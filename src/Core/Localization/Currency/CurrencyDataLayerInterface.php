@@ -25,9 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
-
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
  * Currency data layer classes interface

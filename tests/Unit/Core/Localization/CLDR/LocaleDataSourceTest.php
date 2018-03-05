@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 class LocaleDataSourceTest extends TestCase
 {
