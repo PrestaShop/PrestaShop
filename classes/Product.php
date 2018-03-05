@@ -6077,13 +6077,14 @@ class ProductCore extends ObjectModel
     {
         $idProduct = (int) $idProduct;
 
-        if (!is_array($idAttributes)) {
-            if (is_numeric($idAttributes)) {
-                $idAttributes = array((int) $idAttributes);
-            } else {
-                throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
-            }
+        if (!is_array($idAttributes) && is_numeric($idAttributes)) {
+            $idAttributes = array((int) $idAttributes);
         }
+
+        if (!is_array($idAttributes) || empty($idAttributes)) {
+            throw new PrestaShopException(sprintf('Invalid parameter $idAttributes with value: "%s"', print_r($idAttributes, true)));
+        }
+        $idAttributesImploded = implode(',', array_map('intval', $idAttributes));
         $idProductAttribute =  Db::getInstance()->getValue('
             SELECT 
                 pac.`id_product_attribute`
@@ -6092,7 +6093,7 @@ class ProductCore extends ObjectModel
                 INNER JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON pa.id_product_attribute = pac.id_product_attribute
             WHERE 
                 id_product = ' . $idProduct . ' 
-                AND id_attribute IN (' . implode(',', array_map('intval', $idAttributes)) . ')
+                AND id_attribute IN (' . $idAttributesImploded . ')
             GROUP BY 
                 id_product_attribute
             HAVING 
@@ -6110,7 +6111,7 @@ class ProductCore extends ObjectModel
                     `'._DB_PREFIX_.'attribute` a
                     INNER JOIN `'._DB_PREFIX_.'attribute_group` g ON a.`id_attribute_group` = g.`id_attribute_group`
                 WHERE 
-                    `id_attribute` IN ('.implode(',', array_map('intval', $idAttributes)).') 
+                    `id_attribute` IN (' . $idAttributesImploded . ')
                 ORDER BY 
                     g.`position` ASC'
             );
@@ -6139,7 +6140,7 @@ class ProductCore extends ObjectModel
         }
 
         if (empty($idProductAttribute)) {
-            throw new PrestaShopException('Can not retrieve the id_product_attribute');
+            throw new PrestaShopObjectNotFoundException('Can not retrieve the id_product_attribute');
         }
 
         return $idProductAttribute;

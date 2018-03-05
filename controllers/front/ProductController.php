@@ -945,13 +945,16 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     private function getIdProductAttribute($useGroups = false)
     {
         $requestedIdProductAttribute = (int) Tools::getValue('id_product_attribute');
-        $groups = Tools::getValue('group');
 
-        if ($useGroups && !empty($groups)) {
-            $requestedIdProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
-                $this->product->id,
-                $groups
-            );
+        if ($useGroups === true) {
+            $groups = Tools::getValue('group');
+
+            if (!empty($groups)) {
+                $requestedIdProductAttribute = (int) Product::getIdProductAttributesByIdAttributes(
+                    $this->product->id,
+                    $groups
+                );
+            }
         }
 
         if (!Configuration::get('PS_DISP_UNAVAILABLE_ATTR')) {
