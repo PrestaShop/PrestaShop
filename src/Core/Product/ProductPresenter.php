@@ -688,7 +688,6 @@ class ProductPresenter
         if (isset($presentedProduct['features'])) {
             $presentedProduct['grouped_features'] = $this->buildGroupedFeatures($presentedProduct['features']);
         }
-        $presentedProduct['product_url'] = $this->getProductURL($presentedProduct, $language, true);
 
         return $presentedProduct;
     }
