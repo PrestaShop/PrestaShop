@@ -27,4 +27,15 @@ let editCustomerData = {
 
 require('../../../high/09_customer/1_create_customer');
 
+scenario('Edit "Customer"', () => {
+  scenario('Login in the Back Office', client => {
+    test('should open the browser', () => client.open());
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  }, 'customer');
 
+common_scenarios.editCustomer(customerData.email_address, editCustomerData);
+
+  scenario('Logout from the Back Office', client => {
+    test('should logout successfully from the Back Office', () => client.signOutBO());
+  }, 'customer');
+}, 'customer', true);

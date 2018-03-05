@@ -47,5 +47,29 @@ module.exports = {
           .then(() => client.CheckEmailExistence(Customer, customerData.email_address))
       });
     }, 'customer');
+  },
+  editCustomer: function (customerEmailData, editCustomerData) {
+    scenario('Check the customer creation', client => {
+      test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
+      test('should search for the customer email in the "Customers list"', () => {
+        return promise
+          .then(() => client.isVisible(Customer.customer_filter_by_email_input))
+          .then(() => client.EmailSearch(Customer.customer_filter_by_email_input, customerEmailData))
+      });
+      test('should click on "Edit" button', () => client.waitForExistAndClick(Customer.edit_button));
+      test('should choose the "Social title" radio', () => client.waitForExistAndClick(Customer.social_title_button));
+      test('should set the "First name" input', () => client.waitAndSetValue(Customer.first_name_input, editCustomerData.first_name));
+      test('should set the "Last name" input', () => client.waitAndSetValue(Customer.last_name_input, editCustomerData.last_name));
+      test('should set the "Email" input', () => client.waitAndSetValue(Customer.email_address_input, editCustomerData.email_address + date_time + '@prestashop.com'));
+      test('should set the "Password" input', () => client.waitAndSetValue(Customer.password_input, editCustomerData.password));
+      test('should set the customer "Birthday"', () => {
+        return promise
+          .then(() => client.waitAndSelectByValue(Customer.days_select, editCustomerData.birthday.day))
+          .then(() => client.waitAndSelectByValue(Customer.month_select, editCustomerData.birthday.month))
+          .then(() => client.waitAndSelectByValue(Customer.years_select, editCustomerData.birthday.year))
+      });
+      test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
+    }, 'customer');
   }
 };
