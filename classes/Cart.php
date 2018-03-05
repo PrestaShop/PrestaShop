@@ -475,18 +475,18 @@ class CartCore extends ObjectModel
             );
             $result = $activatedCartRulesRows;
             if ($withAutomaticCartRules) {
-                $genericSql           = 'SELECT cr.*, crl.`id_lang`, crl.`name`, ' . (int) $this->id . ' AS `id_cart`
-                FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-                LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
-                    cr.`id_cart_rule` = crl.`id_cart_rule`
-                    AND crl.id_lang = ' . (int) $this->id_lang . '
-                )
-                WHERE `code` = "" AND `active` = 1
-                ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
-                ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
-                ' . ($filter == CartRule::FILTER_ACTION_REDUCTION
-                        ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                                        . ' ORDER by cr.priority ASC';
+                $genericSql = 'SELECT cr.*, crl.`id_lang`, crl.`name`, ' . (int) $this->id . ' AS `id_cart`
+                    FROM `' . _DB_PREFIX_ . 'cart_rule` cr
+                    LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
+                        cr.`id_cart_rule` = crl.`id_cart_rule`
+                        AND crl.id_lang = ' . (int) $this->id_lang . '
+                    )
+                    WHERE `code` = "" AND `active` = 1
+                    ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
+                    ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
+                    ' . ($filter == CartRule::FILTER_ACTION_REDUCTION
+                            ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
+                    . ' ORDER by cr.priority ASC';
                 $genericCartRulesRows = Db::getInstance()->executeS($genericSql);
                 foreach ($genericCartRulesRows as $genericCartRulesRow) {
                     $cartRule = new CartRule($genericCartRulesRow['id_cart_rule'], (int) $this->id_lang);
