@@ -484,6 +484,8 @@ class FrontControllerCore extends Controller
         $this->iso = $iso;
         $this->context->cart = $cart;
         $this->context->currency = $currency;
+
+        Hook::exec('actionFrontControllerAfterInit');
     }
 
     /**
