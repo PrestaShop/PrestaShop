@@ -31,8 +31,11 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class Currency
 {
-    const SYMBOL_TYPE_DEFAULT = 'default';
-    const SYMBOL_TYPE_NARROW  = 'narrow';
+    const SYMBOL_TYPE_DEFAULT        = 'default';
+    const SYMBOL_TYPE_NARROW         = 'narrow';
+    const DISPLAY_NAME_COUNT_DEFAULT = 'default';
+    const DISPLAY_NAME_COUNT_ONE     = 'one';
+    const DISPLAY_NAME_COUNT_OTHER   = 'other';
 
     /**
      * Alphabetic ISO 4217 currency code

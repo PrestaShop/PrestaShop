@@ -28,10 +28,11 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency as CldrCurrency;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
 
 /**
  * CLDR Currency reference data layer
@@ -39,20 +40,20 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
  * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerInterface
+class CurrencyReference extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
 {
     /**
      * CLDR locale repository
      *
      * Provides LocaleData objects
      *
-     * @var LocaleRepository
+     * @var CldrLocaleRepository
      */
     protected $cldrLocaleRepository;
 
     protected $localeCode;
 
-    public function __construct(LocaleRepository $cldrLocaleRepository, $localeCode)
+    public function __construct(CldrLocaleRepository $cldrLocaleRepository, $localeCode)
     {
         $this->cldrLocaleRepository = $cldrLocaleRepository;
         $this->localeCode           = $localeCode;
@@ -61,7 +62,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -87,7 +88,20 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
             return null;
         }
 
-        return $cldrLocale->getCurrencyData($currencyCode);
+        $cldrCurrencyData = $cldrLocale->getCurrencyData($currencyCode);
+
+        if (empty($cldrCurrencyData)) {
+            return null;
+        }
+
+        $currencyData                             = new CurrencyData();
+        $currencyData->isoCode                    = $cldrCurrencyData->isoCode;
+        $currencyData->numericIsoCode             = $cldrCurrencyData->numericIsoCode;
+        $currencyData->symbols[$this->localeCode] = $cldrCurrencyData->symbols[CldrCurrency::SYMBOL_TYPE_NARROW];
+        $currencyData->precision                  = $cldrCurrencyData->decimalDigits;
+        $currencyData->names[$this->localeCode]   = $cldrCurrencyData->displayNames[CldrCurrency::DISPLAY_NAME_COUNT_DEFAULT];
+
+        return $currencyData;
     }
 
     /**
@@ -96,7 +110,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
      * @param string $localeCode
      *  The LocaleData object identifier
      *
-     * @param LocaleData $data
+     * @param CldrLocaleData $data
      *  The LocaleData object to be written
      *
      * @return void
