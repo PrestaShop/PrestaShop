@@ -18,7 +18,10 @@ module.exports = {
     edit_button: '//*[@id="form-customer"]//a[@title="Edit"]',
     dropdown_toggle: '//*[@id="form-customer"]//button[@data-toggle="dropdown"]',
     delete_button: '//*[@id="form-customer"]//a[@title="Delete"]',
-    delete_first_option:'//*[@id="deleteMode_real"]',
-    delete_confirmation_button:'//*[@id="content"]//input[@value="Delete"]'
+    delete_first_option: '//*[@id="deleteMode_real"]',
+    delete_confirmation_button: '//*[@id="content"]//input[@value="Delete"]',
+    select_customer: '//*[@id="form-customer"]//input[@name="customerBox[]"]',
+    bulk_actions_button: '//*[@id="bulk_action_menu_customer"]',
+    bulk_actions_delete_button: '//*[@id="form-customer"]//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeletecustomer")]'
   }
 };

@@ -1,10 +1,10 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const common_scenarios = require('./customer');
+const common_scenarios = require('../../common_scenarios/customer');
 
 let customerData = {
   first_name: 'demo',
   last_name: 'demo',
-  email_address: 'demo',
+  email_address: 'demo@prestashop.com',
   password: '123456789',
   birthday: {
     day: '18',
