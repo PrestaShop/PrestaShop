@@ -561,6 +561,10 @@ class FrontControllerCore extends Controller
                 ->filter($object['configuration']);
         }
 
+        Hook::exec('actionBuildFrontEndObject', array(
+            'obj' => &$object
+        ));
+
         return $object;
     }
 
