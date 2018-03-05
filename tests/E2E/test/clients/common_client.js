@@ -44,7 +44,6 @@ class CommonClient {
       .waitForExist(selector, timeout)
   }
 
-
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
       .waitForExist(menuSelector, 90000)
