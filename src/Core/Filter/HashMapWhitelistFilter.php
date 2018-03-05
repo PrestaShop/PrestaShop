@@ -137,7 +137,7 @@ class HashMapWhitelistFilter implements FilterInterface
     }
 
     /**
-     * Returns the ested filters, indexed by $keyToKeep
+     * Returns the nested filters, indexed by $keyToKeep
      *
      * @return FilterInterface[]
      */
