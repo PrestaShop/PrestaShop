@@ -48,13 +48,13 @@ module.exports = {
       });
     }, 'customer');
   },
-  editCustomer: function (customerEmailData, editCustomerData) {
+  editCustomer: function (customerEmail, editCustomerData) {
     scenario('Check the customer creation', client => {
       test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
       test('should search for the customer email in the "Customers list"', () => {
         return promise
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
-          .then(() => client.EmailSearch(Customer.customer_filter_by_email_input, customerEmailData))
+          .then(() => client.EmailSearch(Customer.customer_filter_by_email_input, customerEmail))
       });
       test('should click on "Edit" button', () => client.waitForExistAndClick(Customer.edit_button));
       test('should choose the "Social title" radio', () => client.waitForExistAndClick(Customer.social_title_button));
@@ -70,6 +70,25 @@ module.exports = {
       });
       test('should click on "Save" button', () => client.waitForExistAndClick(Customer.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
+    }, 'customer');
+  },
+  deleteCustomer: function (customerEmail) {
+    scenario('Delete customer', client => {
+    test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
+    test('should search for the customer email in the "Customers list"', () => {
+      return promise
+        .then(() => client.isVisible(Customer.customer_filter_by_email_input))
+        .then(() => client.EmailSearch(Customer.customer_filter_by_email_input, customerEmail))
+    });
+    test('should click on "Delete" button', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(Customer.dropdown_toggle))
+        .then(() => client.waitForExistAndClick(Customer.delete_button))
+    });
+    test('should accepts the currently displayed alert dialog', () => client.alertAccept());
+    test('should choose the option that allows customers to register again with the same email address', () => client.waitForExistAndClick(Customer.delete_first_option));
+    test('should click on "Delete" button', () => client.waitForExistAndClick(Customer.delete_confirmation_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful deletion.'));
     }, 'customer');
   }
 };

@@ -33,7 +33,8 @@ scenario('Edit "Customer"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'customer');
 
-common_scenarios.editCustomer(customerData.email_address, editCustomerData);
+  common_scenarios.editCustomer(customerData.email_address, editCustomerData);
+  common_scenarios.deleteCustomer(editCustomerData.email_address);
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());

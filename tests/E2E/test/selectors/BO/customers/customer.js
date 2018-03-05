@@ -15,6 +15,10 @@ module.exports = {
     customer_filter_by_email_input: '//*[@id="form-customer"]//input[@name="customerFilter_email"]',
     email_address_value: '//*[@id="form-customer"]//td[%ID]',
     reset_button: '//*[@id="table-customer"]//button[@name="submitResetcustomer"]',
-    edit_button:'//*[@id="form-customer"]//a[@title="Edit"]'
+    edit_button: '//*[@id="form-customer"]//a[@title="Edit"]',
+    dropdown_toggle: '//*[@id="form-customer"]//button[@data-toggle="dropdown"]',
+    delete_button: '//*[@id="form-customer"]//a[@title="Delete"]',
+    delete_first_option:'//*[@id="deleteMode_real"]',
+    delete_confirmation_button:'//*[@id="content"]//input[@value="Delete"]'
   }
 };
