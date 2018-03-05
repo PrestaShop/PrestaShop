@@ -187,7 +187,6 @@
 				color: #6c868e
 
 		> .link 
-			//+single-line-block($size-navbar-link-height)
 			font-size: .75rem
 			display: flex
 			height: initial
@@ -196,7 +195,7 @@
 			color: $gray-dark-text
 			text-decoration: none
 			padding: 0.5rem .3125rem 0.5rem .938rem
-			word-wrap: break-word
+			word-break: break-word
 			white-space: initial
 			text-overflow: initial
 			overflow: hidden
@@ -375,9 +374,7 @@
 						padding-left: 5px
 
 				.link-leveltwo
-					height: 1.563rem
-
-					&:first-of-type 
+					&:first-of-type
 						padding-top: 0 !important
 						margin-top: .2rem
 

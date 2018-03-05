@@ -28,7 +28,7 @@
 								{assign var="mainTabClass" value=''}
 
 								{if $level_2.current and not $collapse_menu}
-									{assign var="mainTabClass" value=" -active open"}
+									{assign var="mainTabClass" value=" -active open ul-open"}
 								{elseif $level_2.current and $collapse_menu}
 									{assign var="mainTabClass" value=" -active"}
 								{/if}

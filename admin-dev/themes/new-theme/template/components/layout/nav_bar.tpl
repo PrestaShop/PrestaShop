@@ -69,7 +69,7 @@
                 {assign var="levelOneClass" value=''}
 
                 {if $level2.current and not $collapse_menu}
-                    {assign var="levelOneClass" value=" -active open"}
+                    {assign var="levelOneClass" value=" -active open ul-open"}
                 {elseif $level2.current and $collapse_menu}
                     {assign var="levelOneClass" value=" -active"}
                 {/if}
