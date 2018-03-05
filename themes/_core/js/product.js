@@ -45,18 +45,37 @@ $(document).ready(function () {
         }
     );
 
+    $('body').on(
+        'click',
+        '.product-refresh',
+        function (e, extraParameters) {
+            e.preventDefault();
+            let eventType = 'updatedProductCombination';
+
+            if (typeof extraParameters !== 'undefined'
+                && extraParameters.eventType
+            ) {
+                eventType = extraParameters.eventType;
+            }
+            prestashop.emit('updateProduct', {
+                eventType: eventType,
+                event: e
+            })
+        }
+    );
+
     // Refresh all the product content
     prestashop.on('updateProduct', function (args) {
         const eventType = args.eventType;
         const event = args.event;
-        const $productAttribute = $(event.currentTarget);
-        const $productActions = $productAttribute.parents('.product-actions');
+        const $productActions = $('.product-actions');
         const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
         const updateUrl = $quantityWantedInput.data('update-url');
         const preview = psGetRequestParameter('preview');
 
         // New request only if new value
-        if (event.type === 'keyup'
+        if (event != null
+            && event.type === 'keyup'
             && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
         ) {
             return;
