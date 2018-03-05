@@ -2548,18 +2548,30 @@
 	        });
 	    });
 	
+	    (0, _jquery2['default'])('body').on('click', '.product-refresh', function (e, extraParameters) {
+	        e.preventDefault();
+	        var eventType = 'updatedProductCombination';
+	
+	        if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
+	            eventType = extraParameters.eventType;
+	        }
+	        _prestashop2['default'].emit('updateProduct', {
+	            eventType: eventType,
+	            event: e
+	        });
+	    });
+	
 	    // Refresh all the product content
 	    _prestashop2['default'].on('updateProduct', function (args) {
 	        var eventType = args.eventType;
 	        var event = args.event;
-	        var $productAttribute = (0, _jquery2['default'])(event.currentTarget);
-	        var $productActions = $productAttribute.parents('.product-actions');
+	        var $productActions = (0, _jquery2['default'])('.product-actions');
 	        var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
 	        var updateUrl = $quantityWantedInput.data('update-url');
 	        var preview = (0, _common.psGetRequestParameter)('preview');
 	
 	        // New request only if new value
-	        if (event.type === 'keyup' && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')) {
+	        if (event != null && event.type === 'keyup' && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')) {
 	            return;
 	        }
 	        $quantityWantedInput.data('old-value', $quantityWantedInput.val());
