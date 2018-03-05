@@ -523,44 +523,45 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Builds the "prestashop" javascript object that will be inserted in the front end
+     * Builds the "prestashop" javascript object that will be sent to the front end
      *
-     * @param array $templateVars Variables to be inserted in the template (see FrontController::assignGeneralPurposeVariables)
+     * @param array $object Variables inserted in the template (see FrontController::assignGeneralPurposeVariables)
      *
      * @return array Variables to be inserted in the "prestashop" javascript object
      * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     * @throws PrestaShopException
      */
-    protected function buildFrontEndObject($templateVars)
+    protected function buildFrontEndObject($object)
     {
         // keep whitelisted cart product data only
-        if (isset($templateVars['cart']['products']) && is_array($templateVars['cart']['products'])) {
-            $templateVars['cart']['products'] = $this
+        if (isset($object['cart']['products']) && is_array($object['cart']['products'])) {
+            $object['cart']['products'] = $this
                 ->getProductListOutputFilter()
-                ->filter($templateVars['cart']['products']);
+                ->filter($object['cart']['products']);
         }
 
         // keep whitelisted customer data only
-        if (isset($templateVars['customer']) && is_array($templateVars['customer'])) {
-            $templateVars['customer'] = $this
+        if (isset($object['customer']) && is_array($object['customer'])) {
+            $object['customer'] = $this
                 ->getCustomerOutputFilter()
-                ->filter($templateVars['customer']);
+                ->filter($object['customer']);
         }
 
         // keep whitelisted shop data only
-        if (isset($templateVars['shop']) && is_array($templateVars['shop'])) {
-            $templateVars['shop'] = $this
+        if (isset($object['shop']) && is_array($object['shop'])) {
+            $object['shop'] = $this
                 ->getShopOutputFilter()
-                ->filter($templateVars['shop']);
+                ->filter($object['shop']);
         }
 
         // keep whitelisted configuration data only
-        if (isset($templateVars['configuration']) && is_array($templateVars['configuration'])) {
-            $templateVars['configuration'] = $this
+        if (isset($object['configuration']) && is_array($object['configuration'])) {
+            $object['configuration'] = $this
                 ->getConfigurationOutputFilter()
-                ->filter($templateVars['configuration']);
+                ->filter($object['configuration']);
         }
 
-        return $templateVars;
+        return $object;
     }
 
     /**
