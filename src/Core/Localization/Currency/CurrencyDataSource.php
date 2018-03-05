@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyDataLayerInterface;
-
 class CurrencyDataSource implements DataSourceInterface
 {
     /**
