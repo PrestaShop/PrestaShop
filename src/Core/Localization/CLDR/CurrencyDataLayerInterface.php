@@ -25,16 +25,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
-
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 /**
  * CLDR Currency data layer classes interface
  *
  * Describes the behavior of CldrCurrencyDataLayer classes
  */
-interface CldrCurrencyDataLayerInterface
+interface CurrencyDataLayerInterface
 {
     /**
      * Read Currency by currency code
@@ -66,10 +64,10 @@ interface CldrCurrencyDataLayerInterface
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param CldrCurrencyDataLayerInterface $lowerLayer
+     * @param CurrencyDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer);
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
 }

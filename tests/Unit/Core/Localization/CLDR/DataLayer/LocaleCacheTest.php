@@ -24,20 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\DataLayer;
+namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrCurrencyCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleCache as CldrLocaleCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-class CldrCurrencyCacheDataLayerTest extends TestCase
+class LocaleCacheTest extends TestCase
 {
     /**
      * The tested data layer
      *
-     * @var CldrCurrencyCacheDataLayer
+     * @var CldrLocaleCacheDataLayer
      */
     protected $layer;
 
@@ -50,12 +50,12 @@ class CldrCurrencyCacheDataLayerTest extends TestCase
         $cacheAdapter = new ArrayAdapter();
 
         /** @var CacheAdapterInterface $cacheAdapter */
-        $this->layer = new CldrCurrencyCacheDataLayer($cacheAdapter);
+        $this->layer = new CldrLocaleCacheDataLayer($cacheAdapter);
     }
 
     public function testReadWrite()
     {
-        $data      = new CldrCurrencyData();
+        $data      = new CldrLocaleData();
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -68,7 +68,7 @@ class CldrCurrencyCacheDataLayerTest extends TestCase
         /** @noinspection end */
 
         $this->assertInstanceOf(
-            CldrCurrencyData::class,
+            CldrLocaleData::class,
             $cachedData
         );
 

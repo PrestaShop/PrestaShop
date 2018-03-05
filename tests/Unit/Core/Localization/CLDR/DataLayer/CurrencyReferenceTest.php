@@ -24,21 +24,20 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\DataLayer;
+namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrCurrencyReferenceDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference as CurrencyReferenceDataLayer;
 
-class CldrCurrencyReferenceDataLayerTest extends TestCase
+class CurrencyReferenceTest extends TestCase
 {
     /**
      * The tested data layer
      *
-     * @var CldrCurrencyReferenceDataLayer
+     * @var CurrencyReferenceDataLayer
      */
     protected $layer;
 
@@ -47,7 +46,7 @@ class CldrCurrencyReferenceDataLayerTest extends TestCase
      */
     protected function setUp()
     {
-        $stubCurrencyData      = new CurrencyData();
+        $stubCurrencyData      = new CldrCurrencyData();
         $stubCurrencyData->foo = ['bar', 'baz'];
 
         // This fake CLDR Locale will be returned by the fake CLDR LocaleRepository
@@ -70,11 +69,11 @@ class CldrCurrencyReferenceDataLayerTest extends TestCase
             ->willReturn($fakeCldrLocale);
 
         /** @var CldrLocaleRepository $cldrLocaleRepository */
-        $this->layer = new CldrCurrencyReferenceDataLayer($cldrLocaleRepository, 'fr-FR');
+        $this->layer = new CurrencyReferenceDataLayer($cldrLocaleRepository, 'fr-FR');
     }
 
     /**
-     * Given a valid CldrCurrencyReferenceDataLayer object
+     * Given a valid CLDR CurrencyReference DataLayer object
      * When asking it for a given currency's data
      * Then the expected CLDR CurrencyData object should be retrieved, of null if currency is unknown.
      */

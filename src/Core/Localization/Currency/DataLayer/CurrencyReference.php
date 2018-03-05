@@ -25,9 +25,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
@@ -38,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
  * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class CldrCurrencyReferenceDataLayer extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
+class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
      * CLDR locale repository
@@ -60,7 +61,7 @@ class CldrCurrencyReferenceDataLayer extends AbstractDataLayer implements CldrCu
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 

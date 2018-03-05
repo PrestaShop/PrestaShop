@@ -25,15 +25,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
-class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
+class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
      * Symfony Cache component adapter
@@ -53,7 +54,7 @@ class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurren
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -61,15 +62,15 @@ class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurren
     }
 
     /**
-     * Actually read a CLDR CurrencyData object into the current layer
+     * Actually read a CurrencyData object into the current layer
      *
      * Might be a file access, cache read, DB select...
      *
      * @param mixed $currencyCode
-     *  The CLDR CurrencyData object identifier
+     *  The CurrencyData object identifier
      *
      * @return CurrencyData|null
-     *  The wanted CLDR CurrencyData object (null if not found)
+     *  The wanted CurrencyData object (null if not found)
      */
     protected function doRead($currencyCode)
     {
@@ -87,7 +88,7 @@ class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurren
     {
         if (!($data instanceof CurrencyData)) {
             throw new LocalizationException(
-                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData'
+                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData'
             );
         }
 
@@ -95,7 +96,7 @@ class CldrCurrencyCacheDataLayer extends AbstractDataLayer implements CldrCurren
     }
 
     /**
-     * Actually write a CLDR CurrencyData object into the current layer
+     * Actually write a CurrencyData object into the current layer
      *
      * Might be a file edit, cache update, DB insert/update...
      *

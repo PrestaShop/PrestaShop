@@ -24,14 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\DataLayer;
+namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleReferenceDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference as CldrLocaleReferenceDataLayer;
 
-class CldrLocaleReferenceDataLayerTest extends TestCase
+class LocaleReferenceTest extends TestCase
 {
     /**
      * The tested data layer

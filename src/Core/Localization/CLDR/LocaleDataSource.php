@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 /**
  * LocaleDataSource provides CLDR LocaleData objects

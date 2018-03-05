@@ -25,34 +25,33 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
-use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 /**
- * Locale cache data layer
+ * Locale reference data layer
  *
- * Reads / writes into cache.
+ * Provides reference data for locale, number specification, currencies...
+ * Data comes from CLDR official data files, and is read only.
  */
-class CldrLocaleCacheDataLayer extends AbstractDataLayer implements CldrLocaleDataLayerInterface
+class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerInterface
 {
     /**
-     * Symfony Cache component adapter
+     * CLDR files reader
      *
-     * Provides cached LocaleData objects
-     * Implements PSR-6: Cache Interface (@see http://www.php-fig.org/psr/psr-6/)
+     * Provides LocaleData objects
      *
-     * @var AdapterInterface
+     * @var ReaderInterface
      */
-    protected $cache;
+    protected $reader;
 
-    public function __construct(AdapterInterface $cache)
+    public function __construct(ReaderInterface $reader)
     {
-        $this->cache = $cache;
+        $this->reader = $reader;
     }
 
     /**
@@ -68,7 +67,7 @@ class CldrLocaleCacheDataLayer extends AbstractDataLayer implements CldrLocaleDa
     /**
      * Actually read a CLDR LocaleData object into the current layer
      *
-     * Data is read from passed cache adapter
+     * Data is read from official CLDR file (via the CLDR files reader)
      *
      * @param string $localeCode
      *  The CLDR LocaleData object identifier
@@ -78,52 +77,22 @@ class CldrLocaleCacheDataLayer extends AbstractDataLayer implements CldrLocaleDa
      */
     protected function doRead($localeCode)
     {
-        $cacheItem = $this->cache->getItem($localeCode);
-
-        return $cacheItem->isHit()
-            ? $cacheItem->get()
-            : null;
+        return $this->reader->readLocaleData($localeCode);
     }
 
     /**
-     * @inheritDoc
-     */
-    public function write($id, $data)
-    {
-        if (!($data instanceof LocaleData)) {
-            throw new LocalizationException(
-                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData'
-            );
-        }
-
-        return parent::write($id, $data);
-    }
-
-    /**
-     * Actually write a LocaleData object into the current layer
+     * CLDR files are read only. Nothing can be written there.
      *
-     * Might be a file edit, cache update, DB insert/update...
-     *
-     * @param mixed $localeCode
-     *  The LocaleData object identifier
+     * @param string $localeCode
+     *  The CLDR LocaleData object identifier
      *
      * @param LocaleData $data
      *  The CLDR LocaleData object to be written
      *
      * @return void
-     *
-     * @throws DataLayerException
-     *  When write fails
      */
     protected function doWrite($localeCode, $data)
     {
-        $cacheItem = $this->cache->getItem($localeCode);
-        $cacheItem->set($data);
-
-        $saved = $this->cache->save($cacheItem);
-
-        if (!$saved) {
-            throw new DataLayerException('Unable to persist data in cache data layer');
-        }
+        // Nothing.
     }
 }

@@ -27,12 +27,12 @@
 namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyCache as CurrencyCacheDataLayer;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-class CurrencyCacheDataLayerTest extends TestCase
+class CurrencyCacheTest extends TestCase
 {
     /**
      * The tested data layer
