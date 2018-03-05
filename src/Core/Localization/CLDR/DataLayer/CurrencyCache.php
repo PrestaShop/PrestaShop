@@ -25,15 +25,16 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
-class CurrencyCacheDataLayer extends AbstractDataLayer implements CurrencyDataLayerInterface
+class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
      * Symfony Cache component adapter
@@ -61,15 +62,15 @@ class CurrencyCacheDataLayer extends AbstractDataLayer implements CurrencyDataLa
     }
 
     /**
-     * Actually read a CurrencyData object into the current layer
+     * Actually read a CLDR CurrencyData object into the current layer
      *
      * Might be a file access, cache read, DB select...
      *
      * @param mixed $currencyCode
-     *  The CurrencyData object identifier
+     *  The CLDR CurrencyData object identifier
      *
      * @return CurrencyData|null
-     *  The wanted CurrencyData object (null if not found)
+     *  The wanted CLDR CurrencyData object (null if not found)
      */
     protected function doRead($currencyCode)
     {
@@ -87,7 +88,7 @@ class CurrencyCacheDataLayer extends AbstractDataLayer implements CurrencyDataLa
     {
         if (!($data instanceof CurrencyData)) {
             throw new LocalizationException(
-                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData'
+                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData'
             );
         }
 
@@ -95,7 +96,7 @@ class CurrencyCacheDataLayer extends AbstractDataLayer implements CurrencyDataLa
     }
 
     /**
-     * Actually write a CurrencyData object into the current layer
+     * Actually write a CLDR CurrencyData object into the current layer
      *
      * Might be a file edit, cache update, DB insert/update...
      *

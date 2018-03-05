@@ -24,37 +24,38 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Unit\Core\Localization\DataLayer;
+namespace Tests\Unit\Core\Localization\CLDR\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\CurrencyCache as CldrCurrencyCacheDataLayer;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-class CurrencyCacheDataLayerTest extends TestCase
+class CurrencyCacheTest extends TestCase
 {
     /**
      * The tested data layer
      *
-     * @var CurrencyCacheDataLayer
+     * @var CldrCurrencyCacheDataLayer
      */
     protected $layer;
 
-    protected $stubCurrencyData;
-
+    /**
+     * @inheritDoc
+     */
     protected function setUp()
     {
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
 
         /** @var CacheAdapterInterface $cacheAdapter */
-        $this->layer = new CurrencyCacheDataLayer($cacheAdapter);
+        $this->layer = new CldrCurrencyCacheDataLayer($cacheAdapter);
     }
 
     public function testReadWrite()
     {
-        $data      = new CurrencyData();
+        $data      = new CldrCurrencyData();
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -67,7 +68,7 @@ class CurrencyCacheDataLayerTest extends TestCase
         /** @noinspection end */
 
         $this->assertInstanceOf(
-            CurrencyData::class,
+            CldrCurrencyData::class,
             $cachedData
         );
 

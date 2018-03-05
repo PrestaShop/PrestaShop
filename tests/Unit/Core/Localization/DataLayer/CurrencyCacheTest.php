@@ -27,35 +27,34 @@
 namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
-use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleCacheDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\DataLayer\CurrencyCache as CurrencyCacheDataLayer;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheAdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-class CldrLocaleCacheDataLayerTest extends TestCase
+class CurrencyCacheTest extends TestCase
 {
     /**
      * The tested data layer
      *
-     * @var CldrLocaleCacheDataLayer
+     * @var CurrencyCacheDataLayer
      */
     protected $layer;
 
-    /**
-     * @inheritDoc
-     */
+    protected $stubCurrencyData;
+
     protected function setUp()
     {
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
 
         /** @var CacheAdapterInterface $cacheAdapter */
-        $this->layer = new CldrLocaleCacheDataLayer($cacheAdapter);
+        $this->layer = new CurrencyCacheDataLayer($cacheAdapter);
     }
 
     public function testReadWrite()
     {
-        $data      = new CldrLocaleData();
+        $data      = new CurrencyData();
         $data->foo = ['bar', 'baz'];
 
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -68,7 +67,7 @@ class CldrLocaleCacheDataLayerTest extends TestCase
         /** @noinspection end */
 
         $this->assertInstanceOf(
-            CldrLocaleData::class,
+            CurrencyData::class,
             $cachedData
         );
 

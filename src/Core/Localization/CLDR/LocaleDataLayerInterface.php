@@ -25,16 +25,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
-
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 /**
  * CLDR Locale data layer classes interface
  *
  * Describes the behavior of CldrLocaleDataLayer classes
  */
-interface CldrLocaleDataLayerInterface
+interface LocaleDataLayerInterface
 {
     /**
      * Read CLDR locale data by locale code
@@ -70,10 +68,10 @@ interface CldrLocaleDataLayerInterface
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param CldrLocaleDataLayerInterface $lowerLayer
+     * @param LocaleDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(CldrLocaleDataLayerInterface $lowerLayer);
+    public function setLowerLayer(LocaleDataLayerInterface $lowerLayer);
 }

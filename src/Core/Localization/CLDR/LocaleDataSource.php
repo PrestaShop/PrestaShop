@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\DataLayer\CldrLocaleDataLayerInterfa
 class LocaleDataSource
 {
     /**
-     * @var CldrLocaleDataLayerInterface
+     * @var LocaleDataLayerInterface
      */
     protected $topLayer;
 
@@ -45,7 +45,7 @@ class LocaleDataSource
      * LocaleDataSource constructor needs an array of CldrLocaleDataLayer objects.
      * These layers will be chained and will act as a middleware stack.
      *
-     * @param CldrLocaleDataLayerInterface[] $layers
+     * @param LocaleDataLayerInterface[] $layers
      */
     public function __construct($layers)
     {
@@ -65,11 +65,11 @@ class LocaleDataSource
     /**
      * Chain locale data layers together, in the passed order.
      *
-     * @param CldrLocaleDataLayerInterface[] $layers
+     * @param LocaleDataLayerInterface[] $layers
      *  The layers to chain.
      *  First one will be the top layer. Last one will be the lowest layer.
      *
-     * @return null|CldrLocaleDataLayerInterface
+     * @return null|LocaleDataLayerInterface
      *  The top layer
      */
     protected function chainLayers($layers)

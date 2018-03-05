@@ -25,11 +25,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
+namespace PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as CldrLocaleDataLayerInterface;
 
 /**
  * Locale reference data layer
@@ -37,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\ReaderInterface;
  * Provides reference data for locale, number specification, currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class CldrLocaleReferenceDataLayer extends AbstractDataLayer implements CldrLocaleDataLayerInterface
+class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerInterface
 {
     /**
      * CLDR files reader
