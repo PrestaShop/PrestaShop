@@ -709,7 +709,7 @@ class WebserviceOutputBuilderCore
 
     public function getSynopsisDetails($field)
     {
-        $arr_details = '';
+        $arr_details = array();
         if (array_key_exists('required', $field) && $field['required']) {
             $arr_details['required'] = 'true';
         }
