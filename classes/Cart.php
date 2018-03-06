@@ -1146,6 +1146,12 @@ class CartCore extends ObjectModel
      */
     public function getProductQuantity($id_product, $id_product_attribute = 0, $id_customization = 0, $id_address_delivery = 0)
     {
+        $defaultPackStockType = Configuration::get('PS_PACK_STOCK_TYPE');
+        $packStockTypesAllowed = array(
+            Pack::STOCK_TYPE_PRODUCTS_ONLY,
+            Pack::STOCK_TYPE_PACK_BOTH
+        );
+        $packStockTypesDefaultSupported = (int) in_array($defaultPackStockType, $packStockTypesAllowed);
         $firstUnionSql = 'SELECT cp.`quantity` as first_level_quantity, 0 as pack_quantity 
           FROM `'._DB_PREFIX_.'cart_product` cp';
         $secondUnionSql = 'SELECT 0 as first_level_quantity, cp.`quantity` * p.`quantity` as pack_quantity
@@ -1178,10 +1184,10 @@ class CartCore extends ObjectModel
         $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $id_product;
         $secondUnionSql .= $commonWhere;
         $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $id_product;
-        $secondUnionSql .= ' AND pr.`pack_stock_type` IN (' .
-            Pack::STOCK_TYPE_PRODUCTS_ONLY . ',' .
-            Pack::STOCK_TYPE_PACK_BOTH .
-        ')';
+        $secondUnionSql .= ' AND (pr.`pack_stock_type` IN (' . implode(',', $packStockTypesAllowed) . ') OR (
+                pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
+                AND ' . $packStockTypesDefaultSupported . ' = 1
+            ))';
         $parentSql = 'SELECT 
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity 
