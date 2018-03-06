@@ -1,6 +1,5 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
-
-const common_scenarios = require('../../../high/09_customer/addresses');
+const common_scenarios = require('../../../common_scenarios/addresses');
 
 let addressData = {
   email: 'pub@prestashop.com',
@@ -14,7 +13,7 @@ let addressData = {
   second_address: 'RDC',
   ZIP: '75009',
   city: 'Paris',
-  Country: 'France',
+  country: 'France',
   home_phone: '0123456789',
   other: 'azerty'
 };
@@ -31,20 +30,24 @@ let editAddressData = {
   second_address: 'RDC',
   ZIP: '75009',
   city: 'Paris',
-  Country: 'France',
+  country: 'France',
   home_phone: '9876543210',
   other: 'azerty'
 };
 
 require('../../../high/09_customer/2_create_address');
 
-scenario('Edit "Address"', () => {
+scenario('Edit, delete and delete with bulk actions "Address"', () => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'customer');
 
-  common_scenarios.editAddress(addressData, editAddressData);
+  common_scenarios.editAddress(addressData.address, editAddressData);
+  common_scenarios.checkAddressBO(editAddressData);
+  common_scenarios.deleteAddress(editAddressData.address);
+  common_scenarios.createAddress(addressData);
+  common_scenarios.deleteAddressWithBulkActions(addressData.address);
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());

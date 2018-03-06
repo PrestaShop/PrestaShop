@@ -34,28 +34,6 @@ class Customer extends CommonClient {
     }
   }
 
-  addressSearch(selector, addressData) {
-    if (global.isVisible) {
-      return this.client
-        .waitAndSetValue(selector, addressData.address + " " + date_time)
-        .keys('\uE007')
-    } else {
-      return this.client
-        .pause(1000)
-    }
-  }
-
-  CheckAddressExistence(addresses, addressData) {
-    if (global.isVisible) {
-      return this.client.getText(addresses.address_value.replace('%ID', 5)).then(function (text) {
-        expect(text).to.be.equal(addressData + " " + date_time);
-      })
-    } else {
-      return this.client.getText(addresses.address_value.replace('%ID', 4)).then(function (text) {
-        expect(text).to.be.equal(addressData + " " + date_time);
-      })
-    }
-  }
 }
 
 module.exports = Customer;

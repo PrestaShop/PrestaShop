@@ -19,6 +19,11 @@ module.exports = {
     save_button: '//*[@id="address_form_submit_btn"]',
     filter_by_address_input: '//*[@id="form-address"]//input[@name="addressFilter_address1"]',
     address_value: '//*[@id="form-address"]//td[%ID]',
-    edit_button: '//*[@id="table-address"]//a[@title="Edit"]'
+    edit_button: '//*[@id="table-address"]//a[@title="Edit"]',
+    dropdown_toggle: '//*[@id="table-address"]//button[@data-toggle="dropdown"]',
+    delete_button: '//*[@id="table-address"]//a[@title="Delete"]',
+    select_address: '//*[@id="table-address"]//input[@name="addressBox[]"]',
+    bulk_actions_button: '//*[@id="bulk_action_menu_address"]',
+    bulk_actions_delete_button: '//div[contains(@class,"bulk-actions")]//a[contains(@onclick,"submitBulkdeleteaddress")]'
   }
 };

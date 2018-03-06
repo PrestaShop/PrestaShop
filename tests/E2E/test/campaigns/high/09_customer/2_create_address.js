@@ -1,6 +1,6 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 
-const common_scenarios = require('./addresses');
+const common_scenarios = require('../../common_scenarios/addresses');
 
 let addressData = {
   email: 'pub@prestashop.com',
@@ -14,7 +14,7 @@ let addressData = {
   second_address: 'RDC',
   ZIP: '75009',
   city: 'Paris',
-  Country: 'France',
+  country: 'France',
   home_phone: '0123456789',
   other: 'azerty'
 };
