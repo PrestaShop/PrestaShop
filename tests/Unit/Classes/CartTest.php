@@ -30,6 +30,7 @@ use Tests\TestCase\UnitTestCase;
 use Address;
 use Cart;
 use Order;
+use Tests\Unit\ContextMocker;
 use Tools;
 use Phake;
 
@@ -81,9 +82,19 @@ class CartTest extends UnitTestCase
      */
     private $productPriceCalculator;
 
+    /**
+     * @var ContextMocker
+     */
+    protected $contextMocker;
+
     public function setUp()
     {
         parent::setUp();
+
+        $this->initLanguage();
+
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator();
         $this->container->bind('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PriceCalculator', $this->productPriceCalculator);
@@ -100,6 +111,35 @@ class CartTest extends UnitTestCase
     {
         parent::teardown();
         Tools::$round_mode = null;
+    }
+
+    /**
+     * @throws \ReflectionException
+     */
+    private function initLanguage()
+    {
+        // We need to mock loaded languages because ContextMocker instantiates a Currency with language id = 1,
+        // and Currency needs to have that language loaded, or else it will fail
+
+        $reflectedLanguage = new \ReflectionClass(\Language::class);
+        $languageList = $reflectedLanguage->getProperty('_LANGUAGES');
+        $languageList->setAccessible(true);
+        if (empty($languageList->getValue())) {
+            $languageList->setValue(array(
+                1 => array(
+                    'id_lang'          => 1,
+                    'name'             => 'English (English)',
+                    'active'           => 1,
+                    'language_code'    => 'en-us',
+                    'locale'           => 'en-US',
+                    'date_format_lite' => 'm/d/Y',
+                    'date_format_full' => 'm/d/Y H:i:s',
+                    'is_rtl'           => 0,
+                    'id_shop'          => 1,
+                    'shops'            => array(1 => true),
+                )
+            ));
+        }
     }
 
     private function setRoundType($type)

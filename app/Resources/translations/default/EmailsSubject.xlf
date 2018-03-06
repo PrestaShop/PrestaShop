@@ -94,19 +94,19 @@ File: modules/contactform/contactform.php:289</note>
         <source>Newsletter voucher</source>
         <target>Newsletter voucher</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:657</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:658</note>
       </trans-unit>
       <trans-unit id="efabbb0eb84d3c8e487a72e879953673">
         <source>Newsletter confirmation</source>
         <target>Newsletter confirmation</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:691</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:692</note>
       </trans-unit>
       <trans-unit id="732f1aa49f17856ff55a5aa0a88374d9">
         <source>Email verification</source>
         <target>Email verification</target>
         <note>Context:
-File: modules/ps_emailsubscription/ps_emailsubscription.php:730</note>
+File: modules/ps_emailsubscription/ps_emailsubscription.php:731</note>
       </trans-unit>
     </body>
   </file>

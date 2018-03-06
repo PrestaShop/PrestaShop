@@ -11,7 +11,6 @@
   bootstrap                   =" bootstrap-controllers.php"
 >
   <php>
-    <server name="KERNEL_DIR" value="../app/" />
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak" />
     <const name="_PS_IN_TEST_" value="1" />
   </php>

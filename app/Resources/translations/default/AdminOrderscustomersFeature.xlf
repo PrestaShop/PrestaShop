@@ -220,6 +220,16 @@ File: classes/lang/RiskLang.php:43</note>
       </trans-unit>
     </body>
   </file>
+  <file original="modules/ps_emailsubscription/ps_emailsubscription.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
+        <source>Newsletter</source>
+        <target>Newsletter</target>
+        <note>Context:
+File: modules/ps_emailsubscription/ps_emailsubscription.php:1231</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="controllers/admin/AdminCartsController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d79cf3f429596f77db95c65074663a54">

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<entity_manufacturer>
+  <manufacturer id="Studio_Design">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Studio Design propose une gamme de produits vari&#xE9;e : pr&#xEA;t-&#xE0;-porter, objets de d&#xE9;coration, accessoires de maison... Depuis sa cr&#xE9;ation en 2012, la marque apporte des id&#xE9;es et des tendances nouvelles &#xE0; travers ses collections. &lt;/span&gt;&lt;/p&gt;</description>
+    <short_description/>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </manufacturer>
+  <manufacturer id="Graphic_Corner">
+    <description>&lt;p&gt;&lt;span style="font-size:10pt;font-family:Arial;font-style:normal;"&gt;Graphic Corner propose depuis 2010 un large choix d'affiches et de posters disponibles en version papier et sur de nombreux supports. &lt;/span&gt;&lt;/p&gt;</description>
+    <short_description/>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </manufacturer>
+</entity_manufacturer>

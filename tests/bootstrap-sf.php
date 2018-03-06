@@ -35,3 +35,12 @@ if (!defined('PS_ADMIN_DIR')) {
 require_once(dirname(__FILE__).'/../config/config.inc.php');
 
 $loader = require_once(dirname(__FILE__).'/../var/bootstrap.php.cache');
+
+/**
+ * Following code makes tests run under phpstorm
+ * Else we get error : Class 'PHPUnit_Util_Configuration' not found
+ * @see https://stackoverflow.com/questions/33299149/phpstorm-8-and-phpunit-problems-with-runinseparateprocess
+ */
+if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+    define('PHPUNIT_COMPOSER_INSTALL', __DIR__ . '/../vendor/autoload.php');
+}
