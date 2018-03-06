@@ -55,5 +55,31 @@ module.exports = {
           .then(() => client.CheckAddressExistence(Addresses, addressData.address))
       });
     }, 'customer');
+  },
+  editAddress: function (addressData, newAddressData) {
+    scenario('Check the customer creation', client => {
+      test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.addresses_submenu));
+      test('should search for the customer email in the "Customers list"', () => {
+        return promise
+          .then(() => client.isVisible(Addresses.filter_by_address_input))
+          .then(() => client.addressSearch(Addresses.filter_by_address_input, addressData))
+      });
+      test('should click on "Edit" button', () => client.waitForExistAndClick(Addresses.edit_button));
+      test('should set the new "Identification number" input', () => client.waitAndSetValue(Addresses.id_number_input, newAddressData.id_number));
+      test('should set the new "Address alias" input', () => client.waitAndSetValue(Addresses.address_alias_input, newAddressData.address_alias));
+      test('should check that the "First name" is "John"', () => client.checkAttributeValue(Addresses.first_name_input, 'value', newAddressData.first_name));
+      test('should check that the "Last name" is "Doe"', () => client.checkAttributeValue(Addresses.last_name_input, 'value', newAddressData.last_name));
+      test('should set the new "Company" input', () => client.waitAndSetValue(Addresses.company, newAddressData.company));
+      test('should set the new "VAT number" input', () => client.waitAndSetValue(Addresses.VAT_number_input, newAddressData.vat_number));
+      test('should set the new "Address" input', () => client.waitAndSetValue(Addresses.address_input, newAddressData.address + " " + date_time));
+      test('should set the new "Second address" input', () => client.waitAndSetValue(Addresses.address_second_input, newAddressData.second_address));
+      test('should set the new "Postal code" input', () => client.waitAndSetValue(Addresses.zip_code_input, newAddressData.ZIP));
+      test('should set the new "City" input', () => client.waitAndSetValue(Addresses.city_input, newAddressData.city));
+      test('should set the new "Pays" input', () => client.waitAndSelectByVisibleText(Addresses.country_input, newAddressData.Country));
+      test('should set the new "Home phone" input', () => client.waitAndSetValue(Addresses.phone_input, newAddressData.home_phone));
+      test('should set the new "Other information" input', () => client.waitAndSetValue(Addresses.other_input, newAddressData.other));
+      test('should click on "Save" button', () => client.scrollWaitForExistAndClick(Addresses.save_button, 50));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(BO.success_panel, '×\nSuccessful update.'));
+    }, 'customer');
   }
 };
