@@ -37,7 +37,6 @@
         "phpoffice/phpexcel": "~1.8",
         "guzzlehttp/guzzle": "~5.0",
         "csa/guzzle-bundle": "~1.3",
-        "ipresta/localize-fixture": "~v1.0",
         "paragonie/random_compat": "^1.4|^2.0",
         "prestashop/blockreassurance": "^3",
         "prestashop/contactform": "^3",
@@ -97,8 +96,15 @@
         "composer/ca-bundle": "^1.0",
         "nikic/php-parser": "^2.1",
         "prestashop/decimal": "^1.0.0",
-        "smarty/smarty": "^3.1"
+        "smarty/smarty": "^3.1",
+        "cssjanus/cssjanus": "dev-patch-1"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/prestashop/php-cssjanus"
+        }
+    ],
     "require-dev": {
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0",
@@ -150,19 +156,19 @@
         ],
         "phpunit-legacy": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit.xml"
         ],
         "phpunit-admin": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/phpunit-admin.xml"
         ],
         "phpunit-sf": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/sf-tests.xml"
         ],
         "phpunit-controllers": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
+            "KERNEL_DIR='app' php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/old-controllers.xml"
         ],
         "create-release": "@php tools/build/CreateRelease.php",
         "git-hook-install": "@php .github/contrib/install.php",

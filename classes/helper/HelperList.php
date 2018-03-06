@@ -662,7 +662,7 @@ class HelperListCore extends Helper
                 case 'date':
                 case 'datetime':
                     if (is_string($value)) {
-                        $value = Tools::unSerialize($value);
+                        $value = json_decode($value, true);
                     }
                     if (!Validate::isCleanHtml($value[0]) || !Validate::isCleanHtml($value[1])) {
                         $value = '';

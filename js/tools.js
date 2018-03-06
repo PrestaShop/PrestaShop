@@ -46,6 +46,18 @@ var Tools = {
       return parsed;
     }
 
+    // replace arabic numbers by latin
+		value = value
+			// arabic
+			.replace(/[\u0660-\u0669]/g, function(d) {
+				return d.charCodeAt(0) - 1632;
+			})
+			// persian
+			.replace(/[\u06F0-\u06F9]/g, function(d) {
+        return d.charCodeAt(0) - 1776;
+      })
+		;
+
     // remove all non-digit characters
     var split = value.split(/[^\dE-]+/);
 

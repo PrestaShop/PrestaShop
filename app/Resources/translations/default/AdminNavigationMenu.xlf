@@ -651,13 +651,13 @@ File: admin-dev/themes/default/template/search_form.tpl:61</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/AdvancedParameters/SystemInformationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SystemInformationController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
         <source>Information</source>
         <target>Information</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/SystemInformationController.php:54</note>
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/SystemInformationController.php:54</note>
       </trans-unit>
     </body>
   </file>
@@ -677,13 +677,13 @@ File: src/PrestaShopBundle/Translation/Api/InternationalApi.php:51</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="9446a98ad14416153cc4d45ab8b531bf">
         <source>Performance</source>
         <target>Performance</target>
         <note>Context:
-File: src/PrestaShopBundle/Controller/Admin/AdvancedParameters/PerformanceController.php:58</note>
+File: src/PrestaShopBundle/Controller/Admin/Configure/AdvancedParameters/PerformanceController.php:58</note>
       </trans-unit>
     </body>
   </file>

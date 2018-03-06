@@ -1330,9 +1330,9 @@ class CarrierCore extends ObjectModel
         if (Shop::getContext() == Shop::CONTEXT_ALL) {
             $where = 'AND d2.id_shop IS NULL AND d2.id_shop_group IS NULL';
         } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
-            $where = 'AND ((d2.id_shop_group IS NULL OR d2.id_shop_group = '.Shop::getContextShopGroupID().') AND d2.id_shop IS NULL)';
+            $where = 'AND ((d2.id_shop_group IS NULL OR d2.id_shop_group = '.(int) Shop::getContextShopGroupID().') AND d2.id_shop IS NULL)';
         } else {
-            $where = 'AND (d2.id_shop = '.Shop::getContextShopID().' OR (d2.id_shop_group = '.Shop::getContextShopGroupID().'
+            $where = 'AND (d2.id_shop = '.(int) Shop::getContextShopID().' OR (d2.id_shop_group = '.(int) Shop::getContextShopGroupID().'
 					AND d2.id_shop IS NULL) OR (d2.id_shop_group IS NULL AND d2.id_shop IS NULL))';
         }
 

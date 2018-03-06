@@ -39,7 +39,7 @@
 							<img class="img-responsive" alt="PrestaShop Addons" src="themes/default/img/prestashop-addons-logo.png">
 						</div>
 						<div class="col-lg-4 col-lg-offset-1 col-md-4 col-sm-7 col-xs-12 addons-style-search-bar">
-							<form id="addons-search-form" method="get" action="http://addons.prestashop.com/{$iso_code}/search" class="float">
+							<form id="addons-search-form" method="get" action="https://addons.prestashop.com/{$iso_code}/search" class="float">
 							<label>{l s='Search on PrestaShop Marketplace:'}</label>
 							<div class="input-group">
 								<input id="addons-search-box" class="form-control" type="text" autocomplete="off" name="query" value="" placeholder="Search on PrestaShop Marketplace">
@@ -50,7 +50,7 @@
 							</form>
 						</div>
 						<div class="col-lg-3 col-md-4 col-sm-5 col-xs-12 addons-see-all-themes">
-							{l s='Or'}<a href="http://addons.prestashop.com/{$iso_code}/2-modules-prestashop" class="btn btn-primary" onclick="return !window.open(this.href)">{l s='See all modules'}</a>
+							{l s='Or'}<a href="https://addons.prestashop.com/{$iso_code}/2-modules-prestashop" class="btn btn-primary" onclick="return !window.open(this.href)">{l s='See all modules'}</a>
 						</div>
 					</div>
 				</div>

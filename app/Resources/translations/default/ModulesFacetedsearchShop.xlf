@@ -6,67 +6,67 @@
         <source>Price</source>
         <target>Price</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1932</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1926</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:1976</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:1970</note>
       </trans-unit>
       <trans-unit id="03c2e7e41ffc181a4e84080b4710e81e">
         <source>New</source>
         <target>New</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2029</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2023</note>
       </trans-unit>
       <trans-unit id="019d1ca7d50cc54b995f60d456435e87">
         <source>Used</source>
         <target>Used</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2030</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2024</note>
       </trans-unit>
       <trans-unit id="6da03a74721a0554b7143254225cc08a">
         <source>Refurbished</source>
         <target>Refurbished</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2031</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2025</note>
       </trans-unit>
       <trans-unit id="9e2941b3c81256fac10392aaca4ccfde">
         <source>Condition</source>
         <target>Condition</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2057</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2051</note>
       </trans-unit>
       <trans-unit id="2d25c72c1b18e562f6654fff8e11711e">
         <source>Not available</source>
         <target>Not available</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2066</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2060</note>
       </trans-unit>
       <trans-unit id="fcebe56087b9373f15514831184fa572">
         <source>In stock</source>
         <target>In stock</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2067</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2061</note>
       </trans-unit>
       <trans-unit id="faeaec9eda6bc4c8cb6e1a9156a858be">
         <source>Availability</source>
         <target>Availability</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2089</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2083</note>
       </trans-unit>
       <trans-unit id="1be6f9eb563f3bf85c78b4219bf09de9">
         <source>Brand</source>
         <target>Brand</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2112</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2106</note>
       </trans-unit>
       <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
         <source>Categories</source>
         <target>Categories</target>
         <note>Context:
-File: modules/ps_facetedsearch/ps_facetedsearch.php:2232</note>
+File: modules/ps_facetedsearch/ps_facetedsearch.php:2226</note>
       </trans-unit>
     </body>
   </file>

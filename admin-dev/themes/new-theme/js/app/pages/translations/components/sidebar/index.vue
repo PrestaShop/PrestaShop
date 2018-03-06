@@ -147,23 +147,11 @@
   };
 </script>
 
-<style lang="sass">
+<style lang="sass" type="text/scss">
   @import "../../../../../../scss/config/_settings.scss";
-  .tree-header {
-    .pointer {
-      font-size: .65rem;
-      strong {
-        font-weight: 700;
-      }
-      .material-icons {
-        font-size: 25px;
-      }
-    }
-  }
   .translationTree {
     .tree-name {
       margin-bottom: .9375rem;
-      line-height: 1.5rem;
 
       &.active {
         font-weight: bold;

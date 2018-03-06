@@ -6,67 +6,67 @@
         <source>Will appear on main page. Recommended size for the default theme: height %height% and width %width%.</source>
         <target>Will appear on main page. Recommended size for the default theme: height %height% and width %width%.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:487</note>
+File: controllers/admin/AdminThemesController.php:490</note>
       </trans-unit>
       <trans-unit id="aeec498c2bb6b53e8eb24752af092828">
         <source>Will appear on email headers. If undefined, the header logo will be used.</source>
         <target>Will appear on email headers. If undefined, the header logo will be used.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:501</note>
+File: controllers/admin/AdminThemesController.php:504</note>
       </trans-unit>
       <trans-unit id="544cd7788ebd8916e7191e7a8fd0db57">
         <source>Warning: if no invoice logo is available, the main logo will be used instead.</source>
         <target>Warning: if no invoice logo is available, the main logo will be used instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:509</note>
+File: controllers/admin/AdminThemesController.php:512</note>
       </trans-unit>
       <trans-unit id="b0297d22aade28eda5efbeb5c2e21e97">
         <source>Will appear on invoice headers.</source>
         <target>Will appear on invoice headers.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:510</note>
+File: controllers/admin/AdminThemesController.php:513</note>
       </trans-unit>
       <trans-unit id="d4d7bd35b17411da70ed5e76bcb4c3da">
         <source>Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.</source>
         <target>Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:510</note>
+File: controllers/admin/AdminThemesController.php:513</note>
       </trans-unit>
       <trans-unit id="18b23b42a61e34cfcc2825292c0b03ac">
         <source>Will appear in the address bar of your web browser.</source>
         <target>Will appear in the address bar of your web browser.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:518</note>
+File: controllers/admin/AdminThemesController.php:521</note>
       </trans-unit>
       <trans-unit id="1a4e6f83162563ba06213015f4f503ed">
         <source>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</source>
         <target>Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you click on "Adapt to RTL", any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:553</note>
+File: controllers/admin/AdminThemesController.php:556</note>
       </trans-unit>
       <trans-unit id="6894e313abf58dc29e27e6aef50b2f03">
         <source>You must select a shop from the above list if you wish to choose a theme.</source>
         <target>You must select a shop from the above list if you wish to choose a theme.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:580</note>
+File: controllers/admin/AdminThemesController.php:583</note>
       </trans-unit>
       <trans-unit id="0d03fc8cc7c22c4ff80c5cda6f56ce8e">
         <source>Browse your computer files and select the Zip file for your new theme.</source>
         <target>Browse your computer files and select the Zip file for your new theme.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:641</note>
+File: controllers/admin/AdminThemesController.php:644</note>
       </trans-unit>
       <trans-unit id="f545e8220cd6f37617c495e59695f7f3">
         <source>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</source>
         <target>Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:663</note>
+File: controllers/admin/AdminThemesController.php:666</note>
       </trans-unit>
       <trans-unit id="87c309a4d1deb851c8522127c1aeae54">
         <source>This selector lists the Zip files that you uploaded in the '/themes' folder.</source>
         <target>This selector lists the Zip files that you uploaded in the '/themes' folder.</target>
         <note>Context:
-File: controllers/admin/AdminThemesController.php:698</note>
+File: controllers/admin/AdminThemesController.php:701</note>
       </trans-unit>
     </body>
   </file>

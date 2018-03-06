@@ -417,7 +417,7 @@
     <value>0</value>
   </configuration>
   <configuration id="PS_CUSTOMIZATION_FEATURE_ACTIVE" name="PS_CUSTOMIZATION_FEATURE_ACTIVE">
-    <value>0</value>
+    <value>1</value>
   </configuration>
   <configuration id="PS_CART_RULE_FEATURE_ACTIVE" name="PS_CART_RULE_FEATURE_ACTIVE">
     <value>0</value>
