@@ -470,7 +470,7 @@ abstract class QueryParamsCollection
     protected function appendSqlCategoryFilter(array $filters)
     {
         $filters[] = 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
-        WHERE cp.id_product=p.id_product AND cp.id_category IN (:categories_ids))';
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))';
 
         return $filters;
     }
