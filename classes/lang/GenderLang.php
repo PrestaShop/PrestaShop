@@ -32,14 +32,4 @@ class GenderLangCore extends DataLangCore
     protected $keys = array('id_gender');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Mr.') => $this->translator->trans('Mr.', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Mrs.') => $this->translator->trans('Mrs.', array(), 'Admin.Shopparameters.Feature', $this->locale),
-            ),
-        );
-    }
 }

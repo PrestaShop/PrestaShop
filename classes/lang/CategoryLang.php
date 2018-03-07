@@ -33,17 +33,22 @@ class CategoryLangCore extends DataLangCore
 
     protected $fieldsToUpdate = array('name', 'link_rewrite');
 
-    protected function init()
+    public function getFieldValue($field, $value)
     {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Root') => $this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale),
-                md5('Home') => $this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale),
-            ),
-            'link_rewrite' => array(
-                md5('root') => $this->slugify($this->translator->trans('Root', array(), 'Admin.Catalog.Feature', $this->locale)),
-                md5('home') => $this->slugify($this->translator->trans('Home', array(), 'Admin.Catalog.Feature', $this->locale)),
-            ),
-        );
+        if ($field == 'link_rewrite') {
+            $replacements = array(
+                'home' => 'Home',
+                'root' => 'Root',
+            );
+            $value        = str_replace(array_keys($replacements), array_values($replacements), $value);
+        }
+
+        $value = parent::getFieldValue($field, $value);
+
+        if ($field == 'link_rewrite') {
+            $value = $this->slugify($value);
+        }
+
+        return $value;
     }
 }

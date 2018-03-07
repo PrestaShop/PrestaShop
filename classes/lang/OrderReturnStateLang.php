@@ -32,17 +32,4 @@ class OrderReturnStateLangCore extends DataLangCore
     protected $keys = array('id_order_return_state');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Waiting for confirmation') => $this->translator->trans('Waiting for confirmation', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('Waiting for package') => $this->translator->trans('Waiting for package', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('Package received') => $this->translator->trans('Package received', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('Return denied') => $this->translator->trans('Return denied', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('Return completed') => $this->translator->trans('Return completed', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-            ),
-        );
-    }
 }

@@ -40,9 +40,6 @@ class DataLangCore
     /** @var array */
     protected $fieldsToUpdate;
 
-    /** @var array */
-    protected $fieldNames;
-
     /** @var string */
     protected $domain;
 
@@ -75,19 +72,11 @@ class DataLangCore
                 $this->translator->addResource($format, $file, $locale, $domain);
             }
         }
-
-        $this->init();
     }
 
     public function getFieldValue($field, $value)
     {
-        $md5Value = md5($value);
-
-        if (isset($this->fieldNames[$field]) && isset($this->fieldNames[$field][$md5Value])) {
-            return $this->fieldNames[$field][$md5Value];
-        }
-
-        return $value;
+        return $this->translator->trans($value, array(), $this->domain, $this->locale);
     }
 
     public function getKeys()
@@ -98,11 +87,6 @@ class DataLangCore
     public function getFieldsToUpdate()
     {
         return $this->fieldsToUpdate;
-    }
-
-    protected function init()
-    {
-        $this->fieldNames = array();
     }
 
     public function slugify($string)
