@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
+use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -154,11 +156,18 @@ class ProductPresenter
         }
 
         if ($product['specific_prices']) {
-            $presentedProduct['has_discount'] = (0 != $product['reduction']);
+            $presentedProduct['has_discount']  = (0 != $product['reduction']);
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
-            // TODO: format according to locale preferences
-            $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
-            $presentedProduct['discount_percentage_absolute'] = round(100 * $product['specific_prices']['reduction']).'%';
+
+            $absoluteReduction     = new Number($product['specific_prices']['reduction']);
+            $absoluteReduction     = $absoluteReduction->times(new Number('100'));
+            $negativeReduction     = $absoluteReduction->toNegative();
+            $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
+            $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
+
+            // TODO: add percent sign according to locale preferences
+            $presentedProduct['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
+            $presentedProduct['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             // TODO: Fix issue with tax calculation
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
                 $product['reduction']
