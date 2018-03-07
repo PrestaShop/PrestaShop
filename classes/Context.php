@@ -321,6 +321,7 @@ class ContextCore
             $idCarrier = (int) $this->cart->id_carrier;
             $this->cart->id_carrier = 0;
             $this->cart->setDeliveryOption(null);
+            $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
             $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
             $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
         }
