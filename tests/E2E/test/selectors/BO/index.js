@@ -9,6 +9,7 @@ module.exports = Object.assign({},
   require('./shopParameters'),
   require('./installation'),
   require('./international'),
-  require('./employee_page')
+  require('./employee_page'),
+  require('./desgin')
 );
 
