@@ -56,6 +56,7 @@ class EmployeeProvider implements UserProviderInterface
 
     /**
      * Fetch the Employee entity that matches the given username.
+     * Cache system doesn't supports "@" character, so we rely on a sha1 expression.
      *
      * @param string $username
      * @return Employee
