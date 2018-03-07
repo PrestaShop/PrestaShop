@@ -283,13 +283,13 @@ class QueryParamsCollectionTest extends TestCase
             array(
                 array('category_id' => 1),
                 array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
-        WHERE cp.id_product=p.id_product AND cp.id_category IN (:categories_ids))'),
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
                 $categoryFilterMessage
             ),
             array(
                 array('category_id' => array(1, 2)),
                 array(QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND EXISTS(SELECT 1 FROM {table_prefix}category_product cp 
-        WHERE cp.id_product=p.id_product AND cp.id_category IN (:categories_ids))'),
+        WHERE cp.id_product=p.id_product AND FIND_IN_SET(cp.id_category, :categories_ids))'),
                 $categoryFilterMessage
             ),
             array(
