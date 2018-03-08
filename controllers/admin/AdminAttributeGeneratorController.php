@@ -46,9 +46,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJS(_PS_JS_DIR_.'admin/attributes.js');
     }
 
@@ -76,7 +76,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
     public static function createCombinations($list)
     {
         if (count($list) <= 1) {
-            return count($list) ? array_map(create_function('$v', 'return (array($v));'), $list[0]) : $list;
+            return count($list) ? array_map(function ($v) { return (array($v)); }, $list[0]) : $list;
         }
         $res = array();
         $first = array_pop($list);

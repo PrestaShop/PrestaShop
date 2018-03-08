@@ -37,7 +37,7 @@ class AdminPatternsControllerCore extends AdminController
         parent::__construct();
     }
 
-    public function viewAccess()
+    public function viewAccess($disable = false)
     {
         return true;
     }
@@ -419,9 +419,9 @@ class AdminPatternsControllerCore extends AdminController
         return parent::renderForm();
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addjQueryPlugin('tagify', null, false);
     }
 

@@ -160,9 +160,9 @@ class AdminModulesControllerCore extends AdminController
         return (bool)($a['name'] > $b['name']);
     }
 
-    public function setMedia()
+    public function setMedia($isNewTheme = false)
     {
-        parent::setMedia();
+        parent::setMedia($isNewTheme);
         $this->addJqueryPlugin(array('autocomplete', 'fancybox', 'tablefilter'));
 
         if ($this->context->mode == Context::MODE_HOST && Tools::isSubmit('addnewmodule')) {
