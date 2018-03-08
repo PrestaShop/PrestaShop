@@ -239,24 +239,24 @@ class ModuleTabRegister
      * Install a tab according to its defined structure
      *
      * @param Module $module
-     * @param ParameterBag $data The structure of the tab.
+     * @param ParameterBag $tabDetails The structure of the tab.
      *
      * @throws Exception in case of error from validation or save
      */
-    protected function registerTab(Module $module, ParameterBag $data)
+    protected function registerTab(Module $module, ParameterBag $tabDetails)
     {
-        $this->checkIsValid($module->get('name'), $data);
+        $this->checkIsValid($module->get('name'), $tabDetails);
 
         // Legacy Tab, to be replaced with Doctrine entity when right management
         // won't be directly linked to the tab creation
         // @ToDo
         $tab = new Tab();
-        $tab->active = $data->getBoolean('visible', true);
-        $tab->class_name = $data->get('class_name');
+        $tab->active = $tabDetails->getBoolean('visible', true);
+        $tab->class_name = $tabDetails->get('class_name');
         $tab->module = $module->get('name');
-        $tab->name = $this->getTabNames($data->get('name', $tab->class_name));
-        $tab->icon = $data->get('icon');
-        $tab->id_parent = $this->findParentId($data);
+        $tab->name = $this->getTabNames($tabDetails->get('name', $tab->class_name));
+        $tab->icon = $tabDetails->get('icon');
+        $tab->id_parent = $this->findParentId($tabDetails);
 
         if (!$tab->save()) {
             throw new Exception(
@@ -270,23 +270,23 @@ class ModuleTabRegister
     /**
      * Find the parent ID from the given tab context
      *
-     * @param ParameterBag $data The structure of the tab.
+     * @param ParameterBag $tabDetails The structure of the tab.
      * @return int ID of the parent, 0 if none
      */
-    protected function findParentId(ParameterBag $data)
+    protected function findParentId(ParameterBag $tabDetails)
     {
         $idParent = 0;
-        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
+        $parentClassName = $tabDetails->get('parent_class_name', $tabDetails->get('ParentClassName'));
         if (!empty($parentClassName)) {
-            // Could be a previously duicated tab
-            $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName.self::SUFFIX);
+            // Could be a previously duplicated tab
+            $idParent = $this->tabRepository->findOneIdByClassName($parentClassName.self::SUFFIX);
             if (!$idParent) {
-                $idParent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
+                $idParent = $this->tabRepository->findOneIdByClassName($parentClassName);
             }
-        } elseif (true === $data->getBoolean('visible', true)) {
-            $idParent = (int)$this->tabRepository->findOneIdByClassName($this->defaultParent);
+        } elseif (true === $tabDetails->getBoolean('visible', true)) {
+            $idParent = $this->tabRepository->findOneIdByClassName($this->defaultParent);
         }
-        return $this->duplicateParentIfAlone($idParent);
+        return $this->duplicateParentIfAlone((int) $idParent);
     }
 
     /**
