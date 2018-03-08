@@ -1197,18 +1197,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
-        $page['canonical'] = $this->context->link->getProductLink(
-            $this->product->id,
-            isset($this->product->link_rewrite) ? $this->product->link_rewrite : null,
-            isset($this->product->category) ? $this->product->category : null,
-            isset($this->product->ean13) ? $this->product->ean13 : null,
-            $this->context->language->id,
-            null,
-            null,
-            false,
-            false,
-            true
-        );
         $page['body_classes']['product-id-'.$this->product->id] = true;
         $page['body_classes']['product-'.$this->product->name] = true;
         $page['body_classes']['product-id-category-'.$this->product->id_category_default] = true;
@@ -1229,5 +1217,49 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
 
         return $page;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * Indicates if the provided combination exists and belongs to the product
+     *
+     * @param int $productAttributeId
+     * @param int $productId
+     *
+     * @return bool
+     */
+    protected function isValidCombination($productAttributeId, $productId)
+    {
+        if ($productAttributeId > 0 && $productId > 0) {
+            $combination = new Combination($productAttributeId);
+
+            return (
+                Validate::isLoadedObject($combination)
+                && $combination->id_product == $productId
+            );
+        }
+
+        return false;
+    }
+    
+    /**
+     * @inheritdoc
+     * @return string
+     */
+    public function getCanonicalURL()
+    {
+        return $this->context->link->getProductLink(
+            $this->product->id,
+            isset($this->product->link_rewrite) ? $this->product->link_rewrite : null,
+            isset($this->product->category) ? $this->product->category : null,
+            isset($this->product->ean13) ? $this->product->ean13 : null,
+            $this->context->language->id,
+            null,
+            null,
+            false,
+            false,
+            true
+        );
     }
 }
