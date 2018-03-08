@@ -2580,17 +2580,15 @@
 	 * Get product update URL from different
 	 * sources if needed (for compatibility)
 	 *
-	 * @param {string} event
-	 * @param {string} eventType
 	 * @return {Promise}
 	 */
-	function getProductUpdateUrl(event, eventType) {
+	function getProductUpdateUrl() {
 	    var dfd = _jquery2['default'].Deferred();
 	    var $productActions = (0, _jquery2['default'])('.product-actions');
 	    var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-	    var updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
+	    var updateUrl = null;
 	
-	    if (updateUrl == null && _prestashop2['default'] != null && _prestashop2['default'].page != null && _prestashop2['default'].page.canonical != '') {
+	    if (_prestashop2['default'] != null && _prestashop2['default'].page != null && _prestashop2['default'].page.canonical != '') {
 	        updateUrl = _prestashop2['default'].page.canonical;
 	    }
 	
@@ -2613,7 +2611,7 @@
 	                dataType: 'json',
 	                success: function success(data, textStatus, errorThrown) {
 	                    var productUpdateUrl = data.productUrl;
-	                    $productActions.find('#quantity_wanted:first').data('update-url', productUpdateUrl);
+	                    _prestashop2['default'].page.canonical = productUpdateUrl;
 	                    dfd.resolve(productUpdateUrl);
 	                }
 	            });
