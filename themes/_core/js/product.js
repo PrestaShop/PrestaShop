@@ -83,19 +83,16 @@ $(document).ready(function () {
  * Get product update URL from different
  * sources if needed (for compatibility)
  *
- * @param {string} event
- * @param {string} eventType
  * @return {Promise}
  */
-function getProductUpdateUrl(event, eventType)
+function getProductUpdateUrl()
 {
     let dfd = $.Deferred();
     const $productActions = $('.product-actions');
     const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-    let updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
+    let updateUrl = null;
 
-    if (updateUrl == null
-        && prestashop != null
+    if (prestashop != null
         && prestashop.page != null
         && prestashop.page.canonical != ''
     ) {
@@ -123,7 +120,7 @@ function getProductUpdateUrl(event, eventType)
             dataType: 'json',
             success: function(data, textStatus, errorThrown) {
                 let productUpdateUrl = data.productUrl;
-                $productActions.find('#quantity_wanted:first').data('update-url', productUpdateUrl);
+                prestashop.page.canonical = productUpdateUrl;
                 dfd.resolve(productUpdateUrl);
             }
         });
