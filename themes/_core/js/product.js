@@ -26,13 +26,13 @@ import $ from 'jquery';
 import prestashop from 'prestashop';
 import {psGetRequestParameter} from './common';
 
+// Used to be able to abort request if user modify something
+var currentRequest = null;
+
+// Used to clearTimeout if user flood the product quantity input
+var currentRequestDelayedId = null;
+
 $(document).ready(function () {
-    // Used to be able to abort request if user modify something
-    var currentRequest = null;
-
-    // Used to clearTimeout if user flood the product quantity input
-    var currentRequestDelayedId = null;
-
     // Listen on all form elements + those who have a data-product-attribute
     $('body').on(
         'change touchspin.on.startspin',
@@ -70,82 +70,152 @@ $(document).ready(function () {
         const event = args.event;
         const $productActions = $('.product-actions');
         const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-        const updateUrl = $quantityWantedInput.data('update-url');
-        const preview = psGetRequestParameter('preview');
+        let preview = psGetRequestParameter('preview');
 
-        // New request only if new value
-        if (event != null
-            && event.type === 'keyup'
-            && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+        if (preview !== null) {
+            preview = '&preview=' + preview;
+        } else {
+            preview = '';
+        }
+        let updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
+
+        if (updateUrl == null
+            && prestashop != null
+            && prestashop.page != null
+            && prestashop.page.canonical != ''
         ) {
-            return;
-        }
-        $quantityWantedInput.data('old-value', $quantityWantedInput.val());
-
-        if (currentRequestDelayedId) {
-            clearTimeout(currentRequestDelayedId);
+            updateUrl = prestashop.page.canonical;
         }
 
-        currentRequestDelayedId = setTimeout(function() {
-            currentRequest = $.ajax({
-                url: updateUrl + '?' +
-                    $productActions.find('form:first').serialize() +
-                    '&preview=' + preview,
+        if (updateUrl == null) {
+            let formData = {};
+
+            $($productActions.find('form:first').serializeArray()).each(function(k, v) {
+                formData[v.name] = v.value;
+            });
+
+            $.ajax({
+                url: $productActions.find('form:first').attr('action'),
                 method: 'POST',
-                data: {
-                    ajax: 1,
-                    action: 'refresh',
-                    quantity_wanted: $quantityWantedInput.val()
-                },
+                data: Object.assign(
+                    {
+                        ajax: 1,
+                        action: 'productrefresh',
+                        quantity_wanted: $quantityWantedInput.val()
+                    },
+                    formData
+                ),
                 dataType: 'json',
-                beforeSend: function() {
-                    if (currentRequest != null) {
-                        currentRequest.abort();
-                    }
-                },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    if (textStatus !== 'abort'
-                        && $('section#main > .ajax-error').length === 0
-                    ) {
+                    if ($('section#main > .ajax-error').length === 0) {
                         showError($('#product-availability'), 'An error occurred while processing your request');
                     }
                 },
                 success: function(data, textStatus, errorThrown) {
-                    // Avoid image to blink each time we modify the product quantity
-                    // Can not compare directly cause of HTML comments in data.
-                    const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
+                    updateUrl = data.productUrl;
+                    $productActions.find('#quantity_wanted:first').data('update-url', updateUrl);
 
-                    // Used to avoid image blinking if same image = epileptic friendly
-                    if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
-                        $('.images-container').replaceWith(data.product_cover_thumbnails);
-                    }
-                    $('.product-prices').replaceWith(data.product_prices);
-                    $('.product-customization').replaceWith(data.product_customization);
-                    $('.product-variants').replaceWith(data.product_variants);
-                    $('.product-discounts').replaceWith(data.product_discounts);
-                    $('.product-additional-info').replaceWith(data.product_additional_info);
-                    $('#product-details').replaceWith(data.product_details);
-                    replaceAddToCartSections(data);
-                    const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
-
-                    // Prevent quantity input from blinking with classic theme.
-                    if (!isNaN(minimalProductQuantity)
-                        && $quantityWantedInput.val() < minimalProductQuantity
-                        && eventType !== 'updatedProductQuantity'
-                    ) {
-                        $quantityWantedInput.attr('min', minimalProductQuantity);
-                        $quantityWantedInput.val(minimalProductQuantity);
-                    }
-                    prestashop.emit('updatedProduct', data);
-                },
-                complete: function(jqXHR, textStatus) {
-                    currentRequest = null;
-                    currentRequestDelayedId = null;
+                    return updateProduct(event, eventType, updateUrl);
                 }
             });
-        }.bind(currentRequest, currentRequestDelayedId), 250);
+
+            return;
+        }
+
+        return updateProduct(event, eventType, updateUrl);
     });
 });
+
+function updateProduct(event, eventType, updateUrl)
+{
+    const $productActions = $('.product-actions');
+    const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
+    const formSerialized = $productActions.find('form:first').serialize();
+    let preview = psGetRequestParameter('preview');
+
+    if (preview !== null) {
+        preview = '&preview=' + preview;
+    } else {
+        preview = '';
+    }
+
+    // Can not get product ajax url
+    if (updateUrl == null) {
+        showError($('#product-availability'), 'An error occurred while processing your request');
+
+        return;
+    }
+
+    // New request only if new value
+    if (event != null
+        && event.type === 'keyup'
+        && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+    ) {
+        return;
+    }
+    $quantityWantedInput.data('old-value', $quantityWantedInput.val());
+
+    if (currentRequestDelayedId) {
+        clearTimeout(currentRequestDelayedId);
+    }
+
+    currentRequestDelayedId = setTimeout(function() {
+        currentRequest = $.ajax({
+            url: updateUrl + '?' + formSerialized + preview,
+            method: 'POST',
+            data: {
+                ajax: 1,
+                action: 'refresh',
+                quantity_wanted: $quantityWantedInput.val()
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                if (currentRequest != null) {
+                    currentRequest.abort();
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                if (textStatus !== 'abort'
+                    && $('section#main > .ajax-error').length === 0
+                ) {
+                    showError($('#product-availability'), 'An error occurred while processing your request');
+                }
+            },
+            success: function(data, textStatus, errorThrown) {
+                // Avoid image to blink each time we modify the product quantity
+                // Can not compare directly cause of HTML comments in data.
+                const $newImagesContainer = $('<div>').append(data.product_cover_thumbnails);
+
+                // Used to avoid image blinking if same image = epileptic friendly
+                if ($('.images-container').html() !== $newImagesContainer.find('.images-container').html()) {
+                    $('.images-container').replaceWith(data.product_cover_thumbnails);
+                }
+                $('.product-prices').replaceWith(data.product_prices);
+                $('.product-customization').replaceWith(data.product_customization);
+                $('.product-variants').replaceWith(data.product_variants);
+                $('.product-discounts').replaceWith(data.product_discounts);
+                $('.product-additional-info').replaceWith(data.product_additional_info);
+                $('#product-details').replaceWith(data.product_details);
+                replaceAddToCartSections(data);
+                const minimalProductQuantity = parseInt(data.product_minimal_quantity, 10);
+
+                // Prevent quantity input from blinking with classic theme.
+                if (!isNaN(minimalProductQuantity)
+                    && $quantityWantedInput.val() < minimalProductQuantity
+                    && eventType !== 'updatedProductQuantity'
+                ) {
+                    $quantityWantedInput.attr('min', minimalProductQuantity);
+                    $quantityWantedInput.val(minimalProductQuantity);
+                }
+                prestashop.emit('updatedProduct', data);
+            },
+            complete: function(jqXHR, textStatus) {
+                currentRequest = null;
+                currentRequestDelayedId = null;
+            }
+        });
+    }.bind(currentRequest, currentRequestDelayedId), 250);
+}
 
 // Replace all "add to cart" sections but the quantity input
 // in order to keep quantity field intact i.e.
