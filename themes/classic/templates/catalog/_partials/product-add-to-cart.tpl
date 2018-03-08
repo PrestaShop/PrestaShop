@@ -83,7 +83,5 @@
         {/if}
       </p>
     {/block}
-      <!-- TO DELETE BEFORE COMMIT -->
-      <input type="button" class="product-refresh" hidden>
   {/if}
 </div>
