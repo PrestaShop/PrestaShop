@@ -1,5 +1,5 @@
 module.exports = {
-  PageCategory: {
+  Category: {
     add_category_button: '//*[@id="page-header-desc-cms-new_cms_category"]',
     name_input: '//*[@id="name_1"]',
     enable_display_option: '//label[text()="Yes"]',
@@ -14,6 +14,9 @@ module.exports = {
     dropdown_toggle: '//*[@id="table-cms_category"]//button[@data-toggle="dropdown"]',
     edit_button: '//*[@id="table-cms_category"]//a[@title="Edit"]',
     search_name_result: '//*[@id="table-cms_category"]//td[%ID]',
-    delete_button: '//*[@id="table-cms_category"]//a[@title="Delete"]'
+    delete_button: '//*[@id="table-cms_category"]//a[@title="Delete"]',
+    bulk_actions_button:'//*[@id="bulk_action_menu_cms_category"]',
+    bulk_actions_select_all_button:'//*[@id="form-cms_category"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "true")]',
+    bulk_actions_delete_button:'//*[@id="form-cms_category"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecms_category")]'
   }
 };

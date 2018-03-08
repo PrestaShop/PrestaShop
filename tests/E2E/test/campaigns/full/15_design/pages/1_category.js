@@ -1,7 +1,7 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
 const common_scenarios = require('./pages');
 
-let pageCategoryData = {
+let categoryData = {
   name: 'Category',
   parent_category: '1',
   description: 'category description',
@@ -10,13 +10,13 @@ let pageCategoryData = {
   meta_keywords: 'category meta keywords',
 };
 
-let newPageCategoryData = {
+let newCategoryData = {
   name: 'editCategory',
   parent_category: '1',
-  description: 'edited category description',
-  meta_title: 'edited category meta title',
-  meta_description: 'edited category meta description',
-  meta_keywords: 'edited category meta keywords',
+  description: 'new category description',
+  meta_title: 'new category meta title',
+  meta_description: 'new category meta description',
+  meta_keywords: 'new category meta keywords',
 };
 
 scenario('Create, edit, delete and delete with bulk actions page category', client => {
@@ -24,16 +24,19 @@ scenario('Create, edit, delete and delete with bulk actions page category', clie
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  }, 'design');
+  }, 'common_client');
 
-  common_scenarios.createPageCategory(pageCategoryData);
-  common_scenarios.checkPageCategoryBO(pageCategoryData.name);
-  common_scenarios.editPageCategory(pageCategoryData.name, newPageCategoryData);
-  common_scenarios.checkPageCategoryBO(newPageCategoryData.name);
-  common_scenarios.deletePageCategory(newPageCategoryData.name);
+  common_scenarios.createCategory(categoryData);
+  common_scenarios.checkCategoryBO(categoryData.name);
+  common_scenarios.editCategory(categoryData.name, newCategoryData);
+  common_scenarios.checkCategoryBO(newCategoryData.name);
+  common_scenarios.deleteCategory(newCategoryData.name);
+  common_scenarios.createCategory(categoryData);
+  common_scenarios.createCategory(categoryData);
+  common_scenarios.deleteCategoryWithBulkActions(categoryData.name);
 
   scenario('logout successfully from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
-  }, 'design');
+  }, 'common_client');
 
-}, 'design', true);
+}, 'common_client', true);
