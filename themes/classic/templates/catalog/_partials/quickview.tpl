@@ -62,6 +62,10 @@
                 {block name='product_add_to_cart'}
                   {include file='catalog/_partials/product-add-to-cart.tpl'}
                 {/block}
+
+                {block name='product_refresh'}
+                  <input class="product-refresh" data-url-update="false" name="refresh" type="submit" value="{l s='Refresh' d='Shop.Theme.Actions'}" hidden>
+                {/block}
             </form>
           </div>
         {/block}
