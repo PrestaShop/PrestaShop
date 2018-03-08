@@ -36,8 +36,11 @@ class CurrencyCore extends ObjectModel
     /** @var string Iso code */
     public $iso_code;
 
-    /** @var string numeric Iso code */
+    /** @var string numeric Iso code (will be deprecated soon) */
     public $iso_code_num;
+
+    /** @var string numeric ISO code */
+    public $numeric_iso_code;
 
     /** @var string exchange rate from euros */
     public $conversion_rate;
@@ -52,6 +55,8 @@ class CurrencyCore extends ObjectModel
     public $format;
     public $blank;
     public $decimals;
+    public $precision;
+    public $symbol;
 
     /**
      * @see ObjectModel::$definition
@@ -59,13 +64,19 @@ class CurrencyCore extends ObjectModel
     public static $definition = array(
         'table' => 'currency',
         'primary' => 'id_currency',
-        'multilang_shop' => true,
+        'multilang' => true,
+        // 'multilang_shop' => true,
         'fields' => array(
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-            'conversion_rate' => array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+            'iso_code'         => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
+            'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode' , 'required' => true, 'size' => 3),
+            'precision'        => array('type' => self::TYPE_INT   , 'validate' => 'isInt'            , 'required' => true),
+            'conversion_rate'  => array('type' => self::TYPE_FLOAT , 'validate' => 'isUnsignedFloat'  , 'required' => true, 'shop' => true),
+            'deleted'          => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
+            'active'           => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
+
+            /* Lang fields */
+            'name'   => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 64),
         ),
     );
 

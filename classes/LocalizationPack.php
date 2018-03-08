@@ -308,16 +308,22 @@ class LocalizationPackCore
                 if (Currency::exists($attributes['iso_code'])) {
                     continue;
                 }
-                $currency = new Currency();
-                $currency->name = (string)$attributes['name'];
-                $currency->iso_code = (string)$attributes['iso_code'];
-                $currency->iso_code_num = (int)$attributes['iso_code_num'];
-                $currency->sign = (string)$attributes['sign'];
-                $currency->blank = (int)$attributes['blank'];
-                $currency->conversion_rate = 1; // This value will be updated if the store is online
-                $currency->format = (int)$attributes['format'];
-                $currency->decimals = (int)$attributes['decimals'];
-                $currency->active = true;
+
+                $defaultLang = (int) Configuration::get('PS_LANG_DEFAULT');
+
+                $currency                   = new Currency(null, $defaultLang);
+                $currency->name             = (string)$attributes['name'];
+                $currency->iso_code         = (string)$attributes['iso_code'];
+                $currency->iso_code_num     = (int)$attributes['iso_code_num'];
+                $currency->numeric_iso_code = (string)$attributes['iso_code_num'];
+                $currency->sign             = (string)$attributes['sign'];
+                $currency->symbol           = (string)$attributes['sign'];
+                $currency->blank            = (int)$attributes['blank'];
+                $currency->conversion_rate  = 1; // This value will be updated if the store is online
+                $currency->format           = (int)$attributes['format'];
+                $currency->decimals         = (int)$attributes['decimals'];
+                $currency->precision        = (int)$attributes['decimals'];
+                $currency->active           = true;
                 if (!$currency->validateFields()) {
                     $this->_errors[] = Context::getContext()->getTranslator()->trans('Invalid currency properties.', array(), 'Admin.International.Notification');
                     return false;
