@@ -28,11 +28,10 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency as CldrCurrency;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData as CldrLocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
  * CLDR Currency reference data layer
@@ -40,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyDat
  * Provides reference data for currencies...
  * Data comes from CLDR official data files, and is read only.
  */
-class CurrencyReference extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
+class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**
      * CLDR locale repository
@@ -62,7 +61,7 @@ class CurrencyReference extends AbstractDataLayer implements CldrCurrencyDataLay
     /**
      * @inheritdoc
      */
-    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
@@ -70,15 +69,18 @@ class CurrencyReference extends AbstractDataLayer implements CldrCurrencyDataLay
     }
 
     /**
-     * Actually read a CLDR CurrencyData object into the current layer
+     * Actually read a CurrencyData object into the current layer
      *
      * Data is read from official CLDR files (via the CLDR LocaleRepository)
      *
      * @param string $currencyCode
-     *  The CLDR CurrencyData object identifier
+     *  The CurrencyData object identifier
      *
      * @return CurrencyData|null
-     *  The wanted CLDR CurrencyData object (null if not found)
+     *  The wanted CurrencyData object (null if not found)
+     *
+     * @throws LocalizationException
+     *  In case of invalid type asked for symbol (but we let the default behavior, so it is very unlikely...)
      */
     protected function doRead($currencyCode)
     {
@@ -88,18 +90,18 @@ class CurrencyReference extends AbstractDataLayer implements CldrCurrencyDataLay
             return null;
         }
 
-        $cldrCurrencyData = $cldrLocale->getCurrencyData($currencyCode);
+        $cldrCurrency = $cldrLocale->getCurrency($currencyCode);
 
-        if (empty($cldrCurrencyData)) {
+        if (empty($cldrCurrency)) {
             return null;
         }
 
         $currencyData                             = new CurrencyData();
-        $currencyData->isoCode                    = $cldrCurrencyData->isoCode;
-        $currencyData->numericIsoCode             = $cldrCurrencyData->numericIsoCode;
-        $currencyData->symbols[$this->localeCode] = $cldrCurrencyData->symbols[CldrCurrency::SYMBOL_TYPE_NARROW];
-        $currencyData->precision                  = $cldrCurrencyData->decimalDigits;
-        $currencyData->names[$this->localeCode]   = $cldrCurrencyData->displayNames[CldrCurrency::DISPLAY_NAME_COUNT_DEFAULT];
+        $currencyData->isoCode                    = $cldrCurrency->getIsoCode();
+        $currencyData->numericIsoCode             = $cldrCurrency->getNumericIsoCode();
+        $currencyData->symbols[$this->localeCode] = $cldrCurrency->getSymbol();
+        $currencyData->precision                  = $cldrCurrency->getDecimalDigits();
+        $currencyData->names[$this->localeCode]   = $cldrCurrency->getDisplayName();
 
         return $currencyData;
     }
@@ -107,15 +109,15 @@ class CurrencyReference extends AbstractDataLayer implements CldrCurrencyDataLay
     /**
      * CLDR files are read only. Nothing can be written there.
      *
-     * @param string $localeCode
+     * @param string $currencyCode
      *  The LocaleData object identifier
      *
-     * @param CldrLocaleData $data
-     *  The LocaleData object to be written
+     * @param CurrencyData $currencyData
+     *  The CurrencyData object to be written
      *
      * @return void
      */
-    protected function doWrite($localeCode, $data)
+    protected function doWrite($currencyCode, $currencyData)
     {
         // Nothing.
     }

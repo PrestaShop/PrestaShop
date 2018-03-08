@@ -42,21 +42,21 @@ class Currency
      *
      * @var string
      */
-    public $isoCode;
+    protected $isoCode;
 
     /**
      * Numeric ISO 4217 currency code
      *
      * @var string
      */
-    public $numericIsoCode;
+    protected $numericIsoCode;
 
     /**
      * Number of decimal digits to display for a price in this currency
      *
      * @var int
      */
-    public $decimalDigits;
+    protected $decimalDigits;
 
     /**
      * Possible names depending on count context.
@@ -70,7 +70,7 @@ class Currency
      *
      * @var string[]
      */
-    public $displayNames;
+    protected $displayNames;
 
     /**
      * Possible symbols (PrestaShop is using narrow)
@@ -83,7 +83,7 @@ class Currency
      *
      * @var string[]
      */
-    public $symbols;
+    protected $symbols;
 
     public function __construct(CurrencyData $currencyData)
     {

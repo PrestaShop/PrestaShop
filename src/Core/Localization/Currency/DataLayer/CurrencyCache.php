@@ -103,7 +103,7 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      * @param mixed $currencyCode
      *  The data object identifier
      *
-     * @param CurrencyData $data
+     * @param CurrencyData $currencyData
      *  The data object to be written
      *
      * @return void
@@ -111,10 +111,10 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      * @throws DataLayerException
      *  When write fails
      */
-    protected function doWrite($currencyCode, $data)
+    protected function doWrite($currencyCode, $currencyData)
     {
         $cacheItem = $this->cache->getItem($currencyCode);
-        $cacheItem->set($data);
+        $cacheItem->set($currencyData);
 
         $saved = $this->cache->save($cacheItem);
 
