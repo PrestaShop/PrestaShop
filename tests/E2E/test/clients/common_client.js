@@ -333,6 +333,41 @@ class CommonClient {
   deleteObjectElement(object, pos) {
     delete object[pos];
   }
+
+  /**
+   * This function searches the data in the table in case a filter input exists
+   * @param selector
+   * @param data
+   * @returns {*}
+   */
+  search(selector, data) {
+    if (global.isVisible) {
+      return this.client
+        .waitAndSetValue(selector, data)
+        .keys('Enter')
+    } else {
+      return this.client.pause(0)
+    }
+  }
+
+  /**
+   * This function checks the result of the search
+   * @param selector
+   * @param data
+   * @param pos
+   * @returns {*}
+   */
+  checkExistence(selector, data, pos) {
+    if (global.isVisible) {
+      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
+        expect(text).to.be.equal(data);
+      })
+    } else {
+      return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
+        expect(text).to.be.equal(data);
+      })
+    }
+  }
 }
 
 module.exports = CommonClient;
