@@ -2565,63 +2565,73 @@
 	    _prestashop2['default'].on('updateProduct', function (args) {
 	        var eventType = args.eventType;
 	        var event = args.event;
-	        var $productActions = (0, _jquery2['default'])('.product-actions');
-	        var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-	        var preview = (0, _common.psGetRequestParameter)('preview');
 	
-	        if (preview !== null) {
-	            preview = '&preview=' + preview;
-	        } else {
-	            preview = '';
-	        }
-	        var updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
-	
-	        if (updateUrl == null && _prestashop2['default'] != null && _prestashop2['default'].page != null && _prestashop2['default'].page.canonical != '') {
-	            updateUrl = _prestashop2['default'].page.canonical;
-	        }
-	
-	        if (updateUrl == null) {
-	            var _ret = (function () {
-	                var formData = {};
-	
-	                (0, _jquery2['default'])($productActions.find('form:first').serializeArray()).each(function (k, v) {
-	                    formData[v.name] = v.value;
-	                });
-	
-	                _jquery2['default'].ajax({
-	                    url: $productActions.find('form:first').attr('action'),
-	                    method: 'POST',
-	                    data: Object.assign({
-	                        ajax: 1,
-	                        action: 'productrefresh',
-	                        quantity_wanted: $quantityWantedInput.val()
-	                    }, formData),
-	                    dataType: 'json',
-	                    error: function error(jqXHR, textStatus, errorThrown) {
-	                        if ((0, _jquery2['default'])('section#main > .ajax-error').length === 0) {
-	                            showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
-	                        }
-	                    },
-	                    success: function success(data, textStatus, errorThrown) {
-	                        updateUrl = data.productUrl;
-	                        $productActions.find('#quantity_wanted:first').data('update-url', updateUrl);
-	
-	                        return updateProduct(event, eventType, updateUrl);
-	                    }
-	                });
-	
-	                return {
-	                    v: undefined
-	                };
-	            })();
-	
-	            if (typeof _ret === 'object') return _ret.v;
-	        }
-	
-	        return updateProduct(event, eventType, updateUrl);
+	        getProductUpdateUrl().done(function (productUpdateUrl) {
+	            return updateProduct(event, eventType, productUpdateUrl);
+	        }).fail(function () {
+	            if ((0, _jquery2['default'])('section#main > .ajax-error').length === 0) {
+	                showError((0, _jquery2['default'])('#product-availability'), 'An error occurred while processing your request');
+	            }
+	        });
 	    });
 	});
 	
+	/**
+	 * Get product update URL from different
+	 * sources if needed (for compatibility)
+	 *
+	 * @param {string} event
+	 * @param {string} eventType
+	 * @return {Promise}
+	 */
+	function getProductUpdateUrl(event, eventType) {
+	    var dfd = _jquery2['default'].Deferred();
+	    var $productActions = (0, _jquery2['default'])('.product-actions');
+	    var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
+	    var updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
+	
+	    if (updateUrl == null && _prestashop2['default'] != null && _prestashop2['default'].page != null && _prestashop2['default'].page.canonical != '') {
+	        updateUrl = _prestashop2['default'].page.canonical;
+	    }
+	
+	    if (updateUrl == null) {
+	        (function () {
+	            var formData = {};
+	
+	            (0, _jquery2['default'])($productActions.find('form:first').serializeArray()).each(function (k, v) {
+	                formData[v.name] = v.value;
+	            });
+	
+	            _jquery2['default'].ajax({
+	                url: $productActions.find('form:first').attr('action'),
+	                method: 'POST',
+	                data: Object.assign({
+	                    ajax: 1,
+	                    action: 'productrefresh',
+	                    quantity_wanted: $quantityWantedInput.val()
+	                }, formData),
+	                dataType: 'json',
+	                success: function success(data, textStatus, errorThrown) {
+	                    var productUpdateUrl = data.productUrl;
+	                    $productActions.find('#quantity_wanted:first').data('update-url', productUpdateUrl);
+	                    dfd.resolve(productUpdateUrl);
+	                }
+	            });
+	        })();
+	    } else {
+	        dfd.resolve(updateUrl);
+	    }
+	
+	    return dfd.promise();
+	}
+	
+	/**
+	 * Update the product html
+	 *
+	 * @param {string} event
+	 * @param {string} eventType
+	 * @param {string} updateUrl
+	 */
 	function updateProduct(event, eventType, updateUrl) {
 	    var $productActions = (0, _jquery2['default'])('.product-actions');
 	    var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
