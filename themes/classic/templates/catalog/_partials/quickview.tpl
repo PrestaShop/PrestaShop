@@ -63,7 +63,7 @@
                   {include file='catalog/_partials/product-add-to-cart.tpl'}
                 {/block}
 
-                {* Input to refresh product HTML removed, block keeped for compatibility with themes *}
+                {* Input to refresh product HTML removed, block kept for compatibility with themes *}
                 {block name='product_refresh'}{/block}
             </form>
           </div>
