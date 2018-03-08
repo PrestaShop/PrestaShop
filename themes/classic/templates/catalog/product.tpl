@@ -132,7 +132,7 @@
                     {include file='catalog/_partials/product-additional-info.tpl'}
                   {/block}
 
-                  {* Input to refresh product HTML removed, block keeped for compatibility with themes *}
+                  {* Input to refresh product HTML removed, block kept for compatibility with themes *}
                   {block name='product_refresh'}{/block}
                 </form>
               {/block}
