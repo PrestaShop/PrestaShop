@@ -258,6 +258,13 @@ class ProductPresenter
         );
     }
 
+    /**
+     * @inheritdoc
+     * @param array $product
+     * @param Language $language
+     * @param bool $canonical
+     * @return string
+     */
     private function getProductURL(
         array $product,
         Language $language,
