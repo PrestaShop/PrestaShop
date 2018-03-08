@@ -1,5 +1,7 @@
 const {Menu} = require('../../../../selectors/BO/menu.js');
-const {Category} = require('../../../../selectors/BO/desgin/pages');
+const {Pages} = require('../../../../selectors/BO/desgin/pages');
+const {AccessPageBO} = require('../../../../selectors/BO/access_page');
+const {AccessPageFO} = require('../../../../selectors/FO/access_page');
 
 let promise = Promise.resolve();
 
@@ -14,30 +16,37 @@ let promise = Promise.resolve();
  * };
  */
 
+/****Example of page data ****
+ * let pageData = {
+  *  name: 'page',
+  *  meta_description: 'page meta description',
+  *  meta_keyword: ["keyword", "page"]
+  * };
+ */
 module.exports = {
   createCategory: function (categoryData) {
     scenario('Create page category', client => {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
-      test('should click on "Add new page category" button', () => client.waitForExistAndClick(Category.add_category_button));
-      test('should set the "Name" input', () => client.waitAndSetValue(Category.name_input, categoryData.name + date_time));
-      test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Category.enable_display_option));
-      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Category.parent_category_select, 1));
-      test('should set the "Description" text area ', () => client.waitAndSetValue(Category.description_textarea, categoryData.description));
-      test('should set the "Meta title" input ', () => client.waitAndSetValue(Category.meta_title_input, categoryData.meta_title));
-      test('should set the "Meta description" input ', () => client.waitAndSetValue(Category.meta_description_input, categoryData.meta_description));
-      test('should set the "Meta keywords" input ', () => client.waitAndSetValue(Category.meta_keywords_input, categoryData.meta_keywords));
-      test('should click on the "Save" button', () => client.waitForExistAndClick(Category.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Category.success_panel, '×\nSuccessful creation.'));
+      test('should click on "Add new page category" button', () => client.waitForExistAndClick(Pages.Category.add_category_button));
+      test('should set the "Name" input', () => client.waitAndSetValue(Pages.Common.name_input, categoryData.name + date_time));
+      test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
+      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, 1));
+      test('should set the "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryData.description));
+      test('should set the "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryData.meta_title));
+      test('should set the "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryData.meta_description));
+      test('should set the "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryData.meta_keywords));
+      test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
     }, 'common_client');
   },
   checkCategoryBO: function (categoryName) {
-    scenario('check page category existence in the Back Office', client => {
+    scenario('Check page category existence in the Back Office', client => {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
-      test('should check the existence of the created page category', () => {
+      test('should check the existence of the page category', () => {
         return promise
-          .then(() => client.isVisible(Category.name_filter))
-          .then(() => client.search(Category.name_filter, categoryName + date_time))
-          .then(() => client.checkExistence(Category.search_name_result, categoryName + date_time, 3))
+          .then(() => client.isVisible(Pages.Category.name_filter))
+          .then(() => client.search(Pages.Category.name_filter, categoryName + date_time))
+          .then(() => client.checkExistence(Pages.Category.search_name_result, categoryName + date_time, 3));
       });
     }, 'common_client');
   },
@@ -46,23 +55,23 @@ module.exports = {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the category in the "Category list"', () => {
         return promise
-          .then(() => client.isVisible(Category.name_filter))
-          .then(() => client.search(Category.name_filter, categoryName + date_time))
+          .then(() => client.isVisible(Pages.Category.name_filter))
+          .then(() => client.search(Pages.Category.name_filter, categoryName + date_time));
       });
       test('should click on "Edit" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Category.dropdown_toggle))
-          .then(() => client.waitForExistAndClick(Category.edit_button))
+          .then(() => client.waitForExistAndClick(Pages.Category.dropdown_toggle))
+          .then(() => client.waitForExistAndClick(Pages.Category.edit_button));
       });
-      test('should set the new "Name" input', () => client.waitAndSetValue(Category.name_input, categoryData.name + date_time));
-      test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Category.enable_display_option));
-      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Category.parent_category_select, 1));
-      test('should set the new "Description" text area ', () => client.waitAndSetValue(Category.description_textarea, categoryData.description));
-      test('should set the new "Meta title" input ', () => client.waitAndSetValue(Category.meta_title_input, categoryData.meta_title));
-      test('should set the new "Meta description" input ', () => client.waitAndSetValue(Category.meta_description_input, categoryData.meta_description));
-      test('should set the new "Meta keywords" input ', () => client.waitAndSetValue(Category.meta_keywords_input, categoryData.meta_keywords));
-      test('should click on the "Save" button', () => client.waitForExistAndClick(Category.save_button));
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Category.success_panel, '×\nSuccessful update.'));
+      test('should set the new "Name" input', () => client.waitAndSetValue(Pages.common.name_input, categoryData.name + date_time));
+      test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
+      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, 1));
+      test('should set the new "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryData.description));
+      test('should set the new "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryData.meta_title));
+      test('should set the new "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryData.meta_description));
+      test('should set the new "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryData.meta_keywords));
+      test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful update.'));
     }, 'common_client');
   },
   deleteCategory: function (categoryName) {
@@ -70,16 +79,16 @@ module.exports = {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the category in the "Category list"', () => {
         return promise
-          .then(() => client.isVisible(Category.name_filter))
-          .then(() => client.search(Category.name_filter, categoryName + date_time))
+          .then(() => client.isVisible(Pages.Category.name_filter))
+          .then(() => client.search(Pages.Category.name_filter, categoryName + date_time))
       });
       test('should click on "Delete" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Category.dropdown_toggle))
-          .then(() => client.waitForExistAndClick(Category.delete_button))
+          .then(() => client.waitForExistAndClick(Pages.Category.dropdown_toggle))
+          .then(() => client.waitForExistAndClick(Pages.Category.delete_button))
       });
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Category.success_panel, '×\nSuccessful deletion.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful deletion.'));
     }, 'common_client');
   },
   deleteCategoryWithBulkActions: function (categoryName) {
@@ -87,21 +96,62 @@ module.exports = {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the category in the "Category list"', () => {
         return promise
-          .then(() => client.isVisible(Category.name_filter))
-          .then(() => client.search(Category.name_filter, categoryName))
+          .then(() => client.isVisible(Pages.Category.name_filter))
+          .then(() => client.search(Pages.Category.name_filter, categoryName))
       });
       test('should click on the "Bulk actions - Select all" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Category.bulk_actions_button))
-          .then(() => client.waitForExistAndClick(Category.bulk_actions_select_all_button))
+          .then(() => client.waitForExistAndClick(Pages.Category.bulk_actions_button))
+          .then(() => client.waitForExistAndClick(Pages.Category.bulk_actions_select_all_button))
       });
       test('should click on the "Bulk actions - Delete selected" button', () => {
         return promise
-          .then(() => client.waitForExistAndClick(Category.bulk_actions_button))
-          .then(() => client.waitForExistAndClick(Category.bulk_actions_delete_button))
+          .then(() => client.waitForExistAndClick(Pages.Category.bulk_actions_button))
+          .then(() => client.waitForExistAndClick(Pages.Category.bulk_actions_delete_button))
       });
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
-      test('should verify the appearance of the green validation', () => client.checkTextValue(Category.success_panel, '×\nThe selection has been successfully deleted.'));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nThe selection has been successfully deleted.'));
+    }, 'common_client');
+  },
+  createPage: function (pageData) {
+    scenario('Create a CMS page', client => {
+      test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+      test('should click on the "Add new page" button', () => client.waitForExistAndClick(Pages.Page.add_new_page_button));
+      test('should set the "Meta title" input', () => client.waitAndSetValue(Pages.Common.name_input, pageData.meta_title + date_time));
+      test('should set the "Meta description" input', () => client.waitAndSetValue(Pages.Common.meta_description_input, pageData.meta_description));
+      for (let i in pageData.meta_keyword) {
+        test('should set the "Meta Keywords - ' + pageData.meta_keyword[i] + '" input', () => {
+          return promise
+            .then(() => client.waitForExistAndClick(Pages.Page.meta_keywords_input))
+            .then(() => client.keys(pageData.meta_keyword[i]))
+            .then(() => client.keys('Enter'));
+        });
+      }
+      test('should set the option "Indexation by search engines" to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
+      test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
+      test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
+    }, 'common_client');
+  },
+  checkPageBO: function (pageMetaTitle) {
+    scenario('Check page existence in the Back Office', client => {
+      test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+      test('should check the existence of the page', () => {
+        return promise
+          .then(() => client.isVisible(Pages.Page.url_filter_input))
+          .then(() => client.search(Pages.Page.url_filter_input, pageMetaTitle + date_time))
+          .then(() => client.checkExistence(Pages.Page.search_url_result, pageMetaTitle + date_time, 3))
+      });
+    }, 'common_client');
+  },
+  checkPageFO: function (pageMetaTitle) {
+    scenario('Check page existence in the Front Office', client => {
+      test('should go to the front Office', () => client.waitForExistAndClick(AccessPageBO.shopname));
+      test('should switch to Front Office window', () => client.switchWindow(1));
+      test('should change the Front Office language to "English"', () => client.changeLanguage());
+      test('should click on the "sitemap" menu', () => client.scrollWaitForExistAndClick(AccessPageFO.sitemap));
+      test('should check the existence of the page link in "PAGES" menu', () => client.scrollWaitForExistAndClick(AccessPageFO.page_link.replace("%pageName", pageMetaTitle + date_time)));
+      test('should switch to Back Office window', () => client.switchWindow(0));
     }, 'common_client');
   }
 };
