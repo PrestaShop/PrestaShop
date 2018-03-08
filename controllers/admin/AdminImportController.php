@@ -4421,6 +4421,7 @@ class AdminImportControllerCore extends AdminController
             }
             $import_type = false;
             $doneCount = 0;
+            $moreStepLabels = array();
             // Sometime, import will use registers to memorize data across all elements to import (for trees, or else).
             // Since import is splitted in multiple ajax calls, we must keep these data across all steps of the full import.
             $crossStepsVariables = array();
