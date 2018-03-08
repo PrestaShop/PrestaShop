@@ -68,64 +68,79 @@ $(document).ready(function () {
     prestashop.on('updateProduct', function (args) {
         const eventType = args.eventType;
         const event = args.event;
-        const $productActions = $('.product-actions');
-        const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-        let preview = psGetRequestParameter('preview');
 
-        if (preview !== null) {
-            preview = '&preview=' + preview;
-        } else {
-            preview = '';
-        }
-        let updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
-
-        if (updateUrl == null
-            && prestashop != null
-            && prestashop.page != null
-            && prestashop.page.canonical != ''
-        ) {
-            updateUrl = prestashop.page.canonical;
-        }
-
-        if (updateUrl == null) {
-            let formData = {};
-
-            $($productActions.find('form:first').serializeArray()).each(function(k, v) {
-                formData[v.name] = v.value;
-            });
-
-            $.ajax({
-                url: $productActions.find('form:first').attr('action'),
-                method: 'POST',
-                data: Object.assign(
-                    {
-                        ajax: 1,
-                        action: 'productrefresh',
-                        quantity_wanted: $quantityWantedInput.val()
-                    },
-                    formData
-                ),
-                dataType: 'json',
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if ($('section#main > .ajax-error').length === 0) {
-                        showError($('#product-availability'), 'An error occurred while processing your request');
-                    }
-                },
-                success: function(data, textStatus, errorThrown) {
-                    updateUrl = data.productUrl;
-                    $productActions.find('#quantity_wanted:first').data('update-url', updateUrl);
-
-                    return updateProduct(event, eventType, updateUrl);
-                }
-            });
-
-            return;
-        }
-
-        return updateProduct(event, eventType, updateUrl);
+        getProductUpdateUrl().done(function(productUpdateUrl) {
+            return updateProduct(event, eventType, productUpdateUrl);
+        }).fail(function() {
+            if ($('section#main > .ajax-error').length === 0) {
+                showError($('#product-availability'), 'An error occurred while processing your request');
+            }
+        });
     });
 });
 
+/**
+ * Get product update URL from different
+ * sources if needed (for compatibility)
+ *
+ * @param {string} event
+ * @param {string} eventType
+ * @return {Promise}
+ */
+function getProductUpdateUrl(event, eventType)
+{
+    let dfd = $.Deferred();
+    const $productActions = $('.product-actions');
+    const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
+    let updateUrl = $productActions.find('#quantity_wanted:first').data('update-url');
+
+    if (updateUrl == null
+        && prestashop != null
+        && prestashop.page != null
+        && prestashop.page.canonical != ''
+    ) {
+        updateUrl = prestashop.page.canonical;
+    }
+
+    if (updateUrl == null) {
+        let formData = {};
+
+        $($productActions.find('form:first').serializeArray()).each(function(k, v) {
+            formData[v.name] = v.value;
+        });
+
+        $.ajax({
+            url: $productActions.find('form:first').attr('action'),
+            method: 'POST',
+            data: Object.assign(
+                {
+                    ajax: 1,
+                    action: 'productrefresh',
+                    quantity_wanted: $quantityWantedInput.val()
+                },
+                formData
+            ),
+            dataType: 'json',
+            success: function(data, textStatus, errorThrown) {
+                let productUpdateUrl = data.productUrl;
+                $productActions.find('#quantity_wanted:first').data('update-url', productUpdateUrl);
+                dfd.resolve(productUpdateUrl);
+            }
+        });
+    } else {
+        dfd.resolve(updateUrl);
+    }
+
+    return dfd.promise();
+}
+
+/**
+ * Update the product html
+ *
+ * @param {string} event
+ * @param {string} eventType
+ * @param {string} updateUrl
+ */
 function updateProduct(event, eventType, updateUrl)
 {
     const $productActions = $('.product-actions');
