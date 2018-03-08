@@ -553,12 +553,23 @@ CREATE TABLE `PREFIX_country_lang` (
 /* Currency specification */
 CREATE TABLE `PREFIX_currency` (
   `id_currency` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
   `iso_code` varchar(3) NOT NULL DEFAULT '0',
+  `numeric_iso_code` varchar(3),
+  `precision` INT(2) NOT NULL DEFAULT 2,
   `conversion_rate` decimal(13,6) NOT NULL,
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id_currency`)
+  PRIMARY KEY (`id_currency`),
+  KEY `currency_iso_code` (`iso_code`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+/* Localized currency information */
+CREATE TABLE `PREFIX_currency_lang` (
+  `id_currency` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `symbol` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`id_currency`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 /* Customer info */
