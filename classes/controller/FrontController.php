@@ -1658,7 +1658,7 @@ class FrontControllerCore extends Controller
 
         $page = array(
             'title' => '',
-            'canonical' => '',
+            'canonical' => $this->getCanonicalURL(),
             'meta' => array(
                 'title' => $meta_tags['meta_title'],
                 'description' => $meta_tags['meta_description'],
@@ -1711,9 +1711,6 @@ class FrontControllerCore extends Controller
         );
     }
 
-    /**
-     * @deprecated 1.7.3.1
-     */
     public function getCanonicalURL()
     {
         return;
