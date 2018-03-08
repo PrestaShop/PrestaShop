@@ -4,7 +4,6 @@ module.exports = {
     click_outside: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[1]/th[3]',
     logout: '#header_logout',
     products_subtab: '#subtab-AdminCatalog',
-    //go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
     go_to_catalog_button: '#form > div.product-footer.justify-content-md-center > div.col-sm-5.col-lg-7.text-right > div.btn-group.hide.dropdown.show > div > a.dropdown-item.go-catalog.js-btn-save',
     new_product_dropdown_button: '#form > div.product-footer.justify-content-md-center > div.col-sm-5.col-lg-7.text-right > div.btn-group.hide.dropdown.show > div > a.dropdown-item.new-product.js-btn-save',
     more_option_button: '.btn.btn-primary.dropdown-toggle',
@@ -159,6 +158,7 @@ module.exports = {
     options_file_description: '//*[@id="form_step6_attachment_product_description"]',
     options_file_add_button: '//*[@id="form_step6_attachment_product_add"]',
     options_file_checkbox: '//*[@id="form_step6_attachments_0"]',
+    attached_file_checkbox: '//*[@id="product-attachment-file"]/tbody//label[contains(text(),"%FileName")]/input',
     catalog_product_table: '#product_catalog_list table.product',
     get catalog_product_name() {
       return this.catalog_product_table + ' > tbody tr:first-child > td:nth-child(4) > a';
