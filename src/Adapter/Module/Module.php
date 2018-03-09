@@ -181,6 +181,7 @@ class Module implements ModuleInterface
 
     /**
      * @return bool True if valid Module instance
+     * @throws \Exception
      */
     public function hasValidInstance()
     {
@@ -190,15 +191,16 @@ class Module implements ModuleInterface
         }
 
         if ($this->instance === null) {
-            // We try to instanciate the legacy class if not done yet
+            // We try to instantiate the legacy class if not done yet
             try {
                 $this->instanciateLegacyModule($this->attributes->get('name'));
             } catch (\Exception $e) {
                 $this->disk->set('is_valid', false);
-                throw $e;
+
+                return false;
             }
         }
-        $this->disk->set('is_valid', ($this->instance instanceof LegacyModule));
+        $this->disk->set('is_valid', $this->instance instanceof LegacyModule);
 
         return $this->disk->get('is_valid');
     }

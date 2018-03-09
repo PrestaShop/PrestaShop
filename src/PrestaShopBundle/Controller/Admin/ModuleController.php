@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -239,7 +240,7 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($modules as $moduleLabel => $modulesPart) {
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart);
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls(AddonsCollection::createFrom($modulesPart));
             $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
         }
 

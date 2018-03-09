@@ -26,8 +26,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
@@ -172,9 +172,14 @@ class AdminModuleDataProvider implements ModuleInterface
         return ($this->employee->can('edit', 'AdminModulessf') && $this->moduleProvider->can('configure', $name));
     }
 
-    public function generateAddonsUrls(array $addons, $specific_action = null)
+    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
-        foreach ($addons as &$addon) {
+        foreach ($addons->toArray() as &$addon) {
+            if (!$addon->hasValidInstance()) {
+                $this->logger->warning(sprintf("The addon with id %s is invalid", $addon->get('id')));
+
+                return;
+            }
             $urls = array();
             foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
