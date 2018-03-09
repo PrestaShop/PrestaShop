@@ -7,6 +7,12 @@ let pageData = {
   meta_keyword: ["keyword", "page"]
 };
 
+let newPageData = {
+  meta_title: 'editpage',
+  meta_description: 'edit page meta description',
+  meta_keyword: ["edit"]
+};
+
 scenario('Create, edit, delete and delete with bulk actions page', client => {
 
   scenario('Open the browser and connect to the BO', client => {
@@ -17,6 +23,7 @@ scenario('Create, edit, delete and delete with bulk actions page', client => {
   common_scenarios.createPage(pageData);
   common_scenarios.checkPageBO(pageData.meta_title);
   common_scenarios.checkPageFO(pageData.meta_title);
+  common_scenarios.editPage(pageData, newPageData);
 
   scenario('logout successfully from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());

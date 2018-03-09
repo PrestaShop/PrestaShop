@@ -25,10 +25,14 @@ module.exports = {
     Page: {
       add_new_page_button: '//*[@id="page-header-desc-cms-new_cms_page"]',
       meta_keywords_input: '//div[@class="tagify-container"]//input',
+      delete_tag_button: '//div[@class="tagify-container"]//span[%POS]/a',
       enable_indexation_option: '//label[@for="indexation_on"]',
       save_button: '//*[@id="cms_form_submit_btn"]',
       url_filter_input: '//input[@name="cmsFilter_link_rewrite"]',
-      search_url_result: '//*[@id="table-cms"]//td[%ID]'
+      search_url_result: '//*[@id="table-cms"]//td[%ID]',
+      edit_button: '//*[@id="table-cms"]//a[@title="Edit"]',
+      dropdown_toggle: '//*[@id="table-cms"]//button[@data-toggle="dropdown"]',
+      delete_button: '//*[@id="table-cms"]//a[@title="Delete"]',
     }
   }
 };
