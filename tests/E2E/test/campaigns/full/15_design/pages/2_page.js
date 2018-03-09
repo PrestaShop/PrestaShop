@@ -29,10 +29,12 @@ scenario('Create, edit, delete and delete with bulk actions page', client => {
   common_scenarios.checkPageBO(newPageData.meta_title);
   common_scenarios.checkPageFO(newPageData);
   common_scenarios.deletePage(newPageData);
+  common_scenarios.createPage(pageData);
+  common_scenarios.createPage(pageData);
+  common_scenarios.deletePageWithBulkActions(pageData);
 
-  /*  scenario('logout successfully from the Back Office', client => {
-      test('should logout successfully from the Back Office', () => client.signOutBO());
-    }, 'common_client');*/
+  scenario('logout successfully from the Back Office', client => {
+    test('should logout successfully from the Back Office', () => client.signOutBO());
+  }, 'common_client');
 
-
-}, 'common_client');
+}, 'common_client', true);

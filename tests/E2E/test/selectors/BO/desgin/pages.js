@@ -33,7 +33,10 @@ module.exports = {
       edit_button: '//*[@id="table-cms"]//a[@title="Edit"]',
       dropdown_toggle: '//*[@id="table-cms"]//button[@data-toggle="dropdown"]',
       delete_button: '//*[@id="table-cms"]//a[@title="Delete"]',
-      page_content: '//*[@id="cms_form"]//div[@class="mce-tinymce mce-container mce-panel"]'
+      page_content: '//*[@id="cms_form"]//div[@class="mce-tinymce mce-container mce-panel"]',
+      bulk_actions_button: '//*[@id="bulk_action_menu_cms"]',
+      bulk_actions_select_all_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "true")]',
+      bulk_actions_delete_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecms")]'
     }
   }
 };

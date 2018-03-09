@@ -23,6 +23,7 @@ let promise = Promise.resolve();
   *  meta_keyword: ["keyword", "page"]
   * };
  */
+
 module.exports = {
   createCategory: function (categoryData) {
     scenario('Create page category', client => {
@@ -127,7 +128,7 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       }
-      test('should set the "Page content"', () => client.setContentToEditor(Pages.Page.page_content, pageData.page_content));
+      test('should set the "Page content"', () => client.setTextToEditor(Pages.Page.page_content, pageData.page_content));
       test('should set the option "Indexation by search engines" to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
@@ -168,7 +169,7 @@ module.exports = {
       test('should set the new "Meta title" input', () => client.waitAndSetValue(Pages.Common.name_input, newPageData.meta_title + date_time));
       test('should set the new "Meta description" input', () => client.waitAndSetValue(Pages.Common.meta_description_input, newPageData.meta_description));
       for (let j in pageData.meta_keyword) {
-        test('should delete the old "Meta Keywords - ' + pageData.meta_keyword[j] + '" input', () => client.waitForExistAndClick(Pages.Page.delete_tag_button.replace("%POS", Number(j)+1)));
+        test('should delete the old "Meta Keywords - ' + pageData.meta_keyword[j] + '" input', () => client.waitForExistAndClick(Pages.Page.delete_tag_button.replace("%POS", Number(j) + 1)));
       }
       for (let i in newPageData.meta_keyword) {
         test('should set the new "Meta Keywords - ' + newPageData.meta_keyword[i] + '" input', () => {
@@ -178,28 +179,50 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       }
-      test('should set the "Page content"', () => client.setContentToEditor(Pages.Page.page_content, newPageData.page_content));
+      test('should set the "Page content"', () => client.setTextToEditor(Pages.Page.page_content, newPageData.page_content));
       test('should set the option "Indexation by search engines" to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful update.'))
     }, 'common_client');
   },
-  deletePage:function (pageData) {
+  deletePage: function (pageData) {
     scenario('Delete the page', client => {
-    test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
-    test('should search for the page in "pages list"', () => {
-      return promise
-        .then(() => client.isVisible(Pages.Page.title_filter_input))
-        .then(() => client.search(Pages.Page.title_filter_input, pageData.meta_title + date_time))
-    });
-    test('should click on "Delete" button"', () => {
-      return promise
-        .then(() => client.waitForExistAndClick(Pages.Page.dropdown_toggle))
-        .then(() => client.waitForExistAndClick(Pages.Page.delete_button))
-    });
-    test('should accept the currently displayed alert dialog', () => client.alertAccept());
-    test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful deletion.'));
+      test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+      test('should search for the page in "pages list"', () => {
+        return promise
+          .then(() => client.isVisible(Pages.Page.title_filter_input))
+          .then(() => client.search(Pages.Page.title_filter_input, pageData.meta_title + date_time))
+      });
+      test('should click on "Delete" button"', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(Pages.Page.dropdown_toggle))
+          .then(() => client.waitForExistAndClick(Pages.Page.delete_button))
+      });
+      test('should accept the currently displayed alert dialog', () => client.alertAccept());
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful deletion.'));
+    }, 'common_client');
+  },
+  deletePageWithBulkActions: function (pageData) {
+    scenario('Delete the page with Bulk actions', client => {
+      test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+      test('should search for the page in "pages list"', () => {
+        return promise
+          .then(() => client.isVisible(Pages.Page.title_filter_input))
+          .then(() => client.search(Pages.Page.title_filter_input, pageData.meta_title))
+      });
+      test('should click on "Bulk actions - Select all" button"', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_button))
+          .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_select_all_button))
+      });
+      test('should click on "Bulk actions - Delete selected" button"', () => {
+        return promise
+          .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_button))
+          .then(() => client.waitForExistAndClick(Pages.Page.bulk_actions_delete_button))
+      });
+      test('should accept the currently displayed alert dialog', () => client.alertAccept());
+      test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nThe selection has been successfully deleted.'));
     }, 'common_client');
   }
 };
