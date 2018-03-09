@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\Entity\Configuration;
 
 /**
  * This class will provide data from DB / ORM about Currency
@@ -41,5 +42,32 @@ class CurrencyDataProvider
     public function getCurrencies($object = false, $active = true, $group_by = false)
     {
         return Currency::getCurrencies($object = false, $active = true, $group_by = false);
+    }
+
+    /**
+     * Get a Currency entity instance by ISO code
+     *
+     * @param string $isoCode
+     *  An ISO 4217 currency code
+     *
+     * @param int|null $idLang
+     *  Set this parameter if you want the currency in a specific language.
+     *  If null, default language will be used.
+     *
+     * @return Currency|null
+     *  The asked Currency object, or null if not found.
+     */
+    public function getCurrencyByIsoCode($isoCode, $idLang = null)
+    {
+        $currencyId = Currency::getIdByIsoCode($isoCode);
+        if (!$currencyId) {
+            return null;
+        }
+
+        if (null === $idLang) {
+            $idLang = Configuration::get('PS_LANG_DEFAULT');
+        }
+
+        return new Currency($currencyId, $idLang);
     }
 }
