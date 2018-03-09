@@ -27,6 +27,7 @@
 namespace Tests\Unit\Core\Localization\DataLayer;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency as CldrCurrency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
@@ -46,11 +47,12 @@ class CurrencyReferenceTest extends TestCase
     {
         $stubCurrencyData          = new CldrCurrencyData();
         $stubCurrencyData->isoCode = 'PCE';
+        $stubCldrCurrency          = new CldrCurrency($stubCurrencyData);
 
         $stubLocale = $this->createMock(CldrLocale::class);
-        $stubLocale->method('getCurrencyData')
+        $stubLocale->method('getCurrency')
             ->willReturnMap([
-                ['PCE', $stubCurrencyData],
+                ['PCE', $stubCldrCurrency],
                 ['unknown', null],
             ]);
 
@@ -83,6 +85,7 @@ class CurrencyReferenceTest extends TestCase
             $currencyData
         );
 
+        /** @var CurrencyData $currencyData */
         $this->assertSame(
             'PCE',
             $currencyData->isoCode
