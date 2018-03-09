@@ -27,12 +27,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
-use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShopBundle\Entity\Currency as CurrencyEntity;
+use PrestaShopException;
 
 /**
  * CLDR Currency Database (Doctrine) data layer
@@ -41,19 +41,14 @@ use PrestaShopBundle\Entity\Currency as CurrencyEntity;
  */
 class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
 {
-    /**
-     * Doctrine entity manager, used to read and write into the database layer
-     *
-     * @var EntityManagerInterface
-     */
-    protected $em;
 
+    protected $dataProvider;
     protected $localeCode;
 
-    public function __construct(EntityManagerInterface $em, $localeCode)
+    public function __construct(CurrencyDataProvider $dataProvider, $localeCode)
     {
-        $this->em         = $em;
-        $this->localeCode = $localeCode;
+        $this->dataProvider = $dataProvider;
+        $this->localeCode   = $localeCode;
     }
 
     /**
@@ -86,15 +81,19 @@ class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLaye
      */
     protected function doRead($currencyCode)
     {
-        /** @var CurrencyEntity $currencyEntity */
-        $currencyEntity = $this->em->getRepository(CurrencyEntity::class)->findOneBy(['iso_code' => $currencyCode]);
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCode($currencyCode);
+
+        if (null === $currencyEntity) {
+            return null;
+        }
+
         $currencyData   = new CurrencyData();
 
-        $currencyData->isoCode                    = $currencyEntity->getIsoCode();
-        $currencyData->numericIsoCode             = $currencyEntity->getNumericIsoCode(); // TODO
-        $currencyData->symbols[$this->localeCode] = $currencyEntity->getSymbol(); // TODO
-        $currencyData->precision                  = $currencyEntity->getPrecision(); // TODO
-        $currencyData->names[$this->localeCode]   = $currencyEntity->getName();
+        $currencyData->isoCode                    = $currencyEntity->iso_code;
+        $currencyData->names[$this->localeCode]   = $currencyEntity->name;
+        $currencyData->numericIsoCode             = $currencyEntity->numeric_iso_code;
+        $currencyData->symbols[$this->localeCode] = $currencyEntity->symbol;
+        $currencyData->precision                  = $currencyEntity->precision;
 
         return $currencyData;
     }
