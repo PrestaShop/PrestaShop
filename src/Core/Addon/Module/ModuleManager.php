@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -147,7 +148,8 @@ class ModuleManager implements AddonManagerInterface
 
         $modulesProvider = $this->adminModuleProvider;
         foreach ($modules as $moduleLabel => $modulesPart) {
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart, str_replace("to_", "", $moduleLabel));
+            $collection = AddonsCollection::createFrom($modulesPart);
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection, str_replace("to_", "", $moduleLabel));
             $modules->{$moduleLabel} = $modulesPresenter($modulesPart);
         }
 

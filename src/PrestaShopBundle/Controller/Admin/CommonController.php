@@ -25,6 +25,7 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use Symfony\Component\HttpFoundation\Request;
@@ -157,11 +158,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
-        $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
+        $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
         /* @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
@@ -180,7 +181,8 @@ class CommonController extends FrameworkBundleAdminController
         }
 
         $modules = $recommendedModules->filterInstalledAndBadModules($modules);
-        $modules = $modulesProvider->generateAddonsUrls($modules);
+        $collection = AddonsCollection::createFrom($modules);
+        $modules = $modulesProvider->generateAddonsUrls($collection);
 
         return array(
             'domain' => $domain,

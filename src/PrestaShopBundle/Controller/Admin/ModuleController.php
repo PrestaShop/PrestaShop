@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
+use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -119,9 +120,8 @@ class ModuleController extends FrameworkBundleAdminController
         ;
 
         try {
-            $modules = $modulesProvider->generateAddonsUrls(
-                $moduleRepository->getFilteredList($filters)
-            );
+            $modulesFromRepository = AddonsCollection::createFrom($moduleRepository->getFilteredList($filters));
+            $modules = $modulesProvider->generateAddonsUrls($modulesFromRepository);
 
             $categoriesMenu = $this->get('prestashop.categories_provider')->getCategoriesMenu($modules);
             shuffle($modules);
@@ -142,7 +142,8 @@ class ModuleController extends FrameworkBundleAdminController
 
     private function constructJsonCatalogBodyResponse($modulesProvider, $modules)
     {
-        $modules = $modulesProvider->generateAddonsUrls($modules);
+        $collection = AddonsCollection::createFrom($modules);
+        $modules = $modulesProvider->generateAddonsUrls($collection);
         $formattedContent = array();
         $formattedContent['selector'] = '.module-catalog-page';
         $formattedContent['content'] = $this->render(
@@ -239,7 +240,8 @@ class ModuleController extends FrameworkBundleAdminController
         }
 
         foreach ($modules as $moduleLabel => $modulesPart) {
-            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($modulesPart);
+            $collection = AddonsCollection::createFrom($modulesPart);
+            $modules->{$moduleLabel} = $modulesProvider->generateAddonsUrls($collection);
             $modules->{$moduleLabel} = $this->getPresentedProducts($modulesPart);
         }
 
@@ -339,7 +341,8 @@ class ModuleController extends FrameworkBundleAdminController
                 );
             }
         } catch (UnconfirmedModuleActionException $e) {
-            $modules = $modulesProvider->generateAddonsUrls(array($e->getModule()));
+            $collection = AddonsCollection::createFrom(array($e->getModule()));
+            $modules = $modulesProvider->generateAddonsUrls($collection);
             $response[$module] = array_replace($response[$module],
                     array(
                         'status' => false,
@@ -371,7 +374,8 @@ class ModuleController extends FrameworkBundleAdminController
 
         if ($response[$module]['status'] === true && $action != 'uninstall') {
             $moduleInstance = $moduleRepository->getModule($module);
-            $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls(array($moduleInstance));
+            $collection = AddonsCollection::createFrom(array($moduleInstance));
+            $moduleInstanceWithUrl = $modulesProvider->generateAddonsUrls($collection);
             $response[$module]['action_menu_html'] = $this->render('PrestaShopBundle:Admin/Module/Includes:action_menu.html.twig', array(
                 'module' => $this->getPresentedProducts($moduleInstanceWithUrl)[0],
                 'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
@@ -496,7 +500,7 @@ class ModuleController extends FrameworkBundleAdminController
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
         $tabRepository = $this->get('prestashop.core.admin.tab.repository');
 
-        $modulesOnDisk = $moduleRepository->getList();
+        $modulesOnDisk = AddonsCollection::createFrom($moduleRepository->getList());
 
         $modulesList = array(
             'installed' => array(),
@@ -645,7 +649,8 @@ class ModuleController extends FrameworkBundleAdminController
                 array('Content-Type' => 'application/json')
             );
         } catch (UnconfirmedModuleActionException $e) {
-            $modules = $this->get('prestashop.core.admin.data_provider.module_interface')->generateAddonsUrls(array($e->getModule()));
+            $collection = AddonsCollection::createFrom(array($e->getModule()));
+            $modules = $this->get('prestashop.core.admin.data_provider.module_interface')->generateAddonsUrls($collection);
             return new JsonResponse(
                     array(
                         'status' => false,
@@ -803,7 +808,8 @@ class ModuleController extends FrameworkBundleAdminController
         $module = $moduleRepository->getModuleById($moduleId);
 
         $addOnsAdminDataProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $addOnsAdminDataProvider->generateAddonsUrls(array($module));
+        $collection = AddonsCollection::createFrom(array($module));
+        $addOnsAdminDataProvider->generateAddonsUrls($collection);
 
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
         $moduleToPresent = $modulePresenter->present($module);
