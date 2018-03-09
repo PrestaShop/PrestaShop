@@ -127,6 +127,7 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       }
+      test('should set the "Page content"', () => client.setContentToEditor(Pages.Page.page_content, pageData.page_content));
       test('should set the option "Indexation by search engines" to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
@@ -138,19 +139,20 @@ module.exports = {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should check the existence of the page', () => {
         return promise
-          .then(() => client.isVisible(Pages.Page.url_filter_input))
-          .then(() => client.search(Pages.Page.url_filter_input, pageMetaTitle + date_time))
-          .then(() => client.checkExistence(Pages.Page.search_url_result, pageMetaTitle + date_time, 3))
+          .then(() => client.isVisible(Pages.Page.title_filter_input))
+          .then(() => client.search(Pages.Page.title_filter_input, pageMetaTitle + date_time))
+          .then(() => client.checkExistence(Pages.Page.search_title_result, pageMetaTitle + date_time, 4))
       });
     }, 'common_client');
   },
-  checkPageFO: function (pageMetaTitle) {
+  checkPageFO: function (pageData) {
     scenario('Check the page existence in the Front Office', client => {
       test('should go to the front Office', () => client.waitForExistAndClick(AccessPageBO.shopname));
       test('should switch to Front Office window', () => client.switchWindow(1));
       test('should change the Front Office language to "English"', () => client.changeLanguage());
       test('should click on the "sitemap" menu', () => client.scrollWaitForExistAndClick(AccessPageFO.sitemap));
-      test('should check the existence of the page link in "PAGES" menu', () => client.waitForExistAndClick(AccessPageFO.page_link.replace("%pageName", pageMetaTitle + date_time)));
+      test('should check the existence of the page link in "PAGES" menu', () => client.waitForExistAndClick(AccessPageFO.page_link.replace("%pageName", pageData.meta_title + date_time)));
+      test('should check the page content', () => client.checkTextValue(AccessPageFO.page_content, pageData.page_content));
       test('should switch to Back Office window', () => client.switchWindow(0));
     }, 'common_client');
   },
@@ -159,8 +161,8 @@ module.exports = {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the page in "pages list"', () => {
         return promise
-          .then(() => client.isVisible(Pages.Page.url_filter_input))
-          .then(() => client.search(Pages.Page.url_filter_input, pageData.meta_title + date_time))
+          .then(() => client.isVisible(Pages.Page.title_filter_input))
+          .then(() => client.search(Pages.Page.title_filter_input, pageData.meta_title + date_time))
       });
       test('should click on the "Edit" button', () => client.waitForExistAndClick(Pages.Page.edit_button));
       test('should set the new "Meta title" input', () => client.waitAndSetValue(Pages.Common.name_input, newPageData.meta_title + date_time));
@@ -176,10 +178,28 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       }
+      test('should set the "Page content"', () => client.setContentToEditor(Pages.Page.page_content, newPageData.page_content));
       test('should set the option "Indexation by search engines" to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful update.'))
+    }, 'common_client');
+  },
+  deletePage:function (pageData) {
+    scenario('Delete the page', client => {
+    test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+    test('should search for the page in "pages list"', () => {
+      return promise
+        .then(() => client.isVisible(Pages.Page.title_filter_input))
+        .then(() => client.search(Pages.Page.title_filter_input, pageData.meta_title + date_time))
+    });
+    test('should click on "Delete" button"', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(Pages.Page.dropdown_toggle))
+        .then(() => client.waitForExistAndClick(Pages.Page.delete_button))
+    });
+    test('should accept the currently displayed alert dialog', () => client.alertAccept());
+    test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful deletion.'));
     }, 'common_client');
   }
 };

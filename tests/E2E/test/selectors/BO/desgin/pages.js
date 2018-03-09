@@ -28,11 +28,12 @@ module.exports = {
       delete_tag_button: '//div[@class="tagify-container"]//span[%POS]/a',
       enable_indexation_option: '//label[@for="indexation_on"]',
       save_button: '//*[@id="cms_form_submit_btn"]',
-      url_filter_input: '//input[@name="cmsFilter_link_rewrite"]',
-      search_url_result: '//*[@id="table-cms"]//td[%ID]',
+      title_filter_input: '//input[@name="cmsFilter_b!meta_title"]',
+      search_title_result: '//*[@id="table-cms"]//td[%ID]',
       edit_button: '//*[@id="table-cms"]//a[@title="Edit"]',
       dropdown_toggle: '//*[@id="table-cms"]//button[@data-toggle="dropdown"]',
       delete_button: '//*[@id="table-cms"]//a[@title="Delete"]',
+      page_content: '//*[@id="cms_form"]//div[@class="mce-tinymce mce-container mce-panel"]'
     }
   }
 };
