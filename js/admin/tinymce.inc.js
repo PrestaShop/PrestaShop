@@ -45,9 +45,6 @@ function tinySetup(config) {
     config.selector = '.' + config.editor_selector;
   }
 
-  if (typeof lang_is_rtl === 'undefined') {
-    var lang_is_rtl = '0';
-  }
 
   var default_config = {
     selector: ".rte",
