@@ -2259,6 +2259,7 @@ class OrderCore extends ObjectModel
 
         // compute products discount
         $order_discount_tax_excl = $this->total_discounts_tax_excl;
+        $order_discount_tax_incl = $this->total_discounts_tax_incl;
 
         $free_shipping_tax = 0;
         $product_specific_discounts = array();
@@ -2269,6 +2270,7 @@ class OrderCore extends ObjectModel
             if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0) {
                 $free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
                 $order_discount_tax_excl -= $this->total_shipping_tax_excl;
+                $order_discount_tax_incl -= $this->total_shipping_tax_incl;
                 $expected_total_base += $this->total_shipping_tax_excl;
             }
 
@@ -2280,10 +2282,11 @@ class OrderCore extends ObjectModel
 
                 $product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
                 $order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
+                $order_discount_tax_incl -= $order_cart_rule['value_tax_incl'];
             }
         }
         
-        $expected_total_tax = $this->total_products_wt - $this->total_products;
+        $expected_total_tax = ($this->total_products_wt - $order_discount_tax_incl) - ($this->total_products - $order_discount_tax_excl);
         $actual_total_tax = 0;
         $actual_total_base = 0;
 
