@@ -263,29 +263,32 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
         // 	- 'total_amount'
         $breakdown = array();
 
-        $details = $this->order->getProductTaxesDetails($this->order->products);
+        if (is_array($this->order->products)) {
 
-        foreach ($details as $row) {
-            $rate = sprintf('%.3f', $row['tax_rate']);
-            if (!isset($breakdown[$rate])) {
-                $breakdown[$rate] = array(
-                    'total_price_tax_excl' => 0,
-                    'total_amount' => 0,
-                    'id_tax' => $row['id_tax'],
-                    'rate' =>$rate,
-                );
+            $details = $this->order->getProductTaxesDetails($this->order->products);
+
+            foreach ($details as $row) {
+                $rate = sprintf('%.3f', $row['tax_rate']);
+                if (!isset($breakdown[$rate])) {
+                    $breakdown[$rate] = array(
+                        'total_price_tax_excl' => 0,
+                        'total_amount' => 0,
+                        'id_tax' => $row['id_tax'],
+                        'rate' =>$rate,
+                    );
+                }
+
+                $breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
+                $breakdown[$rate]['total_amount'] += $row['total_amount'];
             }
 
-            $breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
-            $breakdown[$rate]['total_amount'] += $row['total_amount'];
-        }
+            foreach ($breakdown as $rate => $data) {
+                $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+                $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+            }
 
-        foreach ($breakdown as $rate => $data) {
-            $breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
-            $breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+            ksort($breakdown);
         }
-
-        ksort($breakdown);
 
         return $breakdown;
     }
