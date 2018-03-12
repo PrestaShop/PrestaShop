@@ -8,11 +8,18 @@ let promise = Promise.resolve();
 /****Example of category data ****
  * let categoryData = {
  *  name: 'Category',
- *  parent_category: 'demo',
+ *  parent_category: '1',
  *  description: 'Category description',
  *  meta_title: 'Category meta title',
  *  meta_description: 'Category meta description',
  *  meta_keywords: 'Category meta keywords',
+ *  sub_category: {
+ *    name: 'subCategory',
+ *    description: 'sub category description',
+ *    meta_title: 'sub category meta title',
+ *    meta_description: 'sub category meta description',
+ *    meta_keywords: 'sub category meta keywords'
+ *  }
  * };
  */
 
@@ -26,54 +33,120 @@ let promise = Promise.resolve();
 
 module.exports = {
   createCategory: function (categoryData) {
-    scenario('Create page category', client => {
+    scenario('Create cms category', client => {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should click on "Add new page category" button', () => client.waitForExistAndClick(Pages.Category.add_category_button));
       test('should set the "Name" input', () => client.waitAndSetValue(Pages.Common.name_input, categoryData.name + date_time));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
-      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, 1));
+      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, categoryData.parent_category));
       test('should set the "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryData.description));
       test('should set the "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryData.meta_title));
       test('should set the "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryData.meta_description));
       test('should set the "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryData.meta_keywords));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
-    }, 'common_client');
+      if (categoryData.hasOwnProperty('sub_category')) {
+        scenario('Create the cms sub category', client => {
+          test('should return to the "Home" page', () => client.waitForExistAndClick(Pages.Category.home_icon));
+          test('should get the parent category ID', () => {
+            return promise
+              .then(() => client.isVisible(Pages.Category.name_filter))
+              .then(() => client.search(Pages.Category.name_filter, categoryData.name + date_time))
+              .then(() => client.getCategoryID(Pages.Category.search_name_result, 2));
+          });
+          test('should click on "Add new page category" button', () => client.waitForExistAndClick(Pages.Category.add_category_button));
+          test('should set the "Name" input', () => client.waitAndSetValue(Pages.Common.name_input, categoryData.sub_category.name + date_time));
+          test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
+          test('should select the "Parent category" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, global.categoryID));
+          test('should set the "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryData.sub_category.description));
+          test('should set the "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryData.sub_category.meta_title));
+          test('should set the "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryData.sub_category.meta_description));
+          test('should set the "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryData.sub_category.meta_keywords));
+          test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
+          test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful creation.'));
+        }, 'design');
+      }
+    }, 'design');
   },
-  checkCategoryBO: function (categoryName) {
-    scenario('Check page category existence in the Back Office', client => {
+  checkCategoryBO: function (categoryData) {
+    scenario('Check cms category existence in the Back Office', client => {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
-      test('should check the existence of the page category', () => {
+      test('should check the existence of the cms category', () => {
         return promise
           .then(() => client.isVisible(Pages.Category.name_filter))
-          .then(() => client.search(Pages.Category.name_filter, categoryName + date_time))
-          .then(() => client.checkExistence(Pages.Category.search_name_result, categoryName + date_time, 3));
+          .then(() => client.search(Pages.Category.name_filter, categoryData.name + date_time))
+          .then(() => client.checkExistence(Pages.Category.search_name_result, categoryData.name + date_time, 3));
       });
-    }, 'common_client');
+      if (categoryData.hasOwnProperty('sub_category')) {
+        scenario('Check the cms sub category existence in the Back Office', client => {
+          test('should click on "View" button', () => client.waitForExistAndClick(Pages.Category.view_button));
+          test('should Check the cms sub category existence', () => {
+            return promise
+              .then(() => client.isVisible(Pages.Category.name_filter))
+              .then(() => client.search(Pages.Category.name_filter, categoryData.sub_category.name + date_time))
+              .then(() => client.checkExistence(Pages.Category.search_name_result, categoryData.sub_category.name + date_time, 3));
+          });
+        }, 'design');
+      }
+    }, 'design');
   },
-  editCategory: function (categoryName, categoryData) {
+  editCategory: function (categoryData, categoryNewData) {
     scenario('Edit page category', client => {
       test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
       test('should search for the category in the "Category list"', () => {
         return promise
           .then(() => client.isVisible(Pages.Category.name_filter))
-          .then(() => client.search(Pages.Category.name_filter, categoryName + date_time));
+          .then(() => client.search(Pages.Category.name_filter, categoryData.name + date_time));
       });
       test('should click on "Edit" button', () => {
         return promise
           .then(() => client.waitForExistAndClick(Pages.Category.dropdown_toggle))
           .then(() => client.waitForExistAndClick(Pages.Category.edit_button));
       });
-      test('should set the new "Name" input', () => client.waitAndSetValue(Pages.common.name_input, categoryData.name + date_time));
+      if (categoryData.hasOwnProperty('sub_category')) {
+        test('should select the "Parent category" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, Number(global.categoryID) + 1));
+        test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
+        test('should verify the appearance of the error message "The page Category cannot be moved here."', () => client.checkTextValue(Pages.Common.danger_panel, '×\nThe page Category cannot be moved here.'));
+        test('should go to "Design-Pages" list', () => client.goToSubtabMenuPage(Menu.Improve.Design.design_menu, Menu.Improve.Design.pages_submenu));
+        test('should search for the category in the "Category list"', () => {
+          return promise
+            .then(() => client.isVisible(Pages.Category.name_filter))
+            .then(() => client.search(Pages.Category.name_filter, categoryData.name + date_time));
+        });
+        test('should click on "Edit" button', () => {
+          return promise
+            .then(() => client.waitForExistAndClick(Pages.Category.dropdown_toggle))
+            .then(() => client.waitForExistAndClick(Pages.Category.edit_button));
+        });
+      }
+      test('should set the new "Name" input', () => client.waitAndSetValue(Pages.Common.name_input, categoryNewData.name + date_time));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
-      test('should select the "Parent category - home" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, 1));
-      test('should set the new "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryData.description));
-      test('should set the new "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryData.meta_title));
-      test('should set the new "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryData.meta_description));
-      test('should set the new "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryData.meta_keywords));
+      test('should select the "Parent category" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, categoryNewData.parent_category));
+      test('should set the new "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryNewData.description));
+      test('should set the new "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryNewData.meta_title));
+      test('should set the new "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryNewData.meta_description));
+      test('should set the new "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryNewData.meta_keywords));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful update.'));
-    }, 'common_client');
+      if (categoryData.hasOwnProperty('sub_category')) {
+        test('should click on "Edit" button', () => {
+          return promise
+            .then(() => client.waitForExistAndClick(Pages.Category.dropdown_toggle))
+            .then(() => client.waitForExistAndClick(Pages.Category.edit_button));
+        });
+        test('should set the new "Name" input', () => client.waitAndSetValue(Pages.Common.name_input, categoryNewData.sub_category.name + date_time));
+        test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
+        if (categoryNewData.sub_category.hasOwnProperty('parent_category')) {
+          test('should select the "Parent category" option ', () => client.waitAndSelectByValue(Pages.Category.parent_category_select, categoryNewData.sub_category.parent_category));
+        }
+        test('should set the new "Description" text area ', () => client.waitAndSetValue(Pages.Category.description_textarea, categoryNewData.sub_category.description));
+        test('should set the new "Meta title" input ', () => client.waitAndSetValue(Pages.Category.meta_title_input, categoryNewData.sub_category.meta_title));
+        test('should set the new "Meta description" input ', () => client.waitAndSetValue(Pages.Common.meta_description_input, categoryNewData.sub_category.meta_description));
+        test('should set the new "Meta keywords" input ', () => client.waitAndSetValue(Pages.Category.meta_keywords_input, categoryNewData.sub_category.meta_keywords));
+        test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Category.save_button));
+        test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful update.'));
+      }
+    }, 'design');
   },
   deleteCategory: function (categoryName) {
     scenario('Delete page category', client => {
@@ -90,7 +163,7 @@ module.exports = {
       });
       test('should accept the currently displayed alert dialog', () => client.alertAccept());
       test('should verify the appearance of the green validation', () => client.checkTextValue(Pages.Common.success_panel, '×\nSuccessful deletion.'));
-    }, 'common_client');
+    }, 'design');
   },
   deleteCategoryWithBulkActions: function (categoryName) {
     scenario('Delete page category with bulk actions', client => {
