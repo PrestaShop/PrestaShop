@@ -1097,12 +1097,13 @@ class LanguageCore extends ObjectModel
 
     public static function installSfLanguagePack($locale, &$errors = array())
     {
-        if (!file_exists(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip')) {
+        $zipFilePath = _PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip';
+        if (!file_exists($zipFilePath)) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', array(), 'Admin.International.Notification');
         } else {
             $zipArchive = new ZipArchive();
-            $zipArchive->open(_PS_TRANSLATIONS_DIR_.'sf-'.$locale.'.zip');
+            $zipArchive->open($zipFilePath);
             $zipArchive->extractTo(_PS_ROOT_DIR_.'/app/Resources/translations');
             $zipArchive->close();
         }
