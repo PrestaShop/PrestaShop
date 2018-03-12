@@ -53,9 +53,9 @@ class PrestaShopBundle extends Bundle
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new DynamicRolePass());
-        $container->addCompilerPass(new PopulateFormFieldProviderPass());
         $container->addCompilerPass(new PopulateTranslationProvidersPass());
         $container->addCompilerPass(new LoadServicesFromModulesPass(), PassConfig::TYPE_BEFORE_REMOVING);
+        $container->addCompilerPass(new PopulateFormFieldProviderPass(), PassConfig::TYPE_BEFORE_REMOVING);
         $container->addCompilerPass(new RemoveXmlCompiledContainerPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new RouterPass(), PassConfig::TYPE_AFTER_REMOVING);
         $container->addCompilerPass(new OverrideTranslatorServiceCompilerPass());

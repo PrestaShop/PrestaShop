@@ -64,14 +64,15 @@ class FormProvider implements FormProviderInterface
 
             $forms = $this->fields->get($formName);
 
-            foreach ($fields as $field) {
+            foreach ($fields as $name => $field) {
                 if ($field instanceof FormInterface) {
                     $forms[] = $field;
                     continue;
                 }
 
+
                 $forms[] = $this->formFactory->createNamed(
-                    $field['name'],
+                    $name,
                     $field['type'],
                     $field['data'],
                     array_merge(
