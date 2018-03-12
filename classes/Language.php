@@ -1091,7 +1091,7 @@ class LanguageCore extends ObjectModel
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification').' ('.$file.')';
         } else {
             $fs = new Filesystem();
-            $fs->copy($url, $file);
+            $fs->copy($url, $file, true);
         }
     }
 
