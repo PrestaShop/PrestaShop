@@ -52,11 +52,6 @@ if ($tmp = strpos($_SERVER['REQUEST_URI'], '?')) {
 }
 $_SERVER['REQUEST_URI'] = str_replace('//', '/', $_SERVER['REQUEST_URI']);
 
-// Check PHP version
-if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.4', '<')) {
-    die('You need at least PHP 5.4 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
-}
-
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
 if (!defined('__PS_BASE_URI__')) {
@@ -96,8 +91,6 @@ define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_.'controllers/');
 define('_PS_INSTALL_MODELS_PATH_', _PS_INSTALL_PATH_.'models/');
 define('_PS_INSTALL_LANGS_PATH_', _PS_INSTALL_PATH_.'langs/');
 define('_PS_INSTALL_FIXTURES_PATH_', _PS_INSTALL_PATH_.'fixtures/');
-
-require_once _PS_INSTALL_PATH_.'install_version.php';
 
 // PrestaShop autoload is used to load some helpfull classes like Tools.
 // Add classes used by installer bellow.

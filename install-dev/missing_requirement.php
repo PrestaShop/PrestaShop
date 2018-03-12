@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta name="description" content="This store is powered by PrestaShop" />
+  <title>PrestaShop Installation</title>
   <style>
     ::-moz-selection {
       background: #b3d4fc;
@@ -97,18 +97,18 @@
   <ol>
     <?php if (!extension_loaded('SimpleXML')): ?>
     <li>
-        PrestaShop installation requires at least the <b>SimpleXML extension</b> to be enabled.
+        PrestaShop installation requires the <b>SimpleXML extension</b> to be enabled.
     </li>
     <?php endif; ?>
     <?php if (!extension_loaded('zip')): ?>
       <li>
-          PrestaShop installation requires at least the <b>zip extension</b> to be enabled.
+          PrestaShop installation requires the <b>zip extension</b> to be enabled.
       </li>
     <?php endif; ?>
-    <?php if (PHP_VERSION_ID < 50400): ?>
+    <?php if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_): ?>
       <li>
-          PrestaShop requires at least PHP 5.4 or newer versions.
-          <i>You can install PrestaShop 1.6 if you can't update your version of PHP.</i>
+          PrestaShop requires at least PHP <?= _PS_INSTALL_MINIMUM_PHP_VERSION_ ?> or newer versions.
+          <i>To install PrestaShop <?= _PS_INSTALL_VERSION_ ?> you need to update your version of PHP.</i>
       </li>
     <?php endif; ?>
         <?php if (!is_writable(__DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'cache')): ?>
