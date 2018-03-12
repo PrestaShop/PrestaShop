@@ -1,5 +1,5 @@
 module.exports = {
-  AttributeSubMenu:{
+  AttributeSubMenu: {
     submenu: '//*[@id="subtab-AdminParentAttributesGroups"]/a',
     add_new_attribute: '//*[@id="page-header-desc-attribute_group-new_attribute_group"]',
     name_input: '//*[@id="name_1"]',
@@ -18,7 +18,8 @@ module.exports = {
     group_action_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/button',
     delete_attribute_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[3]/a',
     update_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[1]/a',
-    update_value_button: '//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/a'
+    update_value_button: '(//*[@id="table-attribute"]//a[@title="Edit"])[%POS]',
+    reset_button: '//*[@id="table-attribute_group"]//button[@name="submitResetattribute_group"]'
   }
 
 };

@@ -175,6 +175,13 @@ class CommonClient {
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.equal(textToCheckWith));
         break;
+      case "deepequal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(text).to.deep.equal(textToCheckWith));
+        break;
       case "notequal":
         return this.client
           .pause(pause)
@@ -307,6 +314,24 @@ class CommonClient {
       .pause(2000)
       .isVisible(selector)
       .then((isVisible) => expect(isVisible).to.be.false)
+  }
+
+  editObjectData(object) {
+    for(let key in object) {
+      if(object.hasOwnProperty(key) && key !== 'type') {
+        if (typeof object[key] === 'string') {
+          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
+        } else if (typeof object[key] === 'number') {
+          object[key] += 10;
+        } else if (typeof object[key] === 'object'){
+          this.editObjectData(object[key]);
+        }
+      }
+    }
+  }
+
+  deleteObjectElement (object, pos) {
+    delete object[pos];
   }
 }
 
