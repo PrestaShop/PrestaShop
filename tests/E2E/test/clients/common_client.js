@@ -184,6 +184,13 @@ class CommonClient {
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.equal(textToCheckWith));
         break;
+      case "deepequal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(text).to.deep.equal(textToCheckWith));
+        break;
       case "notequal":
         return this.client
           .pause(pause)
