@@ -119,7 +119,7 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                     }
                 } elseif ($entity === 'State') {
                     if ($this->country->contains_states) {
-                        $states = State::getStatesByIdCountry($this->country->id);
+                        $states = State::getStatesByIdCountry($this->country->id, true);
                         foreach ($states as $state) {
                             $formField->addAvailableValue(
                                 $state['id_state'],

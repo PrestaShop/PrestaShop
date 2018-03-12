@@ -264,6 +264,9 @@ class ModuleManagerTest extends \PHPUnit_Framework_TestCase
             ->method('onInstall')
             ->willReturn(true);
         $moduleS
+            ->method('onUpgrade')
+            ->willReturn(true);
+        $moduleS
             ->method('onUninstall')
             ->willReturn(true);
         $moduleS

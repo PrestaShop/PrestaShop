@@ -1034,7 +1034,7 @@ class AdminProductsControllerCore extends AdminController
         }
         if (!$priorities = Tools::getValue('specificPricePriority')) {
             $this->errors[] = $this->trans('Please specify priorities.', array(), 'Admin.Catalog.Notification');
-        } elseif (Tools::isSubmit('specificPricePriorityToAll')) {
+        } elseif (Tools::isSubmit('specificPricePriorityToAll') && Tools::getValue('specificPricePriorityToAll')) {
             if (!SpecificPrice::setPriorities($priorities)) {
                 $this->errors[] = $this->trans('An error occurred while updating priorities.', array(), 'Admin.Catalog.Notification');
             } else {

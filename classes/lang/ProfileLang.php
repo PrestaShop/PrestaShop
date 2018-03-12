@@ -32,16 +32,4 @@ class ProfileLangCore extends DataLangCore
     protected $keys = array('id_profile');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('SuperAdmin') => $this->translator->trans('SuperAdmin', array(), 'Admin.Advparameters.Feature', $this->locale),
-                md5('Logistician') => $this->translator->trans('Logistician', array(), 'Admin.Advparameters.Feature', $this->locale),
-                md5('Translator') => $this->translator->trans('Translator', array(), 'Admin.Advparameters.Feature', $this->locale),
-                md5('Salesman') => $this->translator->trans('Salesman', array(), 'Admin.Advparameters.Feature', $this->locale),
-            ),
-        );
-    }
 }

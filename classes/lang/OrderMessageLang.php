@@ -32,17 +32,4 @@ class OrderMessageLangCore extends DataLangCore
     protected $keys = array('id_order_message');
 
     protected $fieldsToUpdate = array('name', 'message');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Delay') => $this->translator->trans('Delay', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-            ),
-            'message' => array(
-                md5("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,")
-                    => $this->translator->trans("Hi,\n\nUnfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.\nPlease accept our apologies and rest assured that we are working hard to rectify this.\n\nBest regards,", array(), 'Admin.Orderscustomers.Feature', $this->locale),
-            ),
-        );
-    }
 }

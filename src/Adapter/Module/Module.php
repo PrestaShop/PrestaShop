@@ -215,6 +215,8 @@ class Module implements ModuleInterface
 
         $result = $this->instance->install();
         $this->database->set('installed', $result);
+        $this->database->set('active', $result);
+        $this->database->set('version', $this->attributes->get('version'));
         return $result;
     }
 
@@ -237,6 +239,7 @@ class Module implements ModuleInterface
      */
     public function onUpgrade($version)
     {
+        $this->database->set('version', $this->attributes->get('version_available'));
         return true;
     }
 
