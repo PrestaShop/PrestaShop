@@ -27,6 +27,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Cldr\Repository as cldrRepository;
 use PrestaShop\PrestaShop\Core\Localization\RTL\Processor as RtlStylesheetProcessor;
 use PrestaShopBundle\Translation\Translator;
+use Symfony\Component\Filesystem\Filesystem;
 
 class LanguageCore extends ObjectModel
 {
@@ -1073,25 +1074,24 @@ class LanguageCore extends ObjectModel
     {
         $file = _PS_TRANSLATIONS_DIR_.$type.'-'.$locale.'.zip';
         $url = ('emails' === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
-        $content = Tools::file_get_contents(
-            str_replace(
-                array(
-                    '%version%',
-                    '%locale%',
-                ),
-                array(
-                    _PS_VERSION_,
-                    $locale,
-                ),
-                $url
-            )
+        $url = str_replace(
+            array(
+                '%version%',
+                '%locale%',
+            ),
+            array(
+                _PS_VERSION_,
+                $locale,
+            ),
+            $url
         );
 
         if (!is_writable(dirname($file))) {
             // @todo Throw exception
             $errors[] = Context::getContext()->getTranslator()->trans('Server does not have permissions for writing.', array(), 'Admin.International.Notification').' ('.$file.')';
         } else {
-            @file_put_contents($file, $content);
+            $fs = new Filesystem();
+            $fs->copy($url, $file);
         }
     }
 
@@ -1111,7 +1111,7 @@ class LanguageCore extends ObjectModel
     public static function installEmailsLanguagePack($lang_pack, &$errors = array())
     {
         $folder = _PS_TRANSLATIONS_DIR_.'emails-'.$lang_pack['locale'];
-        $fileSystem = new \Symfony\Component\Filesystem\Filesystem();
+        $fileSystem = new Filesystem();
         $finder = new \Symfony\Component\Finder\Finder();
 
         if (!file_exists($folder.'.zip')) {
