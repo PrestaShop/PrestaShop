@@ -8,6 +8,9 @@ parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
 
 services:
+    _defaults:
+        public: true
+
     doctrine.cache.provider:
         class: Doctrine\Common\Cache\FilesystemCache
         arguments:
@@ -310,14 +313,17 @@ services:
     prestashop.core.api.query_stock_params_collection:
         parent: prestashop.core.api.query_params_collection
         class: PrestaShopBundle\Api\QueryStockParamsCollection
+        public: true
 
     prestashop.core.api.query_stock_movement_params_collection:
         parent: prestashop.core.api.query_params_collection
         class: PrestaShopBundle\Api\QueryStockMovementParamsCollection
+        public: true
 
     prestashop.core.api.query_translation_params_collection:
         parent: prestashop.core.api.query_params_collection
         class: PrestaShopBundle\Api\QueryTranslationParamsCollection
+        public: true
 
     prestashop.core.api.stock.movements_collection:
         class: PrestaShopBundle\Api\Stock\MovementsCollection
@@ -383,6 +389,7 @@ services:
     prestashop.core.api.stock.controller:
         class: PrestaShopBundle\Controller\Api\StockController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             movements: "@prestashop.core.api.stock.movements_collection"
             stockRepository: "@prestashop.core.api.stock.repository"
@@ -391,6 +398,7 @@ services:
     prestashop.core.api.stock_movement.controller:
         class: PrestaShopBundle\Controller\Api\StockMovementController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             stockMovementRepository: "@prestashop.core.api.stock_movement.repository"
             queryParams: "@prestashop.core.api.query_stock_movement_params_collection"
@@ -398,40 +406,47 @@ services:
     prestashop.core.api.supplier.controller:
         class: PrestaShopBundle\Controller\Api\SupplierController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             supplierRepository: "@prestashop.core.api.supplier.repository"
 
     prestashop.core.api.manufacturer.controller:
         class: PrestaShopBundle\Controller\Api\ManufacturerController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             manufacturerRepository: "@prestashop.core.api.manufacturer.repository"
 
     prestashop.core.api.category.controller:
         class: PrestaShopBundle\Controller\Api\CategoryController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             categoryRepository: "@prestashop.core.api.category.repository"
 
     prestashop.core.api.attribute.controller:
         class: PrestaShopBundle\Controller\Api\AttributeController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
 
     prestashop.core.api.feature.controller:
         class: PrestaShopBundle\Controller\Api\FeatureController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             featureAttributeRepository: "@prestashop.core.api.feature_attribute.repository"
 
     prestashop.core.api.i18n.controller:
         class: PrestaShopBundle\Controller\Api\I18nController
         parent: prestashop.core.api.controller
+        public: true
 
     prestashop.core.api.translation.controller:
         class: PrestaShopBundle\Controller\Api\TranslationController
         parent: prestashop.core.api.controller
+        public: true
         properties:
             translationService: "@prestashop.service.translation"
             queryParams: "@prestashop.core.api.query_translation_params_collection"
@@ -446,10 +461,12 @@ services:
     prestashop.translation.api.stock:
         class: PrestaShopBundle\Translation\Api\StockApi
         parent: prestashop.translation.api
+        public: true
 
     prestashop.translation.api.international:
         class: PrestaShopBundle\Translation\Api\InternationalApi
         parent: prestashop.translation.api
+        public: true
 
     # Managers
     prestashop.adapter.image_manager:
