@@ -7,12 +7,13 @@ module.exports = {
       save_and_stay_button: '//*[@id="tax_rules_group_form_submit_btn"]',
       tax_select: '//*[@id="id_tax"]',
       save_button: '//*[@id="tax_rule_form_submit_btn_1"]',
-      success_alert: '(//div[contains(@class,"alert-success")])[1]',
       filter_name_input: '//*[@id="table-tax_rules_group"]//input[@name="tax_rules_groupFilter_name"]',
       filter_search_button: '//*[@id="submitFilterButtontax_rules_group"]',
       edit_button: '//*[@id="table-tax_rules_group"]//tr[1]//a[@title="Edit"]',
       dropdown_button: '//*[@id="table-tax_rules_group"]/tbody//button[@data-toggle="dropdown"]',
-      delete_button: '//*[@id="table-tax_rules_group"]/tbody//a[@title="Delete"]'
+      delete_button: '//*[@id="table-tax_rules_group"]/tbody//a[@title="Delete"]',
+      bulk_action_button: '//*[@id="bulk_action_menu_tax_rules_group"]',
+      action_group_button: '(//*[@id="form-tax_rules_group"]//div[contains(@class, "bulk-actions")]//a)[%ID]'
     }
   }
 };

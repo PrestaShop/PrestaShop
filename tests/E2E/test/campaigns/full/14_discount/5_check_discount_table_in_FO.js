@@ -34,12 +34,12 @@ let taxData = {
 };
 
 scenario('Create "Tax rules" in the Back Office', () => {
-  scenario('Open the browser and connect to the BO', client => {
+  scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+    test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  common_scenarios.createTaxRule(taxData.name + date_time, taxData.tax_value);
-  common_scenarios.checkTaxRule(taxData.name + date_time);
+  common_scenarios.createTaxRule(taxData.name, taxData.tax_value);
+  common_scenarios.checkTaxRule(taxData.name);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
@@ -100,7 +100,7 @@ scenario('Create "Product"', () => {
 scenario('Check the product discount in the Front Office', () => {
   scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+    test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
   scenario('Edit price display method', client => {
@@ -177,22 +177,13 @@ scenario('Check the product discount in the Front Office', () => {
     test('should check that the second save is equal to "Up to €60"', () => client.checkTextValue(productPage.product_discounts_table.replace('%R', 2).replace('%D', 3), 'Up to €60.00'));
   }, 'common_client');
 
-  scenario('Logout from the Back Office', client => {
-    test('should logout successfully from the Back Office', () => {
-      return promise
-        .then(() => client.switchWindow(0))
-        .then(() => client.signOutBO());
-    });
-  }, 'common_client');
-}, 'common_client', true);
-
-scenario('Delete "Tax rules" in the Back Office', () => {
-  scenario('Open the browser and connect to the BO', client => {
-    test('should open the browser', () => client.open());
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  }, 'common_client');
-  common_scenarios.deleteTaxRule(taxData.name + date_time);
-  scenario('Logout from the Back Office', client => {
-    test('should logout successfully from the Back Office', () => client.signOutBO());
+  scenario('Delete "Tax rules" in the Back Office', () => {
+    scenario('Go back to Back Office', client => {
+      test('should go back successfully to the Back Office', () => client.switchWindow(0));
+    }, 'common_client');
+    common_scenarios.deleteTaxRule(taxData.name);
+    scenario('Logout from the Back Office', client => {
+      test('should logout successfully from the Back Office', () => client.signOutBO());
+    }, 'common_client');
   }, 'common_client');
 }, 'common_client', true);
