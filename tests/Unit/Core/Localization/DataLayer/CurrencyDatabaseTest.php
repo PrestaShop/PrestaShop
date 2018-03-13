@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CurrencyDatabaseTest extends TestCase
 {
@@ -68,6 +69,10 @@ class CurrencyDatabaseTest extends TestCase
             ->willReturnMap([
                 ['EUR', null, $this->fakeFrEuro],
             ]);
+        $this->fakeDataProvider->method('getCurrencyByIsoCodeOrCreate')
+            ->willReturnMap([
+                ['FOO', null, $this->createMock(Currency::class)],
+            ]);
 
         $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
     }
@@ -103,12 +108,22 @@ class CurrencyDatabaseTest extends TestCase
         $this->assertNull($this->layer->read('FOO'));
     }
 
+    /**
+     * Given a valid CurrencyDatabase layer object
+     * When asking it to write Currency data
+     * Then it should call the expected write method on its data provider
+     *
+     * @throws LocalizationException
+     */
     public function testWrite()
     {
-        $this->fakeDataProvider->expects($this->once())->method(/* TODO : write method on data provider ? */);
-        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
-
         $someCurrencyData = new CurrencyData();
-        $writableLayer->write('FOO', $someCurrencyData); // Should trigger write method on data provider
+
+        $this->fakeDataProvider->expects($this->once())
+            ->method('saveCurrency')
+            ->with($this->isInstanceOf(Currency::class));
+
+        $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
+        $writableLayer->write('FOO', $someCurrencyData); // Should trigger saveCurrency() on data provider
     }
 }

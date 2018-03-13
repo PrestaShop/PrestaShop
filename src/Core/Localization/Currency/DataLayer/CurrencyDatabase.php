@@ -27,12 +27,13 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer;
 
+use Exception;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
  * CLDR Currency Database (Doctrine) data layer
@@ -87,7 +88,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLaye
             return null;
         }
 
-        $currencyData   = new CurrencyData();
+        $currencyData = new CurrencyData();
 
         $currencyData->isoCode                    = $currencyEntity->iso_code;
         $currencyData->names[$this->localeCode]   = $currencyEntity->name;
@@ -99,23 +100,48 @@ class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLaye
     }
 
     /**
+     * @inheritDoc
+     */
+    public function write($id, $data)
+    {
+        if (!($data instanceof CurrencyData)) {
+            throw new LocalizationException(
+                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData'
+            );
+        }
+
+        return parent::write($id, $data);
+    }
+
+    /**
      * Actually write a data object into the current layer
+     * Here, this is a DB insert/update...
      *
-     * Might be a file edit, cache update, DB insert/update...
+     * @param string $currencyCode
+     *  The currency ISO 4217 code
      *
-     * @param mixed $currencyCode
-     *  The data object identifier
-     *
-     * @param mixed $currencyData
+     * @param CurrencyData $currencyData
      *  The data object to be written
      *
      * @return void
      *
      * @throws DataLayerException
-     *  When write fails
+     *  If something goes wrong when trying to write into DB
      */
     protected function doWrite($currencyCode, $currencyData)
     {
-        // TODO: Implement doWrite() method.
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode);
+
+        $currencyEntity->iso_code         = $currencyData->isoCode;
+        $currencyEntity->name             = $currencyData->names[$this->localeCode];
+        $currencyEntity->numeric_iso_code = $currencyData->numericIsoCode;
+        $currencyEntity->symbol           = $currencyData->symbols[$this->localeCode];
+        $currencyEntity->precision        = $currencyData->precision;
+
+        try {
+            $this->dataProvider->saveCurrency($currencyEntity);
+        } catch (Exception $e) {
+            throw new DataLayerException('Unable to persist data in DB data layer', 0, $e);
+        }
     }
 }
