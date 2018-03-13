@@ -39,7 +39,6 @@ class EmbeddedAttributesFilter extends HashMapWhitelistFilter
     {
         $whitelist = [
             "attributes",
-            "available_date",
             "available_later",
             "available_now",
             "category",
@@ -54,7 +53,6 @@ class EmbeddedAttributesFilter extends HashMapWhitelistFilter
             "id_manufacturer",
             "id_product",
             "id_product_attribute",
-            "is_virtual",
             "link_rewrite",
             "minimal_quantity",
             "name",
@@ -71,11 +69,8 @@ class EmbeddedAttributesFilter extends HashMapWhitelistFilter
             "rate",
             "reduction",
             "reference",
-            "show_price",
             "specific_prices",
             "tax_name",
-            "unit_price_ratio",
-            "unity",
         ];
 
         $this->whitelist($whitelist);
