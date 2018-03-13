@@ -344,9 +344,9 @@ class CommonClient {
     if (global.isVisible) {
       return this.client
         .waitAndSetValue(selector, data)
-        .keys('Enter')
+        .keys('Enter');
     } else {
-      return this.client.pause(0)
+      return this.client.pause(0);
     }
   }
 
@@ -361,11 +361,11 @@ class CommonClient {
     if (global.isVisible) {
       return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
         expect(text).to.be.equal(data);
-      })
+      });
     } else {
       return this.client.getText(selector.replace('%ID', pos - 1)).then(function (text) {
         expect(text).to.be.equal(data);
-      })
+      });
     }
   }
 
@@ -380,7 +380,24 @@ class CommonClient {
       .click(selector)
       .execute(function (content) {
         return (tinyMCE.activeEditor.setContent(content));
-      }, content)
+      }, content);
+  }
+
+  editObjectData(object, type = '') {
+    for(let key in object) {
+      if(object.hasOwnProperty(key) && key !== 'type') {
+        if (typeof object[key] === 'string') {
+          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
+        } else if (typeof object[key] === 'number') {
+          object[key] += 10;
+        } else if (typeof object[key] === 'object'){
+          this.editObjectData(object[key]);
+        }
+      }
+      if(type !== '') {
+        object['type'] = type;
+      }
+    }
   }
 }
 

@@ -10,6 +10,6 @@ module.exports = Object.assign({},
   require('./installation'),
   require('./international'),
   require('./employee_page'),
-  require('./desgin')
+  require('./design')
 );
 

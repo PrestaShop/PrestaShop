@@ -5,7 +5,7 @@ module.exports = {
       meta_description_input: '//*[@id="meta_description_1"]',
       enable_display_option: '//label[@for="active_on"]',
       success_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "success")]',
-      danger_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "alert")]'
+      alert_panel: '//*[@id="content"]/div[@class="bootstrap"]/div[contains(@class, "alert")]'
     },
     Category: {
       add_category_button: '//*[@id="page-header-desc-cms-new_cms_category"]',
@@ -24,9 +24,12 @@ module.exports = {
       bulk_actions_button: '//*[@id="bulk_action_menu_cms_category"]',
       bulk_actions_select_all_button: '//*[@id="form-cms_category"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "true")]',
       bulk_actions_delete_button: '//*[@id="form-cms_category"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecms_category")]',
-      home_icon:'//*[@id="content"]//i[@class="icon-home"]'
+      bulk_actions_disable_button: '//*[@id="form-cms_category"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdisableSelectioncms_category")]',
+      bulk_actions_enable_button: '//*[@id="form-cms_category"]//div[contains(@class,"bulk-actions")]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkenableSelectioncms_category")]',
+      home_icon: '//*[@id="content"]//i[@class="icon-home"]'
     },
     Page: {
+      page_category: '//select[@name="id_cms_category"]',
       add_new_page_button: '//*[@id="page-header-desc-cms-new_cms_page"]',
       meta_keywords_input: '//div[@class="tagify-container"]//input',
       delete_tag_button: '//div[@class="tagify-container"]//span[%POS]/a',
@@ -40,7 +43,10 @@ module.exports = {
       page_content: '//*[@id="cms_form"]//div[@class="mce-tinymce mce-container mce-panel"]',
       bulk_actions_button: '//*[@id="bulk_action_menu_cms"]',
       bulk_actions_select_all_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "true")]',
-      bulk_actions_delete_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecms")]'
+      bulk_actions_delete_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdeletecms")]',
+      bulk_actions_disable_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkdisableSelectioncms")]',
+      bulk_actions_enable_button: '//*[@id="form-cms"]//div[contains(@class,\'bulk-actions\')]//ul[@class="dropdown-menu"]//a[contains(@onclick, "submitBulkenableSelectioncms")]',
+      reset_button: '//button[@name="submitResetcms"]'
     }
   }
 };
