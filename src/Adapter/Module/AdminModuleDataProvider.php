@@ -175,7 +175,7 @@ class AdminModuleDataProvider implements ModuleInterface
     public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
     {
         $addons = $addons->toArray();
-        foreach ($addons as $key => &$addon) {
+        foreach ($addons as &$addon) {
             $urls = array();
             foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', array(
@@ -233,7 +233,7 @@ class AdminModuleDataProvider implements ModuleInterface
             } elseif (
                 !$addon->attributes->has('origin') ||
                 $addon->disk->getBoolean('is_present') ||
-                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'))
+                in_array($addon->attributes->get('origin'), array('native', 'native_all', 'partner', 'customer'), true)
             ) {
                 $url_active = 'install';
                 unset(
