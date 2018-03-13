@@ -730,45 +730,23 @@ class LinkCore
                 }
                 break;
 
-            case 'AdminModulesSf':
-                $routeName = 'admin_module_manage';
-                break;
+            default:
+                $routes = array(
+                    'AdminModulesSf' => 'admin_module_manage',
+                    'AdminStockManagement' => 'admin_stock_overview',
+                    'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminInformation' => 'admin_system_information',
+                    'AdminAddonsCatalog' => 'admin_module_addons_store',
+                    'AdminLogs' => 'admin_logs',
+                    'AdminPerformance' => 'admin_performance',
+                    'AdminAdminPreferences' => 'admin_administration',
+                    'AdminMaintenance' => 'admin_maintenance',
+                    'AdminPPreferences' => 'admin_product_preferences',
+                );
 
-            case 'AdminStockManagement':
-                $routeName = 'admin_stock_overview';
-                break;
-
-            case 'AdminTranslationSf':
-                $routeName = 'admin_international_translation_overview';
-                break;
-
-            case 'AdminInformation':
-                $routeName = 'admin_system_information';
-                break;
-
-            case 'AdminAddonsCatalog':
-                $routeName = 'admin_module_addons_store';
-                break;
-
-            case 'AdminLogs':
-                $routeName = 'admin_logs';
-                break;
-
-            case 'AdminPerformance':
-                $routeName = 'admin_performance';
-                break;
-
-            case 'AdminAdminPreferences':
-                $routeName = 'admin_administration';
-                break;
-
-            case 'AdminMaintenance':
-                $routeName = 'admin_maintenance';
-                break;
-
-            case 'AdminPPreferences':
-                $routeName = 'admin_product_preferences';
-                break;
+                if (isset($routes[$controller])) {
+                    $routeName = $routes[$controller];
+                }
         }
 
         if (!is_null($routeName)) {
@@ -779,7 +757,7 @@ class LinkCore
 
         $idLang = Context::getContext()->language->id;
 
-        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params, false);
+        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
     }
 
     /**
