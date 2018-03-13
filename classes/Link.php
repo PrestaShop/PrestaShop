@@ -720,73 +720,40 @@ class LinkCore
                         if (array_key_exists('filter_column_active', $sfRouteParams)) {
                             $routeParams['active'] = $sfRouteParams['filter_column_active'];
                         }
-
                         return $sfRouter->generate('admin_product_catalog_filters', $routeParams);
                     }
-
                     return $sfRouter->generate('admin_product_catalog', $sfRouteParams);
                 } else {
                     $params = array_merge($params, $sfRouteParams);
                 }
                 break;
 
-            case 'AdminModulesSf':
-                $routeName = 'admin_module_manage';
-                break;
-
-            case 'AdminStockManagement':
-                $routeName = 'admin_stock_overview';
-                break;
-
-            case 'AdminTranslationSf':
-                $routeName = 'admin_international_translation_overview';
-                break;
-
-            case 'AdminInformation':
-                $routeName = 'admin_system_information';
-                break;
-
-            case 'AdminAddonsCatalog':
-                $routeName = 'admin_module_addons_store';
-                break;
-
-            case 'AdminLogs':
-                $routeName = 'admin_logs';
-                break;
-
-            case 'AdminPerformance':
-                $routeName = 'admin_performance';
-                break;
-
-            case 'AdminAdminPreferences':
-                $routeName = 'admin_administration';
-                break;
-
-            case 'AdminMaintenance':
-<<<<<<< HEAD
-                return $sfRouter->generate('admin_maintenance', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
-
-            case 'AdminPPreferences':
-                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_product_preferences';
-
-                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
-||||||| parent of 7aa379e... CO: added new route for AdminLogs + refactoring
-                return $sfRouter->generate('admin_maintenance', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
-=======
-                $routeName = 'admin_maintenance';
-                break;
+            default:
+                $routes = array(
+                    'AdminModulesSf' => 'admin_module_manage',
+                    'AdminStockManagement' => 'admin_stock_overview',
+                    'AdminTranslationSf' => 'admin_international_translation_overview',
+                    'AdminInformation' => 'admin_system_information',
+                    'AdminAddonsCatalog' => 'admin_module_addons_store',
+                    'AdminLogs' => 'admin_logs',
+                    'AdminPerformance' => 'admin_performance',
+                    'AdminAdminPreferences' => 'admin_administration',
+                    'AdminMaintenance' => 'admin_maintenance',
+                    'AdminPPreferences' => 'admin_product_preferences',
+                );
+                if (isset($routes[$controller])) {
+                    $routeName = $routes[$controller];
+                }
         }
 
         if (!is_null($routeName)) {
             $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : $routeName;
-
             return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
->>>>>>> 7aa379e... CO: added new route for AdminLogs + refactoring
         }
 
         $idLang = Context::getContext()->language->id;
 
-        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params, false);
+        return $this->getBaseLink().basename(_PS_ADMIN_DIR_).'/'.Dispatcher::getInstance()->createUrl($controller, $idLang, $params);
     }
 
     /**
