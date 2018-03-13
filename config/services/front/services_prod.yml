@@ -7,6 +7,11 @@ services:
     prestashop.core.filter.front_end_object.product:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter
 
+    prestashop.core.filter.front_end_object.cart:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CartFilter
+        arguments:
+          - '@prestashop.core.filter.front_end_object.product_collection'
+
     prestashop.core.filter.front_end_object.search_result_product:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\SearchResultProductFilter
 
