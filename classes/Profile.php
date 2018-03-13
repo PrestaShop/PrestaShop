@@ -172,9 +172,9 @@ class ProfileCore extends ObjectModel
 				WHERE j.`id_profile` = '.(int) $idProfile);
 
                 foreach ($result as $row) {
-                    $idTab = self::findIdTabByAuthSlug($row['slug']);
+                    $tab = self::findTabTypeInformationByAuthSlug($type, $row['slug']);
 
-                    self::$_cache_accesses[$idProfile][$type][$idTab][array_search('1', $row)] = '1';
+                    self::$_cache_accesses[$idProfile][$type][$tab][array_search('1', $row)] = '1';
                 }
             }
         }
@@ -207,11 +207,13 @@ class ProfileCore extends ObjectModel
     }
 
     /**
-     *
+     * Find tab type information by authorization slug
+     * 
+     * @param string $type
      * @param string $authSlug
      * @return int
      */
-    private static function findIdTabByAuthSlug($authSlug)
+    private static function findTabTypeInformationByAuthSlug($type, $authSlug)
     {
         preg_match(
             '/ROLE_MOD_[A-Z]+_(?P<classname>[A-Z]+)_(?P<auth>[A-Z]+)/',
@@ -220,11 +222,11 @@ class ProfileCore extends ObjectModel
         );
 
         $result = Db::getInstance()->getRow('
-            SELECT `id_tab`
+            SELECT `'.$type.'`
             FROM `'._DB_PREFIX_.'tab` t
             WHERE UCASE(`class_name`) = "'.$matches['classname'].'"
         ');
 
-        return $result['id_tab'];
+        return $result[$type];
     }
 }
