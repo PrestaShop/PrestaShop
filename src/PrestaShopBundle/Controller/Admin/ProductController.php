@@ -113,7 +113,14 @@ class ProductController extends FrameworkBundleAdminController
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         $filterParametersUpdater = $this->get('prestashop.adapter.filter_parameters_updater');
-        $filterParametersUpdater->setValues($persistedFilterParameters, $offset, $limit, $orderBy, $sortOrder);
+        list($offset, $limit, $orderBy, $sortOrder) = $filterParametersUpdater->setValues(
+            $persistedFilterParameters,
+            $offset,
+            $limit,
+            $orderBy,
+            $sortOrder
+        );
+
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         $toolbarButtons = $this->getToolbarButtons();

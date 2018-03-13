@@ -427,12 +427,13 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->productPricePriority = $this->adminProductWrapper->getPricePriority($product->id);
 
         $this->formData['id_product'] = $product->id;
-        $this->mapStep1FromData($product);
-        $this->mapStep2FormData($product);
-        $this->mapStep3FormData($product);
-        $this->mapStep4FormData($product);
-        $this->mapStep5FormData($product);
-        $this->mapStep6FormData($product);
+        $this->formData['step1'] = $this->mapStep1FromData($product);
+        $this->formData['step2'] = $this->mapStep2FormData($product);
+        $this->formData['step3'] = $this->mapStep3FormData($product);
+        $this->formData['step4'] = $this->mapStep4FormData($product);
+        $this->formData['step5'] = $this->mapStep5FormData($product);
+        $this->formData['step6'] = $this->mapStep6FormData($product);
+
         //Inject data form for supplier combinations
         $this->formData['step6'] = array_merge($this->formData['step6'], $this->getDataSuppliersCombinations($product));
 
@@ -449,21 +450,22 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      * Maps the existing products data to the form for Step 1
      *
      * @param Product $product
+     * @return array
      */
     private function mapStep1FromData(Product $product)
     {
-        $this->formData['step1'] = [
+        return array(
                 'type_product' => $product->getType(),
                 'inputPackItems' => [
                     'data' => array_map(
                         function ($p) {
                             return [
-                                "id" => $p->id,
-                                "id_product_attribute" => isset($p->id_pack_product_attribute) ? $p->id_pack_product_attribute : 0,
-                                "name" => $p->name,
-                                "ref" => $p->reference,
-                                "quantity" => $p->pack_quantity,
-                                "image" => $p->image,
+                                'id' => $p->id,
+                                'id_product_attribute' => isset($p->id_pack_product_attribute) ? $p->id_pack_product_attribute : 0,
+                                'name' => $p->name,
+                                'ref' => $p->reference,
+                                'quantity' => $p->pack_quantity,
+                                'image' => $p->image,
                             ];
                         },
                         $this->packAdapter->getItems($product->id, $this->locales[0]['id_lang'])
@@ -483,7 +485,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                             return($p['id_product']);
                         },
                         call_user_func_array(
-                            array($product, "getAccessoriesLight"),
+                            array($product, 'getAccessoriesLight'),
                             array($this->locales[0]['id_lang'], $product->id)
                         )
                     )
@@ -491,17 +493,18 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_manufacturer' => $product->id_manufacturer,
                 'features' => $this->getFormFeatures($product),
                 'images' => $this->productAdapter->getImages($product->id, $this->locales[0]['id_lang'])
-        ];
+        );
     }
 
     /**
      * Maps the existing products data to the form for Step 2
      *
      * @param Product $product
+     * @return array
      */
     private function mapStep2FormData(Product $product)
     {
-        $this->formData['step2'] = [
+        return array(
                 'price' => $product->price,
                 'ecotax' => $product->ecotax,
                 'id_tax_rules_group' => !empty($product->id_tax_rules_group) ? $product->id_tax_rules_group : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
@@ -520,20 +523,21 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'specificPricePriority_1' => $this->productPricePriority[1],
                 'specificPricePriority_2' => $this->productPricePriority[2],
                 'specificPricePriority_3' => $this->productPricePriority[3],
-        ];
+        );
     }
 
     /**
      * Maps the existing products data to the form for Step 3
      *
      * @param Product $product
+     * @return array
      */
     private function mapStep3FormData(Product $product)
     {
-        $this->formData['step3'] = [
+        return array(
             'advanced_stock_management' => (bool) $product->advanced_stock_management,
             'depends_on_stock' => $product->depends_on_stock?"1":"0",
-            'qty_0' => $product->getQuantity($product->id),
+            'qty_0' => $product::getQuantity($product->id),
             'id_product_attributes' => $this->getProductAttributes($product),
             'out_of_stock' => $product->out_of_stock,
             'minimal_quantity' => $product->minimal_quantity,
@@ -544,17 +548,18 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
             'available_date' => $product->available_date,
             'pack_stock_type' => $product->pack_stock_type,
             'virtual_product' => $this->getVirtualProductData($product),
-        ];
+        );
     }
 
     /**
      * Maps the existing products data to the form for Step 4
      *
      * @param Product $product
+     * @return array
      */
     private function mapStep4FormData(Product $product)
     {
-        $this->formData['step4'] = [
+        return array(
                 'width' => $product->width,
                 'height' => $product->height,
                 'depth' => $product->depth,
@@ -564,17 +569,18 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'additional_delivery_times' => $product->additional_delivery_times,
                 'delivery_in_stock' => $product->delivery_in_stock,
                 'delivery_out_stock' => $product->delivery_out_stock,
-        ];
+        );
     }
 
     /**
      * Maps the existing products data to the form for Step 5
      *
      * @param Product $product
+     * @return array
      */
     private function mapStep5FormData(Product $product)
     {
-        $this->formData['step5'] = [
+        return array(
                 'link_rewrite' => $product->link_rewrite,
                 'meta_title' => $product->meta_title,
                 'meta_description' => $product->meta_description,
@@ -582,17 +588,18 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'id_type_redirected' => [
                     'data' => [$product->id_type_redirected]
                 ],
-        ];
+        );
     }
 
     /**
      * Maps the existing products data to the form for Step 6
      *
      * @param Product $product
+     * @return array
      */
     private function mapStep6FormData(Product $product)
     {
-        $this->formData['step6'] = [
+        return array(
                 'visibility' => $product->visibility,
                 'tags' => $this->getTags($product),
                 'display_options' => [
@@ -615,7 +622,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 'default_supplier' => $product->id_supplier,
                 'custom_fields' => $this->getCustomFields($product),
                 'attachments' => $this->getProductAttachments($product),
-        ];
+        );
     }
 
     /**
@@ -637,10 +644,10 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getProductAttachments(Product $product)
     {
         return array_map(
-            function ($a) {
-                return($a['id_attachment']);
+            function ($attachment) {
+                return $attachment['id_attachment'];
             },
-            Attachment::getAttachments($this->locales[0]['id_lang'], $product->id, true)
+            Attachment::getAttachments($this->locales[0]['id_lang'], $product->id)
         );
     }
 
