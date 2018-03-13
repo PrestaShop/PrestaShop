@@ -26,10 +26,6 @@
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
-use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
-use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ConfigurationFilter;
-use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\CustomerFilter;
-use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ShopFilter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -1968,45 +1964,5 @@ class FrontControllerCore extends Controller
         $container->compile();
 
         return $container;
-    }
-
-    /**
-     * Returns an object that filters the Product list to be sent to the browser
-     *
-     * @return CollectionFilter
-     */
-    protected function getProductListOutputFilter()
-    {
-        return $this->get('prestashop.core.filter.front_end_object.product_collection');
-    }
-
-    /**
-     * Returns an object that filters the Customer object to be sent to the browser
-     *
-     * @return CustomerFilter
-     */
-    protected function getCustomerOutputFilter()
-    {
-        return $this->get('prestashop.core.filter.front_end_object.customer');
-    }
-
-    /**
-     * Returns an object that filters the Shop object to be sent to the browser
-     *
-     * @return ShopFilter
-     */
-    protected function getShopOutputFilter()
-    {
-        return $this->get('prestashop.core.filter.front_end_object.shop');
-    }
-
-    /**
-     * Returns an object that filters the Configuration object to be sent to the browser
-     *
-     * @return ConfigurationFilter
-     */
-    protected function getConfigurationOutputFilter()
-    {
-        return $this->get('prestashop.core.filter.front_end_object.configuration');
     }
 }

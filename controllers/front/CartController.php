@@ -133,7 +133,7 @@ class CartControllerCore extends FrontController
             $presentedCart = $cartPresenter->present($this->context->cart);
 
             // filter product output
-            $presentedCart['products'] = $this->getProductListOutputFilter()
+            $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
                 ->filter($presentedCart['products']);
 
             $this->ajaxDie(Tools::jsonEncode([
