@@ -62,6 +62,16 @@
 				{l s='Bug Tracker' d='Admin.Navigation.Footer'}
 			</a>
 			/&nbsp;
+			<a href="https://www.prestashop.com/club/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+				<i class="icon-users"></i>
+				{l s='User Club' d='Admin.Navigation.Footer'}
+			</a>
+			/&nbsp;
+			<a href="http://feedback.prestashop.com/forums/387864-prestashop-1-7-x?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+				<i class="icon-lightbulb"></i>
+				{l s='Feature Requests' d='Admin.Navigation.Footer'}
+			</a>
+			/&nbsp;
 			<a href="http://www.prestashop.com/forums/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
 				<i class="icon-comments"></i>
 				{l s='Forum' d='Admin.Navigation.Footer'}
