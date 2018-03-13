@@ -49,17 +49,19 @@ class ProductCategories extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param CategoryDataProvider $categoryDataProvider
+     * @param array $languages
      * @param int $languageId
      */
     public function __construct(
         TranslatorInterface $translator,
         CategoryDataProvider $categoryDataProvider,
+        array $languages,
         $languageId
     )
     {
         $this->categoryProvider = $categoryDataProvider;
         $this->languageId = $languageId;
-        parent::__construct($translator);
+        parent::__construct($translator, $languages);
     }
 
     /**
