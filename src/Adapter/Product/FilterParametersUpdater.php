@@ -61,25 +61,62 @@ final class FilterParametersUpdater
      * @param string $limit
      * @param string $orderBy
      * @param string $sortOrder
+     *
+     * @return array
      */
     public function setValues(
         $filterParameters,
-        &$offset,
-        &$limit,
-        &$orderBy,
-        &$sortOrder
+        $offset,
+        $limit,
+        $orderBy,
+        $sortOrder
     ) {
-        if ($offset === 'last') {
-            $offset = $filterParameters['last_offset'];
-        }
-        if ($limit === 'last') {
-            $limit = $filterParameters['last_limit'];
-        }
-        if ($orderBy === 'last') {
-            $orderBy = $filterParameters['last_orderBy'];
-        }
-        if ($sortOrder === 'last') {
-            $sortOrder = $filterParameters['last_sortOrder'];
-        }
+        $filters = array();
+        $filters['offset'] = $this->getOffset($offset, $filterParameters);
+        $filters['limit'] = $this->getLimit($limit, $filterParameters);
+        $filters['orderBy'] = $this->getOrderBy($orderBy, $filterParameters);
+        $filters['sortOrder'] = $this->getSortOrder($sortOrder, $filterParameters);
+
+        return $filters;
+    }
+
+    /**
+     * @param int $offset
+     * @param array $filterParameters
+     * @return int
+     */
+    private function getOffset($offset, $filterParameters)
+    {
+        return ($offset === 'last' && isset($filterParameters['last_offset'])) ? $filterParameters['last_offset'] : $offset;
+    }
+
+    /**
+     * @param int $limit
+     * @param array $filterParameters
+     * @return int
+     */
+    private function getLimit($limit, $filterParameters)
+    {
+        return ($limit === 'last' && isset($filterParameters['last_limit'])) ? $filterParameters['last_limit'] : $limit;
+    }
+
+    /**
+     * @param string $orderBy
+     * @param array $filterParameters
+     * @return string
+     */
+    private function getOrderBy($orderBy, $filterParameters)
+    {
+        return ($orderBy === 'last' && isset($filterParameters['last_orderBy'])) ? $filterParameters['last_orderBy'] : $orderBy;
+    }
+
+    /**
+     * @param string $sortOrder
+     * @param array $filterParameters
+     * @return string
+     */
+    private function getSortOrder($sortOrder, $filterParameters)
+    {
+        return ($sortOrder === 'last' && isset($filterParameters['last_sortOrder'])) ? $filterParameters['last_sortOrder'] : $sortOrder;
     }
 }
