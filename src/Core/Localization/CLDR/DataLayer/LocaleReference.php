@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataLayerInterface as Cld
 /**
  * Locale reference data layer
  *
- * Provides reference data for locale, number specification, currencies...
+ * Provides reference (CLDR) data for locale, number specification, currencies...
  * Data comes from CLDR official data files, and is read only.
  */
 class LocaleReference extends AbstractDataLayer implements CldrLocaleDataLayerInterface

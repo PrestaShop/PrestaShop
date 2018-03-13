@@ -29,6 +29,11 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 
+/**
+ * CLDR Locale Repository
+ *
+ * Provides CLDR Locale objects
+ */
 class LocaleRepository
 {
     /**

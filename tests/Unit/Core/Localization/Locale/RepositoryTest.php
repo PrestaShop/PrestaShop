@@ -38,13 +38,12 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 class RepositoryTest extends TestCase
 {
     /**
+     * An instance of the tested LocaleRepository class
+     *
      * @var LocaleRepository
      */
     protected $localeRepository;
 
-    /**
-     * @inheritDoc
-     */
     protected function setUp()
     {
         /**

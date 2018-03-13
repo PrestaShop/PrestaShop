@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
 /**
- * Locale cache data layer
+ * LocaleCache CLDR data layer
  *
- * Reads / writes into cache.
+ * This locale data layer reads and writes CLDR LocaleData from a cache adapter
  */
 class LocaleCache extends AbstractDataLayer implements CldrLocaleDataLayerInterface
 {

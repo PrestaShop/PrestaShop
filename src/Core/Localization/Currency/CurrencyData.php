@@ -27,6 +27,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
+/**
+ * Localization Currency data object
+ *
+ * This class is only used internally, it is mutable and overridable until fully built. It can then be used as
+ * an intermediary data bag to build a real Localization/Currency (immutable) object.
+ */
 class CurrencyData
 {
     /**

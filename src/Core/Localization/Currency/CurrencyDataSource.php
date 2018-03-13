@@ -26,9 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
+/**
+ * Localization CurrencyData source
+ * Uses a stack of middleware data layers to read / write CurrencyData objects
+ */
 class CurrencyDataSource implements DataSourceInterface
 {
     /**
+     * The top layer of the middleware stack
+     *
      * @var CurrencyDataLayerInterface
      */
     protected $topLayer;

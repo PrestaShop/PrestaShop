@@ -29,6 +29,14 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
+/**
+ * CLDR Currency entity. This is an immutable data object.
+ *
+ * This class represents the immutable object of CLDR data for a specific currency, translated in a given language.
+ * It is the only data object visible and handleable by "outside" code (meaning non-CLDR code).
+ * CLDR Locale objects aggregate multiple CLDR Currency instances (available currencies), and return this class when
+ * asked for a given currency.
+ */
 class Currency
 {
     const SYMBOL_TYPE_DEFAULT        = 'default';

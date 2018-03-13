@@ -29,6 +29,12 @@ namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
+/**
+ * CLDR Locale entity. This is an immutable data object.
+ *
+ * This class represents the immutable object of CLDR data for a specific locale, translated in a given language.
+ * It is the only data object visible and handleable by "outside" code (meaning non-CLDR code).
+ */
 class Locale
 {
     /**
