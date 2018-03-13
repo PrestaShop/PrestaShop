@@ -4,6 +4,14 @@ services:
     hashing:
         class: PrestaShop\PrestaShop\Core\Crypto\Hashing
 
+    prestashop.core.filter.front_end_object.main:
+        class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\MainFilter
+        arguments:
+            - cart: '@prestashop.core.filter.front_end_object.cart'
+              customer: '@prestashop.core.filter.front_end_object.customer'
+              shop: '@prestashop.core.filter.front_end_object.shop'
+              configuration: '@prestashop.core.filter.front_end_object.configuration'
+
     prestashop.core.filter.front_end_object.product:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter
 

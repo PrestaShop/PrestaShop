@@ -535,33 +535,8 @@ class FrontControllerCore extends Controller
      */
     protected function buildFrontEndObject($object)
     {
-        // keep whitelisted cart product data only
-        if (isset($object['cart']['products']) && is_array($object['cart']['products'])) {
-            $object['cart']['products'] = $this
-                ->getProductListOutputFilter()
-                ->filter($object['cart']['products']);
-        }
-
-        // keep whitelisted customer data only
-        if (isset($object['customer']) && is_array($object['customer'])) {
-            $object['customer'] = $this
-                ->getCustomerOutputFilter()
-                ->filter($object['customer']);
-        }
-
-        // keep whitelisted shop data only
-        if (isset($object['shop']) && is_array($object['shop'])) {
-            $object['shop'] = $this
-                ->getShopOutputFilter()
-                ->filter($object['shop']);
-        }
-
-        // keep whitelisted configuration data only
-        if (isset($object['configuration']) && is_array($object['configuration'])) {
-            $object['configuration'] = $this
-                ->getConfigurationOutputFilter()
-                ->filter($object['configuration']);
-        }
+        $object = $this->get('prestashop.core.filter.front_end_object.main')
+            ->filter($object);
 
         Hook::exec('actionBuildFrontEndObject', array(
             'obj' => &$object
