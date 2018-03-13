@@ -153,7 +153,7 @@ class ProfileCore extends ObjectModel
                     $idProfile,
                     $type,
                     array(
-                        'id_profile' => _PS_ADMIN_PROFILE_,
+                        'id_profile' => $idProfile,
                         'view' => '0',
                         'add' => '0',
                         'edit' => '0',
