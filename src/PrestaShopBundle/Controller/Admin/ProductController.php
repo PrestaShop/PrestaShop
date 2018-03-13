@@ -114,7 +114,16 @@ class ProductController extends FrameworkBundleAdminController
         // Set values from persistence and replace in the request
         $persistedFilterParameters = $productProvider->getPersistedFilterParameters();
         $filterParametersUpdater = $this->get('prestashop.adapter.filter_parameters_updater');
-        $filterParametersUpdater->setValues($persistedFilterParameters, $offset, $limit, $orderBy, $sortOrder);
+
+        $filters = $filterParametersUpdater->setValues(
+            $persistedFilterParameters,
+            $offset,
+            $limit,
+            $orderBy,
+            $sortOrder
+        );
+
+        extract($filters, EXTR_OVERWRITE);
         $persistedFilterParameters = array_replace($persistedFilterParameters, $request->request->all());
 
         $toolbarButtons = $this->getToolbarButtons();
@@ -342,14 +351,8 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
-<<<<<<< 2c856ee425f804d49088584030443612c9e68748
         gc_disable();
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), 'ADMINPRODUCTS_')) {
-||||||| merged common ancestors
-        if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), 'ADMINPRODUCTS_')) {
-=======
         if (!$this->isGranted(array(PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE), self::PRODUCT_OBJECT)) {
->>>>>>> Extracted private functions into dedicated services
             return $this->redirect('admin_dashboard');
         }
 

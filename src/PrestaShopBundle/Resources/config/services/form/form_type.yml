@@ -234,6 +234,7 @@ services:
         arguments:
             - "@translator"
             - "@prestashop.adapter.data_provider.category"
+            - "@=service('prestashop.adapter.legacy.context').getLanguages()"
             - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
         tags:
             - { name: form.type }
