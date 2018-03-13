@@ -1,18 +1,18 @@
 const {AccessPageBO} = require('../../../../selectors/BO/access_page');
-const common_scenarios = require('./pages');
+const common_scenarios = require('../../../common_scenarios/pages');
 
 let categoryDataWithoutSubCategory = {
   name: 'Category',
-  parent_category: 1,
+  parent_category: '1',
   description: 'category description',
   meta_title: 'category meta title',
   meta_description: 'category meta description',
-  meta_keywords: 'category meta keywords',
+  meta_keywords: 'category meta keywords'
 };
 
-let categoryData = {
+let categoryDataWithSubCategory = {
   name: 'Category',
-  parent_category: 1,
+  parent_category: '1',
   description: 'category description',
   meta_title: 'category meta title',
   meta_description: 'category meta description',
@@ -43,24 +43,26 @@ let newCategoryData = {
   }
 };
 
-scenario('Create, edit, delete and delete with bulk actions page category', client => {
+scenario('Create, edit, delete and delete with bulk actions page category', () => {
 
-  scenario('Open the browser and connect to the BO', client => {
+  scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
+    test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'design');
 
-  common_scenarios.createCategory(categoryData);
-  common_scenarios.checkCategoryBO(categoryData);
-  common_scenarios.editCategory(categoryData, newCategoryData);
+  common_scenarios.createCategory(categoryDataWithSubCategory);
+  common_scenarios.checkCategoryBO(categoryDataWithSubCategory);
+  common_scenarios.editCategory(categoryDataWithSubCategory, newCategoryData);
   common_scenarios.deleteCategory(newCategoryData.name);
   common_scenarios.deleteCategory(newCategoryData.sub_category.name);
   common_scenarios.createCategory(categoryDataWithoutSubCategory);
   common_scenarios.createCategory(categoryDataWithoutSubCategory);
-  common_scenarios.deleteCategoryWithBulkActions(categoryData.name);
+  common_scenarios.categoryBulkActions(categoryDataWithSubCategory.name, "disable");
+  common_scenarios.categoryBulkActions(categoryDataWithSubCategory.name, "enable");
+  common_scenarios.categoryBulkActions(categoryDataWithSubCategory.name);
 
   scenario('logout successfully from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'design');
 
-}, 'design');
+}, 'design', true);

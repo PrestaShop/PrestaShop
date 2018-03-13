@@ -6,11 +6,11 @@ class Design extends CommonClient {
     if (global.isVisible) {
       return this.client
         .getText(selector.replace('%ID', pos))
-        .then((text) => global.categoryID = text)
+        .then((text) => global.categoryID = text);
     } else {
       return this.client
         .getText(selector.replace('%ID', pos - 1))
-        .then((text) => global.categoryID = text)
+        .then((text) => global.categoryID = text);
     }
   }
 }
