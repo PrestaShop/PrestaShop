@@ -27,6 +27,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
+/**
+ * The CurrencyData class is the exact representation of Currency's data structure inside CLDR xml data files
+ *
+ * This class is only used internally, it is mutable and overridable until fully built. It can then be used as
+ * an intermediary data bag to build a real CLDR Currency (immutable) object.
+ */
 class CurrencyData
 {
     /**
@@ -77,6 +83,15 @@ class CurrencyData
      */
     public $symbols;
 
+    /**
+     * Override this object's data with another CurrencyData object.
+     *
+     * @param CurrencyData $currencyData
+     *  Currency data to use for the override
+     *
+     * @return $this
+     *  Fluent interface
+     */
     public function overrideWith(CurrencyData $currencyData)
     {
         if (isset($currencyData->isoCode)) {

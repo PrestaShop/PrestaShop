@@ -53,6 +53,11 @@ class LocaleCacheTest extends TestCase
         $this->layer = new CldrLocaleCacheDataLayer($cacheAdapter);
     }
 
+    /**
+     * Given a valid CLDR LocaleCache data layer object
+     * When asking it to write data and then read the same data
+     * Then the said data should be retrieved unchanged
+     */
     public function testReadWrite()
     {
         $data      = new CldrLocaleData();

@@ -30,33 +30,99 @@ class CurrencyCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Name */
+    /**
+     * Name of the currency
+     *
+     * @var string
+     */
     public $name;
 
-    /** @var string Iso code */
+    /**
+     * Alphabetic ISO 4217 code of this currency
+     *
+     * @var string
+     */
     public $iso_code;
 
-    /** @var string numeric Iso code (will be deprecated soon) */
+    /**
+     * Numeric ISO 4217 code of this currency
+     * Will be deprecated soon
+     *
+     * @var string
+     */
     public $iso_code_num;
 
-    /** @var string numeric ISO code */
+    /**
+     * Numeric ISO 4217 code of this currency
+     *
+     * @var string
+     */
     public $numeric_iso_code;
 
-    /** @var string exchange rate from euros */
+    /**
+     * Exchange rate from default currency
+     *
+     * @var float
+     */
     public $conversion_rate;
 
-    /** @var bool True if currency has been deleted (staying in database as deleted) */
+    /**
+     * Is this currency deleted ?
+     * If currency is deleted, it stays in database. This is just a state (soft delete).
+     *
+     * @var bool
+     */
     public $deleted = 0;
 
-    /** @var int bool active */
+    /**
+     * Is this currency active ?
+     *
+     * @var int|bool active
+     */
     public $active;
 
+    /**
+     * Currency's symbol
+     * Will be deprecated soon
+     *
+     * @var string
+     */
     public $sign;
-    public $format;
-    public $blank;
-    public $decimals;
-    public $precision;
+
+    /**
+     * Currency's symbol
+     *
+     * @var string
+     */
     public $symbol;
+
+    /**
+     * CLDR price formatting pattern
+     * e.g.: In french (fr-FR), price formatting pattern is : #,##0.00 ¤
+     *
+     * @var string
+     */
+    public $format;
+
+    /**
+     * @var int
+     */
+    public $blank;
+
+    /**
+     * Number of decimal digits to use when displaying a price in this currency
+     * Will be deprecated soon
+     *
+     * @var int
+     */
+    public $decimals;
+
+    /**
+     * Number of decimal digits to use when displaying a price in this currency
+     *
+     * @var int
+     */
+    public $precision;
 
     /**
      * @see ObjectModel::$definition

@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\DataSourceInterface as Curr
 /**
  * Currency repository class
  *
- * Used to get Currency instances (by currency code for example)
+ * Used to get Localization/Currency instances (by currency code for example)
  */
 class Repository implements CurrencyRepositoryInterface
 {

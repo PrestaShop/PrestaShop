@@ -50,6 +50,11 @@ class CurrencyCacheTest extends TestCase
         $this->layer = new CurrencyCacheDataLayer($cacheAdapter);
     }
 
+    /**
+     * Given a valid CurrencyCache data layer object
+     * When asking it to write data and then read the same data
+     * Then the said data should be retrieved unchanged
+     */
     public function testReadWrite()
     {
         $data      = new CurrencyData();

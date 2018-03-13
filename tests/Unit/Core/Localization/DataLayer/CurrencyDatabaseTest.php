@@ -81,13 +81,13 @@ class CurrencyDatabaseTest extends TestCase
      * Given a valid CurrencyDatabase data layer
      * When asking this layer for data of a given currency
      * Then the expected CurrencyData object should be retrieved, or null if unknown.
-     *
-     * @throws DataLayerException
      */
     public function testRead()
     {
         /** @var CurrencyData $currencyData */
+        /** @noinspection PhpUnhandledExceptionInspection */
         $currencyData = $this->layer->read('EUR');
+        /** @noinspection end */
 
         $this->assertSame(
             $this->fakeFrEuro->iso_code,
@@ -105,7 +105,9 @@ class CurrencyDatabaseTest extends TestCase
         );
 
         // FOO is unknown
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertNull($this->layer->read('FOO'));
+        /** @noinspection end */
     }
 
     /**

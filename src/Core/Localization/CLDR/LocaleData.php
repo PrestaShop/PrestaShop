@@ -27,6 +27,12 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
+/**
+ * The LocaleData class is the exact representation of Locale's data structure inside CLDR xml data files
+ *
+ * This class is only used internally, it is mutable and overridable until fully built. It can then be used as
+ * an intermediary data bag to build a real CLDR Locale (immutable) object.
+ */
 class LocaleData
 {
     /**

@@ -34,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
+/**
+ * CurrencyCache CLDR data layer
+ *
+ * This currency data layer reads and writes CLDR CurrencyData from a cache adapter
+ */
 class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
     /**

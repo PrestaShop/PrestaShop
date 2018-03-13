@@ -29,6 +29,7 @@ namespace Tests\Unit\Core\Localization\CLDR;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Reader;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class ReaderTest extends TestCase
 {
@@ -50,10 +51,14 @@ class ReaderTest extends TestCase
     /**
      * @dataProvider provideLocaleData
      *
+     * Given a valid CLDR Reader
+     * When asking for a specific locale to this reader
+     * Then the expected Locale data should be retrieved
+     *
      * @param $localeCode
      * @param $expectedData
      *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @throws LocalizationException
      */
     public function testReadLocaleData($localeCode, $expectedData)
     {

@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
  * Locale repository
  *
  * Used to get locale instances.
- * This repository manages all dependencies needed to create a complete Locale instance
+ * This repository manages all dependencies needed to create a complete Localization/Locale instance
  */
 class Repository implements RepositoryInterface
 {
