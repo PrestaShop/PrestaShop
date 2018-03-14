@@ -1420,7 +1420,7 @@ class AdminModulesControllerCore extends AdminController
         }
 
         // Retrieve Modules Preferences
-        $modules_preferences = '';
+        $modules_preferences = array();
         $tab_modules_preferences = array();
         $modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee);
         $tab_modules_preferences_tmp = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'tab_module_preference` WHERE `id_employee` = '.(int)$this->id_employee);

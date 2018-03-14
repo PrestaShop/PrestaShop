@@ -39,7 +39,7 @@
     <country id="SG" id_zone="Asia" iso_code="SG" call_prefix="65" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNNN" display_tax_label="1"/>
     <country id="IE" id_zone="Europe" iso_code="IE" call_prefix="353" active="1" contains_states="0" need_identification_number="0" need_zip_code="0" zip_code_format="" display_tax_label="1"/>
     <country id="NZ" id_zone="Oceania" iso_code="NZ" call_prefix="64" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
-    <country id="KR" id_zone="Asia" iso_code="KR" call_prefix="82" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNN-NNN" display_tax_label="1"/>
+    <country id="KR" id_zone="Asia" iso_code="KR" call_prefix="82" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNN" display_tax_label="1"/>
     <country id="IL" id_zone="Asia" iso_code="IL" call_prefix="972" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNNNNN" display_tax_label="1"/>
     <country id="ZA" id_zone="Africa" iso_code="ZA" call_prefix="27" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="NNNN" display_tax_label="1"/>
     <country id="NG" id_zone="Africa" iso_code="NG" call_prefix="234" active="1" contains_states="0" need_identification_number="0" need_zip_code="1" zip_code_format="" display_tax_label="1"/>

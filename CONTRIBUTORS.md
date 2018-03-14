@@ -32,9 +32,10 @@ GitHub contributors:
 - antoniofr
 - AntonLejon
 - Arnaud Lemercier
-- Aurelien Pelletier
+- Aurélien Pelletier
 - axi
 - Axome
+- Azouz-Jribi
 - Balestrino
 - bellini13
 - Benjamin PONGY
@@ -70,6 +71,7 @@ GitHub contributors:
 - Claudio Venturini
 - cmouleyre
 - codvir
+- ColonelMoutarde
 - Comkwatt
 - Conner Burnett
 - Corentin Delcourt
@@ -254,11 +256,13 @@ GitHub contributors:
 - makk1ntosh
 - manuelbcd
 - marcinsz101
+- Marc González Majoral
 - Marco Cervellin
 - Marcos
 - Marius
 - Mark Sullivan
 - matiasiglesias
+- matrix
 - Mats Rynge
 - Matteo
 - Matthias RAIGNE
@@ -279,7 +283,7 @@ GitHub contributors:
 - Michel ANTOINE
 - Michel Courtade
 - Mickael Desgranges
-- Mickael Andrieu
+- Mickaël Andrieu
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
@@ -353,6 +357,7 @@ GitHub contributors:
 - Raphael Droz
 - Raphael Malie
 - raulgundin
+- Rémi Gaillard
 - remoteshaman.com
 - Renaud Sanchez - ChouetteWeb.fr
 - rGaillard
@@ -364,8 +369,8 @@ GitHub contributors:
 - Roland Schütz
 - romainberger
 - Roy
+- Rúben Martins
 - runningz
-- Remi Gaillard
 - s-duval
 - Sacha
 - Sacha FROMENT

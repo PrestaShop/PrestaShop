@@ -620,9 +620,9 @@ class ToolsCore
             return $currency;
         } else {
             // get currency from context
-            $currency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
-            if (isset($currency[0]) && $currency[0]['id_currency']) {
-                $cookie->id_currency = $currency[0]['id_currency'];
+            $currentCurrency = Shop::getEntityIds('currency', Context::getContext()->shop->id, true, true);
+            if (isset($currentCurrency[0]) && $currentCurrency[0]['id_currency']) {
+                $cookie->id_currency = $currentCurrency[0]['id_currency'];
                 return Currency::getCurrencyInstance((int)$cookie->id_currency);
             }
         }
