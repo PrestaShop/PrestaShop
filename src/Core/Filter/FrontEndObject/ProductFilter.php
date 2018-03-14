@@ -103,6 +103,7 @@ class ProductFilter extends HashMapWhitelistFilter
             "regular_price_amount",
             "remove_from_cart_url",
             "show_availability",
+            "show_price",
             "specific_prices",
             "stock_quantity",
             "tax_name",
