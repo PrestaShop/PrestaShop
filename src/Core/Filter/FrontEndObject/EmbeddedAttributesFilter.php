@@ -59,7 +59,6 @@ class EmbeddedAttributesFilter extends HashMapWhitelistFilter
             "new",
             "on_sale",
             "online_only",
-            "out_of_stock",
             "pack",
             "price",
             "price_amount",

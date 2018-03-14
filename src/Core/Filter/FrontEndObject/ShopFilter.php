@@ -34,13 +34,9 @@ class ShopFilter extends HashMapWhitelistFilter
     public function __construct()
     {
         $whitelist = array(
-            "address",
             "favicon",
-            "favicon_update_time",
-            "fax",
             "logo",
             "name",
-            "phone",
             "stores_icon",
         );
 

@@ -38,8 +38,6 @@ class CartFilter extends HashMapWhitelistFilter
     {
         $whitelist = array(
             'discounts',
-            'id_address_delivery',
-            'id_address_invoice',
             'minimalPurchase',
             'minimalPurchaseRequired',
             'products' => $productsFilter,
