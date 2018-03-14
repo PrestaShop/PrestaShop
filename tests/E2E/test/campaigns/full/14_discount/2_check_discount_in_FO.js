@@ -3,11 +3,11 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const common = require('../02_product/product');
+const common = require('../../common_scenarios/product');
 const {productPage} = require('../../../selectors/FO/product_page');
-const common_scenarios = require('./discount');
+const common_scenarios = require('../../common_scenarios/discount');
 
-var productData = {
+let productData = {
   name: 'SP',
   reference: 'Product with specific price',
   quantity: "10",
@@ -22,7 +22,7 @@ var productData = {
   }
 };
 
-var catalogPriceRule = {
+let catalogPriceRule = {
   name: 'discount',
   type: "percentage",
   reduction: '19.666666'

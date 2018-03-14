@@ -1,8 +1,8 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const common_scenarios = require('../02_product/product');
-const common_attribute = require('./attribute');
+const common_scenarios = require('../../common_scenarios/product');
+const common_attribute = require('../../common_scenarios/attribute');
 
 
 let productData = {

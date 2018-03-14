@@ -5,7 +5,7 @@ const {AttributeSubMenu} = require('../../../selectors/BO/catalogpage/attribute_
 const {FeatureSubMenu} = require('../../../selectors/BO/catalogpage/feature_submenu');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
-const common_scenarios = require('../02_product/product');
+const common_scenarios = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
 
 var productData = {

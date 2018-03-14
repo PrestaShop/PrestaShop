@@ -1,7 +1,7 @@
-const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
-const {AttributeSubMenu} = require('../../../selectors/BO/catalogpage/attribute_submenu');
-const {Menu} = require('../../../selectors/BO/menu.js');
-const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
+const {CatalogPage} = require('../../selectors/BO/catalogpage/index');
+const {AttributeSubMenu} = require('../../selectors/BO/catalogpage/attribute_submenu');
+const {Menu} = require('../../selectors/BO/menu.js');
+const {SearchProductPage} = require('../../selectors/FO/search_product_page');
 let promise = Promise.resolve();
 
 module.exports = {

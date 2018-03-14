@@ -1,8 +1,8 @@
-const {productPage} = require('../../../selectors/FO/product_page');
-const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const {accountPage} = require('../../../selectors/FO/add_account_page');
+const {productPage} = require('../../selectors/FO/product_page');
+const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
+const {accountPage} = require('../../selectors/FO/add_account_page');
 
-let data = require('./../../../datas/customer_and_address_data');
+let data = require('../../datas/customer_and_address_data');
 let promise = Promise.resolve();
 
 module.exports = {

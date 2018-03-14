@@ -1,5 +1,5 @@
-const {Menu} = require('../../../selectors/BO/menu.js');
-const {DiscountSubMenu} = require('../../../selectors/BO/catalogpage/discount_submenu');
+const {Menu} = require('../../selectors/BO/menu.js');
+const {DiscountSubMenu} = require('../../selectors/BO/catalogpage/discount_submenu');
 let promise = Promise.resolve();
 
 module.exports = {
