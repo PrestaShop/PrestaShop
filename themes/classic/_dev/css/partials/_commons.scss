@@ -146,7 +146,6 @@ small.label, small.value {
       text-transform: uppercase;
       &[data-action="show-password"]{
         background: $gray;
-        height: 38px;
       }
     }
   }
