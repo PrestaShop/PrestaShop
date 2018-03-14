@@ -395,7 +395,7 @@ class Repository implements RepositoryInterface
      * @return bool
      *  True if digits should be grouped
      */
-    protected function getNumberGroupingUsed()
+    protected function isNumberGroupingUsed()
     {
         return $this->numberGroupingUsed;
     }
