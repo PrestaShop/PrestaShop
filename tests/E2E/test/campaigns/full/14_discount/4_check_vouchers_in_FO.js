@@ -4,8 +4,8 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const common_discount_scenarios = require('./discount');
-const common_scenarios = require('../02_product/product');
+const common_discount_scenarios = require('../../common_scenarios/discount');
+const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
 
 let cartRuleData = [

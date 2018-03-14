@@ -319,17 +319,21 @@ class CommonClient {
   }
 
   editObjectData(object) {
-    for(let key in object) {
-      if(object.hasOwnProperty(key) && key !== 'type') {
+    for (let key in object) {
+      if (object.hasOwnProperty(key) && key !== 'type') {
         if (typeof object[key] === 'string') {
           parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
         } else if (typeof object[key] === 'number') {
           object[key] += 10;
-        } else if (typeof object[key] === 'object'){
+        } else if (typeof object[key] === 'object') {
           this.editObjectData(object[key]);
         }
       }
     }
+  }
+
+  deleteObjectElement(object, pos) {
+    delete object[pos];
   }
 }
 

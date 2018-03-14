@@ -4,8 +4,8 @@ const {Stock} = require('../../../selectors/BO/catalogpage/stocksubmenu/stock');
 const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movements');
 const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
-const orderScenarios = require('../01_orders/order');
-const common_scenarios = require('../02_product/product');
+const orderScenarios = require('../../common_scenarios/order');
+const common_scenarios = require('../../common_scenarios/product');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 
 let productData = {
@@ -21,7 +21,7 @@ let productData = {
   }
 };
 
-const orderBO = require('./stock');
+const orderBO = require('../../common_scenarios/stock');
 
 scenario('Check order movement', client => {
   scenario('Login in the Back Office', client => {

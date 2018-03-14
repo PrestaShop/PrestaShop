@@ -6,10 +6,10 @@ const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
 
-const commonScenarios = require('../high/02_product/product');
+const commonScenarios = require('../common_scenarios/product');
 const commonInstallation = require('./common_installation');
-const moduleCommonScenarios = require('../high/10_module/module');
-const orderCommonScenarios = require('../high/01_orders/order');
+const moduleCommonScenarios = require('../common_scenarios/module');
+const orderCommonScenarios = require('../common_scenarios/order');
 
 let promise = Promise.resolve();
 

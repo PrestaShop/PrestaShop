@@ -1,5 +1,5 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const common_scenarios = require('./discount');
+const common_scenarios = require('../../common_scenarios/discount');
 
 let cartRuleData = [
   {

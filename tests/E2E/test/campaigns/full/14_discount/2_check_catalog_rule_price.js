@@ -2,7 +2,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const common_scenarios = require('./discount');
+const common_scenarios = require('../../common_scenarios/discount');
 
 var catalogPriceRule = [{
   name: 'Catalog_price_1',
@@ -20,11 +20,11 @@ var catalogPriceRule = [{
  * http://forge.prestashop.com/browse/BOOM-3843
  **/
 
-scenario('Check double catalog price rules', () => {
+scenario('Check double catalog price rules', client => {
 
-  scenario('Open the browser and connect to the Back Office', client => {
+  scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
-    test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
+    test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
   common_scenarios.createCatalogPriceRules(catalogPriceRule[0].name, catalogPriceRule[0].type, catalogPriceRule[0].reduction);
@@ -52,8 +52,8 @@ scenario('Check double catalog price rules', () => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));
   }, 'common_client');
 
-  scenario('Open the browser and connect to the Back Office', client => {
-    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
+  scenario('Open the browser and connect to the BO', client => {
+    test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
   common_scenarios.deleteCatalogPriceRules(catalogPriceRule[0].name);

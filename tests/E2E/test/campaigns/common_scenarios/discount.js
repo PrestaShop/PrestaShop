@@ -1,6 +1,6 @@
-const {Menu} = require('../../../selectors/BO/menu.js');
-const {DiscountSubMenu} = require('../../../selectors/BO/catalogpage/discount_submenu');
-const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
+const {Menu} = require('../../selectors/BO/menu.js');
+const {DiscountSubMenu} = require('../../selectors/BO/catalogpage/discount_submenu');
+const {CatalogPage} = require('../../selectors/BO/catalogpage/index');
 let promise = Promise.resolve();
 
 module.exports = {

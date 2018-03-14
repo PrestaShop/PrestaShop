@@ -1,7 +1,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ModulePage} = require('../../../selectors/BO/module_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const module_common_scenarios = require('./module');
+const module_common_scenarios = require('../../common_scenarios/module');
 
 scenario('Install and Uninstall Module from cross selling', () => {
   scenario('Login in the Back Office', client => {
