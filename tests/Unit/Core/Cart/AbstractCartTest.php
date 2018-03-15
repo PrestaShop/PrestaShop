@@ -55,19 +55,19 @@ abstract class AbstractCartTest extends IntegrationTestCase
     ];
 
     const CART_RULES_FIXTURES = [
-        1  => array('priority' => 1, 'percent' => 50, 'amount' => 0),
-        2  => array('priority' => 2, 'percent' => 50, 'amount' => 0),
-        3  => array('priority' => 3, 'percent' => 10, 'amount' => 0),
-        4  => array('priority' => 4, 'percent' => 0, 'amount' => 5),
-        5  => array('priority' => 5, 'percent' => 0, 'amount' => 500),
-        6  => array('priority' => 6, 'percent' => 0, 'amount' => 10),
-        7  => array('priority' => 7, 'percent' => 50, 'amount' => 0),
-        8  => array('priority' => 8, 'percent' => 0, 'amount' => 5, 'productRestrictionId' => 2),
-        9  => array('priority' => 9, 'percent' => 0, 'amount' => 500, 'productRestrictionId' => 2),
-        10 => array('priority' => 10, 'percent' => 50, 'amount' => 0, 'productRestrictionId' => 2),
-        11 => array('priority' => 11, 'percent' => 10, 'amount' => 0, 'productRestrictionId' => 2),
-        12 => array('priority' => 12, 'percent' => 10, 'amount' => 0, 'productGiftId' => 3),
-        13 => array('priority' => 13, 'percent' => 10, 'amount' => 0, 'productGiftId' => 4),
+        1  => array('priority' => 1, 'code' => 'foo1', 'percent' => 50, 'amount' => 0),
+        2  => array('priority' => 2, 'code' => 'foo2', 'percent' => 50, 'amount' => 0),
+        3  => array('priority' => 3, 'code' => 'foo3', 'percent' => 10, 'amount' => 0),
+        4  => array('priority' => 4, 'code' => 'foo4', 'percent' => 0, 'amount' => 5),
+        5  => array('priority' => 5, 'code' => 'foo5', 'percent' => 0, 'amount' => 500),
+        6  => array('priority' => 6, 'code' => 'foo6', 'percent' => 0, 'amount' => 10),
+        7  => array('priority' => 7, 'code' => 'foo7', 'percent' => 50, 'amount' => 0),
+        8  => array('priority' => 8, 'code' => 'foo8', 'percent' => 0, 'amount' => 5, 'productRestrictionId' => 2),
+        9  => array('priority' => 9, 'code' => 'foo9', 'percent' => 0, 'amount' => 500, 'productRestrictionId' => 2),
+        10 => array('priority' => 10, 'code' => 'foo10', 'percent' => 50, 'amount' => 0, 'productRestrictionId' => 2),
+        11 => array('priority' => 11, 'code' => 'foo11', 'percent' => 10, 'amount' => 0, 'productRestrictionId' => 2),
+        12 => array('priority' => 12, 'code' => 'foo12', 'percent' => 10, 'amount' => 0, 'productGiftId' => 3),
+        13 => array('priority' => 13, 'code' => 'foo13', 'percent' => 10, 'amount' => 0, 'productGiftId' => 4),
     ];
 
     /**
