@@ -42,14 +42,14 @@ class LocaleDataSource
     protected $topLayer;
 
     /**
-     * LocaleDataSource constructor needs an array of CldrLocaleDataLayer objects.
-     * These layers will be chained and will act as a middleware stack.
+     * LocaleDataSource constructor needs a CldrLocaleDataLayerInterface layer object.
+     * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
      *
-     * @param CldrLocaleDataLayerInterface[] $layers
+     * @param CldrLocaleDataLayerInterface $topLayer
      */
-    public function __construct($layers)
+    public function __construct(CldrLocaleDataLayerInterface $topLayer)
     {
-        $this->topLayer = $this->chainLayers($layers);
+        $this->topLayer = $topLayer;
     }
 
     /**
@@ -60,29 +60,5 @@ class LocaleDataSource
     public function getLocaleData($localeCode)
     {
         return $this->topLayer->read($localeCode);
-    }
-
-    /**
-     * Chain locale data layers together, in the passed order.
-     *
-     * @param CldrLocaleDataLayerInterface[] $layers
-     *  The layers to chain.
-     *  First one will be the top layer. Last one will be the lowest layer.
-     *
-     * @return null|CldrLocaleDataLayerInterface
-     *  The top layer
-     */
-    protected function chainLayers($layers)
-    {
-        while ($thisLayer = array_pop($layers)) {
-            $before = count($layers) - 1;
-            if ($before < 0) {
-                return $thisLayer;
-            }
-
-            $layers[$before]->setLowerLayer($thisLayer);
-        }
-
-        return null;
     }
 }
