@@ -522,7 +522,7 @@ class CategoryCore extends ObjectModel
         }
 
         $cache_id = 'Category::getAllCategoriesName_'.md5((int)$root_category.(int)$id_lang.(int)$active.(int)$use_shop_restriction
-            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '').$sql_filter.$sql_sort.$sql_limit);
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
@@ -565,7 +565,7 @@ class CategoryCore extends ObjectModel
         }
 
         $cache_id = 'Category::getNestedCategories_'.md5((int)$root_category.(int)$id_lang.(int)$active.(int)$use_shop_restriction
-            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+            .(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : '').$sql_filter.$sql_sort.$sql_limit);
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
