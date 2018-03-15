@@ -555,7 +555,7 @@ CREATE TABLE `PREFIX_currency` (
   `id_currency` int(10) unsigned NOT NULL auto_increment,
   `iso_code` varchar(3) NOT NULL DEFAULT '0',
   `numeric_iso_code` varchar(3),
-  `precision` INT(2) NOT NULL DEFAULT 2,
+  `precision` int(2) NOT NULL DEFAULT 8,
   `conversion_rate` decimal(13,6) NOT NULL,
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
@@ -567,8 +567,8 @@ CREATE TABLE `PREFIX_currency` (
 CREATE TABLE `PREFIX_currency_lang` (
   `id_currency` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
-  `name` varchar(64) NOT NULL,
-  `symbol` VARCHAR(32) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `symbol` varchar(255) NOT NULL,
   PRIMARY KEY (`id_currency`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 

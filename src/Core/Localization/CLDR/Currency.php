@@ -69,7 +69,7 @@ class Currency
     /**
      * Possible names depending on count context.
      *
-     * e.g. : "Used currency is dollar" (default), "I need one dollar" (one), "I need five dollars" (other)
+     * e.g.: "Used currency is dollar" (default), "I need one dollar" (one), "I need five dollars" (other)
      * [
      *     'default' => 'dollar',
      *     'one'     => 'dollar',
@@ -156,7 +156,7 @@ class Currency
      * Get the symbol of this currency. Narrow symbol is returned by default.
      *
      * @param string $type
-     *  Possible value : "default" ("$") and "narrow" ("US$")
+     *  Possible value: "default" ("$") and "narrow" ("US$")
      *
      * @return string
      *  The currency's symbol
@@ -167,7 +167,12 @@ class Currency
     public function getSymbol($type = self::SYMBOL_TYPE_NARROW)
     {
         if (!in_array($type, [self::SYMBOL_TYPE_NARROW, self::SYMBOL_TYPE_DEFAULT])) {
-            throw new LocalizationException('Unknown symbol type');
+            throw new LocalizationException(
+                sprintf(
+                    'Unknown symbol type: "%s"',
+                    print_r($type, true)
+                )
+            );
         }
 
         return $this->symbols[$type];

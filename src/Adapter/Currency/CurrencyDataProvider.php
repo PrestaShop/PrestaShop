@@ -89,12 +89,12 @@ class CurrencyDataProvider
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
-        $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
+        if (null === $idLang) {
+            $idLang = Configuration::get('PS_LANG_DEFAULT');
+        }
 
+        $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
         if (null === $currency) {
-            if (null === $idLang) {
-                $idLang = Configuration::get('PS_LANG_DEFAULT');
-            }
             $currency = new Currency(null, $idLang);
         }
 

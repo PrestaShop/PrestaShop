@@ -105,7 +105,7 @@ class Reader implements ReaderInterface
      * Validate a locale code
      *
      * If the passed code doesn't respect the CLDR files naming style, an exception will be raised
-     * eg : "fr_FR" and "en_001" are valid
+     * e.g.: "fr_FR" and "en_001" are valid
      *
      * @param $localeCode
      *  Locale code to be validated
@@ -214,7 +214,7 @@ class Reader implements ReaderInterface
             return $parent;
         }
 
-        // The "top level" case. When only language code is left in $localeCode : 'en', 'fr'... then parent is "root".
+        // The "top level" case. When only language code is left in $localeCode: 'en', 'fr'... then parent is "root".
         return self::CLDR_ROOT_LOCALE;
     }
 
@@ -394,7 +394,7 @@ class Reader implements ReaderInterface
             foreach ($numbersData->decimalFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string)$format['numberSystem'];
-                // If alias is set, we just copy data from another numbering system :
+                // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if ($alias
                     && preg_match(
@@ -424,7 +424,7 @@ class Reader implements ReaderInterface
             foreach ($numbersData->percentFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string)$format['numberSystem'];
-                // If alias is set, we just copy data from another numbering system :
+                // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if ($alias
                     && preg_match(
@@ -455,7 +455,7 @@ class Reader implements ReaderInterface
             foreach ($numbersData->currencyFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem = (string)$format['numberSystem'];
-                // If alias is set, we just copy data from another numbering system :
+                // If alias is set, we just copy data from another numbering system:
                 $alias = $format->alias;
                 if ($alias
                     && preg_match(
