@@ -532,6 +532,10 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
     protected function doProductSearch($template, $params = array(), $locale = null)
     {
         if ($this->ajax) {
+
+			// When the products are fetched through AJAX the "General Purpose Variables" are not assigned, which leads to following problems (like bugs when trying to implement the AJAX Cart on category pages or other list of products).
+			$this->assignGeneralPurposeVariables();
+
             ob_end_clean();
             header('Content-Type: application/json');
             $this->ajaxDie(json_encode($this->getAjaxProductSearchVariables()));
