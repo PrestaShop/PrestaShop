@@ -2,7 +2,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const common_scenarios = require('./discount');
+const common_scenarios = require('../../common_scenarios/discount');
 
 var catalogPriceRule = [{
   name: 'Catalog_price_1',

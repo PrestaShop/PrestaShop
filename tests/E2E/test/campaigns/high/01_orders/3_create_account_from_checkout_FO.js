@@ -1,5 +1,5 @@
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
-const common_scenarios = require('./order');
+const common_scenarios = require('../../common_scenarios/order');
 
 scenario('Create account from checkout in Front Office', () => {
   scenario('Open the browser and access to the Front Office', client => {

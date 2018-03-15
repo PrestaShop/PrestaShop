@@ -1,7 +1,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {PagesForm} = require('../../../selectors/BO/pages_form.js');
 const {Menu} = require('../../../selectors/BO/menu.js');
-const common = require('./shop_parameters');
+const common = require('../../common_scenarios/shop_parameters');
 
 scenario('Open all menu links in the Back Office', () => {
   scenario('Login in the Back Office', client => {

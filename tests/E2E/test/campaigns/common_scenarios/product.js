@@ -1,8 +1,8 @@
-const {Menu} = require('../../../selectors/BO/menu.js');
+const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
-const {ProductList} = require('../../../selectors/BO/add_product_page');
+const {ProductList} = require('../../selectors/BO/add_product_page');
 
-/****Exemple of product data ****
+/**** Example of product data ****
  * var productData = {
  *  name: 'product_name',
  *  reference: 'product_reference',

@@ -1,4 +1,4 @@
-const {Menu} = require('../../../selectors/BO/menu.js');
+const {Menu} = require('../../selectors/BO/menu.js');
 
 module.exports = {
   checkConfigPage: function (client, ModulePage, moduleTechName) {
