@@ -1,5 +1,5 @@
 .search-widget {
-  float: right;
+  display: inline-block;
   @include search-box;
 }
 .header-top {
