@@ -74,7 +74,7 @@ class LocaleDataSourceTest extends TestCase
                 ['en-US', $this->enStubLocaleData],
             ]);
 
-        $this->localeDataSource = new LocaleDataSource([$layer]);
+        $this->localeDataSource = new LocaleDataSource($layer);
     }
 
     /**

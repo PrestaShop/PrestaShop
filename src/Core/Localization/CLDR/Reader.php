@@ -506,7 +506,7 @@ class Reader implements ReaderInterface
                 if (!empty($codesMapping)) {
                     /** @var SimplexmlElement $codesMapping */
                     $codesMapping                 = $codesMapping[0];
-                    $currencyData->numericIsoCode = (int)(string)$codesMapping->attributes()->numeric;
+                    $currencyData->numericIsoCode = (string)$codesMapping->attributes()->numeric;
                 }
 
                 $fractionsData = $this->supplementalXml->supplementalData->xpath(

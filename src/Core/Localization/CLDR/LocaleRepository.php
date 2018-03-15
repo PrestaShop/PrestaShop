@@ -47,9 +47,13 @@ class LocaleRepository
     }
 
     /**
-     * @param $localeCode
+     * Get a CLDR Locale by simplified IETF tag
      *
-     * @return CldrLocale
+     * @param string $localeCode
+     *  e.g.: fr-FR, en-US...
+     *
+     * @return CldrLocale|null
+     *  A CldrLocale object. Null if not found
      */
     public function getLocale($localeCode)
     {

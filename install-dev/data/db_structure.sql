@@ -555,7 +555,7 @@ CREATE TABLE `PREFIX_currency` (
   `id_currency` int(10) unsigned NOT NULL auto_increment,
   `iso_code` varchar(3) NOT NULL DEFAULT '0',
   `numeric_iso_code` varchar(3),
-  `precision` int(2) NOT NULL DEFAULT 8,
+  `precision` int(2) NOT NULL DEFAULT 6,
   `conversion_rate` decimal(13,6) NOT NULL,
   `deleted` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
