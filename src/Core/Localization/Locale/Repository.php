@@ -79,7 +79,7 @@ class Repository implements RepositoryInterface
 
     /**
      * Numbering system to use when formatting numbers.
-     * Default value : "latn"
+     * Default value: "latn"
      *
      * @see http://cldr.unicode.org/translation/numbering-systems
      *
@@ -90,7 +90,7 @@ class Repository implements RepositoryInterface
     /**
      * Currency display type
      * Default is "symbol". But sometimes you may want to display the currency code instead.
-     * Possible values : PrestaShop\PrestaShop\Core\Localization\Specification\Price::CURRENCY_DISPLAY_*
+     * Possible values: PrestaShop\PrestaShop\Core\Localization\Specification\Price::CURRENCY_DISPLAY_*
      *
      * @var string
      */
@@ -248,7 +248,7 @@ class Repository implements RepositoryInterface
      *  This Currency object brings missing specification to format a number as a price
      *
      * @param string $localeCode
-     *  Some price specs need to be localized (eg : currency symbol)
+     *  Some price specs need to be localized (e.g.: currency symbol)
      *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
      *  eg: fr-FR, en-US
      *

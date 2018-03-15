@@ -59,7 +59,7 @@ class CurrencyData
     /**
      * Possible names depending on count context.
      *
-     * e.g. : "Used currency is dollar" (default), "I need one dollar" (one), "I need five dollars" (other)
+     * e.g.: "Used currency is dollar" (default), "I need one dollar" (one), "I need five dollars" (other)
      * [
      *     'default' => 'dollar',
      *     'one'     => 'dollar',
