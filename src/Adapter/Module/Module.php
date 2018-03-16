@@ -359,6 +359,11 @@ class Module implements ModuleInterface
         }
     }
 
+    /**
+     * Inform the merchant an upgrade is wating to be applied from the disk or the marketplace
+     *
+     * @return boolean
+     */
     public function canBeUpgraded()
     {
         if ($this->database->get('installed') == 0) {
@@ -366,12 +371,22 @@ class Module implements ModuleInterface
         }
 
         // Potential update from API
-        if ($this->attributes->get('version_available') !== 0
-            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<')) {
+        if ($this->canBeUpgradedFromAddons()) {
             return true;
         }
 
         // Potential update from disk
         return version_compare($this->database->get('version'), $this->disk->get('version'), '<');
+    }
+
+    /**
+     * Only check if an upgrade is available on the marketplace
+     *
+     * @return boolean
+     */
+    public function canBeUpgradedFromAddons()
+    {
+        return $this->attributes->get('version_available') !== 0
+            && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');
     }
 }
