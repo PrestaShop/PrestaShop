@@ -41,6 +41,14 @@
       color: $brand-primary;
     }
   }
+  .menu {
+    display: inline-block;
+    > ul {
+      > li {
+        display: inline-block;
+      }
+    }
+  }
   .header-nav {
     border-bottom: $gray-light 2px solid;
     max-height: 50px;
@@ -129,11 +137,6 @@
     }
     padding-bottom: 1.25rem;
     .menu {
-      > ul {
-        > li {
-          float: left;
-        }
-      }
       padding-left: 15px;
       margin-bottom: 0.375rem;
     }
