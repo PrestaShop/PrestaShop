@@ -134,15 +134,15 @@ class CurrencyCore extends ObjectModel
         // 'multilang_shop' => true,
         'fields' => array(
             'iso_code'         => array('type' => self::TYPE_STRING, 'validate' => 'isLanguageIsoCode', 'required' => true, 'size' => 3),
-            'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode' , 'required' => true, 'size' => 3),
-            'precision'        => array('type' => self::TYPE_INT   , 'validate' => 'isInt'            , 'required' => true),
+            'numeric_iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isNumericIsoCode', 'size' => 3),
+            'precision'        => array('type' => self::TYPE_INT   , 'validate' => 'isInt'),
             'conversion_rate'  => array('type' => self::TYPE_FLOAT , 'validate' => 'isUnsignedFloat'  , 'required' => true, 'shop' => true),
             'deleted'          => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
             'active'           => array('type' => self::TYPE_BOOL  , 'validate' => 'isBool'),
 
             /* Lang fields */
-            'name'   => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 64),
+            'name'   => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
+            'symbol' => array('type' => self::TYPE_STRING, 'lang' => true                               , 'size' => 255),
         ),
     );
 
@@ -181,12 +181,14 @@ class CurrencyCore extends ObjectModel
         if ($this->iso_code) {
             $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
 
-            $this->sign = $cldrCurrency['symbol'];
-            $this->iso_code_num = $cldrCurrency['iso_code'];
-            $this->name = $cldrCurrency['name'];
-            $this->format = $this->cldr->getCurrencyFormatPattern();
-            $this->blank = 1;
-            $this->decimals = 1;
+            $this->sign             = $cldrCurrency['symbol'];
+            $this->symbol           = $cldrCurrency['symbol'];
+            $this->iso_code_num     = $cldrCurrency['iso_code'];
+            $this->numeric_iso_code = $cldrCurrency['iso_code'];
+            $this->name             = $cldrCurrency['name'];
+            $this->format           = $this->cldr->getCurrencyFormatPattern();
+            $this->blank            = 1;
+            $this->decimals         = 1;
         }
 
         if (!$this->conversion_rate) {
