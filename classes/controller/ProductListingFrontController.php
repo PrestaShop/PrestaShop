@@ -472,6 +472,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
      */
     protected function getAjaxProductSearchVariables()
     {
+        $this->assignGeneralPurposeVariables();
         $search = $this->getProductSearchVariables();
 
         $rendered_products_top = $this->render('catalog/_partials/products-top', array('listing' => $search));

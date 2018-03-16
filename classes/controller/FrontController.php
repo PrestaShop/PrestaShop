@@ -1940,6 +1940,11 @@ class FrontControllerCore extends Controller
         }
     }
 
+    public function displayAjax()
+    {
+        $this->assignGeneralPurposeVariables();
+    }
+
     protected function buildContainer()
     {
         $container = new ContainerBuilder();
