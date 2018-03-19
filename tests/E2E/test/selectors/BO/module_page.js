@@ -42,7 +42,6 @@ module.exports = {
     rollback_version: '//*[@id="restoreBackupContainer"]//option[2]',
     rollback_button: '//*[@id="rollback"]',
     success_msg: '(//p[contains(@class,"alert-success")])[1]/p',
-    modules_number: '[class="module-sorting-search-wording"]',
     module_list: '//*[@id="modules-list-container-all"]/div[%I]',
     sort_select: '//select[contains(@class,"sort-component")]',
     maintenance_shop: '//*[@id="currentConfiguration"]//input[contains(@name,"putUnderMaintenance")]',
