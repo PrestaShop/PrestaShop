@@ -342,6 +342,18 @@ class CommonClient {
   deleteObjectElement(object, pos) {
     delete object[pos];
   }
+
+  checkParamFromURL(param, value, pause = 0) {
+    return this.client
+      .pause(pause)
+      .url()
+      .then((res) => {
+        let current_url = res.value;
+        expect(current_url).to.contain(param);
+        global.param = current_url.split(param + '=')[1].split("&")[0];
+        expect(global.param).to.equal(value);
+      });
+  }
 }
 
 module.exports = CommonClient;
