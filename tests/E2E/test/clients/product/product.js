@@ -133,13 +133,11 @@ class Product extends CommonClient {
       .selectByVisibleText(addProductPage.feature_value_select, value)
   }
 
-  clickPageNext(selector) {
+  clickPageNextOrPrevious(selector) {
     if (global.isVisible) {
       return this.client
         .click(selector)
         .pause(2000)
-    } else {
-      return this.client.pause(1000)
     }
   }
 
