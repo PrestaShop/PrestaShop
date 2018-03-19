@@ -69,6 +69,30 @@ class CombinationDataProvider
         );
     }
 
+    public function getFormCombinations(array $combinationIds, int $languageId)
+    {
+        $productId = (new Combination($combinationIds[0]))->id_product;
+        $product = new Product($productId);
+        $combinations = array();
+
+        foreach ($combinationIds as $combinationId) {
+            $combinations[$combinationId] = $this->completeCombination(
+                $product->getAttributeCombinationsById(
+                    $combinationId,
+                    $languageId
+                ),
+                $product
+            );
+        }
+
+        return $combinations;
+    }
+
+    /**
+     * @param $attributesCombinations
+     * @param $product
+     * @return array
+     */
     public function completeCombination($attributesCombinations, $product)
     {
         $combination = $attributesCombinations[0];
