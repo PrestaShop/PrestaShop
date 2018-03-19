@@ -549,3 +549,29 @@ services:
             - '@prestashop.adapter.product_pagination.configuration'
             - '@prestashop.adapter.product_page.configuration'
             - '@prestashop.adapter.product_stock.configuration'
+
+    # Localization
+    prestashop.core.localization.locale.repository:
+        class: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
+        arguments:
+            - '@prestashop.core.localization.cldr.localeRepository'
+            - '@prestashop.core.localization.currency.repository'
+        public: true
+
+    prestashop.core.localization.currency.repository:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository
+        arguments:
+            - '@prestashop.core.localization.currency.datasource'
+        public: true
+
+    prestashop.core.localization.cldr.localeRepository:
+        class: PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository
+        arguments:
+            - 'todo'
+        public: true
+
+    prestashop.core.localization.currency.datasource:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataSource
+        arguments:
+            - 'todo'
+        public: true
