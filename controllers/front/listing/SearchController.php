@@ -60,6 +60,9 @@ class SearchControllerCore extends ProductListingFrontController
         );
     }
 
+    /**
+     * Performs the search
+     */
     public function initContent()
     {
         parent::initContent();
