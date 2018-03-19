@@ -1,5 +1,6 @@
 #require 'compass/import-once/activate'
 # Require any additional compass plugins here.
+Encoding.default_external = 'utf-8'
 
 css_dir = "css"
 sass_dir = "sass"
