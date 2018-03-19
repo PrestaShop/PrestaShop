@@ -121,8 +121,14 @@
         margin-top: 0.125rem;
       }
     }
-    #contact-link {
-      margin-top: 0.9375rem;
+    #_desktop_contact_link{
+      display: inline-block;
+      #contact-link {
+        margin-top: 0.9375rem;
+      }
+    }
+    .search-widget {
+      margin-top: 0.2rem;
     }
     .material-icons {
       line-height: inherit;
@@ -146,6 +152,9 @@
     a[data-depth="0"] {
       color: $gray;
       text-transform: uppercase;
+    }
+    .search-widget {
+      float: right;
     }
   }
   .top-menu-link {
@@ -229,6 +238,64 @@
 }
 
 /*** Responsive part ***/
+@include media-breakpoint-down(lg) {
+  #header {
+    .header-nav {
+      max-height: inherit;
+      .search-widget {
+       float: none;
+       width: 15.63rem;
+      }
+    }
+  }
+}
+@include media-breakpoint-down(md) {
+  .container {
+    max-width: 100%;
+  }
+  #header {
+    .logo {
+      width: auto;
+    }
+    .header-top {
+      .search-widget {
+        min-width: inherit;
+      }
+    }
+  }
+  #products .product-miniature,
+  .featured-products .product-miniature {
+    margin: 0 auto;
+  }
+  .sub-menu {
+    left: 0;
+    min-width: 100%;
+  }
+  #blockcart-modal .product-image {
+    width: 100%;
+    display: block;
+    max-width: 15.63rem;
+    margin: 0 auto 0.9375rem;
+  }
+  #blockcart-modal .cart-content {
+    padding-left: 0;
+  }
+  #blockcart-modal .product-name,
+  #product-availability {
+    margin-top: $small-space;
+  }
+  #search_filters .facet .facet-label {
+    text-align: left;
+  }
+  .block-category .category-cover {
+    position: relative;
+    text-align: center;
+  }
+  .block-category {
+    padding-bottom: 0;
+  }
+}
+
 @include media-breakpoint-down(sm) {
   #wrapper {
     box-shadow: none;
@@ -310,45 +377,6 @@
   }
   #footer {
     padding-top: 0.5rem;
-  }
-}
-@include media-breakpoint-down(md) {
-  .container {
-    max-width: 100%;
-  }
-  #header .logo {
-    width: auto;
-  }
-  #products .product-miniature,
-  .featured-products .product-miniature {
-    margin: 0 auto;
-  }
-  .sub-menu {
-    left: 0;
-    min-width: 100%;
-  }
-  #blockcart-modal .product-image {
-    width: 100%;
-    display: block;
-    max-width: 250px;
-    margin: 0 auto 0.9375rem;
-  }
-  #blockcart-modal .cart-content {
-    padding-left: 0;
-  }
-  #blockcart-modal .product-name,
-  #product-availability {
-    margin-top: $small-space;
-  }
-  #search_filters .facet .facet-label {
-    text-align: left;
-  }
-  .block-category .category-cover {
-    position: relative;
-    text-align: center;
-  }
-  .block-category {
-    padding-bottom: 0;
   }
 }
 
