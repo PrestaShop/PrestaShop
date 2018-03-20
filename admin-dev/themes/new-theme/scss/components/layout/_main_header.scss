@@ -375,11 +375,10 @@
 }
 .employee-dropdown {
   > .person {
-    border: solid 1px $gray-medium;
     margin-right: 1rem;
     cursor: pointer;
     .material-icons {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
       color: $gray-medium;
       vertical-align: bottom;
     }
