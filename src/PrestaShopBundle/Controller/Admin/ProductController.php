@@ -440,7 +440,6 @@ class ProductController extends FrameworkBundleAdminController
         // Prepare combination form (fake but just to validate the form)
         $combinations = $modelMapper->getAttributesResume();
         if (is_array($combinations)) {
-            ini_set('max_input_vars', 200 + (20 * count($combinations)));
             foreach ($combinations as $combination) {
                 $form->add(
                     'combination_'.$combination['id_product_attribute'],
