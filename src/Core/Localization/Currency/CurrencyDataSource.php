@@ -40,14 +40,14 @@ class CurrencyDataSource implements DataSourceInterface
     protected $topLayer;
 
     /**
-     * CurrencyDataSource constructor needs an array of CurrencyDataLayer objects.
-     * These layers will be chained and will act as a middleware stack.
+     * CurrencyDataSource constructor needs CurrencyDataLayer objects.
+     * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
      *
-     * @param CurrencyDataLayerInterface[] $layers
+     * @param CurrencyDataLayerInterface $topLayer
      */
-    public function __construct($layers)
+    public function __construct(CurrencyDataLayerInterface $topLayer)
     {
-        $this->topLayer = $this->chainLayers($layers);
+        $this->topLayer = $topLayer;
     }
 
     /**

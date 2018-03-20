@@ -93,7 +93,7 @@ class LocaleCache extends AbstractDataLayer implements CldrLocaleDataLayerInterf
     {
         if (!($data instanceof LocaleData)) {
             throw new LocalizationException(
-                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData'
+                '$data must be an instance of ' . LocaleData::class
             );
         }
 

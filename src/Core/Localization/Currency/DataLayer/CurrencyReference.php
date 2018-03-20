@@ -50,6 +50,13 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
      */
     protected $cldrLocaleRepository;
 
+    /**
+     * The contextual locale code.
+     *
+     * Any data returned by this data layer will be localized in this locale.
+     *
+     * @var string
+     */
     protected $localeCode;
 
     public function __construct(CldrLocaleRepository $cldrLocaleRepository, $localeCode)

@@ -93,7 +93,7 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
     {
         if (!($data instanceof CurrencyData)) {
             throw new LocalizationException(
-                '$data must be an instance of PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData'
+                '$data must be an instance of ' . CurrencyData::class
             );
         }
 
