@@ -52,6 +52,9 @@ script:
   - bash travis-scripts/install-prestashop
   - if [ $PRESTASHOP_TEST_TYPE = "lint" ]; then
         bash tests/check_file_syntax.sh;
+
+        # Check our current PHP Coding Style rules
+        php ./vendor/bin/php-cs-fixer fix --dry-run --stop-on-violation --show-progress=dots
     fi
 
   - if [ $PRESTASHOP_TEST_TYPE = "unit" ]; then

@@ -112,7 +112,7 @@
         "phpunit/phpunit": "~5.7",
         "symfony/phpunit-bridge": "^3.0",
         "phake/phake": "@stable",
-        "friendsofphp/php-cs-fixer": "^1.10"
+        "friendsofphp/php-cs-fixer": "^2.1"
     },
     "autoload-dev": {
         "psr-4": {
