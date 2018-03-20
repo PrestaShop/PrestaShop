@@ -62,28 +62,4 @@ class CurrencyDataSource implements DataSourceInterface
     {
         return $this->topLayer->read($currencyCode);
     }
-
-    /**
-     * Chain currency data layers together, in the passed order.
-     *
-     * @param CurrencyDataLayerInterface[] $layers
-     *  The layers to chain.
-     *  First one will be the top layer. Last one will be the lowest layer.
-     *
-     * @return null|CurrencyDataLayerInterface
-     *  The top layer
-     */
-    protected function chainLayers($layers)
-    {
-        while ($thisLayer = array_pop($layers)) {
-            $before = count($layers) - 1;
-            if ($before < 0) {
-                return $thisLayer;
-            }
-
-            $layers[$before]->setLowerLayer($thisLayer);
-        }
-
-        return null;
-    }
 }
