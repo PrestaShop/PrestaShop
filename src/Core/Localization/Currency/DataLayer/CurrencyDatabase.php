@@ -31,8 +31,8 @@ use Exception;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface as CldrCurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
  *
  * Provides and persists currency data from/into database
  */
-class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLayerInterface
+class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInterface
 {
 
     protected $dataProvider;
@@ -57,12 +57,12 @@ class CurrencyDatabase extends AbstractDataLayer implements CldrCurrencyDataLaye
      * When reading data, if nothing is found then it will try to read in the lower data layer
      * When writing data, the data will also be written in the lower data layer
      *
-     * @param CldrCurrencyDataLayerInterface $lowerLayer
+     * @param CurrencyDataLayerInterface $lowerLayer
      *  The lower data layer.
      *
      * @return self
      */
-    public function setLowerLayer(CldrCurrencyDataLayerInterface $lowerLayer)
+    public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer)
     {
         $this->lowerDataLayer = $lowerLayer;
 
