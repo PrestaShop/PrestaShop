@@ -48,7 +48,7 @@ class LocaleUsageTest extends KernelTestCase
     {
         $this->bootKernel();
         $this->container        = self::$kernel->getContainer();
-        $this->localeRepository = $this->container->get('');
+        $this->localeRepository = $this->container->get('prestashop.core.localization.locale.repository');
     }
 
     /**
@@ -60,7 +60,7 @@ class LocaleUsageTest extends KernelTestCase
      *
      * @throws LocalizationException
      */
-    public function itShouldFormatNumbers($localeCode, $rawNumber, $formattedNumber)
+    public function testItShouldFormatNumbers($localeCode, $rawNumber, $formattedNumber)
     {
         $locale = $this->localeRepository->getLocale($localeCode);
 
