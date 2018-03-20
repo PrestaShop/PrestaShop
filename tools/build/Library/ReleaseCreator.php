@@ -668,6 +668,14 @@ class ReleaseCreator
             $zip->open("{$this->tempProjectPath}/{$this->zipFileName}", ZipArchive::CREATE | ZipArchive::OVERWRITE);
             $zip->addFile("{$this->tempProjectPath}/{$installerZipFilename}", $installerZipFilename);
             $zip->addFile("{$this->projectPath}/tools/build/Library/InstallUnpacker/index.php", 'index.php');
+
+            // add docs at the root
+            $zip->addGlob(
+                "{$this->projectPath}/tools/build/doc/*",
+                0,
+                array('add_path' => './', 'remove_all_path' => true)
+            );
+
             $zip->close();
             exec("rm {$argProjectPath}/tools/build/Library/InstallUnpacker/index.php");
         } else {
