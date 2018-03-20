@@ -32,15 +32,12 @@ class PricesDropControllerCore extends ProductListingFrontController
     public $php_self = 'prices-drop';
 
     /**
-     * Initializes controller.
-     *
-     * @see FrontController::init()
-     *
-     * @throws PrestaShopException
+     * @inheritdoc
      */
-    public function init()
+    public function initContent()
     {
-        parent::init();
+        parent::initContent();
+
         $this->doProductSearch('catalog/listing/prices-drop');
     }
 

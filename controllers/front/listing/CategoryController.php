@@ -36,6 +36,9 @@ class CategoryControllerCore extends ProductListingFrontController
     /** @var bool If set to false, customer cannot view the current category. */
     public $customer_access = true;
 
+    /**
+     * @var Category
+     */
     protected $category;
 
     public function canonicalRedirection($canonicalURL = '')
@@ -84,7 +87,7 @@ class CategoryControllerCore extends ProductListingFrontController
 
         $categoryVar = $this->getTemplateVarCategory();
 
-        $filteredCategory= Hook::exec(
+        $filteredCategory = Hook::exec(
             'filterCategoryContent',
             array('object' => $categoryVar),
             $id_module = null,
@@ -102,8 +105,22 @@ class CategoryControllerCore extends ProductListingFrontController
             'category' => $categoryVar,
             'subcategories' => $this->getTemplateVarSubCategories(),
         ));
+    }
 
-        $this->doProductSearch('catalog/listing/category', array('entity' => 'category', 'id' => $id_category));
+    /**
+     * @inheritdoc
+     */
+    public function initContent()
+    {
+        parent::initContent();
+
+        $this->doProductSearch(
+            'catalog/listing/category',
+            array(
+                'entity' => 'category',
+                'id' => $this->category->id
+            )
+        );
     }
 
     protected function getProductSearchQuery()

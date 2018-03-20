@@ -36,15 +36,6 @@ class OrderDetailControllerCore extends FrontController
     protected $order_to_display;
 
     /**
-     * Initialize order detail controller
-     * @see FrontController::init()
-     */
-    public function init()
-    {
-        parent::init();
-    }
-
-    /**
      * Start forms process
      * @see FrontController::postProcess()
      */
