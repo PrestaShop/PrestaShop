@@ -46,7 +46,6 @@ class CombinationController extends FrameworkBundleAdminController
 
         $formFactory = $this->get('form.factory');
         foreach ($combinations as $combinationId => $combination) {
-            dump($combination);
             $forms[] = $formFactory->createNamed("combination_$combinationId", ProductCombination::class, $combination)->createView();
         }
 
