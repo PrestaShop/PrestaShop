@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2018 PrestaShop
  *
@@ -25,9 +24,14 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
-
-class Number
+function ps_1740_copy_data_from_currency_to_currency_lang()
 {
-
+    $currencies = Currency::getCurrencies();
+    foreach ($currencies as $currency) {
+        Db::getInstance()->execute(
+            "INSERT INTO `" . _DB_PREFIX_ . "currency_lang` (`id_currency`, `id_lang`, `name`)
+            SELECT `id_currency`, " . $currency['id_lang'] . " as id_lang , `name`
+            FROM `" . _DB_PREFIX_ . "currency`"
+        );
+    }
 }

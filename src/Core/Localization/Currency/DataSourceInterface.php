@@ -1,5 +1,4 @@
 <?php
-
 /**
  * 2007-2018 PrestaShop
  *
@@ -25,44 +24,22 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
-
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
+namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
- * CLDR Locale Repository
+ * Currency data repository interface
  *
- * Provides CLDR Locale objects
+ * Describes the behavior of currency DataRepository classes
  */
-class LocaleRepository
+interface DataSourceInterface
 {
     /**
-     * @var LocaleDataSource
-     */
-    protected $dataSource;
-
-    public function __construct(LocaleDataSource $dataSource)
-    {
-        $this->dataSource = $dataSource;
-    }
-
-    /**
-     * Get a CLDR Locale by simplified IETF tag
+     * Get complete currency data by currency code
      *
-     * @param string $localeCode
-     *  e.g.: fr-FR, en-US...
+     * @param string $currencyCode
      *
-     * @return CldrLocale|null
-     *  A CldrLocale object. Null if not found
+     * @return CurrencyData
+     *  The currency data
      */
-    public function getLocale($localeCode)
-    {
-        $localeData = $this->dataSource->getLocaleData($localeCode);
-
-        if (null === $localeData) {
-            return null;
-        }
-
-        return new CldrLocale($localeData);
-    }
+    public function getDataByCurrencyCode($currencyCode);
 }

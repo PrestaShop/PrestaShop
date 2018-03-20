@@ -25,9 +25,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\DataLayer;
-
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 /**
  * Currency data layer classes interface
@@ -37,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
 interface CurrencyDataLayerInterface
 {
     /**
-     * Read Currency by currency code
+     * Read Currency data by currency code
      *
      * @param string $currencyCode
      *  The currency code (ISO 4217)
@@ -48,7 +46,7 @@ interface CurrencyDataLayerInterface
     public function read($currencyCode);
 
     /**
-     * Write a currency data object into the data source
+     * Write a Currency object into the data source
      *
      * @param string $currencyCode
      *  The currency code (ISO 4217)
@@ -59,7 +57,7 @@ interface CurrencyDataLayerInterface
      * @return CurrencyData
      *  The currency data to be written by the upper data layer
      */
-    public function write($currencyCode, CurrencyData $currencyData);
+    public function write($currencyCode, $currencyData);
 
     /**
      * Set the lower layer.
@@ -70,6 +68,7 @@ interface CurrencyDataLayerInterface
      *  The lower data layer.
      *
      * @return self
+     *  Fluent interface
      */
     public function setLowerLayer(CurrencyDataLayerInterface $lowerLayer);
 }
