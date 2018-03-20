@@ -12,7 +12,7 @@ addons:
 
 cache:
   directories:
-    - $HOME/.composer/cache
+    - $HOME/.composer/cache/files
 
 sudo: required
 dist: trusty
@@ -46,6 +46,8 @@ notifications:
 script:
   - composer install --prefer-dist --no-interaction --no-progress
   - bash tests/check_file_syntax.sh
+  # Check our current PHP Coding Style rules
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" ]]; then php ./vendor/bin/php-cs-fixer fix --diff --dry-run -v; fi
   - bash travis-scripts/install-prestashop
   - php bin/console lint:twig src
   - php bin/console lint:twig app
