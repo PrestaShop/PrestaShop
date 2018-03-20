@@ -12,7 +12,7 @@ addons:
 
 cache:
   directories:
-    - $HOME/.composer/cache
+    - $HOME/.composer/cache/files
 
 sudo: required
 dist: trusty
@@ -26,10 +26,15 @@ env:
         - SYMFONY_DEPRECATIONS_HELPER=disabled
 
 matrix:
+  fast_finish: true
   include:
     - php: 7.1
       # temporarily disabled
       # env: EXTRA_TESTS=functional
+    - php: 7.1
+      env: CS=enabled
+  allow_failures:
+     - env: CS=enabled
 
 before_install:
   # Apache & php-fpm configuration
@@ -43,8 +48,12 @@ before_install:
 notifications:
   hipchat: ec4e21c5eb82066ba8be5fd1afefde@1184657
 
-script:
+before_script:
   - composer install --prefer-dist --no-interaction --no-progress
+  # Check our current PHP Coding Style rules
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.1" && ${CS} == "enabled" ]]; then php ./vendor/bin/php-cs-fixer fix --dry-run --stop-on-violation --show-progress=dots; fi
+
+script:
   - bash tests/check_file_syntax.sh
   - bash travis-scripts/install-prestashop
   - php bin/console lint:twig src
