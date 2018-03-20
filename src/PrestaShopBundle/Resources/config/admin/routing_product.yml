@@ -60,14 +60,6 @@ admin_product_form:
     requirements:
         id: \d+
 
-admin_product_use_legacy_setter:
-    path:     /uselegacy/{use}
-    methods:  [GET, POST]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Product:shouldUseLegacyPages
-    requirements:
-        use: 0|1
-
 admin_product_bulk_action:
     path:     /bulk/{action}
     methods:  [POST]

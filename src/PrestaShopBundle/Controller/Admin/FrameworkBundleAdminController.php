@@ -84,6 +84,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param Form $form The form
      * @return array[array[string]] Errors
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     public function getFormErrorsForJS(Form $form)
     {
@@ -107,7 +108,7 @@ class FrameworkBundleAdminController extends Controller
             }
 
             if ($error->getMessagePluralization()) {
-                $errors[$form_id][] = $translator->transchoice(
+                $errors[$form_id][] = $translator->transChoice(
                     $error->getMessageTemplate(),
                     $error->getMessagePluralization(),
                     $error->getMessageParameters(),
@@ -131,6 +132,7 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param $hookName The hook name
      * @param $parameters The hook parameters
+     * @throws \Exception
      */
     protected function dispatchHook($hookName, array $parameters)
     {
@@ -142,9 +144,10 @@ class FrameworkBundleAdminController extends Controller
      *
      * Wrapper to: @see HookDispatcher::renderForParameters()
      *
-     * @param $hookName The hook name
-     * @param $parameters The hook parameters
+     * @param string $hookName The hook name
+     * @param array $parameters The hook parameters
      * @return array The responses of hooks
+     * @throws \Exception
      */
     protected function renderHook($hookName, array $parameters)
     {
@@ -174,6 +177,7 @@ class FrameworkBundleAdminController extends Controller
     /**
      * Get the old but still useful context
      *
+     * @throws \Symfony\Component\Process\Exception\LogicException
      */
     protected function getContext()
     {
@@ -190,7 +194,7 @@ class FrameworkBundleAdminController extends Controller
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     protected function isDemoModeEnabled()
     {
@@ -211,6 +215,7 @@ class FrameworkBundleAdminController extends Controller
      * @param mixed $controller name of the controller to valide access
      *
      * @return int
+     * @throws \LogicException
      */
     protected function authorizationLevel($controller)
     {
@@ -233,9 +238,10 @@ class FrameworkBundleAdminController extends Controller
      *
      * @param $key the key to be translated
      * @param $domain the domain to be selected
-     * @param $parameters Optional, pass parameters if needed (uncommon)
+     * @param array $parameters Optional, pass parameters if needed (uncommon)
      *
      * @returns string
+     * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
     protected function trans($key, $domain, $parameters = array())
     {
@@ -246,11 +252,71 @@ class FrameworkBundleAdminController extends Controller
      * Return errors as flash error messages
      *
      * @param array $errorMessages
+     * @throws \LogicException
      */
     protected function flashErrors(array $errorMessages)
     {
         foreach ($errorMessages as $error) {
             $this->addFlash('error', $this->trans($error['key'], $error['domain'], $error['parameters']));
         }
+    }
+
+    /**
+     * Check if the connected user is granted to actions on a specific object.
+     * @param $action
+     * @param $object
+     * @param string $suffix
+     * @return bool
+     * @throws \LogicException
+     */
+    protected function shouldDenyAction($action, $object = '', $suffix = '')
+    {
+        return (
+                $action === 'delete' . $suffix && !$this->isGranted(PageVoter::DELETE, $object)
+            ) || (
+                ($action === 'activate' . $suffix || $action === 'deactivate' . $suffix) &&
+                !$this->isGranted(PageVoter::UPDATE, $object)
+            ) || (
+                ($action === 'duplicate' . $suffix) &&
+                (!$this->isGranted(PageVoter::UPDATE, $object) || !$this->isGranted(PageVoter::CREATE, $object))
+            )
+        ;
+    }
+
+    /**
+     * Display a message about permissions failure according to an action.
+     * @param $action
+     * @param string $suffix
+     * @return string
+     * @throws \Exception
+     */
+    protected function getForbiddenActionMessage($action, $suffix = '')
+    {
+        if ($action === 'delete' . $suffix) {
+            return $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'deactivate' . $suffix || $action === 'activate' . $suffix) {
+            return $this->trans('You do not have permission to edit this.', 'Admin.Notifications.Error');
+        }
+
+        if ($action === 'duplicate' . $suffix) {
+            return $this->trans('You do not have permission to add this.', 'Admin.Notifications.Error');
+        }
+
+        throw new \Exception(sprintf('Invalid action (%s)', $action . $suffix));
+    }
+
+    /**
+     * Get Admin URI from PrestaShop 1.6 Back Office.
+     * @param string $controller the old Controller name
+     * @param bool $withToken whether we add token or not
+     * @param array $params url parameters
+     *
+     * @return string the page URI (with token)
+     */
+    protected function getAdminLink($controller, array $params, $withToken = true)
+    {
+        return $this->get('prestashop.adapter.legacy.context')->getAdminLink($controller, $withToken, $params);
     }
 }

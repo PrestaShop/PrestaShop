@@ -180,7 +180,6 @@ class AdminModelAdapterTest extends KernelTestCase
         \Context::getContext()->currency = new \Currency(1);
         $this->product = $this->fakeProduct();
         $this->adminModelAdapter = new AdminModelAdapter(
-            $this->product,
             $this->container->get('prestashop.adapter.legacy.context'),
             $this->container->get('prestashop.adapter.admin.wrapper.product'),
             $this->container->get('prestashop.adapter.tools'),
@@ -210,11 +209,15 @@ class AdminModelAdapterTest extends KernelTestCase
 
     public function testGetFormData()
     {
-        $this->assertInternalType('array', $this->adminModelAdapter->getFormData());
+        $this->assertInternalType('array', $this->adminModelAdapter->getFormData($this->product));
         $expectedArrayStructure = $this->fakeFormData();
 
         foreach ($expectedArrayStructure as $property => $value) {
-            $this->assertArrayHasKey($property, $this->adminModelAdapter->getFormData(), sprintf('The expected key %s was not found', $property));
+            $this->assertArrayHasKey(
+                $property,
+                $this->adminModelAdapter->getFormData($this->product),
+                sprintf('The expected key %s was not found', $property)
+            );
         }
     }
 
@@ -257,7 +260,11 @@ class AdminModelAdapterTest extends KernelTestCase
 
         foreach ($expectedStructureReturn as $property => $value) {
             $this->assertArrayHasKey($property, $actualReturn, sprintf('The expected key %s was not found', $property));
-            $this->assertEquals($value, $actualReturn[$property], sprintf('The expected value for property %s is wrong', $property));
+            $this->assertEquals(
+                $value,
+                $actualReturn[$property],
+                sprintf('The expected value for property %s is wrong', $property)
+            );
         }
     }
 }
