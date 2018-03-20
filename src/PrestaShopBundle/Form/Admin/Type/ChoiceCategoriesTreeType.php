@@ -63,7 +63,6 @@ class ChoiceCategoriesTreeType extends CommonAbstractType
         $builder->add('tree', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => false,
             'choices' => $options['valid_list'],
-            'choices_as_values' => true,
             'required' => false,
             'multiple'  => true,
             'expanded'  => true,

@@ -85,7 +85,6 @@ class ProductSpecificPrice extends CommonAbstractType
         } else {
             $builder->add('sp_id_shop', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' => $this->shops,
-                'choices_as_values' => true,
                 'required' => false,
                 'label' => false,
                 'placeholder' => $this->translator->trans('All shops', array(), 'Admin.Global'),
@@ -94,7 +93,6 @@ class ProductSpecificPrice extends CommonAbstractType
 
         $builder->add('sp_id_currency', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->currencies,
-            'choices_as_values' => true,
             'required' => false,
             'label' => false,
             'attr' => array(
@@ -105,7 +103,6 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('sp_id_country', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->countries,
-            'choices_as_values' => true,
             'required' => false,
             'label' => false,
             'attr' => array(
@@ -116,7 +113,6 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('sp_id_group', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->groups,
-            'choices_as_values' => true,
             'required' => false,
             'label' => false,
             'attr' => array(
@@ -137,7 +133,6 @@ class ProductSpecificPrice extends CommonAbstractType
         ))
         ->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => array(),
-            'choices_as_values' => true,
             'required' => false,
             'placeholder' => $this->translator->trans('Apply to all combinations', array(), 'Admin.Catalog.Feature'),
             'label' => $this->translator->trans('Combinations', array(), 'Admin.Catalog.Feature'),
@@ -182,7 +177,6 @@ class ProductSpecificPrice extends CommonAbstractType
                 '€' => 'amount',
                  $this->translator->trans('%', array(), 'Admin.Global') => 'percentage',
             ),
-            'choices_as_values' => true,
             'required' => true,
         ))
         ->add('sp_reduction_tax', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
@@ -191,7 +185,6 @@ class ProductSpecificPrice extends CommonAbstractType
                 $this->translator->trans('Tax excluded', array(), 'Admin.Catalog.Feature') => '0',
                 $this->translator->trans('Tax included', array(), 'Admin.Catalog.Feature') => '1',
             ),
-            'choices_as_values' => true,
             'required' => true,
         ))
         ->add('save', 'Symfony\Component\Form\Extension\Core\Type\ButtonType', array(
@@ -220,7 +213,6 @@ class ProductSpecificPrice extends CommonAbstractType
             //bypass SF validation, define submitted value in choice list
             $form->add('sp_id_product_attribute', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
                 'choices' => array($data['sp_id_product_attribute'] => ''),
-                'choices_as_values' => true,
                 'required' => false,
             ));
         });

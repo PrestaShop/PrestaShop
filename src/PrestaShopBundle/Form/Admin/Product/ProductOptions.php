@@ -98,7 +98,6 @@ class ProductOptions extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Visibility', [], 'Admin.Catalog.Feature'),
         ))
@@ -167,13 +166,11 @@ class ProductOptions extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Condition', [], 'Admin.Catalog.Feature')
         ))
         ->add('suppliers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->suppliers,
-            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
@@ -184,7 +181,6 @@ class ProductOptions extends CommonAbstractType
         ))
         ->add('default_supplier', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->suppliers,
-            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  false,
             'required' =>  true,
@@ -227,7 +223,6 @@ class ProductOptions extends CommonAbstractType
             'expanded'  => true,
             'multiple'  => true,
             'choices'  => $this->attachmentList,
-            'choices_as_values' => true,
             'choice_label' => function ($choice, $key, $value) {
                 $attachmentKey = array_search($key, array_column($this->fullAttachmentList, 'file'));
                 return $this->fullAttachmentList[$attachmentKey]['name'];

@@ -67,7 +67,6 @@ class ProductVirtual extends CommonAbstractType
                 $this->translator->trans('Yes', [], 'Admin.Global') => 1,
                 $this->translator->trans('No', [], 'Admin.Global') => 0,
             ),
-            'choices_as_values' => true,
             'expanded' => true,
             'required' => true,
             'multiple' => false,

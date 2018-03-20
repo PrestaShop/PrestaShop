@@ -74,7 +74,6 @@ class ProductSupplierCombination extends CommonAbstractType
         ))
         ->add('product_price_currency', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => $this->formatDataChoicesList($this->currencyAdapter->getCurrencies(), 'id_currency'),
-            'choices_as_values' => true,
             'required' => true,
             'attr' => array(
                 'class' => 'custom-select',

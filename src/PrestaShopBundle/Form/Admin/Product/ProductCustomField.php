@@ -83,7 +83,6 @@ class ProductCustomField extends CommonAbstractType
             'attr' => array(
                 'class' => 'c-select',
             ),
-            'choices_as_values' => true,
             'required' =>  true
         ))->add('require', 'Symfony\Component\Form\Extension\Core\Type\CheckboxType', array(
             'label'    => $this->translator->trans('Required', [], 'Admin.Global'),

@@ -185,7 +185,6 @@ class ProductCombination extends CommonAbstractType
         }
         $builder->add('id_image_attr', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices'  => array(),
-            'choices_as_values' => true,
             'required' => false,
             'expanded' => true,
             'multiple' => true,
@@ -214,7 +213,6 @@ class ProductCombination extends CommonAbstractType
                 'required' => false,
                 'expanded' => true,
                 'multiple' => true,
-                'choices_as_values' => true,
             ));
         });
     }

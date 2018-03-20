@@ -128,7 +128,6 @@ class ProductSeo extends CommonAbstractType
                 }
                 return [];
             },
-            'choices_as_values' => true,
             'required' => true,
             'label' => $this->translator->trans('Redirection when offline', [], 'Admin.Catalog.Feature'),
             'attr' => array(

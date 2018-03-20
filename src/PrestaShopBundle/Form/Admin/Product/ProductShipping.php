@@ -112,7 +112,6 @@ class ProductShipping extends CommonAbstractType
         ))
         ->add('selectedCarriers', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->carriersChoices,
-            'choices_as_values' => true,
             'expanded' =>  true,
             'multiple' =>  true,
             'required' =>  false,
