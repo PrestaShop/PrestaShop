@@ -25,6 +25,8 @@
  */
 ob_start();
 
+require_once 'install_version.php';
+
 // Set execution time and time_limit to infinite if available
 @set_time_limit(0);
 @ini_set('max_execution_time', '0');
