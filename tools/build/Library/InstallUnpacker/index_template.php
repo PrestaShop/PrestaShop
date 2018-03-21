@@ -232,7 +232,7 @@ if (isset($_GET['element'])) {
       } else {
         if (msg.lastId > msg.numFiles) {
           // end
-          location.reload();
+          window.location.reload(true);
         } else {
           $("#progressContainer")
             .find(".current")
