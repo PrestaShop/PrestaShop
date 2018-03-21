@@ -1,6 +1,6 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {ModulePage} = require('../../../selectors/BO/module_page');
-const module_common_scenarios = require('./module');
+const module_common_scenarios = require('../../common_scenarios/module');
 let promise = Promise.resolve();
 
 scenario('Check sort module by "Name"', () => {

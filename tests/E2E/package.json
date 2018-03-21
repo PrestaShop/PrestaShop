@@ -7,6 +7,7 @@
     "install": "node_modules/selenium-standalone/bin/selenium-standalone install",
     "start-selenium": "node_modules/selenium-standalone/bin/selenium-standalone start",
     "high-test": "node_modules/mocha/bin/mocha test/campaigns/high/*",
+    "full-test": "node_modules/mocha/bin/mocha test/campaigns/full/*",
     "test": "node_modules/mocha/bin/mocha test/campaigns/regular/*",
     "install-upgrade-test": "node_modules/mocha/bin/mocha test/campaigns/install_upgrade/*",
     "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$path",

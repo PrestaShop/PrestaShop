@@ -1,7 +1,7 @@
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {ProductList} = require('../../../selectors/BO/add_product_page');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
-const common_scenarios = require('../02_product/product');
+const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
 
 scenario('Check the sort of products in the Back Office', client => {

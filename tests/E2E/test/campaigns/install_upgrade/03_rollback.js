@@ -6,8 +6,8 @@ const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
 
-const commonScenarios = require('../high/02_product/product');
-const orderCommonScenarios = require('../high/01_orders/order');
+const commonScenarios = require('../common_scenarios/product');
+const orderCommonScenarios = require('../common_scenarios/order');
 
 let promise = Promise.resolve();
 

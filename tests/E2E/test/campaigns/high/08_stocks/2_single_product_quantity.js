@@ -1,7 +1,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Stock} = require('../../../selectors/BO/catalogpage/stocksubmenu/stock');
 const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movements');
-const stock_common_scenarios = require('./stock');
+const stock_common_scenarios = require('../../common_scenarios/stock');
 const {Menu} = require('../../../selectors/BO/menu.js');
 
 scenario('Modify quantity and check movement for single product', () => {
