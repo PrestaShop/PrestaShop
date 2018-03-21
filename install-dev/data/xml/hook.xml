@@ -766,5 +766,25 @@
       <title>Processing Administration page form</title>
       <description>This hook is called when the Administration Page form is processed</description>
     </hook>
+    <hook id="displayPerformancePageForm">
+      <name>displayPerformancePageForm</name>
+      <title>Manage Performance Page form fields</title>
+      <description>This hook adds, update or remove fields of the Performance Page form</description>
+    </hook>
+    <hook id="actionPerformancePageFormSave">
+      <name>actionPerformancePageFormSave</name>
+      <title>Processing Performance page form</title>
+      <description>This hook is called when the Performance Page form is processed</description>
+    </hook>
+    <hook id="displayMaintenancePageForm">
+      <name>displayMaintenancePageForm</name>
+      <title>Manage Maintenance Page form fields</title>
+      <description>This hook adds, update or remove fields of the Maintenance Page form</description>
+    </hook>
+    <hook id="actionMaintenancePageFormSave">
+      <name>actionMaintenancePageFormSave</name>
+      <title>Processing Maintenance page form</title>
+      <description>This hook is called when the Maintenance Page form is processed</description>
+    </hook>
   </entities>
 </entity_hook>
