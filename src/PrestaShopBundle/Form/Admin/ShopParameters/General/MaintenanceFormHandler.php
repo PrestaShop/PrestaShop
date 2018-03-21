@@ -25,16 +25,15 @@
  */
 namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceType;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-final class MaintenanceFormHandler implements FormHandlerInterface
+final class MaintenanceFormHandler extends AbstractFormHandler
 {
     /**
      * @var FormFactoryInterface
@@ -42,13 +41,13 @@ final class MaintenanceFormHandler implements FormHandlerInterface
     private $formFactory;
 
     /**
-     * @var MaintenanceFormDataProvider
+     * @var FormDataProviderInterface
      */
     private $formDataProvider;
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        MaintenanceFormDataProvider $formDataProvider
+        FormDataProviderInterface $formDataProvider
     )
     {
         $this->formFactory = $formFactory;
@@ -60,11 +59,14 @@ final class MaintenanceFormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        return $this->formFactory->createBuilder()
+        $formBuilder = $this->formFactory->createBuilder()
             ->add('general', MaintenanceType::class)
             ->setData($this->formDataProvider->getData())
-            ->getForm()
         ;
+
+        $this->hookDispatcher->dispatchForParameters('displayMaintenancePageForm', ['form_builder' => &$formBuilder]);
+
+        return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
     /**
@@ -72,6 +74,10 @@ final class MaintenanceFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-        return $this->formDataProvider->setData($data);
+        $errors = $this->formDataProvider->setData($data);
+
+        $this->hookDispatcher->dispatchForParameters('actionMaintenancePageFormSave', ['errors' => &$errors, 'form_data' => &$data]);
+
+        return $errors;
     }
 }
