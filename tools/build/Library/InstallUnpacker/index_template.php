@@ -139,7 +139,6 @@ if (isset($_POST['extract'])) {
         unlink(getcwd().'/index.php');
         unlink(getcwd().'/prestashop.zip');
         rename(getcwd().'/index.php.temp', getcwd().'/index.php');
-        sleep(2); // we need to wait the rename creation as the ajax call is asynchronous
     }
 
     die(json_encode([
