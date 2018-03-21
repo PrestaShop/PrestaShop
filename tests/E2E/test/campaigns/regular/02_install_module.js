@@ -3,7 +3,7 @@ const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
 const {OnBoarding} = require('../../selectors/BO/onboarding.js');
 let promise = Promise.resolve();
-const module_common_scenarios = require('../high/10_module/module');
+const module_common_scenarios = require('../common_scenarios/module');
 
 scenario('Install and Uninstall Module from cross selling', () => {
   scenario('Login in the Back Office', client => {

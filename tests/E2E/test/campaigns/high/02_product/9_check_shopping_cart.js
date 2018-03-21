@@ -5,7 +5,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-const common_scenarios = require('../02_product/product');
+const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
 
 var productData = {

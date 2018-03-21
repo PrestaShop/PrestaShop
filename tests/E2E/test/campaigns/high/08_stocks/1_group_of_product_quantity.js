@@ -2,7 +2,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {Stock} = require('../../../selectors/BO/catalogpage/stocksubmenu/stock');
 const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movements');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const common_scenarios = require('../02_product/product');
+const common_scenarios = require('../../common_scenarios/product');
 const {Menu} = require('../../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 

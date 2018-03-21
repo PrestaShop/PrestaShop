@@ -239,20 +239,17 @@ class Install extends AbstractInstall
 
     protected function clearCache()
     {
-        $output = Tools::clearSf2Cache('prod');
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
-            return false;
+        if (defined('_PS_IN_TEST_')) {
+            return true;
         }
 
-        $output = Tools::clearSf2Cache();
-
-        if (0 !== $output['cache:clear']['exitCode']) {
-            $this->setError(explode("\n", $output['cache:clear']['output']));
+        try {
+            Tools::clearSf2Cache('prod');
+            Tools::clearSf2Cache('dev');
+        } catch(\Exception $e) {
+            $this->setError($e->getMessage());
             return false;
         }
-
         return true;
     }
 
@@ -305,7 +302,10 @@ class Install extends AbstractInstall
      */
     public function generateSf2ProductionEnv()
     {
-        $schemaUpgrade = new UpgradeDatabase(defined('_PS_IN_TEST_') ? 'test' : null);
+        if (defined('_PS_IN_TEST_')) {
+            return true;
+        }
+        $schemaUpgrade = new UpgradeDatabase();
         $schemaUpgrade->addDoctrineSchemaUpdate();
         $output = $schemaUpgrade->execute();
 

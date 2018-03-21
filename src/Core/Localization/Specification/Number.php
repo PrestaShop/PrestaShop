@@ -144,7 +144,7 @@ class Number implements NumberInterface
 
     /**
      * Size of primary digits group in the number
-     * eg: 999 is the primary group in this number : 1 234 999.567
+     * e.g.: 999 is the primary group in this number: 1 234 999.567
      *
      * @var int
      */
@@ -152,8 +152,8 @@ class Number implements NumberInterface
 
     /**
      * Size of secondary digits groups in the number
-     * eg: 999 is a secondary group in this number : 123 999 456.789
-     * eg: another secondary group (still 999) : 999 123 456.789
+     * eg: 999 is a secondary group in this number: 123 999 456.789
+     * eg: another secondary group (still 999): 999 123 456.789
      *
      * @var int
      */

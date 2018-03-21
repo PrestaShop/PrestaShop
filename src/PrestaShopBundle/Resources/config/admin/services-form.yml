@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     form.type.date_picker:
         class: PrestaShopBundle\Form\Admin\Type\DatePickerType
         tags:
@@ -223,30 +226,35 @@ services:
     form.type.performance.caching:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
         parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.maintenance.general:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.admininistration.general:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType'
         parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.administration.upload_quota:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType'
         parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 
     form.type.administration.notification:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType'
         parent: 'form.type.translatable.aware'
+        public: true
         tags:
             - { name: form.type }
 

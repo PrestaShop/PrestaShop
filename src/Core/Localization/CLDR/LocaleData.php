@@ -27,10 +27,17 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
+/**
+ * The LocaleData class is the exact representation of Locale's data structure inside CLDR xml data files
+ *
+ * This class is only used internally, it is mutable and overridable until fully built. It can then be used as
+ * an intermediary data bag to build a real CLDR Locale (immutable) object.
+ */
 class LocaleData
 {
     /**
      * The locale code for this data (either language code or IETF tag)
+     * e.G.: 'fr', 'fr-FR'...
      *
      * @var string
      */
@@ -93,6 +100,13 @@ class LocaleData
     public $currencyPatterns;
 
     /**
+     * All currencies, by ISO code
+     *
+     * @var CurrencyData[]
+     */
+    public $currencies;
+
+    /**
      * Override this object's data with another LocaleData object
      *
      * @param LocaleData $localeData
@@ -146,6 +160,16 @@ class LocaleData
         if (isset($localeData->currencyPatterns)) {
             foreach ($localeData->currencyPatterns as $numberingSystem => $pattern) {
                 $this->currencyPatterns[$numberingSystem] = $pattern;
+            }
+        }
+
+        if (isset($localeData->currencies)) {
+            foreach ($localeData->currencies as $code => $currencyData) {
+                if (!isset($this->currencies[$code])) {
+                    $this->currencies[$code] = $currencyData;
+                    continue;
+                }
+                $this->currencies[$code]->overrideWith($currencyData);
             }
         }
 

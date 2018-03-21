@@ -1,7 +1,8 @@
 <phpunit bootstrap="bootstrap.php">
     <php>
+        <server name="KERNEL_CLASS" value="AppKernel" />
         <env name="SYMFONY_ENV" value="test"/>
-        <env name="kernel.environment" value="test" />
+        <env name="kernel.environment" value="test"/>
     </php>
     <groups>
         <exclude>
@@ -19,4 +20,9 @@
             <directory>Integration</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../src/</directory>
+        </whitelist>
+    </filter>
 </phpunit>

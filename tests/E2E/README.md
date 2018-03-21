@@ -111,7 +111,7 @@ path=high/02_product npm run specific-test -- --URL=FrontOfficeURL
 >3) If you have run only the install_upgrade/01_install.js with language different and country different from "en" and "france" you need to reinstall PrestaShop in **English** with setting country to **France** So you can launch the other tests
 
 #### High tests
-If you want to run the high level and full configuration tests you can run the campaign **High**
+If you want to run the high level tests you can run the campaign **High**
 
 ```
 npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --MODULE=DataTechNameModule
@@ -123,6 +123,21 @@ npm run high-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --MODULE=DataT
 >Notes:
 >
 > It's not recommended to run all the campaign high tests together, it's safer to run them one by one using the script specific-test.
+
+#### Full tests
+If you want to run the high level and full configuration tests you can run the campaign **Full**
+
+```
+npm run full-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --MODULE=DataTechNameModule
+```
+* **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
+* **DIR**: **(Required)** Your download directory (exp: /home/toto/Downloads/) so we can check the downloaded invoice.
+* **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
+
+>Notes:
+>
+> It's not recommended to run all the campaign full tests together, it's safer to run them one by one using the script specific-test.
+
 
 #### Install and Autoupgrade
 If you want to run the Install, Autoupgrade and Rollback tests you can run the campaign **install_upgrade**
