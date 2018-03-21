@@ -33,6 +33,9 @@ define('ZIP_NAME', 'prestashop.zip');
 define('TARGET_FOLDER', __DIR__.'/');
 define('BATCH_SIZE', 500);
 
+// bust cache, or else it won't load the installer after the extraction is done
+header("Cache-Control: no-cache, no-store, must-revalidate");
+
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
     die('You need at least PHP '._PS_INSTALL_MINIMUM_PHP_VERSION_.' to install PrestaShop. Your current PHP version is '.PHP_VERSION);
 }
