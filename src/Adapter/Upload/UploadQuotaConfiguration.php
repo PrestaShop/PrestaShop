@@ -28,7 +28,9 @@ namespace PrestaShop\PrestaShop\Adapter\Upload;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
-
+/**
+ * Manages the configuration data about upload quota options.
+ */
 class UploadQuotaConfiguration implements DataConfigurationInterface
 {
     /**
