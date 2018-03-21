@@ -756,5 +756,15 @@
       <title>Display new elements in back office page with dashboard, on icons list</title>
       <description>This hook launches modules when the back office with dashboard is displayed</description>
     </hook>
+    <hook id="actionBuildFrontEndObject">
+      <name>actionBuildFrontEndObject</name>
+      <title>Manage elements added to the "prestashop" javascript object</title>
+      <description>This hook allows you to customize the "prestashop" javascript object that is included in all front office pages</description>
+    </hook>
+    <hook id="actionFrontControllerAfterInit">
+      <name>actionFrontControllerAfterInit</name>
+      <title>Perform actions after front office controller initialization</title>
+      <description>This hook is launched after the initialization of all front office controllers</description>
+    </hook>
   </entities>
 </entity_hook>

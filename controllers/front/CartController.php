@@ -25,6 +25,8 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Core\Filter\CollectionFilter;
+use PrestaShop\PrestaShop\Core\Filter\FrontEndObject\ProductFilter;
 
 class CartControllerCore extends FrontController
 {
@@ -128,12 +130,18 @@ class CartControllerCore extends FrontController
 
         if (!$this->errors) {
             $cartPresenter = new CartPresenter();
+            $presentedCart = $cartPresenter->present($this->context->cart);
+
+            // filter product output
+            $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
+                ->filter($presentedCart['products']);
+
             $this->ajaxDie(Tools::jsonEncode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
                 'quantity' => $productQuantity,
-                'cart' => $cartPresenter->present($this->context->cart),
+                'cart' => $presentedCart,
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
             ]));
         } else {

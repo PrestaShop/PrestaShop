@@ -480,6 +480,8 @@ class FrontControllerCore extends Controller
         $this->iso = $iso;
         $this->context->cart = $cart;
         $this->context->currency = $currency;
+
+        Hook::exec('actionFrontControllerAfterInit');
     }
 
     /**
@@ -494,17 +496,6 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
-        /* Begin patch to purge sensible data from cart to avoid expose them in html page */
-        $cleancart = $this->cart_presenter->present($this->context->cart);
-        if (count($cleancart['products']) > 0) {
-            foreach($cleancart['products'] as $idx_cart_line => $cart_product) {
-                unset($cleancart['products'][$idx_cart_line]['id_supplier']);
-                unset($cleancart['products'][$idx_cart_line]['supplier_reference']);
-                unset($cleancart['products'][$idx_cart_line]['wholesale_price']);
-                unset($cleancart['products'][$idx_cart_line]['embedded_attributes']);
-            }
-        }
-        /* /patch */
         $templateVars = array(
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
@@ -523,7 +514,31 @@ class FrontControllerCore extends Controller
         );
 
         $this->context->smarty->assign($templateVars);
-        Media::addJsDef(array('prestashop' => $templateVars));
+
+        Media::addJsDef(array (
+            'prestashop' => $this->buildFrontEndObject($templateVars)
+        ));
+    }
+
+    /**
+     * Builds the "prestashop" javascript object that will be sent to the front end
+     *
+     * @param array $object Variables inserted in the template (see FrontController::assignGeneralPurposeVariables)
+     *
+     * @return array Variables to be inserted in the "prestashop" javascript object
+     * @throws \PrestaShop\PrestaShop\Core\Filter\FilterException
+     * @throws PrestaShopException
+     */
+    protected function buildFrontEndObject($object)
+    {
+        $object = $this->get('prestashop.core.filter.front_end_object.main')
+            ->filter($object);
+
+        Hook::exec('actionBuildFrontEndObject', array(
+            'obj' => &$object
+        ));
+
+        return $object;
     }
 
     /**
@@ -1324,7 +1339,7 @@ class FrontControllerCore extends Controller
         }
 
         $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
-        
+
         $content_only = (int) Tools::getValue('content_only');
 
         if ($overridden_layout = Hook::exec(
