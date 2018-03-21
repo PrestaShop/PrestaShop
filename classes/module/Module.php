@@ -3191,9 +3191,10 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * Access the Symfony Container if we are in Symfony Context.
      * Note: in this case, we must get a container from SymfonyContainer class.
+     * Note: if not in Symfony context, fallback to legacy Container for FO/BO.
      * @param string $serviceName
      *
-     * @return Object|false if Symfony is not booted, it returns false.
+     * @return Object|false if a container is not available, it returns false.
      */
     public function get($serviceName)
     {
@@ -3203,6 +3204,10 @@ abstract class ModuleCore implements ModuleInterface
             }
 
             return $this->container->get($serviceName);
+        }
+
+        if ($this->context->controller instanceof Controller) {
+            return $this->context->controller->get($serviceName);
         }
 
         return false;
