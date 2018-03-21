@@ -25,11 +25,11 @@
  */
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
+/**
+ * Manages the configuration data about general options.
+ */
 class GeneralConfiguration implements DataConfigurationInterface
 {
     /**
@@ -77,18 +77,11 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired(
-                array(
-                    'check_modules_update',
-                    'check_ip_address',
-                    'front_cookie_lifetime',
-                    'back_cookie_lifetime',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['check_modules_update'],
+            $configuration['check_ip_address'],
+            $configuration['front_cookie_lifetime'],
+            $configuration['back_cookie_lifetime']
+        );
     }
 }

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class loads and saves data configuration for the Maintenance page
@@ -78,16 +77,10 @@ class MaintenanceConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            array(
-                'enable_shop',
-                'maintenance_ip',
-                'maintenance_text',
-            )
+        return isset(
+            $configuration['enable_shop'],
+            $configuration['maintenance_ip'],
+            $configuration['maintenance_text']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 }
