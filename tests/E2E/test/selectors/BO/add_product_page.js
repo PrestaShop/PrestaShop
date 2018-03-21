@@ -9,7 +9,7 @@ module.exports = {
     more_option_button: '.btn.btn-primary.dropdown-toggle',
     basic_settings_tab: '//*[@id="tab_step1"]/a',
     new_product_button: '#page-header-desc-configuration-add',
-    product_name_input: '#form_step1_name_1',
+    product_name_input: '//*[@id="form_step1_name_1"]',
     save_product_button: '//*[@id="form"]/div[4]/div[2]/div/button[1]',
     green_validation_notice: '[class="growl growl-notice growl-medium"]',
     close_validation_button: '.growl-close',
@@ -167,7 +167,19 @@ module.exports = {
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
-    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]'
+    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]',
+    picture_preview: '//*[@id="product-images-dropzone"]/div[contains(@class, "dz-image-preview")]',
+    standard_product_type_option: '//*[@id="form_step1_type_product"]/option[1]',
+    category_value: '//*[@id="ps_categoryTags"]/span[2]/span',
+    brand_selected_option: '//*[@id="form_step1_id_manufacturer"]/option[2]',
+    related_product: '//*[@id="form_step1_related_products-data"]/li[%ID]//span',
+    priority_shop: '//*[@id="form_step2_specificPricePriority_0"]/option[1]',
+    priority_currency: '//*[@id="form_step2_specificPricePriority_1"]/option[2]',
+    priority_country: '//*[@id="form_step2_specificPricePriority_2"]/option[3]',
+    priority_group: '//*[@id="form_step2_specificPricePriority_3"]/option[4]',
+    visibility_selected_option: '//*[@id="form_step6_visibility"]/option[1]',
+    condition_selected_option: '//*[@id="form_step6_condition"]/option[3]',
+    selected_type: '//*[@id="form_step6_custom_fields_0_type"]/option[1]'
   },
 
   ProductList: {
