@@ -1076,8 +1076,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
 
         $breadcrumb['links'][] = array(
-            'title' => $this->context->controller->product->name,
-            'url' => $this->context->link->getProductLink($this->context->controller->product, null, null, null, null, null, (int) $this->getIdProductAttribute()),
+            'title' => $this->product->name,
+            'url' => $this->context->link->getProductLink($this->product, null, null, null, null, null, (int) $this->getIdProductAttribute()),
         );
 
         return $breadcrumb;
