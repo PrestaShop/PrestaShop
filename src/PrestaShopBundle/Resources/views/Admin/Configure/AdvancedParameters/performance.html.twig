@@ -67,6 +67,7 @@
                                 {{ form_errors(smartyForm.clear_cache) }}
                                 {{ form_widget(smartyForm.clear_cache) }}
                             </div>
+                            {{ form_rest(smartyForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -101,6 +102,7 @@
                                 {{ form_errors(debugModeForm.debug_mode) }}
                                 {{ form_widget(debugModeForm.debug_mode) }}
                             </div>
+                            {{ form_rest(debugModeForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -145,6 +147,7 @@
                                 {{ form_errors(optionalFeaturesForm.customer_groups) }}
                                 {{ form_widget(optionalFeaturesForm.customer_groups) }}
                             </div>
+                            {{ form_rest(optionalFeaturesForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -182,6 +185,7 @@
                                 {{ form_errors(combineCompressCacheForm.apache_optimization) }}
                                 {{ form_widget(combineCompressCacheForm.apache_optimization) }}
                             </div>
+                            {{ form_rest(combineCompressCacheForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -221,6 +225,7 @@
                                 {{ form_errors(mediaServersForm.media_server_three) }}
                                 {{ form_widget(mediaServersForm.media_server_three) }}
                             </div>
+                            {{ form_rest(mediaServersForm) }}
                         </div>
                     </div>
                     <div class="card-footer">
@@ -250,6 +255,7 @@
                                 {{ form_errors(cachingForm.caching_system) }}
                                 {{ form_widget(cachingForm.caching_system) }}
                             </div>
+                            {{ form_rest(cachingForm) }}
                             {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
                         </div>
                     </div>
