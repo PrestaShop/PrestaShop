@@ -19,6 +19,8 @@ module.exports = {
     team_employee_profile: '//*[@id="form-employee"]//tbody//td[6]',
     reset_search_button: '[name="submitResetemployee"]',
     dropdown_toggle: '//*[@id="form-employee"]//tbody//button',
-    delete_link: '//*[@id="form-employee"]//tbody//li/a'
+    delete_link: '//*[@id="form-employee"]//tbody//li/a',
+    edit_button: '//*[@id="table-employee"]//a[contains(@class, "edit")]',
+    language_select: '//*[@id="id_lang"]'
   }
 };

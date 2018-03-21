@@ -161,7 +161,8 @@ module.exports = {
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
     category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
-    symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a'
+    symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
+    summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]'
   },
 
   ProductList: {
