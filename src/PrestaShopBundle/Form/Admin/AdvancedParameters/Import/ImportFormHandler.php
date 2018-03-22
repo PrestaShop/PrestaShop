@@ -27,15 +27,29 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
-class ImportFormHandler implements FormHandlerInterface
+final class ImportFormHandler implements FormHandlerInterface
 {
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    public function __construct(FormFactoryInterface $formFactory)
+    {
+        $this->formFactory = $formFactory;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function getForm()
     {
-        // TODO: Implement getForm() method.
+        return $this->formFactory->createBuilder()
+            ->add('import', ImportType::class)
+            ->getForm()
+        ;
     }
 
     /**
