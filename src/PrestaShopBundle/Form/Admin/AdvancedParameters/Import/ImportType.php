@@ -40,15 +40,15 @@ class ImportType extends TranslatorAwareType
         $builder
             ->add('entity', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Categories', 'Admin.Global'),
-                    $this->trans('Products', 'Admin.Global'),
-                    $this->trans('Combinations', 'Admin.Global'),
-                    $this->trans('Customers', 'Admin.Global'),
-                    $this->trans('Addresses', 'Admin.Global'),
-                    $this->trans('Brands', 'Admin.Global'),
-                    $this->trans('Suppliers', 'Admin.Global'),
-                    $this->trans('Alias', 'Admin.Shopparameters.Feature'),
-                    $this->trans('Store contacts', 'Admin.Advparameters.Feature'),
+                    $this->trans('Categories', 'Admin.Global') => 0,
+                    $this->trans('Products', 'Admin.Global') => 1,
+                    $this->trans('Combinations', 'Admin.Global') => 2,
+                    $this->trans('Customers', 'Admin.Global') => 3,
+                    $this->trans('Addresses', 'Admin.Global') => 4,
+                    $this->trans('Brands', 'Admin.Global') => 5,
+                    $this->trans('Suppliers', 'Admin.Global') => 6,
+                    $this->trans('Alias', 'Admin.Shopparameters.Feature') => 7,
+                    $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
                 ],
             ])
             ->add('file', FileType::class)
