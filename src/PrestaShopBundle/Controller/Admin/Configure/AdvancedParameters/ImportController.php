@@ -35,6 +35,9 @@ class ImportController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
+        $formHandler = $this->get('prestashop.admin.import.form_handler');
+        $form = $formHandler->getForm();
+
         $params = [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
@@ -43,7 +46,7 @@ class ImportController extends FrameworkBundleAdminController
             'showContentHeader' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
-            'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
+            'form' => $form->createView(),
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);

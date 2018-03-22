@@ -533,3 +533,8 @@ services:
           - ["setKernel", ["@kernel"]]
         tags:
           - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
+
+    prestashop.admin.import.form_handler:
+            class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
+            arguments:
+                - '@form.factory'

@@ -23,27 +23,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain 'Admin.Advparameters.Feature' %}
-
-{% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-8">
-                {% block import_panel %}
-                    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig' %}
-                {% endblock %}
-            </div>
-
-            <div class="col-4">
-                {% block import_available_fields %}
-                    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_available_fields.html.twig' %}
-                {% endblock %}
-
-                {% block import_sample_files %}
-                    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_sample_files.html.twig' %}
-                {% endblock %}
-            </div>
-        </div>
-    </div>
-{% endblock %}
+<div class="card">
+    <h3 class="card-header">
+        <i class="material-icons">list</i> {{ 'Available fields'|trans }}
+    </h3>
+</div>
