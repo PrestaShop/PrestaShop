@@ -23,45 +23,41 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-
-
 namespace PrestaShopBundle\Controller\Admin;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShopBundle\Model\Product\AdminModelAdapter as ProductAdminModelAdapter;
 
-class CombinationController extends Controller
+class CombinationController extends FrameworkBundleAdminController
 {
     public function generateCombinationFormAction($combinationIds)
     {
         $response = new Response();
-        $result = '';
 
-        $combinations = explode('-', $combinationIds);
-        if ($combinationIds == 0 || count($combinations) == 0) {
+        $combinationIds = explode('-', $combinationIds);
+        if ($combinationIds === false || count($combinationIds) == 0) {
             return $response;
         }
 
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
+        $combinations = $combinationDataProvider->getFormCombinations($combinationIds, $this->getContext()->language->id);
 
-        foreach ($combinations as $combinationId) {
-            $form = $this->get('form.factory')
-                ->createNamed(
-                    "combination_$combinationId",
-                    'PrestaShopBundle\Form\Admin\Product\ProductCombination',
-                    $combinationDataProvider->getFormCombination($combinationId)
-                );
-            $result .= $this->renderView(
-                'PrestaShopBundle:Admin/Product/Include:form_combination.html.twig',
-                array(
-                    'form' => $form->createView(),
-                )
-            );
+        $formFactory = $this->get('form.factory');
+        foreach ($combinations as $combinationId => $combination) {
+            $forms[] = $formFactory->createNamed(
+                "combination_$combinationId",
+                'PrestaShopBundle\Form\Admin\Product\ProductCombination',
+                $combination
+            )->createView();
         }
 
-        return $response->create($result);
+        return $response->setContent($this->renderView(
+            '@Product/ProductPage/Forms/form_combination_collection.html.twig',
+            array(
+                'combinationForms' => $forms,
+            )
+        ));
     }
 
     /**
