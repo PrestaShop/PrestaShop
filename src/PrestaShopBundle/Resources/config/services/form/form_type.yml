@@ -305,3 +305,9 @@ services:
     form.type.common_type:
         abstract: true
 
+    form.type.import.import:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
