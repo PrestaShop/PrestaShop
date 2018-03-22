@@ -111,3 +111,11 @@ admin_administration_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Administration:processForm'
         _legacy_controller: AdminAdminPreferences
+
+# Import
+admin_import:
+    path: /import
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:import'
+        _legacy_controller: AdminImport

@@ -332,3 +332,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.import.import:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
