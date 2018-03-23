@@ -31,8 +31,10 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 use Employee;
+use Symfony\CS\Tokenizer\Token;
 use Tools;
 
 /**
@@ -68,6 +70,10 @@ class TokenizedUrlsListener
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
+
+        if (TokenInUrls::isEnabled()) {
+            return;
+        }
 
         if (!$event->isMasterRequest()) {
             return;
