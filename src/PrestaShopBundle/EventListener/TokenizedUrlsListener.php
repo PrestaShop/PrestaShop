@@ -69,6 +69,10 @@ class TokenizedUrlsListener
     {
         $request = $event->getRequest();
 
+        if (getenv('_TOKEN_OFF_') === "enabled") {
+            return;
+        }
+
         if (!$event->isMasterRequest()) {
             return;
         }

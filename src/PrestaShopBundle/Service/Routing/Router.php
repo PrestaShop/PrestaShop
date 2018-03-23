@@ -62,6 +62,9 @@ class Router extends BaseRouter
 
     public static function generateTokenizedUrl($url, $token)
     {
+        if (getenv('_TOKEN_OFF_') === "enabled") {
+            return $url;
+        }
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
         $queryParams = array();
