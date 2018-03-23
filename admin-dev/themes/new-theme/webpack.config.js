@@ -48,6 +48,9 @@ let config = {
     ],
     translations: [
       './js/app/pages/translations',
+    ],
+    imports: [
+        './js/pages/import'
     ]
   },
   output: {

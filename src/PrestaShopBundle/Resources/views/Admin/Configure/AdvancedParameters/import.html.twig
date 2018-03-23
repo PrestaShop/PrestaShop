@@ -47,3 +47,9 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('themes/new-theme/public/imports.bundle.js') }}"></script>
+{% endblock %}

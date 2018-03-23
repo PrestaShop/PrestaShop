@@ -52,10 +52,10 @@
             <div class="form-group">
                 <label class="form-control-label">{{ 'What do you want to import?'|trans }}</label>
                 {{ form_errors(importForm.entity) }}
-                {{ form_widget(importForm.entity) }}
+                {{ form_widget(importForm.entity, {'attr': {'class': 'js-entity-select'}}) }}
             </div>
 
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning js-entity-alert" role="alert">
                 <ul>
                     <li>{{ 'Note that the Category import does not support having two categories with the same name.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
                     <li>{{ 'Note that you can have several products with the same reference.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
