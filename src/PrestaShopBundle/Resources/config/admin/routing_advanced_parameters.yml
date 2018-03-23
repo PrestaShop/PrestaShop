@@ -86,7 +86,7 @@ admin_administration_save:
 # Import
 admin_import:
     path: /import
-    methods: [GET]
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\Import:import'
         _legacy_controller: AdminImport
