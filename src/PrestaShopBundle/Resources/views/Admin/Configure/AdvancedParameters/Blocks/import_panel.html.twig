@@ -95,29 +95,29 @@
                 <small class="form-text">{{ 'e.g.'|trans({}, 'Admin.Advparameters.Help') }} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</small>
             </div>
 
-            <div class="form-group">
+            <hr>
+
+            <div class="form-group js-truncate-form-group">
                 <label class="form-control-label">
-                    {{ 'Delete all'|trans }}
-                    <span id="entity"></span>
-                    {{ 'before import'|trans }}
+                    {{ 'Delete all [1]categories[/1] before import'|trans({'[1]': '<span class="js-entity-name">', '[/1]': '</span>'})|raw }}
                 </label>
                 {{ form_errors(importForm.truncate) }}
                 {{ form_widget(importForm.truncate) }}
             </div>
 
-            <div class="form-group">
+            <div class="form-group js-match-ref-form-group">
                 {{ ps.label_with_help(('Use product preference as key'|trans), ('If enabled, the product\'s reference number MUST be unique!'|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.match_ref) }}
                 {{ form_widget(importForm.match_ref) }}
             </div>
 
-            <div class="form-group">
+            <div class="form-group js-regenerate-form-group">
                 <label class="form-control-label">{{ 'Skip thumbnails regeneration'|trans }}</label>
                 {{ form_errors(importForm.regenerate) }}
                 {{ form_widget(importForm.regenerate) }}
             </div>
 
-            <div class="form-group">
+            <div class="form-group js-force-ids-form-group">
                 {{ ps.label_with_help(('Force all ID numbers'|trans), (''|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.forceIDs) }}
                 {{ form_widget(importForm.forceIDs) }}
