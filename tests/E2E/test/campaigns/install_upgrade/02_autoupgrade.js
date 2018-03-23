@@ -102,9 +102,10 @@ scenario('The shop installation', () => {
 
   scenario('Enable shop in the Back Office', client => {
     test('should go to "Shop parameters" page', () => client.waitForExistAndClick(ShopParameter.maintenance_mode_link));
-    test('should set the shop "Enable"', () => client.waitForExistAndClick(ShopParameter.enable_shop.replace("%s", 'on')));
+    test('should set the shop "Enable" to "Yes"', () => client.waitAndSelectByValue(ShopParameter.enable_shop, "1"));
+
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameter.save_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.success_panel, "The settings have been successfully updated."));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.maintenance_success_panel, "Successful update."));
   }, 'common_client');
 
   commonScenarios.createProduct(AddProductPage, productData);
