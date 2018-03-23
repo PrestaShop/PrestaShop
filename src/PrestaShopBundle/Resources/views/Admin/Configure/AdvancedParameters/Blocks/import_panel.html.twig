@@ -31,6 +31,23 @@
         <i class="material-icons">import_export</i> {{ 'Import'|trans }}
     </h3>
     <div class="card-block">
+        <div class="alert alert-info" role="alert">
+            <p class="alert-text">
+                {{ 'You can read information on import at:' }}
+                <a href="{{ 'http://doc.prestashop.com/display/PS17/Import'|trans({}, 'Admin.Advparameters.Help') }}" class="_blank">
+                    {{ 'http://doc.prestashop.com/display/PS17/Import'|trans({}, 'Admin.Advparameters.Help') }}
+                </a>
+            </p>
+            <p class="alert-text">
+                {{ 'Read more about the CSV format at:' }}
+                <a href="https://en.wikipedia.org/wiki/Comma-separated_values" class="_blank">
+                    {{ 'https://en.wikipedia.org/wiki/Comma-separated_values'|trans({}, 'Admin.Advparameters.Help') }}
+                </a>
+            </p>
+        </div>
+
+        <hr>
+
         <div class="card-text">
             <div class="form-group">
                 <label class="form-control-label">{{ 'What do you want to import?'|trans }}</label>
@@ -38,11 +55,25 @@
                 {{ form_widget(importForm.entity) }}
             </div>
 
+            <div class="alert alert-warning" role="alert">
+                <ul>
+                    <li>{{ 'Note that the Category import does not support having two categories with the same name.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
+                    <li>{{ 'Note that you can have several products with the same reference.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
+                </ul>
+            </div>
+
+            <hr>
+
             <div class="form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
                 {{ form_errors(importForm.file) }}
                 {{ form_widget(importForm.file) }}
+                <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
+                <small class="form-text">{{ 'Only UTF-8 and ISO 8859-1 encodings are allowed'|trans({}, 'Admin.Advparameters.Help') }}</small>
+                <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({}, 'Admin.Advparameters.Help') }}</small>
             </div>
+
+            <hr>
 
             <div class="form-group">
                 {{ ps.label_with_help(('Language of the file'|trans), ('The locale must be installed'|trans({}, 'Admin.Advparameters.Help'))) }}
@@ -54,14 +85,14 @@
                 <label class="form-control-label">{{ 'Separator'|trans }}</label>
                 {{ form_errors(importForm.separator) }}
                 {{ form_widget(importForm.separator) }}
-                <small class="form-text">{{ 'e.g. 1; Blouse; 129.90; 5'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                <small class="form-text">{{ 'e.g.'|trans({}, 'Admin.Advparameters.Help') }} 1; Blouse; 129.90; 5</small>
             </div>
 
             <div class="form-group">
                 <label class="form-control-label">{{ 'Multiple value separator'|trans }}</label>
                 {{ form_errors(importForm.multiple_value_separator) }}
                 {{ form_widget(importForm.multiple_value_separator) }}
-                <small class="form-text">{{ 'e.g. Blouse; red.jpg, blue.jpg, green.jpg; 129.90'|trans({}, 'Admin.Shopparameters.Help') }}</small>
+                <small class="form-text">{{ 'e.g.'|trans({}, 'Admin.Advparameters.Help') }} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</small>
             </div>
 
             <div class="form-group">
