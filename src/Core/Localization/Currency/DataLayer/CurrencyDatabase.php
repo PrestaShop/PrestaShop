@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 /**
- * CLDR Currency Database (Doctrine) data layer
+ * Currency Database data layer
  *
  * Provides and persists currency data from/into database
  */

@@ -83,6 +83,6 @@ class Repository implements CurrencyRepositoryInterface
      */
     public function getInstalledCurrencies()
     {
-        // TODO : implement this method
+        $currenciesData = $this->dataSource->getInstalledCurrencies(); // TODO
     }
 }
