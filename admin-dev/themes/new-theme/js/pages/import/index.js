@@ -37,9 +37,10 @@ $(() => {
   const entityStoreContacts = 8;
 
   $('.js-entity-select').on('change', toggleForm);
+  toggleForm();
 
   function toggleForm() {
-    let $selctedOption = $(this).find('option:selected');
+    let $selctedOption = $('#form_import_entity').find('option:selected');
     let selectedEntity = parseInt($selctedOption.val());
     let entityName = $selctedOption.text().toLowerCase();
 

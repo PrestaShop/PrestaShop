@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "37c64204451155315208"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "b5a2a557a4c024cfcc1a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -753,9 +753,10 @@ $(function () {
   var entityStoreContacts = 8;
 
   $('.js-entity-select').on('change', toggleForm);
+  toggleForm();
 
   function toggleForm() {
-    var $selctedOption = $(this).find('option:selected');
+    var $selctedOption = $('#form_import_entity').find('option:selected');
     var selectedEntity = parseInt($selctedOption.val());
     var entityName = $selctedOption.text().toLowerCase();
 
