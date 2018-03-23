@@ -30,6 +30,7 @@ use function foo\func;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,6 +46,9 @@ class ImportType extends TranslatorAwareType
         }
 
         $builder
+            ->add('csv', HiddenType::class, [
+                'data' => '20180323100410-categories_import (1).csv',
+            ])
             ->add('entity', ChoiceType::class, [
                 'choices' => [
                     $this->trans('Categories', 'Admin.Global') => 0,
@@ -75,28 +79,28 @@ class ImportType extends TranslatorAwareType
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('match_ref', ChoiceType::class, [
+            ->add('use_product_reference_as_key', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('regenerate', ChoiceType::class, [
+            ->add('skip_thumbnails_regenerate', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('forceIDs', ChoiceType::class, [
+            ->add('force_ids', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('sendemail', ChoiceType::class, [
+            ->add('send_notification_email', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,

@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ImportController extends FrameworkBundleAdminController
 {
@@ -37,6 +39,14 @@ class ImportController extends FrameworkBundleAdminController
 
         $formHandler = $this->get('prestashop.admin.import.form_handler');
         $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+            // validate data before forwarding
+
+            return $this->fowardRequestToLegacyResponse($request, $data);
+        }
 
         $params = [
             'layoutHeaderToolbarBtn' => [],
@@ -47,9 +57,26 @@ class ImportController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
-            ''
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);
+    }
+
+    /**
+     * Fowards submitted form data to legacy import page
+     *
+     * @param Request $request
+     * @param array $data
+     *
+     * @return RedirectResponse
+     */
+    private function fowardRequestToLegacyResponse(Request $request, array $data)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $legacyContext =  $this->get('prestashop.adapter.legacy.context');
+
+        $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
+
+        return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
     }
 }
