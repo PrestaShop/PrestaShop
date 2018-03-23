@@ -89,9 +89,13 @@ services:
     prestashop.adapter.general.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
-        
+
     prestashop.adapter.maintenance.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
+    prestashop.adapter.preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
 
     prestashop.adapter.upload_quota.configuration:
@@ -111,11 +115,16 @@ services:
             - '@prestashop.adapter.ccc.configuration'
             - '@prestashop.adapter.media_servers.configuration'
             - '@prestashop.adapter.caching.configuration'
-            
+
     prestashop.adapter.maintenance.form_provider:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceFormDataProvider'
         arguments:
             - '@prestashop.adapter.maintenance.configuration'
+
+    prestashop.adapter.preferences.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.preferences.configuration'
 
     prestashop.adapter.administration.form_provider:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\FormDataProvider'
@@ -130,7 +139,14 @@ services:
             - '@form.factory'
             - '@prestashop.adapter.performance.form_provider'
             - '@prestashop.adapter.combination_feature'
-            
+
+    prestashop.adapter.preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.preferences.form_provider'
+            - '@prestashop.adapter.legacy.configuration'
+
     prestashop.adapter.maintenance.form_handler:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceFormHandler'
         arguments:

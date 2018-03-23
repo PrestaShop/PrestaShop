@@ -1,3 +1,18 @@
+# Preferences
+admin_preferences:
+    path: preferences
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Preferences:index'
+        _legacy_controller: AdminPreferences
+
+admin_preferences_save:
+    path: preferences
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Preferences:processForm'
+        _legacy_controller: AdminPreferences
+
 # Maintenance
 admin_maintenance:
     path: maintenance
