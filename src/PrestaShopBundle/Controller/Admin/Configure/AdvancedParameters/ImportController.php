@@ -47,6 +47,7 @@ class ImportController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
+            ''
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);

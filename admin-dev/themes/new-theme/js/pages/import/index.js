@@ -46,6 +46,7 @@ $(() => {
 
     toggleEntityAlert(selectedEntity);
     toggleFields(selectedEntity, entityName);
+    loadAvailableFields(selectedEntity);
   }
 
   /**
@@ -116,5 +117,34 @@ $(() => {
     }
 
     $entityNamePlaceholder.html(entityName);
+  }
+
+  /**
+   * Load available fields for given entity
+   *
+   * @param {int} entity
+   */
+  function loadAvailableFields(entity) {
+    $.ajax({
+      url: '../../../ajax.php',
+      data: {
+        getAvailableFields:1,
+        entity: entity
+      },
+      dataType: 'json',
+    }).then(response => {
+      let fields = '';
+      let $availableFields = $('.js-available-fields');
+      $availableFields.empty();
+
+      for (let i = 0; i < response.length; i++) {
+        fields += response[i].field;
+      }
+
+      $availableFields.html(fields);
+      $availableFields.find('[data-toggle="popover"]').popover();
+    }).catch(error => {
+
+    });
   }
 });
