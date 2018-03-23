@@ -996,7 +996,7 @@ class AdminImportControllerCore extends AdminController
                 $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->trans('or', array(), 'Admin.Advparameters.Help').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
             } else {
                 if (isset($field['help'])) {
-                    $html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';
+                    $html = '&nbsp;<span class="help-box" data-toggle="popover" data-content="'.$field['help'].'"></span>';
                 } else {
                     $html = '';
                 }
