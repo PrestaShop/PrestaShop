@@ -90,43 +90,43 @@ function getProductUpdateUrl()
     let dfd = $.Deferred();
     const $productActions = $('.product-actions');
     const $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-    let updateUrl = null;
 
     if (prestashop != null
         && prestashop.page != null
         && prestashop.page.canonical != ''
+        && prestashop.page.canonical != null
     ) {
-        updateUrl = prestashop.page.canonical;
+        dfd.resolve(prestashop.page.canonical);
+
+        return dfd.promise();
     }
+    let formData = {};
 
-    if (updateUrl == null) {
-        let formData = {};
+    $($productActions.find('form:first').serializeArray()).each(function(k, v) {
+        formData[v.name] = v.value;
+    });
 
-        $($productActions.find('form:first').serializeArray()).each(function(k, v) {
-            formData[v.name] = v.value;
-        });
-
-        $.ajax({
-            url: $productActions.find('form:first').attr('action'),
-            method: 'POST',
-            data: Object.assign(
-                {
-                    ajax: 1,
-                    action: 'productrefresh',
-                    quantity_wanted: $quantityWantedInput.val()
-                },
-                formData
-            ),
-            dataType: 'json',
-            success: function(data, textStatus, errorThrown) {
-                let productUpdateUrl = data.productUrl;
-                prestashop.page.canonical = productUpdateUrl;
-                dfd.resolve(productUpdateUrl);
-            }
-        });
-    } else {
-        dfd.resolve(updateUrl);
-    }
+    $.ajax({
+        url: $productActions.find('form:first').attr('action'),
+        method: 'POST',
+        data: Object.assign(
+            {
+                ajax: 1,
+                action: 'productrefresh',
+                quantity_wanted: $quantityWantedInput.val()
+            },
+            formData
+        ),
+        dataType: 'json',
+        success: function(data, textStatus, errorThrown) {
+            let productUpdateUrl = data.productUrl;
+            prestashop.page.canonical = productUpdateUrl;
+            dfd.resolve(productUpdateUrl);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            dfd.reject({"jqXHR": jqXHR, "textStatus": textStatus, "errorThrown": errorThrown});
+        }
+    });
 
     return dfd.promise();
 }
