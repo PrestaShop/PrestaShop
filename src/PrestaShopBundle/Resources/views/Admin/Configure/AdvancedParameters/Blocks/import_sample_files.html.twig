@@ -25,6 +25,38 @@
 
 <div class="card">
     <h3 class="card-header">
-        <i class="material-icons">file_download</i> {{ 'Download sample csv files'|trans }}
+        <i class="material-icons">file_download</i> {{ 'Download sample csv files'|trans({}, 'Admin.Advparameters.Feature') }}
     </h3>
+
+    <div class="card-block">
+        <div class="list-group">
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/categories_import.csv">
+                {{ 'Sample Categories file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/products_import.csv">
+                {{ 'Sample Products file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/combinations_import.csv">
+                {{ 'Sample Combinations file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/customers_import.csv">
+                {{ 'Sample Customers file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/addresses_import.csv">
+                {{ 'Sample Addresses file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/manufacturers_import.csv">
+                {{ 'Sample Brands file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/suppliers_import.csv">
+                {{ 'Sample Suppliers file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/alias_import.csv">
+                {{ 'Sample Aliases file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/store_contacts.csv">
+                {{ 'Sample Store Contacts file'|trans({}, 'Admin.Advparameters.Feature') }}
+            </a>
+        </div>
+    </div>
 </div>

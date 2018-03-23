@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 
+use function foo\func;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -37,6 +38,12 @@ class ImportType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //@todo: improve
+        $locales = [];
+        foreach ($this->locales as $locale) {
+            $locales[$locale['name']] = $locale['iso_code'];
+        }
+
         $builder
             ->add('entity', ChoiceType::class, [
                 'choices' => [
@@ -52,9 +59,15 @@ class ImportType extends TranslatorAwareType
                 ],
             ])
             ->add('file', FileType::class)
-            ->add('iso_lang', ChoiceType::class)
-            ->add('separator', TextType::class)
-            ->add('multiple_value_separator', TextType::class)
+            ->add('iso_lang', ChoiceType::class, [
+                'choices' => $locales,
+            ])
+            ->add('separator', TextType::class, [
+                'data' => ';',
+            ])
+            ->add('multiple_value_separator', TextType::class, [
+                'data' => ',',
+            ])
             ->add('truncate', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
