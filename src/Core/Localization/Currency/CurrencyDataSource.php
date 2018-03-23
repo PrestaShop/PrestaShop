@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled as CurrencyInstalledDataLayer;
+
 /**
  * Localization CurrencyData source
  * Uses a stack of middleware data layers to read / write CurrencyData objects
@@ -38,6 +40,11 @@ class CurrencyDataSource implements DataSourceInterface
      * @var CurrencyDataLayerInterface
      */
     protected $topLayer;
+
+    /**
+     * @var CurrencyInstalledDataLayer
+     */
+    protected $installedDataLayer;
 
     /**
      * CurrencyDataSource constructor needs CurrencyDataLayer objects.
@@ -61,5 +68,15 @@ class CurrencyDataSource implements DataSourceInterface
     public function getDataByCurrencyCode($currencyCode)
     {
         return $this->topLayer->read($currencyCode);
+    }
+
+    public function isCurrencyInstalled($currencyCode)
+    {
+        return $this->installedDataLayer->isInstalled($currencyCode);
+    }
+
+    public function getInstalledCurrencies()
+    {
+        // TODO
     }
 }
