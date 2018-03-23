@@ -57,6 +57,9 @@ let config = {
     ],
     product_preferences: [
       './js/pages/product-preferences',
+    ],
+    imports: [
+        './js/pages/import'
     ]
   },
   output: {
