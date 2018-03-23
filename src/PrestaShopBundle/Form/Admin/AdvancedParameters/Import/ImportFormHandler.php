@@ -46,10 +46,7 @@ final class ImportFormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        return $this->formFactory->createBuilder()
-            ->add('import', ImportType::class)
-            ->getForm()
-        ;
+        return $this->formFactory->createNamed('', ImportType::class);
     }
 
     /**
