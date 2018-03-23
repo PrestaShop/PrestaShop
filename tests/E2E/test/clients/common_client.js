@@ -125,8 +125,10 @@ class CommonClient {
     return this.client.waitForVisibleAndClick(selector, timeout);
   }
 
-  moveToObject(selector) {
-    return this.client.moveToObject(selector);
+  moveToObject(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .moveToObject(selector);
   }
 
   waitAndSelectByValue(selector, value, timeout = 90000) {
@@ -314,52 +316,6 @@ class CommonClient {
       .isVisible(selector)
       .then((isVisible) => expect(isVisible).to.be.false)
   }
-  /**
-   * This function allows you to search for a data when the filter input exist
-   * @param selector filter selector
-   * @param data : searching data
-   * @returns {*}
-   */
-  search(selector, data) {
-    if (global.isVisible) {
-      return this.client
-        .waitAndSetValue(selector, data)
-        .keys('Enter');
-    } else {
-      return this.client
-        .pause(0);
-    }
-  }
-
-  checkExistence(selector, data, pos) {
-    if (global.isVisible) {
-      return this.client.getText(selector.replace('%ID', pos)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    } else {
-      return this.client.getText(selector.replace('%ID', pos-1)).then(function (text) {
-        expect(text).to.be.equal(data);
-      });
-    }
-  }
-
-  editObjectData(object) {
-    for (let key in object) {
-      if (object.hasOwnProperty(key) && key !== 'type') {
-        if (typeof object[key] === 'string') {
-          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
-        } else if (typeof object[key] === 'number') {
-          object[key] += 10;
-        } else if (typeof object[key] === 'object') {
-          this.editObjectData(object[key]);
-        }
-      }
-    }
-  }
-
-  deleteObjectElement(object, pos) {
-    delete object[pos];
-  }
 
   /**
    * This function searches the data in the table in case a filter input exists
@@ -411,20 +367,31 @@ class CommonClient {
   }
 
   editObjectData(object, type = '') {
-    for(let key in object) {
-      if(object.hasOwnProperty(key) && key !== 'type') {
+    for (let key in object) {
+      if (object.hasOwnProperty(key) && key !== 'type') {
         if (typeof object[key] === 'string') {
           parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
         } else if (typeof object[key] === 'number') {
           object[key] += 10;
-        } else if (typeof object[key] === 'object'){
+        } else if (typeof object[key] === 'object') {
           this.editObjectData(object[key]);
         }
       }
-      if(type !== '') {
+      if (type !== '') {
         object['type'] = type;
       }
     }
+  }
+
+  deleteObjectElement(object, pos) {
+    delete object[pos];
+  }
+
+  setAttributeById(selector) {
+    return this.client
+      .execute(function (selector) {
+        document.getElementById(selector).style.display = 'none';
+      }, selector);
   }
 }
 
