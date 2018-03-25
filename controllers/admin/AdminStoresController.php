@@ -247,7 +247,7 @@ class AdminStoresControllerCore extends AdminController
                     'options' => array(
                         'id' => 'id_state',
                         'name' => 'name',
-                        'query' => null
+                        'query' => State::getStates($this->context->language->id)
                     )
                 ),
                 array(
