@@ -439,7 +439,7 @@ class CommonClient {
    * @returns {*}
    */
 
-  setTextToEditor(selector, content) {
+  setEditorText(selector, content) {
     return this.client
       .click(selector)
       .execute(function (content) {

@@ -4,7 +4,7 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-var data = require('./../../../datas/product-data');
+let data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 
 scenario('Create a pack of products in the Back Office', client => {
@@ -15,6 +15,9 @@ scenario('Create a pack of products in the Back Office', client => {
 
   scenario('Edit the Basic settings', client => {
     test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.pack.name + date_time));
+    test('should set the "Summary"', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
+    test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
+    test('should set the "Description"', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "Pack of products"', () => client.waitAndSelectByValue(AddProductPage.product_type, 1));
     test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack1.search, data.pack.pack.pack1.quantity));
     test('should set the "Add products to your pack"', () => client.addPackProduct(data.pack.pack.pack2.search, data.pack.pack.pack2.quantity));
@@ -135,18 +138,22 @@ scenario('Check the pack product in the Front Office', () => {
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product name is equal to "' + (data.pack.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.pack.name + date_time).toUpperCase()));
     test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
     test('should check that the first product pack name is equal to "The adventure begins Framed poster Dimension-40x60cm"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 1), 'The adventure begins Framed poster Dimension-40x60cm'));
     test('should check that the first product pack price is equal to "€34.80"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 1), '€34.80'));
     test('should check that the first product pack quantity is equal to "1"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 1), 'x 1'));
     test('should check that the second product pack name is equal to "Today is a good day Framed poster Dimension-40x60cm"', () => client.checkTextValue(productPage.pack_product_name.replace('%P', 2), 'Today is a good day Framed poster Dimension-40x60cm'));
     test('should check that the second product pack price is equal to "€34.80"', () => client.checkTextValue(productPage.pack_product_price.replace('%P', 2), '€34.80'));
     test('should check that the second product pack quantity is equal to "3"', () => client.checkTextValue(productPage.pack_product_quantity.replace('%P', 2), 'x 3'));
+    test('should check that the "summary" is equal to "' + data.common.summary + '"', () => client.checkTextValue(productPage.product_summary, data.common.summary));
+    test('should check that the "description" is equal to "' + data.common.description + '"', () => client.checkTextValue(productPage.product_description, data.common.description));
     test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
       return promise
-        .then(() => client.scrollTo(productPage.product_reference))
+        .then(() => client.waitForExistAndClick(productPage.product_detail_tab,2000))
+        .then(() => client.scrollTo(productPage.product_detail_tab, 180))
+        .then(() => client.pause(2000))
         .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
     });
-    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {

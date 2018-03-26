@@ -15,6 +15,9 @@ scenario('Create virtual Product in the Back Office', client => {
 
   scenario('Edit the Basic settings', client => {
     test('should set the "product name"', () => client.waitAndSetValue(AddProductPage.product_name_input, data.virtual.name + date_time));
+    test('should set the "Summary"', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
+    test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
+    test('should set the "Description"', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "virtual product"', () => client.waitAndSelectByValue(AddProductPage.product_type, 2));
     test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, "10"));
     test('should upload the first product picture', () => client.uploadPicture('image_test.jpg', AddProductPage.picture));
@@ -128,12 +131,17 @@ scenario('Check the virtual product in the Front Office', () => {
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product name is equal to "' + (data.virtual.name + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.virtual.name + date_time).toUpperCase()));
     test('should check that the product price is equal to "€12.00"', () => client.checkTextValue(productPage.product_price, '€12.00'));
+    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
+    test('should check that the "summary" is equal to "' + data.common.summary + '"', () => client.checkTextValue(productPage.product_summary, data.common.summary));
+    test('should check that the "description" is equal to "' + data.common.description + '"', () => client.checkTextValue(productPage.product_description, data.common.description));
     test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
       return promise
-        .then(() => client.scrollTo(productPage.product_reference))
+        .then(() => client.waitForExistAndClick(productPage.product_detail_tab,2000))
+        .then(() => client.scrollTo(productPage.product_detail_tab, 180))
+        .then(() => client.pause(2000))
         .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
     });
-    test('should check that the product quantity is equal to "10"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', data.common.quantity));
+
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {

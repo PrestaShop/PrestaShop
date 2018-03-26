@@ -16,22 +16,22 @@ scenario('Configure shop in the Back Office', () => {
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.general_save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.general_success_panel, "The settings have been successfully updated."));
     test('should click on "Maintenance" tab', () => client.waitForExistAndClick(ShopParameters.maintenance_tab));
-    test('should set the "Enable shop" to "NO"', () => client.waitAndSelectByValue(ShopParameters.enable_shop, "0"));
-    test('should set the "Custom maintenance" textarea', () => client.setTextToEditor(ShopParameters.textarea_input.replace("%ID", 1), 'We are currently disabled our shop and will be back really soon.'));
+    test('should set the "Enable shop" parameter to "NO"', () => client.waitAndSelectByValue(ShopParameters.enable_shop, "0"));
+    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 1), 'We are currently disabled our shop and will be back really soon.'));
     test('should switch to the "French" language', () => client.waitForExistAndClick(ShopParameters.language_option.replace("%LANG", 'Fr').replace("%ID", "1")));
-    test('should set the "Custom maintenance" textarea', () => client.setTextToEditor(ShopParameters.textarea_input.replace("%ID", 2), 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.'));
+    test('should set the "Custom maintenance" textarea', () => client.setEditorText(ShopParameters.textarea_input.replace("%ID", 2), 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.'));
     test('should click on "Save" button', () => client.waitForExistAndClick(ShopParameters.save_button));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.maintenance_success_panel, "Successful update."));
     test('should go to the front office', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
-        .then(() => client.switchWindow(1))
+        .then(() => client.switchWindow(1));
     });
     test('should check that the shop is disabled', () => client.checkTextValue(ShopParameters.maintenance_message, 'Nous avons actuellement désactivés notre boutique et serons de retour très bientôt.', 'contain'));
   }, 'common_client');
 
   scenario('Enable shop in the Back Office', client => {
-    test('should set the "Enable shop" to "YES"', () => {
+    test('should set the "Enable shop" parameter to "YES"', () => {
       return promise
         .then(() => client.switchWindow(0))
         .then(() => client.waitAndSelectByValue(ShopParameters.enable_shop, "1"));
@@ -41,7 +41,7 @@ scenario('Configure shop in the Back Office', () => {
     test('should go to the front office', () => {
       return promise
         .then(() => client.waitForExistAndClick(AccessPageBO.shopname))
-        .then(() => client.switchWindow(1))
+        .then(() => client.switchWindow(1));
     });
     test('should check that the shop is enabled', () => client.signInFO(AccessPageFO));
   }, 'common_client');

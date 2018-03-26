@@ -16,6 +16,9 @@ scenario('Create product with combination in the Back Office', client => {
 
   scenario('Edit Basic settings', client => {
     test('should set the "product name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
+    test('should set the "Summary"', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
+    test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
+    test('should set the "Description"', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations));
     test('should upload the first product picture', () => client.uploadPicture('1.png', AddProductPage.picture));
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
@@ -222,16 +225,18 @@ scenario('Check the product with combination in the Front Office', () => {
     test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
     test('should check that the product name is equal to "' + (data.standard.name + 'C' + date_time).toUpperCase() + '"', () => client.checkTextValue(productPage.product_name, (data.standard.name + 'C' + date_time).toUpperCase()));
     test('should check that the product price is equal to "€27.00"', () => client.checkTextValue(productPage.product_price, '€27.00'));
+    test('should check that the product quantity us equal to "20"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', '10'));
     test('should set the product size to "S"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[0][0], 3000));
     test('should check that the product color is equal to "Grey"', () => client.checkTextValue(productPage.product_color, productVariations[0][1]));
     test('should set the product size to "M"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[1][0], 3000));
     test('should check that the product color is equal to "Beige"', () => client.checkTextValue(productPage.product_color, productVariations[1][1]));
-    test('should check that the product reference is equal to "variation_1"', () => {
+    test('should check that the "summary" is equal to "' + data.common.summary + '"', () => client.checkTextValue(productPage.product_summary, data.common.summary));
+    test('should check that the "description" is equal to "' + data.common.description + '"', () => client.checkTextValue(productPage.product_description, data.common.description));
+    test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
       return promise
         .then(() => client.scrollTo(productPage.product_reference))
         .then(() => client.checkTextValue(productPage.product_reference, 'variation_2'));
     });
-    test('should check that the product quantity us equal to "20"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', '10'));
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {
