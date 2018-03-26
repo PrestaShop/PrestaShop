@@ -2586,39 +2586,36 @@
 	    var dfd = _jquery2['default'].Deferred();
 	    var $productActions = (0, _jquery2['default'])('.product-actions');
 	    var $quantityWantedInput = $productActions.find('#quantity_wanted:first');
-	    var updateUrl = null;
 	
-	    if (_prestashop2['default'] != null && _prestashop2['default'].page != null && _prestashop2['default'].page.canonical != '') {
-	        updateUrl = _prestashop2['default'].page.canonical;
+	    if (_prestashop2['default'] != null && _prestashop2['default'].page != null && _prestashop2['default'].page.canonical != '' && _prestashop2['default'].page.canonical != null) {
+	        dfd.resolve(_prestashop2['default'].page.canonical);
+	
+	        return dfd.promise();
 	    }
+	    var formData = {};
 	
-	    if (updateUrl == null) {
-	        (function () {
-	            var formData = {};
+	    (0, _jquery2['default'])($productActions.find('form:first').serializeArray()).each(function (k, v) {
+	        formData[v.name] = v.value;
+	    });
 	
-	            (0, _jquery2['default'])($productActions.find('form:first').serializeArray()).each(function (k, v) {
-	                formData[v.name] = v.value;
-	            });
-	
-	            _jquery2['default'].ajax({
-	                url: $productActions.find('form:first').attr('action'),
-	                method: 'POST',
-	                data: Object.assign({
-	                    ajax: 1,
-	                    action: 'productrefresh',
-	                    quantity_wanted: $quantityWantedInput.val()
-	                }, formData),
-	                dataType: 'json',
-	                success: function success(data, textStatus, errorThrown) {
-	                    var productUpdateUrl = data.productUrl;
-	                    _prestashop2['default'].page.canonical = productUpdateUrl;
-	                    dfd.resolve(productUpdateUrl);
-	                }
-	            });
-	        })();
-	    } else {
-	        dfd.resolve(updateUrl);
-	    }
+	    _jquery2['default'].ajax({
+	        url: $productActions.find('form:first').attr('action'),
+	        method: 'POST',
+	        data: Object.assign({
+	            ajax: 1,
+	            action: 'productrefresh',
+	            quantity_wanted: $quantityWantedInput.val()
+	        }, formData),
+	        dataType: 'json',
+	        success: function success(data, textStatus, errorThrown) {
+	            var productUpdateUrl = data.productUrl;
+	            _prestashop2['default'].page.canonical = productUpdateUrl;
+	            dfd.resolve(productUpdateUrl);
+	        },
+	        error: function error(jqXHR, textStatus, errorThrown) {
+	            dfd.reject({ "jqXHR": jqXHR, "textStatus": textStatus, "errorThrown": errorThrown });
+	        }
+	    });
 	
 	    return dfd.promise();
 	}
