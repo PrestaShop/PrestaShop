@@ -770,6 +770,9 @@ class LinkCore
                 $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_product_preferences';
 
                 return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminPreferences':
+                return $sfRouter->generate('admin_preferences', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
