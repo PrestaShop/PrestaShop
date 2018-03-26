@@ -49,11 +49,6 @@
         <hr>
 
         <div class="card-text">
-            <div class="form-group hidden-xs-up">
-                {{ form_errors(importForm.uploaded_file_name) }}
-                {{ form_widget(importForm.uploaded_file_name) }}
-            </div>
-
             <div class="form-group">
                 <label class="form-control-label">{{ 'What do you want to import?'|trans }}</label>
                 {{ form_errors(importForm.entity) }}
@@ -68,6 +63,11 @@
             </div>
 
             <hr>
+
+            <div class="form-group hidden-xs-up">
+                {{ form_errors(importForm.csv) }}
+                {{ form_widget(importForm.csv) }}
+            </div>
 
             <div class="form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
@@ -112,26 +112,26 @@
 
             <div class="form-group js-match-ref-form-group">
                 {{ ps.label_with_help(('Use product reference as key'|trans), ('If enabled, the product\'s reference number MUST be unique!'|trans({}, 'Admin.Advparameters.Help'))) }}
-                {{ form_errors(importForm.use_product_reference_as_key) }}
-                {{ form_widget(importForm.use_product_reference_as_key) }}
+                {{ form_errors(importForm.match_ref) }}
+                {{ form_widget(importForm.match_ref) }}
             </div>
 
             <div class="form-group js-regenerate-form-group">
                 <label class="form-control-label">{{ 'Skip thumbnails regeneration'|trans }}</label>
-                {{ form_errors(importForm.skip_thumbnails_regenerate) }}
-                {{ form_widget(importForm.skip_thumbnails_regenerate) }}
+                {{ form_errors(importForm.regenerate) }}
+                {{ form_widget(importForm.regenerate) }}
             </div>
 
             <div class="form-group js-force-ids-form-group">
                 {{ ps.label_with_help(('Force all ID numbers'|trans), (''|trans({}, 'Admin.Advparameters.Help'))) }}
-                {{ form_errors(importForm.force_ids) }}
-                {{ form_widget(importForm.force_ids) }}
+                {{ form_errors(importForm.forceIDs) }}
+                {{ form_widget(importForm.forceIDs) }}
             </div>
 
             <div class="form-group">
                 {{ ps.label_with_help(('Send notification email'|trans), (''|trans({}, 'Admin.Advparameters.Help'))) }}
-                {{ form_errors(importForm.send_notification_email) }}
-                {{ form_widget(importForm.send_notification_email) }}
+                {{ form_errors(importForm.sendemail) }}
+                {{ form_widget(importForm.sendemail) }}
             </div>
         </div>
     </div>
