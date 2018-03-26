@@ -46,9 +46,7 @@ class ImportType extends TranslatorAwareType
         }
 
         $builder
-            ->add('csv', HiddenType::class, [
-                'data' => '',
-            ])
+            ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
                 'choices' => [
                     $this->trans('Categories', 'Admin.Global') => 0,
@@ -62,9 +60,7 @@ class ImportType extends TranslatorAwareType
                     $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
                 ],
             ])
-            ->add('file', FileType::class, [
-                'required' => false,
-            ])
+            ->add('file', FileType::class)
             ->add('iso_lang', ChoiceType::class, [
                 'choices' => $locales,
             ])

@@ -25,7 +25,7 @@
 
 {% set importForm = form %}
 
-{{ form_start(form) }}
+{{ form_start(form, {'attr': { 'data-file-upload-url': file_upload_url, 'class': 'js-import-form' }}) }}
 <div class="card">
     <h3 class="card-header">
         <i class="material-icons">import_export</i> {{ 'Import'|trans }}
@@ -66,13 +66,13 @@
 
             <div class="form-group hidden-xs-up">
                 {{ form_errors(importForm.csv) }}
-                {{ form_widget(importForm.csv) }}
+                {{ form_widget(importForm.csv, {'attr': {'class': 'js-uploaded-file'}}) }}
             </div>
 
             <div class="form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
                 {{ form_errors(importForm.file) }}
-                {{ form_widget(importForm.file) }}
+                {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file'}}) }}
                 <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
                 <small class="form-text">{{ 'Only UTF-8 and ISO 8859-1 encodings are allowed'|trans({}, 'Admin.Advparameters.Help') }}</small>
                 <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({}, 'Admin.Advparameters.Help') }}</small>

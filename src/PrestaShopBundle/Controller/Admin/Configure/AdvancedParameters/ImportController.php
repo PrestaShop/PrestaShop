@@ -27,12 +27,21 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ImportController extends FrameworkBundleAdminController
 {
+    /**
+     * Show import form
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse|Response
+     */
     public function importAction(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
@@ -43,7 +52,7 @@ class ImportController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            // validate data before forwarding
+            //@todo: validate data before forwarding
 
             return $this->fowardRequestToLegacyResponse($request, $data);
         }
@@ -57,9 +66,30 @@ class ImportController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
+            'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);
+    }
+
+    /**
+     * Handle import file upload
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function uploadAction(Request $request)
+    {
+        $uploadedFile = $request->files->get('file');
+        if (!$uploadedFile) {
+            //@todo: handle error
+        }
+
+        $fileUploader = $this->get('prestashop.import.file_uploader');
+        $file = $fileUploader->upload($uploadedFile);
+
+        return new JsonResponse(['file' => ['name' => $file->getFilename()]]);
     }
 
     /**

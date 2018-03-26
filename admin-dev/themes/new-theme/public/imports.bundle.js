@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "1f69f0c547902b3e393c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fcc3f7ce10666b37f9a1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -753,6 +753,8 @@ $(function () {
   var entityStoreContacts = 8;
 
   $('.js-entity-select').on('change', toggleForm);
+  $('.js-import-file').on('change', uploadFile);
+
   toggleForm();
 
   function toggleForm() {
@@ -845,6 +847,35 @@ $(function () {
       $availableFields.html(fields);
       $availableFields.find('[data-toggle="popover"]').popover();
     }).catch(function (error) {});
+  }
+
+  /**
+   * Upload selected import file
+   */
+  function uploadFile() {
+    var uplodedFile = $('#file').prop('files')[0];
+
+    var data = new FormData(uplodedFile);
+    data.append('file', uplodedFile);
+
+    var url = $('.js-import-form').data('file-upload-url');
+
+    //@todo: add progress bar when uploading
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false
+    }).then(function (response) {
+      var filename = response.file.name;
+      $('.js-uploaded-file').val(filename);
+    }).catch(function (error) {
+      //@todo: display error to admin?
+      console.log(error);
+    });
   }
 });
 
