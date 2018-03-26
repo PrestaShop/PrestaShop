@@ -47,7 +47,7 @@ class ImportType extends TranslatorAwareType
 
         $builder
             ->add('csv', HiddenType::class, [
-                'data' => '20180323100410-categories_import (1).csv',
+                'data' => '',
             ])
             ->add('entity', ChoiceType::class, [
                 'choices' => [
@@ -62,7 +62,9 @@ class ImportType extends TranslatorAwareType
                     $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
                 ],
             ])
-            ->add('file', FileType::class)
+            ->add('file', FileType::class, [
+                'required' => false,
+            ])
             ->add('iso_lang', ChoiceType::class, [
                 'choices' => $locales,
             ])
@@ -77,6 +79,7 @@ class ImportType extends TranslatorAwareType
                     'Yes' => 1,
                     'No' => 0,
                 ],
+                'data' => 0,
                 'choice_translation_domain' => 'Admin.Global',
             ])
             ->add('match_ref', ChoiceType::class, [
@@ -84,6 +87,7 @@ class ImportType extends TranslatorAwareType
                     'Yes' => 1,
                     'No' => 0,
                 ],
+                'data' => 0,
                 'choice_translation_domain' => 'Admin.Global',
             ])
             ->add('regenerate', ChoiceType::class, [
@@ -91,6 +95,7 @@ class ImportType extends TranslatorAwareType
                     'Yes' => 1,
                     'No' => 0,
                 ],
+                'data' => 0,
                 'choice_translation_domain' => 'Admin.Global',
             ])
             ->add('forceIDs', ChoiceType::class, [
@@ -98,6 +103,7 @@ class ImportType extends TranslatorAwareType
                     'Yes' => 1,
                     'No' => 0,
                 ],
+                'data' => 0,
                 'choice_translation_domain' => 'Admin.Global',
             ])
             ->add('sendemail', ChoiceType::class, [
@@ -105,6 +111,7 @@ class ImportType extends TranslatorAwareType
                     'Yes' => 1,
                     'No' => 0,
                 ],
+                'data' => 1,
                 'choice_translation_domain' => 'Admin.Global',
             ])
         ;
