@@ -26,7 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Doctrine\ORM\EntityManager;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,6 +56,12 @@ class PreferencesController extends FrameworkBundleAdminController
             $form = $this->get('prestashop.adapter.preferences.form_handler')->getForm();
         }
 
+        /** @var Tools $toolsAdapter */
+        $toolsAdapter = $this->get('prestashop.adapter.tools');
+
+        // SSL URI is used for the merchant to check if he has SSL enabled
+        $sslUri = 'https://'.$toolsAdapter->getShopDomainSsl().$request->getRequestUri();
+
         $twigValues = array(
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->get('translator')->trans('Preferences', array(), 'Admin.Navigation.Menu'),
@@ -62,6 +72,8 @@ class PreferencesController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminPreferences'),
             'requireFilterStatus' => false,
             'form' => $form->createView(),
+            'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
+            'sslUri' => $sslUri,
         );
 
         return $this->render('@ShopParameters/preferences.html.twig', $twigValues);
@@ -112,6 +124,22 @@ class PreferencesController extends FrameworkBundleAdminController
         $saveErrors = $this->get('prestashop.adapter.preferences.form_handler')->save($data);
 
         if (0 === count($saveErrors)) {
+            /** @var EntityManager $em */
+            $em = $this->get('doctrine.orm.entity_manager');
+
+            /** @var TabRepository $tabRepository */
+            $tabRepository = $em->getRepository(Tab::class);
+
+            /** @var Tab $tab */
+            $tab = $tabRepository->findOneByClassName('AdminShopGroup');
+
+            if (null !== $tab) {
+                // Update multistore tab status according to updated multishop option
+                $tab->setActive((bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE'));
+                $em->persist($tab);
+                $em->flush();
+            }
+
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_preferences');

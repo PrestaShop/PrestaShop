@@ -46,15 +46,19 @@ class PreferencesType extends CommonAbstractType
     {
         $configuration = $this->getConfiguration();
 
+        if ($options['is_ssl_enabled']) {
+            $builder
+                ->add('enable_ssl', ChoiceType::class, array(
+                    'choices_as_values' => true,
+                    'choices'  => array(
+                        'No' => false,
+                        'Yes' => true,
+                    ),
+                    'choice_translation_domain' => 'Admin.Global',
+                ));
+        }
+
         $builder
-            ->add('enable_ssl', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
             ->add('enable_ssl_everywhere', ChoiceType::class, array(
                 'choices_as_values' => true,
                 'choices'  => array(
