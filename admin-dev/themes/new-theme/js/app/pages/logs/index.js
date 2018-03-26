@@ -25,24 +25,69 @@
 
 import TableSorting from '../../utils/table-sorting';
 import initDatePickers from '../../utils/datepicker';
+import SqlManager from '../../utils/sql-manager';
 
 const $ = global.$;
 
 class LogsPage {
 
+  init() {
+    const $sortableTables = $('table.table');
+    const $deleteAllLogsButton = $('#logs-deleteAll');
+    const $refreshButton = $('#logs-refresh');
+    const $showSqlQueryButton = $('#logs-showSqlQuery');
+    const $exportSqlManagerButton = $('#logs-exportSqlManager');
+
+    this.sqlManager = new SqlManager();
+
+    new TableSorting($sortableTables).attach();
+    initDatePickers();
+
+    $deleteAllLogsButton.on('click', this._onDeleteAllLogsClick.bind(this));
+    $refreshButton.on('click', this._onRefreshClick.bind(this));
+    $showSqlQueryButton.on('click', this._onShowSqlQueryClick.bind(this));
+    $exportSqlManagerButton.on('click', this._onExportSqlManagerClick.bind(this));
+  }
+
   /**
-   * @param message
+   * Invoked when clicking on the "delete all logs" toolbar button
+   * @param {jQuery.Event} event
+   * @private
    */
-  static delete(message) {
-    if (global.confirm(message)) {
-      const form = document.getElementById('logs_delete_form');
+  _onDeleteAllLogsClick(event) {
+    const clickedButton = $(event.delegateTarget);
+    const confirmationMessage = clickedButton.data('confirmMessage');
+    const form = clickedButton.closest('form');
+    if (global.confirm(confirmationMessage)) {
       form.submit();
     }
+  }
+
+  /**
+   * Invoked when clicking on the "reload" toolbar button
+   * @private
+   */
+  _onRefreshClick() {
+    location.reload();
+  }
+
+  /**
+   * Invoked when clicking on the "show sql query" toolbar button
+   * @private
+   */
+  _onShowSqlQueryClick() {
+    this.sqlManager.showLastSqlQuery();
+  }
+
+  /**
+   * Invoked when clicking on the "export to the sql query" toolbar button
+   * @private
+   */
+  _onExportSqlManagerClick() {
+    this.sqlManager.sendLastSqlQuery(this.sqlManager.createSqlQueryName());
   }
 }
 
 $(() => {
-  new TableSorting($('table.table')).attach();
-
-  initDatePickers();
+  new LogsPage().init();
 });

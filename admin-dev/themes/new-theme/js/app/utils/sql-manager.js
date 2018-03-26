@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-const $ = document.$;
+const $ = global.$;
 
 /**
  * Allow to display the last SQL query in a modal and redirect to SQL Manager.

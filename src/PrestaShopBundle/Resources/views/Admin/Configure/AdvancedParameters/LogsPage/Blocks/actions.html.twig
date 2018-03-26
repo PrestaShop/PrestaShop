@@ -26,21 +26,21 @@
 <div class="btn-toolbar float-right" role="toolbar">
     {{ renderhook('displayDashboardToolbarIcons', {}) }}
 
-    <form action="{{ path('admin_logs_delete') }}" id="logs_delete_form" method="POST" class="form-inline float-left">
+    <form action="{{ path('admin_logs_delete') }}" method="POST" class="form-inline float-left">
         <input name="_method" type="hidden" value="DELETE" />
         <input name="_token" type="hidden" value="{{ csrf_token('logs') }}" />
         {% set message = 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') %}
-        <a onclick="LogsPage.delete('{{ message }}');" href="javascript:void(0);">
+        <button type="button" id="logs-deleteAll" class="btn btn-link list-toolbar-btn" data-confirm-message="{{ message }}">
             {{ ps.tooltip(("Erase all"|trans), 'delete_forever') }}
-        </a>
+        </button>
     </form>
-    <button type="button" id="desc-product-import" class="btn btn-link list-toolbar-btn" onclick="location.reload();">
+    <button type="button" id="logs-refresh" class="btn btn-link list-toolbar-btn">
         {{ ps.tooltip(("Refresh list"|trans), 'refresh') }}
     </button>
-    <button type="button" id="desc-product-show-sql" class="btn btn-link list-toolbar-btn" onclick="SQLManager.showLastSqlQuery();">
+    <button type="button" id="logs-showSqlQuery" class="btn btn-link list-toolbar-btn">
         {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
     </button>
-    <button type="button" id="desc-product-sql-manager" class="btn btn-link list-toolbar-btn" onclick="SQLManager.sendLastSqlQuery(SQLManager.createSqlQueryName());">
+    <button type="button" id="logs-exportSqlManager" class="btn btn-link list-toolbar-btn">
         {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
     </button>
 </div>
