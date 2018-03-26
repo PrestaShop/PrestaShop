@@ -117,7 +117,7 @@ class OrderPresenter implements PresenterInterface
         if (!$this->skipProductDetails) {
             $productsOrder = $this->getProducts($order);
 
-            $result = array(
+            $result += array(
                 'messages' => $this->getMessages($order),
                 'follow_up' => $this->getFollowUp($order),
                 'details' => $this->getDetails($order, true),
