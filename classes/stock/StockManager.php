@@ -239,7 +239,11 @@ class StockManagerCore implements StockManagerInterface
         if (Pack::isPack((int)$id_product) && !$ignore_pack) {
             if (Validate::isLoadedObject($product = new Product((int)$id_product))) {
                 // Gets items
-                if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)) {
+                if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
+                    || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                    || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                        && Configuration::get('PS_PACK_STOCK_TYPE') > 0)
+                ) {
                     $products_pack = Pack::getItems((int)$id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
                     // Foreach item
                     foreach ($products_pack as $product_pack) {
@@ -260,8 +264,14 @@ class StockManagerCore implements StockManagerInterface
                         }
                     }
                 }
-                if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-                    ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))) {
+
+                if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
+                    || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                    || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                        && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
+                            || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                    )
+                ) {
                     $return = array_merge($return, $this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1, $employee));
                 }
             } else {
@@ -457,9 +467,10 @@ class StockManagerCore implements StockManagerInterface
                 $packs = Pack::getPacksContainingItem($id_product, $id_product_attribute, (int)Configuration::get('PS_LANG_DEFAULT'));
                 foreach ($packs as $pack) {
                     // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
-                    if (!((int)$pack->pack_stock_type == 2) &&
-                        !((int)$pack->pack_stock_type == 3 && (int)Configuration::get('PS_PACK_STOCK_TYPE') == 2)
-                        ) {
+                    if (!((int)$pack->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH)
+                        && !((int)$pack->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                            && (int)Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+                    ) {
                         continue;
                     }
 
@@ -564,7 +575,7 @@ class StockManagerCore implements StockManagerInterface
 			AND id_product_attribute_item = '.($id_product_attribute ? (int)$id_product_attribute : '0'))) {
             foreach ($in_pack as $value) {
                 if (Validate::isLoadedObject($product = new Product((int)$value['id_product_pack'])) &&
-                    ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
+                    ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && Configuration::get('PS_PACK_STOCK_TYPE') > 0))) {
                     $query = new DbQuery();
                     $query->select('od.product_quantity, od.product_quantity_refunded, pk.quantity');
                     $query->from('order_detail', 'od');
@@ -592,8 +603,8 @@ class StockManagerCore implements StockManagerInterface
 
         // skip if product is a pack without
         if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))
-            && $product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-                    ($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))) {
+            && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH ||
+                    ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)))) {
             // Gets client_orders_qty
             $query = new DbQuery();
             $query->select('od.product_quantity, od.product_quantity_refunded');
