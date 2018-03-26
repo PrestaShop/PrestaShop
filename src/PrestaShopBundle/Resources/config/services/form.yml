@@ -189,7 +189,7 @@ services:
 
     form.type.translatable.aware:
         abstract: true
-        arguments: 
+        arguments:
             - "@translator"
             - "@=service('prestashop.adapter.legacy.context').getLanguages()"
 
