@@ -40,7 +40,7 @@ $(() => {
   toggleForm();
 
   function toggleForm() {
-    let $selctedOption = $('#form_import_entity').find('option:selected');
+    let $selctedOption = $('#entity').find('option:selected');
     let selectedEntity = parseInt($selctedOption.val());
     let entityName = $selctedOption.text().toLowerCase();
 

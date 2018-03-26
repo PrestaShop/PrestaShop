@@ -79,28 +79,28 @@ class ImportType extends TranslatorAwareType
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('use_product_reference_as_key', ChoiceType::class, [
+            ->add('match_ref', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('skip_thumbnails_regenerate', ChoiceType::class, [
+            ->add('regenerate', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('force_ids', ChoiceType::class, [
+            ->add('forceIDs', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
                 ],
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('send_notification_email', ChoiceType::class, [
+            ->add('sendemail', ChoiceType::class, [
                 'choices' => [
                     'Yes' => 1,
                     'No' => 0,
