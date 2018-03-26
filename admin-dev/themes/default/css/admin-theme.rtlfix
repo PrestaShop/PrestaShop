@@ -1,81 +1,27 @@
-/*
-Vazir Font Copyright
-Changes by Saber Rastikerdar are in public domain.
-Glyphs and data from Roboto font are licensed under the Apache License, Version 2.0.
-
-Fonts are (c) Bitstream (see below). DejaVu changes are in public domain. 
-
-Bitstream Vera Fonts Copyright
-------------------------------
-
-Copyright (c) 2003 by Bitstream, Inc. All Rights Reserved. Bitstream Vera is
-a trademark of Bitstream, Inc.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of the fonts accompanying this license ("Fonts") and associated
-documentation files (the "Font Software"), to reproduce and distribute the
-Font Software, including without limitation the rights to use, copy, merge,
-publish, distribute, and/or sell copies of the Font Software, and to permit
-persons to whom the Font Software is furnished to do so, subject to the
-following conditions:
-
-The above copyright and trademark notices and this permission notice shall
-be included in all copies of one or more of the Font Software typefaces.
-
-The Font Software may be modified, altered, or added to, and in particular
-the designs of glyphs or characters in the Fonts may be modified and
-additional glyphs or characters may be added to the Fonts, only if the fonts
-are renamed to names not containing either the words "Bitstream" or the word
-"Vera".
-
-This License becomes null and void to the extent applicable to Fonts or Font
-Software that has been modified and is distributed under the "Bitstream
-Vera" names.
-
-The Font Software may be sold as part of a larger software package but no
-copy of one or more of the Font Software typefaces may be sold by itself.
-
-THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF COPYRIGHT, PATENT,
-TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL BITSTREAM OR THE GNOME
-FOUNDATION BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, INCLUDING
-ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
-THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER DEALINGS IN THE
-FONT SOFTWARE.
-
-Except as contained in this notice, the names of Gnome, the Gnome
-Foundation, and Bitstream Inc., shall not be used in advertising or
-otherwise to promote the sale, use or other dealings in this Font Software
-without prior written authorization from the Gnome Foundation or Bitstream
-Inc., respectively. For further information, contact: fonts at gnome dot
-org.
-*/
 @font-face {
   font-family: Vazir;
-  src: url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir.eot');
-  src: url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir.eot?#iefix') format('embedded-opentype'),
-       url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir.woff') format('woff'),
-       url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir.ttf') format('truetype');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.eot');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.eot?#iefix') format('embedded-opentype'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.woff') format('woff'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir.ttf') format('truetype');
   font-weight: normal;
 }
       
 @font-face {
   font-family: Vazir;
-  src: url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Bold.eot');
-  src: url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
-       url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Bold.woff') format('woff'),
-       url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Bold.ttf') format('truetype');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.woff') format('woff'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.ttf') format('truetype');
   font-weight: bold;
 }
 
 @font-face {
   font-family: Vazir;
-  src: url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Light.eot');
-  src: url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
-       url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Light.woff') format('woff'),
-       url('https://cdn.rawgit.com/rastikerdar/vazir-font/61a73a5c/dist/Vazir-Light.ttf') format('truetype');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.eot');
+  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.eot?#iefix') format('embedded-opentype'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.woff') format('woff'),
+       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.ttf') format('truetype');
   font-weight: 300;
 }
 .bootstrap body.lang-fa, body.lang-fa, .lang-fa #content.bootstrap .panel .panel-heading a.btn, .lang-fa #content.bootstrap #dash_version .panel-heading a.btn, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn, .lang-fa #notification .dropdown-menu .notifications .nav-tabs .nav-item .nav-link, .lang-fa .bootstrap .tooltip, .lang-fa .bootstrap .btn-group-action .btn, .lang-fa .bootstrap .page-head h2.page-title, .lang-fa .bootstrap .page-head h4.page-subtitle, .lang-fa .bootstrap #dashboard section > section header .small, .lang-fa .bootstrap #login-panel #shop_name, .bootstrap #login-panel #reset_name, .bootstrap #login-panel #reset_confirm_name, .bootstrap #login-panel #forgot_name, .bootstrap #login-panel #forgot_confirm_name, .bootstrap h1, .lang-fa .bootstrap h2, .lang-fa .bootstrap h3, .lang-fa .bootstrap h4, .lang-fa .bootstrap h5, .lang-fa .bootstrap h6, .lang-fa .bootstrap .h1, .lang-fa .bootstrap .h2, .lang-fa .bootstrap .h3, .lang-fa .bootstrap .h4, .lang-fa .bootstrap .h5, .lang-fa .bootstrap .h6, .lang-fa #content.bootstrap .panel .panel-heading, .lang-fa #content.bootstrap #dash_version .panel-heading, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .bootstrap .nav-tabs li a, .bootstrap .list-empty .list-empty-msg, .bootstrap #dashboard #dashtrends dt, .bootstrap #dashboard #dashproducts nav, .lang-fa .bootstrap #dashboard .tooltip-panel-heading {
