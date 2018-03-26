@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b5a2a557a4c024cfcc1a"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1f69f0c547902b3e393c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -756,12 +756,13 @@ $(function () {
   toggleForm();
 
   function toggleForm() {
-    var $selctedOption = $('#form_import_entity').find('option:selected');
+    var $selctedOption = $('#entity').find('option:selected');
     var selectedEntity = parseInt($selctedOption.val());
     var entityName = $selctedOption.text().toLowerCase();
 
     toggleEntityAlert(selectedEntity);
     toggleFields(selectedEntity, entityName);
+    loadAvailableFields(selectedEntity);
   }
 
   /**
@@ -817,6 +818,33 @@ $(function () {
     }
 
     $entityNamePlaceholder.html(entityName);
+  }
+
+  /**
+   * Load available fields for given entity
+   *
+   * @param {int} entity
+   */
+  function loadAvailableFields(entity) {
+    $.ajax({
+      url: '../../../ajax.php',
+      data: {
+        getAvailableFields: 1,
+        entity: entity
+      },
+      dataType: 'json'
+    }).then(function (response) {
+      var fields = '';
+      var $availableFields = $('.js-available-fields');
+      $availableFields.empty();
+
+      for (var i = 0; i < response.length; i++) {
+        fields += response[i].field;
+      }
+
+      $availableFields.html(fields);
+      $availableFields.find('[data-toggle="popover"]').popover();
+    }).catch(function (error) {});
   }
 });
 
