@@ -765,6 +765,11 @@ class LinkCore
 
             case 'AdminMaintenance':
                 return $sfRouter->generate('admin_maintenance', $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
+
+            case 'AdminImport':
+                $sfRoute = array_key_exists('route', $sfRouteParams) ? $sfRouteParams['route'] : 'admin_import';
+
+                return $sfRouter->generate($sfRoute, $sfRouteParams, UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $idLang = Context::getContext()->language->id;
