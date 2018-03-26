@@ -22,15 +22,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+import 'url-polyfill';
+
+const $ = global.$;
 
 /**
  * Enable all datepickers.
  */
-global.DatePicker = {};
+const init = function initDatePickers() {
+  $('.datepicker').datetimepicker({
+    locale: global.full_language_code,
+    format: 'YYYY-MM-DD',
+  });
+};
 
-DatePicker.init = () => {
-    $('.datepicker').datetimepicker({
-        locale: full_language_code,
-        format: 'YYYY-MM-DD'
-    });
-}
+export default init;
