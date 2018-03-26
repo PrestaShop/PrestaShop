@@ -844,6 +844,7 @@ class Install extends AbstractInstall
             }
         } else {
             $modules = array(
+                'contactform',
                 'dashactivity',
                 'dashtrends',
                 'dashgoals',
