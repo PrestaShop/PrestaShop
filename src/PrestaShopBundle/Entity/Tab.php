@@ -144,4 +144,18 @@ class Tab
     {
         return $this->tabLangs;
     }
+
+    /**
+     * Set active
+     *
+     * @param bool $active
+     *
+     * @return Tab
+     */
+    public function setActive($active)
+    {
+        $this->active = $active;
+
+        return $this;
+    }
 }
