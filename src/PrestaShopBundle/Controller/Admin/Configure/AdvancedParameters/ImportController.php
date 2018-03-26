@@ -33,6 +33,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Responsible of "Configure > Advanced Parameters > Import" page display
+ */
 class ImportController extends FrameworkBundleAdminController
 {
     /**
