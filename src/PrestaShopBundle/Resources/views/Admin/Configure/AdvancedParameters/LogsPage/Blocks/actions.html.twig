@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
-<div class="action-buttons float-right">
+<div class="btn-toolbar float-right" role="toolbar">
     {{ renderhook('displayDashboardToolbarIcons', {}) }}
 
     <form action="{{ path('admin_logs_delete') }}" id="logs_delete_form" method="POST" class="form-inline float-left">
@@ -34,15 +34,15 @@
             {{ ps.tooltip(("Erase all"|trans), 'delete_forever') }}
         </a>
     </form>
-    <a id="desc-product-import" class="list-toolbar-btn" href="javascript:location.reload();">
+    <button type="button" id="desc-product-import" class="btn btn-link list-toolbar-btn" onclick="location.reload();">
         {{ ps.tooltip(("Refresh list"|trans), 'refresh') }}
-    </a>
-    <a id="desc-product-show-sql" class="list-toolbar-btn" href="javascript:void(0);" onclick="SQLManager.showLastSqlQuery();">
+    </button>
+    <button type="button" id="desc-product-show-sql" class="btn btn-link list-toolbar-btn" onclick="SQLManager.showLastSqlQuery();">
         {{ ps.tooltip(("Show SQL query"|trans({}, 'Admin.Actions')), 'code') }}
-    </a>
-    <a id="desc-product-sql-manager" class="list-toolbar-btn" href="javascript:void(0);" onclick="SQLManager.sendLastSqlQuery(SQLManager.createSqlQueryName());">
+    </button>
+    <button type="button" id="desc-product-sql-manager" class="btn btn-link list-toolbar-btn" onclick="SQLManager.sendLastSqlQuery(SQLManager.createSqlQueryName());">
         {{ ps.tooltip(("Export to SQL Manager"|trans({}, 'Admin.Actions')), 'storage') }}
-    </a>
+    </button>
 </div>
 
 {% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
