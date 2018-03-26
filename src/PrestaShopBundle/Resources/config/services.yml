@@ -1,6 +1,6 @@
 imports:
     - { resource: services/services.yml }
-    - { resource: services/form.yml }
+    - { resource: services/form_services.yml }
     - { resource: services/alias.yml }
     - { resource: services/adapters.yml }
 

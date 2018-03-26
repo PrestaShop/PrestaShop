@@ -1,0 +1,3 @@
+imports:
+    - { resource: form/form_type.yml }
+    - { resource: form/form_extension.yml }
