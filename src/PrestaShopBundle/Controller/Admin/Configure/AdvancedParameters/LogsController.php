@@ -68,6 +68,8 @@ class LogsController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
+            'orderBy' => $filters['orderBy'],
+            'sortOrder' => $filters['sortOrder'],
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
             'searchParametersForm' => $searchParametersForm->createView(),

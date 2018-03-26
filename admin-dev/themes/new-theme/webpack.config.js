@@ -43,6 +43,9 @@ let config = {
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
     ],
+    catalog: [
+      './js/app/pages/catalog',
+    ],
     stock: [
       './js/app/pages/stock',
     ],
@@ -50,16 +53,7 @@ let config = {
       './js/app/pages/translations',
     ],
     logs: [
-      './js/app/utils/table-filters.js',
-      './js/app/utils/sql-manager.js',
-      './js/app/utils/datepicker.js',
-      './js/app/pages/logs'
-    ],
-    'sql-manager-helper': [
-      './js/app/utils/sql-manager.js'
-    ],
-    'table-filters-helper': [
-      './js/app/utils/table-filters.js'
+      './js/app/pages/logs',
     ],
     product_preferences: [
       './js/pages/product-preferences',

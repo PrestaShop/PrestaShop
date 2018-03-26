@@ -26,40 +26,32 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {{ form_start(searchParametersForm, {'method': 'POST', 'action': path('admin_search_logs') }) }}
-<table class="table table-hover">
+<table class="table">
   <thead class="thead-default">
     <tr class="column-headers">
-      <th scope="col">
-        {{ 'ID'|trans({}, 'Admin.Global') }}
-        {{ ps.sort_arrows('id_log') }}
+      <th scope="col" width="10%">
+        {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_log', orderBy, sortOrder) }}
       </th>
       <th scope="col">
-        {{ 'Employee'|trans({}, 'Admin.Global') }}
-        {{ ps.sort_arrows('id_employee') }}
-      </th>
-      <th scope="col" class="text-center">
-        {{ 'Severity (1-4)'|trans }}
-        {{ ps.sort_arrows('severity') }}
+        {{ ps.sortable_column_header('Employee'|trans({}, 'Admin.Global'), 'id_employee', orderBy, sortOrder) }}
       </th>
       <th scope="col">
-        {{ 'Message'|trans({}, 'Admin.Global') }}
-        {{ ps.sort_arrows('message') }}
-      </th>
-      <th scope="col" class="text-center">
-        {{ 'Object type'|trans }}
-        {{ ps.sort_arrows('object_type') }}
-      </th>
-      <th scope="col" class="text-center">
-        {{ 'Object ID'|trans }}
-        {{ ps.sort_arrows('object_id') }}
-      </th>
-      <th scope="col" class="text-center">
-        {{ 'Error code'|trans }}
-        {{ ps.sort_arrows('error_code') }}
+        {{ ps.sortable_column_header('Severity (1-4)'|trans, 'severity', orderBy, sortOrder) }}
       </th>
       <th scope="col">
-        {{ 'Date'|trans({}, 'Admin.Global') }}
-        {{ ps.sort_arrows('date_add') }}
+        {{ ps.sortable_column_header('Message'|trans({}, 'Admin.Global'), 'message', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Object type'|trans, 'object_type', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Object ID'|trans, 'object_id', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Error code'|trans, 'error_code', orderBy, sortOrder) }}
+      </th>
+      <th scope="col">
+        {{ ps.sortable_column_header('Date'|trans({}, 'Admin.Global'), 'error_code', orderBy, sortOrder) }}
       </th>
       <th scope="col">&nbsp;</th>
     </tr>

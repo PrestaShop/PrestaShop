@@ -62,24 +62,19 @@
 </label>
 {% endmacro %}
 
- {# Display arrows to reverse order of items #}
- {% macro sort_arrows(column, sortOrder, orderBy) %}
-    {% set sortOrder, orderBy = sortOrder|default(''), orderBy|default('') %}
-
-    {% spaceless %}
-      <span
-        psorderby="{{ column }}"
-        psorderway="asc"
-        class="icon-caret-up icon-caret {% if orderBy == column and sortOrder == 'asc' %}-current{% endif %}"
-      >
-        &#9650;
-      </span>
-      <span
-        psorderby="{{ column }}"
-        psorderway="desc"
-        class="icon-caret-down icon-caret {% if orderBy == column and sortOrder == 'desc' %}-current{% endif %}"
-      >
-        &#9660;
-      </span>
-    {% endspaceless %}
+{# Table column headers with sorting indicators #}
+{% macro sortable_column_header(title, sortColumnName, orderBy, sortOrder) %}
+  {% set sortOrder, orderBy = sortOrder|default(''), orderBy|default('') %}
+    <div
+      class="ps-sortable-column"
+      data-sort-col-name="{{ sortColumnName }}"
+      {% if orderBy == sortColumnName %}
+        data-sort-is-current="true"
+        data-sort-direction="{{ sortOrder == 'desc' ? 'desc' : 'asc' }}"
+      {% endif %}
+    >
+      <span role="columnheader">{{ title }}</span>
+      <span role="button" class="ps-sort" aria-label="{{ 'Sort by'|trans({}, 'Admin.Actions') }}"></span>
+    </div>
+  </th>
 {% endmacro %}
