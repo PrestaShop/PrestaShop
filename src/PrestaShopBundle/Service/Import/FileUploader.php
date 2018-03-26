@@ -69,7 +69,11 @@ class FileUploader
     {
         $this->validateUploadedFile($uploadedFile);
 
-        $uploadedFileName = sprintf('%s-%s', date('YmdHis'), $uploadedFile->getClientOriginalName());
+        $uploadedFileName = sprintf(
+            '%s-%s',
+            date('YmdHis'),
+            $uploadedFile->getClientOriginalName()
+        );
 
         $file = $uploadedFile->move(
             $this->getImporDir(),
