@@ -37,6 +37,8 @@ $(() => {
   const entityStoreContacts = 8;
 
   $('.js-entity-select').on('change', toggleForm);
+  $('.js-import-file').on('change', uploadFile);
+
   toggleForm();
 
   function toggleForm() {
@@ -145,6 +147,35 @@ $(() => {
       $availableFields.find('[data-toggle="popover"]').popover();
     }).catch(error => {
 
+    });
+  }
+
+  /**
+   * Upload selected import file
+   */
+  function uploadFile() {
+    const uplodedFile = $('#file').prop('files')[0];
+
+    const data = new FormData(uplodedFile);
+    data.append('file', uplodedFile);
+
+    const url = $('.js-import-form').data('file-upload-url');
+
+    //@todo: add progress bar when uploading
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+    }).then(response => {
+      let filename = response.file.name;
+      $('.js-uploaded-file').val(filename);
+    }).catch(error => {
+      //@todo: display error to admin?
+      console.log(error);
     });
   }
 });

@@ -555,11 +555,6 @@ services:
             - '@prestashop.adapter.product_page.configuration'
             - '@prestashop.adapter.product_stock.configuration'
 
-    prestashop.admin.import.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
-        arguments:
-            - '@form.factory'
-
     # Localization
     prestashop.core.localization.cache.adapter:
         class: Symfony\Component\Cache\Adapter\ArrayAdapter
@@ -640,3 +635,15 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
         arguments:
             - '@prestashop.adapter.data_provider.currency'
+
+    # Import
+    prestashop.admin.import.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
+        arguments:
+            - '@form.factory'
+
+    prestashop.import.file_uploader:
+        class: 'PrestaShopBundle\Service\Import\FileUploader'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
