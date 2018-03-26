@@ -538,3 +538,11 @@ services:
             class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
             arguments:
                 - '@form.factory'
+
+
+    # Import
+    prestashop.import.file_uploader:
+        class: 'PrestaShopBundle\Service\Import\FileUploader'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+            - '@translator'
