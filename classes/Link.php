@@ -681,7 +681,7 @@ class LinkCore
             return '';
         }
 
-        if ($withToken) {
+        if ($withToken && getenv('_TOKEN_OFF_') !== "enabled") {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
 
