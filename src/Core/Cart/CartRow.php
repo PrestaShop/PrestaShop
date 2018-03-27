@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Cart;
 use Cart;
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
+use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Database;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
@@ -40,44 +41,70 @@ use PrestaShop\PrestaShop\Adapter\Tools;
  */
 class CartRow
 {
+
+    /**
+     * row round mode by item
+     */
     const ROUND_MODE_ITEM  = 'item';
+
+    /**
+     * row round mode by line
+     */
     const ROUND_MODE_LINE  = 'line';
+
+    /**
+     * row round mode by all lines
+     */
     const ROUND_MODE_TOTAL = 'total';
 
+    /**
+     * static cache key pattern
+     */
     const PRODUCT_PRICE_CACHE_ID_PATTERN = "Product::getPriceStatic_%d-%d";
 
     /**
-     * @var PriceCalculator
+     * @var PriceCalculator adapter to calculate price
      */
     protected $priceCalculator;
 
     /**
-     * @var AddressFactory
+     * @var AddressFactory adapter to get address informations
      */
     protected $addressFactory;
 
     /**
-     * @var CustomerDataProvider
+     * @var CustomerDataProvider adapter to get customer informations
      */
     protected $customerDataProvider;
 
     /**
-     * @var GroupDataProvider
+     * @var GroupDataProvider adapter to get group informations
      */
     protected $groupDataProvider;
 
     /**
-     * @var Database
+     * @var Database adapter to get database
      */
     protected $databaseAdapter;
 
     /**
-     * @var CacheAdapter
+     * @var CacheAdapter adapter to get cache
      */
     protected $cacheAdapter;
 
+    /**
+     * @var bool calculation will use ecotax
+     */
     protected $useEcotax;
+
+    /**
+     * @var int calculation precision (decimals count)
+     */
     protected $precision;
+
+    /**
+     * @var string round mode : see self::ROUND_MODE_xxx
+     */
     protected $roundType;
 
     /**
@@ -162,7 +189,9 @@ class CartRow
     }
 
     /**
-     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
+     * Returns the initial unit price (ie without applying cart rules)
+     *
+     * @return AmountImmutable
      * @throws \Exception
      */
     public function getInitialUnitPrice()
@@ -177,7 +206,7 @@ class CartRow
     /**
      * return final price: initial minus the cart rule discounts
      *
-     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
+     * @return AmountImmutable
      * @throws \Exception
      */
     public function getFinalUnitPrice()
@@ -192,7 +221,7 @@ class CartRow
     /**
      * return final price: initial minus the cart rule discounts
      *
-     * @return \PrestaShop\PrestaShop\Core\Cart\AmountImmutable
+     * @return AmountImmutable
      * @throws \Exception
      */
     public function getFinalTotalPrice()
@@ -209,7 +238,7 @@ class CartRow
      *
      * @param Cart $cart
      *
-     * @throws \PrestaShop\PrestaShop\Adapter\CoreException
+     * @throws CoreException
      */
     public function processCalculation(Cart $cart)
     {
@@ -323,6 +352,9 @@ class CartRow
         return new AmountImmutable($priceTaxIncl, $priceTaxExcl);
     }
 
+    /**
+     * depending on attribute roundType, rounds the item/line value
+     */
     protected function applyRound()
     {
         // ROUNDING MODE
@@ -366,7 +398,7 @@ class CartRow
      * substract discount from the row
      * if discount exceeds amount, we keep 0 (no use of negative amounts)
      *
-     * @param \PrestaShop\PrestaShop\Core\Cart\AmountImmutable $amount
+     * @param AmountImmutable $amount
      */
     public function applyFlatDiscount(AmountImmutable $amount)
     {

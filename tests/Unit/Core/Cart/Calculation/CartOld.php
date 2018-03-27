@@ -339,13 +339,4 @@ class CartOld extends Cart
 
         return Tools::ps_round((float) $order_total, $compute_precision);
     }
-
-    /**
-     * @param bool $usePreviousVersion
-     */
-    public function setUsePreviousVersion($usePreviousVersion)
-    {
-        $this->usePreviousVersion = $usePreviousVersion;
-    }
-
 }
