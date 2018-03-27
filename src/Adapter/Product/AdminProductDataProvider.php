@@ -286,12 +286,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $sqlOrder = array('id_product ASC');
         }
 
+        $sqlGroupBy = array();
+
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
         Hook::exec('actionAdminProductsListingFieldsModifier', array(
             '_ps_version' => _PS_VERSION_,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
+            'sql_group_by' => &$sqlGroupBy,            
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ));
@@ -322,11 +325,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
             'sql_where' => &$sqlWhere,
+            'sql_group_by' => &$sqlGroupBy,            
             'sql_order' => &$sqlOrder,
             'sql_limit' => &$sqlLimit,
         ));
 
-        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlOrder, $sqlLimit);
+        $sql = $this->compileSqlQuery($sqlSelect, $sqlTable, $sqlWhere, $sqlGroupBy, $sqlOrder, $sqlLimit);
         $products = Db::getInstance()->executeS($sql, true, false);
         $total = Db::getInstance()->executeS('SELECT FOUND_ROWS();', true, false);
         $total = $total[0]['FOUND_ROWS()'];
