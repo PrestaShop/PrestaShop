@@ -84,9 +84,9 @@ class RoundingModeTest extends AbstractCartCalculationTest
 
         $this->addProductsToCart($productData);
         $this->addCartRulesToCart($cartRuleData);
-        $totalV1 = $this->cart->getOrderTotal();
+        $totalV1 = $this->cart->getOrderTotalV1();
         $this->assertEquals($expectedTotal, $totalV1, 'V1 fail (tax incl)');
-        $totalV2 = $this->cart->getOrderTotalV2();
+        $totalV2 = $this->cart->getOrderTotal();
         $this->assertEquals($expectedTotal, $totalV2, 'V2 fail (tax excl)');
     }
 

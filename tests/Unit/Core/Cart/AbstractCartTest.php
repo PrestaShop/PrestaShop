@@ -35,6 +35,7 @@ use Db;
 use Tests\TestCase\IntegrationTestCase;
 use Product;
 use StockAvailable;
+use Tests\Unit\Core\Cart\Calculation\CartOld;
 
 /**
  * these tests aim to check cart using mocks
@@ -71,7 +72,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     ];
 
     /**
-     * @var Cart
+     * @var CartOld
      */
     protected $cart;
 
@@ -93,7 +94,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->cart              = new Cart();
+        $this->cart              = new CartOld();
         $this->cart->id_lang     = (int) Context::getContext()->language->id;
         $this->cart->id_currency = (int) Context::getContext()->currency->id;
         $this->cart->id_shop     = (int) Context::getContext()->shop->id;

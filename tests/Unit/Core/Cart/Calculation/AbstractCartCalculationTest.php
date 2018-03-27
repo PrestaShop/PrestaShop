@@ -37,8 +37,8 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
     protected function compareCartTotalTaxIncl($expectedTotal, $knownToFailOnV1 = false)
     {
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
-        $totalV1   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
-        $totalV2   = $this->cart->getOrderTotalV2(true, Cart::BOTH, null, $carrierId);
+        $totalV1   = $this->cart->getOrderTotalV1(true, Cart::BOTH, null, $carrierId);
+        $totalV2   = $this->cart->getOrderTotal(true, Cart::BOTH, null, $carrierId);
         // here we round values to avoid round issues : rounding modes are tested by specific tests
         $expectedTotal = round($expectedTotal, 1);
         $totalV1       = round($totalV1, 1);
@@ -52,8 +52,8 @@ abstract class AbstractCartCalculationTest extends AbstractCartTest
     protected function compareCartTotalTaxExcl($expectedTotal, $knownToFailOnV1 = false)
     {
         $carrierId = (int) $this->cart->id_carrier <= 0 ? null : $this->cart->id_carrier;
-        $totalV1   = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
-        $totalV2   = $this->cart->getOrderTotalV2(false, Cart::BOTH, null, $carrierId);
+        $totalV1   = $this->cart->getOrderTotalV1(false, Cart::BOTH, null, $carrierId);
+        $totalV2   = $this->cart->getOrderTotal(false, Cart::BOTH, null, $carrierId);
         // here we round values to avoid round issues : rounding modes are tested by specific tests
         $expectedTotal = round($expectedTotal, 1);
         $totalV1       = round($totalV1, 1);
