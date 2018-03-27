@@ -1889,9 +1889,9 @@ class CartCore extends ObjectModel
     /**
      * get the cart calculator and process it
      *
-     * @param $products
-     * @param $cartRules
-     * @param $id_carrier
+     * @param array $products list of products to calculate on
+     * @param array $cartRules list of cart rules to apply
+     * @param int   $id_carrier carrier id (fees calculation)
      *
      * @return \PrestaShop\PrestaShop\Core\Cart\Calculator
      */
