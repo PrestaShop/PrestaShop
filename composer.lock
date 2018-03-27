@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0fcc9b01c1cdeab61574a29544c92a6",
+    "content-hash": "b7b972ec82529af9555693ae77b49d3e",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2668,16 +2668,16 @@
         },
         {
             "name": "prestashop/contactform",
-            "version": "v3.0.0",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/contactform.git",
-                "reference": "fabe592df4dac4f1a06d1c52377c4ec98275935e"
+                "reference": "bef34d2f69cefc93663219438b6d952aab3fcf79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/fabe592df4dac4f1a06d1c52377c4ec98275935e",
-                "reference": "fabe592df4dac4f1a06d1c52377c4ec98275935e",
+                "url": "https://api.github.com/repos/PrestaShop/contactform/zipball/bef34d2f69cefc93663219438b6d952aab3fcf79",
+                "reference": "bef34d2f69cefc93663219438b6d952aab3fcf79",
                 "shasum": ""
             },
             "require": {
@@ -2686,7 +2686,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -2696,7 +2696,7 @@
             ],
             "description": "PrestaShop module contactform",
             "homepage": "https://github.com/PrestaShop/contactform",
-            "time": "2017-06-23T09:48:19+00:00"
+            "time": "2018-03-26T09:56:09+00:00"
         },
         {
             "name": "prestashop/dashactivity",
@@ -3228,16 +3228,16 @@
         },
         {
             "name": "prestashop/ps_emailsubscription",
-            "version": "v2.1.0",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_emailsubscription.git",
-                "reference": "ac9c360f5a8a7d5484c61cebba7a7bffbb75c7c2"
+                "reference": "15312b89d3884c9b055da65d9cd9c45473686f5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/ac9c360f5a8a7d5484c61cebba7a7bffbb75c7c2",
-                "reference": "ac9c360f5a8a7d5484c61cebba7a7bffbb75c7c2",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailsubscription/zipball/15312b89d3884c9b055da65d9cd9c45473686f5d",
+                "reference": "15312b89d3884c9b055da65d9cd9c45473686f5d",
                 "shasum": ""
             },
             "require": {
@@ -3246,7 +3246,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -3256,7 +3256,7 @@
             ],
             "description": "PrestaShop module ps_emailsubscription",
             "homepage": "https://github.com/PrestaShop/ps_emailsubscription",
-            "time": "2017-12-08T10:34:56+00:00"
+            "time": "2018-03-26T10:27:13+00:00"
         },
         {
             "name": "prestashop/ps_facetedsearch",

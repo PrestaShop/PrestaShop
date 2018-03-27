@@ -40,7 +40,7 @@
         "paragonie/random_compat": "^1.4|^2.0",
         "prestashop/smarty": "dev-master",
         "prestashop/blockreassurance": "^3",
-        "prestashop/contactform": "^3",
+        "prestashop/contactform": "^4",
         "prestashop/dashactivity": "^2",
         "prestashop/dashgoals": "^2",
         "prestashop/dashproducts": "^2",
