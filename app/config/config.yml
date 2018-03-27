@@ -59,6 +59,7 @@ twig:
     globals:
         webpack_server:   false
     paths:
+        '%admin_page%/Product': Product
         '%admin_page%/Configure/AdvancedParameters': AdvancedParameters
 
 # Doctrine Configuration

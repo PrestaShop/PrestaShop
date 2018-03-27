@@ -442,7 +442,22 @@ class ProductController extends FrameworkBundleAdminController
 
         // Prepare combination form (fake but just to validate the form)
         $combinations = $modelMapper->getAttributesResume();
+
         if (is_array($combinations)) {
+            $maxInputVars = (int) ini_get('max_input_vars');
+            $combinationsCount = count($combinations) * 25;
+            $combinationsInputs = ceil($combinationsCount/1000)*1000;
+
+            if ($combinationsInputs > $maxInputVars) {
+
+                $this->addFlash('error', $this->trans(
+                    'The value of the PHP.ini setting "max_input_vars" must be increased to %value% in order to be able to submit the product form.',
+                    'Admin.Global.Error',
+                    array('%value%' => $combinationsInputs)
+                ));
+            }
+
+
             foreach ($combinations as $combination) {
                 $form->add(
                     'combination_'.$combination['id_product_attribute'],
