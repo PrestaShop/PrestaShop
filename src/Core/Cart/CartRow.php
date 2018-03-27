@@ -261,7 +261,7 @@ class CartRow
 				FROM `' . _DB_PREFIX_ . 'cart_product`
 				WHERE `id_product` = ' . (int) $productId . '
 				AND `id_cart` = ' . (int) $cart->id;
-                $cartQuantity = (int) $this->databaseAdapter->getValue(_PS_USE_SQL_SLAVE_, $sql);
+                $cartQuantity = (int) $this->databaseAdapter->getValue($sql, _PS_USE_SQL_SLAVE_);
                 $this->cacheAdapter->store($cacheId, $cartQuantity);
             } else {
                 $cartQuantity = $this->cacheAdapter->retrieve($cacheId);

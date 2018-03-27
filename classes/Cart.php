@@ -1921,17 +1921,15 @@ class CartCore extends ObjectModel
         $useEcotax = $this->configuration->get('PS_USE_ECOTAX');
         $precision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         $configRoundType = $this->configuration->get('PS_ROUND_TYPE');
-        switch ($configRoundType) {
-            case Order::ROUND_TOTAL:
-                $roundType = CartRow::ROUND_MODE_TOTAL;
-                break;
-            case Order::ROUND_LINE:
-                $roundType = CartRow::ROUND_MODE_LINE;
-                break;
-            case Order::ROUND_ITEM:
-            default:
+        $roundTypes = [
+            Order::ROUND_TOTAL => CartRow::ROUND_MODE_TOTAL,
+            Order::ROUND_LINE  => CartRow::ROUND_MODE_LINE,
+            Order::ROUND_ITEM  => CartRow::ROUND_MODE_ITEM,
+        ];
+        if (isset($roundTypes[$configRoundType])) {
+            $roundType = $roundTypes[$configRoundType];
+        } else {
             $roundType = CartRow::ROUND_MODE_ITEM;
-                break;
         }
 
         foreach ($products as $product) {

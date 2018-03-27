@@ -56,13 +56,13 @@ class Database implements \PrestaShop\PrestaShop\Core\Foundation\Database\Databa
     /**
      * Returns a value from the first row, first column of a SELECT query
      *
-     * @param bool           $useMaster
      * @param string|DbQuery $sql
+     * @param bool           $useMaster
      * @param bool           $useCache
      *
      * @return string|false|null
      */
-    public function getValue($useMaster, $sql, $useCache = true)
+    public function getValue($sql, $useMaster = true, $useCache = true)
     {
         return Db::getInstance($useMaster)->getValue($sql, $useCache);
     }
