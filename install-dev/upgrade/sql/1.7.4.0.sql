@@ -1,6 +1,7 @@
 SET SESSION sql_mode = '';
 SET NAMES 'utf8';
 
+ALTER TABLE `PREFIX_order_detail` DROP KEY product_id, ADD KEY product_id (product_id, product_attribute_id);
 ALTER TABLE `PREFIX_currency` ADD `numeric_iso_code` varchar(3) NOT NULL DEFAULT '0' AFTER `iso_code`;
 ALTER TABLE `PREFIX_currency` ADD `precision` int(2) NOT NULL DEFAULT 6 AFTER `numeric_iso_code`;
 
@@ -16,3 +17,4 @@ CREATE TABLE `PREFIX_currency_lang` (
 /* PHP:ps_1740_copy_data_from_currency_to_currency_lang(); */;
 
 ALTER TABLE `PREFIX_currency` DROP `name`;
+

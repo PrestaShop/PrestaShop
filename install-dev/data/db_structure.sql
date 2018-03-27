@@ -1299,7 +1299,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `original_wholesale_price` DECIMAL(20, 6) NOT NULL DEFAULT '0.000000',
   PRIMARY KEY (`id_order_detail`),
   KEY `order_detail_order` (`id_order`),
-  KEY `product_id` (`product_id`),
+  KEY `product_id` (`product_id`, `product_attribute_id`),
   KEY `product_attribute_id` (`product_attribute_id`),
   KEY `id_tax_rules_group` (`id_tax_rules_group`),
   KEY `id_order_id_order_detail` (`id_order`, `id_order_detail`)
