@@ -39,6 +39,7 @@ class CustomerFormCore extends AbstractForm
 
     private $customerPersister;
     private $guest_allowed;
+    private $passwordRequired = true;
 
     public function __construct(
         Smarty $smarty,
@@ -64,6 +65,13 @@ class CustomerFormCore extends AbstractForm
         $this->formatter->setPasswordRequired(!$guest_allowed);
         $this->guest_allowed = $guest_allowed;
 
+        return $this;
+    }
+
+    public function setPasswordRequired($passwordRequired)
+    {
+        $this->passwordRequired = $passwordRequired;
+        
         return $this;
     }
 
@@ -184,7 +192,8 @@ class CustomerFormCore extends AbstractForm
             $ok = $this->customerPersister->save(
                 $this->getCustomer(),
                 $clearTextPassword,
-                $newPassword
+                $newPassword,
+                $this->passwordRequired
             );
 
             if (!$ok) {
