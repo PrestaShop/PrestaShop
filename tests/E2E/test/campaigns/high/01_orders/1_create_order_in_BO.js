@@ -27,6 +27,13 @@ scenario('Create order in the Back Office', () => {
       test('should open the browser', () => client.open());
       test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
     }, 'order');
+    scenario('Close the onboarding modal if exist ', client => {
+      test('should close the onboarding modal if exist', () => {
+        return promise
+          .then(() => client.isVisible(OnBoarding.welcome_modal))
+          .then(() => client.closeBoarding(OnBoarding.popup_close_button))
+      });
+    }, 'order');
     common_scenarios.createProduct(AddProductPage, productData);
     scenario('Logout from the Back Office', client => {
       test('should logout successfully from the Back Office', () => client.signOutBO());
@@ -36,14 +43,6 @@ scenario('Create order in the Back Office', () => {
   scenario('Open the browser and connect to the BO', client => {
     test('should open the browser', () => client.open());
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  }, 'order');
-
-  scenario('Close the onboarding modal if exist ', client => {
-    test('should close the onboarding modal if exist', () => {
-      return promise
-        .then(() => client.isVisible(OnBoarding.welcome_modal))
-        .then(() => client.closeBoarding(OnBoarding.popup_close_button))
-    });
   }, 'order');
 
   orderScenarios.createOrderBO(OrderPage, CreateOrder, productData);

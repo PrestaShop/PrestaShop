@@ -18,12 +18,12 @@ class Category extends CommonClient {
             if (alert) {
                 return this.client
                     .waitForExistAndClick(groupActionSelector)
-                    .waitForExistAndClick(actionSelector)
+                    .waitForVisibleAndClick(actionSelector)
                     .alertAccept()
             } else {
                 return this.client
                     .waitForExistAndClick(groupActionSelector)
-                    .waitForExistAndClick(actionSelector)
+                    .waitForVisibleAndClick(actionSelector)
             }
         } else {
             return this.client
