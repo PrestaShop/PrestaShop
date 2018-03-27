@@ -1887,7 +1887,7 @@ class CartCore extends ObjectModel
 
 
     /**
-     * get the cart calculator and process it
+     * get the populated cart calculator
      *
      * @param array $products list of products to calculate on
      * @param array $cartRules list of cart rules to apply
