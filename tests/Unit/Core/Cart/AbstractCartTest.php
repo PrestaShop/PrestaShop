@@ -33,6 +33,7 @@ use Configuration;
 use Context;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Product;
+use Pack;
 use StockAvailable;
 
 /**
@@ -162,7 +163,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
                 && $productFixture['is_pack'] === true
             ) {
                 foreach ($productFixture['pack_items'] as $packItem) {
-                    \Pack::addItem(
+                    Pack::addItem(
                         $product->id,
                         $this->products[$packItem['id_product_fixture']]->id,
                         $packItem['quantity']
@@ -179,7 +180,7 @@ abstract class AbstractCartTest extends IntegrationTestCase
         }
 
         // Fix issue pack cache is set when adding products.
-        \Pack::resetStaticCache();
+        Pack::resetStaticCache();
     }
 
     protected function addProductsToCart($productData)

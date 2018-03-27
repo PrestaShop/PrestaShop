@@ -4677,6 +4677,7 @@ class CartCore extends ObjectModel
     {
         $product_out_of_stock = 0;
         $product_in_stock = 0;
+
         foreach ($this->getProducts() as $product) {
             if (!$exclusive) {
                 if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) < 0
@@ -4688,6 +4689,7 @@ class CartCore extends ObjectModel
                     && (!$ignore_virtual || !$product['is_virtual'])) {
                     $product_out_of_stock++;
                 }
+
                 if ((int)$product['quantity_available'] > 0
                     && (!$ignore_virtual || !$product['is_virtual'])) {
                     $product_in_stock++;
@@ -4698,6 +4700,7 @@ class CartCore extends ObjectModel
                 }
             }
         }
+
         return true;
     }
 
