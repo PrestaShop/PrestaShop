@@ -283,7 +283,7 @@ class FeatureCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        return Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
+        return (bool) Configuration::get('PS_FEATURE_FEATURE_ACTIVE');
     }
 
     /**

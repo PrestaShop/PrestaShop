@@ -245,7 +245,7 @@ class GroupCore extends ObjectModel
     public static function isFeatureActive()
     {
         if (self::$ps_group_feature_active === null) {
-            self::$ps_group_feature_active = Configuration::get('PS_GROUP_FEATURE_ACTIVE');
+            self::$ps_group_feature_active = (bool) Configuration::get('PS_GROUP_FEATURE_ACTIVE');
         }
         return self::$ps_group_feature_active;
     }

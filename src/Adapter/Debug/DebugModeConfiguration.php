@@ -65,8 +65,8 @@ class DebugModeConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'disable_non_native_modules' => $this->configuration->get('PS_DISABLE_NON_NATIVE_MODULE'),
-            'disable_overrides' => $this->configuration->get('PS_DISABLE_OVERRIDES'),
+            'disable_non_native_modules' => $this->configuration->getBoolean('PS_DISABLE_NON_NATIVE_MODULE'),
+            'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
         );
     }
