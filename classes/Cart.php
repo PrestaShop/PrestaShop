@@ -482,9 +482,9 @@ class CartCore extends ObjectModel
             CartRule::autoAddToCart($virtual_context);
         }
 
-        $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter.'-'.($withAutomaticCartRules ? '1' : '0');
+        $cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter;
         if (!Cache::isStored($cache_key)) {
-            $activatedCartRulesRows = Db::getInstance()->executeS(
+            $result = Db::getInstance()->executeS(
                 'SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
                 FROM `'._DB_PREFIX_.'cart_cart_rule` cd
                 LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
@@ -498,32 +498,14 @@ class CartCore extends ObjectModel
                 '.($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
                 .' ORDER by cr.priority ASC'
             );
-            $result = $activatedCartRulesRows;
-            if ($withAutomaticCartRules) {
-                $genericSql           = 'SELECT cr.*, crl.`id_lang`, crl.`name`, ' . (int) $this->id . ' AS `id_cart`
-                FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-                LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
-                    cr.`id_cart_rule` = crl.`id_cart_rule`
-                    AND crl.id_lang = ' . (int) $this->id_lang . '
-                )
-                WHERE `code` = "" AND `active` = 1
-                ' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
-                ' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
-                ' . ($filter == CartRule::FILTER_ACTION_REDUCTION
-                        ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-                                        . ' ORDER by cr.priority ASC';
-                $genericCartRulesRows = Db::getInstance()->executeS($genericSql);
-                foreach ($genericCartRulesRows as $genericCartRulesRow) {
-                    $cartRule = new CartRule($genericCartRulesRow['id_cart_rule'], (int) $this->id_lang);
-                    if ($cartRule->checkValidity(\Context::getContext(), false, false)) {
-                        $result[] = $genericCartRulesRow;
-                    }
-                }
-            }
             Cache::store($cache_key, $result);
         } else {
             $result = Cache::retrieve($cache_key);
         }
+
+        // Define virtual context to prevent case where the cart is not the in the global context
+        $virtual_context = Context::getContext()->cloneContext();
+        $virtual_context->cart = $this;
 
         foreach ($result as &$row) {
             $row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
