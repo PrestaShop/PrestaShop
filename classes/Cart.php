@@ -478,7 +478,7 @@ class CartCore extends ObjectModel
         if (!CartRule::isFeatureActive() || !$this->id) {
             return array();
         }
-        if( $autoAdd) {
+        if ($autoAdd) {
             CartRule::autoAddToCart($virtual_context);
         }
 
@@ -1841,8 +1841,11 @@ class CartCore extends ObjectModel
 
 
         // CART CALCULATION
-
-        $calculator = $this->newCalculator($products, $this->getCartRules(), $id_carrier);
+        $cartRules = array();
+        if ($type != Cart::ONLY_PRODUCTS) {
+            $cartRules = $this->getCartRules();
+        }
+        $calculator = $this->newCalculator($products, $cartRules, $id_carrier);
         $computePrecision = $this->configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
         switch ($type) {
             case Cart::ONLY_SHIPPING:
