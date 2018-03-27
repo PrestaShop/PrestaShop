@@ -63,6 +63,9 @@ class OrderPresenter implements PresenterInterface
     /* @var TaxConfiguration */
     private $taxConfiguration;
 
+    /* @var bool */
+    private $skipProductDetails = false;
+
     public function __construct()
     {
         $this->cartPresenter = new CartPresenter();
@@ -73,9 +76,28 @@ class OrderPresenter implements PresenterInterface
     }
 
     /**
+     * Set if we need to skip product details from the results
+     *
+     * @param $value
+     */
+    public function setSkipProductDetails($value)
+    {
+        $this->skipProductDetails = (bool) $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSkipProductDetails()
+    {
+        return $this->skipProductDetails;
+    }
+
+    /**
      * @param Order $order
      *
      * @return array
+     * @throws \Exception
      */
     public function present($order)
     {
@@ -83,25 +105,37 @@ class OrderPresenter implements PresenterInterface
             throw new \Exception('OrderPresenter can only present instance of Order');
         }
 
-        $products = $this->getProducts($order);
-        $amounts = $this->getAmounts($order);
+        $amounts = $this->getAmounts($order, !$this->skipProductDetails);
 
-        return array(
-            'products' => $products,
-            'products_count' => count($products),
+        $result = array(
             'totals' => $amounts['totals'],
-            'subtotals' => $amounts['subtotals'],
-            'details' => $this->getDetails($order),
             'history' => $this->getHistory($order),
-            'messages' => $this->getMessages($order),
-            'carrier' => $this->getCarrier($order),
-            'addresses' => $this->getAddresses($order),
-            'follow_up' => $this->getFollowUp($order),
-            'shipping' => $this->getShipping($order),
             'id_address_delivery' => $order->id_address_delivery,
             'id_address_invoice' => $order->id_address_invoice,
-            'labels' => $this->getLabels(),
         );
+
+        if (!$this->skipProductDetails) {
+            $productsOrder = $this->getProducts($order);
+
+            $result += array(
+                'messages' => $this->getMessages($order),
+                'follow_up' => $this->getFollowUp($order),
+                'details' => $this->getDetails($order, true),
+                'subtotals' => $amounts['subtotals'],
+                'products' => $productsOrder,
+                'products_count' => count($productsOrder),
+                'addresses' => $this->getAddresses($order),
+                'carrier' => $this->getCarrier($order),
+                'labels' => $this->getLabels(),
+            );
+
+            // backward compat
+            $result['shipping'] = $result['details']['shipping'];
+        } else {
+            $result['details'] = $this->getDetails($order, false);
+        }
+
+        return $result;
     }
 
     /**
@@ -158,9 +192,8 @@ class OrderPresenter implements PresenterInterface
      *
      * @return array
      */
-    private function getAmounts(Order $order)
+    private function getSubTotal(Order $order)
     {
-        $amounts = array();
         $subtotals = array();
 
         $total_products = ($this->includeTaxes()) ? $order->total_products_wt : $order->total_products;
@@ -222,7 +255,21 @@ class OrderPresenter implements PresenterInterface
             );
         }
 
-        $amounts['subtotals'] = $subtotals;
+        return $subtotals;
+    }
+
+    /**
+     * @param Order $order
+     * @param bool  $withSubTotal
+     *
+     * @return array
+     */
+    private function getAmounts(Order $order, $withSubTotal = true)
+    {
+        $amounts = array();
+        if ($withSubTotal) {
+            $amounts['subtotals'] = $this->getSubTotal($order);
+        }
 
         $amounts['totals'] = array();
         $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
@@ -245,30 +292,36 @@ class OrderPresenter implements PresenterInterface
 
     /**
      * @param Order $order
+     * @param bool  $getExtraInfos
      *
      * @return array
      */
-    private function getDetails(Order $order)
+    private function getDetails(Order $order, $getExtraInfos = true)
     {
         $context = Context::getContext();
-        $cart = new Cart($order->id_cart);
 
-        return array(
+        $result = array(
             'id' => $order->id,
             'reference' => $order->reference,
             'order_date' => Tools::displayDate($order->date_add, null, false),
-            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order='.$order->id),
-            'reorder_url' => HistoryController::getUrlToReorder((int) $order->id, $context),
+            'details_url' => $context->link->getPageLink('order-detail', true, null, 'id_order=' . $order->id),
+            'reorder_url' => HistoryController::getUrlToReorder((int)$order->id, $context),
             'invoice_url' => HistoryController::getUrlToInvoice($order, $context),
             'gift_message' => nl2br($order->gift_message),
-            'is_returnable' => (int) $order->isReturnable(),
-            'is_virtual' => $cart->isVirtualCart(),
+            'is_returnable' => (int)$order->isReturnable(),
             'payment' => $order->payment,
             'module' => $order->module,
-            'recyclable' => (bool) $order->recyclable,
-            'shipping' => $this->getShipping($order),
+            'recyclable' => (bool)$order->recyclable,
             'is_valid' => $order->valid,
         );
+
+        if ($getExtraInfos) {
+            $cart = new Cart($order->id_cart);
+            $result['shipping'] = $this->getShipping($order);
+            $result['is_virtual'] = $cart->isVirtualCart();
+        }
+
+        return $result;
     }
 
     /**
