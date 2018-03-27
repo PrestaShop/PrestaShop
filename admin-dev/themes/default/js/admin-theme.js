@@ -131,13 +131,11 @@ $(document).ready(function() {
       $(this).toggleClass('icon-rotate-90');
 
       if ($(this).hasClass('icon-rotate-90')) {
-        $(this).css('margin-left', '5px');
         $('.page-head .page-title').css('padding-left', '70px');
         $('.page-head .breadcrumb').css('left', '70px');
         $('.page-head .page-subtitle').css('left', '70px');
 
       } else {
-        $(this).css('margin-left', '');
         $('.page-head .page-title').css('padding-left', '230px');
         $('.page-head .breadcrumb').css('left', '230px');
         $('.page-head .page-subtitle').css('left', '230px');
@@ -156,7 +154,6 @@ $(document).ready(function() {
 
     if ($('body').hasClass('page-sidebar-closed')) {
       menuCollapse.addClass('icon-rotate-90');
-      menuCollapse.css('margin-left', '5px');
       $('.page-head .page-title').css('padding-left', '70px');
       $('.page-head .breadcrumb').css('left', '70px');
       $('.page-head .page-subtitle').css('left', '70px');
