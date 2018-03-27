@@ -27,11 +27,16 @@
 @import "components/datepicker";
 @import "components/help_box";
 @import "components/ps_dropdown";
+@import "components/ps_number";
+@import "components/ps_radio";
+@import "components/ps_spinner";
+@import "components/ps_tree";
 
 // Pages specifics SCSS files
 @import "pages/product_page";
 @import "pages/products_catalog";
 @import "pages/translation_page";
+@import "pages/stock_page";
 
 // Main Layout
 @import "pages/modules";
@@ -81,6 +86,17 @@ span.twitter-typeahead {
   width: 100% !important;
   input.tt-input {
     width: 100% !important;
+  }
+}
+
+// text buttons
+.btn.btn-text {
+  cursor: pointer;
+  padding: 0;
+  background: transparent;
+
+  &:focus {
+    box-shadow: none;
   }
 }
 

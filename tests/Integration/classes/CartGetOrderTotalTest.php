@@ -40,7 +40,7 @@ use Currency;
 use Db;
 use Group;
 use Order;
-use Tests\PrestaShopBundle\Utils\Database;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 use Product;
 use Tools;
 use Tax;

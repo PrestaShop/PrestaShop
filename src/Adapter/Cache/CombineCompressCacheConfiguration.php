@@ -97,11 +97,10 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
         $errors = array();
 
         if ($this->validateConfiguration($configuration)) {
+            $this->updateCachesVersionsIfNeeded($configuration);
             if ($configuration['smart_cache_css'] || $configuration['smart_cache_js']) {
                 // Manage JS & CSS Smart cache
-                if ($this->createThemeCacheFolder()) {
-                    $this->updateCachesVersionsIfNeeded($configuration);
-                } else {
+                if (!$this->createThemeCacheFolder()) {
                     $errors[] = array(
                         'key' => 'To use Smarty Cache, the directory %directorypath% must be writable.',
                         'domain' => 'Admin.Advparameters.Notification',

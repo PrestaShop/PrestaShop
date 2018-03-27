@@ -1187,8 +1187,8 @@ File: install-dev/classes/controllerHttp.php:378
  Comment: Link to localized video tutorial (if available)</note>
       </trans-unit>
       <trans-unit id="7d9e68227c2ab19838a46b6b4f3e44be">
-        <source>http://addons.prestashop.com/en/388-support</source>
-        <target>http://addons.prestashop.com/en/388-support</target>
+        <source>https://addons.prestashop.com/en/388-support</source>
+        <target>https://addons.prestashop.com/en/388-support</target>
         <note>Context:
 File: install-dev/classes/controllerHttp.php:389
  Comment: Link to support on addons</note>
@@ -1396,58 +1396,58 @@ File: install-dev/controllers/http/database.php:131</note>
         <source>Create file parameters</source>
         <target>Create file parameters</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:296
+File: install-dev/controllers/http/process.php:300
  Comment: We fill the process step used for Ajax queries</note>
       </trans-unit>
       <trans-unit id="0b1b557a66c34f8467d364c5f6ac36a5">
         <source>Create database tables</source>
         <target>Create database tables</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:297</note>
+File: install-dev/controllers/http/process.php:301</note>
       </trans-unit>
       <trans-unit id="22242e741d52f57289ac8b72b9e8c96d">
         <source>Create default shop and languages</source>
         <target>Create default shop and languages</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:298</note>
+File: install-dev/controllers/http/process.php:302</note>
       </trans-unit>
       <trans-unit id="33f1b48d4dac0408b87bb952b6b0799f">
         <source>Populate database tables</source>
         <target>Populate database tables</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:301
+File: install-dev/controllers/http/process.php:305
  Comment: If low memory, create subtasks for populateDatabase step (entity per entity)</note>
       </trans-unit>
       <trans-unit id="039c15f5a6879d4a65fb0f67f8f90f09">
         <source>Configure shop information</source>
         <target>Configure shop information</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:313</note>
+File: install-dev/controllers/http/process.php:317</note>
       </trans-unit>
       <trans-unit id="23de8b7f5abcac68c426e405975411bb">
         <source>Install demonstration data</source>
         <target>Install demonstration data</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:317
+File: install-dev/controllers/http/process.php:321
  Comment: If low memory, create subtasks for installFixtures step (entity per entity)</note>
       </trans-unit>
       <trans-unit id="e819ad111fcd4023d34b419946936265">
         <source>Install modules</source>
         <target>Install modules</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:331</note>
+File: install-dev/controllers/http/process.php:335</note>
       </trans-unit>
       <trans-unit id="fe931ab87bd95a63a886c40e311ab838">
         <source>Install Addons modules</source>
         <target>Install Addons modules</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:339</note>
+File: install-dev/controllers/http/process.php:343</note>
       </trans-unit>
       <trans-unit id="7ad8960b5505289cf368e247f7ac72ef">
         <source>Install theme</source>
         <target>Install theme</target>
         <note>Context:
-File: install-dev/controllers/http/process.php:356</note>
+File: install-dev/controllers/http/process.php:360</note>
       </trans-unit>
     </body>
   </file>

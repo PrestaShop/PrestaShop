@@ -81,7 +81,7 @@ class AdminExtension extends \Twig_Extension implements \Twig_Extension_GlobalsI
 
         if (null === $tabDataContent) {
             $yamlParser = new Parser();
-            $yamlNavigationPath = __DIR__.'/../Resources/config/admin/navigation.yml';
+            $yamlNavigationPath = __DIR__ . '/../Resources/config/app/navigation.yml';
             $tabConfiguration = $yamlParser->parse(file_get_contents($yamlNavigationPath));
             $explodedControllerInfo = explode('::', $parameterBag->get('_controller'));
             $explodedControllerName = explode('\\', $explodedControllerInfo[0]);

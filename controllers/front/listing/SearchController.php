@@ -58,9 +58,15 @@ class SearchControllerCore extends ProductListingFrontController
                 'search_tag'    => $this->search_tag,
             )
         );
+    }
+
+    public function initContent()
+    {
+        parent::initContent();
 
         $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
     }
+
 
     protected function getProductSearchQuery()
     {

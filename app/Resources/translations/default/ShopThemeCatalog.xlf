@@ -618,16 +618,6 @@ File: themes/classic/modules/ps_brandlist/views/templates/_partials/brand_form.t
       </trans-unit>
     </body>
   </file>
-  <file original="themes/classic/modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="8e41eae149ff3fa38cc9c4fde945f2c3">
-        <source>No brand</source>
-        <target>No brand</target>
-        <note>Context:
-File: themes/classic/modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl:37</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="modules/ps_productinfo/views/templates/hook/ps_productinfo.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="035749e4c50392a661c0f1b220ae0516">
@@ -731,16 +721,6 @@ File: themes/classic/modules/ps_rssfeed/views/templates/hook/ps_rssfeed.tpl:36</
         <target>All suppliers</target>
         <note>Context:
 File: themes/classic/modules/ps_supplierlist/views/templates/_partials/supplier_form.tpl:28</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="themes/classic/modules/ps_supplierlist/views/templates/hook/ps_supplierlist.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="496689fbd342f80d30f1f266d060415a">
-        <source>No supplier</source>
-        <target>No supplier</target>
-        <note>Context:
-File: themes/classic/modules/ps_supplierlist/views/templates/hook/ps_supplierlist.tpl:37</note>
       </trans-unit>
     </body>
   </file>

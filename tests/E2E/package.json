@@ -1,0 +1,53 @@
+{
+  "name": "END2END",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "node_modules/selenium-standalone/bin/selenium-standalone install",
+    "start-selenium": "node_modules/selenium-standalone/bin/selenium-standalone start",
+    "high-test": "node_modules/mocha/bin/mocha test/campaigns/high/*",
+    "full-test": "node_modules/mocha/bin/mocha test/campaigns/full/*",
+    "test": "node_modules/mocha/bin/mocha test/campaigns/regular/*",
+    "install-upgrade-test": "node_modules/mocha/bin/mocha test/campaigns/install_upgrade/*",
+    "specific-test": "node_modules/mocha/bin/mocha test/campaigns/$path",
+    "sanity-check": "curl http://localhost:4444/wd/hub/status | json_pp ",
+    "concat-files-report": "cd email_sender && ../node_modules/gulp-cli/bin/gulp.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrestaShop/PrestaShop.git"
+  },
+  "author": "PrestaShop",
+  "license": "OSL-3.0",
+  "bugs": {
+    "url": "https://github.com/PrestaShop/PrestaShop/issues"
+  },
+  "homepage": "https://github.com/PrestaShop/PrestaShop#readme",
+  "dependencies": {
+    "json": "^9.0",
+    "minimist": "^1.2",
+    "mocha": "^2.5",
+    "node-uuid": "^1.4",
+    "parsed-url": "0.0.0",
+    "q": "^1.4",
+    "req": "^0.1",
+    "selenium-standalone": "^6.12.0",
+    "should": "^9.0",
+    "webdriverio": "^4.0",
+    "window": "^1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-string": "^1.4.0",
+    "dateformat": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-cli": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "mochawesome": "^2.3.0",
+    "nodemailer": "^4.0.1",
+    "pdf-to-text": "0.0.6",
+    "pdfkit": "^0.8.3"
+  }
+}

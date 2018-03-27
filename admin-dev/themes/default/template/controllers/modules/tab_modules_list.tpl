@@ -66,5 +66,5 @@
 	</div>
 {/if}
 <div class="alert alert-addons row-margin-top">
-	<a href="http://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}{if $admin_list_from_source}&amp;utm_term={$admin_list_from_source}{/if}" onclick="return !window.open(this.href);">{l s='More modules on addons.prestashop.com'}</a>
+	<a href="https://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}{if $admin_list_from_source}&amp;utm_term={$admin_list_from_source}{/if}" onclick="return !window.open(this.href);">{l s='More modules on addons.prestashop.com'}</a>
 </div>

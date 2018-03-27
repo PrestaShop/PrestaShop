@@ -1257,191 +1257,203 @@ File: admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="60aaf44d4b562252c04db7f98497e9aa">
         <source>Port</source>
         <target>Port</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:48</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:72</note>
       </trans-unit>
       <trans-unit id="74c9e12c3a19cfb79b79faf579934844">
         <source>Add server</source>
         <target>Add server</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:11</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:35</note>
       </trans-unit>
       <trans-unit id="5b8c99dad1893a85076709b2d3c2d2d0">
         <source>IP Address</source>
         <target>IP Address</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:16</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:40</note>
       </trans-unit>
       <trans-unit id="8c489d0946f66d17d73f26366a4bf620">
         <source>Weight</source>
         <target>Weight</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:49</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:73</note>
       </trans-unit>
       <trans-unit id="003744a685f896a2d9764655f67f1a24">
         <source>Add Server</source>
         <target>Add Server</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:35</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:59</note>
       </trans-unit>
       <trans-unit id="dd11871dd215aec96a2eb051116bac00">
         <source>Test Server</source>
         <target>Test Server</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/memcache_servers.html.twig:36</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/memcache_servers.html.twig:60</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="517a8a7dbf1f6e371509817de328e396">
         <source>Customer groups</source>
         <target>Customer groups</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:140</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:140</note>
       </trans-unit>
       <trans-unit id="f8d698aea36fcbead2b9d5359ffca76f">
         <source>Smarty</source>
         <target>Smarty</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:41</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:41</note>
       </trans-unit>
       <trans-unit id="770d85a02ce8841bd4dac97b57c7fa17">
         <source>Template compilation</source>
         <target>Template compilation</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:46</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:46</note>
       </trans-unit>
       <trans-unit id="ab0cf104f39708eabd07b8cb67e149ba">
         <source>Cache</source>
         <target>Cache</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:51</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:51</note>
       </trans-unit>
       <trans-unit id="0d6bf1934cab1de045b189eed03c3d42">
         <source>Should be enabled except for debugging.</source>
         <target>Should be enabled except for debugging.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:51</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:51</note>
       </trans-unit>
       <trans-unit id="1c9e9fdb43035d78fc94dd37c357869c">
         <source>Multi-front optimizations</source>
         <target>Multi-front optimizations</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:56</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:56</note>
       </trans-unit>
       <trans-unit id="bfa7e629b4eaa924530242510a50679e">
         <source>Caching type</source>
         <target>Caching type</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:61</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:61</note>
       </trans-unit>
       <trans-unit id="79c0d6cba080dc90b01c887064c9fc2f">
         <source>Clear cache</source>
         <target>Clear cache</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:66</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:66</note>
       </trans-unit>
       <trans-unit id="ec3028a12402ab7f43962a6f3a667b6e">
         <source>Debug mode</source>
         <target>Debug mode</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:98</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:98</note>
       </trans-unit>
       <trans-unit id="0da6a47faba382116423315f9e61b9e2">
         <source>Disable non PrestaShop modules</source>
         <target>Disable non PrestaShop modules</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:88</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:88</note>
+      </trans-unit>
+      <trans-unit id="edf05af828595f01ae00b209ef0b1e1f">
+        <source>Enable or disable non PrestaShop Modules.</source>
+        <target>Enable or disable non PrestaShop Modules.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:88</note>
       </trans-unit>
       <trans-unit id="03a9e6840847f96325b7184d5f3c2769">
         <source>Disable all overrides</source>
         <target>Disable all overrides</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:93</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:93</note>
+      </trans-unit>
+      <trans-unit id="29826f9f4da3d473c1e4ecf2f6c4ef9f">
+        <source>Enable or disable all classes and controllers overrides.</source>
+        <target>Enable or disable all classes and controllers overrides.</target>
+        <note>Context:
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:93</note>
       </trans-unit>
       <trans-unit id="010a6cb0eccdea35662ad711d443f2ec">
         <source>Optional features</source>
         <target>Optional features</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:117</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:117</note>
       </trans-unit>
       <trans-unit id="f4efdd180586cba038b52f2471e4075d">
         <source>CCC (Combine, Compress and Cache)</source>
         <target>CCC (Combine, Compress and Cache)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:157</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:157</note>
       </trans-unit>
       <trans-unit id="c7ceaefb9d7fd3731ae2a28abad2cb95">
         <source>Smart cache for CSS</source>
         <target>Smart cache for CSS</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:165</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:165</note>
       </trans-unit>
       <trans-unit id="cf00874a93cf1cca317853c54c9f40e3">
         <source>Smart cache for JavaScript</source>
         <target>Smart cache for JavaScript</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:170</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:170</note>
       </trans-unit>
       <trans-unit id="0b388064aa29e8576990d9eb5da8d43e">
         <source>Apache optimization</source>
         <target>Apache optimization</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:175</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:175</note>
       </trans-unit>
       <trans-unit id="3ffcac2b857b421d5418b748b411265b">
         <source>Media servers (use only with CCC)</source>
         <target>Media servers (use only with CCC)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:194</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:194</note>
       </trans-unit>
       <trans-unit id="2d29e91503465ed72170623f37458e32">
         <source>You must enter another domain, or subdomain, in order to use cookieless static content.</source>
         <target>You must enter another domain, or subdomain, in order to use cookieless static content.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:199</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:199</note>
       </trans-unit>
       <trans-unit id="3ed7fddd0f381c4fe4683fc9e856dbcf">
         <source>Media server #1</source>
         <target>Media server #1</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:202</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:202</note>
       </trans-unit>
       <trans-unit id="9dafd449b62301e26c635b976b231b88">
         <source>Media server #2</source>
         <target>Media server #2</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:207</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:207</note>
       </trans-unit>
       <trans-unit id="391e79edab921e1974705a7096055dde">
         <source>Media server #3</source>
         <target>Media server #3</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:212</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:212</note>
       </trans-unit>
       <trans-unit id="02d56cf7754ce16d7ce0193fbca7c90a">
         <source>Caching</source>
         <target>Caching</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:229</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:229</note>
       </trans-unit>
       <trans-unit id="276e3171a63595e207ec292fce891277">
         <source>Use cache</source>
         <target>Use cache</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:234</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:234</note>
       </trans-unit>
       <trans-unit id="aa7ef82bc75491903bfc4838957265be">
         <source>Caching system</source>
         <target>Caching system</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/performance.html.twig:239</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/performance.html.twig:239</note>
       </trans-unit>
     </body>
   </file>
@@ -1593,235 +1605,235 @@ File: src/PrestaShopBundle/Controller/Api/StockController.php:156</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8b9a96e40ebcda35ce12190b41789b64">
         <source>Configuration information</source>
         <target>Configuration information</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:33</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:33</note>
       </trans-unit>
       <trans-unit id="cca793d1dbd9d60b8574a869cf212630">
         <source>This information must be provided when you report an issue on our bug tracker or forum.</source>
         <target>This information must be provided when you report an issue on our bug tracker or forum.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:37</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:37</note>
       </trans-unit>
       <trans-unit id="7d30d49dcf91d103c59496aafc4e3187">
         <source>Server information</source>
         <target>Server information</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:50</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:50</note>
       </trans-unit>
       <trans-unit id="ad41419235c76297eaf568c7656da881">
         <source>Server software version:</source>
         <target>Server software version:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:54</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:54</note>
       </trans-unit>
       <trans-unit id="e2551ec433c9623fed56f27ca2b91a35">
         <source>PHP version:</source>
         <target>PHP version:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:57</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:57</note>
       </trans-unit>
       <trans-unit id="94be595f109f75bfcced2d3bec366128">
         <source>Memory limit:</source>
         <target>Memory limit:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:60</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:60</note>
       </trans-unit>
       <trans-unit id="f3bd61801b2a43ad234af6e6fc917583">
         <source>Max execution time:</source>
         <target>Max execution time:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:63</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:63</note>
       </trans-unit>
       <trans-unit id="3d8a3c1f364b4767769b36eedbe66bb0">
         <source>Upload Max File size:</source>
         <target>Upload Max File size:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:66</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:66</note>
       </trans-unit>
       <trans-unit id="fc0eeb8415aed39a9d3624c7fc2fe47c">
         <source>PageSpeed module for Apache installed (mod_instaweb)</source>
         <target>PageSpeed module for Apache installed (mod_instaweb)</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:69</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:69</note>
       </trans-unit>
       <trans-unit id="2933fa807adda5cc00e163479de35538">
         <source>Database information</source>
         <target>Database information</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:77</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:77</note>
       </trans-unit>
       <trans-unit id="52018f4304c11e4bd288a533b122ccf7">
         <source>MySQL version:</source>
         <target>MySQL version:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:82</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:82</note>
       </trans-unit>
       <trans-unit id="dbaf046be46df36dab10f0a54e94b95e">
         <source>MySQL server:</source>
         <target>MySQL server:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:85</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:85</note>
       </trans-unit>
       <trans-unit id="a720577895f55e35dd9ea15feeadc35e">
         <source>MySQL name:</source>
         <target>MySQL name:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:88</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:88</note>
       </trans-unit>
       <trans-unit id="6088e183841f22493e40f574376240cb">
         <source>MySQL user:</source>
         <target>MySQL user:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:91</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:91</note>
       </trans-unit>
       <trans-unit id="fe453b675e37e3a3d2ca501d7ef3135e">
         <source>Tables prefix:</source>
         <target>Tables prefix:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:94</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:94</note>
       </trans-unit>
       <trans-unit id="b888bbc9841a225c7780b20f2c2db60c">
         <source>MySQL engine:</source>
         <target>MySQL engine:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:97</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:97</note>
       </trans-unit>
       <trans-unit id="9369ef07178c0e2be115d85fab6eb6cb">
         <source>MySQL driver:</source>
         <target>MySQL driver:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:100</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:100</note>
       </trans-unit>
       <trans-unit id="3aea774cdcd8f2c45549f10758a71323">
         <source>Store information</source>
         <target>Store information</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:110</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:110</note>
       </trans-unit>
       <trans-unit id="59681d7f729ee8ffdfbc99b8c935c41b">
         <source>PrestaShop version:</source>
         <target>PrestaShop version:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:115</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:115</note>
       </trans-unit>
       <trans-unit id="76c01eed328aa2411b18f007c77d2eeb">
         <source>Shop URL:</source>
         <target>Shop URL:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:118</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:118</note>
       </trans-unit>
       <trans-unit id="b5b3eed3efd6cfebfea270066a1e1f9b">
         <source>Current theme in use:</source>
         <target>Current theme in use:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:121</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:121</note>
       </trans-unit>
       <trans-unit id="4e37aa2987c0876f7f7b2104927df1a1">
         <source>Mail configuration</source>
         <target>Mail configuration</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:129</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:129</note>
       </trans-unit>
       <trans-unit id="aee55e0ed7a06f68ed5e13f235a8bfd8">
         <source>Mail method:</source>
         <target>Mail method:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:134</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:134</note>
       </trans-unit>
       <trans-unit id="f882852afa750c241cdb951bc52539fd">
         <source>You are using the PHP mail() function.</source>
         <target>You are using the PHP mail() function.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:137</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:137</note>
       </trans-unit>
       <trans-unit id="cffa72aaebae1bd90bbe1b8d827ecb1c">
         <source>You are using your own SMTP parameters.</source>
         <target>You are using your own SMTP parameters.</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:139</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:139</note>
       </trans-unit>
       <trans-unit id="33b3f142e242a624cb69a5f5f689039d">
         <source>SMTP server:</source>
         <target>SMTP server:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:141</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:141</note>
       </trans-unit>
       <trans-unit id="5489d25adfc42d3aadcb90b679405bda">
         <source>SMTP username:</source>
         <target>SMTP username:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:144</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:144</note>
       </trans-unit>
       <trans-unit id="c4e9522d7b3c8c652f7f0333ff436eec">
         <source>Defined</source>
         <target>Defined</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:154</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:154</note>
       </trans-unit>
       <trans-unit id="f8b1369a8e9d90da0cae0b11049309af">
         <source>Not defined</source>
         <target>Not defined</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:156</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:156</note>
       </trans-unit>
       <trans-unit id="037373672dd4a89426144d40f2e8ad91">
         <source>SMTP password:</source>
         <target>SMTP password:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:152</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:152</note>
       </trans-unit>
       <trans-unit id="8a7363b823dce00b3b1b7e62ca1d777d">
         <source>Encryption:</source>
         <target>Encryption:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:160</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:160</note>
       </trans-unit>
       <trans-unit id="599303a627bf19148eedd5fe29112729">
         <source>SMTP port:</source>
         <target>SMTP port:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:163</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:163</note>
       </trans-unit>
       <trans-unit id="8746097684bc64be8b7eff424c4debdb">
         <source>Your information</source>
         <target>Your information</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:172</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:172</note>
       </trans-unit>
       <trans-unit id="11eb3e792866d1433dd4ca9d7e49b5ac">
         <source>Your web browser:</source>
         <target>Your web browser:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:177</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:177</note>
       </trans-unit>
       <trans-unit id="e91dd9bbca6e42bb85c0f2d94aaee995">
         <source>Check your configuration</source>
         <target>Check your configuration</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:185</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:185</note>
       </trans-unit>
       <trans-unit id="a3810ddb5a67e550cb3ca9c1cffce800">
         <source>Required parameters:</source>
         <target>Required parameters:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:190</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:190</note>
       </trans-unit>
       <trans-unit id="0297eee5a43818dda6ad1e1b36f08965">
         <source>Optional parameters:</source>
         <target>Optional parameters:</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:207</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:207</note>
       </trans-unit>
       <trans-unit id="d5c0bb5c1df152c6fe45bd07e303cb69">
         <source>List of changed files</source>
         <target>List of changed files</target>
         <note>Context:
-File: src/PrestaShopBundle/Resources/views/Admin/AdvancedParameters/system_information.html.twig:231</note>
+File: src/PrestaShopBundle/Resources/views/Admin/Configure/AdvancedParameters/system_information.html.twig:231</note>
       </trans-unit>
     </body>
   </file>

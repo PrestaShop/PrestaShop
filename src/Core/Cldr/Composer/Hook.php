@@ -35,7 +35,7 @@ use Composer\Script\Event;
 class Hook
 {
     /** @var string */
-    const ZIP_CORE_URL = 'https://i18n.prestashop.com/cldr/core.zip';
+    const ZIP_CORE_URL = 'https://i18n.prestashop.com/cldr/cldr.zip';
 
     /**
      * Triggers CLDR download
@@ -51,11 +51,11 @@ class Hook
         }
         $root_dir = realpath(__DIR__ . '/../../../../');
         $cldrFolder = "$root_dir/translations/cldr";
-        $coreFilePath = "$cldrFolder/core.zip";
+        $cldrFilePath = "$cldrFolder/cldr.zip";
         $zipUrl = self::ZIP_CORE_URL;
 
-        if (!file_exists($coreFilePath)) {
-            $fp = fopen($coreFilePath, "w");
+        if (!file_exists($cldrFilePath)) {
+            $fp = fopen($cldrFilePath, "w");
             $ch = curl_init($zipUrl);
             curl_setopt($ch, CURLOPT_FILE, $fp);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -67,6 +67,8 @@ class Hook
             if (!empty($error)) {
                 throw new \Exception("Failed to download '$zipUrl', error: '$error'.");
             };
+            exec("cd $cldrFolder && unzip -oqq $cldrFilePath -d .. && cd -");
+            unlink($cldrFilePath);
         }
 
         if ($event) {

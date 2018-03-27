@@ -134,7 +134,7 @@ You can discuss about e-commerce, help other merchants and get help, and contrib
 Getting support
 --------
 
-If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-170x-in-development/
+If you need help using PrestaShop 1.7, ask on the forums: https://www.prestashop.com/forums/forum/273-172x-current/
 
 
 Thank you for downloading and using the PrestaShop Open Source e-commerce solution!
@@ -147,8 +147,8 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [6]: CONTRIBUTING.md
 [7]: http://doc.prestashop.com/display/PS16/Contributing+to+PrestaShop
 [8]: https://crowdin.net/project/prestashop-official
-[9]: http://developers.prestashop.com/
-[10]: http://developers.prestashop.com/
+[9]: https://developers.prestashop.com/
+[10]: https://developers.prestashop.com/
 [11]: http://doc.prestashop.com/display/PS17/Getting+Started
 [12]: http://doc.prestashop.com/display/PS17/User+Guide
 [13]: http://doc.prestashop.com/display/PS17/Updating+PrestaShop

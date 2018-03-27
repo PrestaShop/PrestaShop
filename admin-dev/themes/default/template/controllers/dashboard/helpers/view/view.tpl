@@ -90,7 +90,7 @@
 		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
-				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
+				<a href="https://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">
 					<i class="icon-plus"></i> {l s='Add more dashboard modules' d='Admin.Dashboard.Feature'}
 				</a>
 			</div>
@@ -115,7 +115,7 @@
 						<dd>{l s="Connect with the PrestaShop community" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Addons" d='Admin.Dashboard.Feature'}</a></dt>
+						<dt><a href="https://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="PrestaShop Addons" d='Admin.Dashboard.Feature'}</a></dt>
 						<dd>{l s="Enhance your store with templates & modules" d='Admin.Dashboard.Feature'}</dd>
 					</dl>
 					<dl>

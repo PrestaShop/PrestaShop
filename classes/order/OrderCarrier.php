@@ -108,13 +108,14 @@ class OrderCarrierCore extends ObjectModel
 
             //try to get the first image for the purchased combination
             $img = $prod_obj->getCombinationImages($order->id_lang);
+            $link_rewrite = $prod_obj->link_rewrite[$order->id_lang];
             $combination_img = $img[$product['product_attribute_id']][0]['id_image'];
             if ($combination_img != null) {
-                $img_url = $link->getImageLink($prod_obj->link_rewrite, $combination_img, 'large_default');
+                $img_url = $link->getImageLink($link_rewrite, $combination_img, 'large_default');
             } else {
                 //if there is no combination image, then get the product cover instead
                 $img = $prod_obj->getCover($prod_obj->id);
-                $img_url = $link->getImageLink($prod_obj->link_rewrite, $img['id_image']);
+                $img_url = $link->getImageLink($link_rewrite, $img['id_image']);
             }
             $prod_url = $prod_obj->getLink();
 

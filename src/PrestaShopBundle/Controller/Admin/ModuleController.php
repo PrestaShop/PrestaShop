@@ -595,7 +595,7 @@ class ModuleController extends FrameworkBundleAdminController
                 ),
             );
 
-            $violations = $this->get('validator')->validateValue($file_uploaded, $constraints);
+            $violations = $this->get('validator')->validate($file_uploaded, $constraints);
             if (0 !== count($violations)) {
                 $violationsMessages = '';
                 foreach ($violations as $violation) {
