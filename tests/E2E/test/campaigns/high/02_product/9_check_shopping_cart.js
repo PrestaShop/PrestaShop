@@ -8,7 +8,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const common_scenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
 
-var productData = {
+let productData = {
   name: 'CSC',
   quantity: "50",
   price: '10',
@@ -92,7 +92,13 @@ scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity 
       test('should check that the proceed to checkout button is disabled when the product quantity is equal to "-1"', () => {
         return promise
           .then(() => client.isExisting(CheckoutOrderPage.alert))
-          .then(() => client.checkAttributeValue(CheckoutOrderPage.proceed_to_checkout_button, 'class', 'disabled', 'contain'))
+          .then(() => client.checkAttributeValue(CheckoutOrderPage.proceed_to_checkout_button, 'class', 'disabled', 'contain'));
+      });
+      test('should go back to the Back Office and reset the filter', () => {
+        return promise
+          .then(() => client.switchWindow(0))
+          .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
+          .then(() => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
       });
     }, 'product/product');
   }, 'product/product');

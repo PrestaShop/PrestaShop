@@ -19,8 +19,8 @@ class Product extends CommonClient {
       .then((text) => global.productIdElement[1] = text)
       .then(() => this.client.getText(ProductList.third_product_id))
       .then((text) => global.productIdElement[2] = text)
-      .then(() => expect(Number(global.productIdElement[0])).to.be.below(Number(global.productIdElement[1])))
-      .then(() => expect(Number(global.productIdElement[1])).to.be.below(Number(global.productIdElement[2])));
+      .then(() => expect(Number(global.productIdElement[1])).to.be.below(Number(global.productIdElement[0])))
+      .then(() => expect(Number(global.productIdElement[2])).to.be.below(Number(global.productIdElement[1])));
   }
 
   checkCategoryRadioButton(categoryValue) {
