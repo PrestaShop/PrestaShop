@@ -224,7 +224,9 @@ class InstallControllerHttp
                 break;
             }
 
-            if (!$check_step->getControllerInstance()->validate()) {
+            // no need to validate several time the system step
+            if (!(($check_step->getControllerInstance()) instanceof InstallControllerHttpSystem)
+                && !$check_step->getControllerInstance()->validate()) {
                 self::$steps->setOffset($key);
                 $session->step = $session->last_step = self::$steps->current()->getName();
                 break;
