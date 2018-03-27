@@ -25,9 +25,11 @@
 <template>
   <div class="input-group date">
     <input type='text' class="form-control" />
-    <span class="input-group-addon">
-      <i class="material-icons">event</i>
-    </span>
+    <div class="input-group-append">
+      <span class="input-group-text">
+        <i class="material-icons">event</i>
+      </span>
+    </div>
   </div>
 </template>
 

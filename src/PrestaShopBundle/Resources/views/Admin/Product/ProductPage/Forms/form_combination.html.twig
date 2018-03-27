@@ -28,7 +28,9 @@
     <td>{{ form.vars.value.name }}</td>
     <td class="attribute-price">
         <div class="input-group">
-            <span class="input-group-addon">{{ default_currency }}</span>
+            <div class="input-group-prepend">
+                <span class="input-group-text">{{ default_currency }}</span>
+            </div>
             <input type="text" class="attribute_priceTE form-control text-sm-right" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
@@ -178,7 +180,9 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">{{ form.attribute_weight.vars.label }}</label>
                             <div class="input-group">
-                                <span class="input-group-addon">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                                </div>
                                 {{ form_errors(form.attribute_weight) }}
                                 {{ form_widget(form.attribute_weight) }}
                             </div>

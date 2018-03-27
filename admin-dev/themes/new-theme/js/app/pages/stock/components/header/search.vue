@@ -30,12 +30,12 @@
           <label>{{trans('product_search')}}</label>
           <div class="input-group">
             <PSTags ref="psTags" :tags="tags" @tagChange="onSearch" />
-            <span class="input-group-btn">
+            <div class="input-group-append">
               <PSButton @click="onClick" class="search-button" :primary="true">
                 <i class="material-icons">search</i>
                 {{trans('button_search')}}
               </PSButton>
-            </span>
+            </div>
           </div>
         </form>
       </div>
