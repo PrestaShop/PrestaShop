@@ -1864,8 +1864,8 @@ class CartCore extends ObjectModel
                 break;
             case Cart::BOTH_WITHOUT_SHIPPING:
             case Cart::ONLY_PRODUCTS:
-            $calculator->calculateRows();
-            $amount = $calculator->getRowTotal();
+                $calculator->calculateRows();
+                $amount = $calculator->getRowTotal();
                 break;
             case Cart::ONLY_DISCOUNTS:
                 $calculator->processCalculation($computePrecision);
@@ -2066,7 +2066,11 @@ class CartCore extends ObjectModel
     public function getTaxAddressId()
     {
         $taxAddressType = $this->configuration->get('PS_TAX_ADDRESS_TYPE');
-        $addressId = $this->$taxAddressType;
+        if (Validate::isLoadedObject($this) && !empty($taxAddressType)) {
+            $addressId = $this->$taxAddressType;
+        } else {
+            $addressId = $this->id_address_delivery;
+        }
 
         return $addressId;
     }
