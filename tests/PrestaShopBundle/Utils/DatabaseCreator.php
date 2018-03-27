@@ -48,7 +48,7 @@ class DatabaseCreator
         \DbPDOCore::createDatabase(_DB_SERVER_, _DB_USER_, _DB_PASSWD_, _DB_NAME_, false);
         $install->clearDatabase(false);
         $install->installDatabase(true);
-        $process = new Process('php bin/console do:sc:up --env=test --force');
+        $process = new Process('php bin/console prestashop:schema:update-without-foreign --env=test');
         $process->run();
         $install->initializeTestContext();
         $install->installDefaultData('test_shop', false, false, false);

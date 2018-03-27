@@ -1,7 +1,6 @@
 parameters:
     AdapterSecurityAdminClass:                Tests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
     prestashop.security.voter.product.class:  Tests\PrestaShopBundle\Mock\PageVoter
-    database_name:                            test_prestashop
 
 imports:
     - { resource: config_dev.yml }
