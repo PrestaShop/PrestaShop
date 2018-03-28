@@ -27,7 +27,7 @@ class Product extends CommonClient {
     return this.client
       .waitForVisible(AddProductPage.category_radio_button.replace('%VALUE', categoryValue))
       .scroll(0, 1000)
-      .isVisible(AddProductPage.category_radio_button.replace('%VALUE', categoryValue), 60000)
+      .isVisible(AddProductPage.category_radio_button.replace('%VALUE', categoryValue))
       .then((text) => expect(text).to.be.true);
   }
 
@@ -155,18 +155,20 @@ class Product extends CommonClient {
         .then((count) => {
           global.productsNumber = count.match(/[0-9]+/g)[2];
         })
-
     } else {
-      selector = 'product_catalog_list';
-      return this.client
-        .execute(function (selector) {
-          let count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
-          return count;
-        }, selector)
-        .then((count) => {
-          global.productsNumber = count.value;
-        })
+      this.getProductPageNumber('product_catalog_list')
     }
+  }
+
+  getProductPageNumber(selector) {
+    return this.client
+      .execute(function (selector) {
+        let count = document.getElementById(selector).getElementsByTagName("tbody")[0].children.length;
+        return count;
+      }, selector)
+      .then((count) => {
+        global.productsPageNumber = count.value;
+      })
   }
 
   /**
@@ -220,7 +222,7 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             sort_mode === 'ASC' ? this.sortByAsc(type) : this.sortByDesc(type);
-          }, 1000 * global.productsNumber)
+          }, 1000 * global.productsPageNumber)
       })
   }
 
@@ -235,7 +237,7 @@ class Product extends CommonClient {
         this.client
           .waitUntil(function () {
             expect(productsTable).to.deep.equal(productsSortedTable);
-          }, 1000 * global.productsNumber)
+          }, 1000 * global.productsPageNumber)
       })
   }
 

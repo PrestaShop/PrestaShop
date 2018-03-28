@@ -10,7 +10,7 @@ scenario('Check the sort of products in the Back Office', client => {
   test('should go to "Catalog" page', () => {
     return promise
       .then(() => client.waitForExistAndClick(AddProductPage.products_subtab, 2000))
-      .then(() => client.getProductsNumber(ProductList.pagination_products));
+      .then(() => client.getProductPageNumber('product_catalog_list'));
   });
 
   common_scenarios.sortProduct(ProductList.product_id, 'id_product');

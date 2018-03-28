@@ -193,7 +193,6 @@ scenario('Check the product creation in the Back Office', client => {
   test('should reset filter', () => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
 }, 'product/check_product', true);
 
-
 scenario('Check the product with combination in the Front Office', () => {
   scenario('Login in the Front Office', client => {
     test('should open the browser', () => client.open());
