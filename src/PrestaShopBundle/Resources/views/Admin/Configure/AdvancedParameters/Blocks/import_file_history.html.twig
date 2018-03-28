@@ -23,13 +23,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-<div class="card">
+<div class="card d-none js-files-history-block">
     <div class="card-header">
         {{ 'History of uploaded files'|trans({}, 'Admin.Advparameters.Feature') }}
         <span class="badge badge-primary">{{ uploaded_file_names|length }}</span>
-        <button type="button" class="close" aria-label="Close">
+        <a href="#" class="close js-close-files-history-block-btn" aria-label="Close">
             <span aria-hidden="true">&times;</span>
-        </button>
+        </a>
     </div>
     <div class="card-content">
         <table class="table mb-0">
@@ -51,15 +51,15 @@
                                 <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
                             </button>
                             <div class="dropdown-menu menu-sm">
-                                <a class="dropdown-item" href="#">
+                                <button class="dropdown-item" type="button">
                                     <i class="material-icons">file_download</i>
                                     {{ 'Download'|trans }}
-                                </a>
+                                </button>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">
+                                <button class="dropdown-item" type="button">
                                     <i class="material-icons">delete</i>
                                     {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                                </a>
+                                </button>
                             </div>
                         </div>
                     </td>
