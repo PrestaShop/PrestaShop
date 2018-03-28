@@ -25,6 +25,8 @@
  */
 namespace PrestaShopBundle\Controller\Admin;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+
 /**
  * Admin controller for the Stock pages.
  */
@@ -32,5 +34,11 @@ class StockController extends FrameworkBundleAdminController
 {
     protected $layoutTitle = 'Stock';
 
-    // overview method on FrameworkBundleAdminController for all vue-js app
+    /**
+     * @Template("@PrestaShop/Admin/Stock/overview.html.twig")
+     */
+    public function overviewAction()
+    {
+        return parent::overviewAction();
+    }
 }
