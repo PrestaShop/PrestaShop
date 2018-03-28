@@ -69,15 +69,10 @@ class CurrencyInstalled
      *
      * @return string[]
      */
-    public function getInstalledCurrencyCodes()
+    public function getAvailableCurrencyCodes()
     {
-        $currencies = $this->dataProvider->getCurrencies();
-
-        $extractIsoCodes = function (Currency $currency) {
-            return $currency->iso_code;
-        };
-
-        $currencyIds = array_map($extractIsoCodes, $currencies);
+        $currencies  = $this->dataProvider->getCurrencies();
+        $currencyIds = array_column($currencies, 'iso_code');
 
         return $currencyIds;
     }

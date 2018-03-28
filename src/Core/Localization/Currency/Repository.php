@@ -50,7 +50,6 @@ class Repository implements CurrencyRepositoryInterface
      */
     protected $dataSource;
 
-
     public function __construct(CurrencyDataSourceInterface $dataSource)
     {
         $this->dataSource = $dataSource;
@@ -79,10 +78,28 @@ class Repository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Get all the available currencies (installed + active)
+     *
      * @return CurrencyCollection
+     *  The available currencies
      */
-    public function getInstalledCurrencies()
+    public function getAvailableCurrencies()
     {
-        $currenciesData = $this->dataSource->getInstalledCurrencies(); // TODO
+        $currencies     = new CurrencyCollection();
+        $currenciesData = $this->dataSource->getAvailableCurrenciesData();
+
+        foreach ($currenciesData as $currencyDatum) {
+            $currencies->add(new Currency(
+                $currencyDatum->isActive,
+                $currencyDatum->conversionRate,
+                $currencyDatum->isoCode,
+                $currencyDatum->numericIsoCode,
+                $currencyDatum->symbols,
+                $currencyDatum->precision,
+                $currencyDatum->names
+            ));
+        }
+
+        return $currencies;
     }
 }

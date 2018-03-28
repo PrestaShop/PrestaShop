@@ -24,38 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+namespace Tests\TestCase;
 
-/**
- * Currency data repository interface
- *
- * Describes the behavior of currency DataRepository classes
- */
-interface DataSourceInterface
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tests\Unit\ContextMocker;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+
+class SymfonyIntegrationTestCase extends KernelTestCase
 {
     /**
-     * Get complete currency data by currency code
-     *
-     * @param string $currencyCode
-     *
-     * @return CurrencyData
-     *  The currency data
+     * @var ContextMocker
      */
-    public function getDataByCurrencyCode($currencyCode);
+    protected $contextMocker;
 
     /**
-     * @param $currencyCode
-     *
-     * @return bool
-     *  True if currency is installed
+     * @var ContainerInterface
      */
-    public function isCurrencyAvailable($currencyCode);
+    protected $container;
 
-    /**
-     * Get all the available (installed + active) currencies' data
-     *
-     * @return CurrencyData[]
-     *  The available currencies' data
-     */
-    public function getAvailableCurrenciesData();
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+
+        $this->bootKernel();
+        $this->container = self::$kernel->getContainer();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
+    public static function setUpBeforeClass()
+    {
+        Database::restoreTestDB();
+        require_once(__DIR__ . '/../../config/config.inc.php');
+    }
 }
