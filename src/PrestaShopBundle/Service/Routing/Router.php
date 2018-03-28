@@ -63,7 +63,7 @@ class Router extends BaseRouter
 
     public static function generateTokenizedUrl($url, $token)
     {
-        if (TokenInUrls::isEnabled()) {
+        if (TokenInUrls::isDisabled()) {
             return $url;
         }
         $components = parse_url($url);

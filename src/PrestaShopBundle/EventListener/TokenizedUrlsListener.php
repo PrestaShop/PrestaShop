@@ -71,7 +71,7 @@ class TokenizedUrlsListener
     {
         $request = $event->getRequest();
 
-        if (TokenInUrls::isEnabled()) {
+        if (TokenInUrls::isDisabled()) {
             return;
         }
 

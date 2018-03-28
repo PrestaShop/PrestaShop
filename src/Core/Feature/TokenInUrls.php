@@ -28,18 +28,18 @@
 namespace PrestaShop\PrestaShop\Core\Feature;
 
 /**
- * Defines if token is urls are enabled.
+ * Defines if token in urls are disabled.
  */
 final class TokenInUrls
 {
-    const ENABLED = 'enabled';
-    const ENV_VAR = '_TOKEN_OFF_';
+    const DISABLED = 'disabled';
+    const ENV_VAR = '_TOKEN_';
 
     /**
      * @return bool
      */
-    public static function isEnabled()
+    public static function isDisabled()
     {
-        return getenv(self::ENV_VAR) === self::ENABLED;
+        return getenv(self::ENV_VAR) === self::DISABLED;
     }
 }

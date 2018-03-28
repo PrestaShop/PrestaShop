@@ -682,7 +682,7 @@ class LinkCore
             return '';
         }
 
-        if ($withToken && !TokenInUrls::isEnabled()) {
+        if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
 
