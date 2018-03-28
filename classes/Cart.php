@@ -1839,6 +1839,9 @@ class CartCore extends ObjectModel
             $type = Cart::ONLY_PRODUCTS;
         }
 
+        if (Tax::excludeTaxeOption()) {
+            $withTaxes = false;
+        }
 
         // CART CALCULATION
         $cartRules = array();

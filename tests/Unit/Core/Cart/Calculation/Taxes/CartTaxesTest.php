@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\Core\Cart\Calculation\Taxes;
 
+use Configuration;
 use Tests\Unit\Core\Cart\Calculation\AbstractCartCalculationTest;
 
 class CartTaxesTest extends AbstractCartCalculationTest
@@ -71,6 +72,31 @@ class CartTaxesTest extends AbstractCartCalculationTest
 
         $this->compareCartTotalTaxExcl($expectedTotalTaxExcl);
         $this->compareCartTotalTaxIncl($expectedTotalTaxIncl);
+    }
+
+    /**
+     * @dataProvider cartTaxesProvider
+     */
+    public function testWithoutTaxes(
+        $productData,
+        $expectedTotalTaxExcl,
+        $expectedTotalTaxIncl,
+        $cartRuleData,
+        $addressId
+    ) {
+        $prevConfTax = Configuration::get('PS_TAX');
+        Configuration::set('PS_TAX', false);
+
+        $this->cart->id_address_delivery = $addressId;
+        $this->resetCart();
+        $this->addProductsToCart($productData);
+        $this->addCartRulesToCart($cartRuleData);
+        $this->compareCartTotalTaxExcl($expectedTotalTaxExcl);
+        // tax incl should equal tax excl since tax is deactivated
+        $this->compareCartTotalTaxIncl($expectedTotalTaxExcl);
+
+        Configuration::set('PS_TAX', $prevConfTax);
+
     }
 
     public function cartTaxesProvider()
