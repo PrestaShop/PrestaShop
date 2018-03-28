@@ -44,10 +44,13 @@ interface DataSourceInterface
     public function getDataByCurrencyCode($currencyCode);
 
     /**
+     * Is this currency available ?
+     * (an available currency is not deleted AND is active)
+     *
      * @param $currencyCode
      *
      * @return bool
-     *  True if currency is installed
+     *  True if currency is available
      */
     public function isCurrencyAvailable($currencyCode);
 
