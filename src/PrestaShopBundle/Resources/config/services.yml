@@ -539,6 +539,7 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.admin.product_preferences.data_provider'
+            - '@prestashop.adapter.cache_clearer'
 
     prestashop.admin.product_preferences.data_provider:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'

@@ -40,9 +40,9 @@ class CacheClearer
     public function clearAllCaches()
     {
         $this->clearSymfonyCache();
-        Tools::clearSmartyCache();
+        $this->clearSmartyCache();
         Tools::clearXMLCache();
-        Media::clearCache();
+        $this->clearMediaCache();
         Tools::generateIndex();
     }
 
@@ -52,5 +52,21 @@ class CacheClearer
     public function clearSymfonyCache()
     {
         Tools::clearSf2Cache();
+    }
+
+    /**
+     * Clear media cache only
+     */
+    public function clearMediaCache()
+    {
+        Media::clearCache();
+    }
+
+    /**
+     * Clear smarty cache only
+     */
+    public function clearSmartyCache()
+    {
+        Tools::clearSmartyCache();
     }
 }
