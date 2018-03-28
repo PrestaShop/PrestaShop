@@ -2635,6 +2635,38 @@ exit;
     }
 
     /**
+     * Return the directory list from the given $path
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectories($path)
+    {
+        if (function_exists('glob')) {
+            $directoryList = glob($path.'/*', GLOB_ONLYDIR | GLOB_NOSORT);
+            array_walk($directoryList,
+                function (&$absolutePath, $key) {
+                    $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
+                }
+            );
+
+            return $directoryList;
+        }
+
+        $directoryList = [];
+        $dh = @opendir($path);
+        while (($file = @readdir($dh)) !== false) {
+            if (is_dir($path.DIRECTORY_SEPARATOR.$file) && $file[0] != '.') {
+                $directoryList[] = $file;
+            }
+        }
+        @closedir($dh);
+
+        return $directoryList;
+    }
+
+    /**
      * @deprecated Deprecated since 1.7.0
      * Use json_decode instead
      * jsonDecode convert json string to php array / object
