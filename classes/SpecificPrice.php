@@ -137,7 +137,7 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Flush local cache
      */
-    static public function flushCache()
+    public static function flushCache()
     {
         self::$_specificPriceCache = array();
         self::$_couldHaveSpecificPriceCache = array();
