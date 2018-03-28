@@ -46,4 +46,12 @@ interface RepositoryInterface
      *  The wanted Currency instance
      */
     public function getCurrency($currencyCode);
+
+    /**
+     * Get all the available currencies (installed + active)
+     *
+     * @return CurrencyCollection
+     *  The available currencies
+     */
+    public function getAvailableCurrencies();
 }

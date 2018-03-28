@@ -67,6 +67,14 @@ class Repository implements RepositoryInterface
     protected $currencyRepository;
 
     /**
+     * The current locale code will be used to localize (translate) provided data.
+     * The provided Locale instances' data will be translated in this locale.
+     *
+     * @var string
+     */
+    protected $currentLocaleCode;
+
+    /**
      * Rounding mode to use when formatting numbers
      * Possible values are listed in PrestaShop\Decimal\Operation\Rounding::ROUND_* constants
      *
@@ -117,6 +125,7 @@ class Repository implements RepositoryInterface
     public function __construct(
         CldrLocaleRepository $cldrLocaleRepository,
         CurrencyRepository $currencyRepository,
+        $currentLocaleCode,
         $roundingMode = Rounding::ROUND_HALF_UP,
         $numberingSystem = Locale::NUMBERING_SYSTEM_LATIN,
         $currencyDisplayType = PriceSpecification::CURRENCY_DISPLAY_SYMBOL,
@@ -125,6 +134,7 @@ class Repository implements RepositoryInterface
     ) {
         $this->cldrLocaleRepository = $cldrLocaleRepository;
         $this->currencyRepository   = $currencyRepository;
+        $this->currentLocaleCode    = $currentLocaleCode;
         $this->roundingMode         = $roundingMode;
         $this->numberingSystem      = $numberingSystem;
         $this->currencyDisplayType  = $currencyDisplayType;
@@ -170,7 +180,7 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        return (new SpecificationFactory)->buildNumberSpecification(
+        return (new SpecificationFactory($this->currentLocaleCode))->buildNumberSpecification(
             $cldrLocale,
             $this->maxFractionDigits,
             $this->numberGroupingUsed
@@ -198,12 +208,12 @@ class Repository implements RepositoryInterface
             throw new LocalizationException('CLDR locale not found for locale code "' . $localeCode . '"');
         }
 
-        $currencies = $this->currencyRepository->getInstalledCurrencies();
+        $currencies = $this->currencyRepository->getAvailableCurrencies();
 
         $priceSpecifications = new PriceSpecificationMap();
         foreach ($currencies as $currency) {
             // Build the spec
-            $thisPriceSpecification = (new SpecificationFactory)->buildPriceSpecification(
+            $thisPriceSpecification = (new SpecificationFactory($this->currentLocaleCode))->buildPriceSpecification(
                 $cldrLocale,
                 $currency,
                 $localeCode,

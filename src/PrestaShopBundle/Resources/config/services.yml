@@ -558,7 +558,7 @@ services:
     prestashop.core.localization.cldr.cache.adapter:
         class: Symfony\Component\Cache\Adapter\FilesystemAdapter
         arguments:
-            - 'prestashop_cldr_'
+            - 'CLDR'
             - 0
             - '%kernel.cache_dir%/localization'
         public: true
@@ -568,6 +568,7 @@ services:
         arguments:
             - '@prestashop.core.localization.cldr.localeRepository'
             - '@prestashop.core.localization.currency.repository'
+            - "@=service('translator').getLocale()"
         public: true
 
     prestashop.core.localization.currency.repository:
@@ -612,6 +613,7 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataSource
         arguments:
             - '@prestashop.core.localization.currency.middleware.topLayer'
+            - '@prestashop.core.localization.currency.middleware.installed'
         public: true
 
     prestashop.core.localization.currency.middleware.topLayer: '@prestashop.core.localization.currency.middleware.cache'
@@ -638,4 +640,10 @@ services:
         arguments:
             - '@prestashop.core.localization.cldr.localeRepository'
             - "@=service('translator').getLocale()"
+        public: true
+
+    prestashop.core.localization.currency.middleware.installed:
+        class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
+        arguments:
+            - '@prestashop.adapter.data_provider.currency'
         public: true

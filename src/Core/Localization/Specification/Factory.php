@@ -42,6 +42,18 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 class Factory
 {
     /**
+     * Provided specification instances contain data that must be translated in a given language.
+     * This locale code is the language in which specification data will be localized.
+     *
+     * @var string
+     */
+    protected $currentLocaleCode;
+
+    public function __construct($currentLocaleCode)
+    {
+        $this->currentLocaleCode = $currentLocaleCode;
+    }
+    /**
      * Build a Number specification from a CLDR Locale object
      *
      * @param CldrLocale $cldrLocale
@@ -117,7 +129,7 @@ class Factory
             $this->getPrimaryGroupSize($currencyPattern),
             $this->getSecondaryGroupSize($currencyPattern),
             $currencyDisplayType,
-            $currency->getSymbol($localeCode),
+            $currency->getSymbol($this->currentLocaleCode),
             $currency->getIsoCode()
         );
     }

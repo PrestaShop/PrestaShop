@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled as CurrencyInstalledDataLayer;
+use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled;
 
 /**
  * Localization CurrencyData source
@@ -51,10 +52,12 @@ class CurrencyDataSource implements DataSourceInterface
      * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
      *
      * @param CurrencyDataLayerInterface $topLayer
+     * @param CurrencyInstalled $installedDataLayer
      */
-    public function __construct(CurrencyDataLayerInterface $topLayer)
+    public function __construct(CurrencyDataLayerInterface $topLayer, CurrencyInstalled $installedDataLayer)
     {
-        $this->topLayer = $topLayer;
+        $this->topLayer           = $topLayer;
+        $this->installedDataLayer = $installedDataLayer;
     }
 
     /**
@@ -70,13 +73,25 @@ class CurrencyDataSource implements DataSourceInterface
         return $this->topLayer->read($currencyCode);
     }
 
-    public function isCurrencyInstalled($currencyCode)
+    public function isCurrencyAvailable($currencyCode)
     {
         return $this->installedDataLayer->isInstalled($currencyCode);
     }
 
-    public function getInstalledCurrencies()
+    /**
+     * Get all the available (installed + active) currencies' data
+     *
+     * @return CurrencyData[]
+     *  The available currencies' data
+     */
+    public function getAvailableCurrenciesData()
     {
-        // TODO
+        $currencyCodes  = $this->installedDataLayer->getAvailableCurrencyCodes();
+        $currenciesData = [];
+        foreach ($currencyCodes as $currencyCode) {
+            $currenciesData[] = $this->getDataByCurrencyCode($currencyCode);
+        }
+
+        return $currenciesData;
     }
 }
