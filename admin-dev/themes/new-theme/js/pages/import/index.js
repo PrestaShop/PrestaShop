@@ -25,7 +25,29 @@
 
 const $ = window.$;
 
+class ImportPage {
+  init() {
+    $('.js-from-files-history-btn').on('click', this.showFilesHistory);
+    $('.js-close-files-history-block-btn').on('click', this.closeFilesHistory);
+  }
+
+  /**
+   * Show files history block
+   */
+  showFilesHistory() {
+    $('.js-file-upload-form-group').addClass('d-none');
+    $('.js-files-history-block').removeClass('d-none');
+  }
+
+  closeFilesHistory() {
+    $('.js-file-upload-form-group').removeClass('d-none');
+    $('.js-files-history-block').addClass('d-none');
+  }
+}
+
 $(() => {
+  new ImportPage().init();
+
   const entityCategories = 0;
   const entityProducts = 1;
   const entityCombinations = 2;

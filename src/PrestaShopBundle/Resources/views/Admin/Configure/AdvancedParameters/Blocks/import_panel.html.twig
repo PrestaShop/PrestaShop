@@ -69,12 +69,12 @@
                 {{ form_widget(importForm.csv, {'attr': {'class': 'js-uploaded-file'}}) }}
             </div>
 
-            <div class="form-group">
+            <div class="form-group js-file-upload-form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
                 {{ form_errors(importForm.file) }}
                 {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file'}}) }}
                 <span>{{ 'or'|trans }}</span>
-                <button type="button" class="btn btn-outline-primary btn-sm">
+                <button type="button" class="btn btn-outline-primary btn-sm js-from-files-history-btn">
                     {{ 'Choose from history / FTP'|trans({}, 'Admin.Advparameters.Feature') }}
                 </button>
                 <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
