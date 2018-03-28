@@ -369,7 +369,7 @@ class CombinationCore extends ObjectModel
         static $feature_active = null;
 
         if ($feature_active === null) {
-            $feature_active = Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
+            $feature_active = (bool) Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
         }
         return $feature_active;
     }

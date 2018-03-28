@@ -51,7 +51,7 @@ class MaintenanceConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'enable_shop' => $this->configuration->get('PS_SHOP_ENABLE'),
+            'enable_shop' => $this->configuration->getBoolean('PS_SHOP_ENABLE'),
             'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP'),
             'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT'),
         );

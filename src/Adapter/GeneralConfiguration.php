@@ -48,8 +48,8 @@ class GeneralConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'check_modules_update' => $this->configuration->get('PRESTASTORE_LIVE'),
-            'check_ip_address' => $this->configuration->get('PS_COOKIE_CHECKIP'),
+            'check_modules_update' => $this->configuration->getBoolean('PRESTASTORE_LIVE'),
+            'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
             'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
             'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
         );

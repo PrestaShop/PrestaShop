@@ -83,9 +83,9 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return array(
-            'smart_cache_css' => $this->configuration->get('PS_CSS_THEME_CACHE'),
-            'smart_cache_js' => $this->configuration->get('PS_JS_THEME_CACHE'),
-            'apache_optimization' => $this->configuration->get('PS_HTACCESS_CACHE_CONTROL'),
+            'smart_cache_css' => $this->configuration->getBoolean('PS_CSS_THEME_CACHE'),
+            'smart_cache_js' => $this->configuration->getBoolean('PS_JS_THEME_CACHE'),
+            'apache_optimization' => $this->configuration->getBoolean('PS_HTACCESS_CACHE_CONTROL'),
         );
     }
 
