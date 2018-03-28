@@ -305,3 +305,8 @@ services:
     form.type.common_type:
         abstract: true
 
+    form.type.product_preferences.general:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\GeneralType'
+        parent: 'form.type.translatable.aware'
+        tags:
+            - { name: form.type }
