@@ -82,48 +82,9 @@
                 <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({}, 'Admin.Advparameters.Help') }}</small>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    {{ 'History of uploaded files'|trans({}, 'Admin.Advparameters.Feature') }}
-                    <button type="button" class="close" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="card-content">
-                    <table class="table mb-0">
-                        <tbody>
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <div class="btn-group float-right">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">
-                                            {{ 'Use'|trans({}, 'Admin.Actions') }}
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
-                                                data-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                        >
-                                            <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
-                                        </button>
-                                        <div class="dropdown-menu menu-sm">
-                                            <a class="dropdown-item" href="#">
-                                                <i class="material-icons">file_download</i>
-                                                {{ 'Download'|trans }}
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">
-                                                <i class="material-icons">delete</i>
-                                                {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            {% block import_file_history_block %}
+                {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_file_history.html.twig' %}
+            {% endblock %}
 
             <hr>
 
