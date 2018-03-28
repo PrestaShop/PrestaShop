@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Cldr;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Config\FileLocator;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 class AdminControllerCore extends Controller
 {
@@ -764,6 +765,10 @@ class AdminControllerCore extends Controller
      */
     public function checkToken()
     {
+        if (TokenInUrls::isDisabled()) {
+            return true;
+        }
+
         $token = Tools::getValue('token');
         if (!empty($token) && $token === $this->token) {
             return true;

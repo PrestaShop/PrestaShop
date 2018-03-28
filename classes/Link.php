@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 class LinkCore
 {
@@ -681,7 +682,7 @@ class LinkCore
             return '';
         }
 
-        if ($withToken) {
+        if ($withToken && !TokenInUrls::isDisabled()) {
             $params['token'] = Tools::getAdminTokenLite($controller);
         }
 

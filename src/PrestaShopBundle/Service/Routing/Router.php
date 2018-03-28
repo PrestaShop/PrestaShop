@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Service\Routing;
 use Symfony\Bundle\FrameworkBundle\Routing\Router as BaseRouter;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
+use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 
 /**
  * We extends Symfony Router in order to add a token to each url.
@@ -62,6 +63,9 @@ class Router extends BaseRouter
 
     public static function generateTokenizedUrl($url, $token)
     {
+        if (TokenInUrls::isDisabled()) {
+            return $url;
+        }
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
         $queryParams = array();
