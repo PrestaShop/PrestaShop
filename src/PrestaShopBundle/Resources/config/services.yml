@@ -539,10 +539,14 @@ services:
             arguments:
                 - '@form.factory'
 
-
     # Import
     prestashop.import.file_uploader:
         class: 'PrestaShopBundle\Service\Import\FileUploader'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+
+    prestashop.import.file_finder:
+        class: 'PrestaShopBundle\Service\Import\FileFinder'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
