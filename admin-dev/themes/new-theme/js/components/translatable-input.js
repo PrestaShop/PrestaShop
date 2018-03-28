@@ -22,32 +22,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+const $ = window.$;
+const TranslatableInput = {};
 
-// Plugins CSS
+TranslatableInput.toggleInput = (event) => {
+    const localeItem = $(event.target);
+    const localeInputGroup = localeItem.closest('.js-locale-input-group');
+    const selectedLocale = localeItem.data('locale');
 
-import 'dropzone/dist/min/dropzone.min.css';
+    localeInputGroup.find('.js-locale-btn').text(selectedLocale);
 
-import 'magnific-popup/dist/magnific-popup.css';
+    localeInputGroup.find('input.js-locale-input').addClass('d-none');
+    localeInputGroup.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
+};
 
-// Theme SCSS
+TranslatableInput.init = () => {
+    $('body').on('click', '.js-locale-item', TranslatableInput.toggleInput);
+};
 
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-Dropzone.autoDiscover = false;
-
-import NavBar from './nav_bar.js';
-
-// this needs to be ported into the UI kit
-import './clickable-dropdown';
-
-import './maintenance-page';
-import './product-page/index';
-import './translation-page/index';
-import './product-preferences-page/index';
-
-import Header from './header.js';
-
-new NavBar();
-new Header();
+export default TranslatableInput;

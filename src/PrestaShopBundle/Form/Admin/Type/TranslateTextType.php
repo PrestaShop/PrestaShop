@@ -17,7 +17,7 @@ class TranslateTextType extends AbstractType
             $localeOptions = $options['options'];
             $localeOptions['label'] = $locale['iso_code'];
 
-            $builder->add($locale['id_lang'], $options['type'], $localeOptions);
+            $builder->add($locale['id_lang'], TextType::class, $localeOptions);
         }
     }
 
@@ -25,16 +25,14 @@ class TranslateTextType extends AbstractType
     {
         $view->vars['locales'] = $options['locales'];
         $view->vars['default_locale'] = reset($options['locales']);
-        $view->vars['hide_locales'] = $options['hide_locales'];
+        $view->vars['hide_locales'] = 1 === count($options['locales']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'type' => TextType::class,
             'options' => [],
             'locales' => [],
-            'hide_locales' => true,
         ]);
     }
 

@@ -23,31 +23,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-// Plugins CSS
+import TraslateInput from '../components/translatable-input';
 
-import 'dropzone/dist/min/dropzone.min.css';
+const $ = window.$;
 
-import 'magnific-popup/dist/magnific-popup.css';
+$(() => {
+    // Do not run if we're not on the product preferences page
+    if (!window.location.pathname.match('/configure/shop/product_preferences\\b')) {
+        return;
+    }
 
-// Theme SCSS
-
-import '../scss/theme.scss';
-
-// Theme Javascript
-
-Dropzone.autoDiscover = false;
-
-import NavBar from './nav_bar.js';
-
-// this needs to be ported into the UI kit
-import './clickable-dropdown';
-
-import './maintenance-page';
-import './product-page/index';
-import './translation-page/index';
-import './product-preferences-page/index';
-
-import Header from './header.js';
-
-new NavBar();
-new Header();
+    TraslateInput.init();
+});
