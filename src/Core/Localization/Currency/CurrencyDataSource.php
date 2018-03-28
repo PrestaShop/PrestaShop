@@ -73,9 +73,18 @@ class CurrencyDataSource implements DataSourceInterface
         return $this->topLayer->read($currencyCode);
     }
 
+    /**
+     * Is this currency available ?
+     * (an available currency is not deleted AND is active)
+     *
+     * @param $currencyCode
+     *
+     * @return bool
+     *  True if currency is available
+     */
     public function isCurrencyAvailable($currencyCode)
     {
-        return $this->installedDataLayer->isInstalled($currencyCode);
+        return $this->installedDataLayer->isAvailable($currencyCode);
     }
 
     /**

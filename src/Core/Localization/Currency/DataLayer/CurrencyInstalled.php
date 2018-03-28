@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 /**
  * Installed Currencies data layer
  *
- * Provides currencies installation info
+ * Provides currencies' installation info
  */
 class CurrencyInstalled
 {
@@ -45,15 +45,15 @@ class CurrencyInstalled
     }
 
     /**
-     * Check if a currency is currently installed
+     * Check if a currency is currently available (not deleted + active)
      *
      * @param $currencyCode
      *  The said currency ISO code
      *
      * @return bool
-     *  True if this currency is installed
+     *  True if this currency is available
      */
-    public function isInstalled($currencyCode)
+    public function isAvailable($currencyCode)
     {
         $currency = $this->dataProvider->getCurrencyByIsoCode($currencyCode);
 
@@ -65,7 +65,7 @@ class CurrencyInstalled
     }
 
     /**
-     * Get all installed currencies' ISO codes
+     * Get all available (not deleted + active) currencies' ISO codes
      *
      * @return string[]
      */
