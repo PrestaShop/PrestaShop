@@ -9,6 +9,7 @@ scenario('Search "Contact form Modules"', () => {
   }, 'module');
   scenario('Check that the result of search modules is correct', client => {
     test('should go to "Modules" page', () => client.goToSubtabMenuPage(ModulePage.modules_subtab, ModulePage.modules_subtab));
+    test('should click on "Selection" tab', () => client.waitForExistAndClick(ModulePage.selection_tab));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, "contact form"));
     test('should click on "Search" button', () => {
       return promise

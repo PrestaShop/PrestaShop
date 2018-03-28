@@ -21,8 +21,6 @@ let productData = {
   }
 };
 
-const orderBO = require('../../common_scenarios/stock');
-
 scenario('Check order movement', client => {
   scenario('Login in the Back Office', client => {
     test('should open the browser', () => client.open());

@@ -5,7 +5,7 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 const {CatalogPage} = require('../../../selectors/BO/catalogpage/index');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 
-const common_scenarios = require('../02_product/product');
+const common_scenarios = require('../../common_scenarios/product');
 
 let productData = {
   name: 'DP',

@@ -11,6 +11,7 @@ scenario('Check sort module by "Name"', () => {
 
   scenario('Check the sort module by name ', client => {
     test('should go to "Modules" page', () => client.goToSubtabMenuPage(ModulePage.modules_subtab, ModulePage.modules_subtab));
+    test('should click on "Selection" tab', () => client.waitForExistAndClick(ModulePage.selection_tab));
     test('should set the name of the module in the search input', () => client.waitAndSetValue(ModulePage.module_selection_input, 'contact form'));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.selection_search_button));
     test('should get module number', () => client.getTextInVar(ModulePage.modules_number, "modules_number"));

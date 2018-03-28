@@ -380,8 +380,6 @@ class CommonClient {
       return this.client
         .waitAndSetValue(selector, data)
         .keys('Enter');
-    } else {
-      return this.client.pause(0);
     }
   }
 
@@ -445,6 +443,7 @@ class CommonClient {
         document.getElementById(selector).style.display = 'none';
       }, selector);
   }
+
 }
 
 module.exports = CommonClient;
