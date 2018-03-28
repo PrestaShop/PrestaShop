@@ -162,7 +162,7 @@ class Fees
      */
     public function getInitialWrappingFees()
     {
-        return $this->getInitialWrappingFees();
+        return $this->wrappingFees;
     }
 
     public function subDiscountValueShipping(AmountImmutable $amount)
