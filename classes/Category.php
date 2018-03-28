@@ -87,6 +87,9 @@ class CategoryCore extends ObjectModel
 
     public $groupBox;
 
+    /** @var bool */
+    public $doNotRegenerateNTree = false;
+
     protected static $_links = array();
 
     /**
@@ -147,6 +150,9 @@ class CategoryCore extends ObjectModel
         parent::__construct($idCategory, $idLang, $idShop);
         $this->image_dir = _PS_CAT_IMG_DIR_;
         $this->id_image = ($this->id && file_exists($this->image_dir.(int) $this->id.'.jpg')) ? (int) $this->id : false;
+        if (defined('PS_INSTALLATION_IN_PROGRESS')) {
+            $this->doNotRegenerateNTree = true;
+        }
     }
 
     /**
@@ -193,7 +199,8 @@ class CategoryCore extends ObjectModel
                 $this->addPosition($position, $shop['id_shop']);
             }
         }
-        if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree) {
+
+        if (!$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
         $this->updateGroup($this->groupBox);
@@ -248,7 +255,7 @@ class CategoryCore extends ObjectModel
         }
 
         $ret = parent::update($nullValues);
-        if ($changed && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)) {
+        if ($changed && !$this->doNotRegenerateNTree) {
             $this->cleanPositions((int) $this->id_parent);
             Category::regenerateEntireNtree();
             $this->recalculateLevelDepth($this->id);
@@ -396,7 +403,7 @@ class CategoryCore extends ObjectModel
         }
 
         /* Rebuild the nested tree */
-        if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)) {
+        if (!$this->hasMultishopEntries() && !$this->doNotRegenerateNTree) {
             Category::regenerateEntireNtree();
         }
 
@@ -1441,38 +1448,37 @@ class CategoryCore extends ObjectModel
             $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
         }
         $idShop = $context->shop->id;
-        while (true) {
-            $sql = '
-			SELECT c.*, cl.*
-			FROM `'._DB_PREFIX_.'category` c
+
+        $sqlAppend = 'FROM `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 				ON (c.`id_category` = cl.`id_category`
-				AND `id_lang` = '.(int) $idLang.Shop::addSqlRestrictionOnLang('cl').')';
-            if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP) {
-                $sql .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')';
-            }
-            $sql .= ' WHERE c.`id_category` = '.(int) $idCurrent;
-            if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP) {
-                $sql .= ' AND cs.`id_shop` = '.(int) $context->shop->id;
-            }
-            $rootCategory = Category::getRootCategory();
-            if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP
-                && (!Tools::isSubmit('id_category') || (int) Tools::getValue('id_category') == (int) $rootCategory->id || (int) $rootCategory->id == (int) $context->shop->id_category)) {
-                $sql .= ' AND c.`id_parent` != 0';
-            }
-
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-
-            if ($result) {
-                $categories[] = $result;
-            } elseif (!$categories) {
-                $categories = array();
-            }
-            if (!$result || ($result['id_category'] == $context->shop->id_category)) {
-                return $categories;
-            }
-            $idCurrent = $result['id_parent'];
+                    AND `id_lang` = '.(int) $idLang.Shop::addSqlRestrictionOnLang('cl').')';
+        if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP) {
+            $sqlAppend .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')';
         }
+        if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP) {
+            $sqlAppend .= ' AND cs.`id_shop` = '.(int) $context->shop->id;
+        }
+        $rootCategory = Category::getRootCategory();
+        if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP
+            && (!Tools::isSubmit('id_category') || (int) Tools::getValue('id_category') == (int) $rootCategory->id || (int) $rootCategory->id == (int) $context->shop->id_category)) {
+            $sqlAppend .= ' AND c.`id_parent` != 0';
+        }
+
+        $categories = [];
+
+        $treeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT c.`nleft`, c.`nright`  '.$sqlAppend.' WHERE c.`id_category` = '.(int) $idCurrent);
+        if (!empty($treeInfo)) {
+            $categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                'SELECT c.*, cl.*  '.$sqlAppend.
+                ' WHERE c.`nleft` <= '.(int) $treeInfo['nleft'].
+                ' AND c.`nright` >= '.(int) $treeInfo['nright'].
+                ' AND c.id_category >= '.(int) $context->shop->id_category.
+                ' ORDER BY `nleft` DESC'
+            );
+        }
+
+        return $categories;
     }
 
     /**
@@ -1728,24 +1734,28 @@ class CategoryCore extends ObjectModel
      *
      * @return int Number of categories + 1 having $idCategoryParent as parent
      *
-     * @todo     rename that function to make it understandable (getNewLastPosition for example)
+     * @todo     rename that function to make it understandable (getNextPosition for example)
      */
     public static function getLastPosition($idCategoryParent, $idShop)
     {
-        if ((int) Db::getInstance()->getValue('
-				SELECT COUNT(c.`id_category`)
+        // @TODO, if we remove this query, the position will begin at 1 instead of 0, but is this really a problem?
+        $results = Db::getInstance()->executeS('
+				SELECT 1
 				FROM `'._DB_PREFIX_.'category` c
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
+				 JOIN `'._DB_PREFIX_.'category_shop` cs
 				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')
-				WHERE c.`id_parent` = '.(int) $idCategoryParent) === 1) {
+				WHERE c.`id_parent` = '.(int) $idCategoryParent.' LIMIT 2');
+
+        if (count($results) === 1) {
             return 0;
         } else {
-            return (1 + (int) Db::getInstance()->getValue('
+            $maxPosition = (int) Db::getInstance()->getValue('
 				SELECT MAX(cs.`position`)
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs
 				ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')
-				WHERE c.`id_parent` = '.(int) $idCategoryParent));
+				WHERE c.`id_parent` = '.(int) $idCategoryParent);
+            return (1 + $maxPosition);
         }
     }
 

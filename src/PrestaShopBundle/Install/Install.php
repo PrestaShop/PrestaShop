@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\Cookie;
 use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Adapter\Entity\Cart;
+use PrestaShop\PrestaShop\Adapter\Entity\Category;
 use InstallSession;
 use Language as LanguageLegacy;
 use PrestaShop\PrestaShop\Core\Cldr\Update;
@@ -1095,6 +1096,10 @@ class Install extends AbstractInstall
         // IDS from xmlLoader are stored in order to use them for fixtures
         $this->xml_loader_ids = $xml_loader->getIds();
         unset($xml_loader);
+
+        if ($entity === 'category') {
+            Category::regenerateEntireNtree();
+        }
 
         if ($entity === null) {
             Search::indexation(true);
