@@ -66,6 +66,8 @@ class FileFinder
     /**
      * Get import directory
      *
+     * @todo: fix duplicate in FileUploader
+     *
      * @return string
      */
     protected function getImportDir()
