@@ -128,7 +128,7 @@ class ProductImageController extends FrameworkBundleAdminController
 
         $image = $productAdapter->getImage((int)$idImage);
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'form', $image, array('csrf_protection' => false))
+        $form = $this->container->get('form.factory')->createNamedBuilder('form_image', 'Symfony\Component\Form\Extension\Core\Type\FormType', $image, array('csrf_protection' => false))
             ->add('legend', 'PrestaShopBundle\Form\Admin\Type\TranslateType', array(
                 'type' => 'Symfony\Component\Form\Extension\Core\Type\TextareaType',
                 'options' => array(),
