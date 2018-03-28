@@ -169,3 +169,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\PageConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_stock.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

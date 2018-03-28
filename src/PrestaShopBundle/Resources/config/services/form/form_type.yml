@@ -306,7 +306,13 @@ services:
         abstract: true
 
     form.type.product_preferences.general:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\GeneralType'
-        parent: 'form.type.translatable.aware'
-        tags:
-            - { name: form.type }
+      class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\GeneralType'
+      parent: 'form.type.translatable.aware'
+      tags:
+          - { name: form.type }
+
+    form.type.product_preferences.stock:
+      class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\StockType'
+      parent: 'form.type.translatable.aware'
+      tags:
+          - { name: form.type }

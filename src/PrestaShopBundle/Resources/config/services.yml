@@ -546,3 +546,4 @@ services:
             - '@prestashop.adapter.product_general.configruation'
             - '@prestashop.adapter.product_pagination.configuration'
             - '@prestashop.adapter.product_page.configuration'
+            - '@prestashop.adapter.product_stock.configuration'

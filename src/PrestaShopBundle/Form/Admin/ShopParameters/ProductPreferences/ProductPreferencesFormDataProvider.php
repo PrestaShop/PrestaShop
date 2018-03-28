@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 use PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration;
 use PrestaShop\PrestaShop\Adapter\Product\PageConfiguration;
 use PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration;
+use PrestaShop\PrestaShop\Adapter\Product\StockConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -52,14 +53,21 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
      */
     private $pageConfiguration;
 
+    /**
+     * @var StockConfiguration
+     */
+    private $stockConfiguration;
+
     public function __construct(
         GeneralConfiguration $generalConfiguration,
         PaginationConfiguration $paginationConfiguration,
-        PageConfiguration $pageConfiguration
+        PageConfiguration $pageConfiguration,
+        StockConfiguration $stockConfiguration
     ) {
         $this->generalConfiguration = $generalConfiguration;
         $this->paginationConfiguration = $paginationConfiguration;
         $this->pageConfiguration = $pageConfiguration;
+        $this->stockConfiguration = $stockConfiguration;
     }
 
     /**
@@ -71,6 +79,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
             'general' => $this->generalConfiguration->getConfiguration(),
             'pagination' => $this->paginationConfiguration->getConfiguration(),
             'page' => $this->pageConfiguration->getConfiguration(),
+            'stock' => $this->stockConfiguration->getConfiguration(),
         ];
     }
 
@@ -81,6 +90,7 @@ class ProductPreferencesFormDataProvider implements FormDataProviderInterface
     {
         return $this->generalConfiguration->updateConfiguration($data['general']) +
             $this->paginationConfiguration->updateConfiguration($data['pagination']) +
-            $this->pageConfiguration->updateConfiguration($data['page']);
+            $this->pageConfiguration->updateConfiguration($data['page']) +
+            $this->stockConfiguration->updateConfiguration($data['stock']);
     }
 }
