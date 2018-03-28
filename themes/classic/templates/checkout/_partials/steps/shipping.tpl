@@ -50,22 +50,22 @@
                     </div>
                     <label for="delivery_option_{$carrier.id}" class="col-sm-11 delivery-option-2">
                       <div class="row">
-                        <div class="col-sm-5 col-xs-12">
+                        <div class="col-sm-5 col-12">
                           <div class="row">
                             {if $carrier.logo}
                             <div class="col-xs-3">
                                 <img src="{$carrier.logo}" alt="{$carrier.name}" />
                             </div>
                             {/if}
-                            <div class="{if $carrier.logo}col-xs-9{else}col-xs-12{/if}">
+                            <div class="{if $carrier.logo}col-xs-9{else}col-12{/if}">
                               <span class="h6 carrier-name">{$carrier.name}</span>
                             </div>
                           </div>
                         </div>
-                        <div class="col-sm-4 col-xs-12">
+                        <div class="col-sm-4 col-12">
                           <span class="carrier-delay">{$carrier.delay}</span>
                         </div>
-                        <div class="col-sm-3 col-xs-12">
+                        <div class="col-sm-3 col-12">
                           <span class="carrier-price">{$carrier.price}</span>
                         </div>
                       </div>
