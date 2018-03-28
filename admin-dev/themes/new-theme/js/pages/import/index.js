@@ -35,6 +35,7 @@ class ImportPage {
     $('.js-close-files-history-block-btn').on('click', this.closeFilesHistoryHandler.bind(this));
     $('.js-use-file-btn').on('click', this.useFileFromFilesHistory.bind(this));
     $('.js-change-import-file-btn').on('click', this.changeImportFileHandler.bind(this));
+    $('.js-import-file').on('change', this.uploadFile.bind(this));
   }
 
   changeImportFileHandler() {
@@ -112,17 +113,11 @@ class ImportPage {
   showFileUploadBlock() {
     $('.js-file-upload-form-group').removeClass('d-none');
   }
-}
-
-$(() => {
-  new ImportPage().init();
-
-  $('.js-import-file').on('change', uploadFile);
 
   /**
    * Upload selected import file
    */
-  function uploadFile() {
+  uploadFile() {
     const uplodedFile = $('#file').prop('files')[0];
 
     const data = new FormData(uplodedFile);
@@ -141,10 +136,35 @@ $(() => {
       processData: false,
     }).then(response => {
       let filename = response.file.name;
+
       $('.js-import-file-input').val(filename);
+
+      this.showImportFileAlert(filename);
+      this.hideFileUploadBlock();
+      this.addFileToHistoryTable(filename);
     }).catch(error => {
       //@todo: display error to admin?
       console.log(error);
     });
   }
+
+  /**
+   * Renders new row in files history table
+   *
+   * @param {string} filename
+   */
+  addFileToHistoryTable(filename) {
+    const $table = $('#fileHistoryTable');
+
+    let $template = $table.find('tr:first').clone();
+    $template.removeClass('d-none');
+    $template.find('td:first').text(filename);
+    $template.find('.btn-group').attr('data-file', filename);
+
+    $table.find('tbody').append($template);
+  }
+}
+
+$(() => {
+  new ImportPage().init();
 });
