@@ -30,6 +30,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Admin controller for the International pages.
@@ -45,7 +46,14 @@ class TranslationsController extends FrameworkBundleAdminController
      */
     const controller_name = self::CONTROLLER_NAME;
 
-    // overview method on FrameworkBundleAdminController for all vue-js app
+    /**
+     * @Template("@PrestaShop/Admin/Translations/overview.html.twig")
+     */
+    public function overviewAction()
+    {
+        return parent::overviewAction();
+    }
+
     // redirect to the new translation application
     // before, clean request params
     private function redirectToTranslationApp(Request $request)
