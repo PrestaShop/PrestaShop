@@ -232,7 +232,7 @@ if (isset($_GET['element'])) {
       } else {
         if (msg.lastId > msg.numFiles) {
           // end
-          window.location.reload(true);
+          window.location.href = 'install/';
         } else {
           $("#progressContainer")
             .find(".current")
