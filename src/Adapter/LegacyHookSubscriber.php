@@ -249,10 +249,11 @@ class LegacyHookSubscriber implements EventSubscriberInterface
                         $functionName = 'call_' . $id . '_' . $moduleId;
                         $moduleListeners[] = array($functionName, 2000 - $order);
                     }
-                } else {
-                    $moduleListeners[] = array('call_' . $id . '_0', 2000);
+
+                    if (count($moduleListeners)) {
+                        $listeners[$name] = $moduleListeners;
+                    }
                 }
-                $listeners[$name] = $moduleListeners;
             }
         }
         return $listeners;
@@ -277,17 +278,18 @@ class LegacyHookSubscriber implements EventSubscriberInterface
         $ids = explode('_', $name);
         array_shift($ids); // remove 'call'
 
-        if (count($ids) !== 2) {
+        if (count($ids) != 2) {
             throw new \BadMethodCallException('The call to \''.$name.'\' is not recognized.');
         }
 
-        $moduleId = (int) $ids[1];
-        list($event, $hookName) = $args;
+        $moduleId = $ids[1];
 
+        $hookName = $args[1];
+        $event = $args[0];
         /* @var $event HookEvent */
         $content = Hook::exec($hookName, $event->getHookParameters(), $moduleId, ($event instanceof RenderingHookEvent));
 
-        if ($event instanceof RenderingHookEvent && 0 !== $moduleId) {
+        if ($event instanceof RenderingHookEvent) {
             $event->setContent(array_values($content)[0], array_keys($content)[0]);
         }
     }
