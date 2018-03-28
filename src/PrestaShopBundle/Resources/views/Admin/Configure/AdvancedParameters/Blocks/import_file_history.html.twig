@@ -38,8 +38,8 @@
                 <tr>
                     <td>{{ file_name }}</td>
                     <td>
-                        <div class="btn-group float-right">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                        <div class="btn-group float-right" data-file="{{ file_name }}">
+                            <button type="button" class="btn btn-sm btn-outline-secondary js-use-file-btn">
                                 {{ 'Use'|trans({}, 'Admin.Actions') }}
                             </button>
                             <button type="button"

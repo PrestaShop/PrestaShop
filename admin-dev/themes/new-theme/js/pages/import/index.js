@@ -27,21 +27,73 @@ const $ = window.$;
 
 class ImportPage {
   init() {
-    $('.js-from-files-history-btn').on('click', this.showFilesHistory);
-    $('.js-close-files-history-block-btn').on('click', this.closeFilesHistory);
+    $('.js-from-files-history-btn').on('click', this.showFilesHistoryHandler.bind(this));
+    $('.js-close-files-history-block-btn').on('click', this.closeFilesHistoryHandler.bind(this));
+    $('.js-use-file-btn').on('click', this.useFileFromFilesHistory.bind(this));
+  }
+
+  /**
+   * Show files history event handler
+   */
+  showFilesHistoryHandler() {
+    this.showFilesHistory();
+    this.hideFileUploadBlock();
+  }
+
+  /**
+   * Close files history event handler
+   */
+  closeFilesHistoryHandler() {
+    this.closeFilesHistory();
+    this.showFileUploadBlock();
   }
 
   /**
    * Show files history block
    */
   showFilesHistory() {
-    $('.js-file-upload-form-group').addClass('d-none');
     $('.js-files-history-block').removeClass('d-none');
   }
 
+  /**
+   * Hide files history block
+   */
   closeFilesHistory() {
-    $('.js-file-upload-form-group').removeClass('d-none');
     $('.js-files-history-block').addClass('d-none');
+  }
+
+  /**
+   *  Prefill hidden file input with selected file name from history
+   */
+  useFileFromFilesHistory(event) {
+    let filename = $(event.target).closest('.btn-group').data('file');
+
+    $('.js-import-file-input').val(filename);
+
+    this.showImportFileAlert(filename);
+    this.closeFilesHistory();
+  }
+
+  /**
+   * Show alert with imported file name
+   */
+  showImportFileAlert(filename) {
+    $('.js-import-file-alert').removeClass('d-none');
+    $('.js-import-file').text(filename);
+  }
+
+  /**
+   * Hides import file upload block
+   */
+  hideFileUploadBlock() {
+    $('.js-file-upload-form-group').addClass('d-none');
+  }
+
+  /**
+   * Hides import file upload block
+   */
+  showFileUploadBlock() {
+    $('.js-file-upload-form-group').removeClass('d-none');
   }
 }
 
@@ -194,7 +246,7 @@ $(() => {
       processData: false,
     }).then(response => {
       let filename = response.file.name;
-      $('.js-uploaded-file').val(filename);
+      $('.js-import-file-input').val(filename);
     }).catch(error => {
       //@todo: display error to admin?
       console.log(error);
