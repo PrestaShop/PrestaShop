@@ -32,9 +32,38 @@
         </a>
     </div>
     <div class="card-content">
-        <table class="table mb-0">
+        <table id="fileHistoryTable" class="table mb-0">
             <tbody>
-            {% for file_name in uploaded_file_names %}
+                <tr class="d-none">
+                    <td></td>
+                    <td>
+                        <div class="btn-group float-right" data-file="">
+                            <button type="button" class="btn btn-sm btn-outline-secondary js-use-file-btn">
+                                {{ 'Use'|trans({}, 'Admin.Actions') }}
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-outline-secondary dropdown-toggle dropdown-toggle-split"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                            >
+                                <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+                            </button>
+                            <div class="dropdown-menu menu-sm">
+                                <button class="dropdown-item" type="button">
+                                    <i class="material-icons">file_download</i>
+                                    {{ 'Download'|trans }}
+                                </button>
+                                <div class="dropdown-divider"></div>
+                                <button class="dropdown-item" type="button">
+                                    <i class="material-icons">delete</i>
+                                    {{ 'Delete'|trans({}, 'Admin.Actions') }}
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% for file_name in uploaded_file_names %}
                 <tr>
                     <td>{{ file_name }}</td>
                     <td>
@@ -64,7 +93,7 @@
                         </div>
                     </td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
             </tbody>
         </table>
     </div>
