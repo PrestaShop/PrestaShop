@@ -60,6 +60,9 @@ class ImportController extends FrameworkBundleAdminController
             return $this->fowardRequestToLegacyResponse($request, $data);
         }
 
+        $finder = $this->get('prestashop.import.file_finder');
+        $names = $finder->getImportFileNames();
+
         $params = [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
@@ -70,6 +73,7 @@ class ImportController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
             'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
+            'uploaded_file_names' => $names,
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);

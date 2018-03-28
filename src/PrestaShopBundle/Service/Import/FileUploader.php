@@ -90,7 +90,9 @@ class FileUploader
      */
     protected function getImporDir()
     {
-        return $this->configuration->get('_PS_ADMIN_DIR_').DIRECTORY_SEPARATOR.'import';
+        return ($this->configuration->get('_PS_HOST_MODE_') ?
+                $this->configuration->get('_PS_ROOT_DIR_') :
+                $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import';
     }
 
     /**
@@ -110,7 +112,7 @@ class FileUploader
                 break;
             case UPLOAD_ERR_FORM_SIZE:
                 $message = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification')
-                    .'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
+                    .'<br/><a href="#" >
 					<code>php_value post_max_size 20M</code> '.
                     $this->translator->trans('(click to open "Generators" page)', [], 'Admin.Advparameters.Notification').'</a>';
                 break;

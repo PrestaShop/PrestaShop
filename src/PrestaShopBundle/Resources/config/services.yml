@@ -647,3 +647,8 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+
+    prestashop.import.file_finder:
+        class: 'PrestaShopBundle\Service\Import\FileFinder'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
