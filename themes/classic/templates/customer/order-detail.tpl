@@ -33,7 +33,7 @@
     <div id="order-infos">
       <div class="box">
           <div class="row">
-            <div class="col-xs-{if $order.details.reorder_url}9{else}12{/if}">
+            <div class="col-{if $order.details.reorder_url}9{else}12{/if}">
               <strong>
                 {l
                   s='Order Reference %reference% - placed on %date%'
@@ -43,7 +43,7 @@
               </strong>
             </div>
             {if $order.details.reorder_url}
-              <div class="col-xs-3 text-xs-right">
+              <div class="col-3 text-xs-right">
                 <a href="{$order.details.reorder_url}" class="button-primary">{l s='Reorder' d='Shop.Theme.Actions'}</a>
               </div>
             {/if}
