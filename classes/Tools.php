@@ -2644,24 +2644,50 @@ exit;
     public static function getDirectories($path)
     {
         if (function_exists('glob')) {
-            $directoryList = glob($path.'/*', GLOB_ONLYDIR | GLOB_NOSORT);
-            array_walk($directoryList,
-                function (&$absolutePath, $key) {
-                    $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
-                }
-            );
-
-            return $directoryList;
+            return self::getDirectoriesWithGlob($path);
         }
 
+        return self::getDirectoriesWithReaddir($path);
+    }
+
+    /**
+     * Return the directory list from the given $path using php glob function
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectoriesWithGlob($path)
+    {
+        $directoryList = glob($path.'/*', GLOB_ONLYDIR | GLOB_NOSORT);
+        array_walk($directoryList,
+            function (&$absolutePath, $key) {
+                $absolutePath = substr($absolutePath, strrpos($absolutePath, '/') + 1);
+            }
+        );
+
+        return $directoryList;
+    }
+
+    /**
+     * Return the directory list from the given $path using php readdir function
+     *
+     * @param string $path
+     *
+     * @return array
+     */
+    public static function getDirectoriesWithReaddir($path)
+    {
         $directoryList = [];
         $dh = @opendir($path);
-        while (($file = @readdir($dh)) !== false) {
-            if (is_dir($path.DIRECTORY_SEPARATOR.$file) && $file[0] != '.') {
-                $directoryList[] = $file;
+        if ($dh) {
+            while (($file = @readdir($dh)) !== false) {
+                if (is_dir($path . DIRECTORY_SEPARATOR . $file) && $file[0] != '.') {
+                    $directoryList[] = $file;
+                }
             }
+            @closedir($dh);
         }
-        @closedir($dh);
 
         return $directoryList;
     }

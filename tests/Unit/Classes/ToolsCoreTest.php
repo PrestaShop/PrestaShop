@@ -198,6 +198,32 @@ class ToolsCoreTest extends TestCase
     }
 
     /**
+     *  @dataProvider dirProvider
+     *
+     */
+    public function testGetDirectories($path, $haveFiles)
+    {
+        $res1 = Tools::getDirectoriesWithGlob($path);
+        $res2 = Tools::getDirectoriesWithReaddir($path);
+        sort($res1);
+        sort($res2);
+        $this->assertEquals(
+            $res1,
+            $res2,
+            'Results differ between getDirectoriesWithGlob and getDirectoriesWithReaddir for path '.$path
+        );
+
+        $haveFilesTest = ($res1 !== []);
+
+        $this->assertEquals($haveFiles, $haveFilesTest);
+    }
+
+    public function dirProvider()
+    {
+        return array(array(__DIR__, true), array(__FILE__, false), array('dontexists', false));
+    }
+
+    /**
      * @dataProvider testSpreadAmountExamples
      */
     public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
