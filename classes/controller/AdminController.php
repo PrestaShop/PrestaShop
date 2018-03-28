@@ -765,7 +765,7 @@ class AdminControllerCore extends Controller
      */
     public function checkToken()
     {
-        if (TokenInUrls::isEnabled()) {
+        if (TokenInUrls::isDisabled()) {
             return true;
         }
 
