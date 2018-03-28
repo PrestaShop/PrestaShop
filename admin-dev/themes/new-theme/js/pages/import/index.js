@@ -23,13 +23,23 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+import FormFieldToggle from './FormFieldToggle';
+
 const $ = window.$;
 
 class ImportPage {
   init() {
+    new FormFieldToggle().init();
+
     $('.js-from-files-history-btn').on('click', this.showFilesHistoryHandler.bind(this));
     $('.js-close-files-history-block-btn').on('click', this.closeFilesHistoryHandler.bind(this));
     $('.js-use-file-btn').on('click', this.useFileFromFilesHistory.bind(this));
+    $('.js-change-import-file-btn').on('click', this.changeImportFileHandler.bind(this));
+  }
+
+  changeImportFileHandler() {
+    this.hideImportFileAlert();
+    this.showFileUploadBlock();
   }
 
   /**
@@ -83,6 +93,13 @@ class ImportPage {
   }
 
   /**
+   * Hides selected import file alert
+   */
+  hideImportFileAlert() {
+    $('.js-import-file-alert').addClass('d-none');
+  }
+
+  /**
    * Hides import file upload block
    */
   hideFileUploadBlock() {
@@ -100,129 +117,7 @@ class ImportPage {
 $(() => {
   new ImportPage().init();
 
-  const entityCategories = 0;
-  const entityProducts = 1;
-  const entityCombinations = 2;
-  const entityCustomers = 3;
-  const entityAddresses = 4;
-  const entityBrands = 5;
-  const entitySuppliers = 6;
-  const entityAlias = 7;
-  const entityStoreContacts = 8;
-
-  $('.js-entity-select').on('change', toggleForm);
   $('.js-import-file').on('change', uploadFile);
-
-  toggleForm();
-
-  function toggleForm() {
-    let $selctedOption = $('#entity').find('option:selected');
-    let selectedEntity = parseInt($selctedOption.val());
-    let entityName = $selctedOption.text().toLowerCase();
-
-    toggleEntityAlert(selectedEntity);
-    toggleFields(selectedEntity, entityName);
-    loadAvailableFields(selectedEntity);
-  }
-
-  /**
-   * Toggle alert warning for selected import entity
-   *
-   * @param {int} selectedEntity
-   */
-  function toggleEntityAlert(selectedEntity) {
-    let $alert = $('.js-entity-alert');
-
-    if ([entityCategories, entityProducts].includes(selectedEntity)) {
-      $alert.show()
-    } else {
-      $alert.hide();
-    }
-  }
-
-  /**
-   * Toggle available options for selected entity
-   *
-   * @param {int} selectedEntity
-   * @param {string} entityName
-   */
-  function toggleFields(selectedEntity, entityName) {
-    const $truncateFormGroup = $('.js-truncate-form-group');
-    const $matchRefFormGroup = $('.js-match-ref-form-group');
-    const $regenerateFormGroup = $('.js-regenerate-form-group');
-    const $forceIdsFormGroup = $('.js-force-ids-form-group');
-    const $entityNamePlaceholder = $('.js-entity-name');
-
-    if (entityStoreContacts === selectedEntity) {
-      $truncateFormGroup.hide();
-    } else {
-      $truncateFormGroup.show();
-    }
-
-    if ([entityProducts, entityCombinations].includes(selectedEntity)) {
-      $matchRefFormGroup.show();
-    } else {
-      $matchRefFormGroup.hide();
-    }
-
-    if ([entityCategories,
-        entityProducts,
-        entityBrands,
-        entitySuppliers,
-        entityStoreContacts
-      ].includes(selectedEntity)
-    ) {
-      $regenerateFormGroup.show();
-    } else {
-      $regenerateFormGroup.hide();
-    }
-
-    if ([entityCategories,
-        entityProducts,
-        entityCustomers,
-        entityAddresses,
-        entityBrands,
-        entitySuppliers,
-        entityStoreContacts,
-        entityAlias
-      ].includes(selectedEntity)
-    ) {
-      $forceIdsFormGroup.show();
-    } else {
-      $forceIdsFormGroup.hide();
-    }
-
-    $entityNamePlaceholder.html(entityName);
-  }
-
-  /**
-   * Load available fields for given entity
-   *
-   * @param {int} entity
-   */
-  function loadAvailableFields(entity) {
-    $.ajax({
-      url: '../../../ajax.php',
-      data: {
-        getAvailableFields:1,
-        entity: entity
-      },
-      dataType: 'json',
-    }).then(response => {
-      let fields = '';
-      let $availableFields = $('.js-available-fields');
-      $availableFields.empty();
-
-      for (let i = 0; i < response.length; i++) {
-        fields += response[i].field;
-      }
-
-      $availableFields.html(fields);
-      $availableFields.find('[data-toggle="popover"]').popover();
-    }).catch(error => {
-
-    });
-  }
 
   /**
    * Upload selected import file
