@@ -5,6 +5,7 @@ module.exports = {
     logout: '#header_logout',
     products_subtab: '#subtab-AdminCatalog',
     go_to_catalog_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.go-catalog.js-btn-save',
+    new_product_dropdown_button: '#form > div.product-footer > div.text-lg-right > div > div.dropdown-menu > a.dropdown-item.new-product.js-btn-save',
     more_option_button: '.btn.btn-primary.dropdown-toggle',
     basic_settings_tab: '//*[@id="tab_step1"]/a',
     new_product_button: '#page-header-desc-configuration-add',
@@ -157,13 +158,16 @@ module.exports = {
     catalog_product_online: '//*[@id="product_catalog_list"]/div[2]/div/table/tbody/tr/td[8]/a/i',
     catalog_reset_filter: '//*[@id="product_catalog_list"]/div[2]/div/table/thead/tr[2]/th[9]/button[2]',
     catalog_home: '//*[@id="form_step1_categories"]/ul/li/div/label',
-
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
-
-
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
-    category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]'
+    category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
+    preview_buttons: '//*[@id="product_form_preview_btn"]',
+    dropdown_button: '//*[@id="dropdownMenu"]',
+    duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
+    success_panel: '//div[contains(@class, "alert-success")]//p',
+    delete_button: '//*[@id="product_form_delete_btn"]',
+    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]'
   },
 
   ProductList: {
