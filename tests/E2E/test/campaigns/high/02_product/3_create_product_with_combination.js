@@ -99,7 +99,13 @@ scenario('Create product with combination in the Back Office', client => {
         .then(() => client.goToEditCombination());
     });
     test('should edit second combination', () => client.editCombination(2));
+    /**
+     * This scenario is based on the bug described in this ticket
+     * http://forge.prestashop.com/browse/BOOM-4827
+     **/
+    test('should click on "Set as default combination" button', () => client.scrollWaitForExistAndClick(AddProductPage.default_combination.replace('%NUMBER', combinationId)));
     test('should go back to combination list', () => client.backToProduct());
+    test('should check that the second combination is the default combination', () => client.isSelected(AddProductPage.combination_default_button.replace('%NUMBER', combinationId)));
     test('should check that combination\'s quantity is equal to "10"', () => client.checkAttributeValue(AddProductPage.combination_attribute_quantity.replace('%NUMBER', combinationId), 'value', "10"));
     test('should check that combination\'s picture is well updated', () => client.checkAttributeValue(AddProductPage.combination_attribute_image.replace('%NUMBER', combinationId), 'src', title_image, 'contain'));
     test('should check that the "Impact on price (tax incl.) is equal to "20"', () => {
@@ -223,4 +229,3 @@ scenario('Check the product with combination in the Front Office', () => {
     });
   }, 'product/product');
 }, 'product/product', true);
-

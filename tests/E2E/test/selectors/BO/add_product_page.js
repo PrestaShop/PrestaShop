@@ -112,6 +112,8 @@ module.exports = {
     combination_attribute_quantity: '//*[@id="attribute_%NUMBER"]/td[6]/div/input',
     combination_image: '//*[@id="combination_%NUMBER_id_image_attr"]/div[2]/img',
     combination_edit: '//*[@id="attribute_%NUMBER"]/td[7]/div[1]/a',
+    combination_default_button: '//input[@class="attribute-default" and @data-id="%NUMBER"]',
+    default_combination: '//*[@id="combination_%NUMBER_attribute_default"]',
     back_to_product: '//*[@id="combination_form_%NUMBER"]/div[2]/div[1]/button',
     product_pricing_tab: '//*[@id="tab_step2"]/a',
     unit_price: '#form_step2_unit_price',
