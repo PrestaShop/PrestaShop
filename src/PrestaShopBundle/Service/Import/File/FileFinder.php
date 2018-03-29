@@ -24,21 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Import;
+namespace PrestaShopBundle\Service\Import\File;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Service\Import\ImportDirectory;
 use Symfony\Component\Finder\Finder;
 
 class FileFinder
 {
     /**
-     * @var ConfigurationInterface
+     * @var ImportDirectory
      */
-    private $configuration;
+    private $importDirectory;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ImportDirectory $importDirectory)
     {
-        $this->configuration = $configuration;
+        $this->importDirectory = $importDirectory;
     }
 
     /**
@@ -51,7 +51,7 @@ class FileFinder
         $finder = new Finder();
         $finder
             ->files()
-            ->in($this->getImportDir())
+            ->in($this->importDirectory->getDir())
             ->notName('/^index\.php/i');
 
         $fileNames = [];
@@ -61,19 +61,5 @@ class FileFinder
         }
 
         return $fileNames;
-    }
-
-    /**
-     * Get import directory
-     *
-     * @todo: fix duplicate in FileUploader
-     *
-     * @return string
-     */
-    protected function getImportDir()
-    {
-        return ($this->configuration->get('_PS_HOST_MODE_') ?
-            $this->configuration->get('_PS_ROOT_DIR_') :
-            $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import';
     }
 }

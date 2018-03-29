@@ -26,13 +26,16 @@
 <div class="card d-none js-files-history-block">
     <div class="card-header">
         {{ 'History of uploaded files'|trans({}, 'Admin.Advparameters.Feature') }}
-        <span class="badge badge-primary js-files-history-number">{{ uploaded_file_names|length }}</span>
+        <span class="badge badge-primary js-files-history-number">{{ import_file_names|length }}</span>
         <a href="#" class="close js-close-files-history-block-btn" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </a>
     </div>
     <div class="card-content">
-        <table id="fileHistoryTable" class="table mb-0">
+        <table id="fileHistoryTable"
+               class="table mb-0"
+               data-delete-file-url="{{ path('admin_import_file_delete') }}"
+        >
             <tbody>
                 <tr class="d-none">
                     <td></td>
@@ -50,20 +53,20 @@
                                 <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
                             </button>
                             <div class="dropdown-menu menu-sm">
-                                <button class="dropdown-item" type="button">
+                                <a href="#" class="dropdown-item">
                                     <i class="material-icons">file_download</i>
                                     {{ 'Download'|trans }}
-                                </button>
+                                </a>
                                 <div class="dropdown-divider"></div>
-                                <button class="dropdown-item" type="button">
+                                <a href="#" class="dropdown-item js-delete-file-btn">
                                     <i class="material-icons">delete</i>
                                     {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </td>
                 </tr>
-                {% for file_name in uploaded_file_names %}
+                {% for file_name in import_file_names %}
                 <tr>
                     <td>{{ file_name }}</td>
                     <td>
@@ -80,15 +83,15 @@
                                 <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
                             </button>
                             <div class="dropdown-menu menu-sm">
-                                <button class="dropdown-item" type="button">
+                                <a href="#" class="dropdown-item">
                                     <i class="material-icons">file_download</i>
                                     {{ 'Download'|trans }}
-                                </button>
+                                </a>
                                 <div class="dropdown-divider"></div>
-                                <button class="dropdown-item" type="button">
+                                <a href="{{ path('admin_import_file_delete', {'filename': file_name}) }}" class="dropdown-item">
                                     <i class="material-icons">delete</i>
                                     {{ 'Delete'|trans({}, 'Admin.Actions') }}
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </td>
