@@ -114,26 +114,82 @@ export default class ImportPage {
     $('.js-file-upload-form-group').removeClass('d-none');
   }
 
+  /**
+   * Make file history button clickable
+   */
   enableFilesHistoryBtn() {
     $('.js-from-files-history-btn').removeAttr('disabled');
   }
 
-  disableFilesHistoryBtn() {
-    $('.js-from-files-history-btn').attr('disabled', 'disabled');
+  /**
+   * Show error message if file uploading failed
+   *
+   * @param {string} fileName
+   * @param {integer} fileSize
+   * @param {string} message
+   */
+  showImportFileError(fileName, fileSize, message) {
+    const $alert = $('.js-import-file-error');
+
+    const fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
+
+    $alert.find('.js-file-data').html(fileData);
+    $alert.find('.js-error-message').html(message);
+    $alert.removeClass('d-none');
+  }
+
+  /**
+   * Hide file uploading error
+   */
+  hideImportFileError() {
+    const $alert = $('.js-import-file-error');
+    $alert.addClass('d-none');
+  }
+
+  /**
+   * Show file size in human readable format
+   *
+   * @param {int} bytes
+   *
+   * @returns {string}
+   */
+  humanizeSize(bytes) {
+    if (typeof bytes !== 'number') {
+      return '';
+    }
+
+    if (bytes >= 1000000000) {
+      return (bytes / 1000000000).toFixed(2) + ' GB';
+    }
+
+    if (bytes >= 1000000) {
+      return (bytes / 1000000).toFixed(2) + ' MB';
+    }
+
+    return (bytes / 1000).toFixed(2) + ' KB';
   }
 
   /**
    * Upload selected import file
    */
   uploadFile() {
-    const uplodedFile = $('#file').prop('files')[0];
+    this.hideImportFileError();
 
-    const data = new FormData(uplodedFile);
-    data.append('file', uplodedFile);
+    const $input = $('#file');
+    const uploadedFile = $input.prop('files')[0];
+
+    console.log(uploadedFile);
+
+    const maxUploadSize = $input.data('max-file-upload-size');
+    if (maxUploadSize < uploadedFile.size) {
+      this.showImportFileError(uploadedFile.name, uploadedFile.size, 'File is too large');
+      return;
+    }
+
+    const data = new FormData(uploadedFile);
+    data.append('file', uploadedFile);
 
     const url = $('.js-import-form').data('file-upload-url');
-
-    //@todo: add progress bar when uploading
 
     $.ajax({
       type: 'POST',
@@ -143,6 +199,11 @@ export default class ImportPage {
       contentType: false,
       processData: false,
     }).then(response => {
+      if (response.error) {
+        this.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
+        return;
+      }
+
       let filename = response.file.name;
 
       $('.js-import-file-input').val(filename);
@@ -152,8 +213,6 @@ export default class ImportPage {
       this.addFileToHistoryTable(filename);
       this.enableFilesHistoryBtn();
     }).catch(error => {
-      //@todo: display error to admin?
-      console.log(error);
     });
   }
 
