@@ -93,8 +93,8 @@ class PreferencesType extends CommonAbstractType
             ->add('multishop_feature_active', SwitchType::class)
             ->add('shop_activity', ChoiceType::class, array(
                 'choices_as_values' => true,
+                'placeholder' => '-- Please choose your main activity --',
                 'choices'  => array(
-                    '-- Please choose your main activity --' => 0,
                     'Animals and Pets' => 2,
                     'Art and Culture' => 3,
                     'Babies' => 4,
