@@ -39,9 +39,17 @@ class CategoryDataProvider
 {
     private $languageId;
 
+    /** @var array the list of existing active categories until root */
+    private $categoryList;
+
     public function __construct(LegacyContext $context)
     {
         $this->languageId = $context->getLanguage()->id;
+        $categories = Category::getSimpleCategoriesWithParentInfos($this->languageId);
+        // index by categories and construct the categoryList
+        foreach ($categories as $category) {
+            $this->categoryList[$category['id_category']] = $category;
+        }
     }
 
     /**
@@ -119,25 +127,23 @@ class CategoryDataProvider
 
     /**
      * Return a simple array id/name of categories for a specified product
-     * @param Product $product
+     * @param \Product $product
      *
      * @return array Categories
      */
     public function getCategoriesByProduct(ObjectModel $product)
     {
-        $allCategories = $this->getAllCategoriesName();
         $productCategories = $product->getCategories();
 
         $results = [];
-        foreach ($allCategories as $category) {
-            foreach ($productCategories as $productCategory) {
-                if ($productCategory == $category['id_category']) {
-                    $results[] = [
-                        'id' => $category['id_category'],
-                        'name' => $category['name'],
-                        'breadcrumb' => $this->getBreadCrumb($category['id_category'])
-                    ];
-                }
+        foreach ($productCategories as $productCategory) {
+            if (isset($this->categoryList[$productCategory])) {
+                $category = $this->categoryList[$productCategory];
+                $results[] = [
+                    'id' => $category['id_category'],
+                    'name' => $category['name'],
+                    'breadcrumb' => $this->getBreadCrumb($category['id_category'])
+                ];
                 $productCategories[$category['name']] = $category['id_category'];
             }
         }
@@ -152,10 +158,8 @@ class CategoryDataProvider
      */
     public function getCategoriesWithBreadCrumb()
     {
-        $allCategories = $this->getAllCategoriesName();
-
         $results = [];
-        foreach ($allCategories as $category) {
+        foreach ($this->categoryList as $category) {
             $results[] = [
                 'id' => $category['id_category'],
                 'name' => $category['name'],
@@ -167,23 +171,37 @@ class CategoryDataProvider
     }
 
     /**
-     * Returns a simple breacrumb from a categoryId, the delimiter can be choosen
-     * @param $categoryId
+     * Construct the breadcrumb using the already constructed list of all categories
+     *
+     * @param int    $categoryId
      * @param string $delimiter
+     *
      * @return string
      */
-    public function getBreadCrumb($categoryId, $delimiter = " > ")
+    public function getBreadCrumb($categoryId, $delimiter = ' > ')
     {
-        $currentCategory = new Category($categoryId);
-        $categories = $currentCategory->getParentsCategories();
+        $categories = $this->getParentNamesFromList($categoryId);
         $categories = array_reverse($categories, true);
-        $breadCrumb = '';
 
-        foreach ($categories as $category) {
-            $breadCrumb .= ' > '.$category['name'];
+        return implode($delimiter, $categories);
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return array
+     */
+    public function getParentNamesFromList($categoryId)
+    {
+        $categories = [];
+
+        while (isset($this->categoryList[$categoryId])) {
+            $category = $this->categoryList[$categoryId];
+            $categories[] = $category['name'];
+            $categoryId = $category['id_parent'];
         }
 
-        return substr($breadCrumb, strlen($delimiter));
+        return $categories;
     }
 
     /**
