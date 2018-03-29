@@ -27,6 +27,8 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -57,7 +59,7 @@ class ImportController extends FrameworkBundleAdminController
             $data = $form->getData();
             //@todo: validate data before forwarding
 
-            return $this->fowardRequestToLegacyResponse($request, $data);
+            return $this->fowardRequestToLegacyResponse($request);
         }
 
         $finder = $this->get('prestashop.import.file_finder');
@@ -73,7 +75,8 @@ class ImportController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
             'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
-            'uploaded_file_names' => $names,
+            'import_file_names' => $names,
+            'import_dir' => $this->get('prestashop.import.dir')->getDir(),
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);
@@ -100,14 +103,30 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Fowards submitted form data to legacy import page
+     * Delete import file
      *
      * @param Request $request
-     * @param array $data
      *
      * @return RedirectResponse
      */
-    private function fowardRequestToLegacyResponse(Request $request, array $data)
+    public function deleteAction(Request $request)
+    {
+        $filename = $request->query->get('filename');
+
+        $fileRemoval = $this->get('prstashop.import.file_removal');
+        $fileRemoval->remove($filename);
+
+        return $this->redirectToRoute('admin_import');
+    }
+
+    /**
+     * Fowards submitted form data to legacy import page
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    private function fowardRequestToLegacyResponse(Request $request)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
         $legacyContext =  $this->get('prestashop.adapter.legacy.context');
