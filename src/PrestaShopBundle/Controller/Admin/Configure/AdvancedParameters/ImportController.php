@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -45,7 +46,9 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse|Response
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/import.html.twig")
+     *
+     * @return array|RedirectResponse|Response
      */
     public function importAction(Request $request)
     {
@@ -76,7 +79,7 @@ class ImportController extends FrameworkBundleAdminController
         $finder = $this->get('prestashop.import.file_finder');
         $names = $finder->getImportFileNames();
 
-        $params = [
+        return $params = [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -90,8 +93,6 @@ class ImportController extends FrameworkBundleAdminController
             'import_dir' => $this->get('prestashop.import.dir')->getDir(),
             'max_file_upload_size' => $this->getPostMaxSizeInBytes(),
         ];
-
-        return $this->render('@AdvancedParameters/import.html.twig', $params);
     }
 
     /**
