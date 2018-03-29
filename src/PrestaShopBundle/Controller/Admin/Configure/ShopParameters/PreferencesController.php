@@ -26,11 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Entity\Tab;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use PrestaShopBundle\Service\Tab\TabStatus;
 use Symfony\Component\Form\FormInterface;
@@ -47,7 +45,9 @@ class PreferencesController extends FrameworkBundleAdminController
      * @param Request $request
      * @param FormInterface|null $form
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig")
+     *
+     * @return array
      *
      * @throws \LogicException
      */
@@ -63,7 +63,7 @@ class PreferencesController extends FrameworkBundleAdminController
         // SSL URI is used for the merchant to check if he has SSL enabled
         $sslUri = 'https://'.$toolsAdapter->getShopDomainSsl().$request->getRequestUri();
 
-        $twigValues = array(
+        return array(
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->get('translator')->trans('Preferences', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -76,8 +76,6 @@ class PreferencesController extends FrameworkBundleAdminController
             'isSslEnabled' => $this->configuration->get('PS_SSL_ENABLED'),
             'sslUri' => $sslUri,
         );
-
-        return $this->render('@ShopParameters/preferences.html.twig', $twigValues);
     }
 
     /**
