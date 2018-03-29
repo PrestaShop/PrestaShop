@@ -59,7 +59,7 @@ class LocalizationWarmer implements CacheWarmerInterface
         if (is_file($path_cache_file)) {
             $localization_file_content = file_get_contents($path_cache_file);
         } else {
-            if (!_PS_IN_TEST_) {
+            if (!defined('_PS_IN_TEST_')) {
                 $localization_file_content = @Tools::file_get_contents(
                     'http://api.prestashop.com/localization/' . $this->version . '/' . $this->country . '.xml'
                 );
