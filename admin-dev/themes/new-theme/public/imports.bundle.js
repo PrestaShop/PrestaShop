@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bd8cc5f1b39fa38b271b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "978864831a2e307be045"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -966,13 +966,25 @@ var ImportPage = function () {
   _createClass(ImportPage, [{
     key: 'init',
     value: function init() {
+      var _this = this;
+
       new __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__["a" /* default */]().init();
 
-      $('.js-from-files-history-btn').on('click', this.showFilesHistoryHandler.bind(this));
-      $('.js-close-files-history-block-btn').on('click', this.closeFilesHistoryHandler.bind(this));
-      $('#fileHistoryTable').on('click', '.js-use-file-btn', this.useFileFromFilesHistory.bind(this));
-      $('.js-change-import-file-btn').on('click', this.changeImportFileHandler.bind(this));
-      $('.js-import-file').on('change', this.uploadFile.bind(this));
+      $('.js-from-files-history-btn').on('click', function () {
+        return _this.showFilesHistoryHandler();
+      });
+      $('.js-close-files-history-block-btn').on('click', function () {
+        return _this.closeFilesHistoryHandler();
+      });
+      $('#fileHistoryTable').on('click', '.js-use-file-btn', function (event) {
+        return _this.useFileFromFilesHistory(event);
+      });
+      $('.js-change-import-file-btn').on('click', function () {
+        return _this.changeImportFileHandler();
+      });
+      $('.js-import-file').on('change', function () {
+        return _this.uploadFile();
+      });
     }
   }, {
     key: 'changeImportFileHandler',
@@ -1153,14 +1165,12 @@ var ImportPage = function () {
   }, {
     key: 'uploadFile',
     value: function uploadFile() {
-      var _this = this;
+      var _this2 = this;
 
       this.hideImportFileError();
 
       var $input = $('#file');
       var uploadedFile = $input.prop('files')[0];
-
-      console.log(uploadedFile);
 
       var maxUploadSize = $input.data('max-file-upload-size');
       if (maxUploadSize < uploadedFile.size) {
@@ -1182,7 +1192,7 @@ var ImportPage = function () {
         processData: false
       }).then(function (response) {
         if (response.error) {
-          _this.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
+          _this2.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
           return;
         }
 
@@ -1190,10 +1200,10 @@ var ImportPage = function () {
 
         $('.js-import-file-input').val(filename);
 
-        _this.showImportFileAlert(filename);
-        _this.hideFileUploadBlock();
-        _this.addFileToHistoryTable(filename);
-        _this.enableFilesHistoryBtn();
+        _this2.showImportFileAlert(filename);
+        _this2.hideFileUploadBlock();
+        _this2.addFileToHistoryTable(filename);
+        _this2.enableFilesHistoryBtn();
       }).catch(function (error) {});
     }
 
