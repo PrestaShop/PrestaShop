@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Service\Import\File;
 
+use PrestaShopBundle\Exception\FileUploadException;
 use PrestaShopBundle\Service\Import\ImportDirectory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -65,11 +66,13 @@ class FileUploader
      *
      * @return File
      *
-     * @throws \RuntimeException
+     * @throws FileUploadException
      */
     public function upload(UploadedFile $uploadedFile)
     {
-        $this->validateUploadedFile($uploadedFile);
+        if ($error = $this->validateUploadedFile($uploadedFile)) {
+            throw new FileUploadException($error);
+        }
 
         $uploadedFileName = sprintf(
             '%s-%s',
@@ -90,40 +93,38 @@ class FileUploader
      *
      * @param UploadedFile $uploadedFile
      *
-     * @throws \RuntimeException
+     * @return string|false     Returns error string on error or FALSE otherwise
      */
     protected function validateUploadedFile(UploadedFile $uploadedFile)
     {
-        $message = false;
+        $error = false;
 
         switch ($uploadedFile->getError()) {
             case UPLOAD_ERR_INI_SIZE:
-                $message = $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', [], 'Admin.Advparameters.Notification');
+                $error = $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', [], 'Admin.Advparameters.Notification');
                 break;
             case UPLOAD_ERR_FORM_SIZE:
-                $message = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification')
+                $error = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification')
                     .'<br/><a href="#" >
 					<code>php_value post_max_size 20M</code> '.
                     $this->translator->trans('(click to open "Generators" page)', [], 'Admin.Advparameters.Notification').'</a>';
                 break;
             case UPLOAD_ERR_PARTIAL:
-                $message = $this->translator->trans('The uploaded file was only partially uploaded.', [], 'Admin.Advparameters.Notification');
+                $error = $this->translator->trans('The uploaded file was only partially uploaded.', [], 'Admin.Advparameters.Notification');
                 break;
             case UPLOAD_ERR_NO_FILE:
-                $message = $this->translator->trans('No file was uploaded.', [], 'Admin.Advparameters.Notification');
+                $error = $this->translator->trans('No file was uploaded.', [], 'Admin.Advparameters.Notification');
                 break;
         }
 
-        if ($message) {
-            throw new \RuntimeException($message);
+        if ($error) {
+            return $error;
         }
 
         if (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $uploadedFile->getClientOriginalName())) {
-            $message = $this->translator->trans('The extension of your file should be .csv.', [], 'Admin.Advparameters.Notification');
+            $error = $this->translator->trans('The extension of your file should be .csv.', [], 'Admin.Advparameters.Notification');
         }
 
-        if ($message) {
-            throw new \RuntimeException($message);
-        }
+        return $error;
     }
 }

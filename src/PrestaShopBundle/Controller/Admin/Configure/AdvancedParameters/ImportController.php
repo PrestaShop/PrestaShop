@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Exception\FileUploadException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,6 +78,7 @@ class ImportController extends FrameworkBundleAdminController
             'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
             'import_file_names' => $names,
             'import_dir' => $this->get('prestashop.import.dir')->getDir(),
+            'max_file_upload_size' => $this->getPostMaxSizeInBytes(),
         ];
 
         return $this->render('@AdvancedParameters/import.html.twig', $params);
@@ -86,19 +89,30 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function uploadAction(Request $request)
     {
         $uploadedFile = $request->files->get('file');
-        if (!$uploadedFile) {
-            //@todo: handle error
+        if (!$uploadedFile instanceof UploadedFile) {
+            return $this->json([
+                'error' => $this->trans('No file was uploaded.','Admin.Advparameters.Notification')
+            ]);
         }
 
-        $fileUploader = $this->get('prestashop.import.file_uploader');
-        $file = $fileUploader->upload($uploadedFile);
+        $response['file'] = [
+            'name' => $uploadedFile->getFilename(),
+            'size' => $uploadedFile->getSize(),
+        ];
 
-        return new JsonResponse(['file' => ['name' => $file->getFilename()]]);
+        try {
+            $fileUploader = $this->get('prestashop.import.file_uploader');
+            $fileUploader->upload($uploadedFile);
+        } catch (FileUploadException $e) {
+            $response['error'] = $e->getMessage();
+        }
+
+        return $this->json($response);
     }
 
     /**
@@ -157,5 +171,34 @@ class ImportController extends FrameworkBundleAdminController
         $legacyImportUrl = $legacyContext->getAdminLink($legacyController);
 
         return $this->redirect($legacyImportUrl, Response::HTTP_TEMPORARY_REDIRECT);
+    }
+
+    /**
+     * Get m post max size from ini configuration in bytes
+     *
+     * @return int
+     */
+    private function getPostMaxSizeInBytes()
+    {
+        $post_max_size = ini_get('post_max_size');
+        $bytes = (int) trim($post_max_size);
+        $last = strtolower($post_max_size[strlen($post_max_size) - 1]);
+
+        switch ($last) {
+            case 'g':
+                $bytes *= 1024;
+            // no break to fall-through
+            case 'm':
+                $bytes *= 1024;
+            // no break to fall-through
+            case 'k':
+                $bytes *= 1024;
+        }
+
+        if (!isset($bytes) || $bytes == '') {
+            $bytes = 20971520;  // 20Mb
+        }
+
+        return $bytes;
     }
 }
