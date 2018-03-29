@@ -26,11 +26,13 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Entity\Repository\TabRepository;
+use PrestaShopBundle\Entity\Tab;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use PrestaShopBundle\Service\Tab\TabStatus;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -123,10 +125,13 @@ class PreferencesController extends FrameworkBundleAdminController
         $saveErrors = $this->get('prestashop.adapter.preferences.form_handler')->save($data);
 
         if (0 === count($saveErrors)) {
-            /** @var TabStatus $tabStatus */
-            $tabStatus = $this->get('prestashop.tab.tab_status');
+            /** @var EntityManager $em */
+            $em = $this->get('doctrine.orm.entity_manager');
 
-            $tabStatus->changeStatusByClassName(
+            /** @var TabRepository $tabRepository */
+            $tabRepository = $em->getRepository(Tab::class);
+
+            $tabRepository->changeStatusByClassName(
                 'AdminShopGroup',
                 (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
             );

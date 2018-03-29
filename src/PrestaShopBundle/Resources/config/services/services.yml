@@ -305,9 +305,3 @@ services:
         arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
         tags:
           - { name: twig.loader, priority: 1}
-
-    # Tab status changer
-    prestashop.tab.tab_status:
-        class: PrestaShopBundle\Service\Tab\TabStatus
-        arguments:
-            - "@doctrine.orm.entity_manager"
