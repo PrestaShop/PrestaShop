@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -42,6 +43,7 @@ class SystemInformationController extends FrameworkBundleAdminController
 
     /**
      * @param Request $request
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/system_information.html.twig")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(Request $request)
@@ -49,7 +51,7 @@ class SystemInformationController extends FrameworkBundleAdminController
         $requirementsSummary = $this->getRequirementsChecker()->getSummary();
         $systemInformationSummary = $this->getSystemInformation()->getSummary();
 
-        $twigValues = array(
+        return array(
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Information', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -64,8 +66,6 @@ class SystemInformationController extends FrameworkBundleAdminController
             'requirements' => $requirementsSummary,
             'userAgent' => $request->headers->get('User-Agent'),
         );
-
-        return $this->render('@AdvancedParameters/system_information.html.twig', $twigValues);
     }
 
     /**

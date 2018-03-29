@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,6 +43,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
     /**
      * @var FormInterface
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/performance.html.twig")
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
@@ -54,7 +56,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         $form = is_null($form) ? $this->get('prestashop.adapter.performance.form_handler')->getForm() : $form;
 
-        $twigValues = array(
+        return array(
             'layoutHeaderToolbarBtn' => $toolbarButtons,
             'layoutTitle' => $this->get('translator')->trans('Performance', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -66,8 +68,6 @@ class PerformanceController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'servers' => $this->get('prestashop.adapter.memcache_server.manager')->getServers(),
         );
-
-        return $this->render('@AdvancedParameters/performance.html.twig', $twigValues);
     }
 
     /**

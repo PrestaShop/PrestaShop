@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -43,6 +44,7 @@ class MaintenanceController extends FrameworkBundleAdminController
 
     /**
      * @var FormInterface
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig")
      * @return Response
      */
     public function indexAction(Request $request, FormInterface $form = null)
@@ -51,7 +53,7 @@ class MaintenanceController extends FrameworkBundleAdminController
             $form = $this->get('prestashop.adapter.maintenance.form_handler')->getForm();
         }
 
-        $twigValues = array(
+        return array(
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->get('translator')->trans('Maintenance', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -63,8 +65,6 @@ class MaintenanceController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'currentIp' => $request->getClientIp(),
         );
-
-        return $this->render('@ShopParameters/maintenance.html.twig', $twigValues);
     }
 
     /**

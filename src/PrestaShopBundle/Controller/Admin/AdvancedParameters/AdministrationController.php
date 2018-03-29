@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,13 +43,14 @@ class AdministrationController extends FrameworkBundleAdminController
 
     /**
      * @var FormInterface
+     * @Template("@PrestaShop/Admin/AdvancedParameters/administration.html.twig")
      * @return Response
      */
     public function indexAction(FormInterface $form = null)
     {
         $form = is_null($form) ? $this->get('prestashop.adapter.administration.form_handler')->getForm() : $form;
 
-        $twigValues = array(
+        return array(
             'layoutHeaderToolbarBtn' => array(),
             'layoutTitle' => $this->get('translator')->trans('Administration', array(), 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -59,8 +61,6 @@ class AdministrationController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
         );
-
-        return $this->render('PrestaShopBundle:Admin/AdvancedParameters:administration.html.twig', $twigValues);
     }
 
     /**
