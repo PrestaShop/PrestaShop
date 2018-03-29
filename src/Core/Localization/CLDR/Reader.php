@@ -464,7 +464,9 @@ class Reader implements ReaderInterface
             foreach ($numbersData->currencyFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem  = (string)$format['numberSystem'];
-                $patternResult = $format->xpath('currencyFormatLength/currencyFormat[@type="standard"]/pattern');
+                $patternResult = $format->xpath(
+                    'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern[not(@*)]'
+                );
                 if (isset($patternResult[0])) {
                     $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
                 }
