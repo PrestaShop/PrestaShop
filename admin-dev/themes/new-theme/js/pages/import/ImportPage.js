@@ -165,15 +165,19 @@ export default class ImportPage {
   addFileToHistoryTable(filename) {
     const $table = $('#fileHistoryTable');
 
-    let deleteBaseUrl = $table.data('delete-file-url');
-    let url = deleteBaseUrl + '&filename' + encodeURIComponent(filename);
+    let baseDeleteUrl = $table.data('delete-file-url');
+    let deleteUrl = baseDeleteUrl + '&filename=' + encodeURIComponent(filename);
+
+    let baseDownloadUrl = $table.data('download-file-url');
+    let downloadUrl = baseDownloadUrl + '&filename=' + encodeURIComponent(filename);
 
     let $template = $table.find('tr:first').clone();
 
     $template.removeClass('d-none');
     $template.find('td:first').text(filename);
     $template.find('.btn-group').attr('data-file', filename);
-    $template.find('.js-delete-file-btn').attr('href', url);
+    $template.find('.js-delete-file-btn').attr('href', deleteUrl);
+    $template.find('.js-download-file-btn').attr('href', downloadUrl);
 
     $table.find('tbody').append($template);
 

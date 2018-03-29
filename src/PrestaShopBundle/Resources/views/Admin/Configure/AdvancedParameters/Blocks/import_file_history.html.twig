@@ -35,6 +35,7 @@
         <table id="fileHistoryTable"
                class="table mb-0"
                data-delete-file-url="{{ path('admin_import_file_delete') }}"
+               data-download-file-url="{{ path('admin_import_file_download') }}"
         >
             <tbody>
                 <tr class="d-none">
@@ -53,7 +54,7 @@
                                 <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
                             </button>
                             <div class="dropdown-menu menu-sm">
-                                <a href="#" class="dropdown-item">
+                                <a href="#" class="dropdown-item js-download-file-btn" target="_blank">
                                     <i class="material-icons">file_download</i>
                                     {{ 'Download'|trans }}
                                 </a>
@@ -83,7 +84,7 @@
                                 <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
                             </button>
                             <div class="dropdown-menu menu-sm">
-                                <a href="#" class="dropdown-item">
+                                <a href="{{ path('admin_import_file_download', {'filename': file_name}) }}" class="dropdown-item" target="_blank">
                                     <i class="material-icons">file_download</i>
                                     {{ 'Download'|trans }}
                                 </a>

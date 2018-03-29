@@ -27,13 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Import" page display
@@ -111,10 +110,34 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function deleteAction(Request $request)
     {
-        $filename = $request->query->get('filename');
+        if ($filename = $request->query->get('filename')) {
+            $fileRemoval = $this->get('prstashop.import.file_removal');
+            $fileRemoval->remove($filename);
+        }
 
-        $fileRemoval = $this->get('prstashop.import.file_removal');
-        $fileRemoval->remove($filename);
+        return $this->redirectToRoute('admin_import');
+    }
+
+    /**
+     * Download import file from history
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function downloadAction(Request $request)
+    {
+        if ($filename = $request->query->get('filename')) {
+            $importDirectory = $this->get('prestashop.import.dir');
+
+            $response = new BinaryFileResponse($importDirectory.$filename);
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                $filename
+            );
+
+            return $response;
+        }
 
         return $this->redirectToRoute('admin_import');
     }
