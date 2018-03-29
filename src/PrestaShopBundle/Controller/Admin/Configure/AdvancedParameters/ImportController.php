@@ -62,7 +62,7 @@ class ImportController extends FrameworkBundleAdminController
             if ($this->isDemoModeEnabled()) {
                 $this->addFlash(
                     'error',
-                    $this->trans('This functionality has been disabled.','Admin.Notifications.Error')
+                    $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error')
                 );
 
                 return $this->redirectToRoute('admin_import');
@@ -79,7 +79,7 @@ class ImportController extends FrameworkBundleAdminController
         $finder = $this->get('prestashop.import.file_finder');
         $names = $finder->getImportFileNames();
 
-        return $params = [
+        return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -107,7 +107,7 @@ class ImportController extends FrameworkBundleAdminController
         $uploadedFile = $request->files->get('file');
         if (!$uploadedFile instanceof UploadedFile) {
             return $this->json([
-                'error' => $this->trans('No file was uploaded.','Admin.Advparameters.Notification')
+                'error' => $this->trans('No file was uploaded.', 'Admin.Advparameters.Notification')
             ]);
         }
 
@@ -200,10 +200,10 @@ class ImportController extends FrameworkBundleAdminController
         switch ($last) {
             case 'g':
                 $bytes *= 1024;
-            // no break to fall-through
+                // no break to fall-through
             case 'm':
                 $bytes *= 1024;
-            // no break to fall-through
+                // no break to fall-through
             case 'k':
                 $bytes *= 1024;
         }
