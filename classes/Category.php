@@ -800,7 +800,7 @@ class CategoryCore extends ObjectModel
         $context = Context::getContext();
         if (count(Category::getCategoriesWithoutParent()) > 1
             && \Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')
-            && count(Shop::getShops(true, null, true)) != 1) {
+            && count(Shop::getShops(true, null, true)) !== 1) {
             $idCategoryRoot = (int) \Configuration::get('PS_ROOT_CATEGORY');
         } elseif (!$context->shop->id) {
             $idCategoryRoot = (new Shop(\Configuration::get('PS_SHOP_DEFAULT')))->id_category;
@@ -1212,10 +1212,10 @@ class CategoryCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')
 		WHERE `id_lang` = '.(int) $idLang.'
 		AND c.`id_parent` = '.(int) $idParent;
-        if (Shop::getContext() == Shop::CONTEXT_SHOP && $useShopContext) {
+        if (Shop::getContext() === Shop::CONTEXT_SHOP && $useShopContext) {
             $sql .= ' AND cs.`id_shop` = '.(int) $shop->id;
         }
-        if (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP && $useShopContext) {
+        if (!Shop::isFeatureActive() || Shop::getContext() === Shop::CONTEXT_SHOP && $useShopContext) {
             $sql .= ' ORDER BY cs.`position` ASC';
         }
 
@@ -1483,7 +1483,7 @@ class CategoryCore extends ObjectModel
         $idCurrent = $this->id;
         if (count(Category::getCategoriesWithoutParent()) > 1
             && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')
-            && count(Shop::getShops(true, null, true)) != 1) {
+            && count(Shop::getShops(true, null, true)) !== 1) {
             $context->shop->id_category = (int) Configuration::get('PS_ROOT_CATEGORY');
         } elseif (!$context->shop->id) {
             $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
@@ -1494,15 +1494,15 @@ class CategoryCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 				ON (c.`id_category` = cl.`id_category`
                     AND `id_lang` = '.(int) $idLang.Shop::addSqlRestrictionOnLang('cl').')';
-        if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP) {
+        if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP) {
             $sqlAppend .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` cs '.
                 'ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int) $idShop.')';
         }
-        if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP) {
+        if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP) {
             $sqlAppend .= ' AND cs.`id_shop` = '.(int) $context->shop->id;
         }
         $rootCategory = Category::getRootCategory();
-        if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP
+        if (Shop::isFeatureActive() && Shop::getContext() === Shop::CONTEXT_SHOP
             && (!Tools::isSubmit('id_category')
                 || (int) Tools::getValue('id_category') == (int) $rootCategory->id
                 || (int) $rootCategory->id == (int) $context->shop->id_category)) {
