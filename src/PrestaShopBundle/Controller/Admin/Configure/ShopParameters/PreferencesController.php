@@ -32,6 +32,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\Tab\TabStatus;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -124,21 +125,13 @@ class PreferencesController extends FrameworkBundleAdminController
         $saveErrors = $this->get('prestashop.adapter.preferences.form_handler')->save($data);
 
         if (0 === count($saveErrors)) {
-            /** @var EntityManager $em */
-            $em = $this->get('doctrine.orm.entity_manager');
+            /** @var TabStatus $tabStatus */
+            $tabStatus = $this->get('prestashop.tab.tab_status');
 
-            /** @var TabRepository $tabRepository */
-            $tabRepository = $em->getRepository(Tab::class);
-
-            /** @var Tab $tab */
-            $tab = $tabRepository->findOneByClassName('AdminShopGroup');
-
-            if (null !== $tab) {
-                // Update multistore tab status according to updated multishop option
-                $tab->setActive((bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE'));
-                $em->persist($tab);
-                $em->flush();
-            }
+            $tabStatus->changeStatusByClassName(
+                'AdminShopGroup',
+                (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')
+            );
 
             $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
 
@@ -146,6 +139,7 @@ class PreferencesController extends FrameworkBundleAdminController
         }
 
         $this->flashErrors($saveErrors);
+
         return $this->redirectToRoute('admin_preferences');
     }
 }
