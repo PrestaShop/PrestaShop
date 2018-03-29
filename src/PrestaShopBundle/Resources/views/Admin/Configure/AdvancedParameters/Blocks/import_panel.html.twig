@@ -74,7 +74,11 @@
                 {{ form_errors(importForm.file) }}
                 {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file'}}) }}
                 <span>{{ 'or'|trans }}</span>
-                <button type="button" class="btn btn-outline-primary btn-sm js-from-files-history-btn">
+                <button type="button"
+                        class="btn btn-outline-primary btn-sm js-from-files-history-btn"
+                        {% if uploaded_file_names is empty %}disabled{% endif %}
+                >
+                    <span class="badge badge-primary js-files-history-number">{{ uploaded_file_names|length }}</span>
                     {{ 'Choose from history / FTP'|trans({}, 'Admin.Advparameters.Feature') }}
                 </button>
                 <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
