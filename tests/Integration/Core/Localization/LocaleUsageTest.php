@@ -27,8 +27,10 @@
 
 namespace Tests\Integration\Core\Localization;
 
+use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Tests\TestCase\SymfonyIntegrationTestCase;
 
@@ -46,6 +48,12 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
     protected $localeRepository;
 
     private static $isCacheClear = false;
+
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        self::installTestedLanguagePacks();
+    }
 
     protected function setUp()
     {
@@ -181,6 +189,167 @@ class LocaleUsageTest extends SymfonyIntegrationTestCase
                 'localeCode'      => 'pl-PL',
                 'rawNumber'       => 1234568.12345,
                 'formattedNumber' => '1 234 568,123',
+            ],
+        ];
+    }
+
+    /**
+     * Given a valid Locale object and a valid currency code
+     * When asking the locale to format a price of the said currency
+     * Then the expected formatted price should be retrieved
+     *
+     * @dataProvider provideFormattedPrices
+     */
+    public function testItShouldFormatPrices($localeCode, $rawNumber, $currencyCode, $formattedPrice)
+    {
+        $locale = $this->localeRepository->getLocale($localeCode);
+
+        $this->assertSame(
+            $formattedPrice,
+            $locale->formatPrice($rawNumber, $currencyCode)
+        );
+    }
+
+    protected static function installTestedLanguagePacks()
+    {
+        $countries = [
+            'us',
+            'jp',
+            'gb',
+            'de',
+            'fr',
+            'in',
+            'es',
+            'ca',
+            'cn',
+            'au',
+            'br',
+            'mx',
+            'ru',
+            'it',
+            'pl',
+        ];
+        $cacheDir  = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
+
+        foreach ($countries as $country) {
+            $xmlContent = (new LocalizationWarmer(_PS_VERSION_, $country))
+                ->warmUp($cacheDir);
+
+            (new LocalizationPack)->loadLocalisationPack($xmlContent, false, true);
+        }
+    }
+
+    public function provideFormattedPrices()
+    {
+        return [
+            'United States'    => [
+                'localeCode'      => 'en-US',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'USD',
+                'formattedPrice' => '$1,234,568.12',
+            ],
+            'Japan'            => [
+                'localeCode'      => 'ja-JP',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'JPY',
+                'formattedPrice' => '¥1,234,568',
+            ],
+            'United Kingdom' => [
+                'localeCode'     => 'en-GB',
+                'rawNumber'      => 1234568.12345,
+                'currencyCode'   => 'GBP',
+                'formattedPrice' => '£1,234,568.12',
+            ],
+            'Germany'          => [
+                'localeCode'      => 'de-DE',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'EUR',
+                'formattedPrice' => '1.234.568,12 €',
+            ],
+            'France'           => [
+                'localeCode'      => 'fr-FR',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'EUR',
+                'formattedPrice' => '1 234 568,12 €',
+            ],
+            'India (Hindi)'    => [
+                'localeCode'      => 'hi-IN',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'INR',
+                'formattedPrice' => '₹12,34,568.12',
+            ],
+            'India (English)'  => [
+                'localeCode'      => 'en-IN',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'INR',
+                'formattedPrice' => '₹ 12,34,568.12',
+            ],
+            'India (Bengali)'  => [
+                'localeCode'      => 'bn-IN',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'INR',
+                'formattedPrice' => '12,34,568.12₹',
+            ],
+            'Spain'            => [
+                'localeCode'      => 'es-ES',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'EUR',
+                'formattedPrice' => '1.234.568,12 €',
+            ],
+            'Canada (French)'  => [
+                'localeCode'      => 'fr-CA',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'CAD',
+                'formattedPrice' => '1 234 568,12 $',
+            ],
+            'Canada (English)' => [
+                'localeCode'      => 'en-CA',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'CAD',
+                'formattedPrice' => '$1,234,568.12',
+            ],
+            'China'            => [
+                'localeCode'      => 'zh-CN',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'CNY',
+                'formattedPrice' => '¥1,234,568.12',
+            ],
+            'Australia'        => [
+                'localeCode'      => 'en-AU',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'AUD',
+                'formattedPrice' => '$1,234,568.12',
+            ],
+            'Brazil'           => [
+                'localeCode'      => 'pt-BR',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'BRL',
+                'formattedPrice' => 'R$ 1.234.568,12',
+            ],
+            'Mexico'           => [
+                'localeCode'      => 'es-MX',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'MXN',
+                'formattedPrice' => '$1,234,568.12',
+            ],
+            'Russia'           => [
+                'localeCode'      => 'ru-RU',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'RUB',
+                'formattedPrice' => '1 234 568,12 RUB', // Expectation with legacy ICanBoogie system
+                // 'formattedPrice' => '1 234 568,12 ₽', // Expectation with NEW CLDR system
+            ],
+            'Italy'            => [
+                'localeCode'      => 'it-IT',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'EUR',
+                'formattedPrice' => '1.234.568,12 €',
+            ],
+            'Poland'           => [
+                'localeCode'      => 'pl-PL',
+                'rawNumber'       => 1234568.12345,
+                'currencyCode'    => 'PLN',
+                'formattedPrice' => '1 234 568,12 zł',
             ],
         ];
     }

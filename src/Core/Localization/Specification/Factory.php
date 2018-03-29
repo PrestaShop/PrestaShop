@@ -95,14 +95,9 @@ class Factory
      * @param Currency $currency
      *  This Currency object brings missing specification to format a number as a price
      *
-     * @param string $localeCode
-     *  Some price specs need to be localized (e.g.: currency symbol)
-     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *  eg: fr-FR, en-US
-     *
-     * @param $maxFractionDigits
      * @param $numberGroupingUsed
      * @param $currencyDisplayType
+     * @param $maxFractionDigits
      *
      * @return PriceSpecification
      *
@@ -111,19 +106,23 @@ class Factory
     public function buildPriceSpecification(
         CldrLocale $cldrLocale,
         Currency $currency,
-        $localeCode,
-        $maxFractionDigits,
         $numberGroupingUsed,
-        $currencyDisplayType
+        $currencyDisplayType,
+        $maxFractionDigits = null
     ) {
         $currencyPattern = $cldrLocale->getCurrencyPattern();
         $numbersSymbols  = $cldrLocale->getAllNumberSymbols();
+
+        $precision = $maxFractionDigits;
+        if (null === $precision) {
+            $precision = (int)$currency->getDecimalPrecision();
+        }
 
         return new PriceSpecification(
             $this->getPositivePattern($currencyPattern),
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $maxFractionDigits,
+            $precision,
             $this->getMinFractionDigits($currencyPattern),
             $numberGroupingUsed,
             $this->getPrimaryGroupSize($currencyPattern),
