@@ -465,7 +465,7 @@ class Reader implements ReaderInterface
                 /** @var SimplexmlElement $format */
                 $numberSystem  = (string)$format['numberSystem'];
                 $patternResult = $format->xpath(
-                    'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern[not(@*)]'
+                    'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern'
                 );
                 if (isset($patternResult[0])) {
                     $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
