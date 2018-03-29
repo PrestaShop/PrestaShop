@@ -48,17 +48,17 @@ class PreferencesConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'enable_ssl' => (bool) $this->configuration->get('PS_SSL_ENABLED'),
-            'enable_ssl_everywhere' => (bool) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE'),
-            'enable_token' => (bool) $this->configuration->get('PS_TOKEN_ENABLE'),
-            'allow_html_iframes' => (bool) $this->configuration->get('PS_ALLOW_HTML_IFRAME'),
-            'use_htmlpurifier' => (bool) $this->configuration->get('PS_USE_HTMLPURIFIER'),
+            'enable_ssl' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
+            'enable_ssl_everywhere' => $this->configuration->getBoolean('PS_SSL_ENABLED_EVERYWHERE'),
+            'enable_token' => $this->configuration->getBoolean('PS_TOKEN_ENABLE'),
+            'allow_html_iframes' => $this->configuration->getBoolean('PS_ALLOW_HTML_IFRAME'),
+            'use_htmlpurifier' => $this->configuration->getBoolean('PS_USE_HTMLPURIFIER'),
             'price_round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE'),
             'price_round_type' => $this->configuration->get('PS_ROUND_TYPE'),
             'price_display_precision' => $this->configuration->get('PS_PRICE_DISPLAY_PRECISION'),
-            'display_suppliers' => (bool) $this->configuration->get('PS_DISPLAY_SUPPLIERS'),
-            'display_best_sellers' => (bool) $this->configuration->get('PS_DISPLAY_BEST_SELLERS'),
-            'multishop_feature_active' => (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE'),
+            'display_suppliers' => $this->configuration->getBoolean('PS_DISPLAY_SUPPLIERS'),
+            'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
+            'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
             'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
         ];
     }

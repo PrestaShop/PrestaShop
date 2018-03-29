@@ -68,7 +68,7 @@ final class PreferencesFormHandler implements FormHandlerInterface
     {
         return $this->formFactory->createBuilder()
             ->add('general', PreferencesType::class, [
-                'is_ssl_enabled' => (bool) $this->configuration->get('PS_SSL_ENABLED'),
+                'is_ssl_enabled' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
             ])
             ->setData($this->formDataProvider->getData())
             ->getForm()
