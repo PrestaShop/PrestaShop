@@ -147,7 +147,6 @@ export default class FormFieldToggle {
       $availableFields.html(fields);
       $availableFields.find('[data-toggle="popover"]').popover();
     }).catch(error => {
-
     });
   }
 }
