@@ -41,7 +41,7 @@
                 </a>
             </p>
             <p class="alert-text">
-                {{ 'Read more about the CSV format at:'|trans() }}
+                {{ 'Read more about the CSV format at:'|trans({}, 'messages') }}
                 <a href="{{ 'https://en.wikipedia.org/wiki/Comma-separated_values'|trans({}, 'Admin.Advparameters.Help') }}" class="_blank">
                     {{ 'https://en.wikipedia.org/wiki/Comma-separated_values'|trans({}, 'Admin.Advparameters.Help') }}
                 </a>
@@ -124,7 +124,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-control-label">{{ 'Multiple value separator'|trans() }}</label>
+                <label class="form-control-label">{{ 'Multiple value separator'|trans({}, 'messages') }}</label>
                 {{ form_errors(importForm.multiple_value_separator) }}
                 {{ form_widget(importForm.multiple_value_separator) }}
                 <small class="form-text">{{ 'e.g. '|trans({}, 'Admin.Advparameters.Help') }} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</small>
