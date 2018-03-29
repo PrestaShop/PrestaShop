@@ -216,10 +216,9 @@ class Repository implements RepositoryInterface
             $thisPriceSpecification = (new SpecificationFactory($this->currentLocaleCode))->buildPriceSpecification(
                 $cldrLocale,
                 $currency,
-                $localeCode,
-                $this->maxFractionDigits,
                 $this->numberGroupingUsed,
-                $this->currencyDisplayType
+                $this->currencyDisplayType,
+                null // TODO : replace here with custom currency precision
             );
 
             // Add the spec to the collection
