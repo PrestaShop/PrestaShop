@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fcc3f7ce10666b37f9a1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "bd8cc5f1b39fa38b271b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -706,13 +706,59 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(438)(__webpack_require__.s = 438);
+/******/ 	return hotCreateRequire(440)(__webpack_require__.s = 440);
 /******/ })
 /************************************************************************/
 /******/ ({
 
 /***/ 223:
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImportPage__ = __webpack_require__(256);
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+var $ = window.$;
+
+$(function () {
+  new __WEBPACK_IMPORTED_MODULE_0__ImportPage__["a" /* default */]().init();
+});
+
+/***/ }),
+
+/***/ 255:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
  * 2007-2018 PrestaShop
@@ -741,147 +787,456 @@
 
 var $ = window.$;
 
-$(function () {
-  var entityCategories = 0;
-  var entityProducts = 1;
-  var entityCombinations = 2;
-  var entityCustomers = 3;
-  var entityAddresses = 4;
-  var entityBrands = 5;
-  var entitySuppliers = 6;
-  var entityAlias = 7;
-  var entityStoreContacts = 8;
+var entityCategories = 0;
+var entityProducts = 1;
+var entityCombinations = 2;
+var entityCustomers = 3;
+var entityAddresses = 4;
+var entityBrands = 5;
+var entitySuppliers = 6;
+var entityAlias = 7;
+var entityStoreContacts = 8;
 
-  $('.js-entity-select').on('change', toggleForm);
-  $('.js-import-file').on('change', uploadFile);
-
-  toggleForm();
-
-  function toggleForm() {
-    var $selctedOption = $('#entity').find('option:selected');
-    var selectedEntity = parseInt($selctedOption.val());
-    var entityName = $selctedOption.text().toLowerCase();
-
-    toggleEntityAlert(selectedEntity);
-    toggleFields(selectedEntity, entityName);
-    loadAvailableFields(selectedEntity);
+var FormFieldToggle = function () {
+  function FormFieldToggle() {
+    _classCallCheck(this, FormFieldToggle);
   }
 
-  /**
-   * Toggle alert warning for selected import entity
-   *
-   * @param {int} selectedEntity
-   */
-  function toggleEntityAlert(selectedEntity) {
-    var $alert = $('.js-entity-alert');
+  _createClass(FormFieldToggle, [{
+    key: 'init',
+    value: function init() {
+      $('.js-entity-select').on('change', this.toggleForm.bind(this));
 
-    if ([entityCategories, entityProducts].includes(selectedEntity)) {
-      $alert.show();
-    } else {
-      $alert.hide();
+      this.toggleForm();
     }
-  }
+  }, {
+    key: 'toggleForm',
+    value: function toggleForm() {
+      var $selctedOption = $('#entity').find('option:selected');
+      var selectedEntity = parseInt($selctedOption.val());
+      var entityName = $selctedOption.text().toLowerCase();
 
-  /**
-   * Toggle available options for selected entity
-   *
-   * @param {int} selectedEntity
-   * @param {string} entityName
-   */
-  function toggleFields(selectedEntity, entityName) {
-    var $truncateFormGroup = $('.js-truncate-form-group');
-    var $matchRefFormGroup = $('.js-match-ref-form-group');
-    var $regenerateFormGroup = $('.js-regenerate-form-group');
-    var $forceIdsFormGroup = $('.js-force-ids-form-group');
-    var $entityNamePlaceholder = $('.js-entity-name');
-
-    if (entityStoreContacts === selectedEntity) {
-      $truncateFormGroup.hide();
-    } else {
-      $truncateFormGroup.show();
+      this.toggleEntityAlert(selectedEntity);
+      this.toggleFields(selectedEntity, entityName);
+      this.loadAvailableFields(selectedEntity);
     }
 
-    if ([entityProducts, entityCombinations].includes(selectedEntity)) {
-      $matchRefFormGroup.show();
-    } else {
-      $matchRefFormGroup.hide();
+    /**
+     * Toggle alert warning for selected import entity
+     *
+     * @param {int} selectedEntity
+     */
+
+  }, {
+    key: 'toggleEntityAlert',
+    value: function toggleEntityAlert(selectedEntity) {
+      var $alert = $('.js-entity-alert');
+
+      if ([entityCategories, entityProducts].includes(selectedEntity)) {
+        $alert.show();
+      } else {
+        $alert.hide();
+      }
     }
 
-    if ([entityCategories, entityProducts, entityBrands, entitySuppliers, entityStoreContacts].includes(selectedEntity)) {
-      $regenerateFormGroup.show();
-    } else {
-      $regenerateFormGroup.hide();
-    }
+    /**
+     * Toggle available options for selected entity
+     *
+     * @param {int} selectedEntity
+     * @param {string} entityName
+     */
 
-    if ([entityCategories, entityProducts, entityCustomers, entityAddresses, entityBrands, entitySuppliers, entityStoreContacts, entityAlias].includes(selectedEntity)) {
-      $forceIdsFormGroup.show();
-    } else {
-      $forceIdsFormGroup.hide();
-    }
+  }, {
+    key: 'toggleFields',
+    value: function toggleFields(selectedEntity, entityName) {
+      var $truncateFormGroup = $('.js-truncate-form-group');
+      var $matchRefFormGroup = $('.js-match-ref-form-group');
+      var $regenerateFormGroup = $('.js-regenerate-form-group');
+      var $forceIdsFormGroup = $('.js-force-ids-form-group');
+      var $entityNamePlaceholder = $('.js-entity-name');
 
-    $entityNamePlaceholder.html(entityName);
-  }
-
-  /**
-   * Load available fields for given entity
-   *
-   * @param {int} entity
-   */
-  function loadAvailableFields(entity) {
-    $.ajax({
-      url: '../../../ajax.php',
-      data: {
-        getAvailableFields: 1,
-        entity: entity
-      },
-      dataType: 'json'
-    }).then(function (response) {
-      var fields = '';
-      var $availableFields = $('.js-available-fields');
-      $availableFields.empty();
-
-      for (var i = 0; i < response.length; i++) {
-        fields += response[i].field;
+      if (entityStoreContacts === selectedEntity) {
+        $truncateFormGroup.hide();
+      } else {
+        $truncateFormGroup.show();
       }
 
-      $availableFields.html(fields);
-      $availableFields.find('[data-toggle="popover"]').popover();
-    }).catch(function (error) {});
-  }
+      if ([entityProducts, entityCombinations].includes(selectedEntity)) {
+        $matchRefFormGroup.show();
+      } else {
+        $matchRefFormGroup.hide();
+      }
 
-  /**
-   * Upload selected import file
-   */
-  function uploadFile() {
-    var uplodedFile = $('#file').prop('files')[0];
+      if ([entityCategories, entityProducts, entityBrands, entitySuppliers, entityStoreContacts].includes(selectedEntity)) {
+        $regenerateFormGroup.show();
+      } else {
+        $regenerateFormGroup.hide();
+      }
 
-    var data = new FormData(uplodedFile);
-    data.append('file', uplodedFile);
+      if ([entityCategories, entityProducts, entityCustomers, entityAddresses, entityBrands, entitySuppliers, entityStoreContacts, entityAlias].includes(selectedEntity)) {
+        $forceIdsFormGroup.show();
+      } else {
+        $forceIdsFormGroup.hide();
+      }
 
-    var url = $('.js-import-form').data('file-upload-url');
+      $entityNamePlaceholder.html(entityName);
+    }
 
-    //@todo: add progress bar when uploading
+    /**
+     * Load available fields for given entity
+     *
+     * @param {int} entity
+     */
 
-    $.ajax({
-      type: 'POST',
-      url: url,
-      data: data,
-      cache: false,
-      contentType: false,
-      processData: false
-    }).then(function (response) {
-      var filename = response.file.name;
-      $('.js-uploaded-file').val(filename);
-    }).catch(function (error) {
-      //@todo: display error to admin?
-      console.log(error);
-    });
-  }
-});
+  }, {
+    key: 'loadAvailableFields',
+    value: function loadAvailableFields(entity) {
+      $.ajax({
+        url: '../../../ajax.php',
+        data: {
+          getAvailableFields: 1,
+          entity: entity
+        },
+        dataType: 'json'
+      }).then(function (response) {
+        var fields = '';
+        var $availableFields = $('.js-available-fields');
+        $availableFields.empty();
+
+        for (var i = 0; i < response.length; i++) {
+          fields += response[i].field;
+        }
+
+        $availableFields.html(fields);
+        $availableFields.find('[data-toggle="popover"]').popover();
+      }).catch(function (error) {});
+    }
+  }]);
+
+  return FormFieldToggle;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (FormFieldToggle);
 
 /***/ }),
 
-/***/ 438:
+/***/ 256:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__ = __webpack_require__(255);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2018 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2018 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+
+
+var $ = window.$;
+
+var ImportPage = function () {
+  function ImportPage() {
+    _classCallCheck(this, ImportPage);
+  }
+
+  _createClass(ImportPage, [{
+    key: 'init',
+    value: function init() {
+      new __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__["a" /* default */]().init();
+
+      $('.js-from-files-history-btn').on('click', this.showFilesHistoryHandler.bind(this));
+      $('.js-close-files-history-block-btn').on('click', this.closeFilesHistoryHandler.bind(this));
+      $('#fileHistoryTable').on('click', '.js-use-file-btn', this.useFileFromFilesHistory.bind(this));
+      $('.js-change-import-file-btn').on('click', this.changeImportFileHandler.bind(this));
+      $('.js-import-file').on('change', this.uploadFile.bind(this));
+    }
+  }, {
+    key: 'changeImportFileHandler',
+    value: function changeImportFileHandler() {
+      this.hideImportFileAlert();
+      this.showFileUploadBlock();
+    }
+
+    /**
+     * Show files history event handler
+     */
+
+  }, {
+    key: 'showFilesHistoryHandler',
+    value: function showFilesHistoryHandler() {
+      this.showFilesHistory();
+      this.hideFileUploadBlock();
+    }
+
+    /**
+     * Close files history event handler
+     */
+
+  }, {
+    key: 'closeFilesHistoryHandler',
+    value: function closeFilesHistoryHandler() {
+      this.closeFilesHistory();
+      this.showFileUploadBlock();
+    }
+
+    /**
+     * Show files history block
+     */
+
+  }, {
+    key: 'showFilesHistory',
+    value: function showFilesHistory() {
+      $('.js-files-history-block').removeClass('d-none');
+    }
+
+    /**
+     * Hide files history block
+     */
+
+  }, {
+    key: 'closeFilesHistory',
+    value: function closeFilesHistory() {
+      $('.js-files-history-block').addClass('d-none');
+    }
+
+    /**
+     *  Prefill hidden file input with selected file name from history
+     */
+
+  }, {
+    key: 'useFileFromFilesHistory',
+    value: function useFileFromFilesHistory(event) {
+      var filename = $(event.target).closest('.btn-group').data('file');
+
+      $('.js-import-file-input').val(filename);
+
+      this.showImportFileAlert(filename);
+      this.closeFilesHistory();
+    }
+
+    /**
+     * Show alert with imported file name
+     */
+
+  }, {
+    key: 'showImportFileAlert',
+    value: function showImportFileAlert(filename) {
+      $('.js-import-file-alert').removeClass('d-none');
+      $('.js-import-file').text(filename);
+    }
+
+    /**
+     * Hides selected import file alert
+     */
+
+  }, {
+    key: 'hideImportFileAlert',
+    value: function hideImportFileAlert() {
+      $('.js-import-file-alert').addClass('d-none');
+    }
+
+    /**
+     * Hides import file upload block
+     */
+
+  }, {
+    key: 'hideFileUploadBlock',
+    value: function hideFileUploadBlock() {
+      $('.js-file-upload-form-group').addClass('d-none');
+    }
+
+    /**
+     * Hides import file upload block
+     */
+
+  }, {
+    key: 'showFileUploadBlock',
+    value: function showFileUploadBlock() {
+      $('.js-file-upload-form-group').removeClass('d-none');
+    }
+
+    /**
+     * Make file history button clickable
+     */
+
+  }, {
+    key: 'enableFilesHistoryBtn',
+    value: function enableFilesHistoryBtn() {
+      $('.js-from-files-history-btn').removeAttr('disabled');
+    }
+
+    /**
+     * Show error message if file uploading failed
+     *
+     * @param {string} fileName
+     * @param {integer} fileSize
+     * @param {string} message
+     */
+
+  }, {
+    key: 'showImportFileError',
+    value: function showImportFileError(fileName, fileSize, message) {
+      var $alert = $('.js-import-file-error');
+
+      var fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
+
+      $alert.find('.js-file-data').html(fileData);
+      $alert.find('.js-error-message').html(message);
+      $alert.removeClass('d-none');
+    }
+
+    /**
+     * Hide file uploading error
+     */
+
+  }, {
+    key: 'hideImportFileError',
+    value: function hideImportFileError() {
+      var $alert = $('.js-import-file-error');
+      $alert.addClass('d-none');
+    }
+
+    /**
+     * Show file size in human readable format
+     *
+     * @param {int} bytes
+     *
+     * @returns {string}
+     */
+
+  }, {
+    key: 'humanizeSize',
+    value: function humanizeSize(bytes) {
+      if (typeof bytes !== 'number') {
+        return '';
+      }
+
+      if (bytes >= 1000000000) {
+        return (bytes / 1000000000).toFixed(2) + ' GB';
+      }
+
+      if (bytes >= 1000000) {
+        return (bytes / 1000000).toFixed(2) + ' MB';
+      }
+
+      return (bytes / 1000).toFixed(2) + ' KB';
+    }
+
+    /**
+     * Upload selected import file
+     */
+
+  }, {
+    key: 'uploadFile',
+    value: function uploadFile() {
+      var _this = this;
+
+      this.hideImportFileError();
+
+      var $input = $('#file');
+      var uploadedFile = $input.prop('files')[0];
+
+      console.log(uploadedFile);
+
+      var maxUploadSize = $input.data('max-file-upload-size');
+      if (maxUploadSize < uploadedFile.size) {
+        this.showImportFileError(uploadedFile.name, uploadedFile.size, 'File is too large');
+        return;
+      }
+
+      var data = new FormData(uploadedFile);
+      data.append('file', uploadedFile);
+
+      var url = $('.js-import-form').data('file-upload-url');
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false
+      }).then(function (response) {
+        if (response.error) {
+          _this.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
+          return;
+        }
+
+        var filename = response.file.name;
+
+        $('.js-import-file-input').val(filename);
+
+        _this.showImportFileAlert(filename);
+        _this.hideFileUploadBlock();
+        _this.addFileToHistoryTable(filename);
+        _this.enableFilesHistoryBtn();
+      }).catch(function (error) {});
+    }
+
+    /**
+     * Renders new row in files history table
+     *
+     * @param {string} filename
+     */
+
+  }, {
+    key: 'addFileToHistoryTable',
+    value: function addFileToHistoryTable(filename) {
+      var $table = $('#fileHistoryTable');
+
+      var baseDeleteUrl = $table.data('delete-file-url');
+      var deleteUrl = baseDeleteUrl + '&filename=' + encodeURIComponent(filename);
+
+      var baseDownloadUrl = $table.data('download-file-url');
+      var downloadUrl = baseDownloadUrl + '&filename=' + encodeURIComponent(filename);
+
+      var $template = $table.find('tr:first').clone();
+
+      $template.removeClass('d-none');
+      $template.find('td:first').text(filename);
+      $template.find('.btn-group').attr('data-file', filename);
+      $template.find('.js-delete-file-btn').attr('href', deleteUrl);
+      $template.find('.js-download-file-btn').attr('href', downloadUrl);
+
+      $table.find('tbody').append($template);
+
+      var filesNumber = $table.find('tr').length - 1;
+      $('.js-files-history-number').text(filesNumber);
+    }
+  }]);
+
+  return ImportPage;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (ImportPage);
+
+/***/ }),
+
+/***/ 440:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(223);
