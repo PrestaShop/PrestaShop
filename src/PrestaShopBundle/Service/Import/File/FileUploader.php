@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Import;
+namespace PrestaShopBundle\Service\Import\File;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShopBundle\Service\Import\ImportDirectory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,23 +37,25 @@ use Symfony\Component\Translation\TranslatorInterface;
 class FileUploader
 {
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param ConfigurationInterface $configuration
-     * @param TranslatorInterface $translator
+     * @var ImportDirectory
      */
-    public function __construct(ConfigurationInterface $configuration, TranslatorInterface $translator)
-    {
-        $this->configuration = $configuration;
+    private $importDirectory;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param ImportDirectory $importDirectory
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        ImportDirectory $importDirectory
+    ) {
         $this->translator = $translator;
+        $this->importDirectory = $importDirectory;
     }
 
     /**
@@ -76,25 +78,11 @@ class FileUploader
         );
 
         $file = $uploadedFile->move(
-            $this->getImporDir(),
+            $this->importDirectory,
             $uploadedFileName
         );
 
         return $file;
-    }
-
-    /**
-     * Returns import files directory
-     *
-     * @todo: fix duplicate in FileFinder
-     *
-     * @return string
-     */
-    protected function getImporDir()
-    {
-        return ($this->configuration->get('_PS_HOST_MODE_') ?
-                $this->configuration->get('_PS_ROOT_DIR_') :
-                $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import';
     }
 
     /**

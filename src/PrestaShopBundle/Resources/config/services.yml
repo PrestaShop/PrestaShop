@@ -643,12 +643,22 @@ services:
             - '@form.factory'
 
     prestashop.import.file_uploader:
-        class: 'PrestaShopBundle\Service\Import\FileUploader'
+        class: 'PrestaShopBundle\Service\Import\File\FileUploader'
         arguments:
-            - '@prestashop.adapter.legacy.configuration'
             - '@translator'
+            - '@prestashop.import.dir'
 
     prestashop.import.file_finder:
-        class: 'PrestaShopBundle\Service\Import\FileFinder'
+        class: 'PrestaShopBundle\Service\Import\File\FileFinder'
+        arguments:
+            - '@prestashop.import.dir'
+
+    prestashop.import.dir:
+        class: 'PrestaShopBundle\Service\Import\ImportDirectory'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prstashop.import.file_removal:
+        class: 'PrestaShopBundle\Service\Import\File\FileRemoval'
+        arguments:
+            - '@prestashop.import.dir'

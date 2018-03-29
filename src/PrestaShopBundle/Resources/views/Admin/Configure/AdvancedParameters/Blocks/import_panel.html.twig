@@ -76,14 +76,14 @@
                 <span>{{ 'or'|trans }}</span>
                 <button type="button"
                         class="btn btn-outline-primary btn-sm js-from-files-history-btn"
-                        {% if uploaded_file_names is empty %}disabled{% endif %}
+                        {% if import_file_names is empty %}disabled{% endif %}
                 >
-                    <span class="badge badge-primary js-files-history-number">{{ uploaded_file_names|length }}</span>
+                    <span class="badge badge-primary js-files-history-number">{{ import_file_names|length }}</span>
                     {{ 'Choose from history / FTP'|trans({}, 'Admin.Advparameters.Feature') }}
                 </button>
                 <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
                 <small class="form-text">{{ 'Only UTF-8 and ISO 8859-1 encodings are allowed'|trans({}, 'Admin.Advparameters.Help') }}</small>
-                <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({}, 'Admin.Advparameters.Help') }}</small>
+                <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({'%s': import_dir}, 'Admin.Advparameters.Help') }}</small>
             </div>
 
             <div class="alert alert-success d-none js-import-file-alert" role="alert">
