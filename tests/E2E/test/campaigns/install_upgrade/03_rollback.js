@@ -1,8 +1,6 @@
 const {AccessPageBO} = require('../../selectors/BO/access_page');
 const {ModulePage} = require('../../selectors/BO/module_page');
 const {AddProductPage} = require('../../selectors/BO/add_product_page');
-const {SearchProductPage} = require('../../selectors/FO/search_product_page');
-const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
 
@@ -11,7 +9,7 @@ const orderCommonScenarios = require('../common_scenarios/order');
 
 let promise = Promise.resolve();
 
-var productData = {
+let productData = {
   name: 'RollingBackProduct',
   reference: 'product',
   quantity: "10",
@@ -21,9 +19,9 @@ var productData = {
 
 scenario('The shop installation', () => {
 
-  scenario('Open the browser and connect to the BO', client => {
+  scenario('Open the browser and connect to the Back Office', client => {
     test('should open the browser', () => client.open());
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
   scenario('Rollback to the old version ', client => {
@@ -31,7 +29,7 @@ scenario('The shop installation', () => {
     test('should deactivate the shop', () => {
       return promise
         .then(() => client.waitForVisibleElement(ModulePage.confirm_maintenance_shop_icon))
-        .then(() => client.waitForExistAndClick(ModulePage.maintenance_shop))
+        .then(() => client.waitForExistAndClick(ModulePage.maintenance_shop));
     });
     test('should click on "Choose your backup" button', () => client.waitForExistAndClick(ModulePage.module_autoUpgrade_menu));
     test('should choose the back up version', () => client.waitForExistAndClick(ModulePage.rollback_version));
@@ -44,8 +42,8 @@ scenario('The shop installation', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'installation');
 
-  scenario('Connect to the BO', client => {
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
+  scenario('Connect to the Back Office', client => {
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
   scenario('Enable shop in the Back Office', client => {

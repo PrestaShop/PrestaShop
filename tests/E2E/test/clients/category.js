@@ -19,16 +19,16 @@ class Category extends CommonClient {
                 return this.client
                     .waitForExistAndClick(groupActionSelector)
                     .waitForVisibleAndClick(actionSelector)
-                    .alertAccept()
+                    .alertAccept();
             } else {
                 return this.client
                     .waitForExistAndClick(groupActionSelector)
-                    .waitForVisibleAndClick(actionSelector)
+                    .waitForVisibleAndClick(actionSelector);
             }
         } else {
             return this.client
                 .pause(2000)
-                .waitForExistAndClick(actionSelector)
+                .waitForExistAndClick(actionSelector);
         }
     }
 
@@ -42,7 +42,7 @@ class Category extends CommonClient {
         return this.client
             .waitForExist(selector)
             .then(() => {
-                expect(checkCategoryName).to.be.an('array').that.does.include(category_name)
+                expect(checkCategoryName).to.be.an('array').that.does.include(category_name);
             });
     }
 }
