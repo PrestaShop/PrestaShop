@@ -43,9 +43,9 @@ export default class FormFieldToggle {
   }
 
   toggleForm() {
-    let $selctedOption = $('#entity').find('option:selected');
-    let selectedEntity = parseInt($selctedOption.val());
-    let entityName = $selctedOption.text().toLowerCase();
+    let selectedOption = $('#entity').find('option:selected');
+    let selectedEntity = parseInt(selectedOption.val());
+    let entityName = selectedOption.text().toLowerCase();
 
     this.toggleEntityAlert(selectedEntity);
     this.toggleFields(selectedEntity, entityName);
