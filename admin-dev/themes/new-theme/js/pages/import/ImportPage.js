@@ -31,11 +31,11 @@ export default class ImportPage {
   init() {
     new FormFieldToggle().init();
 
-    $('.js-from-files-history-btn').on('click', this.showFilesHistoryHandler.bind(this));
-    $('.js-close-files-history-block-btn').on('click', this.closeFilesHistoryHandler.bind(this));
-    $('#fileHistoryTable').on('click', '.js-use-file-btn', this.useFileFromFilesHistory.bind(this));
-    $('.js-change-import-file-btn').on('click', this.changeImportFileHandler.bind(this));
-    $('.js-import-file').on('change', this.uploadFile.bind(this));
+    $('.js-from-files-history-btn').on('click', () => this.showFilesHistoryHandler());
+    $('.js-close-files-history-block-btn').on('click', () => this.closeFilesHistoryHandler());
+    $('#fileHistoryTable').on('click', '.js-use-file-btn', (event) => this.useFileFromFilesHistory(event));
+    $('.js-change-import-file-btn').on('click', () => this.changeImportFileHandler());
+    $('.js-import-file').on('change', () => this.uploadFile());
   }
 
   changeImportFileHandler() {
@@ -177,8 +177,6 @@ export default class ImportPage {
 
     const $input = $('#file');
     const uploadedFile = $input.prop('files')[0];
-
-    console.log(uploadedFile);
 
     const maxUploadSize = $input.data('max-file-upload-size');
     if (maxUploadSize < uploadedFile.size) {
