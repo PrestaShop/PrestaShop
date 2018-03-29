@@ -1711,7 +1711,11 @@ class FrontControllerCore extends Controller
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix().$_SERVER['HTTP_HOST'].$uriWithoutParams;
         $params = array();
-        parse_str($_SERVER['QUERY_STRING'], $params);
+        $paramsFromUri = '';
+        if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
+            $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
+        }
+        parse_str($paramsFromUri, $params);
 
         if (null !== $extraParams) {
             foreach ($extraParams as $key => $value) {
