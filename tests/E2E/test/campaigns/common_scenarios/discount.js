@@ -72,7 +72,7 @@ module.exports = {
       test('should search for the created cart rule', () => {
         return promise
           .then(() => client.isVisible(DiscountSubMenu.cartRules.filter_name_input))
-          .then(() => client.searchByName(DiscountSubMenu.cartRules.filter_name_input, DiscountSubMenu.cartRules.filter_search_button, cartRuleData.name))
+          .then(() => client.searchByName(DiscountSubMenu.cartRules.filter_name_input, DiscountSubMenu.cartRules.filter_search_button, cartRuleData.name));
       });
       test('should click on "Edit" button', () => client.waitForExistAndClick(DiscountSubMenu.cartRules.edit_button));
       test('should check the cart rule\'s "Name"', () => client.checkAttributeValue(DiscountSubMenu.cartRules.name_input, 'value', cartRuleData.name));
@@ -90,7 +90,7 @@ module.exports = {
         return promise
           .then(() => client.isVisible(DiscountSubMenu.cartRules.filter_name_input))
           .then(() => client.searchByName(DiscountSubMenu.cartRules.filter_name_input, DiscountSubMenu.cartRules.filter_search_button, cartRuleData.name))
-          .then(() => client.editObjectData(cartRuleData))
+          .then(() => client.editObjectData(cartRuleData));
       });
       test('should click on "Edit" button', () => client.waitForExistAndClick(DiscountSubMenu.cartRules.edit_button));
       test('should set the "Name" input', () => client.waitAndSetValue(DiscountSubMenu.cartRules.name_input, cartRuleData.name));
@@ -108,7 +108,7 @@ module.exports = {
       test('should search for the created cart rule', () => {
         return promise
           .then(() => client.isVisible(DiscountSubMenu.cartRules.filter_name_input))
-          .then(() => client.searchByName(DiscountSubMenu.cartRules.filter_name_input, DiscountSubMenu.cartRules.filter_search_button, name))
+          .then(() => client.searchByName(DiscountSubMenu.cartRules.filter_name_input, DiscountSubMenu.cartRules.filter_search_button, name));
       });
       test('should click on "Dropdown toggle" button', () => client.waitForExistAndClick(DiscountSubMenu.cartRules.dropdown_button));
       test('should click on "Delete" button', () => client.waitForExistAndClick(DiscountSubMenu.cartRules.delete_button));

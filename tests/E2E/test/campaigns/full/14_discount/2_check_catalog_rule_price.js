@@ -2,7 +2,7 @@ const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
-const common_scenarios = require('../../common_scenarios/discount');
+const commonScenarios = require('../../common_scenarios/discount');
 
 var catalogPriceRule = [{
   name: 'Catalog_price_1',
@@ -27,8 +27,8 @@ scenario('Check double catalog price rules', client => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
-  common_scenarios.createCatalogPriceRules(catalogPriceRule[0].name, catalogPriceRule[0].type, catalogPriceRule[0].reduction);
-  common_scenarios.createCatalogPriceRules(catalogPriceRule[1].name, catalogPriceRule[1].type, catalogPriceRule[1].reduction, catalogPriceRule[1].quantity);
+  commonScenarios.createCatalogPriceRules(catalogPriceRule[0].name, catalogPriceRule[0].type, catalogPriceRule[0].reduction);
+  commonScenarios.createCatalogPriceRules(catalogPriceRule[1].name, catalogPriceRule[1].type, catalogPriceRule[1].reduction, catalogPriceRule[1].quantity);
 
   scenario('logout successfully from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
@@ -56,8 +56,8 @@ scenario('Check double catalog price rules', client => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
   }, 'common_client');
 
-  common_scenarios.deleteCatalogPriceRules(catalogPriceRule[0].name);
-  common_scenarios.deleteCatalogPriceRules(catalogPriceRule[1].name);
+  commonScenarios.deleteCatalogPriceRules(catalogPriceRule[0].name);
+  commonScenarios.deleteCatalogPriceRules(catalogPriceRule[1].name);
 
   scenario('logout successfully from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());

@@ -4,7 +4,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {CustomerSettings} = require('../../../selectors/BO/shopParameters/customer_settings.js');
-const common_scenarios = require('../11_international/3_taxes/taxes');
+const commonScenarios = require('../../common_scenarios/taxes');
 let promise = Promise.resolve();
 
 let productData = {
@@ -38,8 +38,8 @@ scenario('Create "Tax rules" in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should log in successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  common_scenarios.createTaxRule(taxData.name, taxData.tax_value);
-  common_scenarios.checkTaxRule(taxData.name);
+  commonScenarios.createTaxRule(taxData.name, taxData.tax_value);
+  commonScenarios.checkTaxRule(taxData.name);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
@@ -181,7 +181,7 @@ scenario('Check the product discount in the Front Office', () => {
     scenario('Go back to Back Office', client => {
       test('should go back successfully to the Back Office', () => client.switchWindow(0));
     }, 'common_client');
-    common_scenarios.deleteTaxRule(taxData.name);
+    commonScenarios.deleteTaxRule(taxData.name);
     scenario('Logout from the Back Office', client => {
       test('should logout successfully from the Back Office', () => client.signOutBO());
     }, 'common_client');

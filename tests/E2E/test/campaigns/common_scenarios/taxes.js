@@ -1,11 +1,11 @@
-const {Taxes} = require('../../../../selectors/BO/international/taxes');
-const {InternationalPage} = require('../../../../selectors/BO/international/index');
-const {Menu} = require('../../../../selectors/BO/menu.js');
+const {Taxes} = require('../../selectors/BO/international/taxes');
+const {InternationalPage} = require('../../selectors/BO/international/index');
+const {Menu} = require('../../selectors/BO/menu.js');
 let promise = Promise.resolve();
 
 module.exports = {
   /**
-   * Exemple of tax rule data
+   * Example of tax rule data
    * var taxData = {
    *  name: 'name_tax_rule',
    *  tax_value: 'tax_value',
@@ -54,7 +54,7 @@ module.exports = {
         return promise
           .then(() => client.waitForExistAndClick(Taxes.taxRules.dropdown_button))
           .then(() => client.waitForExistAndClick(Taxes.taxRules.delete_button))
-          .then(() => client.alertAccept())
+          .then(() => client.alertAccept());
       });
       test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nSuccessful deletion.'));
     }, 'common_client');
@@ -70,7 +70,7 @@ module.exports = {
       test('should click on "Delete" action', () => {
         return promise
           .then(() => client.waitForExistAndClick(Taxes.taxRules.action_group_button.replace('%ID', 5)))
-          .then(() => client.alertAccept())
+          .then(() => client.alertAccept());
       });
       test('should verify the appearance of the green validation', () => client.checkTextValue(InternationalPage.success_panel, '×\nThe selection has been successfully deleted.'));
     }, 'common_client');
