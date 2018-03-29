@@ -30,7 +30,6 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,9 +57,11 @@ class ImportController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            //@todo: validate data before forwarding
+            if (!$errors = $formHandler->save($data)) {
+                return $this->fowardRequestToLegacyResponse($request);
+            }
 
-            return $this->fowardRequestToLegacyResponse($request);
+            $this->flashErrors($errors);
         }
 
         $finder = $this->get('prestashop.import.file_finder');
@@ -100,17 +101,19 @@ class ImportController extends FrameworkBundleAdminController
             ]);
         }
 
-        $response['file'] = [
-            'name' => $uploadedFile->getFilename(),
-            'size' => $uploadedFile->getSize(),
-        ];
-
         try {
             $fileUploader = $this->get('prestashop.import.file_uploader');
-            $fileUploader->upload($uploadedFile);
+            $file = $fileUploader->upload($uploadedFile);
         } catch (FileUploadException $e) {
             $response['error'] = $e->getMessage();
+
+            return $this->json($response);
         }
+
+        $response['file'] = [
+            'name' => $file->getFilename(),
+            'size' => $file->getSize(),
+        ];
 
         return $this->json($response);
     }

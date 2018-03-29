@@ -63,7 +63,9 @@ class ImportType extends TranslatorAwareType
                     $this->trans('Store contacts', 'Admin.Advparameters.Feature') => 8,
                 ],
             ])
-            ->add('file', FileType::class)
+            ->add('file', FileType::class, [
+                'required' => false,
+            ])
             ->add('iso_lang', ChoiceType::class, [
                 'choices' => $locales,
             ])
