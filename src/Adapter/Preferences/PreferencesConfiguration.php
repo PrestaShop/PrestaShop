@@ -91,25 +91,19 @@ class PreferencesConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            [
-                'enable_ssl',
-                'enable_ssl_everywhere',
-                'enable_token',
-                'allow_html_iframes',
-                'use_htmlpurifier',
-                'price_round_mode',
-                'price_round_type',
-                'price_display_precision',
-                'display_suppliers',
-                'display_best_sellers',
-                'multishop_feature_active',
-                'shop_activity',
-            ]
+        return isset(
+            $configuration['enable_ssl'],
+            $configuration['enable_ssl_everywhere'],
+            $configuration['enable_token'],
+            $configuration['allow_html_iframes'],
+            $configuration['use_htmlpurifier'],
+            $configuration['price_round_mode'],
+            $configuration['price_round_type'],
+            $configuration['price_display_precision'],
+            $configuration['display_suppliers'],
+            $configuration['display_best_sellers'],
+            $configuration['multishop_feature_active'],
+            $configuration['shop_activity']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 }
