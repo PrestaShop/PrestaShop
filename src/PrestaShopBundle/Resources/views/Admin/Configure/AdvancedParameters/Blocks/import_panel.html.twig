@@ -72,7 +72,7 @@
             <div class="form-group js-file-upload-form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
                 {{ form_errors(importForm.file) }}
-                {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file'}}) }}
+                {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': max_file_upload_size }}) }}
                 <span>{{ 'or'|trans }}</span>
                 <button type="button"
                         class="btn btn-outline-primary btn-sm js-from-files-history-btn"
@@ -86,8 +86,15 @@
                 <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({'%s': import_dir}, 'Admin.Advparameters.Help') }}</small>
             </div>
 
+            <div class="alert alert-danger d-none js-import-file-error" role="alert">
+                <p class="alert-text">
+                    <strong class="js-file-data"></strong>: <span class="js-error-message"></span>
+                </p>
+            </div>
+
             <div class="alert alert-success d-none js-import-file-alert" role="alert">
-                <button type="button" class="close btn btn-outline-secondary js-change-import-file-btn"
+                <button type="button"
+                        class="close btn btn-outline-secondary js-change-import-file-btn"
                         aria-label="{{ 'Change'|trans({}, 'Admin.Actions') }}"
                 >
                     <span aria-hidden="true"><i class="material-icons">update</i></span>
