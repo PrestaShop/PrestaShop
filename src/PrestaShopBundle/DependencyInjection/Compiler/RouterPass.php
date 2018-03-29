@@ -42,6 +42,6 @@ class RouterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container->setAlias('router', 'prestashop.router');
+        $container->setAlias('router', 'prestashop.router')->setPublic(true);
     }
 }

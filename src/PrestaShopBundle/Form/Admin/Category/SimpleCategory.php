@@ -86,7 +86,6 @@ class SimpleCategory extends CommonAbstractType
         ))
         ->add('id_parent', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->categories,
-            'choices_as_values' => true,
             'required' => true,
             'attr' => array(
                 'data-toggle' => 'select2',

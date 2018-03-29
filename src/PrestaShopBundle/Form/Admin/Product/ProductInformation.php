@@ -123,7 +123,6 @@ class ProductInformation extends CommonAbstractType
             'attr' => array(
                 'class' => 'custom-select',
             ),
-            'choices_as_values' => true,
             'label' =>  $this->translator->trans('Type', [], 'Admin.Catalog.Feature'),
             'required' => true,
         ))
@@ -197,7 +196,6 @@ class ProductInformation extends CommonAbstractType
         ))
         ->add('id_manufacturer', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' => $this->manufacturers,
-            'choices_as_values' => true,
             'required' => false,
             'attr' => array(
                 'data-toggle' => 'select2',
@@ -245,7 +243,6 @@ class ProductInformation extends CommonAbstractType
         ))
         ->add('id_category_default', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'choices' =>  $this->categories,
-            'choices_as_values' => true,
             'expanded' => true,
             'multiple' => false,
             'required' =>  true,

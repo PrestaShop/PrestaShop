@@ -99,8 +99,7 @@ class ProductQuantity extends CommonAbstractType
             )
             ->add(
                 'pack_stock_type',
-                'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
-                array('choices_as_values' => true)
+                'Symfony\Component\Form\Extension\Core\Type\ChoiceType'
             )//see eventListener for details
             ->add(
                 'depends_on_stock',
@@ -118,7 +117,6 @@ class ProductQuantity extends CommonAbstractType
                             'Admin.Catalog.Feature'
                         ) => 0,
                     ),
-                    'choices_as_values' => true,
                     'expanded' => true,
                     'required' => true,
                     'multiple' => false,
@@ -142,10 +140,7 @@ class ProductQuantity extends CommonAbstractType
         $builder
             ->add(
                 'out_of_stock',
-                'Symfony\Component\Form\Extension\Core\Type\ChoiceType',
-                array(
-                    'choices_as_values' => true,
-                )
+                'Symfony\Component\Form\Extension\Core\Type\ChoiceType'
             )
             ->add(
                 'minimal_quantity',
@@ -243,7 +238,6 @@ class ProductQuantity extends CommonAbstractType
                             $this->translator->trans('Allow orders', array(), 'Admin.Catalog.Feature') => '1',
                             $defaultChoiceLabel => '2',
                         ),
-                        'choices_as_values' => true,
                         'expanded' => true,
                         'required' => false,
                         'placeholder'=> false,
@@ -272,7 +266,6 @@ class ProductQuantity extends CommonAbstractType
                             $this->translator->trans('Decrement both.', array(), 'Admin.Catalog.Feature')  => '2',
                             $defaultChoiceLabel => '3',
                         ),
-                        'choices_as_values' => true,
                         'expanded' => false,
                         'required' => true,
                         'placeholder' => false,

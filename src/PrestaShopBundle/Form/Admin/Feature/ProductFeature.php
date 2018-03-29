@@ -73,7 +73,6 @@ class ProductFeature extends CommonAbstractType
         $builder->add('feature', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Feature', array(), 'Admin.Catalog.Feature'),
             'choices' =>  $this->features,
-            'choices_as_values' => true,
             'required' =>  false,
             'attr' => array(
                 'data-action' => $this->router->generate('admin_feature_get_feature_values', array('idFeature' => 1)),
@@ -86,7 +85,6 @@ class ProductFeature extends CommonAbstractType
         ->add('value', 'Symfony\Component\Form\Extension\Core\Type\ChoiceType', array(
             'label' => $this->translator->trans('Pre-defined value', array(), 'Admin.Catalog.Feature'),
             'required' =>  false,
-            'choices_as_values' => true,
             'attr' => array(
                 'class' => 'feature-value-selector',
                 'data-minimumResultsForSearch' => '7',
@@ -149,7 +147,6 @@ class ProductFeature extends CommonAbstractType
                 'data-toggle' => 'select2',
             ),
             'choices' => $choices,
-            'choices_as_values' => true,
             'placeholder' => $this->translator->trans('Choose a value', array(), 'Admin.Catalog.Feature'),
         ));
     }

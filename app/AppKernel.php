@@ -66,9 +66,9 @@ class AppKernel extends Kernel
          * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
          */
         if (extension_loaded('apc')) {
-            $_SERVER['SYMFONY__CACHE__DRIVER'] = 'apc';
+            $_SERVER['CACHE_DRIVER'] = 'apc';
         } else {
-            $_SERVER['SYMFONY__CACHE__DRIVER'] = 'array';
+            $_SERVER['CACHE_DRIVER'] = 'array';
         }
 
         return $bundles;
