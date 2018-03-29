@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,51 +48,16 @@ class PreferencesType extends CommonAbstractType
         $configuration = $this->getConfiguration();
 
         if ($options['is_ssl_enabled']) {
-            $builder
-                ->add('enable_ssl', ChoiceType::class, array(
-                    'choices_as_values' => true,
-                    'choices'  => array(
-                        'No' => false,
-                        'Yes' => true,
-                    ),
-                    'choice_translation_domain' => 'Admin.Global',
-                ));
+            $builder->add('enable_ssl', SwitchType::class);
         }
 
         $builder
-            ->add('enable_ssl_everywhere', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('enable_ssl_everywhere', SwitchType::class, array(
                 'disabled' => !$options['is_ssl_enabled'],
             ))
-            ->add('enable_token', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
-            ->add('allow_html_iframes', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
-            ->add('use_htmlpurifier', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
+            ->add('enable_token', SwitchType::class)
+            ->add('allow_html_iframes', SwitchType::class)
+            ->add('use_htmlpurifier', SwitchType::class)
             ->add('price_round_mode', ChoiceType::class, array(
                 'choices_as_values' => true,
                 'choices'  => array(
@@ -122,30 +88,9 @@ class PreferencesType extends CommonAbstractType
                     'min' => 0,
                 ],
             ))
-            ->add('display_suppliers', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
-            ->add('display_best_sellers', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
-            ->add('multishop_feature_active', ChoiceType::class, array(
-                'choices_as_values' => true,
-                'choices'  => array(
-                    'No' => false,
-                    'Yes' => true,
-                ),
-                'choice_translation_domain' => 'Admin.Global',
-            ))
+            ->add('display_suppliers', SwitchType::class)
+            ->add('display_best_sellers', SwitchType::class)
+            ->add('multishop_feature_active', SwitchType::class)
             ->add('shop_activity', ChoiceType::class, array(
                 'choices_as_values' => true,
                 'choices'  => array(
