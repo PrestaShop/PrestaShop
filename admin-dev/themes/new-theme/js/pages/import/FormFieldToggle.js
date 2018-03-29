@@ -61,7 +61,7 @@ export default class FormFieldToggle {
     let $alert = $('.js-entity-alert');
 
     if ([entityCategories, entityProducts].includes(selectedEntity)) {
-      $alert.show()
+      $alert.show();
     } else {
       $alert.hide();
     }
@@ -146,7 +146,6 @@ export default class FormFieldToggle {
 
       $availableFields.html(fields);
       $availableFields.find('[data-toggle="popover"]').popover();
-    }).catch(error => {
     });
   }
 }
