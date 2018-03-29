@@ -51,9 +51,21 @@ final class ImportFormHandler implements FormHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * Performs some checked on data that is being passed to legacy controller
      */
     public function save(array $data)
     {
-        // TODO: Implement save() method.
+        $errors = [];
+
+        if (!isset($data['csv']) || empty($data['csv'])) {
+            $errors[] = [
+                'key' => 'To proceed, please upload a file first.',
+                'domain' => 'Admin.Advparameters.Notification',
+                'parameters' => [],
+            ];
+        }
+
+        return $errors;
     }
 }
