@@ -768,11 +768,11 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Get a simple list of categories
+     * Get a simple list of categories with id_category and name for each Category
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Return array with `id_category` and `name` for every Category
+     * @return array|false|mysqli_result|null|PDOStatement|resource
      */
     public static function getSimpleCategories($idLang)
     {
@@ -788,11 +788,12 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * Get a simple list of categories with parent infos
+     * Get a simple list of categories with id_category, name and id_parent infos
+     * It also takes into account the root category of the current shop
      *
      * @param int $idLang Language ID
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource Return array with `id_category` and `name` for every Category
+     * @return array|false|mysqli_result|null|PDOStatement|resource
      */
     public static function getSimpleCategoriesWithParentInfos($idLang)
     {
