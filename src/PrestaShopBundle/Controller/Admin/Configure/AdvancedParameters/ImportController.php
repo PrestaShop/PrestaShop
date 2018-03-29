@@ -56,6 +56,15 @@ class ImportController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
+            if ($this->isDemoModeEnabled()) {
+                $this->addFlash(
+                    'error',
+                    $this->trans('This functionality has been disabled.','Admin.Notifications.Error')
+                );
+
+                return $this->redirectToRoute('admin_import');
+            }
+
             $data = $form->getData();
             if (!$errors = $formHandler->save($data)) {
                 return $this->fowardRequestToLegacyResponse($request);
