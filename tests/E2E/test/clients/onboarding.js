@@ -16,7 +16,7 @@ class OnBoarding extends CommonClient {
           global.startOnboarding = true;
           this.client.click(resumeButton);
         }
-      })
+      });
   }
 }
 
