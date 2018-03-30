@@ -551,7 +551,7 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prstashop.import.file_removal:
+    prestashop.import.file_removal:
         class: 'PrestaShopBundle\Service\Import\File\FileRemoval'
         arguments:
             - '@prestashop.import.dir'
