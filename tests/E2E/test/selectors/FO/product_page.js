@@ -1,6 +1,6 @@
 module.exports = {
   productPage: {
-    first_product: '(//*[@id="content"]//h1[@itemprop="name"])[1]',
+    first_product: '(//*[@id="content"]//h3[@itemprop="name"])[1]',
     first_product_size: '//*[@id="group_1"]',
     first_product_quantity: '//*[@id="quantity_wanted"]',
     first_product_color: '//*[@id="group_2"]/li[2]/label/input',

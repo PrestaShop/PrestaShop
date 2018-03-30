@@ -3,7 +3,7 @@
 module.exports = {
     customer: {
         firstname: "John",
-        lastname: "Doe",
+        lastname: "DOE",
         email: "pub%ID@prestashop.com",
         password: "123456789"
     },

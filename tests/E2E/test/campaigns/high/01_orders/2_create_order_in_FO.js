@@ -1,5 +1,4 @@
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
-const {OrderPage} = require('../../../selectors/BO/order');
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
@@ -7,8 +6,8 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
-const common_scenarios = require('../../common_scenarios/order');
-const common_scenarios_product = require('../../common_scenarios/product');
+const commonOrder = require('../../common_scenarios/order');
+const commonProduct = require('../../common_scenarios/product');
 let promise = Promise.resolve();
 
 scenario('Create order in the Front Office', () => {
@@ -16,9 +15,9 @@ scenario('Create order in the Front Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'order');
-  scenario('Create order in the Front Office', () => {
-    common_scenarios.createOrder();
-  }, 'order');
+
+    commonOrder.createOrder();
+
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));
   }, 'order');
@@ -30,25 +29,11 @@ scenario('Check the created order in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'order');
 
-  scenario('Check the created order in the Back Office', client => {
-    test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
-    test('should search the order created by reference', () => client.waitAndSetValue(OrderPage.search_by_reference_input, global.tab['reference']));
-    test('should go to search order', () => client.waitForExistAndClick(OrderPage.search_order_button));
-    test('should go to the order ', () => client.scrollWaitForExistAndClick(OrderPage.view_order_button.replace('%NUMBER', 1)));
-    test('should check the customer name ', () => client.checkTextValue(OrderPage.customer_name, 'John DOE', 'contain'));
-    test('should status be equal to Awaiting bank wire payment ', () => client.checkTextValue(OrderPage.order_status, 'Awaiting bank wire payment'));
-    test('should check the shipping price', () => client.checkTextValue(OrderPage.shipping_cost, global.tab['shipping_price']));
-    test('should check the product', () => client.checkTextValue(OrderPage.product_name, global.tab['product']));
-    test('should check the order message ', () => client.checkTextValue(OrderPage.message_order, 'Order message test'));
-    test('should check the total price', () => client.checkTextValue(OrderPage.total_price, global.tab["total_price"]));
-    test('should check basic product price', () => {
-      return promise
-        .then(() => client.scrollTo(OrderPage.edit_product_button))
-        .then(() => client.waitForExistAndClick(OrderPage.edit_product_button))
-        .then(() => client.checkAttributeValue(OrderPage.product_basic_price, 'value', global.tab["basic_price"].replace('€', '')))
-    });
-    test('should check shipping method ', () => client.checkTextValue(OrderPage.shipping_method, global.tab["method"].split('\n')[0], 'contain'));
-  }, "order");
+  commonOrder.checkOrderInBO();
+
+  scenario('Logout from the Back Office', client => {
+    test('should logout successfully from the Back Office', () => client.signOutBO());
+  }, 'order');
 }, 'order', true);
 
 /**
@@ -76,8 +61,8 @@ scenario('Check that Ordering more than the stock is giving a wrong message', ()
     test('Should click "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button));
   }, 'order');
 
-  scenario('Create a product with the quantity equal to 50', client => {
-    common_scenarios_product.createProduct(AddProductPage, productDataOrder[0])
+  scenario('Create a product with the quantity equal to 50', () => {
+    commonProduct.createProduct(AddProductPage, productDataOrder[0])
   }, 'order');
 
   scenario('Connect to the Front Office', client => {
