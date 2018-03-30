@@ -360,6 +360,12 @@ class CommonClient {
   deleteObjectElement(object, pos) {
     delete object[pos];
   }
+
+  isSelected(selector){
+    return this.client
+      .isSelected(selector)
+      .then((value) => expect(value).to.be.true);
+  }
 }
 
 module.exports = CommonClient;

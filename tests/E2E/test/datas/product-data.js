@@ -111,6 +111,6 @@ module.exports = {
         name: "perso_file",
       }
     },
-    search_related_products: "Hummingbird printed t-shirt (ref: demo_1)//The best is yet to come' Framed poster (ref: demo_6)",
+    search_related_products: "Hummingbird printed t-shirt (ref:demo_1)//The best is yet to come' Framed poster (ref:demo_6)",
   }
 };
