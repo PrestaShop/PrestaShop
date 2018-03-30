@@ -25,36 +25,14 @@
  */
 namespace PrestaShop\PrestaShop\Core\Product;
 
-class ProductListingPresenter extends ProductPresenter
+/**
+ * @deprecated since 1.7.4.0
+ * @see \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter
+ *
+ * Class ProductListingPresenter
+ * @package PrestaShop\PrestaShop\Core\Product
+ */
+class ProductListingPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter
 {
-    public function present(
-        ProductPresentationSettings $settings,
-        array $product,
-        \Language $language
-    ) {
-        $presentedProduct = parent::present(
-            $settings,
-            $product,
-            $language
-        );
 
-        if ($product['id_product_attribute'] != 0 && !$settings->allow_add_variant_to_cart_from_listing) {
-            $presentedProduct['add_to_cart_url'] = null;
-        }
-
-        if ($product['customizable'] == 2 || !empty($product['customization_required'])) {
-            $presentedProduct['add_to_cart_url'] = null;
-        }
-
-        return $presentedProduct;
-    }
-
-    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
-    {
-        if (isset($product['attributes']) && count($product['attributes']) > 0 && !$settings->allow_add_variant_to_cart_from_listing) {
-            return false;
-        }
-
-        return parent::shouldEnableAddToCartButton($product, $settings);
-    }
 }

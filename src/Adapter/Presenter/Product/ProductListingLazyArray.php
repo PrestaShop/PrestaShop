@@ -23,42 +23,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
-namespace PrestaShop\PrestaShop\Adapter;
+use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
-use Symfony\Component\HttpKernel\KernelInterface;
-
-/**
- * Class SymfonyContainer
- *
- * This is a TEMPORARY class for quick access to the Symfony Container
- */
-final class SymfonyContainer
+class ProductListingLazyArray extends ProductLazyArray
 {
-    /** @var self */
-    private static $instance = null;
-
     /**
-     * Get a singleton instance of SymfonyContainer
-     *
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface;
+     * @arrayAccess
+     * @return null|string
      */
-    public static function getInstance()
+    public function getAddToCartUrl()
     {
-        if (!isset(self::$instance)) {
-
-            global $kernel;
-
-            if (!is_null($kernel) && $kernel instanceof KernelInterface) {
-                self::$instance = $kernel->getContainer();
-            }
+        if ($this->product['id_product_attribute'] != 0 && !$this->settings->allow_add_variant_to_cart_from_listing) {
+            return null;
         }
 
-        return self::$instance;
+        if ($this->product['customizable'] == 2 || !empty($this->product['customization_required'])) {
+            return null;
+        }
+
+        return parent::getAddToCartUrl();
     }
 
-    public static function resetStaticCache()
+    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
     {
-        self::$instance = null;
+        if (isset($product['attributes'])
+            && count($product['attributes']) > 0
+            && !$settings->allow_add_variant_to_cart_from_listing) {
+            return false;
+        }
+
+        return parent::shouldEnableAddToCartButton($product, $settings);
     }
 }

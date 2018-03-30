@@ -25,16 +25,25 @@
  */
 
 
-namespace PrestaShop\PrestaShop\Core\Product;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
+use Order;
 
-/**
- * @deprecated since 1.7.4.0
- * @see \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter
- *
- * Class ProductPresenter
- * @package PrestaShop\PrestaShop\Core\Product
- */
-class ProductPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductPresenter
+class OrderPresenter implements PresenterInterface
 {
+    /**
+     * @param Order $order
+     *
+     * @return OrderLazyArray
+     * @throws \Exception
+     */
+    public function present($order)
+    {
+        if (!is_a($order, 'Order')) {
+            throw new \Exception('OrderArray can only present instance of Order');
+        }
+
+        return new OrderLazyArray($order);
+    }
 }
