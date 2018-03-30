@@ -46,6 +46,7 @@ class HistoryControllerCore extends FrontController
 
         if ($this->order_presenter === null) {
             $this->order_presenter = new OrderPresenter();
+            $this->order_presenter->setSkipProductDetails(true);
         }
 
         if (Tools::isSubmit('slowvalidation')) {
