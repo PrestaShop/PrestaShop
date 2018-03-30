@@ -54,3 +54,8 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.logs.form_provider'
+
+    prestashop.admin.import.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
+        arguments:
+            - '@form.factory'

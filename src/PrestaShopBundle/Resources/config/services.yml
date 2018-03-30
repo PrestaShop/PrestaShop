@@ -637,11 +637,6 @@ services:
             - '@prestashop.adapter.data_provider.currency'
 
     # Import
-    prestashop.admin.import.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
-        arguments:
-            - '@form.factory'
-
     prestashop.import.file_uploader:
         class: 'PrestaShopBundle\Service\Import\File\FileUploader'
         arguments:
