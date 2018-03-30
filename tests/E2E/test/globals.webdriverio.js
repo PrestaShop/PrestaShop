@@ -15,7 +15,6 @@ global.db_user = argv.DB_USER || "root";
 global.db_passwd = argv.DB_PASSWD || "doge";
 global.db_empty_password = !!argv.DB_EMPTY_PASSWD; //Cast as boolean
 global.selenium_url = argv.SELENIUM;
-
 global.module_tech_name = argv.MODULE || "gadwords";
 global.install_shop = argv.INSTALL || false;
 global.downloadsFolderPath = argv.DIR;                   // Download directory
@@ -37,6 +36,7 @@ global.onboarding = false;
 global.invoiceFileName = "";
 global.basic_price = "";
 global.indexText = 0;
+global.categoryID = "";
 module.exports = {
     selector: require('./selectors'),
     shouldExist: function (err, existing) {
