@@ -29,6 +29,10 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
+/**
+ * This class manages the data submitted in first step of import
+ * in "Configure > Advanced Parameters > Import" page.
+ */
 final class ImportFormHandler implements FormHandlerInterface
 {
     /**
