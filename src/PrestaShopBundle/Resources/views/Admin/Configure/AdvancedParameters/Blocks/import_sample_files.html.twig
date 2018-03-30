@@ -32,33 +32,15 @@
 
     <div class="card-block">
         <div class="list-group">
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/categories_import.csv">
-                {{ 'Sample Categories file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/products_import.csv">
-                {{ 'Sample Products file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/combinations_import.csv">
-                {{ 'Sample Combinations file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/customers_import.csv">
-                {{ 'Sample Customers file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/addresses_import.csv">
-                {{ 'Sample Addresses file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/manufacturers_import.csv">
-                {{ 'Sample Brands file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/suppliers_import.csv">
-                {{ 'Sample Suppliers file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/alias_import.csv">
-                {{ 'Sample Aliases file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
-            <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/store_contacts.csv">
-                {{ 'Sample Store Contacts file'|trans({}, 'Admin.Advparameters.Feature') }}
-            </a>
+            {{ ps.import_file_sample('Sample Categories file', 'categories_import') }}
+            {{ ps.import_file_sample('Sample Products file', 'products_import') }}
+            {{ ps.import_file_sample('Sample Combinations file', 'combinations_import') }}
+            {{ ps.import_file_sample('Sample Customers file', 'customers_import') }}
+            {{ ps.import_file_sample('Sample Addresses file', 'addresses_import') }}
+            {{ ps.import_file_sample('Sample Brands file', 'manufacturers_import') }}
+            {{ ps.import_file_sample('Sample Suppliers file', 'suppliers_import') }}
+            {{ ps.import_file_sample('Sample Aliases file', 'alias_import') }}
+            {{ ps.import_file_sample('Sample Store Contacts file', 'store_contacts') }}
         </div>
     </div>
 </div>
