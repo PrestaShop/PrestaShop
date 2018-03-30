@@ -26,10 +26,11 @@
 namespace PrestaShop\PrestaShop\Adapter\Upload;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
+/**
+ * Manages the configuration data about upload quota options.
+ */
 class UploadQuotaConfiguration implements DataConfigurationInterface
 {
     /**
@@ -72,25 +73,28 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      * Update the file upload limit if possible.
      *
      * @return array the errors list during the update operation.
+     * @throws \Exception
      */
     private function updateFileUploadConfiguration(array $configuration)
     {
         $uploadMaxSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
         $postMaxSize = (int) str_replace('M', '', ini_get('post_max_size'));
-        $maxSize = $uploadMaxSize < $postMaxSize ? $uploadMaxSize : $postMaxSize;
+        $maxSize = min($uploadMaxSize, $postMaxSize);
 
         $errors = array();
 
         foreach ($configuration as $configurationKey => $configurationValue) {
-            if ($configurationValue > $maxSize) {
-                $errors[] = array(
-                    'key' => 'The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.',
-                    'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' => array(),
-                );
-            }
+            if (in_array($configurationKey, array_keys($this->getConfiguration(), true), true)) {
+                if ($configurationValue > $maxSize) {
+                    $errors[] = array(
+                        'key' => 'The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.',
+                        'domain' => 'Admin.Advparameters.Notification',
+                        'parameters' => array(),
+                    );
+                }
 
-            $this->configuration->set($this->getConfigurationKey($configurationKey), $configurationValue);
+                $this->configuration->set($this->getConfigurationKey($configurationKey), $configurationValue);
+            }
         }
 
         return $errors;
@@ -118,17 +122,10 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired(
-                array(
-                    'max_size_attached_files',
-                    'max_size_downloadable_product',
-                    'max_size_product_image',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['max_size_attached_files'],
+            $configuration['max_size_downloadable_product'],
+            $configuration['max_size_product_image']
+        );
     }
 }

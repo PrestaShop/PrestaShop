@@ -107,18 +107,11 @@ class CachingConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired(
-                array(
-                    'use_cache',
-                    'caching_system',
-                    'servers',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['use_cache'],
+            $configuration['caching_system'],
+            $configuration['servers']
+        );
     }
 
     /**

@@ -56,8 +56,10 @@
                                 {{ form_errors(generalForm.maintenance_text) }}
                                 {{ form_widget(generalForm.maintenance_text) }}
                             </div>
+                            {{ form_rest(generalForm) }}
                         </div>
                     </div>
+
                     <div class="card-footer">
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>

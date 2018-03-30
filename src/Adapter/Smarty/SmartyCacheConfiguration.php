@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Smarty;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class will manage Smarty configuration for a Shop
@@ -84,30 +83,14 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setDefined(
-                array(
-                    'template_compilation',
-                    'cache',
-                    'multi_front_optimization',
-                    'caching_type',
-                    'clear_cache',
-                    'smarty_console',
-                    'smarty_console_key'
-                )
-            )
-            ->setRequired(
-                array(
-                    'template_compilation',
-                    'cache',
-                    'multi_front_optimization',
-                    'caching_type',
-                    'clear_cache',
-                )
-            );
-        $resolver->resolve($configuration);
-
-        return true;
+        return isset(
+            $configuration['template_compilation'],
+            $configuration['cache'],
+            $configuration['multi_front_optimization'],
+            $configuration['caching_type'],
+            $configuration['clear_cache'],
+            $configuration['smarty_console'],
+            $configuration['smarty_console_key']
+        );
     }
 }

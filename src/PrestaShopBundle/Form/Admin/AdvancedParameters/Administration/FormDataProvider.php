@@ -27,8 +27,8 @@ namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration;
 use PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\GeneralConfiguration;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
  * This class is responsible of managing the data manipulated using forms

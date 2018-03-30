@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\OptionalFeatures;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureFeature;
@@ -102,16 +101,10 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
      */
     public function validateConfiguration(array $configuration)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired(
-            array(
-                'combinations',
-                'features',
-                'customer_groups',
-            )
+        return isset(
+            $configuration['combinations'],
+            $configuration['features'],
+            $configuration['customer_groups']
         );
-        $resolver->resolve($configuration);
-
-        return true;
     }
 }

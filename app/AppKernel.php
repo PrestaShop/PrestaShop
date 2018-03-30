@@ -24,9 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpKernel\Kernel;
 use PrestaShopBundle\Kernel\ModuleRepository;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -34,6 +32,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AppKernel extends Kernel
 {
+    /**
+     * @{inheritdoc}
+     */
     public function registerBundles()
     {
         $bundles = array(
@@ -83,12 +84,12 @@ class AppKernel extends Kernel
 
         $activeModules = array();
 
+        /* Will not work until PrestaShop is installed */
         if ($this->parametersFileExists()) {
             try {
                 $this->getConnection()->connect();
                 $activeModules = $this->getActiveModules();
-            } catch (\Exception $e) {
-            }
+            } catch (\Exception $e) {}
         }
 
         return array_merge(
@@ -123,6 +124,7 @@ class AppKernel extends Kernel
 
     /**
      * @{inheritdoc}
+     * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
@@ -139,6 +141,7 @@ class AppKernel extends Kernel
      * Return all active modules.
      *
      * @return array list of modules names.
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function getActiveModules()
     {
@@ -153,7 +156,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @return array The root parameters of PrestaShop
+     * @return array The root parameters of PrestaShop.
      */
     private function getParameters()
     {
@@ -168,6 +171,7 @@ class AppKernel extends Kernel
 
     /**
      * @var bool
+     * @return bool
      */
     private function parametersFileExists()
     {
@@ -175,7 +179,7 @@ class AppKernel extends Kernel
     }
 
     /**
-     * @return string filepath to PrestaShop configuration parameters
+     * @return string file path to PrestaShop configuration parameters.
      */
     private function getParametersFile()
     {
@@ -184,6 +188,7 @@ class AppKernel extends Kernel
 
     /**
      * @return \Doctrine\DBAL\Connection
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function getConnection()
     {

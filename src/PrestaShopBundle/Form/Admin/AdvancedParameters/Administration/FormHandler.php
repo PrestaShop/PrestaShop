@@ -25,18 +25,15 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Administration;
 
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType;
+use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Administration" page.
  */
-final class FormHandler implements FormHandlerInterface
+final class FormHandler extends AbstractFormHandler
 {
     /**
      * @var FormFactoryInterface
@@ -59,13 +56,16 @@ final class FormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        return $this->formFactory->createBuilder()
+        $formBuilder = $this->formFactory->createBuilder()
             ->add('general', GeneralType::class)
             ->add('upload_quota', UploadQuotaType::class)
             ->add('notifications', NotificationsType::class)
             ->setData($this->formDataProvider->getData())
-            ->getForm()
         ;
+
+        $this->hookDispatcher->dispatchForParameters('displayAdministrationPageForm', ['form_builder' => &$formBuilder]);
+
+        return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
     /**
@@ -73,6 +73,10 @@ final class FormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-        return $this->formDataProvider->setData($data);
+        $errors = $this->formDataProvider->setData($data);
+
+        $this->hookDispatcher->dispatchForParameters('actionAdministrationPageFormSave', ['errors' => &$errors, 'form_data' => &$data]);
+
+        return $errors;
     }
 }

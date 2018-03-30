@@ -25,23 +25,16 @@
  */
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Performance;
 
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType;
-use PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Adapter\Feature\CombinationFeature;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\AbstractFormHandler;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * This class manages the data manipulated using forms
  * in "Configure > Advanced Parameters > Performance" page.
  */
-final class PerformanceFormHandler implements FormHandlerInterface
+final class PerformanceFormHandler extends AbstractFormHandler
 {
     /**
      * @var FormFactoryInterface
@@ -74,7 +67,7 @@ final class PerformanceFormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        return $this->formFactory->createBuilder()
+        $formBuilder = $this->formFactory->createBuilder()
             ->add('smarty', SmartyType::class)
             ->add('debug_mode', DebugModeType::class)
             ->add('optional_features', OptionalFeaturesType::class, array(
@@ -85,8 +78,11 @@ final class PerformanceFormHandler implements FormHandlerInterface
             ->add('caching', CachingType::class)
             ->add('add_memcache_server', MemcacheServerType::class)
             ->setData($this->formDataProvider->getData())
-            ->getForm()
         ;
+
+        $this->hookDispatcher->dispatchForParameters('displayPerformancePageForm', ['form_builder' => &$formBuilder]);
+
+        return $formBuilder->setData($formBuilder->getData())->getForm();
     }
 
     /**
@@ -94,6 +90,10 @@ final class PerformanceFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-        return $this->formDataProvider->setData($data);
+        $errors = $this->formDataProvider->setData($data);
+
+        $this->hookDispatcher->dispatchForParameters('actionPerformancePageFormSave', ['errors' => &$errors, 'form_data' => &$data]);
+
+        return $errors;
     }
 }
