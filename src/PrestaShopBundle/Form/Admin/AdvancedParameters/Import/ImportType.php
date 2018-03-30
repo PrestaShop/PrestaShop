@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 
 use function foo\func;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -75,45 +76,20 @@ class ImportType extends TranslatorAwareType
             ->add('multiple_value_separator', TextType::class, [
                 'data' => ',',
             ])
-            ->add('truncate', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'data' => 0,
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('truncate', SwitchType::class, [
+                'data' => false,
             ])
-            ->add('match_ref', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'data' => 0,
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('match_ref', SwitchType::class, [
+                'data' => false,
             ])
-            ->add('regenerate', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'data' => 0,
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('regenerate', SwitchType::class, [
+                'data' => false,
             ])
-            ->add('forceIDs', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'data' => 0,
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('forceIDs', SwitchType::class, [
+                'data' => false,
             ])
-            ->add('sendemail', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'data' => 1,
-                'choice_translation_domain' => 'Admin.Global',
+            ->add('sendemail', SwitchType::class, [
+                'data' => true,
             ])
         ;
     }
