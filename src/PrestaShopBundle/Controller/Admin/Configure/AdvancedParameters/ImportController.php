@@ -55,6 +55,9 @@ class ImportController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $formHandler = $this->get('prestashop.admin.import.form_handler');
+        $finder = $this->get('prestashop.core.import.file_finder');
+        $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
+
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
@@ -76,9 +79,6 @@ class ImportController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        $finder = $this->get('prestashop.core.import.file_finder');
-        $names = $finder->getImportFileNames();
-
         return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
@@ -89,9 +89,9 @@ class ImportController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'form' => $form->createView(),
             'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
-            'import_file_names' => $names,
+            'import_file_names' => $finder->getImportFileNames(),
             'import_dir' => $this->get('prestashop.core.import.dir')->getDir(),
-            'max_file_upload_size' => $this->get('prestashop.utils.ini_config')->getPostMaxSizeInBytes(),
+            'max_file_upload_size' => $iniConfiguration->getPostMaxSizeInBytes(),
         ];
     }
 
