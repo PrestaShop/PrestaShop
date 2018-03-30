@@ -79,6 +79,7 @@
   </th>
 {% endmacro %}
 
+{# Show link to import file sample #}
 {% macro import_file_sample(label, filename) %}
     <a class="list-group-item list-group-item-action _blank" href="../../../../docs/csv_import/{{ filename }}.csv">
         {{ label|trans({}, 'Admin.Advparameters.Feature') }}
