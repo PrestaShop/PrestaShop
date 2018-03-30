@@ -24,10 +24,10 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Import\File;
+namespace PrestaShop\PrestaShop\Core\Import\File;
 
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Exception\FileUploadException;
-use PrestaShopBundle\Service\Import\ImportDirectory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -35,7 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * FileUploader is responsible for uploading import files to import directory
  */
-class FileUploader
+final class FileUploader
 {
     /**
      * @var TranslatorInterface

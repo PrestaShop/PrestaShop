@@ -24,42 +24,47 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Import\File;
+namespace PrestaShop\PrestaShop\Core\Import;
 
-use PrestaShopBundle\Service\Import\ImportDirectory;
-use Symfony\Component\Finder\Finder;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
-class FileFinder
+/**
+ * ImportDirectory class is responsible for returning import directory
+ */
+final class ImportDirectory
 {
     /**
-     * @var ImportDirectory
+     * @var ConfigurationInterface
      */
-    private $importDirectory;
+    private $configuration;
 
-    public function __construct(ImportDirectory $importDirectory)
+    /**
+     * @param ConfigurationInterface $configuration
+     */
+    public function __construct(ConfigurationInterface $configuration)
     {
-        $this->importDirectory = $importDirectory;
+        $this->configuration = $configuration;
     }
 
     /**
-     * Get import file names in import directory
+     * Get path to import directory
      *
-     * @return array|string[]
+     * @return string
      */
-    public function getImportFileNames()
+    public function getDir()
     {
-        $finder = new Finder();
-        $finder
-            ->files()
-            ->in($this->importDirectory->getDir())
-            ->notName('/^index\.php/i');
+        return ($this->configuration->get('_PS_HOST_MODE_') ?
+                $this->configuration->get('_PS_ROOT_DIR_') :
+                $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR;
+    }
 
-        $fileNames = [];
-
-        foreach ($finder as $file) {
-            $fileNames[] = $file->getFilename();
-        }
-
-        return $fileNames;
+    /**
+     * Use import directory object as a string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getDir();
     }
 }

@@ -1,0 +1,2 @@
+imports:
+    - { resource: core/import.yml }

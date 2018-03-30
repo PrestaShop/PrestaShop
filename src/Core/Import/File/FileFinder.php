@@ -24,12 +24,15 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Import\File;
+namespace PrestaShop\PrestaShop\Core\Import\File;
 
-use PrestaShopBundle\Service\Import\ImportDirectory;
-use Symfony\Component\Filesystem\Filesystem;
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use Symfony\Component\Finder\Finder;
 
-class FileRemoval
+/**
+ * Class responsible for finding import files
+ */
+final class FileFinder
 {
     /**
      * @var ImportDirectory
@@ -42,13 +45,24 @@ class FileRemoval
     }
 
     /**
-     * Remove file from import directory
+     * Get import file names in import directory
      *
-     * @param $filename
+     * @return array|string[]
      */
-    public function remove($filename)
+    public function getImportFileNames()
     {
-        $fs = new Filesystem();
-        $fs->remove($this->importDirectory.$filename);
+        $finder = new Finder();
+        $finder
+            ->files()
+            ->in($this->importDirectory->getDir())
+            ->notName('/^index\.php/i');
+
+        $fileNames = [];
+
+        foreach ($finder as $file) {
+            $fileNames[] = $file->getFilename();
+        }
+
+        return $fileNames;
     }
 }
