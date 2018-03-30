@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 
-use function foo\func;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -43,12 +42,6 @@ class ImportType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //@todo: improve
-        $locales = [];
-        foreach ($this->locales as $locale) {
-            $locales[$locale['name']] = $locale['iso_code'];
-        }
-
         $builder
             ->add('csv', HiddenType::class)
             ->add('entity', ChoiceType::class, [
@@ -68,7 +61,7 @@ class ImportType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('iso_lang', ChoiceType::class, [
-                'choices' => $locales,
+                'choices' => $this->getLocaleChoices(),
             ])
             ->add('separator', TextType::class, [
                 'data' => ';',
