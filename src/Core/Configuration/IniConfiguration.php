@@ -24,12 +24,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Utils;
+namespace  PrestaShop\PrestaShop\Core\Configuration;
 
 /**
  * Gets ini configuration
  */
-class IniConfig
+class IniConfiguration
 {
     /**
      * Get max post max size from ini configuration in bytes
@@ -45,10 +45,10 @@ class IniConfig
         switch ($last) {
             case 'g':
                 $bytes *= 1024;
-            // no break to fall-through
+                // no break to fall-through
             case 'm':
                 $bytes *= 1024;
-            // no break to fall-through
+                // no break to fall-through
             case 'k':
                 $bytes *= 1024;
         }
