@@ -3,6 +3,7 @@ imports:
     - { resource: services/form_services.yml }
     - { resource: services/alias.yml }
     - { resource: services/adapters.yml }
+    - { resource: services/core_services.yml }
 
 parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
@@ -635,25 +636,3 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
         arguments:
             - '@prestashop.adapter.data_provider.currency'
-
-    # Import
-    prestashop.import.file_uploader:
-        class: 'PrestaShopBundle\Service\Import\File\FileUploader'
-        arguments:
-            - '@translator'
-            - '@prestashop.import.dir'
-
-    prestashop.import.file_finder:
-        class: 'PrestaShopBundle\Service\Import\File\FileFinder'
-        arguments:
-            - '@prestashop.import.dir'
-
-    prestashop.import.dir:
-        class: 'PrestaShopBundle\Service\Import\ImportDirectory'
-        arguments:
-            - '@prestashop.adapter.legacy.configuration'
-
-    prestashop.import.file_removal:
-        class: 'PrestaShopBundle\Service\Import\File\FileRemoval'
-        arguments:
-            - '@prestashop.import.dir'

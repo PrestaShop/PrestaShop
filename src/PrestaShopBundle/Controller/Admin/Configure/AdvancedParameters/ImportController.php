@@ -76,7 +76,7 @@ class ImportController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        $finder = $this->get('prestashop.import.file_finder');
+        $finder = $this->get('prestashop.core.import.file_finder');
         $names = $finder->getImportFileNames();
 
         return [
@@ -90,7 +90,7 @@ class ImportController extends FrameworkBundleAdminController
             'form' => $form->createView(),
             'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
             'import_file_names' => $names,
-            'import_dir' => $this->get('prestashop.import.dir')->getDir(),
+            'import_dir' => $this->get('prestashop.core.import.dir')->getDir(),
             'max_file_upload_size' => $this->getPostMaxSizeInBytes(),
         ];
     }
@@ -112,7 +112,7 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         try {
-            $fileUploader = $this->get('prestashop.import.file_uploader');
+            $fileUploader = $this->get('prestashop.core.import.file_uploader');
             $file = $fileUploader->upload($uploadedFile);
         } catch (FileUploadException $e) {
             $response['error'] = $e->getMessage();
@@ -138,7 +138,7 @@ class ImportController extends FrameworkBundleAdminController
     public function deleteAction(Request $request)
     {
         if ($filename = $request->query->get('filename')) {
-            $fileRemoval = $this->get('prestashop.import.file_removal');
+            $fileRemoval = $this->get('prestashop.core.import.file_removal');
             $fileRemoval->remove($filename);
         }
 
@@ -155,7 +155,7 @@ class ImportController extends FrameworkBundleAdminController
     public function downloadAction(Request $request)
     {
         if ($filename = $request->query->get('filename')) {
-            $importDirectory = $this->get('prestashop.import.dir');
+            $importDirectory = $this->get('prestashop.core.import.dir');
 
             $response = new BinaryFileResponse($importDirectory.$filename);
             $response->setContentDisposition(

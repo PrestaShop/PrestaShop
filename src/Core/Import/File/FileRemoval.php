@@ -24,41 +24,34 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Service\Import;
+namespace PrestaShop\PrestaShop\Core\Import\File;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
+use Symfony\Component\Filesystem\Filesystem;
 
-class ImportDirectory
+/**
+ * FileRemoval is responsible for deleting import files
+ */
+final class FileRemoval
 {
     /**
-     * @var ConfigurationInterface
+     * @var ImportDirectory
      */
-    private $configuration;
+    private $importDirectory;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(ImportDirectory $importDirectory)
     {
-        $this->configuration = $configuration;
+        $this->importDirectory = $importDirectory;
     }
 
     /**
-     * Get path to import directory
+     * Remove file from import directory
      *
-     * @return string
+     * @param $filename
      */
-    public function getDir()
+    public function remove($filename)
     {
-        return ($this->configuration->get('_PS_HOST_MODE_') ?
-                $this->configuration->get('_PS_ROOT_DIR_') :
-                $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR;
-    }
-
-    /**
-     * Use import directory object as a string
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getDir();
+        $fs = new Filesystem();
+        $fs->remove($this->importDirectory.$filename);
     }
 }
