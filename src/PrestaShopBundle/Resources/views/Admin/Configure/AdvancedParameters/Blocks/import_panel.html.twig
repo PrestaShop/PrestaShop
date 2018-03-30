@@ -111,7 +111,7 @@
             <hr>
 
             <div class="form-group">
-                {{ ps.label_with_help(('Language of the file'|trans), ('The locale must be installed'|trans({}, 'Admin.Advparameters.Help'))) }}
+                {{ ps.label_with_help(('Language of the file'|trans), ('The locale must be installed'|trans({}, 'messages'))) }}
                 {{ form_errors(importForm.iso_lang) }}
                 {{ form_widget(importForm.iso_lang) }}
             </div>
@@ -153,13 +153,13 @@
             </div>
 
             <div class="form-group js-force-ids-form-group">
-                {{ ps.label_with_help(('Force all ID numbers'|trans), (''|trans({}, 'Admin.Advparameters.Help'))) }}
+                {{ ps.label_with_help(('Force all ID numbers'|trans), ('If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.forceIDs) }}
                 {{ form_widget(importForm.forceIDs) }}
             </div>
 
             <div class="form-group">
-                {{ ps.label_with_help(('Send notification email'|trans), (''|trans({}, 'Admin.Advparameters.Help'))) }}
+                {{ ps.label_with_help(('Send notification email'|trans), ('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.'|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.sendemail) }}
                 {{ form_widget(importForm.sendemail) }}
             </div>
@@ -169,7 +169,7 @@
     <div class="card-footer">
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary" name="submitImportFile">
-                {{ 'Next step'|trans({}, 'Admin.Actions') }}
+                {{ 'Next step'|trans({}, 'Admin.Advparameters.Feature') }}
                 <i class="material-icons">navigate_next</i>
             </button>
         </div>
