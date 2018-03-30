@@ -54,9 +54,11 @@ final class ImportFormHandler implements FormHandlerInterface
     }
 
     /**
-     * {@inheritdoc}
-     *
      * Performs some checked on data that is being passed to legacy controller
+     *
+     * @param array $data   Form data
+     *
+     * @return array        Errors if any or empty array if no errors occured
      */
     public function save(array $data)
     {

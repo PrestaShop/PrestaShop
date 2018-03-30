@@ -24,11 +24,35 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Exception;
+namespace PrestaShopBundle\Utils;
 
 /**
- * Exception that should be thrown when file uploading has failed
+ * Gets ini configuration
  */
-class FileUploadException extends \RuntimeException
+class IniConfig
 {
+    /**
+     * Get max post max size from ini configuration in bytes
+     *
+     * @return int
+     */
+    public function getPostMaxSizeInBytes()
+    {
+        $postMaxSize = ini_get('post_max_size');
+        $bytes = (int) trim($postMaxSize);
+        $last = strtolower($postMaxSize[strlen($postMaxSize) - 1]);
+
+        switch ($last) {
+            case 'g':
+                $bytes *= 1024;
+            // no break to fall-through
+            case 'm':
+                $bytes *= 1024;
+            // no break to fall-through
+            case 'k':
+                $bytes *= 1024;
+        }
+
+        return $bytes;
+    }
 }
