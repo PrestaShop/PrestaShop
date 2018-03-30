@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-use PrestaShop\PrestaShop\Adapter\Order\OrderPresenter;
+
+use PrestaShopBundle\Presenter\Order\OrderPresenter;
 
 class HistoryControllerCore extends FrontController
 {
@@ -46,7 +47,6 @@ class HistoryControllerCore extends FrontController
 
         if ($this->order_presenter === null) {
             $this->order_presenter = new OrderPresenter();
-            $this->order_presenter->setSkipProductDetails(true);
         }
 
         if (Tools::isSubmit('slowvalidation')) {
