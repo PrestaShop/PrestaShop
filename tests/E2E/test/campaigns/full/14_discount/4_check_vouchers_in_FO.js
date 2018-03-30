@@ -4,8 +4,8 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
-const common_discount_scenarios = require('../../common_scenarios/discount');
-const common_scenarios = require('../../common_scenarios/product');
+const commonDiscountScenarios = require('../../common_scenarios/discount');
+const commonScenarios = require('../../common_scenarios/product');
 let promise = Promise.resolve();
 
 let cartRuleData = [
@@ -46,8 +46,8 @@ scenario('Create a new "Cart Rule" in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
   for (let i = 0; i < cartRuleData.length; i++) {
-    common_discount_scenarios.createCartRule(cartRuleData[i], 'codePromo' + (i+1));
-    common_discount_scenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i+1));
+    commonDiscountScenarios.createCartRule(cartRuleData[i], 'codePromo' + (i+1));
+    commonDiscountScenarios.checkCartRule(cartRuleData[i], 'codePromo' + (i+1));
   }
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
@@ -59,7 +59,7 @@ scenario('Create product in the Back Office', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
-  common_scenarios.createProduct(AddProductPage, productData);
+  commonScenarios.createProduct(AddProductPage, productData);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'product/product');
@@ -113,7 +113,7 @@ scenario('Delete "Cart Rule" in the Back Office', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'discount');
   for (let i = 0; i < cartRuleData.length; i++) {
-    common_discount_scenarios.deleteCartRule(cartRuleData[i].name);
+    commonDiscountScenarios.deleteCartRule(cartRuleData[i].name);
   }
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());

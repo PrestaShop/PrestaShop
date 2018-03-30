@@ -20,6 +20,7 @@ module.exports = {
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
     quick_view_add_to_cart:'//*[@id="add-to-cart-or-refresh"]//button[contains(@data-button-action, "add-to-cart")]',
     //Get the number of products in front office after clicking on "SEE ALL PRODUCTS" link
-    products_number: '//*[@id="js-product-list-top"]//p'
+    products_number: '//*[@id="js-product-list-top"]//p',
+    product_discounts_table: '//*[@id="add-to-cart-or-refresh"]//tbody/tr[%R]/td[%D]',
   }
 };
