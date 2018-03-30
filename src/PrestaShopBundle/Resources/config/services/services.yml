@@ -171,9 +171,6 @@ services:
     prestashop.utils.zip_manager:
         class: PrestaShopBundle\Utils\ZipManager
 
-    prestashop.utils.ini_config:
-        class: PrestaShopBundle\Utils\IniConfig
-
     #TRANSLATIONS FACTORIES
     prestashop.translation.translations_factory:
         class: PrestaShopBundle\Translation\Factory\TranslationsFactory
