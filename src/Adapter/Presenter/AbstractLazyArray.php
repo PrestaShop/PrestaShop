@@ -32,7 +32,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     /**
      * @var \ArrayObject
      */
-    private $arrayAccessMethods;
+    private $arrayAccessList;
 
     /**
      * @var \ArrayIterator
@@ -45,16 +45,36 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function __construct()
     {
-        $this->arrayAccessMethods = new \ArrayObject();
+        $this->arrayAccessList = new \ArrayObject();
         $reflexionClass = new \ReflectionClass(get_called_class());
         $methods = $reflexionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
-                $this->arrayAccessMethods[] = $method->getName();
+                $this->arrayAccessList[$this->convertMethodNameToIndex($method->getName())] =
+                    array(
+                        'type' => 'method',
+                        'value' => $method->getName()
+                    );
             }
         }
-        $this->arrayAccessIterator = $this->arrayAccessMethods->getIterator();
+        $this->arrayAccessIterator = $this->arrayAccessList->getIterator();
+    }
+
+    /**
+     * @param $array
+     */
+    public function appendArray($array)
+    {
+        foreach ($array as $key => $value) {
+            $this->arrayAccessList->offsetSet(
+                $key,
+                array(
+                    'type' => 'variable',
+                    'value' => $value
+                )
+            );
+        }
     }
 
     /**
@@ -62,7 +82,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function count()
     {
-        return $this->arrayAccessMethods->count();
+        return $this->arrayAccessList->count();
     }
 
     /**
@@ -70,7 +90,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      *
      * @return string
      */
-    private function convertMethodNameToArray($methodName)
+    private function convertMethodNameToIndex($methodName)
     {
         // remove "get" prefix from the function name
         $strippedMethodName = substr($methodName, 3);
@@ -86,15 +106,17 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function offsetGet($index)
     {
-        $methodName = 'get'.ucfirst($index);
-        $methodName = Inflector::camelize($methodName);
-
-        if (method_exists($this, $methodName)) {
-            return $this->{$methodName}();
+        if (isset($this->arrayAccessList[$index])) {
+            if ($this->arrayAccessList[$index]['type'] === 'method') {
+                $methodName = $this->arrayAccessList[$index]['value'];
+                return $this->{$methodName}();
+            } else {
+                return $this->arrayAccessList[$index]['value'];
+            }
         }
 
         throw new \RuntimeException(
-            'Unknown index '.$index.' associated with method '.$methodName.' from LazyPresenter '.get_called_class().'. 
+            'Unknown index '.$index.' from LazyPresenter '.get_called_class().'. 
             Make sure the annotation @arrayAccess has properly been added on each methods which should be accessible'
         );
     }
@@ -106,10 +128,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function offsetExists($index)
     {
-        $methodName = 'get'.ucfirst($index);
-        $methodName = Inflector::camelize($methodName);
-
-        return method_exists($this, $methodName);
+        return isset($this->arrayAccessList[$index]);
     }
 
     /**
@@ -126,10 +145,9 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function current()
     {
-        $methodName = $this->arrayAccessIterator->current();
-        $indexName = $this->convertMethodNameToArray($methodName);
+        $key = $this->arrayAccessIterator->key();
 
-        return $this->offsetGet($indexName);
+        return $this->offsetGet($key);
     }
 
     /**
@@ -145,10 +163,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function key()
     {
-        $methodName = $this->arrayAccessIterator->current();
-        $indexName = $this->convertMethodNameToArray($methodName);
-
-        return $indexName;
+        return $this->arrayAccessIterator->key();
     }
 
     /**
