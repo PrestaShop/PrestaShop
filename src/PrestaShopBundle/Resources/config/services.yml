@@ -206,7 +206,7 @@ services:
 
     # Presenters
     prestashop.adapter.presenter.module:
-        class: PrestaShop\PrestaShop\Adapter\Module\ModulePresenter
+        class: PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
         arguments: ["@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price"]
 
     prestashop.adapter.formatter.price:

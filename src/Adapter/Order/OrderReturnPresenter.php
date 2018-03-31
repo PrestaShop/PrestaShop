@@ -26,7 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-class OrderReturnPresenter extends \PrestaShopBundle\Presenter\Order\OrderReturnPresenter
+/**
+ * @deprecated since 1.7.4.0
+ * @see \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
+ *
+ * Class OrderReturnPresenter
+ * @package PrestaShop\PrestaShop\Adapter\Order
+ */
+class OrderReturnPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter
 {
 
 }

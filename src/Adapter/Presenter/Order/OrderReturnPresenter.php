@@ -24,11 +24,11 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Presenter\Order;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Exception;
 use Link;
-use PrestaShopBundle\Presenter\AbstractLazyPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyPresenter;
 use Tools;
 
 class OrderReturnPresenter extends AbstractLazyPresenter
