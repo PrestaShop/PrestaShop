@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use Cart;
 use Configuration;
 use Context;
@@ -36,7 +36,7 @@ use Order;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use Tools;
 
-class OrderDetailPresenter extends AbstractLazyPresenter
+class OrderDetailLazyArray extends AbstractLazyArray
 {
     /** @var Order */
     private $order;
@@ -48,25 +48,14 @@ class OrderDetailPresenter extends AbstractLazyPresenter
     private $translator;
 
     /**
-     * OrderDetailPresenter constructor.
+     * OrderDetailLazyArray constructor.
      */
-    public function __construct()
+    public function __construct($order)
     {
+        $this->order = $order;
         $this->context = Context::getContext();
         $this->translator = Context::getContext()->getTranslator();
         parent::__construct();
-    }
-
-    /**
-     * @param $order
-     *
-     * @return OrderDetailPresenter
-     */
-    public function present($order)
-    {
-        $this->order = $order;
-
-        return clone($this);
     }
 
     /**
