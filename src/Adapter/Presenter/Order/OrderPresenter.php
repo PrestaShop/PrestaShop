@@ -25,11 +25,11 @@
  */
 
 
-namespace PrestaShopBundle\Presenter\Order;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShopBundle\Presenter\AbstractLazyPresenter;
-use PrestaShop\PrestaShop\Adapter\Cart\CartPresenter;
-use PrestaShop\PrestaShop\Adapter\ObjectPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Address;
 use AddressFormat;

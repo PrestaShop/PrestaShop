@@ -25,9 +25,9 @@
  */
 
 
-namespace PrestaShopBundle\Presenter\Order;
+namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShopBundle\Presenter\AbstractLazyPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyPresenter;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Cart;
