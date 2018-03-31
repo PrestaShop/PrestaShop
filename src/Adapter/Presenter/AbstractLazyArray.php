@@ -27,7 +27,7 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
 use Doctrine\Common\Util\Inflector;
 
-abstract class AbstractLazyPresenter implements \Iterator, \ArrayAccess, \Countable, PresenterInterface
+abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
 {
     /**
      * @var \ArrayObject
@@ -41,7 +41,6 @@ abstract class AbstractLazyPresenter implements \Iterator, \ArrayAccess, \Counta
 
     /**
      * LazyPresenter constructor.
-     * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \ReflectionException
      */
     public function __construct()
@@ -114,7 +113,7 @@ abstract class AbstractLazyPresenter implements \Iterator, \ArrayAccess, \Counta
     }
 
     /**
-     * @return AbstractLazyPresenter
+     * @return AbstractLazyArray
      */
     public function getArrayCopy()
     {

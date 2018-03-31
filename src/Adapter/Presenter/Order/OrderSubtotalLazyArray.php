@@ -27,7 +27,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShopBundle\Translation\TranslatorComponent;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use Cart;
@@ -38,7 +38,7 @@ use Order;
 use TaxConfiguration;
 use Currency;
 
-class OrderSubtotalPresenter extends AbstractLazyPresenter
+class OrderSubtotalLazyArray extends AbstractLazyArray
 {
     /** @var Order */
     private $order;
@@ -56,27 +56,16 @@ class OrderSubtotalPresenter extends AbstractLazyPresenter
     private $translator;
 
     /**
-     * OrderSubtotalPresenter constructor.
+     * OrderSubtotalLazyArray constructor.
      */
-    public function __construct()
+    public function __construct($order)
     {
         $this->context = Context::getContext();
         $this->taxConfiguration = new TaxConfiguration();
         $this->priceFormatter = new PriceFormatter();
         $this->translator = Context::getContext()->getTranslator();
-        parent::__construct();
-    }
-
-    /**
-     * @param $order
-     *
-     * @return OrderSubtotalPresenter
-     */
-    public function present($order)
-    {
         $this->order = $order;
-
-        return clone($this);
+        parent::__construct();
     }
 
     /**

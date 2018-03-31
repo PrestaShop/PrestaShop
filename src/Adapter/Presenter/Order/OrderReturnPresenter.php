@@ -28,79 +28,31 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Order;
 
 use Exception;
 use Link;
-use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyPresenter;
-use Tools;
+use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 
-class OrderReturnPresenter extends AbstractLazyPresenter
+class OrderReturnPresenter implements PresenterInterface
 {
     private $prefix;
     private $link;
-    /** @var array */
-    private $orderReturn;
 
     public function __construct($prefix, Link $link)
     {
         $this->prefix = $prefix;
         $this->link = $link;
-        parent::__construct();
     }
 
+    /**
+     * @param $orderReturn
+     *
+     * @return OrderReturnLazyArray
+     * @throws \ReflectionException
+     */
     public function present($orderReturn)
     {
         if (!is_array($orderReturn)) {
             throw new Exception('orderReturnPresenter can only present order_return passed as array');
         }
 
-        $this->orderReturn = $orderReturn;
-
-        return clone($this);
-    }
-
-    public function getId()
-    {
-        return $this->orderReturn['id_order_return'];
-    }
-
-    public function getDetailsUrl()
-    {
-        return $this->link->getPageLink(
-            'order-detail',
-            true,
-            null,
-            'id_order='.(int) $this->orderReturn['id_order']
-        );
-    }
-
-    public function getReturnUrl()
-    {
-        return $this->link->getPageLink(
-            'order-return',
-            true,
-            null,
-            'id_order_return='.(int) $this->orderReturn['id_order_return']
-        );
-    }
-
-
-    public function getReturnNumber()
-    {
-        return $this->prefix.sprintf('%06d', $this->orderReturn['id_order_return']);
-    }
-
-    public function getReturnDate()
-    {
-        return Tools::displayDate($this->orderReturn['date_add'], null, false);
-    }
-
-    public function getPrintUrl()
-    {
-        return ($this->orderReturn['state'] == 2)
-            ? $this->link->getPageLink(
-                'pdf-order-return',
-                true,
-                null,
-                'id_order_return='.(int) $this->orderReturn['id_order_return']
-            )
-            : '';
+        return new OrderReturnLazyArray($this->prefix, $this->link, $orderReturn);
     }
 }
