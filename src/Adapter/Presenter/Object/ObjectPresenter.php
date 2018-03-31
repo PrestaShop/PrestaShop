@@ -45,7 +45,7 @@ class ObjectPresenter implements PresenterInterface
 
         $presentedObject = array();
 
-        $fields = ($object::$definition)['fields'];
+        $fields = $object::$definition['fields'];
         foreach ($fields as $fieldName => $null) {
             $presentedObject[$fieldName] = $object->{$fieldName};
         }
