@@ -67,13 +67,16 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     public function appendArray($array)
     {
         foreach ($array as $key => $value) {
-            $this->arrayAccessList->offsetSet(
-                $key,
-                array(
-                    'type' => 'variable',
-                    'value' => $value
-                )
-            );
+            // do not override any existing method
+            if (!$this->arrayAccessList->offsetExists($key)) {
+                $this->arrayAccessList->offsetSet(
+                    $key,
+                    array(
+                        'type' => 'variable',
+                        'value' => $value
+                    )
+                );
+            }
         }
     }
 

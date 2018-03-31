@@ -27,22 +27,33 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Product;
 
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 
-class ProductListingPresenter extends ProductPresenter
+class ProductListingLazyArray extends ProductLazyArray
 {
-    public function present(
-        ProductPresentationSettings $settings,
-        array $product,
-        \Language $language
-    ) {
-        return new ProductListingLazyArray(
-            $settings,
-            $product,
-            $language,
-            $this->imageRetriever,
-            $this->link,
-            $this->priceFormatter,
-            $this->productColorsRetriever,
-            $this->translator
-        );
+    /**
+     * @arrayAccess
+     * @return null|string
+     */
+    public function getAddToCartUrl()
+    {
+        if ($this->product['id_product_attribute'] != 0 && !$this->settings->allow_add_variant_to_cart_from_listing) {
+            return null;
+        }
+
+        if ($this->product['customizable'] == 2 || !empty($this->product['customization_required'])) {
+            return null;
+        }
+
+        return parent::getAddToCartUrl();
+    }
+
+    protected function shouldEnableAddToCartButton(array $product, ProductPresentationSettings $settings)
+    {
+        if (isset($product['attributes'])
+            && count($product['attributes']) > 0
+            && !$settings->allow_add_variant_to_cart_from_listing) {
+            return false;
+        }
+
+        return parent::shouldEnableAddToCartButton($product, $settings);
     }
 }
