@@ -1191,7 +1191,8 @@ class CartCore extends ObjectModel
         $id_address_delivery = 0,
         Shop $shop = null,
         $auto_add_cart_rule = true,
-        $skipAvailabilityCheckOutOfStock = false
+        $skipAvailabilityCheckOutOfStock = false,
+        $bo_changes = null //if null - usual behavoir.
     ) {
         if (!$shop) {
             $shop = Context::getContext()->shop;
@@ -1326,9 +1327,15 @@ class CartCore extends ObjectModel
                 }
 
                 if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
-                    if ((int)$quantity > $result2['quantity']) {
-                        return false;
-                    }
+                    if (isset($bo_changes)){//changes have been made in BO
+   			if ($result2['quantity'] < 0){
+     				return false;
+   			}
+  		    }else{//old fashion for cart routins probably
+   			if ( (int)$quantity > $result2['quantity']) {
+      				return false;
+   			}
+  		    }
                 }
 
                 if ((int)$quantity < $minimal_quantity) {
