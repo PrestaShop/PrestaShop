@@ -27,6 +27,34 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter;
 
 use Doctrine\Common\Util\Inflector;
 
+/**
+ * This class is useful to provide the same behaviour than an array, but which load the result of each key on demand
+ * (LazyLoading).
+ *
+ * Example:
+ *
+ * If your want to define the ['addresses'] array access in your lazyArray object, just define the public method
+ * getAddresses() and add the annotation arrayAccess to it. e.g:
+ *
+ *     @arrayAccess
+ *     @return array
+ *
+ *     public function getAddresses()
+ *
+ * The method name should always be the index name converted to camelCase and prefixed with get. e.g:
+ *
+ * ['add_to_cart'] => getAddToCart()
+ *
+ * You can also add an array with already defined key to the lazyArray be calling the appendArray function.
+ * e.g.: you have a $product array containing $product['id'] = 10; $product['url'] = 'foo';
+ *       If you call ->appendArray($product) on the lazyArray, it will define the key ['id'] and ['url'] as well
+ *       for the lazyArray.
+ * Note if the key already exists as a method, it will be skip. In our example, if getUrl() is defined with the
+ * annotation @arrayAccess, the $product['url'] = 'foo'; will be ignored
+ *
+ * Class AbstractLazyArray
+ * @package PrestaShop\PrestaShop\Adapter\Presenter
+ */
 abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
 {
     /**
@@ -38,6 +66,11 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      * @var \ArrayIterator
      */
     private $arrayAccessIterator;
+
+    /**
+     * @var array
+     */
+    private $methodCacheResults = array();
 
     /**
      * LazyPresenter constructor.
@@ -62,6 +95,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Set array key and values from $array into the LazyArray.
+     *
      * @param $array
      */
     public function appendArray($array)
@@ -81,6 +116,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * The number of keys defined into the lazyArray
+     *
      * @return int
      */
     public function count()
@@ -102,6 +139,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Get the value associated with the $index from the lazyArray
+     *
      * @param mixed $index
      *
      * @return mixed
@@ -110,10 +149,14 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
+            // if the index is associated with a method, execute the method an cache the result
             if ($this->arrayAccessList[$index]['type'] === 'method') {
-                $methodName = $this->arrayAccessList[$index]['value'];
-                return $this->{$methodName}();
-            } else {
+                if (!isset($this->methodCacheResults[$index])) {
+                    $methodName = $this->arrayAccessList[$index]['value'];
+                    $this->methodCacheResults[$index] = $this->{$methodName}();
+                }
+                return $this->methodCacheResults[$index];
+            } else { // if the index is associated with a value, just return the value
                 return $this->arrayAccessList[$index]['value'];
             }
         }
@@ -125,6 +168,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Check if the index exists inside the lazyArray
+     *
      * @param mixed $index
      *
      * @return bool
@@ -135,6 +180,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Copy the lazyArray
+     *
      * @return AbstractLazyArray
      */
     public function getArrayCopy()
@@ -143,6 +190,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Get the result associated with the current index
+     *
      * @return mixed
      * @throws \RuntimeException
      */
@@ -154,7 +203,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     *
+     * Go to the next result inside the lazyArray
      */
     public function next()
     {
@@ -162,6 +211,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Get the key associated with the current index
+     *
      * @return mixed|string
      */
     public function key()
@@ -170,6 +221,8 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
+     * Check if we are at the end of the lazyArray
+     *
      * @return bool
      */
     public function valid()
@@ -178,7 +231,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     *
+     * Go back to the first element of the lazyArray
      */
     public function rewind()
     {

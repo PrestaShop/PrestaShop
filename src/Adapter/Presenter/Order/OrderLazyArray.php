@@ -67,6 +67,9 @@ class OrderLazyArray extends AbstractLazyArray
     /** @var Order */
     private $order;
 
+    /** @var OrderSubtotalLazyArray */
+    private $subTotals;
+
     /**
      * OrderArray constructor.
      * @throws \Doctrine\Common\Annotations\AnnotationException
@@ -80,6 +83,7 @@ class OrderLazyArray extends AbstractLazyArray
         $this->priceFormatter = new PriceFormatter();
         $this->translator = Context::getContext()->getTranslator();
         $this->taxConfiguration = new TaxConfiguration();
+        $this->subTotals = new OrderSubtotalLazyArray($this->order);
         parent::__construct();
     }
 
@@ -117,8 +121,7 @@ class OrderLazyArray extends AbstractLazyArray
      */
     public function getSubtotals()
     {
-        $amounts = $this->getAmounts();
-        return $amounts['subtotals'];
+        return $this->subTotals;
     }
 
     /**
@@ -200,22 +203,13 @@ class OrderLazyArray extends AbstractLazyArray
 
     /**
      * @arrayAccess
-     * @return OrderSubtotalLazyArray
-     */
-    public function getSubTotal()
-    {
-        return new OrderSubtotalLazyArray($this->order);
-    }
-
-    /**
-     * @arrayAccess
      * @return array
      */
     public function getAmounts()
     {
         $order = $this->order;
 
-        $amounts['subtotals'] =  $this->getSubTotal();
+        $amounts['subtotals'] =  $this->subTotals;
 
         $amounts['totals'] = array();
         $amount = $this->includeTaxes() ? $order->total_paid : $order->total_paid_tax_excl;
@@ -230,7 +224,10 @@ class OrderLazyArray extends AbstractLazyArray
             'type' => 'total_paid',
             'label' => $this->translator->trans('Total paid', array(), 'Shop.Theme.Checkout'),
             'amount' => $order->total_paid_real,
-            'value' => $this->priceFormatter->format($order->total_paid_real, Currency::getCurrencyInstance((int)$order->id_currency)),
+            'value' => $this->priceFormatter->format(
+                $order->total_paid_real,
+                Currency::getCurrencyInstance((int)$order->id_currency)
+            ),
         );
 
         return $amounts;
@@ -334,7 +331,8 @@ class OrderLazyArray extends AbstractLazyArray
 
         if (!$order->isVirtual()) {
             $orderAddresses['delivery'] = $this->objectPresenter->present($addressDelivery);
-            $orderAddresses['delivery']['formatted'] = AddressFormat::generateAddress($addressDelivery, array(), '<br />');
+            $orderAddresses['delivery']['formatted'] =
+                AddressFormat::generateAddress($addressDelivery, array(), '<br />');
         }
 
         $orderAddresses['invoice'] = $this->objectPresenter->present($addressInvoice);
