@@ -1328,14 +1328,14 @@ class CartCore extends ObjectModel
 
                 if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
                     if (isset($bo_changes)){//changes have been made in BO
-   			if ($result2['quantity'] < 0){
-     				return false;
-   			}
-  		    }else{//old fashion for cart routins probably
-   			if ( (int)$quantity > $result2['quantity']) {
-      				return false;
-   			}
-  		    }
+                        if ($result2['quantity'] < 0){
+                            return false;
+                        }
+                    }else{//old fashion for cart routins probably
+                        if ( (int)$quantity > $result2['quantity']) {
+                            return false;
+                        }
+                    }
                 }
 
                 if ((int)$quantity < $minimal_quantity) {
