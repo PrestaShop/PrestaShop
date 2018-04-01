@@ -246,9 +246,19 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function offsetSet($offset, $value)
     {
-        throw new \RuntimeException(
-            'Trying to modify the result of the LazyPresenter '.get_called_class().' is not allowed'
-        );
+        if ($this->arrayAccessList->offsetExists($offset)) {
+            $result = $this->arrayAccessList->offsetGet($offset);
+            if ($result['type'] !== 'variable') {
+                throw new \RuntimeException(
+                    'Trying to set the index '.$offset.' of the LazyPresenter '.get_called_class().
+                    ' already defined by a method is not allowed'
+                );
+            }
+        }
+        $this->arrayAccessList->offsetSet($offset, array(
+            'type' => 'variable',
+            'value' => $value
+        ));
     }
 
     /**
@@ -258,8 +268,14 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
      */
     public function offsetUnset($offset)
     {
-        throw new \RuntimeException(
-            'Trying to modify the result of the LazyPresenter '.get_called_class().' is not allowed'
-        );
+        $result = $this->arrayAccessList->offsetGet($offset);
+        if ($result['type'] === 'variable') {
+            $this->arrayAccessList->offsetUnset($offset);
+        } else {
+            throw new \RuntimeException(
+                'Trying to unset the index '.$offset.' of the LazyPresenter '.get_called_class().
+                ' already defined by a method is not allowed'
+            );
+        }
     }
 }
