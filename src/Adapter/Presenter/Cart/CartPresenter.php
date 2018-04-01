@@ -28,7 +28,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Presenter\Cart;
 
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
-use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductCartPresenter;
 use PrestaShop\PrestaShop\Core\Product\ProductPresentationSettings;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -134,7 +134,7 @@ class CartPresenter implements PresenterInterface
 
         $rawProduct['quantity_wanted'] = $rawProduct['cart_quantity'];
 
-        $presenter = new ProductListingPresenter(
+        $presenter = new ProductCartPresenter(
             $this->imageRetriever,
             $this->link,
             $this->priceFormatter,
@@ -151,8 +151,8 @@ class CartPresenter implements PresenterInterface
 
     public function addCustomizedData(array $products, Cart $cart)
     {
-        return array_map(function (array $product) use ($cart) {
-            $product['customizations'] = array();
+        return array_map(function ($product) use ($cart) {
+            $customizations = array();
 
             $data = Product::getAllCustomizedDatas($cart->id, null, true, null, (int) $product['id_customization']);
 
@@ -164,8 +164,8 @@ class CartPresenter implements PresenterInterface
             if (array_key_exists($id_product, $data)) {
                 if (array_key_exists($id_product_attribute, $data[$id_product])) {
                     foreach ($data[$id_product] as $byAddress) {
-                        foreach ($byAddress as $customizations) {
-                            foreach ($customizations as $customization) {
+                        foreach ($byAddress as $byAddressCustomizations) {
+                            foreach ($byAddressCustomizations as $customization) {
                                 $presentedCustomization = array(
                                     'quantity' => $customization['quantity'],
                                     'fields' => array(),
@@ -237,14 +237,14 @@ class CartPresenter implements PresenterInterface
 
                                 $presentedCustomization['update_quantity_url'] = $product['update_quantity_url'];
 
-                                $product['customizations'][] = $presentedCustomization;
+                                $customizations[] = $presentedCustomization;
                             }
                         }
                     }
                 }
             }
 
-            usort($product['customizations'], function (array $a, array $b) {
+            usort($customizations, function (array $a, array $b) {
                 if (
                     $a['quantity'] > $b['quantity']
                     || count($a['fields']) > count($b['fields'])
@@ -255,6 +255,8 @@ class CartPresenter implements PresenterInterface
                     return 1;
                 }
             });
+
+            $product['customizations'] = $customizations;
 
             return $product;
         }, $products);
