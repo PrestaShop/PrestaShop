@@ -73,7 +73,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     private $methodCacheResults = array();
 
     /**
-     * LazyPresenter constructor.
+     * AbstractLazyArray constructor.
      * @throws \ReflectionException
      */
     public function __construct()
@@ -97,7 +97,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     /**
      * Set array key and values from $array into the LazyArray.
      *
-     * @param $array
+     * @param array $array
      */
     public function appendArray($array)
     {
@@ -126,7 +126,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
     }
 
     /**
-     * @param $methodName
+     * @param string $methodName
      *
      * @return string
      */
@@ -162,7 +162,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
         }
 
         throw new \RuntimeException(
-            'Unknown index '.$index.' from LazyPresenter '.get_called_class().'. 
+            'Unknown index '.$index.' from LazyArray '.get_called_class().'. 
             Make sure the annotation @arrayAccess has properly been added on each methods which should be accessible'
         );
     }
@@ -250,7 +250,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
             $result = $this->arrayAccessList->offsetGet($offset);
             if ($result['type'] !== 'variable') {
                 throw new \RuntimeException(
-                    'Trying to set the index '.$offset.' of the LazyPresenter '.get_called_class().
+                    'Trying to set the index '.$offset.' of the LazyArray '.get_called_class().
                     ' already defined by a method is not allowed'
                 );
             }
@@ -273,7 +273,7 @@ abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
             $this->arrayAccessList->offsetUnset($offset);
         } else {
             throw new \RuntimeException(
-                'Trying to unset the index '.$offset.' of the LazyPresenter '.get_called_class().
+                'Trying to unset the index '.$offset.' of the LazyArray '.get_called_class().
                 ' already defined by a method is not allowed'
             );
         }
