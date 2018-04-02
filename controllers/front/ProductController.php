@@ -342,8 +342,9 @@ class ProductControllerCore extends FrontController
 
                 $combination = new Combination((int)$quantity_discount['id_product_attribute']);
                 $attributes = $combination->getAttributesName((int)$this->context->language->id);
+                $quantity_discount['attributes'] = '';
                 foreach ($attributes as $attribute) {
-                    $quantity_discount['attributes'] = $attribute['name'].' - ';
+                    $quantity_discount['attributes'] .= $attribute['name'].' - ';
                 }
                 $quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
             }
