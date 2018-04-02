@@ -26,73 +26,19 @@
 
 namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShopBundle\Entity\Repository\TabRepository;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class manages "Configure > Shop Parameters > Customer Settings" page
  * form handling.
  */
-final class CustomerPreferencesFormHandler implements FormHandlerInterface
+final class CustomerPreferencesFormHandler extends FormHandler
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var FormDataProviderInterface
-     */
-    private $dataProvider;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var HookDispatcher
-     */
-    private $dispatcher;
-
     /**
      * @var TabRepository
      */
     private $tabRepository;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        FormDataProviderInterface $dataProvider,
-        TranslatorInterface $translator,
-        HookDispatcher $dispatcher,
-        TabRepository $tabRepository
-    ) {
-        $this->formFactory = $formFactory;
-        $this->dataProvider = $dataProvider;
-        $this->translator = $translator;
-        $this->dispatcher = $dispatcher;
-        $this->tabRepository = $tabRepository;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getForm()
-    {
-        $builder = $this->formFactory->createBuilder()
-            ->add('general', GeneralType::class)
-            ->setData($this->dataProvider->getData());
-
-        $this->dispatcher->dispatchForParameters('displayCustomerPreferencesForm', [
-            'form_builder' => $builder,
-        ]);
-
-        return $builder->getForm();
-    }
 
     /**
      * {@inheritdoc}
@@ -103,18 +49,19 @@ final class CustomerPreferencesFormHandler implements FormHandlerInterface
             $this->handleB2bUpdate($data['general']['enable_b2b_mode']);
         }
 
-        $this->dispatcher->dispatchForParameters('actionCustomerPreferencesSave', [
-            'errors' => &$errors,
-            'form_data' => &$data,
-        ]);
+        return parent::save($data);
+    }
 
-        return $errors;
+    public function setTabRepository(TabRepository $tabRepository)
+    {
+        $this->tabRepository = $tabRepository;
     }
 
     /**
      * Based on B2b mode, we need to enable/disable some tabs
      *
-     * @param bool $b2bMode     Current B2B mode status
+     * @param bool $b2bMode Current B2B mode status
+     * @throws \InvalidArgumentException
      */
     private function handleB2bUpdate($b2bMode)
     {

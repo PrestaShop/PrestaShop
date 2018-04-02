@@ -35,14 +35,22 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class OptionalFeaturesType extends CommonAbstractType
 {
+    private $isCombinationsUsed;
+
+    public function __construct($isCombinationsUsed)
+    {
+        $this->isCombinationsUsed = $isCombinationsUsed;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $isUsed = $this->isCombinationsUsed;
         $builder
             ->add('combinations', SwitchType::class, array(
-                'disabled' => $options['are_combinations_used'],
+                'disabled' => $isUsed,
             ))
             ->add('features', SwitchType::class, array(
                 'required' => true,
@@ -60,7 +68,6 @@ class OptionalFeaturesType extends CommonAbstractType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Global',
-            'are_combinations_used' => false,
         ));
     }
 
