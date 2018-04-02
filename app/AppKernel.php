@@ -67,9 +67,16 @@ class AppKernel extends Kernel
          * @see https://symfony.com/doc/2.8/configuration/external_parameters.html#environment-variables
          */
         if (extension_loaded('apc')) {
-            $_SERVER['CACHE_DRIVER'] = 'apc';
+            $_SERVER['CACHE__DRIVER'] = 'apc';
         } else {
-            $_SERVER['CACHE_DRIVER'] = 'array';
+            $_SERVER['CACHE__DRIVER'] = 'array';
+        }
+
+        /* Will not work until PrestaShop is installed */
+        if ($this->parametersFileExists()) {
+            try {
+                $this->enableComposerAutoloaderOnModules($this->getActiveModules());
+            } catch (\Exception $e) {}
         }
 
         return $bundles;
@@ -203,5 +210,22 @@ class AppKernel extends Kernel
             'charset' => 'utf8',
             'driver' => 'pdo_mysql',
         ));
+    }
+
+    /**
+     * Enable auto loading of module Composer autoloader if needed.
+     * Need to be done as earlier as possible in application lifecycle.
+     *
+     * @param array $modules the list of modules
+     */
+    private function enableComposerAutoloaderOnModules($modules)
+    {
+        foreach ($modules as $module) {
+            $autoloader = __DIR__.'/../modules/'.$module.'/vendor/autoload.php';
+
+            if (file_exists($autoloader)) {
+                include_once $autoloader;
+            }
+        }
     }
 }
