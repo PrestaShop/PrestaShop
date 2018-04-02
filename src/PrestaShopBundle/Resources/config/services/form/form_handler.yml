@@ -1,0 +1,41 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.performance.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.adapter.performance.form_provider'
+            -
+              'smarty': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\SmartyType'
+              'debug_mode': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\DebugModeType'
+              'optional_features': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
+              'ccc': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CombineCompressCacheType'
+              'media_servers': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MediaServersType'
+              'caching': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\CachingType'
+              'add_memcache_server': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\MemcacheServerType'
+            - 'PerformancePage'
+
+    prestashop.adapter.maintenance.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.adapter.maintenance.form_provider'
+            -
+              'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceType'
+            - 'MaintenancePage'
+
+    prestashop.adapter.administration.form_handler:
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
+        arguments:
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
+            - '@prestashop.adapter.administration.form_provider'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\GeneralType'
+              'upload_quota': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\UploadQuotaType'
+              'notifications': 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\NotificationsType'
+            - 'AdministrationPage'
