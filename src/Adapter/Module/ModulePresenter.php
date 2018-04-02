@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
  * @deprecated since 1.7.4.0
  * @see \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
  *
- * Class ModulePresenter
- * @package PrestaShop\PrestaShop\Adapter\Module
  */
 class ModulePresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
 {

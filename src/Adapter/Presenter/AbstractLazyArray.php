@@ -52,8 +52,6 @@ use Doctrine\Common\Util\Inflector;
  * Note if the key already exists as a method, it will be skip. In our example, if getUrl() is defined with the
  * annotation @arrayAccess, the $product['url'] = 'foo'; will be ignored
  *
- * Class AbstractLazyArray
- * @package PrestaShop\PrestaShop\Adapter\Presenter
  */
 abstract class AbstractLazyArray implements \Iterator, \ArrayAccess, \Countable
 {

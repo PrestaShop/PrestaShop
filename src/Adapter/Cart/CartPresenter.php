@@ -31,8 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Cart;
  * @deprecated since 1.7.4.0
  * @see \PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter
  *
- * Class CartPresenter
- * @package PrestaShop\PrestaShop\Adapter\Cart
  */
 class CartPresenter extends \PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter
 {
