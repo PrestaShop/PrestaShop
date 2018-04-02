@@ -37,11 +37,9 @@ final class MaintenanceFormDataProvider implements FormDataProviderInterface
     /**
      * @var MaintenanceConfiguration
      */
-    protected $maintenanceConfiguration;
+    private $maintenanceConfiguration;
 
-    public function __construct(
-        MaintenanceConfiguration $maintenanceConfiguration
-    )
+    public function __construct(MaintenanceConfiguration $maintenanceConfiguration)
     {
         $this->maintenanceConfiguration = $maintenanceConfiguration;
     }

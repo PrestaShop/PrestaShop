@@ -249,6 +249,7 @@ services:
 
     form.type.performance.optional_features:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\OptionalFeaturesType'
+        arguments: ['@=service("prestashop.adapter.combination_feature").isUsed()']
         tags:
             - { name: form.type }
 
