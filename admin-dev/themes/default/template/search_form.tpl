@@ -28,8 +28,7 @@
 		<div class="input-group">
 			<div class="input-group-btn">
 				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					<i id="search_type_icon" class="icon-search"></i>
-					<i class="icon-caret-down"></i>
+					<i id="search_type_icon" class="material-icons">search</i>
 				</button>
 				<ul id="header_search_options" class="dropdown-menu">
 					<li class="search-all search-option active">

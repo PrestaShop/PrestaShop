@@ -17,22 +17,40 @@ $header-height: 36px
 		@media (max-width: $screen-sm)
 			padding: 10px 0
 
-#header_logo
-	@extend .navbar-brand
-	font-size: 1.3em !important
+#logo_block
 	position: relative
-	height: 36px
-	background: url('#{$img-path}/prestashop-avatar-header_shopname.png') no-repeat top left
-	background-size: auto 36px
-	padding-left: 205px !important
-	@include margin(0, 5px, 0, 0)
+	#header_logo
+		@extend .navbar-brand
+		font-size: 1.3em !important
+		position: relative
+		height: 36px
+		background: url('#{$img-path}/prestashop-avatar-header_shopname.png') no-repeat top left
+		background-size: auto 36px
+		padding-left: 205px !important
+		@include margin(0, 5px, 0, 0)
+		@media (max-width: $screen-sm)
+			margin-left: -10px
 	#shop_version
 		font-size: 10px
-	@media (max-width: $screen-sm)
-		margin-left: 25px
+		position: absolute
+		left: 178px
+		top: 13px
+
+#maintenance-mode
+	a
+		color: #6c868e
+		&:hover, &:focus
+			color: $brand-info
+			text-decoration: none
+
 #header_shopname
 	@extend .navbar-brand
+	font-size: 13px !important
+	height: inherit !important
 	text-decoration: none
+	padding-top: 11px
+	i
+		color: $brand-info
 
 #header_notifs_icon_wrapper
 	@extend .nav
@@ -136,22 +154,7 @@ $header-height: 36px
 			color: $brand-warning
 	.maintenance-mode + .debug-mode
 		margin-left: 0
-#employee_infos
-	width: $header-height
-	box-sizing: border-box
-	.employee_name
-		position: relative
-		height: $header-height
-	.employee_avatar_small
-		.img-thumbnail
-			@include border-radius($header-height)
-		@include avatar($header-height, 0px)
-		position: absolute
-		top: 0
-		@include right(0)
-	img
-		border: none
-		padding: 0
+
 #employee_links
 	i
 		font-size: $icon-size-base
@@ -208,12 +211,13 @@ $header-height: 36px
 		z-index: 10
 		@include right(8px)
 	i
-		font-size: $icon-size-base
+		top: -6px
 
 #header_quick
-	font-size: 15px
+	font-size: 13px
 	a
-		color: $main-color
+		color: #6c868e
+		padding-top: 11px !important
 		&:hover
 			color: $toolbar-buttons-hover-color
 	@extend .nav
@@ -235,7 +239,19 @@ $header-height: 36px
 	@extend .hidden-sm
 	height:     $header-height
 	box-sizing: border-box
-	margin: 0 10px !important
+	margin: 0 0 0 10px !important
+	.shop-state
+		.material-icons
+			font-size: 20px
+			vertical-align: middle
+			position: relative
+			padding-right: 5px
+			color: #6c868e
+	.shop-state, #header_shopname
+		padding-top: 11px
+	span, a
+		font-size: 13px !important
+		color: #6c868e
 	li
 		> a
 			&.notifs
@@ -246,6 +262,12 @@ $header-height: 36px
 				box-sizing:     border-box
 				padding:        0 5px !important
 				vertical-align: middle
+				&:hover, &:focus
+					color: $brand-info
+					text-decoration: none
+			&.gamification_notif
+				padding-left: 5px
+				padding-right: 8px
 
 #header_shop
 	@extend .nav
@@ -267,23 +289,23 @@ $header-height: 36px
 		color: rgba(white,.6)
 		line-height: 35px
 
-#notification
+#notification, #employee_infos
 	&.open
 		background: none
-	.notifs .material-icons
+		a
+			&.dropdown-toggle
+				background: none !important
+	.material-icons
 		color: #6c868e
-	>.material-icons
-		font-size: 1.5rem
-		line-height: 1.375rem
-		vertical-align: middle
+		font-size: 24px
 	#total_notif_number_wrapper
 		display: inline-block
 		line-height: .875rem
 		height: .875rem
 		vertical-align: middle
 		position: absolute
-		top: .125rem
-		right: .125rem
+		top: .3rem
+		right: .6rem
 		color: #fff
 		background: #fb0
 		font-size: .5625rem
@@ -294,7 +316,29 @@ $header-height: 36px
 		padding: 0
 		border-radius: 0
 		min-width: 25rem
-		box-shadow: none
+		box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1)
+		border: 1px solid #bbcdd2
+		top: 42px
+		right: 5px !important
+		&:before, &:after
+			bottom: 100%
+			right: 5px
+			border: solid transparent
+			content: " "
+			height: 0
+			width: 0
+			position: absolute
+			pointer-events: none
+		&:after
+			border-color: transparent
+			border-bottom-color: white
+			border-width: 7px
+			margin-right: 1px
+		&:before
+			border-color: transparent
+			border-bottom-color: #bbcdd2
+			border-width: 8px
+			margin-left: -8px
 		.notifications
 			.nav-tabs
 				border-bottom: 1px solid #fff
@@ -303,24 +347,27 @@ $header-height: 36px
 					width: 33%
 					text-align: center
 					margin-bottom: -1px
-					&.active a
-						border-top: 0
-						border-bottom: 2px solid #25b9d7
-						color: #363a41
-					&:hover a
-						color: #25b9d7
+					&.active
+						a
+							border-top: 0
+							border-bottom: 3px solid $brand-info
+							color: $brand-info
+					&:hover
+						a
+							color: $brand-info	
 					.nav-link
 						color: #6c868e
 						font-weight: 400
 						padding: .9375rem .9375rem .625rem
 						font-family: Open Sans,sans-serif
-						font-size: 0.75rem
+						font-size: 0.9rem
 						text-transform: none
 						border: 0
 			.tab-content
-				border-top: .125rem solid #bbcdd2
+				border-top: .125rem solid $gray-lighter
 				padding: 0
 				margin-top: -.0625rem
+				background: #f2f4f5
 				.tab-pane
 					height: 11.875rem
 					overflow-y: auto
@@ -363,3 +410,36 @@ $header-height: 36px
 						text-decoration: none
 						strong
 							color: #fff
+
+// Employees new design
+
+#employee_infos
+	width: $header-height
+	box-sizing: border-box
+	.employee_name
+		padding: 11px 0 10px 6px !important
+	.dropdown-menu
+		min-width: inherit
+		li
+			font-size: 14px
+			&:hover
+				i
+					color: white
+			&.username
+				padding: 10px 0 0
+			&.divider
+				border: 1px solid $gray-lighter
+			a
+				i
+					font-size: 20px
+					padding: 0
+
+// Progress bar override
+#header
+	.progress
+		border-radius: 11px
+		height: 8px
+		background: lighten($brand-primary, 50%)
+		.progress-bar
+			&.progress-bar-info
+				background: $brand-primary
