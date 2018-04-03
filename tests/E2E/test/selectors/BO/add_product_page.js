@@ -170,7 +170,9 @@ module.exports = {
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
     category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
-    summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]'
+    summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
+    combination_first_table: '//*[@id="accordion_combinations"]',
+    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]'
   },
 
   ProductList: {
