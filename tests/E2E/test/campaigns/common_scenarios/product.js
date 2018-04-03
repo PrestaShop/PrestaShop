@@ -157,5 +157,16 @@ module.exports = {
           .then(() => client.checkSortProduct())
       });
     }, 'product/product');
+  },
+
+  checkPaginationFO(client, productPage, buttonName, pageNumber) {
+    let selectorButton = buttonName === 'Next' ? productPage.pagination_next : productPage.pagination_previous;
+    test('should click on "' + buttonName + '" button', () => {
+      return promise
+        .then(() => client.isVisible(selectorButton))
+        .then(() => client.clickPageNextOrPrevious(selectorButton));
+    });
+    test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
+    test('should check that the value page in URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
   }
 };

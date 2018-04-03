@@ -24,7 +24,7 @@ scenario('Check that all products are well displayed in the Back Office', client
   test('should check the existence of pagination', () => {
     return promise
       .then(() => client.isVisible(productPage.pagination_next))
-      .then(() => client.clickPageNext(productPage.pagination_next))
+      .then(() => client.clickPageNextOrPrevious(productPage.pagination_next));
   });
   test('should go to the first product page', () => client.waitForExistAndClick(productPage.first_product_all));
 }, 'product/product', true);
