@@ -1,8 +1,8 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
-var path = require('path');
-var fs = require('fs');
-var pdfUtil = require('pdf-to-text');
+let path = require('path');
+let fs = require('fs');
+let pdfUtil = require('pdf-to-text');
 
 global.tab = [];
 
@@ -41,7 +41,7 @@ class CommonClient {
 
   waitForExist(selector, timeout = 90000) {
     return this.client
-      .waitForExist(selector, timeout)
+      .waitForExist(selector, timeout);
   }
 
 
@@ -49,16 +49,16 @@ class CommonClient {
     return this.client
       .waitForExist(menuSelector, 90000)
       .moveToObject(menuSelector)
-      .waitForVisibleAndClick(selector)
+      .waitForVisibleAndClick(selector);
   }
 
   closeBoarding(selector) {
     if (global.isVisible) {
       return this.client
         .click(selector)
-        .pause(2000)
+        .pause(2000);
     } else {
-      return this.client.pause(1000)
+      return this.client.pause(1000);
     }
   }
 
@@ -121,7 +121,7 @@ class CommonClient {
   }
 
   scrollWaitForExistAndClick(selector, margin, timeout = 90000) {
-    return this.client.scrollWaitForExistAndClick(selector, margin, timeout)
+    return this.client.scrollWaitForExistAndClick(selector, margin, timeout);
   }
 
   waitForVisibleAndClick(selector, timeout = 90000) {
@@ -184,6 +184,13 @@ class CommonClient {
           .then(() => this.client.getText(selector))
           .then((text) => expect(text).to.equal(textToCheckWith));
         break;
+      case "deepequal":
+        return this.client
+          .pause(pause)
+          .waitForExist(selector, 9000)
+          .then(() => this.client.getText(selector))
+          .then((text) => expect(text).to.deep.equal(textToCheckWith));
+        break;
       case "notequal":
         return this.client
           .pause(pause)
@@ -216,7 +223,7 @@ class CommonClient {
       .execute(function (className) {
         document.getElementsByClassName(className).style = '';
       })
-      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture));
   }
 
   /**
@@ -322,7 +329,7 @@ class CommonClient {
     return this.client
       .execute(function (className, order) {
         document.querySelectorAll(className)[order].style.display = 'block';
-      }, className, order)
+      }, className, order);
   }
 
   checkIsNotVisible(selector) {
