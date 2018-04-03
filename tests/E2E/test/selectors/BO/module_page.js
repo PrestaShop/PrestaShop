@@ -53,7 +53,7 @@ module.exports = {
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
     modules_number: '[class="module-sorting-search-wording"]',
-
+    discover_button: '//*[@id="modules-list-container-all"]/div[@data-tech-name="pm_advancedtopmenu"]//a[contains(text(),"Discover")]',
     //List of modules in notifications tab
     configure_module: '//*[@id="modules-list-container-notification"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     modules_number_to_configure: '//*[@id="module-short-list-configure"]/span[1]',
@@ -64,6 +64,9 @@ module.exports = {
       account_details_textarea: '//*[@id="BANK_WIRE_DETAILS"]',
       bank_address_textarea: '//*[@id="BANK_WIRE_ADDRESS"]',
       save_button: '//*[@id="module_form_submit_btn"]'
-    }
+    },
+
+    //Module name in "addons.prestashop.com" after clicking on "Dicover" button
+    module_name: '//*[@id="product_content"]/div[@class="product_head"]//h1'
   }
 };
