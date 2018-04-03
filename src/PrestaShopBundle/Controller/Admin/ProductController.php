@@ -176,7 +176,7 @@ class ProductController extends FrameworkBundleAdminController
         ) {
             // no filter, total filtered == 0, and then total count == 0 too.
             $legacyUrlGenerator = $this->get('prestashop.core.admin.url_generator_legacy');
-            return $this->render('PrestaShopBundle:Admin/Product:catalog_empty.html.twig', array(
+            return $this->render('PrestaShopBundle:Admin/Product/CatalogPage:catalog_empty.html.twig', array(
                 'layoutHeaderToolbarBtn' => $toolbarButtons,
                 'import_url' => $legacyUrlGenerator->generate('AdminImport'),
             ));
