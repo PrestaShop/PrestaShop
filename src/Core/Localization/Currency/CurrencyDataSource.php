@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled as CurrencyInstalledDataLayer;
-use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled;
 
 /**
  * Localization CurrencyData source
@@ -52,9 +51,9 @@ class CurrencyDataSource implements DataSourceInterface
      * This top layer might be chained with lower layers and will be the entry point of this middleware stack.
      *
      * @param CurrencyDataLayerInterface $topLayer
-     * @param CurrencyInstalled $installedDataLayer
+     * @param CurrencyInstalledDataLayer $installedDataLayer
      */
-    public function __construct(CurrencyDataLayerInterface $topLayer, CurrencyInstalled $installedDataLayer)
+    public function __construct(CurrencyDataLayerInterface $topLayer, CurrencyInstalledDataLayer $installedDataLayer)
     {
         $this->topLayer           = $topLayer;
         $this->installedDataLayer = $installedDataLayer;
