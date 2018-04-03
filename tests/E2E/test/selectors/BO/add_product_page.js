@@ -181,6 +181,12 @@ module.exports = {
     status_select: '//*[@id="product_filter_column_active"]//select[@name="filter_column_active"]',
     first_product_status: '//*[@id="product_catalog_list"]//tr/td[8]/a/i[contains(@class, "action-%ACTION")]',
     edit_button: '//*[@id="product_catalog_list"]//i[text()="mode_edit"]',
-    pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]'
+    pagination_products: '//*[@id="product_catalog_list"]//div[contains(@class, "justify-content-center")]/div[1]',
+    dropdown_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[@data-toggle="dropdown"])[%POS]',
+    action_preview_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@target,"_blank")])[%POS]',
+    action_duplicate_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"duplicate")])[%POS]',
+    action_delete_button: '(//*[@id="product_catalog_list"]//tbody//div[@class="btn-group-action"]//a[contains(@onclick,"delete")])[%POS]',
+    delete_now_modal_button: '//*[@id="catalog_deletion_modal"]//button[contains(text(), "Delete now")]',
+    search_no_results: '//*[@id="product_catalog_list"]//tbody/tr[1]/td'
   }
 };
