@@ -37,6 +37,11 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
  */
 class CurrencyInstalled
 {
+    /**
+     * This adapter will provide data from DB / ORM about Currency (via legacy entity).
+     *
+     * @var CurrencyDataProvider
+     */
     protected $dataProvider;
 
     public function __construct(CurrencyDataProvider $dataProvider)
