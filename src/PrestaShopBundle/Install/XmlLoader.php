@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Install;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Pack;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestashopInstallerException;
 use PrestaShop\PrestaShop\Adapter\Entity\Tag;
@@ -278,7 +279,6 @@ class XmlLoader
                 }
             }
         }
-
 
         // Load all row for current entity and prepare data to be populated
         foreach ($xml->entities->$entity as $node) {
@@ -558,6 +558,20 @@ class XmlLoader
         }
 
         $this->storeId($entity, $identifier, $entity_id);
+    }
+
+    /**
+     * @inheritdoc
+     * @param string $identifier
+     * @param array $data
+     * @param array $data_lang
+     * @return $this
+     */
+    public function createEntityPack($identifier, array $data, array $data_lang)
+    {
+        Pack::addItem($data['id_product_pack'], $data['id_product_item'], $data['quantity']);
+
+        return $this;
     }
 
     public function createEntityStockAvailable($identifier, array $data, array $data_lang)
