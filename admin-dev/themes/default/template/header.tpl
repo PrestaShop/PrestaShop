@@ -115,15 +115,19 @@
 				<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
 					<i class="icon-reorder"></i>
 				</button>
+
 				{* Logo *}
-				<a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}">
-				</a>
+				<div id="logo_block">
+					<a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}">
+					</a>
+					<span id="shop_version">{$ps_version}</span>
+				</div>
 
 				{* Quick access *}
 				{if count($quick_access) >= 0}
 					<ul id="header_quick">
 						<li class="dropdown">
-							<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access' d='Admin.Navigation.Header'} <i class="icon-caret-down"></i></a>
+							<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access' d='Admin.Navigation.Header'} <i class="material-icons">arrow_drop_down</i></a>
 							<ul class="dropdown-menu">
 								{foreach $quick_access as $quick}
 									<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
@@ -146,19 +150,19 @@
 										</a>
 									</li>
 								{else}
-                  <li>
-                    <a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-                      <i class="icon-plus-circle"></i>
-                      {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
-                    </a>
-                  </li>
-                {/if}
-                <li>
-                  <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
-                    <i class="icon-cog"></i>
-                    {l s='Manage quick accesses' d='Admin.Navigation.Header'}
-                  </a>
-                </li>
+				  <li>
+					<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+					  <i class="icon-plus-circle"></i>
+					  {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
+					</a>
+				  </li>
+				{/if}
+				<li>
+				  <a href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
+					<i class="icon-cog"></i>
+					{l s='Manage quick accesses' d='Admin.Navigation.Header'}
+				  </a>
+				</li>
 							</ul>
 						</li>
 					</ul>
@@ -219,24 +223,16 @@
 				<ul id="header_employee_box">
 					<li id="employee_infos" class="dropdown hidden-xs">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
-							<span class="employee_avatar_small">
-								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="26" height="26" />
-							</span>
+							<i class="material-icons">account_circle</i>
 						</a>
 						<ul id="employee_links" class="dropdown-menu">
-							<li data-mobile="true" data-from="employee_links" data-target="menu">
-								<span class="employee_avatar">
-									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
-								</span>
-							</li>
 							<li class="text-center text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
-							<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
+							<li><a class="admin-link" href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="material-icons">settings_applications</i> {l s='My preferences' d='Admin.Navigation.Header'}</a></li>
 							{if $host_mode}
-							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
+							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="material-icons">settings_applications</i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
 							{/if}
-							<li class="divider"></li>
-							<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="material-icons">power_settings_new</i> <span>{l s='Sign out' d='Admin.Navigation.Header'}</span></a></li>
+							<li class="signout" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$login_link|escape:'html':'UTF-8'}&amp;logout"><i class="material-icons">power_settings_new</i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -335,7 +331,7 @@
                 </span>
               {/if}
 							{if isset($is_multishop) && $is_multishop && $shop_list &&
-                (isset($multishop_context) &&
+								(isset($multishop_context) &&
                 $multishop_context & Shop::CONTEXT_GROUP ||
                 $multishop_context & Shop::CONTEXT_SHOP ||
                 $multishop_context & Shop::CONTEXT_ALL
@@ -346,7 +342,10 @@
 									</li>
 								</ul>
 							{else}
-								<a id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">{$shop_name}</a>
+								<a id="header_shopname" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">
+									<i class="material-icons">visibility</i>
+									{l s='View my shop' d='Admin.Navigation.Header'}
+								</a>
 							{/if}
 						</li>
 					</ul>
