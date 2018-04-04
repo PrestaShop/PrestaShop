@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -45,14 +46,7 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('catalog_mode', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => true,
-                    'No' => false,
-                ],
-                'choice_translation_domain' => 'Admin.Global',
-                'required' => true,
-            ])
+            ->add('catalog_mode', SwitchType::class)
             ->add('new_days_number', IntegerType::class, [
                 'required' => false,
             ])
@@ -68,22 +62,8 @@ class GeneralType extends TranslatorAwareType
                 'choice_translation_domain' => 'Admin.Global',
                 'required' => true,
             ])
-            ->add('force_friendly_url', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => true,
-                    'No' => false,
-                ],
-                'choice_translation_domain' => 'Admin.Global',
-                'required' => true,
-            ])
-            ->add('default_status', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => true,
-                    'No' => false,
-                ],
-                'choice_translation_domain' => 'Admin.Global',
-                'required' => true,
-            ])
+            ->add('force_friendly_url', SwitchType::class)
+            ->add('default_status', SwitchType::class)
         ;
     }
 

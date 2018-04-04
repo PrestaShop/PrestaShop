@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -44,22 +45,8 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('allow_ordering_oos', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'required' => true,
-                'choice_translation_domain' => 'Admin.Global',
-            ])
-            ->add('stock_management', ChoiceType::class, [
-                'choices' => [
-                    'Yes' => 1,
-                    'No' => 0,
-                ],
-                'required' => true,
-                'choice_translation_domain' => 'Admin.Global',
-            ])
+            ->add('allow_ordering_oos', SwitchType::class)
+            ->add('stock_management', SwitchType::class)
             ->add('in_stock_label', TranslateTextType::class, [
                 'locales' => $this->locales,
             ])
