@@ -32,6 +32,10 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class generates "General" form
+ * in "Configure > Shop Parameters > Customer Settings" page.
+ */
 class GeneralType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

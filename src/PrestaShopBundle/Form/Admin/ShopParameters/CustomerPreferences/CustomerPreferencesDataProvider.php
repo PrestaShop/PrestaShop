@@ -26,47 +26,36 @@
 
 namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 
-class CustomerPreferencesFormHandler implements FormHandlerInterface
+class CustomerPreferencesDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var FormFactoryInterface
+     * @var DataConfigurationInterface
      */
-    private $formFactory;
+    private $generalDataConfiguration;
 
-    /**
-     * @var FormDataProviderInterface
-     */
-    private $dataProvider;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        FormDataProviderInterface $dataProvider
-    ) {
-        $this->formFactory = $formFactory;
-        $this->dataProvider = $dataProvider;
+    public function __construct(DataConfigurationInterface $generalDataConfiguration)
+    {
+        $this->generalDataConfiguration = $generalDataConfiguration;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getForm()
+    public function getData()
     {
-        $builder = $this->formFactory->createBuilder()
-            ->add('general', GeneralType::class)
-            ->setData($this->dataProvider->getData());
-
-        return $builder->getForm();
+        return [
+            'general' => $this->generalDataConfiguration->getConfiguration(),
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save(array $data)
+    public function setData(array $data)
     {
-        // TODO: Implement save() method.
+        // TODO: Implement setData() method.
     }
 }

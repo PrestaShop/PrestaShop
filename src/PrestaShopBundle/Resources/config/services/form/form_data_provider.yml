@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.admin.customer_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\CustomerPreferencesDataProvider'
+        arguments:
+            - '@prestashop.adapter.customer.customer_configuration'
