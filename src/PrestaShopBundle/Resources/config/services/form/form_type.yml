@@ -318,3 +318,10 @@ services:
         public: true
         tags:
             - { name: form.type }
+
+    form.type.customer_preferences.general:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\GeneralType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }

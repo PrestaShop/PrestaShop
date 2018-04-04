@@ -28,11 +28,11 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class GeneralType extends AbstractType
+class GeneralType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -40,7 +40,7 @@ class GeneralType extends AbstractType
             ->add('redisplay_cart_at_login', SwitchType::class)
             ->add('send_email_after_registration', SwitchType::class)
             ->add('password_reset_delay', TextWithUnitType::class, [
-                'unit' => 'minutes',    //@todo: check if translation is working
+                'unit' => $this->trans('minutes', 'Admin.Shopparameters.Feature'),
             ])
             ->add('enable_b2b_mode', SwitchType::class)
             ->add('ask_for_birthday', SwitchType::class)
