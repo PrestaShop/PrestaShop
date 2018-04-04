@@ -49,8 +49,16 @@ final class FilterLogsByAttributeType extends CommonAbstractType
             ->add('object_type', TextType::class, array('required' => false))
             ->add('object_id', TextType::class, array('required' => false))
             ->add('error_code', TextType::class, array('required' => false))
-            ->add('date_from', DatePickerType::class, array('required' => false))
-            ->add('date_to', DatePickerType::class, array('required' => false))
+            ->add('date_from', DatePickerType::class, array(
+                'required' => false,
+                'attr' => array('placeholder' => 'From'),
+                'translation_domain' => 'Admin.Global',
+            ))
+            ->add('date_to', DatePickerType::class, array(
+                'required' => false,
+                'attr' => array('placeholder' => 'To'),
+                'translation_domain' => 'Admin.Global',
+            ))
         ;
     }
 
