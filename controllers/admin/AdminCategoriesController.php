@@ -524,6 +524,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
+                    'hint' => $this->trans('Click on "Displayed" to index the category on your shop.', array(), 'Admin.Catalog.Help'),
                     'values' => array(
                         array(
                             'id' => 'active_on',

@@ -33,7 +33,7 @@
         <div class="card-block">
             <div class="card-text">
                 <div class="form-group">
-                    {{ ps.label_with_help(('Catalog mode'|trans), ('When active, all shopping features will be disabled.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+                    {{ ps.label_with_help(('Catalog mode'|trans), ('The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.'|trans({}, 'Admin.Shopparameters.Help'))) }}
                     {{ form_errors(generalForm.catalog_mode) }}
                     {{ form_widget(generalForm.catalog_mode) }}
                 </div>

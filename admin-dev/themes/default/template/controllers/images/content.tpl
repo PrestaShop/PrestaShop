@@ -22,6 +22,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  *}
+
+<div class="alert alert-danger">
+	{l s='By default, all images settings are already installed in your store. Do not delete them, you will need it!' d='Admin.Design.Help'}
+</div>
+
 {if isset($content)}
 	{$content}
 {/if}
