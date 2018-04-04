@@ -2,3 +2,4 @@ imports:
     - { resource: form/form_type.yml }
     - { resource: form/form_extension.yml }
     - { resource: form/form_handler.yml }
+    - { resource: form/form_data_provider.yml }

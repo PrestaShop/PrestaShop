@@ -174,3 +174,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.customer.customer_configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

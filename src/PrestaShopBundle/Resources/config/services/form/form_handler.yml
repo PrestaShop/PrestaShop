@@ -6,3 +6,4 @@ services:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
             - '@form.factory'
+            - '@prestashop.admin.customer_preferences.data_provider'
