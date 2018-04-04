@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\FileUploadException;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -71,6 +72,22 @@ class ImportController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_import');
             }
 
+            if (!in_array(
+                $this->authorizationLevel($legacyController),
+                [
+                    PageVoter::LEVEL_CREATE,
+                    PageVoter::LEVEL_UPDATE,
+                    PageVoter::LEVEL_DELETE,
+                ]
+            )) {
+                $this->addFlash(
+                    'error',
+                    $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
+                );
+
+                return $this->redirectToRoute('admin_import');
+            }
+
             $data = $form->getData();
             if (!$errors = $formHandler->save($data)) {
                 return $this->fowardRequestToLegacyResponse($request);
@@ -104,6 +121,27 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function uploadAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'error' => $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            return $this->json([
+                'error' =>  $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
+            ]);
+        }
+
         $uploadedFile = $request->files->get('file');
         if (!$uploadedFile instanceof UploadedFile) {
             return $this->json([
@@ -115,9 +153,7 @@ class ImportController extends FrameworkBundleAdminController
             $fileUploader = $this->get('prestashop.core.import.file_uploader');
             $file = $fileUploader->upload($uploadedFile);
         } catch (FileUploadException $e) {
-            $response['error'] = $e->getMessage();
-
-            return $this->json($response);
+            return $this->json(['error' => $e->getMessage()]);
         }
 
         $response['file'] = [
@@ -137,6 +173,33 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function deleteAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash(
+                'error',
+                $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_import');
+        }
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_import');
+        }
+
         if ($filename = $request->query->get('filename')) {
             $fileRemoval = $this->get('prestashop.core.import.file_removal');
             $fileRemoval->remove($filename);
@@ -154,6 +217,34 @@ class ImportController extends FrameworkBundleAdminController
      */
     public function downloadAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash(
+                'error',
+                $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_import');
+        }
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_READ,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_DELETE,
+                PageVoter::LEVEL_READ,
+            ]
+        )) {
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_import');
+        }
+
         if ($filename = $request->query->get('filename')) {
             $importDirectory = $this->get('prestashop.core.import.dir');
 
