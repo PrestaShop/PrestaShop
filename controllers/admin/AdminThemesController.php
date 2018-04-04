@@ -518,7 +518,7 @@ class AdminThemesControllerCore extends AdminController
                     ),
                     'PS_FAVICON' => array(
                         'title' => $this->trans('Favicon', array(), 'Admin.Design.Feature'),
-                        'hint' => $this->trans('Will appear in the address bar of your web browser.', array(), 'Admin.Design.Help'),
+                        'hint' => $this->trans('It is the small icon that appears in browser tabs, next to the web address (or name of your store?). Use our favicon generator on PrestaShop Marketplace to boost your brand image!', array(), 'Admin.Design.Help'),
                         'type' => 'file',
                         'name' => 'PS_FAVICON',
                         'tab' => 'icons',

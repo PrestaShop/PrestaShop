@@ -47,7 +47,7 @@ class AdminPPreferencesControllerCore extends AdminController
                 'fields' =>    array(
                     'PS_CATALOG_MODE' => array(
                         'title' => $this->trans('Catalog mode', array(), 'Admin.Shopparameters.Feature'),
-                        'hint' => $this->trans('When active, all shopping features will be disabled.', array(), 'Admin.Shopparameters.Help'),
+                        'hint' => $this->trans('The catalog mode is actually to disable products checkout (prices, add to cart, etc.) on your shop, like a retail website does.', array(), 'Admin.Shopparameters.Help'),
                         'validation' => 'isBool',
                         'cast' => 'intval',
                         'required' => false,

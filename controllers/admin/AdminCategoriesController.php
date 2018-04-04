@@ -524,6 +524,7 @@ class AdminCategoriesControllerCore extends AdminController
                     'name' => 'active',
                     'required' => false,
                     'is_bool' => true,
+                    'hint' => $this->trans('Click on "Displayed" to index the category on your shop. If you want a category to appear in the menu of your shop, go to Modules > Modules & Services > Installed modules. Then, configure your menu module.', array(), 'Admin.Catalog.Help'),
                     'values' => array(
                         array(
                             'id' => 'active_on',
