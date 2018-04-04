@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "63638f12a7d7e6e7ff4c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1179553aec4b5eb1f96e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -862,17 +862,21 @@ var $ = window.$;
 
 var StockManagementOptionHandler = function () {
   function StockManagementOptionHandler() {
+    var _this = this;
+
     _classCallCheck(this, StockManagementOptionHandler);
 
     this.handle();
 
-    $('#form_stock_stock_management').on('change', this.handle.bind(this));
+    $('input[name="form[stock][stock_management]"]').on('change', function () {
+      return _this.handle();
+    });
   }
 
   _createClass(StockManagementOptionHandler, [{
     key: 'handle',
     value: function handle() {
-      var stockManagementVal = $('#form_stock_stock_management').val();
+      var stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
       var isStockManagementEnabled = parseInt(stockManagementVal);
 
       this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
@@ -890,13 +894,13 @@ var StockManagementOptionHandler = function () {
   }, {
     key: 'handleAllowOrderingOutOfStockOption',
     value: function handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-      var allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
+      var allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
 
       if (isStockManagementEnabled) {
-        allowOrderingOosSelect.removeAttr('disabled');
+        allowOrderingOosRadios.removeAttr('disabled');
       } else {
-        allowOrderingOosSelect.val(1);
-        allowOrderingOosSelect.attr('disabled', 'disabled');
+        allowOrderingOosRadios.val([1]);
+        allowOrderingOosRadios.attr('disabled', 'disabled');
       }
     }
 
@@ -911,13 +915,13 @@ var StockManagementOptionHandler = function () {
   }, {
     key: 'handleDisplayAvailableQuantitiesOption',
     value: function handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-      var displayQuantitiesSelect = $('#form_page_display_quantities');
+      var displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
 
       if (isStockManagementEnabled) {
-        displayQuantitiesSelect.removeAttr('disabled');
+        displayQuantitiesRadio.removeAttr('disabled');
       } else {
-        displayQuantitiesSelect.val(0);
-        displayQuantitiesSelect.attr('disabled', 'disabled');
+        displayQuantitiesRadio.val([0]);
+        displayQuantitiesRadio.attr('disabled', 'disabled');
       }
     }
   }]);
