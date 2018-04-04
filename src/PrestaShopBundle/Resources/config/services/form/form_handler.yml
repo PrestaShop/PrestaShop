@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.admin.customer_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
+        arguments:
+            - '@form.factory'

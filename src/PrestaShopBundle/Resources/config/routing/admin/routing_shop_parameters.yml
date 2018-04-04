@@ -42,3 +42,12 @@ admin_product_preferences_process:
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\ProductPreferences:process'
         _legacy_controller: AdminPPreferences
+
+
+# Customer preferences
+admin_customer_preferences:
+    path: /customer_preferences
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\CustomerPreferences:index'
+        _legacy_controller: AdminCustomerPreferences
