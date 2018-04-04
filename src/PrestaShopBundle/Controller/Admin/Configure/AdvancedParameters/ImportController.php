@@ -32,6 +32,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -117,7 +118,7 @@ class ImportController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function uploadAction(Request $request)
     {
