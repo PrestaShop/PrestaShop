@@ -41,6 +41,13 @@
 	{else}
 		{$smarty.block.parent}
 	{/if}
+	{if ($input.name == 'active')}
+		<div class="col-lg-12">
+			<div class="help-block">
+				{l s='If you want a category to appear in the menu of your shop, go to Modules > Modules & Services > Installed modules. Then, configure your menu module.' d='Admin.Catalog.Help'}
+			</div>
+		</div>
+	{/if}
 	{if in_array($input.name, ['image', 'thumb'])}
 		<div class="col-lg-6">
 			<div class="help-block">{l s='Recommended dimensions (for the default theme): %1spx x %2spx' sprintf=[$input.format.width, $input.format.height] d='Admin.Catalog.Help'}
