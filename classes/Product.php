@@ -5378,6 +5378,13 @@ class ProductCore extends ObjectModel
             return true;
         }
 
+        if (!$id_customer) {
+            $customer = Context::getContext()->customer;
+            if (Validate::isLoadedObject($customer)) {
+                $id_customer = (int)$customer->id;
+            }
+        }
+
         $cache_id = 'Product::checkAccess_'.(int)$id_product.'-'.(int)$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
         if (!Cache::isStored($cache_id)) {
             if (!$id_customer) {
