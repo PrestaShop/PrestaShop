@@ -680,6 +680,8 @@ class ToolsCore
     /**
     * Return price converted
     *
+    * @deprecated since 1.7.4 use convertPriceToCurrency()
+    *
     * @param float $price Product price
     * @param object|array $currency Current currency object
     * @param bool $to_currency convert to currency or from currency to default currency
@@ -688,11 +690,7 @@ class ToolsCore
     */
     public static function convertPrice($price, $currency = null, $to_currency = true, Context $context = null)
     {
-        static $default_currency = null;
-
-        if ($default_currency === null) {
-            $default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
-        }
+        $default_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 
         if (!$context) {
             $context = Context::getContext();

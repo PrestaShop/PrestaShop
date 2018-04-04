@@ -99,4 +99,19 @@ class Tools
     {
         return LegacyTools::generateHtaccess();
     }
+
+
+    /**
+     * returns the rounded value of $value to specified precision, according to your configuration;
+     *
+     * @note : PHP 5.3.0 introduce a 3rd parameter mode in round function
+     *
+     * @param float $value
+     * @param int $precision
+     * @return float
+     */
+    public function round($value, $precision = 0, $round_mode = null)
+    {
+        return LegacyTools::ps_round($value, $precision, $round_mode);
+    }
 }

@@ -39,6 +39,7 @@ use Phake;
 use Product;
 use Shop;
 use Smarty;
+use SpecificPrice;
 use Tools;
 
 /**
@@ -77,13 +78,16 @@ class ContextMocker
     {
         // need to reset loooot of things
         Product::flushPriceCache();
+        SpecificPrice::flushCache();
         Configuration::clearConfigurationCacheForTesting();
         Configuration::loadConfiguration();
         Cache::clear();
         Cart::resetStaticCache();
         Carrier::resetStaticCache();
         CartRule::resetStaticCache();
+        Currency::resetStaticCache();
         Shop::resetContext();
+        Tools::$round_mode = null;
 
         $this->contextBackup = Context::getContext();
         $context             = clone($this->contextBackup);
