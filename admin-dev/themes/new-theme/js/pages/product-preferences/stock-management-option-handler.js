@@ -29,11 +29,11 @@ class StockManagementOptionHandler {
   constructor() {
     this.handle();
 
-    $('#form_stock_stock_management').on('change', this.handle.bind(this));
+    $('input[name="form[stock][stock_management]"]').on('change', () => this.handle());
   }
 
   handle() {
-    const stockManagementVal = $('#form_stock_stock_management').val();
+    const stockManagementVal = $('input[name="form[stock][stock_management]"]:checked').val();
     const isStockManagementEnabled = parseInt(stockManagementVal);
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
@@ -48,13 +48,13 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleAllowOrderingOutOfStockOption(isStockManagementEnabled) {
-    const allowOrderingOosSelect = $('#form_stock_allow_ordering_oos');
+    const allowOrderingOosRadios = $('input[name="form[stock][allow_ordering_oos]"]');
 
     if (isStockManagementEnabled) {
-        allowOrderingOosSelect.removeAttr('disabled');
+        allowOrderingOosRadios.removeAttr('disabled');
     } else {
-        allowOrderingOosSelect.val(1);
-        allowOrderingOosSelect.attr('disabled', 'disabled');
+        allowOrderingOosRadios.val([1]);
+        allowOrderingOosRadios.attr('disabled', 'disabled');
     }
   }
 
@@ -66,13 +66,13 @@ class StockManagementOptionHandler {
    * @param {int} isStockManagementEnabled
    */
   handleDisplayAvailableQuantitiesOption(isStockManagementEnabled) {
-    const displayQuantitiesSelect = $('#form_page_display_quantities');
+    const displayQuantitiesRadio = $('input[name="form[page][display_quantities]"]');
 
     if (isStockManagementEnabled) {
-        displayQuantitiesSelect.removeAttr('disabled');
+        displayQuantitiesRadio.removeAttr('disabled');
     } else {
-        displayQuantitiesSelect.val(0);
-        displayQuantitiesSelect.attr('disabled', 'disabled');
+        displayQuantitiesRadio.val([0]);
+        displayQuantitiesRadio.attr('disabled', 'disabled');
     }
   }
 }
