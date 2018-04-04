@@ -154,3 +154,23 @@ services:
     prestashop.adapter.php_parameters:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\PhpParameters'
         arguments: ['%kernel.root_dir%/config/parameters.php']
+
+    prestashop.adapter.product_general.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\GeneralConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_pagination.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\PaginationConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_page.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\PageConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.product_stock.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'

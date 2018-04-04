@@ -48,6 +48,9 @@ let config = {
     ],
     translations: [
       './js/app/pages/translations',
+    ],
+    product_preferences: [
+      './js/pages/product-preferences',
     ]
   },
   output: {

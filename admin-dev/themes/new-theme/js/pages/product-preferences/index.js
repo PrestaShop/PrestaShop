@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,49 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cache;
+import TranslatableInput from '../../components/translatable-input';
+import StockManagementOptionHandler from './stock-management-option-handler';
 
-use Tools;
-use Media;
+const $ = window.$;
 
-/**
- * Class able to clear application caches
- */
-class CacheClearer
-{
-    /**
-     * Clear all application caches
-     */
-    public function clearAllCaches()
-    {
-        $this->clearSymfonyCache();
-        $this->clearSmartyCache();
-        Tools::clearXMLCache();
-        $this->clearMediaCache();
-        Tools::generateIndex();
-    }
-
-    /**
-     * Clear Symfony cache
-     */
-    public function clearSymfonyCache()
-    {
-        Tools::clearSf2Cache();
-    }
-
-    /**
-     * Clear media cache only
-     */
-    public function clearMediaCache()
-    {
-        Media::clearCache();
-    }
-
-    /**
-     * Clear smarty cache only
-     */
-    public function clearSmartyCache()
-    {
-        Tools::clearSmartyCache();
-    }
-}
+$(() => {
+  new TranslatableInput();
+  new StockManagementOptionHandler();
+});

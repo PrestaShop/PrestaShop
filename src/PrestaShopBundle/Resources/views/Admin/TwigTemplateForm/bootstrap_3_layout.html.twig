@@ -113,7 +113,7 @@
 {%- endblock time_widget %}
 
 {% block choice_widget_collapsed -%}
-    {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) %}
+    {% set attr = attr|merge({class: (attr.class|default('') ~ ' custom-select')|trim}) %}
     {{- parent() -}}
 {%- endblock %}
 
@@ -243,6 +243,44 @@
     {% endif %}
     {{- parent() -}}
 {%- endblock translate_fields_widget %}
+
+{% block translate_text_widget -%}
+    {{ form_errors(form) }}
+    <div class="input-group locale-input-group js-locale-input-group">
+        {% for translateField in form %}
+            {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
+            {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
+
+            {% if default_locale.id_lang != translateField.vars.name %}
+                {% set classes = classes ~ ' d-none' %}
+            {% endif %}
+
+            {% set attr = translateField.vars.attr %}
+
+            {{ form_widget(translateField, {attr: {'class': classes|trim}}) }}
+        {% endfor %}
+
+        {% if not hide_locales %}
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle js-locale-btn"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    id="{{ form.vars.id }}"
+            >
+                {{ form.vars.default_locale.iso_code }}
+            </button>
+
+            <div class="dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+                {% for locale in locales %}
+                    <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{%- endblock translate_text_widget %}
 
 {% block date_picker_widget %}
     {% spaceless %}

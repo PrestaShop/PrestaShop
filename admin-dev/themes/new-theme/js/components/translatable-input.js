@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2018 PrestaShop
  *
@@ -24,49 +23,28 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Cache;
+const $ = window.$;
 
-use Tools;
-use Media;
-
-/**
- * Class able to clear application caches
- */
-class CacheClearer
-{
-    /**
-     * Clear all application caches
-     */
-    public function clearAllCaches()
-    {
-        $this->clearSymfonyCache();
-        $this->clearSmartyCache();
-        Tools::clearXMLCache();
-        $this->clearMediaCache();
-        Tools::generateIndex();
+class TranslatableInput {
+    constructor() {
+        $('body').on('click', '.js-locale-item', this.toggleInputs);
     }
 
     /**
-     * Clear Symfony cache
+     * Toggle all translatable inputs in form in which locale was changed
+     *
+     * @param {Event} event
      */
-    public function clearSymfonyCache()
-    {
-        Tools::clearSf2Cache();
-    }
+    toggleInputs(event) {
+        const localeItem = $(event.target);
+        const form = localeItem.closest('form');
+        const selectedLocale = localeItem.data('locale');
 
-    /**
-     * Clear media cache only
-     */
-    public function clearMediaCache()
-    {
-        Media::clearCache();
-    }
+        form.find('.js-locale-btn').text(selectedLocale);
 
-    /**
-     * Clear smarty cache only
-     */
-    public function clearSmartyCache()
-    {
-        Tools::clearSmartyCache();
+        form.find('input.js-locale-input').addClass('d-none');
+        form.find('input.js-locale-input.js-locale-' + selectedLocale).removeClass('d-none');
     }
 }
+
+export default TranslatableInput;

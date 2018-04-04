@@ -26,11 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
+use Employee;
+use RuntimeException;
 use Symfony\Component\Process\Exception\LogicException;
 use Context;
 use Language;
 use AdminController;
 use Link;
+use Tab;
 use Tools as ToolsLegacy;
 use Dispatcher;
 use AdminLegacyLayoutControllerCore;
@@ -227,5 +230,26 @@ class LegacyContext
         }
 
         return new Language;
+    }
+
+    /**
+     * Get employee's default tab name
+     *
+     * @return string           Default tab name for employee
+     *
+     * @throws RuntimeException Throws exception if employee does not exist in context
+     */
+    public function getDefaultEmployeeTab()
+    {
+        $employee = $this->getContext()->employee;
+
+        if (!$employee instanceof Employee) {
+            throw new RuntimeException('Cannot retrieve default employee tab. Employee does not exist in context!');
+        }
+
+        $idTab = $idTab = $employee->default_tab;
+        $tab = new Tab($idTab);
+
+        return $tab->class_name;
     }
 }
