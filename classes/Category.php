@@ -1514,11 +1514,13 @@ class CategoryCore extends ObjectModel
         $treeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
             'SELECT c.`nleft`, c.`nright`  '.$sqlAppend.' WHERE c.`id_category` = '.(int) $idCurrent
         );
-        $rootTreeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            'SELECT c.`nleft`, c.`nright` FROM `'._DB_PREFIX_.'category` c 
-            WHERE c.`id_category` = '.(int) $context->shop->id_category
-        );
+
         if (!empty($treeInfo)) {
+            $rootTreeInfo = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
+                'SELECT c.`nleft`, c.`nright` FROM `'._DB_PREFIX_.'category` c 
+            WHERE c.`id_category` = '.(int) $context->shop->id_category
+            );
+
             $categories = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
                 'SELECT c.*, cl.*  '.$sqlAppend.
                 ' WHERE c.`nleft` <= '.(int) $treeInfo['nleft'].
