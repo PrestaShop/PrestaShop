@@ -97,6 +97,13 @@ class CustomerAddressFormatterCore implements FormFormatterInterface
                         $formField->setRequired(true);
                     }
                 }
+                // for countries where DNI is mandatory
+                // but dni is unabled in Customers -> Address
+                // and enabled in Countries -> each country where DNI is not optional
+            if ($field === 'dni') {
+                    if ($this->country->need_identification_number)
+                        { $formField->setRequired(true); }
+               }
             } elseif (count($fieldParts) === 2) {
                 list($entity, $entityField) = $fieldParts;
 
