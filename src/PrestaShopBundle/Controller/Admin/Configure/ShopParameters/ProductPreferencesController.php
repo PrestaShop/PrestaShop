@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,9 @@ class ProductPreferencesController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return Response
+     * @Template("@PrestaShop/Admin/Configure/ShopParameters/product_preferences.html.twig")
+     *
+     * @return array|Response
      */
     public function indexAction(Request $request)
     {
@@ -62,7 +65,7 @@ class ProductPreferencesController extends FrameworkBundleAdminController
 
         $form = $this->get('prestashop.admin.product_preferences.form_handler')->getForm();
 
-        $twigValues = [
+        return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Product Settings', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
@@ -73,8 +76,6 @@ class ProductPreferencesController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
         ];
-
-        return $this->render('@ShopParameters/product_preferences.html.twig', $twigValues);
     }
 
     /**
