@@ -3,9 +3,13 @@ module.exports = {
     submenu: '//*[@id="subtab-AdminCategories"]/a',
     new_category_button: '//*[@id="page-header-desc-category-new_category"]/div',
     name_input: '//*[@id="name_1"]',
-    description_textarea: 'textarea#description_1',
+    description_textarea: '//*[@id="category_form"]//div[@class="mce-tinymce mce-container mce-panel"]',
     picture: '//*[@id="image"]',
     thumb_picture: '//*[@id="thumb"]',
+    thumb_menu_picture: '//*[@id="thumbnail"]',
+    upload_files_button: '//*[@id="thumbnail-upload-button"]',
+    thumbnail_success_alert: '//*[@id="thumbnail-success"]',
+    thumbnail_menu_img: '//*[@id="thumbnail-images-thumbnails"]//img',
     title: '//*[@id="meta_title_1"]',
     meta_description: '//*[@id="meta_description_1"]',
     keyswords: '(//*[@id="fieldset_0"]//input[@placeholder="Add tag"])[1]',
@@ -25,6 +29,10 @@ module.exports = {
     delete_action_group_button: '//*[@id="form-category"]//a[contains(@onclick, "Delete selected")]',
     category_number_span: '//*[@id="form-category"]//span[@class="badge"]',
     category_description: '//*[@id="category_form"]//div[@class="mce-tinymce mce-container mce-panel"]',
-    description: '//*[@id="table-category"]//td[4]'
+    description: '//*[@id="table-category"]//td[4]',
+    delete_tag_button: '//div[@class="tagify-container"]//span[%POS]/a',
+    mode_link_disable_radio: '//*[@id="deleteMode_linkanddisable"]',
+    mode_link_radio: '//*[@id="deleteMode_link"]',
+    mode_delete_radio: '//*[@id="deleteMode_delete"]'
   }
 };
