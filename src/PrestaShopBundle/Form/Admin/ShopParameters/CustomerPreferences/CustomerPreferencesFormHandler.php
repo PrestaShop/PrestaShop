@@ -67,6 +67,6 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-        // TODO: Implement save() method.
+        $this->dataProvider->setData($data);
     }
 }
