@@ -8,3 +8,4 @@ services:
             - '@form.factory'
             - '@prestashop.admin.customer_preferences.data_provider'
             - '@translator'
+            - '@prestashop.hook.dispatcher'
