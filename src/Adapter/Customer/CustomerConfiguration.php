@@ -29,6 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Customer;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
+/**
+ * Class CustomerConfiguration is responsible for saving & loading customer configuration
+ */
 class CustomerConfiguration implements DataConfigurationInterface
 {
     /**
