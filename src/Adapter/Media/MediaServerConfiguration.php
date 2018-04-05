@@ -1,6 +1,6 @@
 <?php
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop.
  *
  * NOTICE OF LICENSE
  *
@@ -19,7 +19,7 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
- * This class will provide Media servers configuration for a Shop
+ * This class will provide Media servers configuration for a Shop.
  */
 class MediaServerConfiguration implements DataConfigurationInterface
 {
@@ -42,7 +42,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
@@ -54,7 +54,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -82,7 +82,9 @@ class MediaServerConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
+     *
+     * @todo: when PHP minimum version will be 7.1, use "FILTER_VALIDATE_DOMAIN" constraint.
      */
     public function validateConfiguration(array $configuration)
     {
@@ -91,7 +93,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
         $serverTwo = $configuration['media_server_two'];
         $serverThree = $configuration['media_server_three'];
 
-        if (!empty($serverOne) && !filter_var($serverOne, FILTER_VALIDATE_URL)) {
+        if (!empty($serverOne) && !$this->isValidDomain($serverOne)) {
             $errors[] = array(
                 'key' => 'Media server #1 is invalid',
                 'domain' => 'Admin.Advparameters.Notification',
@@ -99,7 +101,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
             );
         }
 
-        if (!empty($serverTwo) && !filter_var($serverTwo, FILTER_VALIDATE_URL)) {
+        if (!empty($serverTwo) && !$this->isValidDomain($serverTwo)) {
             $errors[] = array(
                 'key' => 'Media server #2 is invalid',
                 'domain' => 'Admin.Advparameters.Notification',
@@ -107,7 +109,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
             );
         }
 
-        if (!empty($serverThree) && !filter_var($serverThree, FILTER_VALIDATE_URL)) {
+        if (!empty($serverThree) && !$this->isValidDomain($serverThree)) {
             $errors[] = array(
                 'key' => 'Media server #3 is invalid',
                 'domain' => 'Admin.Advparameters.Notification',
@@ -120,5 +122,19 @@ class MediaServerConfiguration implements DataConfigurationInterface
         }
 
         return true;
+    }
+
+    /**
+     * To be removed once the minimum version is PHP 7.1.
+     *
+     * @param $domainName
+     *
+     * @return bool
+     */
+    private function isValidDomain($domainName)
+    {
+        $ip = gethostbyname($domainName);
+
+        return false !== filter_var($ip, FILTER_VALIDATE_IP);
     }
 }
