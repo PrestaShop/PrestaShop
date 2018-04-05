@@ -210,7 +210,6 @@ export default class ImportPage {
       this.hideFileUploadBlock();
       this.addFileToHistoryTable(filename);
       this.enableFilesHistoryBtn();
-    }).catch(error => {
     });
   }
 

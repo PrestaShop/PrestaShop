@@ -75,7 +75,7 @@
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
                 {{ form_errors(importForm.file) }}
                 {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': max_file_upload_size }}) }}
-                <span>{{ 'or'|trans({}, 'messages') }}</span>
+                <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
                 <button type="button"
                         class="btn btn-outline-primary btn-sm js-from-files-history-btn"
                         {% if import_file_names is empty %}disabled{% endif %}
