@@ -3185,7 +3185,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function isSymfonyContext()
     {
-        return !defined('ADMIN_LEGACY_CONTEXT');
+        return !defined('ADMIN_LEGACY_CONTEXT') && $this->context->controller instanceof AdminLegacyLayoutControllerCore;
     }
 
     /**
