@@ -38,7 +38,7 @@ export default class NavBar {
           let $submenu = $(this).parent();
           $('.nav-bar li.link-levelone.has_submenu a > i.material-icons.sub-tabs-arrow')
               .text('keyboard_arrow_down');
-          let onlyClose = jQuery(e.currentTarget).parent().hasClass('ul-open');
+          let onlyClose = $(e.currentTarget).parent().hasClass('ul-open');
 
           if ($('body').is('.page-sidebar-closed:not(.mobile)')) {
               $('.nav-bar li.link-levelone.has_submenu.ul-open').removeClass('ul-open open -hover');
