@@ -80,13 +80,16 @@ class Repository implements CurrencyRepositoryInterface
     /**
      * Get all the available currencies (installed + active)
      *
+     * @param string $localeCode
+     *  IETF tag. Data will be translated in this language
+     *
      * @return CurrencyCollection
      *  The available currencies
      */
-    public function getAvailableCurrencies()
+    public function getAvailableCurrencies($localeCode)
     {
         $currencies     = new CurrencyCollection();
-        $currenciesData = $this->dataSource->getAvailableCurrenciesData();
+        $currenciesData = $this->dataSource->getAvailableCurrenciesData($localeCode);
 
         foreach ($currenciesData as $currencyDatum) {
             $currencies->add(new Currency(

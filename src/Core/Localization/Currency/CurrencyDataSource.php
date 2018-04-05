@@ -60,16 +60,17 @@ class CurrencyDataSource implements DataSourceInterface
     }
 
     /**
-     * Get complete currency data by currency code
+     * Get complete currency data by currency code, in a given language
      *
-     * @param string $currencyCode
+     * @param CurrencyDataIdentifier $currencyDataId
+     *  The currency data identifier (currency code + locale code)
      *
      * @return CurrencyData
      *  The currency data
      */
-    public function getDataByCurrencyCode($currencyCode)
+    public function getDataByCurrencyCode(CurrencyDataIdentifier $currencyDataId)
     {
-        return $this->topLayer->read($currencyCode);
+        return $this->topLayer->read($currencyDataId);
     }
 
     /**
@@ -89,15 +90,18 @@ class CurrencyDataSource implements DataSourceInterface
     /**
      * Get all the available (installed + active) currencies' data
      *
+     * @param string $localeCode
+     *  IETF tag. Data will be translated in this language
+     *
      * @return CurrencyData[]
      *  The available currencies' data
      */
-    public function getAvailableCurrenciesData()
+    public function getAvailableCurrenciesData($localeCode)
     {
         $currencyCodes  = $this->installedDataLayer->getAvailableCurrencyCodes();
         $currenciesData = [];
         foreach ($currencyCodes as $currencyCode) {
-            $currenciesData[] = $this->getDataByCurrencyCode($currencyCode);
+            $currenciesData[] = $this->getDataByCurrencyCode(new CurrencyDataIdentifier($currencyCode, $localeCode));
         }
 
         return $currenciesData;

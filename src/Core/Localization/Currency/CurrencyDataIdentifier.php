@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2018 PrestaShop
  *
@@ -26,35 +27,46 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency;
-
-/**
- * Currency repository interface
- *
- * Describes the behavior of Currency Repository classes
- */
-interface RepositoryInterface
+class CurrencyDataIdentifier
 {
     /**
-     * Get a Currency instance by ISO code.
+     * ISO 4217 code of the currency
      *
-     * @param $currencyCode
-     *  Wanted currency's ISO code
-     *  Must be an alphabetic ISO 4217 currency code
-     *
-     * @return Currency
-     *  The wanted Currency instance
+     * @var string
      */
-    public function getCurrency($currencyCode);
+    private $currencyCode;
 
     /**
-     * Get all the available currencies (installed + active)
+     * CurrencyData's data is translated in this locale.
      *
-     * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyCollection
-     *  The available currencies
+     * @var string
      */
-    public function getAvailableCurrencies($localeCode);
+    private $localeCode;
+
+    public function __construct($currencyCode, $localeCode)
+    {
+        $this->currencyCode = $currencyCode;
+        $this->localeCode   = $localeCode;
+    }
+
+    public function __toString()
+    {
+        return $this->currencyCode . '-' . $this->localeCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocaleCode()
+    {
+        return $this->localeCode;
+    }
 }

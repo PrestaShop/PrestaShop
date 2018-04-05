@@ -42,18 +42,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 class Factory
 {
     /**
-     * Provided specification instances contain data that must be translated in a given language.
-     * This locale code is the language in which specification data will be localized.
-     *
-     * @var string
-     */
-    protected $currentLocaleCode;
-
-    public function __construct($currentLocaleCode)
-    {
-        $this->currentLocaleCode = $currentLocaleCode;
-    }
-    /**
      * Build a Number specification from a CLDR Locale object
      *
      * @param CldrLocale $cldrLocale
@@ -89,21 +77,31 @@ class Factory
     /**
      * Build a Price specification from a CLDR Locale object and a Currency object
      *
+     * @param string $localeCode
+     *  The concerned locale
+     *
      * @param CldrLocale $cldrLocale
      *  This CldrLocale object is a low level data object extracted from CLDR data source
+     *  It contains data about the concerned locale.
      *
      * @param Currency $currency
      *  This Currency object brings missing specification to format a number as a price
      *
-     * @param $numberGroupingUsed
+     * @param bool $numberGroupingUsed
+     *  Should we group digits when formatting prices ?
+     *
      * @param $currencyDisplayType
-     * @param $maxFractionDigits
+     *  Type of display for currency symbol (symbol or ISO code)
+     *
+     * @param null|int $maxFractionDigits
+     *  The decimal precision of the price
      *
      * @return PriceSpecification
      *
      * @throws LocalizationException
      */
     public function buildPriceSpecification(
+        $localeCode,
         CldrLocale $cldrLocale,
         Currency $currency,
         $numberGroupingUsed,
@@ -128,7 +126,7 @@ class Factory
             $this->getPrimaryGroupSize($currencyPattern),
             $this->getSecondaryGroupSize($currencyPattern),
             $currencyDisplayType,
-            $currency->getSymbol($this->currentLocaleCode),
+            $currency->getSymbol($localeCode),
             $currency->getIsoCode()
         );
     }

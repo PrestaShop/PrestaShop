@@ -566,7 +566,6 @@ services:
         arguments:
             - '@prestashop.core.localization.cldr.localeRepository'
             - '@prestashop.core.localization.currency.repository'
-            - "@=service('translator').getLocale()"
 
     prestashop.core.localization.currency.repository:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository
@@ -619,7 +618,6 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase
         arguments:
             - '@prestashop.adapter.data_provider.currency'
-            - "@=service('translator').getLocale()"
         calls:
             - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.reference"]]
 
@@ -627,7 +625,6 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference
         arguments:
             - '@prestashop.core.localization.cldr.localeRepository'
-            - "@=service('translator').getLocale()"
 
     prestashop.core.localization.currency.middleware.installed:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
