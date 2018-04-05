@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * Class CustomerConfiguration is responsible for saving & loading customer configuration
@@ -35,11 +35,11 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 class CustomerConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
-    public function __construct(ConfigurationInterface $configuration)
+    public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -50,12 +50,12 @@ class CustomerConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'redisplay_cart_at_login' => (bool) $this->configuration->get('PS_CART_FOLLOWING'),
-            'send_email_after_registration' => (bool) $this->configuration->get('PS_CUSTOMER_CREATION_EMAIL'),
-            'password_reset_delay' => (int) $this->configuration->get('PS_PASSWD_TIME_FRONT'),
-            'enable_b2b_mode' => (bool) $this->configuration->get('PS_B2B_ENABLE'),
-            'ask_for_birthday' => (bool) $this->configuration->get('PS_CUSTOMER_BIRTHDATE'),
-            'enable_offers' => (bool) $this->configuration->get('PS_CUSTOMER_OPTIN'),
+            'redisplay_cart_at_login' => $this->configuration->getBoolean('PS_CART_FOLLOWING'),
+            'send_email_after_registration' =>$this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
+            'password_reset_delay' => $this->configuration->getInt('PS_PASSWD_TIME_FRONT'),
+            'enable_b2b_mode' => $this->configuration->getBoolean('PS_B2B_ENABLE'),
+            'ask_for_birthday' => $this->configuration->getBoolean('PS_CUSTOMER_BIRTHDATE'),
+            'enable_offers' => $this->configuration->getBoolean('PS_CUSTOMER_OPTIN'),
         ];
     }
 

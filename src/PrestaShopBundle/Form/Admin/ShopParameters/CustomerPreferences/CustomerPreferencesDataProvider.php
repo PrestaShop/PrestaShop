@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
@@ -40,9 +41,17 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     private $generalDataConfiguration;
 
-    public function __construct(DataConfigurationInterface $generalDataConfiguration)
-    {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        DataConfigurationInterface $generalDataConfiguration,
+        TranslatorInterface $translator
+    ) {
         $this->generalDataConfiguration = $generalDataConfiguration;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,6 +69,38 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
+        if ($errors = $this->validate($data)) {
+            return $errors;
+        }
+
         return $this->generalDataConfiguration->updateConfiguration($data['general']);
+    }
+
+    /**
+     * Perform validations on form data
+     *
+     * @param array $data
+     *
+     * @return array    Array of errors if any
+     */
+    private function validate(array $data)
+    {
+        $invalidFields = [];
+
+        $passwordResetDelay = $data['general']['password_reset_delay'];
+        if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
+            $invalidFields[] = $this->translator->trans('Password reset delay', [], 'Admin.Shopparameters.Feature');
+        }
+
+        $errors = [];
+        foreach ($invalidFields as $field) {
+            $errors[] = [
+                'key' => 'The %s field is invalid.',
+                'domain' => 'Admin.Notifications.Error',
+                'parameters' => [$field],
+            ];
+        }
+
+        return $errors;
     }
 }

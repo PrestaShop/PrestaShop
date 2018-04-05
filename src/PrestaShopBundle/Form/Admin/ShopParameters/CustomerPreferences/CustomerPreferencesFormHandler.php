@@ -99,10 +99,6 @@ final class CustomerPreferencesFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
-        }
-
         if (!$errors = $this->dataProvider->setData($data)) {
             $this->handleB2bUpdate($data['general']['enable_b2b_mode']);
         }
@@ -116,39 +112,11 @@ final class CustomerPreferencesFormHandler implements FormHandlerInterface
     }
 
     /**
-     * Perform validations on form data
-     *
-     * @param array $data
-     *
-     * @return array    Array of errors if any
-     */
-    protected function validate(array $data)
-    {
-        $invalidFields = [];
-
-        $passwordResetDelay = $data['general']['password_reset_delay'];
-        if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
-            $invalidFields[] = $this->translator->trans('Password reset delay', [], 'Admin.Shopparameters.Feature');
-        }
-
-        $errors = [];
-        foreach ($invalidFields as $field) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$field],
-            ];
-        }
-
-        return $errors;
-    }
-
-    /**
      * Based on B2b mode, we need to enable/disable some tabs
      *
      * @param bool $b2bMode     Current B2B mode status
      */
-    protected function handleB2bUpdate($b2bMode)
+    private function handleB2bUpdate($b2bMode)
     {
         $b2bTabs = ['AdminOutstanding'];
         foreach ($b2bTabs as $tabName) {
