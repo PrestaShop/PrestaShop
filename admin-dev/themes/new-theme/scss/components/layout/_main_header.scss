@@ -29,9 +29,18 @@
   }
   > .logo {
     display: inline-block;
-    background: url(img/logo.png) no-repeat center center;
+    background: url(img/logo.png) no-repeat center left;
     height: 100%;
     width: $size-navbar-width;
+  }
+  #shop_version {
+    font-size: 0.625rem;
+    position: absolute;
+    left: 11.25rem;
+    top: 0.9375rem;
+    @include media-breakpoint-down(sm) {
+      position: initial;
+    }
   }
   .ajax-spinner {
     position: absolute;
@@ -249,12 +258,17 @@
     }
   }
   .shop-state {
-    margin-right: 1.25rem;
     line-height: $size-header-height;
+    > .link {
+      display: inline-block;
+      color: #6c868e;
+      font-size: 0.8125rem;
+      @include single-line-block($size-header-height);
+    }
     > .material-icons {
-      color: $warning;
+      color: #6c868e;
       vertical-align: middle;
-      font-size: 1rem;
+      font-size: 1.25rem;
     }
   }
   > .component.-norightmargin {
@@ -264,9 +278,14 @@
 .shop-list{
   > .link {
     display: inline-block;
-    color: $gray-dark;
-    margin-right: 1.25rem;
+    color: #6c868e;
+    font-size: 0.8125rem;
     @include single-line-block($size-header-height);
+  > .material-icons {
+      color: $brand-info;
+      vertical-align: middle;
+      font-size: 1.25rem;
+    }
   }
 }
 #shop-list {
