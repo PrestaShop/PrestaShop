@@ -24,6 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -31,7 +34,8 @@ use Composer\CaBundle\CaBundle;
 
 class ToolsCore
 {
-    const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+    const CACERT_LOCATION           = 'https://curl.haxx.se/ca/cacert.pem';
+    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
 
     protected static $file_exists_cache = array();
     protected static $_forceCompile;
@@ -654,16 +658,27 @@ class ToolsCore
         return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
     }
 
-    /*
-     * Return a number well formatted
-     * @param float $number A number
-     * @param nullable $currency / not used anymaore
+    /**
+     * Returns a well formatted number
+     *
+     * @deprecated Please use Locale::formatNumber() instead
+     * @see PrestaShop\PrestaShop\Core\Localization\Locale
+     *
+     * @param float $number The number to format
+     * @param null $currency / not used anymaore
+     *
+     * @return string The formatted number
+     *
+     * @throws Exception
+     * @throws LocalizationException
      */
     public static function displayNumber($number, $currency = null)
     {
-        $cldr = self::getCldr(Context::getContext());
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = Context::getContext()->controller->get(self::SERVICE_LOCALE_REPOSITORY);
+        $locale           = $localeRepository->getLocale((string)Context::getContext()->language->locale);
 
-        return $cldr->getNumber($number);
+        return $locale->formatNumber($number);
     }
 
     public static function displayPriceSmarty($params, &$smarty)
@@ -3960,6 +3975,30 @@ exit;
         }
         exit;
     }
+
+    /**
+     * Get the dependency injection container depending on context (front / admin, dev / prod)
+     *
+     * @return ContainerBuilder
+     */
+    // protected static function getContainer()
+    // {
+    //     $container = new ContainerBuilder();
+    //     $loader    = new YamlFileLoader($container, new FileLocator(__DIR__));
+    //
+    //     $scope = 'front';
+    //     if (is_subclass_of(Context::getContext()->controller, AdminController::class)) {
+    //         $scope = 'admin';
+    //         $container->addCompilerPass(new LegacyCompilerPass());
+    //     }
+    //
+    //     $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
+    //
+    //     $loader->load(_PS_CONFIG_DIR_ . 'services/' . $scope . '/services_' . $env . '.yml');
+    //     $container->compile();
+    //
+    //     return $container;
+    // }
 }
 
 /**
