@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -61,5 +62,34 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
             'requireFilterStatus' => false,
             'form' => $form->createView(),
         ];
+    }
+
+    /**
+     * Handle customer settings from submit
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processAction(Request $request)
+    {
+        $formHandler = $this->get('prestashop.admin.customer_preferences.form_handler');
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if ($errors = $formHandler->save($data)) {
+                $this->flashErrors($errors);
+
+                return $this->redirectToRoute('admin_customer_preferences');
+            }
+
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        }
+
+        return $this->redirectToRoute('admin_customer_preferences');
     }
 }
