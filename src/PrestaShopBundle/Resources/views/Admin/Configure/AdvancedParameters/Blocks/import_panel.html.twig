@@ -41,7 +41,7 @@
                 </a>
             </p>
             <p class="alert-text">
-                {{ 'Read more about the CSV format at:'|trans({}, 'messages') }}
+                {{ 'Read more about the CSV format at:'|trans({}, 'Admin.Advparameters.Help') }}
                 <a href="{{ 'https://en.wikipedia.org/wiki/Comma-separated_values'|trans({}, 'Admin.Advparameters.Help') }}" class="_blank">
                     {{ 'https://en.wikipedia.org/wiki/Comma-separated_values'|trans({}, 'Admin.Advparameters.Help') }}
                 </a>
@@ -111,7 +111,7 @@
             <hr>
 
             <div class="form-group">
-                {{ ps.label_with_help(('Language of the file'|trans), ('The locale must be installed'|trans({}, 'messages'))) }}
+                {{ ps.label_with_help(('Language of the file'|trans), ('The locale must be installed'|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.iso_lang) }}
                 {{ form_widget(importForm.iso_lang) }}
             </div>
@@ -124,7 +124,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-control-label">{{ 'Multiple value separator'|trans({}, 'messages') }}</label>
+                <label class="form-control-label">{{ 'Multiple value separator'|trans }}</label>
                 {{ form_errors(importForm.multiple_value_separator) }}
                 {{ form_widget(importForm.multiple_value_separator) }}
                 <small class="form-text">{{ 'e.g. '|trans({}, 'Admin.Advparameters.Help') }} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</small>
@@ -153,7 +153,7 @@
             </div>
 
             <div class="form-group js-force-ids-form-group">
-                {{ ps.label_with_help(('Force all ID numbers'|trans), ('If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'|trans({}, 'Admin.Advparameters.Help'))) }}
+                {{ ps.label_with_help(('Force all ID numbers'|trans), ('If you enable this option, your imported items ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'|trans({}, 'Admin.Advparameters.Help'))) }}
                 {{ form_errors(importForm.forceIDs) }}
                 {{ form_widget(importForm.forceIDs) }}
             </div>
