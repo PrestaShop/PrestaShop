@@ -2,6 +2,10 @@ services:
     _defaults:
         public: true
 
+    _instanceof:
+        PrestaShop\PrestaShop\Core\Form\AbstractFormHandler:
+            tags: ['prestashop.form.handler']
+
     prestashop.admin.customer_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\CustomerPreferencesFormHandler'
         arguments:
@@ -10,3 +14,30 @@ services:
             - '@translator'
             - '@prestashop.hook.dispatcher'
             - '@prestashop.core.admin.tab.repository'
+
+    prestashop.admin.product_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.admin.product_preferences.data_provider'
+            - '@prestashop.adapter.cache_clearer'
+            - '@translator'
+
+    prestashop.adapter.performance.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Performance\PerformanceFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.performance.form_provider'
+            - '@prestashop.adapter.combination_feature'
+
+    prestashop.adapter.maintenance.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.maintenance.form_provider'
+
+    prestashop.adapter.administration.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\FormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.administration.form_provider'
