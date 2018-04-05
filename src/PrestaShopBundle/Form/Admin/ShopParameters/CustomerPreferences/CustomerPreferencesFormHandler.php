@@ -37,7 +37,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * Class manages "Configure > Shop Parameters > Customer Settings" page
  * form handling.
  */
-class CustomerPreferencesFormHandler implements FormHandlerInterface
+final class CustomerPreferencesFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
