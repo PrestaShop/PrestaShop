@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -54,16 +55,23 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
      */
     private $dispatcher;
 
+    /**
+     * @var TabRepository
+     */
+    private $tabRepository;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         FormDataProviderInterface $dataProvider,
         TranslatorInterface $translator,
-        HookDispatcher $dispatcher
+        HookDispatcher $dispatcher,
+        TabRepository $tabRepository
     ) {
         $this->formFactory = $formFactory;
         $this->dataProvider = $dataProvider;
         $this->translator = $translator;
         $this->dispatcher = $dispatcher;
+        $this->tabRepository = $tabRepository;
     }
 
     /**
@@ -91,7 +99,9 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
             return $errors;
         }
 
-        $errors = $this->dataProvider->setData($data);
+        if (!$errors = $this->dataProvider->setData($data)) {
+            $this->handleB2bUpdate($data['general']['enable_b2b_mode']);
+        }
 
         $this->dispatcher->dispatchForParameters('actionCustomerPreferencesSave', [
             'errors' => &$errors,
@@ -114,11 +124,7 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
 
         $passwordResetDelay = $data['general']['password_reset_delay'];
         if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
-            $invalidFields[] = $this->translator->trans(
-                'Password reset delay',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
+            $invalidFields[] = $this->translator->trans('Password reset delay', [], 'Admin.Shopparameters.Feature');
         }
 
         $errors = [];
@@ -131,5 +137,18 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
         }
 
         return $errors;
+    }
+
+    /**
+     * Based on B2b mode, we need to enable/disable some tabs
+     *
+     * @param bool $b2bMode
+     */
+    protected function handleB2bUpdate($b2bMode)
+    {
+        $b2bTabs = ['AdminOutstanding'];
+        foreach ($b2bTabs as $tabName) {
+            $this->tabRepository->changeStatusByClassName($tabName, (bool) $b2bMode);
+        }
     }
 }

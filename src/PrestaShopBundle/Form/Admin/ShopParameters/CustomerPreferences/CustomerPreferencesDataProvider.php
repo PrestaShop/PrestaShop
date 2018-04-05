@@ -56,6 +56,6 @@ class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        $this->generalDataConfiguration->updateConfiguration($data['general']);
+        return $this->generalDataConfiguration->updateConfiguration($data['general']);
     }
 }
