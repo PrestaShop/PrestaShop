@@ -240,18 +240,28 @@ $header-height: 36px
 	height:     $header-height
 	box-sizing: border-box
 	margin: 0 0 0 10px !important
+	span, a
+		font-size: 13px !important
+		color: #4e6167 !important
 	.shop-state
+		padding-top: 11px
+		color: #4e6167 !important
 		.material-icons
 			font-size: 20px
 			vertical-align: middle
 			position: relative
 			padding-right: 5px
 			color: #6c868e
-	.shop-state, #header_shopname
+	#header_shopname
 		padding-top: 11px
-	span, a
-		font-size: 13px !important
-		color: #6c868e
+		color: #4e6167 !important
+		&:hover, &:focus
+			color: $brand-info !important
+	a
+		&:hover, &:focus
+			color: $brand-info !important
+			text-decoration: none
+
 	li
 		> a
 			&.notifs
