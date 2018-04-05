@@ -33,6 +33,10 @@ use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * Class manages "Configure > Shop Parameters > Customer Settings" page
+ * form handling.
+ */
 class CustomerPreferencesFormHandler implements FormHandlerInterface
 {
     /**
@@ -142,7 +146,7 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
     /**
      * Based on B2b mode, we need to enable/disable some tabs
      *
-     * @param bool $b2bMode
+     * @param bool $b2bMode     Current B2B mode status
      */
     protected function handleB2bUpdate($b2bMode)
     {
