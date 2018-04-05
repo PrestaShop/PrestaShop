@@ -230,7 +230,7 @@ class Reader implements ReaderInterface
      * @return SimplexmlElement
      *  The locale data
      *
-     * @throws LocalizationException
+     * @throws LocalizationFileNotFoundException
      *  If this locale code has no corresponding xml file
      */
     protected function getMainXmlData($localeCode)
@@ -270,7 +270,7 @@ class Reader implements ReaderInterface
     {
         try {
             $xmlData = $this->getMainXmlData($localeTag);
-        } catch (LocalizationException $e) {
+        } catch (LocalizationFileNotFoundException $e) {
             // Sometimes a file can be missing.
             // Example for Chinese : zh_CN.xml doesn't exist. There is only a zh.xml file.
             // That's why we can't let this exception bubble up.
