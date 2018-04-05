@@ -29,6 +29,10 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
+/**
+ * Class is responsible of managing the data manipulated using forms
+ * in "Configure > Shop Parameters > Customer Settings" page.
+ */
 class CustomerPreferencesDataProvider implements FormDataProviderInterface
 {
     /**

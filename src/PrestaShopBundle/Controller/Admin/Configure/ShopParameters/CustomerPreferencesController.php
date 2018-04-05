@@ -61,7 +61,7 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle customer settings from submit
+     * Handle customer settings form submit
      *
      * @param Request $request
      *
