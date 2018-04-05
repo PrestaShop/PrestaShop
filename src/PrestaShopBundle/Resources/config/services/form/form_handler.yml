@@ -7,3 +7,4 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.admin.customer_preferences.data_provider'
+            - '@translator'
