@@ -9,3 +9,4 @@ services:
             - '@prestashop.admin.customer_preferences.data_provider'
             - '@translator'
             - '@prestashop.hook.dispatcher'
+            - '@prestashop.core.admin.tab.repository'

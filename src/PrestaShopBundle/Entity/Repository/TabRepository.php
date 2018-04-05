@@ -60,4 +60,28 @@ class TabRepository extends EntityRepository
         }
         return null;
     }
+
+    /**
+     * Changes tab status
+     *
+     * @param string $className Tab's class name
+     * @param bool $status      Wanted status for the tab
+     *
+     * @return bool             True when status was changed or false otherwise
+     *
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function changeStatusByClassName($className, $status)
+    {
+        if (!$tab = $this->findOneByClassName($className)) {
+            return false;
+        }
+
+        $tab->setActive((bool) $status);
+
+        $this->getEntityManager()->persist($tab);
+        $this->getEntityManager()->flush();
+
+        return true;
+    }
 }

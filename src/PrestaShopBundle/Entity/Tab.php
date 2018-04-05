@@ -144,4 +144,9 @@ class Tab
     {
         return $this->tabLangs;
     }
+
+    public function setActive($status)
+    {
+        $this->active = $status;
+    }
 }
