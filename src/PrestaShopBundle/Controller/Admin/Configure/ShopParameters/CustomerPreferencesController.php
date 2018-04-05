@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,6 +70,24 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
      */
     public function processAction(Request $request)
     {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if (!in_array(
+            $this->authorizationLevel($legacyController),
+            [
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_DELETE,
+            ]
+        )) {
+            $this->addFlash(
+                'error',
+                $this->trans('You do not have permission to edit this', 'Admin.Notifications.Error')
+            );
+
+            return $this->redirectToRoute('admin_customer_preferences');
+        }
+
         $formHandler = $this->get('prestashop.admin.customer_preferences.form_handler');
 
         $form = $formHandler->getForm();
