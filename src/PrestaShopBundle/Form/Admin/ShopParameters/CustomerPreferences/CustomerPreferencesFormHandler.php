@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CustomerPreferencesFormHandler implements FormHandlerInterface
 {
@@ -42,12 +43,19 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
      */
     private $dataProvider;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     public function __construct(
         FormFactoryInterface $formFactory,
-        FormDataProviderInterface $dataProvider
+        FormDataProviderInterface $dataProvider,
+        TranslatorInterface $translator
     ) {
         $this->formFactory = $formFactory;
         $this->dataProvider = $dataProvider;
+        $this->translator = $translator;
     }
 
     /**
@@ -67,6 +75,42 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-        $this->dataProvider->setData($data);
+        if ($errors = $this->validate($data)) {
+            return $errors;
+        }
+
+        return $this->dataProvider->setData($data);
+    }
+
+    /**
+     * Perform validations on form data
+     *
+     * @param array $data
+     *
+     * @return array    Array of errors if any
+     */
+    protected function validate(array $data)
+    {
+        $invalidFields = [];
+
+        $passwordResetDelay = $data['general']['password_reset_delay'];
+        if (!is_numeric($passwordResetDelay) || $passwordResetDelay < 0) {
+            $invalidFields[] = $this->translator->trans(
+                'Password reset delay',
+                [],
+                'Admin.Shopparameters.Feature'
+            );
+        }
+
+        $errors = [];
+        foreach ($invalidFields as $field) {
+            $errors[] = [
+                'key' => 'The %s field is invalid.',
+                'domain' => 'Admin.Notifications.Error',
+                'parameters' => [$field],
+            ];
+        }
+
+        return $errors;
     }
 }
