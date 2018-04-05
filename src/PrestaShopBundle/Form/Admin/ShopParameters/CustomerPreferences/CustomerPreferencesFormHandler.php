@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -48,14 +49,21 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
      */
     private $translator;
 
+    /**
+     * @var HookDispatcher
+     */
+    private $dispatcher;
+
     public function __construct(
         FormFactoryInterface $formFactory,
         FormDataProviderInterface $dataProvider,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        HookDispatcher $dispatcher
     ) {
         $this->formFactory = $formFactory;
         $this->dataProvider = $dataProvider;
         $this->translator = $translator;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -66,6 +74,10 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
         $builder = $this->formFactory->createBuilder()
             ->add('general', GeneralType::class)
             ->setData($this->dataProvider->getData());
+
+        $this->dispatcher->dispatchForParameters('displayCustomerPreferencesForm', [
+            'form_builder' => $builder,
+        ]);
 
         return $builder->getForm();
     }
@@ -79,7 +91,14 @@ class CustomerPreferencesFormHandler implements FormHandlerInterface
             return $errors;
         }
 
-        return $this->dataProvider->setData($data);
+        $errors = $this->dataProvider->setData($data);
+
+        $this->dispatcher->dispatchForParameters('actionCustomerPreferencesSave', [
+            'errors' => &$errors,
+            'form_data' => &$data,
+        ]);
+
+        return $errors;
     }
 
     /**
