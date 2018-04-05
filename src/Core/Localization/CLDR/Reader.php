@@ -28,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationFileNotFoundException;
 use SimpleXMLElement;
 
 /**
@@ -245,13 +246,13 @@ class Reader implements ReaderInterface
      *
      * @return string The realpath of CLDR main data folder
      *
-     * @throws LocalizationException
+     * @throws LocalizationFileNotFoundException
      */
     protected function mainPath($filename = '')
     {
         $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_MAIN . ($filename ? $filename : ''));
         if (false === $path) {
-            throw new LocalizationException("The file $filename does not exist");
+            throw new LocalizationFileNotFoundException("The file $filename does not exist");
         }
 
         return $path;
