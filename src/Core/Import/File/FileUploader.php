@@ -104,10 +104,8 @@ final class FileUploader
                 $error = $this->translator->trans('The uploaded file exceeds the upload_max_filesize directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess.', [], 'Admin.Advparameters.Notification');
                 break;
             case UPLOAD_ERR_FORM_SIZE:
-                $error = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification')
-                    .'<br/><a href="#" >
-					<code>php_value post_max_size 20M</code> '.
-                    $this->translator->trans('(click to open "Generators" page)', [], 'Admin.Advparameters.Notification').'</a>';
+                $message = $this->translator->trans('The uploaded file exceeds the post_max_size directive in php.ini. If your server configuration allows it, you may add a directive in your .htaccess, for example:', [], 'Admin.Advparameters.Notification');
+                $error = sprintf('%s %s', $message, 'php_value post_max_size 20M');
                 break;
             case UPLOAD_ERR_PARTIAL:
                 $error = $this->translator->trans('The uploaded file was only partially uploaded.', [], 'Admin.Advparameters.Notification');
