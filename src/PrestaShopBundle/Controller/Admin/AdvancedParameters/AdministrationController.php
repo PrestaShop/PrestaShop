@@ -50,7 +50,7 @@ class AdministrationController extends FrameworkBundleAdminController
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Administration', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Administration','Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
