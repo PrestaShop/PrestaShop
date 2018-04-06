@@ -157,11 +157,11 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
     {
-        $recommendedModules = $this->container->get('prestashop.data_provider.modules.recommended');
+        $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
         /* @var $recommendedModules RecommendedModules */
         $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
 
-        $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
+        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
         /* @var $modulesProvider AdminModuleDataProvider */
         $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
 
@@ -198,7 +198,7 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function renderSidebarAction($url, $title = '', $footer = '')
     {
-        $tools = $this->container->get('prestashop.adapter.tools');
+        $tools = $this->get('prestashop.adapter.tools');
 
         return $this->render('@PrestaShop/Admin/Common/_partials/_sidebar.html.twig', [
             'footer' => $tools->purifyHTML($footer),

@@ -56,7 +56,7 @@ class PerformanceController extends FrameworkBundleAdminController
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => $toolbarButtons,
-            'layoutTitle' => $this->get('translator')->trans('Performance', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Performance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,

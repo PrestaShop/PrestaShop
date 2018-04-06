@@ -42,8 +42,8 @@ class WarehouseController extends FrameworkBundleAdminController
      */
     public function refreshProductWarehouseCombinationFormAction($idProduct)
     {
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
-        $warehouseAdapter = $this->container->get('prestashop.adapter.data_provider.warehouse');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        $warehouseAdapter = $this->get('prestashop.adapter.data_provider.warehouse');
         $response = new Response();
 
         //get product and all warehouses
@@ -56,16 +56,16 @@ class WarehouseController extends FrameworkBundleAdminController
 
         $modelMapper = new ProductAdminModelAdapter(
             $product,
-            $this->container->get('prestashop.adapter.legacy.context'),
-            $this->container->get('prestashop.adapter.admin.wrapper.product'),
-            $this->container->get('prestashop.adapter.tools'),
-            $this->container->get('prestashop.adapter.data_provider.product'),
-            $this->container->get('prestashop.adapter.data_provider.supplier'),
-            $this->container->get('prestashop.adapter.data_provider.warehouse'),
-            $this->container->get('prestashop.adapter.data_provider.feature'),
-            $this->container->get('prestashop.adapter.data_provider.pack'),
-            $this->container->get('prestashop.adapter.shop.context'),
-            $this->container->get('prestashop.adapter.data_provider.tax')
+            $this->get('prestashop.adapter.legacy.context'),
+            $this->get('prestashop.adapter.admin.wrapper.product'),
+            $this->get('prestashop.adapter.tools'),
+            $this->get('prestashop.adapter.data_provider.product'),
+            $this->get('prestashop.adapter.data_provider.supplier'),
+            $this->get('prestashop.adapter.data_provider.warehouse'),
+            $this->get('prestashop.adapter.data_provider.feature'),
+            $this->get('prestashop.adapter.data_provider.pack'),
+            $this->get('prestashop.adapter.shop.context'),
+            $this->get('prestashop.adapter.data_provider.tax')
         );
         $allFormData = $modelMapper->getFormData();
 
