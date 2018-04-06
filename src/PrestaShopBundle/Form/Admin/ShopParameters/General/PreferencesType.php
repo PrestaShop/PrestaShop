@@ -92,6 +92,7 @@ class PreferencesType extends CommonAbstractType
             ->add('display_best_sellers', SwitchType::class)
             ->add('multishop_feature_active', SwitchType::class)
             ->add('shop_activity', ChoiceType::class, array(
+                'required' => false,
                 'choices_as_values' => true,
                 'placeholder' => '-- Please choose your main activity --',
                 'choices'  => array(
