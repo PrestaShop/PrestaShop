@@ -4668,34 +4668,42 @@ class CartCore extends ObjectModel
      * Are all products of the Cart in stock?
      *
      * @param bool $ignore_virtual Ignore virtual products
-     * @param bool $exclusive If true, the validation is exclusive : it must be present product in stock and out of stock
+     * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
      * @since 1.5.0
      *
      * @return bool False if not all products in the cart are in stock
      */
-    public function isAllProductsInStock($ignore_virtual = false, $exclusive = false)
+    public function isAllProductsInStock($ignoreVirtual = false, $exclusive = false)
     {
-        $product_out_of_stock = 0;
-        $product_in_stock = 0;
+        if (func_num_args() > 1) {
+            @trigger_error(
+                '$exclusive parameter is deprecated since version 1.7.3.2 and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
+        }
+        $productOutOfStock = 0;
+        $productInStock = 0;
 
         foreach ($this->getProducts() as $product) {
-            if (!$exclusive) {
-                if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) < 0
-                    && (!$ignore_virtual || !$product['is_virtual'])) {
-                    return false;
-                }
-            } else {
-                if ((int)$product['quantity_available'] <= 0
-                    && (!$ignore_virtual || !$product['is_virtual'])) {
-                    $product_out_of_stock++;
+            if ($ignoreVirtual && $product['is_virtual']) {
+                continue;
+            }
+            $idProductAttribute = !empty($product['id_product_attribute']) ? $product['id_product_attribute'] : null;
+            $availableOutOfStock = Product::isAvailableWhenOutOfStock($product['out_of_stock']);
+            $productQuantity = Product::getQuantity($product['id_product'], $idProductAttribute, null, $this) - (int) $product['cart_quantity'];
+
+            if (!$exclusive
+                && ($productQuantity <= 0 && !$availableOutOfStock)
+            ) {
+                return false;
+            } else if ($exclusive) {
+                if ($productQuantity <= 0) {
+                    $productOutOfStock++;
+                } else {
+                    $productInStock++;
                 }
 
-                if ((int)$product['quantity_available'] > 0
-                    && (!$ignore_virtual || !$product['is_virtual'])) {
-                    $product_in_stock++;
-                }
-
-                if ($product_in_stock > 0 && $product_out_of_stock > 0) {
+                if ($productInStock > 0 && $productOutOfStock > 0) {
                     return false;
                 }
             }
