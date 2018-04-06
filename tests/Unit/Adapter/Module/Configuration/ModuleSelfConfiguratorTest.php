@@ -311,12 +311,12 @@ class ConfigurationMock extends Configuration
         return $this;
     }
 
-    public function get($key)
+    public function get($key, $default = null)
     {
-        return isset($this->configurationData[$key])?$this->configurationData[$key]:null;
+        return isset($this->configurationData[$key])?$this->configurationData[$key]:$default;
     }
 
-    public function delete($key)
+    public function remove($key)
     {
         unset($this->configurationData[$key]);
         return $this;
