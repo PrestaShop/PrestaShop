@@ -50,7 +50,7 @@ class AdministrationController extends FrameworkBundleAdminController
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Administration', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Administration','Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -71,7 +71,7 @@ class AdministrationController extends FrameworkBundleAdminController
         if ($this->isDemoModeEnabled()) {
             $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-            return $this->redirectToRoute('admin_performance');
+            return $this->redirectToRoute('admin_administration');
         }
 
         $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
