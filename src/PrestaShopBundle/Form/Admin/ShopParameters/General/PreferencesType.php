@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -38,7 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
  * Class returning the content of the form in the maintenance page.
  * To be found in Configure > Shop parameters > General > Maintenance
  */
-class PreferencesType extends CommonAbstractType
+class PreferencesType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -94,7 +94,7 @@ class PreferencesType extends CommonAbstractType
             ->add('shop_activity', ChoiceType::class, array(
                 'required' => false,
                 'choices_as_values' => true,
-                'placeholder' => '-- Please choose your main activity --',
+                'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
                 'choices'  => array(
                     'Animals and Pets' => 2,
                     'Art and Culture' => 3,
