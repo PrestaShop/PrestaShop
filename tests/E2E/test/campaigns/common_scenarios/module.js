@@ -51,15 +51,9 @@ module.exports = {
     test('should click on "Installed Modules"', () => client.waitForVisibleAndClick(ModulePage.installed_modules_tabs));
     test('should search for "' + moduleName + '" module in the installed module tab', () => client.waitAndSetValue(ModulePage.modules_search_input, moduleTechName));
     test('should click on "Search" button', () => client.waitForExistAndClick(ModulePage.modules_search_button));
-<<<<<<< HEAD:tests/E2E/test/campaigns/common_scenarios/module.js
-    test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.option_button));
-    test('should click on "Reset" action', () => client.waitForExistAndClick(ModulePage.reset_module));
-    test('should click on "Reset" button', () => client.waitForExistAndClick(ModulePage.reset_button.replace('%moduleTechName', moduleTechName), 1000));
-=======
     test('should click on module dropdown', () => client.waitForVisibleAndClick(ModulePage.action_dropdown.replace('%moduleTechName', moduleTechName)));
     test('should click on "Reset" action', () => client.waitForExistAndClick(ModulePage.reset_module.split('%moduleTechName').join(moduleTechName)));
     test('should click on "Yes, reset it" button', () => client.waitForVisibleAndClick(ModulePage.reset_button_modal.replace('%moduleTechName', moduleTechName)));
->>>>>>> upstream/1.7.3.x:tests/E2E/test/campaigns/common_scenarios/module.js
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should go to "Dashboard" page', () => client.waitForExistAndClick(Menu.dashboard_menu));
   },

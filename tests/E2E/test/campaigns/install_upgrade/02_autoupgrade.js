@@ -7,11 +7,7 @@ const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
 
 const commonScenarios = require('../common_scenarios/product');
-<<<<<<< HEAD
-const commonInstallation = require('./common_installation');
-=======
 const commonInstallation = require('../common_scenarios/common_installation');
->>>>>>> upstream/1.7.3.x
 const moduleCommonScenarios = require('../common_scenarios/module');
 const orderCommonScenarios = require('../common_scenarios/order');
 

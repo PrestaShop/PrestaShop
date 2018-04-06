@@ -170,19 +170,16 @@ module.exports = {
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
     category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
-<<<<<<< HEAD
     preview_buttons: '//*[@id="product_form_preview_btn"]',
     dropdown_button: '//*[@id="dropdownMenu"]',
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
-    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]'
-=======
+    delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]',
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
     combination_second_table: '//*[@id="accordion_combinations"]//tr[2]'
->>>>>>> upstream/1.7.3.x
   },
 
   ProductList: {

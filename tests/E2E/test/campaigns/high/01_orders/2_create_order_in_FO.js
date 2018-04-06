@@ -6,13 +6,8 @@ const {productPage} = require('../../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
-<<<<<<< HEAD
 const commonOrder = require('../../common_scenarios/order');
 const commonProduct = require('../../common_scenarios/product');
-=======
-const common_scenarios = require('../../common_scenarios/order');
-const common_scenarios_product = require('../../common_scenarios/product');
->>>>>>> upstream/1.7.3.x
 let promise = Promise.resolve();
 
 scenario('Create order in the Front Office', () => {

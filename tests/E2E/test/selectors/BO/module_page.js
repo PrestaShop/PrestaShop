@@ -46,20 +46,13 @@ module.exports = {
     sort_select: '//select[contains(@class,"sort-component")]',
     maintenance_shop: '//*[@id="currentConfiguration"]//input[contains(@name,"putUnderMaintenance")]',
     confirm_maintenance_shop_icon: '(//*[@id="currentConfiguration"]//img)[5]',
-<<<<<<< HEAD
-    enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]',
-    reset_module: '//*[@id="modules-list-container-native"]//button[contains(@class, "module_action_menu_reset")]',
-    reset_button: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
-=======
     enable_module: '//form[contains(@action, "action/enable/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-enable"]',
     reset_module: '//form[contains(@action, "action/reset/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-reset"]',
     reset_button_modal: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
->>>>>>> upstream/1.7.3.x
     backdrop_modale:'//div[contains(@class, "fade show")]',
     installed_module_div: '//div[@data-tech-name="%moduleTechName"]',
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
-<<<<<<< HEAD
     modules_number: '[class="module-sorting-search-wording"]',
     discover_button: '//*[@id="modules-list-container-all"]/div[@data-tech-name="pm_advancedtopmenu"]//a[contains(text(),"Discover")]',
     //List of modules in notifications tab
@@ -76,7 +69,5 @@ module.exports = {
 
     //Module name in "addons.prestashop.com" after clicking on "Dicover" button
     module_name: '//*[@id="product_content"]/div[@class="product_head"]//h1'
-=======
->>>>>>> upstream/1.7.3.x
   }
 };

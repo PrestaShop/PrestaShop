@@ -4,10 +4,6 @@ const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const common_scenarios = require('../../common_scenarios/product');
 const common_attribute = require('../../common_scenarios/attribute');
 
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/1.7.3.x
 let productData = {
   name: 'Att',
   quantity: "10",
@@ -41,62 +37,36 @@ scenario('Create, edit and delete "Attribute"', () => {
   common_scenarios.createProduct(AddProductPage, productData);
 
   /* Check the created attribute */
-<<<<<<< HEAD
   scenario('Go to the Front Office', client => {
     test('should go to the Front Office', () => client.accessToFO(AccessPageFO));
-=======
-  scenario('Login in the Front Office', client => {
-    test('should login successfully in the Front Office', () => client.accessToFO(AccessPageFO));
->>>>>>> upstream/1.7.3.x
   }, 'attribute_and_feature');
   common_attribute.checkAttributeInFO(productData.name, attributeData);
 
   /* Update the created attribute */
-<<<<<<< HEAD
   scenario('Go back to the Back Office', client => {
     test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
-=======
-  scenario('Login in the Back Office', client => {
-    test('should login successfully in the Back Office', () => client.accessToBO(AccessPageBO));
->>>>>>> upstream/1.7.3.x
   }, 'attribute_and_feature');
   common_attribute.updateAttribute(attributeData);
 
   /* Check the updated attribute */
-<<<<<<< HEAD
   scenario('Go back to the Front Office', client => {
     test('should go back to the Front Office', () => client.accessToFO(AccessPageFO));
-=======
-  scenario('Login in the Front Office', client => {
-    test('should login successfully in the Front Office', () => client.accessToFO(AccessPageFO));
->>>>>>> upstream/1.7.3.x
   }, 'attribute_and_feature');
   common_attribute.checkAttributeInFO(productData.name, attributeData);
 
   /* Delete attribute value */
-<<<<<<< HEAD
   scenario('Go back to the Back Office', client => {
     test('should lgo back to the Back Office', () => client.accessToBO(AccessPageBO));
-=======
-  scenario('Login in the Back Office', client => {
-    test('should login successfully in the Back Office', () => client.accessToBO(AccessPageBO));
->>>>>>> upstream/1.7.3.x
   }, 'attribute_and_feature');
   common_attribute.deleteAttributeValue(attributeData);
 
   /* Check the deleted attribute value */
-<<<<<<< HEAD
   scenario('Go back to the Front Office', client => {
     test('should go back to the Front Office', () => client.accessToFO(AccessPageFO));
-=======
-  scenario('Login in the Front Office', client => {
-    test('should login successfully in the Front Office', () => client.accessToFO(AccessPageFO));
->>>>>>> upstream/1.7.3.x
   }, 'attribute_and_feature');
   common_attribute.checkAttributeInFO(productData.name, attributeData);
 
   /* Delete the created attribute */
-<<<<<<< HEAD
   scenario('Go back to the Back Office', client => {
     test('should go back to the Back Office', () => client.accessToBO(AccessPageBO));
   }, 'attribute_and_feature');
@@ -108,19 +78,6 @@ scenario('Create, edit and delete "Attribute"', () => {
   /* Check the deleted attribute */
   scenario('Go back to the Front Office', client => {
     test('should go back to the Front Office', () => client.accessToFO(AccessPageFO));
-=======
-  scenario('Login in the Back Office', client => {
-    test('should login successfully in the Back Office', () => client.accessToBO(AccessPageBO));
-  }, 'attribute_and_feature');
-  common_attribute.deleteAttribute(attributeData);
-  scenario('Logout from the Back Office', client => {
-    test('should logout successfully from Back Office', () => client.signOutBO());
-  }, 'attribute_and_feature');
-
-  /* Check the deleted attribute */
-  scenario('Login in the Front Office', client => {
-    test('should login successfully in the Front Office', () => client.accessToFO(AccessPageFO));
->>>>>>> upstream/1.7.3.x
   }, 'attribute_and_feature');
   common_attribute.checkDeletedAttributeInFO(productData.name);
   scenario('Logout from the Front Office', client => {

@@ -1,11 +1,8 @@
 const {productPage} = require('../../selectors/FO/product_page');
 const {CheckoutOrderPage} = require('../../selectors/FO/order_page');
 const {accountPage} = require('../../selectors/FO/add_account_page');
-<<<<<<< HEAD:tests/E2E/test/campaigns/common_scenarios/order.js
 const {OrderPage} = require('../../selectors/BO/order');
 const {Menu} = require('../../selectors/BO/menu.js');
-=======
->>>>>>> upstream/1.7.3.x:tests/E2E/test/campaigns/common_scenarios/order.js
 
 let data = require('../../datas/customer_and_address_data');
 let promise = Promise.resolve();

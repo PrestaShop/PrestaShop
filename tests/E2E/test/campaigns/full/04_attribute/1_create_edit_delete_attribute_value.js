@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
 const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
@@ -51,6 +50,3 @@ scenario('Delete "Attribute" with bulk actions', () => {
   common_attribute.checkDeletedAttributeInFO(productData.name);
 
 }, 'attribute_and_feature', true);
-=======
-require('../../high/04_attribute/1_create_edit_delete_attribute_value');
->>>>>>> upstream/1.7.3.x

@@ -3,10 +3,6 @@ const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
 const {OnBoarding} = require('../../../selectors/BO/onboarding.js');
 const orderScenarios = require('../../common_scenarios/order');
-<<<<<<< HEAD
-=======
-const {Menu} = require('../../../selectors/BO/menu.js');
->>>>>>> upstream/1.7.3.x
 const common_scenarios = require('../../common_scenarios/product');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 let promise = Promise.resolve();

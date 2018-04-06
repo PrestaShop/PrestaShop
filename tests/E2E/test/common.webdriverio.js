@@ -108,13 +108,6 @@ function initCommands(client) {
       .waitForExist(selector.menuBO, 120000);
   });
 
-  client.addCommand('accessToBO', function (selector, link = URL) {
-    this.selector = globals.selector;
-    return client
-      .url('http://' + link + '/admin-dev')
-      .waitForExist(selector.menuBO, 120000)
-  });
-
   client.addCommand('waitAndSelectByAttribute', function (selector, attribute, value, pause = 0, timeout = 60000) {
     return client
       .waitForExist(selector, timeout)
