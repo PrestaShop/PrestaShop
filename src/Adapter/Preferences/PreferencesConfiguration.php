@@ -101,8 +101,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
             $configuration['price_display_precision'],
             $configuration['display_suppliers'],
             $configuration['display_best_sellers'],
-            $configuration['multishop_feature_active'],
-            $configuration['shop_activity']
+            $configuration['multishop_feature_active']
         );
     }
 }
