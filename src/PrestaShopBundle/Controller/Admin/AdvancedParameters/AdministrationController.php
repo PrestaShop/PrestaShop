@@ -71,7 +71,7 @@ class AdministrationController extends FrameworkBundleAdminController
         if ($this->isDemoModeEnabled()) {
             $this->addFlash('error', $this->getDemoModeErrorMessage());
 
-            return $this->redirectToRoute('admin_performance');
+            return $this->redirectToRoute('admin_administration');
         }
 
         $this->dispatchHook('actionAdminAdminPreferencesControllerPostProcessBefore', array('controller' => $this));
