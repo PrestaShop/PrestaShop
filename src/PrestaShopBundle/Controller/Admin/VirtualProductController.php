@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 
 /**
  * Admin controller for the virtual product on the /product/form page.
@@ -43,9 +44,9 @@ class VirtualProductController extends FrameworkBundleAdminController
     public function saveAction($idProduct, Request $request)
     {
         $response = new JsonResponse();
-        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
         //get product
         $product = $productAdapter->getProduct((int)$idProduct, true);
@@ -55,7 +56,7 @@ class VirtualProductController extends FrameworkBundleAdminController
         }
 
         $form = $this->createForm(
-           'PrestaShopBundle\Form\Admin\Product\ProductVirtual',
+            ProductVirtual::class,
             null,
             array('csrf_protection' => false)
         );
@@ -88,8 +89,8 @@ class VirtualProductController extends FrameworkBundleAdminController
     public function removeFileAction($idProduct, Request $request)
     {
         $response = new JsonResponse();
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
         //get product
         $product = $productAdapter->getProduct((int)$idProduct);
@@ -113,8 +114,8 @@ class VirtualProductController extends FrameworkBundleAdminController
     public function removeAction($idProduct, Request $request)
     {
         $response = new JsonResponse();
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
         //get product
         $product = $productAdapter->getProduct((int)$idProduct);

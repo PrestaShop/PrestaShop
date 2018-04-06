@@ -44,9 +44,9 @@ class AttachementProductController extends FrameworkBundleAdminController
     public function addAction($idProduct, Request $request)
     {
         $response = new JsonResponse();
-        $legacyContext = $this->container->get('prestashop.adapter.legacy.context');
-        $adminProductWrapper = $this->container->get('prestashop.adapter.admin.wrapper.product');
-        $productAdapter = $this->container->get('prestashop.adapter.data_provider.product');
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+        $adminProductWrapper = $this->get('prestashop.adapter.admin.wrapper.product');
+        $productAdapter = $this->get('prestashop.adapter.data_provider.product');
 
         //get product
         $product = $productAdapter->getProduct((int)$idProduct);

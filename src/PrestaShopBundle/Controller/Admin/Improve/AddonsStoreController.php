@@ -49,7 +49,7 @@ class AddonsStoreController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/Module/addons_store.html.twig', array(
             'pageContent' => file_get_contents($this->getAddonsUrl($request)),
             'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Modules catalog', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Modules catalog', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,

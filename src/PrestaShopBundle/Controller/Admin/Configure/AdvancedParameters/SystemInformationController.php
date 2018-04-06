@@ -51,7 +51,7 @@ class SystemInformationController extends FrameworkBundleAdminController
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Information', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Information', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,

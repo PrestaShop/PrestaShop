@@ -27,6 +27,7 @@ namespace PrestaShopBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PrestaShopBundle\Form\Admin\Category\SimpleCategory;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -44,13 +45,13 @@ class CategoryController extends FrameworkBundleAdminController
     public function addSimpleCategoryFormAction(Request $request)
     {
         $response = new JsonResponse();
-        $tools = $this->container->get('prestashop.adapter.tools');
-        $shopContext = $this->container->get('prestashop.adapter.shop.context');
+        $tools = $this->get('prestashop.adapter.tools');
+        $shopContext = $this->get('prestashop.adapter.shop.context');
         $shopList = $shopContext->getShops(false, true);
         $currentIdShop = $shopContext->getContextShopID();
 
         $form = $this->createFormBuilder()
-            ->add('category', 'PrestaShopBundle\Form\Admin\Category\SimpleCategory')
+            ->add('category', SimpleCategory::class)
             ->getForm();
 
         $form->handleRequest($request);
@@ -67,7 +68,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'checkBoxShopAsso_category' => $currentIdShop ? [$currentIdShop => $currentIdShop] : $shopList,
             ];
 
-            $adminCategoryController = $this->container->get('prestashop.adapter.admin.controller.category')->getInstance();
+            $adminCategoryController = $this->get('prestashop.adapter.admin.controller.category')->getInstance();
             if ($category = $adminCategoryController->processAdd()) {
                 $response->setData(['category' => $category]);
             }

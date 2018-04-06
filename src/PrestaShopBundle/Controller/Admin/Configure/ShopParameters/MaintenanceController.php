@@ -53,7 +53,7 @@ class MaintenanceController extends FrameworkBundleAdminController
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => array(),
-            'layoutTitle' => $this->get('translator')->trans('Maintenance', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
@@ -68,6 +68,7 @@ class MaintenanceController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param Request $request
      * @return RedirectResponse
      */
     public function processFormAction(Request $request)
