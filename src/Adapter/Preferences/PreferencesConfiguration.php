@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Preferences;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PreferencesConfiguration implements DataConfigurationInterface
 {
