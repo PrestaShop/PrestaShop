@@ -737,7 +737,7 @@ class LinkCore
                     'AdminTranslationSf' => 'admin_international_translation_overview',
                     'AdminInformation' => 'admin_system_information',
                     'AdminAddonsCatalog' => 'admin_module_addons_store',
-                    // 'AdminLogs' => 'admin_logs', @todo: to uncomment when Logs Page is done
+                    'AdminLogs' => 'admin_logs',
                     'AdminPerformance' => 'admin_performance',
                     'AdminAdminPreferences' => 'admin_administration',
                     'AdminMaintenance' => 'admin_maintenance',
