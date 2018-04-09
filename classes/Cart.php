@@ -4690,7 +4690,13 @@ class CartCore extends ObjectModel
             }
             $idProductAttribute = !empty($product['id_product_attribute']) ? $product['id_product_attribute'] : null;
             $availableOutOfStock = Product::isAvailableWhenOutOfStock($product['out_of_stock']);
-            $productQuantity = Product::getQuantity($product['id_product'], $idProductAttribute, null, $this);
+            $productQuantity = Product::getQuantity(
+                $product['id_product'],
+                $idProductAttribute,
+                null,
+                $this,
+                $product['id_customization']
+            );
 
             if (!$exclusive
                 && ($productQuantity < 0 && !$availableOutOfStock)

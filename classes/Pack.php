@@ -222,31 +222,33 @@ class PackCore extends Product
      *
      * @param int $id_product Product id
      * @param int $id_product_attribute Product attribute id (optional)
-     * @param bool|null $cache_is_pack
+     * @param bool|null $cacheIsPack
      * @param Cart $cart
+     * @param int $idCustomization Product customization id (optional)
      * @return int
      * @throws PrestaShopException
      */
     public static function getQuantity(
-        $id_product,
-        $id_product_attribute = null,
-        $cache_is_pack = null,
-        Cart $cart = null
+        $idProduct,
+        $idProductAttribute = null,
+        $cacheIsPack = null,
+        Cart $cart = null,
+        $idCustomization = null
     ) {
-        $id_product = (int) $id_product;
-        $id_product_attribute = (int) $id_product_attribute;
-        $cache_is_pack = (bool) $cache_is_pack;
+        $idProduct = (int) $idProduct;
+        $idProductAttribute = (int) $idProductAttribute;
+        $cacheIsPack = (bool) $cacheIsPack;
 
-        if (!self::isPack($id_product)) {
-            throw new PrestaShopException("Product with id $id_product is not a pack");
+        if (!self::isPack($idProduct)) {
+            throw new PrestaShopException("Product with id $idProduct is not a pack");
         }
 
         // Initialize
-        $product = new Product($id_product, false);
+        $product = new Product($idProduct, false);
         $packQuantity = 0;
         $packQuantityInStock = StockAvailable::getQuantityAvailableByProduct(
-            $id_product,
-            $id_product_attribute
+            $idProduct,
+            $idProductAttribute
         );
         $packStockType = $product->pack_stock_type;
         $allPackStockType = array(
@@ -275,10 +277,10 @@ class PackCore extends Product
         // Set pack quantity to the minimum quantity of pack, or
         // product pack
         if (in_array($packStockType, array(self::STOCK_TYPE_PACK_BOTH, self::STOCK_TYPE_PRODUCTS_ONLY))) {
-            $items = array_values(Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT')));
+            $items = array_values(Pack::getItems($idProduct, Configuration::get('PS_LANG_DEFAULT')));
 
             foreach ($items as $index => $item) {
-                $itemQuantity = Product::getQuantity($item->id, null, null, $cart);
+                $itemQuantity = Product::getQuantity($item->id, null, null, $cart, $idCustomization);
                 $nbPackAvailableForItem = (int) ($itemQuantity / $item->pack_quantity);
 
                 // Initialize packQuantity with the first product quantity
@@ -296,7 +298,7 @@ class PackCore extends Product
                 }
             }
         } else if (!empty($cart)) {
-            $cartProduct = $cart->getProductQuantity($id_product);
+            $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
                 $packQuantity -= $cartProduct['deep_quantity'];
