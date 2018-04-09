@@ -100,7 +100,6 @@ class Tools
         return LegacyTools::generateHtaccess();
     }
 
-
     /**
      * returns the rounded value of $value to specified precision, according to your configuration;
      *
@@ -113,5 +112,18 @@ class Tools
     public function round($value, $precision = 0, $round_mode = null)
     {
         return LegacyTools::ps_round($value, $precision, $round_mode);
+    }
+
+    /**
+     * Return domain name according to configuration and depending on ssl activation
+     *
+     * @param bool $http if true, return domain name with protocol
+     * @param bool $entities if true, convert special chars to HTML entities
+     *
+     * @return string domain
+     */
+    public function getShopDomainSsl($http = false, $entities = false)
+    {
+        return LegacyTools::getShopDomainSsl($http, $entities);
     }
 }

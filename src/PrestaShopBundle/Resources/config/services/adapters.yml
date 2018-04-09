@@ -98,6 +98,10 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
 
+    prestashop.adapter.preferences.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
+        arguments: ['@prestashop.adapter.legacy.configuration']
+
     prestashop.adapter.upload_quota.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
         arguments: ['@prestashop.adapter.legacy.configuration']
@@ -121,6 +125,11 @@ services:
         arguments:
             - '@prestashop.adapter.maintenance.configuration'
 
+    prestashop.adapter.preferences.form_provider:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.preferences.configuration'
+
     prestashop.adapter.administration.form_provider:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Administration\FormDataProvider'
         arguments:
@@ -134,6 +143,13 @@ services:
             - '@form.factory'
             - '@prestashop.adapter.performance.form_provider'
             - '@prestashop.adapter.combination_feature'
+
+    prestashop.adapter.preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.adapter.preferences.form_provider'
+            - '@prestashop.adapter.legacy.configuration'
 
     prestashop.adapter.maintenance.form_handler:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceFormHandler'

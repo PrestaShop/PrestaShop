@@ -305,4 +305,3 @@ services:
         arguments: ['@=service("prestashop.module_kernel.repository").getActiveModulesPaths()']
         tags:
           - { name: twig.loader, priority: 1}
-

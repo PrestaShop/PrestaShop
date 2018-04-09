@@ -274,6 +274,13 @@ services:
         tags:
             - { name: form.type }
 
+    form.type.shop_parameters.general:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
     form.type.maintenance.general:
         class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'

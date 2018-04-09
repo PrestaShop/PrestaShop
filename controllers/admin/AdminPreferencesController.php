@@ -159,16 +159,16 @@ class AdminPreferencesControllerCore extends AdminController
                         array(
                             'name' => $this->trans('Round on each item', array(), 'Admin.Shopparameters.Feature'),
                             'id' => Order::ROUND_ITEM
-                            ),
+                        ),
                         array(
                             'name' => $this->trans('Round on each line', array(), 'Admin.Shopparameters.Feature'),
                             'id' => Order::ROUND_LINE
-                            ),
+                        ),
                         array(
                             'name' => $this->trans('Round on the total', array(), 'Admin.Shopparameters.Feature'),
                             'id' => Order::ROUND_TOTAL
-                            ),
                         ),
+                    ),
                     'identifier' => 'id'
                 ),
                 'PS_PRICE_DISPLAY_PRECISION' => array(

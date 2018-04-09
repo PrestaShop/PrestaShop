@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PrestaShopBundle\Entity\Tab;
 
 class TabRepository extends EntityRepository
 {
@@ -59,5 +60,29 @@ class TabRepository extends EntityRepository
             return $tab->getId();
         }
         return null;
+    }
+
+    /**
+     * Changes tab status
+     *
+     * @param string $className tab's class name
+     * @param bool $status wanted status for the tab
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function changeStatusByClassName($className, $status)
+    {
+        if (!is_bool($status)) {
+            throw new \InvalidArgumentException(sprintf('Invalid type: bool expected, got %s', gettype($status)));
+        }
+
+        /** @var Tab $tab */
+        $tab = $this->findOneByClassName($className);
+
+        if (null !== $tab) {
+            $tab->setActive($status);
+            $this->getEntityManager()->persist($tab);
+            $this->getEntityManager()->flush();
+        }
     }
 }
