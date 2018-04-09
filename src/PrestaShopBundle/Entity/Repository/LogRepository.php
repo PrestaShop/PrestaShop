@@ -140,10 +140,12 @@ class LogRepository implements RepositoryInterface
     /**
      * Delete all logs.
      * @return integer The number of affected rows.
-     * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function deleteAll()
     {
-        return $this->connection->delete("$this->tableName");
+        $platform   = $this->connection->getDatabasePlatform();
+
+        return $this->connection->executeUpdate($platform->getTruncateTableSQL($this->logTable, true));
     }
 }
