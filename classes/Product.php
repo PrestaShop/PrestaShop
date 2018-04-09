@@ -3606,7 +3606,7 @@ class ProductCore extends ObjectModel
         $nbProductInCart = 0;
 
         if (!empty($cart)) {
-            $cartProduct = $cart->getProductQuantity($id_product);
+            $cartProduct = $cart->getProductQuantity($id_product, $id_product_attribute);
 
             if (!empty($cartProduct['deep_quantity'])) {
                 $nbProductInCart = $cartProduct['deep_quantity'];
