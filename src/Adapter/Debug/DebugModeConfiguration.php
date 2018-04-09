@@ -71,7 +71,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -123,7 +123,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {

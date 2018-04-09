@@ -77,7 +77,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function getConfiguration()
     {
@@ -89,7 +89,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function updateConfiguration(array $configuration)
     {
@@ -122,7 +122,7 @@ class CombineCompressCacheConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * @{inheritdoc}
+     * {@inheritdoc}
      */
     public function validateConfiguration(array $configuration)
     {

@@ -305,6 +305,11 @@ services:
         arguments:
             - PrestaShopBundle\Entity\Lang
 
+    prestashop.core.admin.log.repository:
+        class: PrestaShopBundle\Entity\Repository\LogRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
     # Api
     prestashop.core.api.query_params_collection:
         abstract: true

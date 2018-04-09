@@ -87,6 +87,10 @@ class ControllerTest extends TestCase
         $testedController->run();
     }
 
+    /**
+     * @return array list of all legacy controllers (Back Office)
+     * If you have migrated a page on Symfony, please remove the related test.
+     */
     public function getControllersClasses()
     {
         return array(

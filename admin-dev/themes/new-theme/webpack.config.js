@@ -43,11 +43,17 @@ let config = {
       'sprintf-js/src/sprintf.js',
       './js/theme.js',
     ],
+    catalog: [
+      './js/app/pages/catalog',
+    ],
     stock: [
       './js/app/pages/stock',
     ],
     translations: [
       './js/app/pages/translations',
+    ],
+    logs: [
+      './js/app/pages/logs',
     ],
     product_preferences: [
       './js/pages/product-preferences',

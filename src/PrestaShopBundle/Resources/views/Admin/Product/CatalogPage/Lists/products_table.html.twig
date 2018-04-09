@@ -35,50 +35,42 @@
   <thead class="thead-default">
     {% block product_catalog_form_table_header %}
       <tr class="column-headers">
-        <th class="small-text" style="width: 8%">
-          {{ "ID"|trans({}, 'Admin.Global') }}
-          {{ ps.sort_arrows('id_product') }}
+        <th scope="col" style="width: 8%">
+          {{ ps.sortable_column_header("ID"|trans({}, 'Admin.Global'), 'id_product', orderBy, sortOrder) }}
         </th>
-        <th class="small-text">
+        <th scope="col">
           {{ "Image"|trans({}, 'Admin.Global') }}
         </th>
-        <th class="small-text">
-          {{ "Name"|trans({}, 'Admin.Global') }}
-          {{ ps.sort_arrows('name') }}
+        <th scope="col">
+          {{ ps.sortable_column_header("Name"|trans({}, 'Admin.Global'), 'name', orderBy, sortOrder) }}
         </th>
-        <th class="small-text" style="width: 9%">
-          {{ "Reference"|trans({}, 'Admin.Global') }}
-          {{ ps.sort_arrows('reference') }}
+        <th scope="col" style="width: 9%">
+          {{ ps.sortable_column_header("Reference"|trans({}, 'Admin.Global'), 'reference', orderBy, sortOrder) }}
         </th>
-        <th class="small-text">
-          {{ "Category"|trans({}, 'Admin.Catalog.Feature') }}
-          {{ ps.sort_arrows('name_category') }}
+        <th scope="col">
+          {{ ps.sortable_column_header("Category"|trans({}, 'Admin.Catalog.Feature'), 'name_category', orderBy, sortOrder) }}
         </th>
-        <th class="small-text" style="width: 9%">
-          {{ "Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature') }}
-          {{ ps.sort_arrows('price') }}
+        <th scope="col" style="width: 9%">
+          {{ ps.sortable_column_header("Price (tax excl.)"|trans({}, 'Admin.Catalog.Feature'), 'price', orderBy, sortOrder) }}
         </th>
 
         {% if 'PS_STOCK_MANAGEMENT'|configuration %}
-        <th class="small-text" style="width: 9%">
-          {{ "Quantity"|trans({}, 'Admin.Catalog.Feature') }}
-          {{ ps.sort_arrows('sav_quantity') }}
+        <th scope="col" style="width: 9%">
+          {{ ps.sortable_column_header("Quantity"|trans({}, 'Admin.Catalog.Feature'), 'sav_quantity', orderBy, sortOrder) }}
         </th>
         {% else %}
           <th></th>
         {% endif %}
 
-        <th class="small-text">
-          {{ "Status"|trans({}, 'Admin.Global') }}
-          {{ ps.sort_arrows('active') }}
+        <th scope="col">
+          {{ ps.sortable_column_header("Status"|trans({}, 'Admin.Global'), 'active') }}
         </th>
         {% if has_category_filter == true %}
-          <th class="small-text">
-            {{ "Position"|trans({}, 'Admin.Global') }}
-            {{ ps.sort_arrows('position') }}
+          <th scope="col">
+            {{ ps.sortable_column_header("Position"|trans({}, 'Admin.Global'), 'position') }}
           </th>
         {% endif %}
-        <th class="small-text" style="width: 6%"></th>
+        <th scope="col" style="width: 6%"></th>
       </tr>
     {% endblock %}
 
