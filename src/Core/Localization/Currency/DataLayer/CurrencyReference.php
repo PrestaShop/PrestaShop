@@ -95,7 +95,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
             return null;
         }
 
-        $cldrCurrency = $cldrLocale->getCurrency($currencyDataId);
+        $cldrCurrency = $cldrLocale->getCurrency($currencyDataId->getCurrencyCode());
 
         if (empty($cldrCurrency)) {
             return null;

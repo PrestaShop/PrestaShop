@@ -38,14 +38,17 @@ interface RepositoryInterface
     /**
      * Get a Currency instance by ISO code.
      *
-     * @param $currencyCode
+     * @param string $currencyCode
      *  Wanted currency's ISO code
      *  Must be an alphabetic ISO 4217 currency code
+     *
+     * @param string $localeCode
+     *  Currency data will be translated in this language
      *
      * @return Currency
      *  The wanted Currency instance
      */
-    public function getCurrency($currencyCode);
+    public function getCurrency($currencyCode, $localeCode);
 
     /**
      * Get all the available currencies (installed + active)

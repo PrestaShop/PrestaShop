@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Entity\Currency;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
+use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataIdentifier;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
@@ -67,14 +68,14 @@ class CurrencyDatabaseTest extends TestCase
         $this->fakeDataProvider = $this->createMock(CurrencyDataProvider::class);
         $this->fakeDataProvider->method('getCurrencyByIsoCode')
             ->willReturnMap([
-                ['EUR', null, $this->fakeFrEuro],
+                ['EUR', 'fr-FR', $this->fakeFrEuro],
             ]);
         $this->fakeDataProvider->method('getCurrencyByIsoCodeOrCreate')
             ->willReturnMap([
-                ['FOO', null, $this->createMock(Currency::class)],
+                ['FOO', 'fr-FR', $this->createMock(Currency::class)],
             ]);
 
-        $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
+        $this->layer = new CurrencyDatabaseDataLayer($this->fakeDataProvider);
     }
 
     /**
@@ -86,7 +87,7 @@ class CurrencyDatabaseTest extends TestCase
     {
         /** @var CurrencyData $currencyData */
         /** @noinspection PhpUnhandledExceptionInspection */
-        $currencyData = $this->layer->read('EUR');
+        $currencyData = $this->layer->read(new CurrencyDataIdentifier('EUR', 'fr-FR'));
         /** @noinspection end */
 
         $this->assertSame(
@@ -106,7 +107,7 @@ class CurrencyDatabaseTest extends TestCase
 
         // FOO is unknown
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->assertNull($this->layer->read('FOO'));
+        $this->assertNull($this->layer->read(new CurrencyDataIdentifier('FOO', 'fr-FR')));
         /** @noinspection end */
     }
 
@@ -126,6 +127,9 @@ class CurrencyDatabaseTest extends TestCase
             ->with($this->isInstanceOf(Currency::class));
 
         $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
-        $writableLayer->write('FOO', $someCurrencyData); // Should trigger saveCurrency() on data provider
+        $writableLayer->write(
+            new CurrencyDataIdentifier('FOO', 'fr-FR'),
+            $someCurrencyData
+        ); // Should trigger saveCurrency() on data provider
     }
 }

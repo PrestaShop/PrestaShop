@@ -146,7 +146,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
         }
 
         $currencyCode   = $currencyDataId->getCurrencyCode();
-        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode);
+        $currencyEntity = $this->dataProvider->getCurrencyByIsoCodeOrCreate($currencyCode, 'fr-FR');
 
         $currencyEntity->iso_code         = $currencyData->isoCode;
         $currencyEntity->name             = $currencyData->names[$currencyCode];
