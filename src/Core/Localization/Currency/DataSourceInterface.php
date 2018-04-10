@@ -36,13 +36,13 @@ interface DataSourceInterface
     /**
      * Get complete currency data by currency code, in a given language
      *
-     * @param CurrencyDataIdentifier $currencyDataId
+     * @param LocalizedCurrencyId $localizedCurrencyId
      *  The currency data identifier (currency code + locale code)
      *
      * @return CurrencyData
      *  The currency data
      */
-    public function getDataByCurrencyCode(CurrencyDataIdentifier $currencyDataId);
+    public function getLocalizedCurrencyData(LocalizedCurrencyId $localizedCurrencyId);
 
     /**
      * Is this currency available ?

@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataIdentifier;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 
@@ -106,18 +106,16 @@ class CurrencyCache extends AbstractDataLayer implements CurrencyDataLayerInterf
      *
      * Might be a file edit, cache update, DB insert/update...
      *
-     * @param mixed $currencyDataId
+     * @param LocalizedCurrencyId $currencyDataId
      *  The data object identifier
      *
-     * @param CurrencyDataIdentifier $data
+     * @param CurrencyData $data
      *  The data object to be written
      *
      * @return void
      *
      * @throws DataLayerException
      *  When write fails
-     *
-     * @throws \Psr\Cache\InvalidArgumentException
      */
     protected function doWrite($currencyDataId, $data)
     {

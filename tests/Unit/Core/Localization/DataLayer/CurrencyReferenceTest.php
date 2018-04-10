@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\CurrencyData as CldrCurrencyDat
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Locale as CldrLocale;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataIdentifier;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference as CurrencyReferenceDataLayer;
 
 class CurrencyReferenceTest extends TestCase
@@ -78,7 +78,7 @@ class CurrencyReferenceTest extends TestCase
     public function testRead()
     {
         /** @noinspection PhpUnhandledExceptionInspection */
-        $currencyData = $this->layer->read(new CurrencyDataIdentifier('PCE', 'fr-FR'));
+        $currencyData = $this->layer->read(new LocalizedCurrencyId('PCE', 'fr-FR'));
         /** @noinspection end */
 
         $this->assertInstanceOf(
@@ -94,7 +94,7 @@ class CurrencyReferenceTest extends TestCase
 
         // Same test with unknown cache key
         /** @noinspection PhpUnhandledExceptionInspection */
-        $currencyData = $this->layer->read(new CurrencyDataIdentifier('unknown', 'unknown'));
+        $currencyData = $this->layer->read(new LocalizedCurrencyId('unknown', 'unknown'));
         /** @noinspection end */
 
         $this->assertNull($currencyData);

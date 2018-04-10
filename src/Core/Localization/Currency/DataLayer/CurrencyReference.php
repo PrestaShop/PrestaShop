@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency as CldrCurrency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData as CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataIdentifier;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
@@ -72,7 +72,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
      *
      * Data is read from official CLDR files (via the CLDR LocaleRepository)
      *
-     * @param CurrencyDataIdentifier $currencyDataId
+     * @param LocalizedCurrencyId $currencyDataId
      *  The CurrencyData object identifier
      *
      * @return CurrencyData|null
@@ -84,7 +84,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
      */
     protected function doRead($currencyDataId)
     {
-        if (!$currencyDataId instanceof CurrencyDataIdentifier) {
+        if (!$currencyDataId instanceof LocalizedCurrencyId) {
             throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
         }
 
@@ -114,7 +114,7 @@ class CurrencyReference extends AbstractDataLayer implements CurrencyDataLayerIn
     /**
      * CLDR files are read only. Nothing can be written there.
      *
-     * @param CurrencyDataIdentifier $currencyDataId
+     * @param LocalizedCurrencyId $currencyDataId
      *  The LocaleData object identifier
      *
      * @param CurrencyData $currencyData

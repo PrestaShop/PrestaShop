@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Data\Layer\AbstractDataLayer;
 use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataIdentifier;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataLayerInterface;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
@@ -73,7 +73,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      *
      * Data is read into database
      *
-     * @param CurrencyDataIdentifier $currencyDataId
+     * @param LocalizedCurrencyId $currencyDataId
      *  The CurrencyData object identifier (currency code + locale code)
      *
      * @return CurrencyData|null
@@ -84,7 +84,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      */
     protected function doRead($currencyDataId)
     {
-        if (!$currencyDataId instanceof CurrencyDataIdentifier) {
+        if (!$currencyDataId instanceof LocalizedCurrencyId) {
             throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
         }
 
@@ -125,7 +125,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      * Actually write a data object into the current layer
      * Here, this is a DB insert/update...
      *
-     * @param CurrencyDataIdentifier $currencyDataId
+     * @param LocalizedCurrencyId $currencyDataId
      *  The CurrencyData object identifier (currency code + locale code)
      *
      * @param CurrencyData $currencyData
@@ -141,7 +141,7 @@ class CurrencyDatabase extends AbstractDataLayer implements CurrencyDataLayerInt
      */
     protected function doWrite($currencyDataId, $currencyData)
     {
-        if (!$currencyDataId instanceof CurrencyDataIdentifier) {
+        if (!$currencyDataId instanceof LocalizedCurrencyId) {
             throw new LocalizationException('$currencyDataId must be a CurrencyDataIdentifier object');
         }
 

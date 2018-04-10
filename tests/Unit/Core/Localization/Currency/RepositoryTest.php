@@ -47,12 +47,12 @@ class RepositoryTest extends TestCase
     {
         $dataSource = $this->createMock(CurrencyDataSourceInterface::class);
         $dataSource
-            ->method('getDataByCurrencyCode')
+            ->method('getLocalizedCurrencyData')
             ->willReturnCallback(
-                function ($isoCodecurrencyDataId) {
+                function ($localizedCurrencyId) {
                     $data = new CurrencyData();
 
-                    switch ($isoCodecurrencyDataId->getCurrencyCode()) {
+                    switch ($localizedCurrencyId->getCurrencyCode()) {
                         case 'EUR':
                             $data->isActive       = true;
                             $data->conversionRate = 1;
@@ -74,7 +74,7 @@ class RepositoryTest extends TestCase
                             break;
 
                         default:
-                            throw new LocalizationException('Unknown currency code : ' . $isoCodecurrencyDataId);
+                            throw new LocalizationException('Unknown currency code : ' . $localizedCurrencyId);
                     }
 
                     return $data;

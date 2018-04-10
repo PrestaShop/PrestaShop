@@ -61,8 +61,8 @@ class Repository implements CurrencyRepositoryInterface
     public function getCurrency($currencyCode, $localeCode)
     {
         if (!isset($this->currencies[$currencyCode])) {
-            $data = $this->dataSource->getDataByCurrencyCode(
-                new CurrencyDataIdentifier($currencyCode, $localeCode)
+            $data = $this->dataSource->getLocalizedCurrencyData(
+                new LocalizedCurrencyId($currencyCode, $localeCode)
             );
 
             $this->currencies[$currencyCode] = new Currency(

@@ -29,9 +29,8 @@ namespace Tests\Unit\Core\Localization\DataLayer;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\Entity\Currency;
-use PrestaShop\PrestaShop\Core\Data\Layer\DataLayerException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
-use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyDataIdentifier;
+use PrestaShop\PrestaShop\Core\Localization\Currency\LocalizedCurrencyId;
 use PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase as CurrencyDatabaseDataLayer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
@@ -87,7 +86,7 @@ class CurrencyDatabaseTest extends TestCase
     {
         /** @var CurrencyData $currencyData */
         /** @noinspection PhpUnhandledExceptionInspection */
-        $currencyData = $this->layer->read(new CurrencyDataIdentifier('EUR', 'fr-FR'));
+        $currencyData = $this->layer->read(new LocalizedCurrencyId('EUR', 'fr-FR'));
         /** @noinspection end */
 
         $this->assertSame(
@@ -107,7 +106,7 @@ class CurrencyDatabaseTest extends TestCase
 
         // FOO is unknown
         /** @noinspection PhpUnhandledExceptionInspection */
-        $this->assertNull($this->layer->read(new CurrencyDataIdentifier('FOO', 'fr-FR')));
+        $this->assertNull($this->layer->read(new LocalizedCurrencyId('FOO', 'fr-FR')));
         /** @noinspection end */
     }
 
@@ -128,7 +127,7 @@ class CurrencyDatabaseTest extends TestCase
 
         $writableLayer = new CurrencyDatabaseDataLayer($this->fakeDataProvider, 'fr-FR');
         $writableLayer->write(
-            new CurrencyDataIdentifier('FOO', 'fr-FR'),
+            new LocalizedCurrencyId('FOO', 'fr-FR'),
             $someCurrencyData
         ); // Should trigger saveCurrency() on data provider
     }
