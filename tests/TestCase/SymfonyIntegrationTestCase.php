@@ -24,40 +24,44 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+namespace Tests\TestCase;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tests\Unit\ContextMocker;
+use Tests\PrestaShopBundle\Utils\DatabaseCreator as Database;
 
-/**
- * Currency repository interface
- *
- * Describes the behavior of Currency Repository classes
- */
-interface RepositoryInterface
+class SymfonyIntegrationTestCase extends KernelTestCase
 {
     /**
-     * Get a Currency instance by ISO code.
-     *
-     * @param string $currencyCode
-     *  Wanted currency's ISO code
-     *  Must be an alphabetic ISO 4217 currency code
-     *
-     * @param string $localeCode
-     *  Currency data will be translated in this language
-     *
-     * @return Currency
-     *  The wanted Currency instance
+     * @var ContextMocker
      */
-    public function getCurrency($currencyCode, $localeCode);
+    protected $contextMocker;
 
     /**
-     * Get all the available currencies (installed + active)
-     *
-     * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyCollection
-     *  The available currencies
+     * @var ContainerInterface
      */
-    public function getAvailableCurrencies($localeCode);
+    protected $container;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->contextMocker = new ContextMocker();
+        $this->contextMocker->mockContext();
+
+        $this->bootKernel();
+        $this->container = self::$kernel->getContainer();
+    }
+
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->contextMocker->resetContext();
+    }
+
+    public static function setUpBeforeClass()
+    {
+        Database::restoreTestDB();
+        require_once(__DIR__ . '/../../config/config.inc.php');
+    }
 }

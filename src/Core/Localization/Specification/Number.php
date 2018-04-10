@@ -76,11 +76,16 @@ class Number implements NumberInterface
         $primaryGroupSize,
         $secondaryGroupSize
     ) {
-        $this->positivePattern    = $positivePattern;
-        $this->negativePattern    = $negativePattern;
-        $this->symbols            = $symbols;
-        $this->maxFractionDigits  = $maxFractionDigits;
-        $this->minFractionDigits  = $minFractionDigits;
+        $this->positivePattern = $positivePattern;
+        $this->negativePattern = $negativePattern;
+        $this->symbols         = $symbols;
+
+        if ($maxFractionDigits < $minFractionDigits) {
+            $minFractionDigits = $maxFractionDigits;
+        }
+        $this->maxFractionDigits = $maxFractionDigits;
+        $this->minFractionDigits = $minFractionDigits;
+
         $this->groupingUsed       = $groupingUsed;
         $this->primaryGroupSize   = $primaryGroupSize;
         $this->secondaryGroupSize = $secondaryGroupSize;
@@ -294,10 +299,10 @@ class Number implements NumberInterface
             }
         }
 
-        if (!isset($this->maxFractionDigits)
-            || !is_int($this->maxFractionDigits)
+        if (isset($this->maxFractionDigits)
+            && !is_int($this->maxFractionDigits)
         ) {
-            throw new LocalizationException('Invalid maxFractionDigits');
+            throw new LocalizationException('Invalid maxFractionDigits : ' . print_r($this->maxFractionDigits));
         }
 
         if (!isset($this->minFractionDigits)

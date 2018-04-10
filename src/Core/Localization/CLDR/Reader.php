@@ -28,6 +28,7 @@
 namespace PrestaShop\PrestaShop\Core\Localization\CLDR;
 
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationFileNotFoundException;
 use SimpleXMLElement;
 
 /**
@@ -229,7 +230,7 @@ class Reader implements ReaderInterface
      * @return SimplexmlElement
      *  The locale data
      *
-     * @throws LocalizationException
+     * @throws LocalizationFileNotFoundException
      *  If this locale code has no corresponding xml file
      */
     protected function getMainXmlData($localeCode)
@@ -245,13 +246,13 @@ class Reader implements ReaderInterface
      *
      * @return string The realpath of CLDR main data folder
      *
-     * @throws LocalizationException
+     * @throws LocalizationFileNotFoundException
      */
     protected function mainPath($filename = '')
     {
         $path = realpath(_PS_ROOT_DIR_ . '/' . self::CLDR_MAIN . ($filename ? $filename : ''));
         if (false === $path) {
-            throw new LocalizationException("The file $filename does not exist");
+            throw new LocalizationFileNotFoundException("The file $filename does not exist");
         }
 
         return $path;
@@ -264,11 +265,19 @@ class Reader implements ReaderInterface
      * @param string $localeTag The wanted locale. Can be either a language code (e.g.: fr) of an IETF tag (e.g.: en-US)
      *
      * @return LocaleData
-     * @throws LocalizationException
      */
     protected function getLocaleData($localeTag)
     {
-        $xmlData          = $this->getMainXmlData($localeTag);
+        try {
+            $xmlData = $this->getMainXmlData($localeTag);
+        } catch (LocalizationFileNotFoundException $e) {
+            // Sometimes a file can be missing.
+            // Example for Chinese : zh_CN.xml doesn't exist. There is only a zh.xml file.
+            // That's why we can't let this exception bubble up.
+
+            return new LocaleData;
+        }
+
         $supplementalData = ['digits' => $this->getDigitsData()];
 
         return $this->mapLocaleData($xmlData, $supplementalData);
@@ -286,7 +295,8 @@ class Reader implements ReaderInterface
      * @return LocaleData
      *  The mapped locale data
      *
-     * @todo use root aliases to fill up missing values (e.g.: missing symbols for exotic numbering systems).
+     * @todo use $supplementalData for non-occidental digits
+     *
      * @see  http://cldr.unicode.org/development/development-process/design-proposals/resolution-of-cldr-files
      */
     protected function mapLocaleData(SimplexmlElement $xmlLocaleData, $supplementalData)
@@ -324,12 +334,23 @@ class Reader implements ReaderInterface
         }
         // Symbols (by numbering system)
         if (isset($numbersData->symbols)) {
+            /** @var SimpleXMLElement $symbolsNode */
             foreach ($numbersData->symbols as $symbolsNode) {
-                if (isset($symbolsNode->alias)) {
-                    // TODO here is the alias pointing to the data to be used for this specific numbering system (xpath)
-                    // @see <project root>/localization/CLDR/core/common/main/root.xml
+                if (!isset($symbolsNode['numberSystem'])) {
                     continue;
                 }
+                $thisNumberingSystem = (string)$symbolsNode['numberSystem'];
+
+                // Copying data from another node when relevant (alias)
+                if (isset($symbolsNode->alias)) {
+                    // @see <project root>/localization/CLDR/core/common/main/root.xml
+                    $results = $symbolsNode->xpath($symbolsNode->alias['path']);
+                    if (empty($results)) {
+                        continue;
+                    }
+                    $symbolsNode = $results[0];
+                }
+
                 $symbolsList = new NumberSymbolsData();
                 if (isset($symbolsNode->decimal)) {
                     $symbolsList->decimal = (string)$symbolsNode->decimal;
@@ -374,7 +395,7 @@ class Reader implements ReaderInterface
                     $symbolsList->currencyGroup = (string)$symbolsNode->currencyGroup;
                 }
 
-                $localeData->numberSymbols[(string)$symbolsNode['numberSystem']] = $symbolsList;
+                $localeData->numberSymbols[$thisNumberingSystem] = $symbolsList;
             }
         }
         // Decimal patterns (by numbering system)
@@ -444,7 +465,9 @@ class Reader implements ReaderInterface
             foreach ($numbersData->currencyFormats as $format) {
                 /** @var SimplexmlElement $format */
                 $numberSystem  = (string)$format['numberSystem'];
-                $patternResult = $format->xpath('currencyFormatLength/currencyFormat[@type="standard"]/pattern');
+                $patternResult = $format->xpath(
+                    'currencyFormatLength[not(@*)]/currencyFormat[@type="standard"]/pattern'
+                );
                 if (isset($patternResult[0])) {
                     $localeData->currencyPatterns[$numberSystem] = (string)$patternResult[0];
                 }

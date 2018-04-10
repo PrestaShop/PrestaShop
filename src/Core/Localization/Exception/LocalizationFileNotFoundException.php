@@ -24,40 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Localization\Currency;
+namespace PrestaShop\PrestaShop\Core\Localization\Exception;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency;
-
-/**
- * Currency repository interface
- *
- * Describes the behavior of Currency Repository classes
- */
-interface RepositoryInterface
+class LocalizationFileNotFoundException extends LocalizationException
 {
-    /**
-     * Get a Currency instance by ISO code.
-     *
-     * @param string $currencyCode
-     *  Wanted currency's ISO code
-     *  Must be an alphabetic ISO 4217 currency code
-     *
-     * @param string $localeCode
-     *  Currency data will be translated in this language
-     *
-     * @return Currency
-     *  The wanted Currency instance
-     */
-    public function getCurrency($currencyCode, $localeCode);
 
-    /**
-     * Get all the available currencies (installed + active)
-     *
-     * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyCollection
-     *  The available currencies
-     */
-    public function getAvailableCurrencies($localeCode);
 }

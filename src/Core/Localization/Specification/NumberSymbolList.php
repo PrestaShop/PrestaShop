@@ -322,67 +322,69 @@ class NumberSymbolList
         if (!isset($this->decimal)
             || !is_string($this->decimal)
         ) {
-            throw new LocalizationException('Invalid decimal');
+            throw new LocalizationException('Invalid decimal : ' . var_export($this->decimal, true));
         }
 
         if (!isset($this->group)
             || !is_string($this->group)
         ) {
-            throw new LocalizationException('Invalid group');
+            throw new LocalizationException('Invalid group : ' . var_export($this->group, true));
         }
 
         if (!isset($this->list)
             || !is_string($this->list)
         ) {
-            throw new LocalizationException('Invalid list');
+            throw new LocalizationException('Invalid symbols list : ' . var_export($this->list, true));
         }
 
         if (!isset($this->percentSign)
             || !is_string($this->percentSign)
         ) {
-            throw new LocalizationException('Invalid percentSign');
+            throw new LocalizationException('Invalid percentSign : ' . var_export($this->percentSign, true));
         }
 
         if (!isset($this->minusSign)
             || !is_string($this->minusSign)
         ) {
-            throw new LocalizationException('Invalid minusSign');
+            throw new LocalizationException('Invalid minusSign : ' . var_export($this->minusSign, true));
         }
 
         if (!isset($this->plusSign)
             || !is_string($this->plusSign)
         ) {
-            throw new LocalizationException('Invalid plusSign');
+            throw new LocalizationException('Invalid plusSign : ' . var_export($this->plusSign, true));
         }
 
         if (!isset($this->exponential)
             || !is_string($this->exponential)
         ) {
-            throw new LocalizationException('Invalid exponential');
+            throw new LocalizationException('Invalid exponential : ' . var_export($this->exponential, true));
         }
 
         if (!isset($this->superscriptingExponent)
             || !is_string($this->superscriptingExponent)
         ) {
-            throw new LocalizationException('Invalid superscriptingExponent');
+            throw new LocalizationException(
+                'Invalid superscriptingExponent : ' . var_export($this->superscriptingExponent, true)
+            );
         }
 
         if (!isset($this->perMille)
             || !is_string($this->perMille)
         ) {
-            throw new LocalizationException('Invalid perMille');
+            throw new LocalizationException('Invalid perMille : ' . var_export($this->perMille, true));
         }
 
         if (!isset($this->infinity)
             || !is_string($this->infinity)
         ) {
-            throw new LocalizationException('Invalid infinity');
+            throw new LocalizationException('Invalid infinity : ' . var_export($this->infinity, true));
         }
 
         if (!isset($this->nan)
             || !is_string($this->nan)
         ) {
-            throw new LocalizationException('Invalid nan');
+            throw new LocalizationException('Invalid nan : ' . var_export($this->nan, true));
         }
     }
 }

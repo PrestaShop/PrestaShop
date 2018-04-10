@@ -77,41 +77,50 @@ class Factory
     /**
      * Build a Price specification from a CLDR Locale object and a Currency object
      *
+     * @param string $localeCode
+     *  The concerned locale
+     *
      * @param CldrLocale $cldrLocale
      *  This CldrLocale object is a low level data object extracted from CLDR data source
+     *  It contains data about the concerned locale.
      *
      * @param Currency $currency
      *  This Currency object brings missing specification to format a number as a price
      *
-     * @param string $localeCode
-     *  Some price specs need to be localized (e.g.: currency symbol)
-     *  Combination of ISO 639-1 (2-letters language code) and ISO 3166-2 (2-letters region code)
-     *  eg: fr-FR, en-US
+     * @param bool $numberGroupingUsed
+     *  Should we group digits when formatting prices ?
      *
-     * @param $maxFractionDigits
-     * @param $numberGroupingUsed
      * @param $currencyDisplayType
+     *  Type of display for currency symbol (symbol or ISO code)
+     *
+     * @param null|int $maxFractionDigits
+     *  The decimal precision of the price
      *
      * @return PriceSpecification
      *
      * @throws LocalizationException
      */
     public function buildPriceSpecification(
+        $localeCode,
         CldrLocale $cldrLocale,
         Currency $currency,
-        $localeCode,
-        $maxFractionDigits,
         $numberGroupingUsed,
-        $currencyDisplayType
+        $currencyDisplayType,
+        $maxFractionDigits = null
     ) {
         $currencyPattern = $cldrLocale->getCurrencyPattern();
         $numbersSymbols  = $cldrLocale->getAllNumberSymbols();
+
+        $precision = $maxFractionDigits;
+        if (null === $precision) {
+            $precision = (int)$currency->getDecimalPrecision();
+        }
 
         return new PriceSpecification(
             $this->getPositivePattern($currencyPattern),
             $this->getNegativePattern($currencyPattern),
             $this->computeNumberSymbolLists($numbersSymbols),
-            $maxFractionDigits,
+            $precision,
             $this->getMinFractionDigits($currencyPattern),
             $numberGroupingUsed,
             $this->getPrimaryGroupSize($currencyPattern),

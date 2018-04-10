@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 2007-2018 PrestaShop
  *
@@ -26,38 +27,57 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
-use PrestaShop\PrestaShop\Core\Localization\Currency;
-
 /**
- * Currency repository interface
- *
- * Describes the behavior of Currency Repository classes
+ * Value-object representing an identifier for a currency, "translated" in a given locale (language + region)
  */
-interface RepositoryInterface
+class LocalizedCurrencyId
 {
     /**
-     * Get a Currency instance by ISO code.
+     * ISO 4217 code of the currency
      *
-     * @param string $currencyCode
-     *  Wanted currency's ISO code
-     *  Must be an alphabetic ISO 4217 currency code
-     *
-     * @param string $localeCode
-     *  Currency data will be translated in this language
-     *
-     * @return Currency
-     *  The wanted Currency instance
+     * @var string
      */
-    public function getCurrency($currencyCode, $localeCode);
+    private $currencyCode;
 
     /**
-     * Get all the available currencies (installed + active)
+     * CurrencyData's data is translated in this locale.
+     * IETF tag (e.g.: fr-FR, en-US...)
      *
-     * @param string $localeCode
-     *  IETF tag. Data will be translated in this language
-     *
-     * @return CurrencyCollection
-     *  The available currencies
+     * @var string
      */
-    public function getAvailableCurrencies($localeCode);
+    private $localeCode;
+
+    /**
+     * @param string $currencyCode
+     *   ISO 4217 currency code
+     *
+     * @param $localeCode
+     *  IETF tag (e.g.: fr-FR, en-US...)
+     */
+    public function __construct($currencyCode, $localeCode)
+    {
+        $this->currencyCode = $currencyCode;
+        $this->localeCode   = $localeCode;
+    }
+
+    public function __toString()
+    {
+        return $this->currencyCode . '-' . $this->localeCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+        return $this->currencyCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocaleCode()
+    {
+        return $this->localeCode;
+    }
 }

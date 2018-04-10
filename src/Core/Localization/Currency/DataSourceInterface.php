@@ -34,12 +34,35 @@ namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 interface DataSourceInterface
 {
     /**
-     * Get complete currency data by currency code
+     * Get complete currency data by currency code, in a given language
      *
-     * @param string $currencyCode
+     * @param LocalizedCurrencyId $localizedCurrencyId
+     *  The currency data identifier (currency code + locale code)
      *
      * @return CurrencyData
      *  The currency data
      */
-    public function getDataByCurrencyCode($currencyCode);
+    public function getLocalizedCurrencyData(LocalizedCurrencyId $localizedCurrencyId);
+
+    /**
+     * Is this currency available ?
+     * (an available currency is not deleted AND is active)
+     *
+     * @param $currencyCode
+     *
+     * @return bool
+     *  True if currency is available
+     */
+    public function isCurrencyAvailable($currencyCode);
+
+    /**
+     * Get all the available (installed + active) currencies' data
+     *
+     * @param string $localeCode
+     *  Data will be translated in this language
+     *
+     * @return CurrencyData[]
+     *  The available currencies' data
+     */
+    public function getAvailableCurrenciesData($localeCode);
 }
