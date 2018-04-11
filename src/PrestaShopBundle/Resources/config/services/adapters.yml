@@ -205,3 +205,8 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Product\StockConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.request_sql_settings.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
