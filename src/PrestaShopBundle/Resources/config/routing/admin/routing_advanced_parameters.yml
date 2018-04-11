@@ -111,3 +111,11 @@ admin_administration_save:
     defaults:
         _controller: 'PrestaShopBundle:Admin\AdvancedParameters\Administration:processForm'
         _legacy_controller: AdminAdminPreferences
+
+# SQL manager
+admin_sql_manager:
+    path: sql_manager
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:list'
+        _legacy_controller: AdminRequestSql

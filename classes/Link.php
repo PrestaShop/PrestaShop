@@ -742,6 +742,7 @@ class LinkCore
                     'AdminAdminPreferences' => 'admin_administration',
                     'AdminMaintenance' => 'admin_maintenance',
                     'AdminPPreferences' => 'admin_product_preferences',
+                    'AdminRequestSql' => 'admin_sql_manager',
                 );
 
                 if (isset($routes[$controller])) {
