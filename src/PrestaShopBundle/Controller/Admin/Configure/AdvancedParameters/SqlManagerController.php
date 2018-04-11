@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\RequestSql\FilterRequestSqlType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -48,12 +49,15 @@ class SqlManagerController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
+        $searchForm = $this->createForm(FilterRequestSqlType::class, []);
+        $searchForm->handleRequest($request);
+
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, [
             'limit' => 10,
             'offset' => 0,
             'orderBy' => 'id_request_sql',
             'sortOrder' => 'desc',
-            'filters' => [],
+            'filters' => $searchForm->getData(),
         ]);
 
         $repository = $this->getRepository();
@@ -67,6 +71,9 @@ class SqlManagerController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($legacyController),
             'request_sqls' => $requestSqls,
             'request_sqls_count' => $requestSqlsCount,
+            'order_by' => $filters['orderBy'],
+            'order_way' => $filters['sortOrder'],
+            'search_form' => $searchForm->createView(),
         ];
     }
 
