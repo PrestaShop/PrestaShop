@@ -113,14 +113,22 @@ module.exports = {
     combination_attribute_quantity: '//*[@id="attribute_%NUMBER"]/td[6]/div/input',
     combination_image: '//*[@id="combination_%NUMBER_id_image_attr"]/div[2]/img',
     combination_edit: '//*[@id="attribute_%NUMBER"]/td[7]/div[1]/a',
+    combination_default_button: '//input[@class="attribute-default" and @data-id="%NUMBER"]',
+    default_combination: '//*[@id="combination_%NUMBER_attribute_default"]',
     back_to_product: '//*[@id="combination_form_%NUMBER"]/div[2]/div[1]/button',
     product_pricing_tab: '//*[@id="tab_step2"]/a',
     unit_price: '#form_step2_unit_price',
     unity: '#form_step2_unity',
     pricing_tax_rule_select: '//*[@id="step2"]/div/div/div/div/div[3]/div/div[1]/span',
+    pricing_tax_rule_input: '//span[contains(@class, "select2-search")]/input[@type="search"]',
+    pricing_tax_rule_option: '//*[@id="select2-form_step2_id_tax_rules_group-results"]',
     pricing_wholesale: '//*[@id="form_step2_wholesale_price"]',
     pricing_add_specific_price_button: '//*[@id="specific-price"]/a',
+    specific_price_starting_at_input: '//*[@id="form_step2_specific_price_sp_from_quantity"]',
+    leave_initial_price_checkbox: '//*[@id="form_step2_specific_price_leave_bprice"]',
+    specific_product_price_input: '//*[@id="form_step2_specific_price_sp_price"]',
     specific_price_reduction_type_select: '//*[@id="form_step2_specific_price_sp_reduction_type"]',
+    specific_price_reduction_tax_select: '//*[@id="form_step2_specific_price_sp_reduction_tax"]',
     specific_price_discount_input: '//*[@id="form_step2_specific_price_sp_reduction"]',
     specific_price_save_button: '//*[@id="form_step2_specific_price_save"]',
     pricing_first_priorities_select: '//*[@id="form_step2_specificPricePriority_0"]',
@@ -162,12 +170,19 @@ module.exports = {
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
     category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
+<<<<<<< HEAD
     preview_buttons: '//*[@id="product_form_preview_btn"]',
     dropdown_button: '//*[@id="dropdownMenu"]',
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',
     success_panel: '//div[contains(@class, "alert-success")]//p',
     delete_button: '//*[@id="product_form_delete_btn"]',
     delete_confirmation_button: '//*[@id="confirmation_modal"]//button[contains(text(), "Yes")]'
+=======
+    symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
+    summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
+    combination_first_table: '//*[@id="accordion_combinations"]',
+    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]'
+>>>>>>> upstream/1.7.3.x
   },
 
   ProductList: {

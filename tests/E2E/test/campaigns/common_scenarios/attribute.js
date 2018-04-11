@@ -4,6 +4,7 @@ const {Menu} = require('../../selectors/BO/menu.js');
 const {SearchProductPage} = require('../../selectors/FO/search_product_page');
 let promise = Promise.resolve();
 
+<<<<<<< HEAD
 /**** Example of attribute data (all these properties are required) ****
  * let data = {
  *  name: 'attribute name',
@@ -17,6 +18,8 @@ let promise = Promise.resolve();
  * };
  */
 
+=======
+>>>>>>> upstream/1.7.3.x
 module.exports = {
   createAttribute(data) {
     scenario('Create a new "Attribute"', client => {
@@ -58,7 +61,11 @@ module.exports = {
       test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
       test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.selected_attribute));
       Object.keys(data.values).forEach(function (key) {
+<<<<<<< HEAD
         test('should click on "Edit" action', () => client.waitForExistAndClick(AttributeSubMenu.update_value_button.replace('%POS', key)));
+=======
+        test('should click on "Edit" action for the the first value', () => client.waitForExistAndClick(AttributeSubMenu.update_value_button.replace('%POS', key)));
+>>>>>>> upstream/1.7.3.x
         test('should set the "Value" input', () => client.waitAndSetValue(AttributeSubMenu.value_input, data.values[key]));
         test('should click on "Save" button', () => client.waitForExistAndClick(AttributeSubMenu.save_value_button));
       });
@@ -67,10 +74,17 @@ module.exports = {
   },
   deleteAttributeValue(data) {
     scenario('Delete the created "Attribute value"', client => {
+<<<<<<< HEAD
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
       test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
       test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.selected_attribute));
       test('should delete the value of the created attribute', () => {
+=======
+      test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+      test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
+      test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.selected_attribute));
+      test('should delete the value of created attribute', () => {
+>>>>>>> upstream/1.7.3.x
         return promise
           .then(() => client.clickOnAction(AttributeSubMenu.value_action_group_button, AttributeSubMenu.delete_value_button, 'delete'))
           .then(() => client.deleteObjectElement(data.values, 1));
@@ -80,7 +94,11 @@ module.exports = {
   },
   deleteAttribute(data) {
     scenario('Delete the created "Attribute"', client => {
+<<<<<<< HEAD
       test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+=======
+      test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+>>>>>>> upstream/1.7.3.x
       test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
       test('should delete the created attribute', () => client.clickOnAction(AttributeSubMenu.group_action_button, AttributeSubMenu.delete_attribute_button, 'delete'));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nSuccessful deletion.'));
@@ -91,6 +109,7 @@ module.exports = {
       test('should set the shop language to "English"', () => client.changeLanguage('english'));
       test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productName + date_time));
       test('should go to the product page', () => client.waitForExistAndClick(SearchProductPage.product_result_name));
+<<<<<<< HEAD
       test('should check that the attribute has been deleted in the Front Office', () => client.checkDeleted(SearchProductPage.attribute_name));
     }, 'attribute_and_feature');
   },
@@ -101,6 +120,9 @@ module.exports = {
       test('should select the created attribute', () => client.waitForExistAndClick(AttributeSubMenu.attribute_checkbox));
       test('should ' + action + ' the created attribute', () => client.clickOnAction(AttributeSubMenu.bulk_actions, AttributeSubMenu.delete_bulk_action, action));
       test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.success_panel, '×\nThe selection has been successfully', 'contain'));
+=======
+      test('should Check that the attribute has been deleted in the Front Office', () => client.checkDeleted(SearchProductPage.attribute_name));
+>>>>>>> upstream/1.7.3.x
     }, 'attribute_and_feature');
   }
 };

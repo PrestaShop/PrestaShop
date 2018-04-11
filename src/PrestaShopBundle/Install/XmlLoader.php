@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Install;
 
+use PrestaShop\PrestaShop\Adapter\Entity\Pack;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestashopInstallerException;
+use PrestaShopDatabaseException;
 use PrestaShop\PrestaShop\Adapter\Entity\Tag;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\Entity\Db;
@@ -261,7 +263,8 @@ class XmlLoader
             throw new PrestashopInstallerException('List of fields not found for entity '.$entity);
         }
 
-        if ($this->isMultilang($entity)) {
+        $is_multi_lang_entity = $this->isMultilang($entity);
+        if ($is_multi_lang_entity) {
             $multilang_columns = $this->getColumns($entity, true);
             $xml_langs = array();
             $default_lang = null;
@@ -277,7 +280,6 @@ class XmlLoader
                 }
             }
         }
-
 
         // Load all row for current entity and prepare data to be populated
         foreach ($xml->entities->$entity as $node) {
@@ -298,7 +300,7 @@ class XmlLoader
 
             // Load multilang data
             $data_lang = array();
-            if ($this->isMultilang($entity)) {
+            if ($is_multi_lang_entity) {
                 $xpath_query = $entity.'[@id="'.$identifier.'"]';
                 foreach ($xml_langs as $id_lang => $xml_lang) {
                     if (!$xml_lang) {
@@ -557,6 +559,20 @@ class XmlLoader
         }
 
         $this->storeId($entity, $identifier, $entity_id);
+    }
+
+    /**
+     * @param string $identifier
+     * @param array $data
+     * @param array $data_lang
+     * @return $this
+     * @throws PrestaShopDatabaseException
+     */
+    public function createEntityPack($identifier, array $data, array $data_lang)
+    {
+        Pack::addItem($data['id_product_pack'], $data['id_product_item'], $data['quantity']);
+
+        return $this;
     }
 
     public function createEntityStockAvailable($identifier, array $data, array $data_lang)

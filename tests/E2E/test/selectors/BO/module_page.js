@@ -12,12 +12,12 @@ module.exports = {
     modules_search_input: '.pstaggerAddTagInput',
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
-    action_module_built_button: '//*[@id="modules-list-container-native"]//button[contains(@class,"module_action_menu_configure")]',
+    configure_module_button: '//form[contains(@action, "action/configure/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-configure"]',
     success_install_message: '//*[@id="importDropzone"]/div[3]/i',
-    option_button: '//*[@id="modules-list-container-native"]//button[contains(@class,"dropdown-toggle")]',
-    uninstall_button: '//*[@id="modules-list-container-native"]//button[contains(@class,"module_action_menu_uninstall")]',
+    action_dropdown: '//div[@data-tech-name="%moduleTechName"]//button[contains(@class,"dropdown-toggle")]',
+    uninstall_button: '//form[contains(@action, "action/uninstall/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-uninstall"]',
     uninstall_confirmation: '//*[@id="module-modal-confirm-prestafraud-uninstall"]//a[contains(@class,"module_action_modal_uninstall")]',
-    built_in_module: '(//*[@id="main-div"]//div[contains(@class,"module-short-list")])[2]/span[1]',
+    built_in_module_span: '//*[@id="built-in_modules"]',
     selection_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
     install_button: '//*[@id="modules-list-container-all"]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-install"]',
     config_legend_adwords: '//*[@id="content"]//h4[contains(@class,"page-subtitle")]',
@@ -34,8 +34,8 @@ module.exports = {
     refresh_button: '//*[@id="upgradeButtonBlock"]/div/p[2]/a',
     module_import_success: '//*[@id="importDropzone"]/div[3]/p[1]',
     config_legend: '//*[@id="content"]//ul[contains(@class, "breadcrumb")]/li[text()="%moduleTechName"]',
-    uninstall_module: '//a[contains(@class,"module_action_modal_uninstall")]',
-    disable_module: '//button[contains(@class,"module_action_menu_disable")]',
+    uninstall_module_modal: '//a[contains(@class,"module_action_modal_uninstall")]',
+    disable_module: '//form[contains(@action, "action/disable/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-disable"]',
     confirmation_disable_module: '(//a[contains(@class,"module_action_modal_disable")])[1]',
     module_autoUpgrade_menu: '//*[@id="subtab-AdminSelfUpgrade"]/a',
     rollback_selection: '//*[@id="restoreBackupContainer"]//select',
@@ -46,12 +46,20 @@ module.exports = {
     sort_select: '//select[contains(@class,"sort-component")]',
     maintenance_shop: '//*[@id="currentConfiguration"]//input[contains(@name,"putUnderMaintenance")]',
     confirm_maintenance_shop_icon: '(//*[@id="currentConfiguration"]//img)[5]',
+<<<<<<< HEAD
     enable_module: '(//button[contains(@class,"module_action_menu_enable")])[1]',
     reset_module: '//*[@id="modules-list-container-native"]//button[contains(@class, "module_action_menu_reset")]',
     reset_button: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
+=======
+    enable_module: '//form[contains(@action, "action/enable/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-enable"]',
+    reset_module: '//form[contains(@action, "action/reset/%moduleTechName")]//button[@data-confirm_modal="module-modal-confirm-%moduleTechName-reset"]',
+    reset_button_modal: '//*[@id="module-modal-confirm-%moduleTechName-reset"]//a[contains(@class, "module_action_modal_reset")]',
+>>>>>>> upstream/1.7.3.x
     backdrop_modale:'//div[contains(@class, "fade show")]',
+    installed_module_div: '//div[@data-tech-name="%moduleTechName"]',
     //List of modules after search
     list_module: '//*[@id="modules-list-container-all"]/div[%I]',
+<<<<<<< HEAD
     modules_number: '[class="module-sorting-search-wording"]',
     discover_button: '//*[@id="modules-list-container-all"]/div[@data-tech-name="pm_advancedtopmenu"]//a[contains(text(),"Discover")]',
     //List of modules in notifications tab
@@ -68,5 +76,7 @@ module.exports = {
 
     //Module name in "addons.prestashop.com" after clicking on "Dicover" button
     module_name: '//*[@id="product_content"]/div[@class="product_head"]//h1'
+=======
+>>>>>>> upstream/1.7.3.x
   }
 };

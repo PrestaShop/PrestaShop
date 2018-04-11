@@ -60,13 +60,15 @@ class SearchControllerCore extends ProductListingFrontController
         );
     }
 
+    /**
+     * Performs the search
+     */
     public function initContent()
     {
         parent::initContent();
 
         $this->doProductSearch('catalog/listing/search', array('entity' => 'search'));
     }
-
 
     protected function getProductSearchQuery()
     {

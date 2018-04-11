@@ -507,8 +507,8 @@ abstract class PaymentModuleCore extends Module
                         );
 
                         if (isset($product['price']) && $product['price']) {
-                            $product_var_tpl['unit_price'] = Tools::displayPrice($product['price'], $this->context->currency, false);
-                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product['price'], $this->context->currency, false)
+                            $product_var_tpl['unit_price'] = Tools::displayPrice($product_price, $this->context->currency, false);
+                            $product_var_tpl['unit_price_full'] = Tools::displayPrice($product_price, $this->context->currency, false)
                                 .' '.$product['unity'];
                         } else {
                             $product_var_tpl['unit_price'] = $product_var_tpl['unit_price_full'] = '';

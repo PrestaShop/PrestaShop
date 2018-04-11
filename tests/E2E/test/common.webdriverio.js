@@ -1,10 +1,10 @@
 'use strict';
 
-var client;
-var webdriverio = require('webdriverio');
-var globals = require('./globals.webdriverio.js');
+let client;
+let webdriverio = require('webdriverio');
+let globals = require('./globals.webdriverio.js');
 
-var options = {
+let options = {
   logLevel: 'silent',
   waitForTimeout: 30000,
   desiredCapabilities: {
@@ -17,7 +17,7 @@ if (typeof global.selenium_url !== 'undefined') {
   options.host = global.selenium_url;
 }
 
-var options2 = {
+let options2 = {
   logLevel: 'silent',
   waitForTimeout: 30000,
   desiredCapabilities: {
@@ -36,24 +36,24 @@ function initCommands(client) {
 
   client.addCommand('linkAccess', function (link) {
     return client
-      .url('http://' + link)
+      .url('http://' + link);
   });
 
   client.addCommand('localhost', function (link) {
     return client
-      .url('http://' + link + '/install-dev')
+      .url('http://' + link + '/install-dev');
   });
 
   client.addCommand('waitForExistAndClick', function (selector, timeout = 90000) {
     return client
       .waitForExist(selector, timeout)
-      .click(selector)
+      .click(selector);
   });
 
   client.addCommand('waitAndSetValue', function (selector, value, timeout = 90000) {
     return client
       .waitForExist(selector, timeout)
-      .setValue(selector, value)
+      .setValue(selector, value);
   });
 
   client.addCommand('scrollTo', function (selector, margin = 150) {
@@ -65,30 +65,30 @@ function initCommands(client) {
   client.addCommand('scrollWaitForExistAndClick', function (selector, margin = 150, timeout = 90000) {
     return client
       .scrollTo(selector, margin)
-      .waitForExistAndClick(selector, timeout)
+      .waitForExistAndClick(selector, timeout);
   });
 
   client.addCommand('waitForVisibleAndClick', function (selector, timeout = 90000) {
     return client
       .waitForVisible(selector, timeout)
-      .click(selector)
+      .click(selector);
   });
 
   client.addCommand('waitForVisibleElement', function (selector, timeout = 90000) {
     return client
-      .waitForVisible(selector, timeout)
+      .waitForVisible(selector, timeout);
   });
 
   client.addCommand('waitAndSelectByValue', function (selector, value, timeout = 60000) {
     return client
       .waitForExist(selector, timeout)
-      .selectByValue(selector, value)
+      .selectByValue(selector, value);
   });
 
   client.addCommand('waitAndSelectByVisibleText', function (selector, value, timeout = 60000) {
     return client
       .waitForExist(selector, timeout)
-      .selectByVisibleText(selector, value)
+      .selectByVisibleText(selector, value);
   });
 
   client.addCommand('signInBO', function (selector, link = URL, login = 'demo@prestashop.com', password='prestashop_demo') {
@@ -98,7 +98,14 @@ function initCommands(client) {
       .waitAndSetValue(selector.login_input, login)
       .waitAndSetValue(selector.password_inputBO, password)
       .waitForExistAndClick(selector.login_buttonBO)
-      .waitForExist(selector.menuBO, 120000)
+      .waitForExist(selector.menuBO, 120000);
+  });
+
+  client.addCommand('accessToBO', function (selector, link = URL) {
+    this.selector = globals.selector;
+    return client
+      .url('http://' + link + '/admin-dev')
+      .waitForExist(selector.menuBO, 120000);
   });
 
   client.addCommand('accessToBO', function (selector, link = URL) {
@@ -112,7 +119,7 @@ function initCommands(client) {
     return client
       .waitForExist(selector, timeout)
       .selectByAttribute(selector, attribute, value)
-      .pause(pause)
+      .pause(pause);
   });
 
   client.addCommand('signInFO', function (selector, link = URL) {
@@ -122,7 +129,7 @@ function initCommands(client) {
       .waitAndSetValue(selector.login_input, 'pub@prestashop.com')
       .waitAndSetValue(selector.password_inputFO, '123456789')
       .waitForExistAndClick(selector.login_button)
-      .waitForExistAndClick(selector.logo_home_page)
+      .waitForExistAndClick(selector.logo_home_page);
   });
 
   client.addCommand('signOutBO', function () {
@@ -140,14 +147,14 @@ function initCommands(client) {
   client.addCommand('accessToFO', function (selector) {
     return client
       .url('http://' + URL)
-      .waitForExistAndClick(selector.logo_home_page)
+      .waitForExistAndClick(selector.logo_home_page);
   });
 
   client.addCommand('switchWindow', function (id) {
     return client
       .getTabIds()
       .then(ids => client.switchTab(ids[id]))
-      .refresh()
+      .refresh();
   });
 }
 
@@ -162,7 +169,7 @@ module.exports = {
           chromeOptions: {
             args: ['--headless', '--disable-gpu', '--window-size=1270,899']
           }
-        }
+        };
       }
       client = webdriverio.remote(options);
       initCommands(client);
@@ -170,11 +177,11 @@ module.exports = {
     }
   },
   getCustomDate: function (numberOfDay) {
-    var today = new Date();
+    let today = new Date();
     today.setDate(today.getDate() + numberOfDay);
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
+    let dd = today.getDate();
+    let mm = today.getMonth() + 1; //January is 0!
+    let yyyy = today.getFullYear();
 
     if (dd < 10) {
       dd = '0' + dd;
@@ -188,6 +195,6 @@ module.exports = {
     return today;
   },
   browser: function () {
-    return options.desiredCapabilities.browserName
+    return options.desiredCapabilities.browserName;
   }
 };

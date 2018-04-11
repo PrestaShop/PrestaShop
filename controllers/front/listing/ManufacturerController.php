@@ -72,6 +72,8 @@ class ManufacturerControllerCore extends ProductListingFrontController
     public function initContent()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            parent::initContent();
+
             if (Validate::isLoadedObject($this->manufacturer) && $this->manufacturer->active && $this->manufacturer->isAssociatedToShop()) {
                 $this->assignManufacturer();
                 $this->label = $this->trans(
@@ -91,7 +93,6 @@ class ManufacturerControllerCore extends ProductListingFrontController
                 );
                 $this->setTemplate('catalog/manufacturers', array('entity' => 'manufacturers'));
             }
-            parent::initContent();
         } else {
             $this->redirect_after = '404';
             $this->redirect();

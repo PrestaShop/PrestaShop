@@ -32,20 +32,4 @@ class QuickAccessLangCore extends DataLangCore
     protected $keys = array('id_quick_access');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Home') => $this->translator->trans('Home', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('My Shop') => $this->translator->trans('My Shop', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('New category') => $this->translator->trans('New category', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('New product') => $this->translator->trans('New product', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('New voucher') => $this->translator->trans('New voucher', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('Orders') => $this->translator->trans('Orders', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('Installed modules') => $this->translator->trans('Installed modules', array(), 'Admin.Navigation.Header', $this->locale),
-                md5('Catalog evaluation') => $this->translator->trans('Catalog evaluation', array(), 'Admin.Navigation.Header', $this->locale),
-            ),
-        );
-    }
 }

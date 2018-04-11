@@ -13,6 +13,7 @@ module.exports = {
     save_and_add: '//*[@id="fieldset_0"]/div[3]/button[2]',
     save_value_button: '//*[@id="attribute_form_submit_btn"]',
     value_input: '//*[@id="name_1"]',
+<<<<<<< HEAD
     value_action_group_button: '(//*[@id="table-attribute"]//div[contains(@class, "btn-group")]/button)[1]',
     delete_value_button: '(//*[@id="table-attribute"]//a[@class="delete"])[1]',
     group_action_button: '//*[@id="table-attribute_group"]//button[@data-toggle="dropdown"]',
@@ -23,6 +24,15 @@ module.exports = {
     attribute_checkbox: '//*[@id="table-attribute_group"]//input[@type="checkbox"]',
     bulk_actions: '//*[@id="bulk_action_menu_attribute_group"]',
     delete_bulk_action: '//*[@id="form-attribute_group"]//div[contains(@class,"bulk-actions")]//li[4]/a'
+=======
+    value_action_group_button: '//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/button',
+    delete_value_button: '//*[@id="table-attribute"]/tbody/tr[1]/td[5]/div/div/ul/li/a',
+    group_action_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/button',
+    delete_attribute_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[3]/a',
+    update_button: '//*[@id="table-attribute_group"]/tbody/tr/td[6]/div/div/ul/li[1]/a',
+    update_value_button: '(//*[@id="table-attribute"]//a[@title="Edit"])[%POS]',
+    reset_button: '//*[@id="table-attribute_group"]//button[@name="submitResetattribute_group"]'
+>>>>>>> upstream/1.7.3.x
   }
 
 };

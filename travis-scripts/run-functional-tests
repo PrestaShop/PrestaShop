@@ -4,16 +4,12 @@ if [[ $EXTRA_TESTS != *"functional"* ]]; then
   exit 0
 fi
 
-mysql -u root -e "DROP DATABASE IF EXISTS \`prestashop\`;"
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS \`prestashop\`;"
+bash $TRAVIS_BUILD_DIR/travis-scripts/install-prestashop
 
 echo "* Installing functional tests ...";
 
-git clone https://github.com/PrestaShop/PSFunctionalTests.git
-cd $TRAVIS_BUILD_DIR/PSFunctionalTests && npm install && cd test/itg/1.7
+cd $TRAVIS_BUILD_DIR/tests/E2E && npm install
 
 echo "* Running functional tests ...";
-$TRAVIS_BUILD_DIR/PSFunctionalTests/node_modules/mocha/bin/mocha index.webdriverio.js \
-        -c --URL=localhost  --INSTALL=true --DB_SERVER=localhost --DB_EMPTY_PASSWD -t 200000
-
+npm test -- --MODULE=ps_legalcompliance
 exit $?

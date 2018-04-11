@@ -1840,7 +1840,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         }
 
         foreach ($data as $key => $value) {
-            if (array_key_exists($key, $this)) {
+            if (property_exists($this, $key)) {
                 $this->$key = $value;
             }
         }

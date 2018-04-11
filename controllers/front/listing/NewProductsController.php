@@ -32,15 +32,11 @@ class NewProductsControllerCore extends ProductListingFrontController
     public $php_self = 'new-products';
 
     /**
-     * Initializes controller.
-     *
-     * @see FrontController::init()
-     *
-     * @throws PrestaShopException
+     * @inheritdoc
      */
-    public function init()
+    public function initContent()
     {
-        parent::init();
+        parent::initContent();
 
         $this->doProductSearch('catalog/listing/new-products');
     }

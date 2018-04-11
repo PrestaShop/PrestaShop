@@ -40,7 +40,7 @@ export default class TopMenu extends DropDown {
         elmId = $(e.currentTarget).attr('id');
       }
       if (elmId && $(e.target).data('depth') === 0) {
-        $(`#${elmId} .js-sub-menu`).show().css({
+        $(`#${elmId} .js-sub-menu`).css({
           top: $(`#${elmId}`).height() + $(`#${elmId}`).position().top
         });
       }
@@ -49,11 +49,10 @@ export default class TopMenu extends DropDown {
       $('#mobile_top_menu_wrapper').toggle();
       self.toggleMobileMenu();
     });
-    $('.js-top-menu').mouseleave(() => {
+    $('.js-top-menu .category').mouseleave(() => {
       if (this.el.parent().hasClass('mobile')) {
         return;
       }
-      $(`#${elmId} .js-sub-menu`).hide();
     });
     this.el.on('click', (e) => {
       if (this.el.parent().hasClass('mobile')) {

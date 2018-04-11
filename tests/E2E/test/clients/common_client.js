@@ -1,8 +1,8 @@
 const {getClient} = require('../common.webdriverio.js');
 const {selector} = require('../globals.webdriverio.js');
-var path = require('path');
-var fs = require('fs');
-var pdfUtil = require('pdf-to-text');
+let path = require('path');
+let fs = require('fs');
+let pdfUtil = require('pdf-to-text');
 
 global.tab = [];
 
@@ -41,23 +41,23 @@ class CommonClient {
 
   waitForExist(selector, timeout = 90000) {
     return this.client
-      .waitForExist(selector, timeout)
+      .waitForExist(selector, timeout);
   }
 
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
       .waitForExist(menuSelector, 90000)
       .moveToObject(menuSelector)
-      .waitForVisibleAndClick(selector)
+      .waitForVisibleAndClick(selector);
   }
 
   closeBoarding(selector) {
     if (global.isVisible) {
       return this.client
         .click(selector)
-        .pause(2000)
+        .pause(2000);
     } else {
-      return this.client.pause(1000)
+      return this.client.pause(1000);
     }
   }
 
@@ -109,8 +109,10 @@ class CommonClient {
       .waitForExistAndClick(selector, timeout);
   }
 
-  waitAndSetValue(selector, value, timeout = 90000) {
-    return this.client.waitAndSetValue(selector, value, timeout);
+  waitAndSetValue(selector, value, pause = 0, timeout = 90000) {
+    return this.client
+      .pause(pause)
+      .waitAndSetValue(selector, value, timeout);
   }
 
   scrollTo(selector, margin) {
@@ -118,7 +120,7 @@ class CommonClient {
   }
 
   scrollWaitForExistAndClick(selector, margin, timeout = 90000) {
-    return this.client.scrollWaitForExistAndClick(selector, margin, timeout)
+    return this.client.scrollWaitForExistAndClick(selector, margin, timeout);
   }
 
   waitForVisibleAndClick(selector, timeout = 90000) {
@@ -143,21 +145,28 @@ class CommonClient {
     return this.client
       .scrollTo(selector, value)
       .waitForExist(selector, 90000)
-      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture));
   }
 
-  getTextInVar(selector, globalVar, split = false) {
+  getTextInVar(selector, globalVar, split = false, timeout = 90000) {
     if (split) {
       return this.client
-        .waitForExist(selector, 9000)
+        .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable.split(': ')[1])
+        .then((variable) => global.tab[globalVar] = variable.split(': ')[1]);
     } else {
       return this.client
-        .waitForExist(selector, 9000)
+        .waitForExist(selector, timeout)
         .then(() => this.client.getText(selector))
-        .then((variable) => global.tab[globalVar] = variable)
+        .then((variable) => global.tab[globalVar] = variable);
     }
+  }
+
+  getAttributeInVar(selector, attribute, globalVar, timeout = 90000) {
+    return this.client
+      .waitForExist(selector, timeout)
+      .then(() => this.client.getAttribute(selector, attribute))
+      .then((variable) => global.tab[globalVar] = variable);
   }
 
   checkTextValue(selector, textToCheckWith, parameter = 'equal', pause = 0) {
@@ -215,7 +224,7 @@ class CommonClient {
       .execute(function (className) {
         document.getElementsByClassName(className).style = '';
       })
-      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
+      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture));
   }
 
   /**
@@ -228,7 +237,7 @@ class CommonClient {
   searchByValue(search_input, search_button, value) {
     return this.client
       .waitAndSetValue(search_input, value)
-      .waitForExistAndClick(search_button)
+      .waitForExistAndClick(search_button);
   }
 
   /**
@@ -245,12 +254,12 @@ class CommonClient {
 
     return this.client
       .pause(2000)
-      .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1))
+      .then(() => expect(global.indexText, text + "does not exist in the PDF document").to.not.equal(-1));
   }
 
   waitForVisible(selector, timeout = 90000) {
     return this.client
-      .waitForVisible(selector, timeout)
+      .waitForVisible(selector, timeout);
   }
 
   accessToBO(selector) {
@@ -277,9 +286,23 @@ class CommonClient {
   isExisting(selector, pause = 0) {
     return this.client
       .pause(pause)
-      .scrollTo(selector)
       .isExisting(selector)
-      .then((isExisting) => expect(isExisting).to.be.true)
+      .then((isExisting) => expect(isExisting).to.be.true);
+  }
+
+  isSelected(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .scrollTo(selector)
+      .isSelected(selector)
+      .then((isExisting) => expect(isExisting).to.be.true);
+  }
+
+  isNotExisting(selector, pause = 0) {
+    return this.client
+      .pause(pause)
+      .isExisting(selector)
+      .then((isExisting) => expect(isExisting).to.be.false);
   }
 
   clickOnResumeButton(selector) {
@@ -287,7 +310,7 @@ class CommonClient {
       return this.client
         .click(selector)
     } else {
-      return this.client.pause(1000)
+      return this.client.pause(1000);
     }
   }
 
@@ -307,14 +330,44 @@ class CommonClient {
     return this.client
       .execute(function (className, order) {
         document.querySelectorAll(className)[order].style.display = 'block';
-      }, className, order)
+      }, className, order);
   }
 
   checkIsNotVisible(selector) {
     return this.client
       .pause(2000)
       .isVisible(selector)
-      .then((isVisible) => expect(isVisible).to.be.false)
+      .then((isVisible) => expect(isVisible).to.be.false);
+  }
+
+  editObjectData(object) {
+    for (let key in object) {
+      if (object.hasOwnProperty(key) && key !== 'type') {
+        if (typeof object[key] === 'string') {
+          parseInt(object[key]) ? object[key] = (parseInt(object[key]) + 10).toString() : object[key] += 'update';
+        } else if (typeof object[key] === 'number') {
+          object[key] += 10;
+        } else if (typeof object[key] === 'object') {
+          this.editObjectData(object[key]);
+        }
+      }
+    }
+  }
+
+  deleteObjectElement(object, pos) {
+    delete object[pos];
+  }
+
+  checkParamFromURL(param, value, pause = 0) {
+    return this.client
+      .pause(pause)
+      .url()
+      .then((res) => {
+        let current_url = res.value;
+        expect(current_url).to.contain(param);
+        global.param = current_url.split(param + '=')[1].split("&")[0];
+        expect(global.param).to.equal(value);
+      });
   }
 
   /**

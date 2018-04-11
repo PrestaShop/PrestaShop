@@ -32,6 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Pack;
 
 /**
  * This form class is responsible to generate the product quantity form.
@@ -248,9 +249,9 @@ class ProductQuantity extends CommonAbstractType
                 //Manage out_of_stock field with contextual values/label
                 $pack_stock_type = $this->configuration->get('PS_PACK_STOCK_TYPE');
                 $defaultChoiceLabel = $this->translator->trans('Default', array(), 'Admin.Global').': ';
-                if ($pack_stock_type == 0) {
+                if ($pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY) {
                     $defaultChoiceLabel .= $this->translator->trans('Decrement pack only.', array(), 'Admin.Catalog.Feature');
-                } elseif ($pack_stock_type == 1) {
+                } elseif ($pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY) {
                     $defaultChoiceLabel .= $this->translator->trans('Decrement products in pack only.', array(), 'Admin.Catalog.Feature');
                 } else {
                     $defaultChoiceLabel .= $this->translator->trans('Decrement both.', array(), 'Admin.Catalog.Feature');

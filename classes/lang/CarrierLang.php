@@ -32,14 +32,4 @@ class CarrierLangCore extends DataLangCore
     protected $keys = array('id_carrier', 'id_shop');
 
     protected $fieldsToUpdate = array('delay');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'delay' => array(
-                md5('Pick up in-store') => $this->translator->trans('Pick up in-store', array(), 'Admin.Shipping.Feature', $this->locale),
-                md5('Delivery next day!') => $this->translator->trans('Delivery next day!', array(), 'Admin.Shipping.Feature', $this->locale),
-            ),
-        );
-    }
 }

@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext as ContextAdapter;
 use PrestaShopBundle\Entity\StockMvt;
 use Product;
 use StockAvailable;
+use Pack;
 
 /**
  * Class StockManager Refactored features about product stocks.
@@ -59,9 +60,13 @@ class StockManager
     {
         // @TODO We should call the needed classes with the Symfony dependency injection instead of the Homemade Service Locator
         $serviceLocator = new ServiceLocator();
-
         $configuration = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface');
-        if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') > 0)) {
+
+        if ($product->pack_stock_type == Pack::STOCK_TYPE_PRODUCTS_ONLY
+            || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                && $configuration->get('PS_PACK_STOCK_TYPE') > 0)
+        ) {
 
             $packItemsManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Product\\PackItemsManager');
             $stockManager = $serviceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
@@ -79,8 +84,13 @@ class StockManager
 
         $stock_available->quantity = $stock_available->quantity + $delta_quantity;
 
-        if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-            ($product->pack_stock_type == 3 && ($configuration->get('PS_PACK_STOCK_TYPE') == 0 || $configuration->get('PS_PACK_STOCK_TYPE') == 2))) {
+        if ($product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
+            || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+            || ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                && ($configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
+                    || $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)
+            )
+        ) {
             $stock_available->update();
         }
     }
@@ -107,9 +117,10 @@ class StockManager
         $packs = $packItemsManager->getPacksContainingItem($product, $id_product_attribute);
         foreach ($packs as $pack) {
             // Decrease stocks of the pack only if pack is in linked stock mode (option called 'Decrement both')
-            if (!((int)$pack->pack_stock_type == 2) &&
-                !((int)$pack->pack_stock_type == 3 && $configuration->get('PS_PACK_STOCK_TYPE') == 2)
-                ) {
+            if (!((int)$pack->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH)
+                && !((int)$pack->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                    && $configuration->get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH2)
+            ) {
                 continue;
             }
 

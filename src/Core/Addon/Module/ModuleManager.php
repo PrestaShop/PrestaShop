@@ -314,22 +314,21 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $this->checkIsInstalled($name);
+        $module = $this->moduleRepository->getModule($name);
 
         // Get new module
         // 1- From source
         if ($source != null) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        } else {
+        } elseif ($module->canBeUpgradedFromAddons()) {
             // 2- From Addons
             // This step is not mandatory (in case of local module),
             // we do not check the result
             $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
-        $module = $this->moduleRepository->getModule($name);
-
         // Load and execute upgrade files
-        $result = $this->moduleUpdater->upgrade($name);
+        $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
         $this->dispatch(ModuleManagementEvent::UPGRADE, $module);
 
         return $result;

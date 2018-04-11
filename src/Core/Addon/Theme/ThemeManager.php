@@ -161,7 +161,7 @@ class ThemeManager implements AddonManagerInterface
         }
 
         /* if file exits, remove it and use YAML configuration file instead */
-        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         $theme = $this->themeRepository->getInstanceByName($name);
         if (!$this->themeValidator->isValid($theme)) {
@@ -202,7 +202,7 @@ class ThemeManager implements AddonManagerInterface
 
         $this->doDisableModules($theme->getModulesToDisable());
 
-        @unlink($this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
+        @unlink($this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$name.'/shop'.$this->shop->id.'.json');
 
         return true;
     }
@@ -395,14 +395,20 @@ class ThemeManager implements AddonManagerInterface
         return $this->sandbox;
     }
 
+    /**
+     * @param Theme $theme
+     */
     public function saveTheme($theme)
     {
-        $jsonConfigFolder = $this->appConfiguration->get('_PS_CACHE_DIR_').'themes/'.$theme->getName();
+        $jsonConfigFolder = $this->appConfiguration->get('_PS_CONFIG_DIR_').'themes/'.$theme->getName();
         if (!$this->filesystem->exists($jsonConfigFolder) && !is_dir($jsonConfigFolder)) {
             mkdir($jsonConfigFolder, 0777, true);
         }
 
-        file_put_contents($jsonConfigFolder.'/shop'.$this->shop->id.'.json', json_encode($theme->get(null)));
+        file_put_contents(
+            $jsonConfigFolder.'/shop'.$this->shop->id.'.json',
+            json_encode($theme->get(null))
+        );
     }
 
     /**

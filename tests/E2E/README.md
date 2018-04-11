@@ -83,7 +83,7 @@ If you want to
   * Specify a module to install => you have to set the **MODULE** parameter
 
 ```
-npm test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWORD=DataBasePassword --DB_USER=DataBaseUser --LANGUAGE=language --COUNTRY=country --MODULE=DataTechNameModule
+npm test -- --URL=FrontOfficeURL --INSTALL=true --DB_SERVER=DataBaseUser --DB_PASSWD=DataBasePassword --DB_USER=DataBaseUser --LANGUAGE=language --COUNTRY=country --MODULE=DataTechNameModule
 ```
 * **URL**: **(Optional)** Front office URL of your PrestaShop website without the “http://” (default to **localhost**)
 * **MODULE**: **(Optional)** Module technical name to install (default to "gadwords")
@@ -155,7 +155,7 @@ npm run install-upgrade-test -- --URL=FrontOfficeURL --DIR=DownloadDirectory --U
 * **DB_PASSWD**: **(Optional)** DataBase password (default to "doge")
 * **DB_EMPTY_PASSWD**:**(Optional)** Boolean option : set it to **true** if you have no password
 * **RCTARGET**: **(Required)** Last stable version location directory (example: /project/prestashop1724/)
-* **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to extract the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
+* **RCLINK**: **(Optional)** RC Download link, if you have already downloaded the RC you have to copy the ZIP file in the --RCTARGET admin-dev/autoupgrade/download/ and set the FILENAME option
 * **FILENAME**: **(Optional)** RC file name this parameter must be mentioned if the (RCLINK) option is not indicated
 
 

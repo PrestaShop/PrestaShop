@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *}
 <!-- Block search module TOP -->
-<div id="search_widget" class="col-lg-4 col-md-5 col-sm-12 search-widget" data-search-controller-url="{$search_controller_url}">
+<div id="search_widget" class="search-widget" data-search-controller-url="{$search_controller_url}">
 	<form method="get" action="{$search_controller_url}">
 		<input type="hidden" name="controller" value="search">
 		<input type="text" name="s" value="{$search_string}" placeholder="{l s='Search our catalog' d='Shop.Theme.Catalog'}" aria-label="{l s='Search' d='Shop.Theme.Catalog'}">

@@ -114,4 +114,9 @@ table.table {
   font-size: 0.8rem;
 }
 
-
+// Needed to override the default inline style of modal header in translations-app
+.translations-app{
+  .modal-header{
+    display: initial;
+  }
+}

@@ -237,6 +237,9 @@ class ModuleManagerTest extends TestCase
             ->method('onInstall')
             ->willReturn(true);
         $moduleS
+            ->method('onUpgrade')
+            ->willReturn(true);
+        $moduleS
             ->method('onUninstall')
             ->willReturn(true);
         $moduleS
