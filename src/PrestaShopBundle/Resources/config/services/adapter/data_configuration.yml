@@ -181,3 +181,8 @@ services:
         class: 'PrestaShop\PrestaShop\Core\Email\SmtpDataConfigurator'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
+
+    prestashop.adapter.request_sql_settings.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
