@@ -145,7 +145,7 @@ admin_import_file_download:
 # SQL manager
 admin_sql_manager:
     path: sql_manager
-    methods: [GET]
+    methods: [GET, POST]
     defaults:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:list'
         _legacy_controller: AdminRequestSql
