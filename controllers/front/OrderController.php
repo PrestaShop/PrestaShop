@@ -265,7 +265,14 @@ class OrderControllerCore extends FrontController
         $presentedCart = $this->cart_presenter->present($this->context->cart);
 
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
-            Tools::redirect('index.php?controller=cart');
+            $cartLink = $this->context->link->getPageLink('cart');
+            Tools::redirect($cartLink);
+        }
+
+        $product = $this->context->cart->checkQuantities(true);
+        if (is_array($product)) {
+            $cartLink = $this->context->link->getPageLink('cart', null, null, array('action' => 'show', 'checkout' => true));
+            Tools::redirect($cartLink);
         }
 
         $this->checkoutProcess
