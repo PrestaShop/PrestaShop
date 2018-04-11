@@ -37,7 +37,7 @@
       </div>
     {else}
       <div class="text-sm-center">
-        <a href="{$urls.pages.cart}?action=show&checkout" class="btn btn-primary">{l s='Proceed to checkout' d='Shop.Theme.Actions'}</a>
+        <a href="{$urls.pages.order}" class="btn btn-primary">{l s='Proceed to checkout' d='Shop.Theme.Actions'}</a>
         {hook h='displayExpressCheckout'}
       </div>
     {/if}
