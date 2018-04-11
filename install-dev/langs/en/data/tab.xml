@@ -7,6 +7,9 @@
     <tab id="Addresses" name="Addresses" />
     <tab id="Administration" name="Administration" />
     <tab id="Module_Page" name="Modules &amp; Services" />
+    <tab id="Module_Page_Catalog" name="Selection" />
+    <tab id="Module_Page_Manage" name="Installed modules" />
+    <tab id="Module_Page_Notifications" name="Notifications" />
     <tab id="Advanced_Parameters" name="Advanced Parameters" />
     <tab id="Attachments" name="Files" />
     <tab id="Attributes_and_features" name="Attributes &amp; Features" />
