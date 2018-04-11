@@ -156,3 +156,8 @@ services:
         arguments:
             - '@prestashop.adapter.module.payment_module_provider'
             - '@prestashop.core.module.configuration.payment_restrictions_configurator'
+
+    prestashop.adapter.request_sql_settings.configuration:
+        class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
+        arguments:
+            - '@prestashop.adapter.legacy.configuration'
