@@ -754,6 +754,7 @@ class LinkCore
                     'AdminPayment' => 'admin_payment_methods',
                     'AdminLocalization' => 'admin_localization_show_settings',
                     'AdminGeolocation' => 'admin_geolocation',
+                    'AdminRequestSql' => 'admin_sql_manager',
                 );
 
                 if (isset($routes[$controller])) {
