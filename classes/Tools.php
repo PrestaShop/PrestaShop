@@ -24,9 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -632,30 +632,42 @@ class ToolsCore
     }
 
     /**
-    * Return price with currency sign for a given product
-    *
-    * @param float $price Product price
-    * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
-    * @return string Price correctly formated (sign, decimal separator...)
-    * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
-    */
+     * Return price with currency sign for a given product
+     *
+     * @param float $price
+     *  Product price
+     *
+     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     *
+     * @return string Price correctly formated (sign, decimal separator...)
+     * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
+     *
+     * @throws LocalizationException
+     */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
         if (!is_numeric($price)) {
             return $price;
         }
-        if (!$context) {
-            $context = Context::getContext();
-        }
-        if ($currency === null) {
-            $currency = $context->currency;
-        } elseif (is_int($currency)) {
-            $currency = Currency::getCurrencyInstance((int)$currency);
+
+        $context  = $context ?: Context::getContext();
+        $currency = $currency ?: $context->currency;
+
+        if (is_int($currency)) {
+            $currency = Currency::getCurrencyInstance($currency);
         }
 
-        $cldr = self::getCldr($context);
+        $container = $context->controller->getContainer();
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
 
-        return $cldr->getPrice($price, is_array($currency) ? $currency['iso_code'] : $currency->iso_code);
+        /** @var LocaleRepository $localeRepository */
+        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $locale           = $localeRepository->getLocale((string)$context->language->locale);
+        $currencyCode     = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
+
+        return $locale->formatPrice($price, $currencyCode);
     }
 
     /**
@@ -674,9 +686,15 @@ class ToolsCore
      */
     public static function displayNumber($number, $currency = null)
     {
+        $context   = Context::getContext();
+        $container = $context->controller->getContainer();
+        if (null === $container) {
+            $container = SymfonyContainer::getInstance();
+        }
+
         /** @var LocaleRepository $localeRepository */
-        $localeRepository = Context::getContext()->controller->get(self::SERVICE_LOCALE_REPOSITORY);
-        $locale           = $localeRepository->getLocale((string)Context::getContext()->language->locale);
+        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        $locale           = $localeRepository->getLocale((string)$context->language->locale);
 
         return $locale->formatNumber($number);
     }
@@ -3975,30 +3993,6 @@ exit;
         }
         exit;
     }
-
-    /**
-     * Get the dependency injection container depending on context (front / admin, dev / prod)
-     *
-     * @return ContainerBuilder
-     */
-    // protected static function getContainer()
-    // {
-    //     $container = new ContainerBuilder();
-    //     $loader    = new YamlFileLoader($container, new FileLocator(__DIR__));
-    //
-    //     $scope = 'front';
-    //     if (is_subclass_of(Context::getContext()->controller, AdminController::class)) {
-    //         $scope = 'admin';
-    //         $container->addCompilerPass(new LegacyCompilerPass());
-    //     }
-    //
-    //     $env = _PS_MODE_DEV_ === true ? 'dev' : 'prod';
-    //
-    //     $loader->load(_PS_CONFIG_DIR_ . 'services/' . $scope . '/services_' . $env . '.yml');
-    //     $container->compile();
-    //
-    //     return $container;
-    // }
 }
 
 /**
