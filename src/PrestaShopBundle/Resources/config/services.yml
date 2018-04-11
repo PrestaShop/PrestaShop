@@ -310,6 +310,13 @@ services:
         arguments:
             - '@doctrine.dbal.default_connection'
             - '%database_prefix%'
+
+    prestashop.core.admin.request_sql.repository:
+        class: PrestaShopBundle\Entity\Repository\RequestSqlRepository
+        arguments:
+            - '@doctrine.dbal.default_connection'
+            - '%database_prefix%'
+
     # Api
     prestashop.core.api.query_params_collection:
         abstract: true
