@@ -784,7 +784,7 @@ class CategoryCore extends ObjectModel
 		WHERE cl.`id_lang` = '.(int) $idLang.'
 		AND c.`id_category` != '.Configuration::get('PS_ROOT_CATEGORY').'
 		GROUP BY c.id_category
-		ORDER BY c.`id_category`, category_shop.`position`');
+		ORDER BY c.`id_category`, category_shop.`position`', true, false);
     }
 
     /**
