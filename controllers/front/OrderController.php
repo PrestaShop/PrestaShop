@@ -271,7 +271,7 @@ class OrderControllerCore extends FrontController
 
         $product = $this->context->cart->checkQuantities(true);
         if (is_array($product)) {
-            $cartLink = $this->context->link->getPageLink('cart', null, null, array('action' => 'show', 'checkout' => true));
+            $cartLink = $this->context->link->getPageLink('cart', null, null, array('action' => 'show'));
             Tools::redirect($cartLink);
         }
 
