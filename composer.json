@@ -177,7 +177,8 @@
         "platform": {
             "php": "5.6.0"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "process-timeout": 0
     },
     "extra": {
         "symfony-app-dir": "app",
