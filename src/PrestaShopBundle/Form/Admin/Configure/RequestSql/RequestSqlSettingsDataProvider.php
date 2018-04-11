@@ -26,37 +26,34 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class FilterRequestSqlType extends AbstractType
+class RequestSqlSettingsDataProvider implements FormDataProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var DataConfigurationInterface
+     */
+    private $dataConfiguration;
+
+    public function __construct(DataConfigurationInterface $dataConfiguration)
     {
-        $builder
-            ->add('id_request_sql', TextType::class, [
-                'required' => false,
-            ])
-            ->add('name', TextType::class, [
-                'required' => false,
-            ])
-            ->add('sql', TextType::class, [
-                'required' => false,
-            ])
-        ;
+        $this->dataConfiguration = $dataConfiguration;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
     {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        return ['settings' => $this->dataConfiguration->getConfiguration()];
     }
 
-    public function getBlockPrefix()
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
     {
-        return 'request_sql_filter_block';
+        return $this->dataConfiguration->updateConfiguration($data['settings']);
     }
 }
