@@ -48,11 +48,35 @@ class SqlManagerController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
+        $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, [
+            'limit' => 10,
+            'offset' => 0,
+            'orderBy' => 'id_request_sql',
+            'sortOrder' => 'desc',
+            'filters' => [],
+        ]);
+
+        $repository = $this->getRepository();
+        $requestSqls = $repository->findByFilters($filters);
+        $requestSqlsCount = $repository->getCount();
+
         return [
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
+            'request_sqls' => $requestSqls,
+            'request_sqls_count' => $requestSqlsCount,
         ];
+    }
+
+    /**
+     * Get request sql repository
+     *
+     * @return \PrestaShopBundle\Entity\Repository\RequestSqlRepository
+     */
+    protected function getRepository()
+    {
+        return $this->get('prestashop.core.admin.request_sql.repository');
     }
 }
