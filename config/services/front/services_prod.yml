@@ -1,8 +1,13 @@
 parameters:
+    ps_cache_dir: !php/const _PS_CACHE_DIR_
 
 services:
     hashing:
         class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+
+    # Data providers service
+    prestashop.adapter.data_provider.currency:
+        class: PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider
 
     # Localization
     prestashop.core.localization.cache.adapter:
@@ -13,7 +18,7 @@ services:
         arguments:
             - 'CLDR'
             - 0
-            - '%kernel.cache_dir%/localization'
+            - '%ps_cache_dir%/localization'
 
     prestashop.core.localization.locale.repository:
         class: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
