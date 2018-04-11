@@ -15,12 +15,14 @@ module.exports = {
     keyswords: '(//*[@id="fieldset_0"]//input[@placeholder="Add tag"])[1]',
     simplify_URL_input: '//*[@id="link_rewrite_1"]',
     save_button: '//*[@id="category_form_submit_btn"]',
+    reset_button: '//*[@id="table-category"]//th[7]//button[contains(@name, "Reset")]',
     search_input: '//*[@id="table-category"]//input[@name="categoryFilter_name"]',
     search_button: '//*[@id="submitFilterButtoncategory"]',
     search_result: '//*[@id="table-category"]//td[3]',
     update_button: '//*[@id="table-category"]//td[7]/div/div',
     action_button: '//*[@id="table-category"]//td[7]//button[contains(@class, "dropdown-toggle")]',
     delete_button: '//*[@id="table-category"]//td[7]//a[@title="Delete"]',
+    view_button: '//*[@id="table-category"]//td[7]//a[@title="View"]',
     image_link: '//*[@id="image-images-thumbnails"]/div/img',
     thumb_link: '//*[@id="thumb-images-thumbnails"]/div/img',
     second_delete_button: '//*[@id="content"]//form//button[not(@name)]',
@@ -33,6 +35,9 @@ module.exports = {
     delete_tag_button: '//div[@class="tagify-container"]//span[%POS]/a',
     mode_link_disable_radio: '//*[@id="deleteMode_linkanddisable"]',
     mode_link_radio: '//*[@id="deleteMode_link"]',
-    mode_delete_radio: '//*[@id="deleteMode_delete"]'
+    mode_delete_radio: '//*[@id="deleteMode_delete"]',
+    expand_all_button: '//*[@id="expand-all-categories-tree"]',
+    parent_category: '(//*[@id="categories-tree"]//span[contains(.,"%NAME")]//input)[1]',
+    search_no_results: '//*[@id="table-category"]//td[@class="list-empty"]'
   }
 };

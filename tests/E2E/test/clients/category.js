@@ -4,17 +4,12 @@ global.checkCategoryName = [];
 
 class Category extends CommonClient {
 
-  AddFile(picture, selector) {
-    return this.client
-      .chooseFile(selector, path.join(__dirname, '..', 'datas', picture))
-  }
-
   checkImage(selector) {
     return this.client
       .waitForExist(selector)
       .pause(2000)
       .then(() => this.client.isExisting(selector))
-      .then((text) => expect(text).to.be.equal(true));
+      .then((text) => expect(text, "The picture is not existing").to.be.equal(true));
 
   }
 
@@ -49,6 +44,33 @@ class Category extends CommonClient {
       .then(() => {
         expect(checkCategoryName).to.be.an('array').that.does.include(category_name)
       });
+  }
+
+  checkCategoryInsideParent(parentSelector, categorySelector) {
+    return this.client
+      .moveToObject(parentSelector)
+      .isVisible(categorySelector)
+      .then((isVisible) => {
+        expect(isVisible).to.be.true;
+        if (isVisible) {
+          this.client.waitForExistAndClick(categorySelector);
+        }
+      });
+  }
+
+  checkBreadcrumbInFo(selector, parentCategory, categoryName) {
+    return this.client
+      .execute(function (selector) {
+        let count = document.querySelector(selector).getElementsByTagName("ol")[0].children.length;
+        let breadcrumb = '';
+        for(let i = 0; i < count; i++) {
+          breadcrumb += document.querySelector(selector).getElementsByTagName("ol")[0].children[i].innerText + '/ '
+        }
+        return breadcrumb;
+      }, selector)
+      .then((breadcrumb) => {
+        expect(breadcrumb.value).to.contains("Home", parentCategory, categoryName)
+      })
   }
 }
 
