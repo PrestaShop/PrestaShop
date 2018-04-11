@@ -10,7 +10,7 @@ CREATE TABLE `PREFIX_currency_lang` (
   `id_currency` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
-  `symbol` varchar(255) NOT NULL
+  `symbol` varchar(255) NOT NULL,
   PRIMARY KEY (`id_currency`,`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
