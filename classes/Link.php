@@ -733,6 +733,9 @@ class LinkCore
             default:
                 $routes = array(
                     'AdminModulesSf' => 'admin_module_manage',
+                    'AdminModulesCatalog' => 'admin_module_catalog',
+                    'AdminModulesManage' => 'admin_module_manage',
+                    'AdminModulesNotifications' => 'admin_module_notification',
                     'AdminStockManagement' => 'admin_stock_overview',
                     'AdminTranslationSf' => 'admin_international_translation_overview',
                     'AdminInformation' => 'admin_system_information',
