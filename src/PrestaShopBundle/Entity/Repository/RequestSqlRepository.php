@@ -101,11 +101,11 @@ class RequestSqlRepository implements RepositoryInterface
             ->setMaxResults($filters['limit']);
 
         $scalarFilters = array_filter($conditionValues, function ($key) {
-            return !in_array($key, ['name', 'sql']);
+            return in_array($key, ['name', 'sql']);
         }, ARRAY_FILTER_USE_KEY);
 
         foreach ($scalarFilters as $column => $value) {
-            $qb->andWhere("$column LIKE :$column");
+            $qb->andWhere("`$column` LIKE :$column");
             $qb->setParameter($column, '%'.$value.'%');
         }
 

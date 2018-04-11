@@ -25,18 +25,25 @@
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
+{{ form_start(search_form) }}
 <table class="table">
     <thead class="thead-default">
         <tr class="column-headers">
-            <th scope="col" width="10%"></th>
-            <th scope="col"></th>
-            <th scope="col"></th>
+            <th scope="col" width="10%">
+                {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_request_sql', order_by, order_way) }}
+            </th>
+            <th scope="col">
+                {{ ps.sortable_column_header('SQL query Name'|trans({}, 'Admin.Global'), 'name', order_by, order_way) }}
+            </th>
+            <th scope="col">
+                {{ ps.sortable_column_header('SQL query'|trans, 'sql', order_by, order_way) }}
+            </th>
             <th scope="col">&nbsp;</th>
         </tr>
         <tr class="column-filters">
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>{{ form_widget(search_form.id_request_sql) }}</th>
+            <th>{{ form_widget(search_form.name) }}</th>
+            <th>{{ form_widget(search_form.sql) }}</th>
             <th>
                 <button type="submit" class="btn btn-primary">
                     <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Action') }}
@@ -50,8 +57,39 @@
                 <th scope="row">{{ request_sql.id_request_sql }}</th>
                 <td>{{ request_sql.name }}</td>
                 <td>{{ request_sql.sql }}</td>
-                <td>&nbsp;</td>
+                <td>
+                    <div class="btn-group-action">
+                        <div class="btn-group">
+                            <a href="#" title="{{ 'Export'|trans({}, 'Admin.Global') }}" class="btn tooltip-link product-edit">
+                                <i class="material-icons">cloud_download</i>
+                            </a>
+                            <a class="btn btn-link dropdown-toggle dropdown-toggle-split"
+                               data-toggle="dropdown"
+                               aria-haspopup="true"
+                               aria-expanded="false"
+                            >
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(86px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item product-edit" href="http://localhost/PrestaShopMigration/SqlManager/home-accessories/19-customizable-mug.html" target="_blank">
+                                    <i class="material-icons">remove_red_eye</i>
+                                    {{ 'View'|trans({}, 'Admin.Global') }}
+                                </a>
+                                <a class="dropdown-item product-edit" href="#">
+                                    <i class="material-icons">edit</i>
+                                    {{ 'Edit'|trans({}, 'Admin.Global') }}
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item product-edit" href="#">
+                                    <i class="material-icons">delete</i>
+                                    {{ 'Delete'|trans({}, 'Admin.Global') }}
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+{{ form_end(search_form) }}
