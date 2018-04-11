@@ -26,37 +26,46 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 
-class FilterRequestSqlType extends AbstractType
+class RequestSqlSettingsFormHandler implements FormHandlerInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('id_request_sql', TextType::class, [
-                'required' => false,
-            ])
-            ->add('name', TextType::class, [
-                'required' => false,
-            ])
-            ->add('sql', TextType::class, [
-                'required' => false,
-            ])
-        ;
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
+
+    /**
+     * @var FormDataProviderInterface
+     */
+    private $dataProvider;
+
+    public function __construct(
+        FormFactoryInterface $formFactory,
+        FormDataProviderInterface $dataProvider
+    ) {
+        $this->formFactory = $formFactory;
+        $this->dataProvider = $dataProvider;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    /**
+     * {@inheritdoc}
+     */
+    public function getForm()
     {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
+        return $this->formFactory->createBuilder()
+            ->add('settings', RequestSqlSettingsType::class)
+            ->setData($this->dataProvider->getData())
+            ->getForm();
     }
 
-    public function getBlockPrefix()
+    /**
+     * {@inheritdoc}
+     */
+    public function save(array $data)
     {
-        return 'request_sql_filter_block';
+        return $this->dataProvider->setData($data);
     }
 }
