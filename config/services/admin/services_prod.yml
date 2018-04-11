@@ -1,5 +1,5 @@
 parameters:
-    cache_dir: var/cache
+    ps_cache_dir: !php/const _PS_CACHE_DIR_
 
 services:
     filesystem:
@@ -46,14 +46,13 @@ services:
         arguments:
             - 'CLDR'
             - 0
-            - '%cache_dir%/localization'
+            - '%ps_cache_dir%/localization'
 
     prestashop.core.localization.locale.repository:
         class: PrestaShop\PrestaShop\Core\Localization\Locale\Repository
         arguments:
             - '@prestashop.core.localization.cldr.localeRepository'
             - '@prestashop.core.localization.currency.repository'
-            - "@=service('context.static').getContext().language.locale"
 
     prestashop.core.localization.currency.repository:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\Repository
@@ -106,7 +105,6 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyDatabase
         arguments:
             - '@prestashop.adapter.data_provider.currency'
-            - "@=service('context.static').getContext().language.locale"
         calls:
             - [ 'setLowerLayer', ["@prestashop.core.localization.currency.middleware.reference"]]
 
@@ -114,7 +112,6 @@ services:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyReference
         arguments:
             - '@prestashop.core.localization.cldr.localeRepository'
-            - "@=service('context.static').getContext().language.locale"
 
     prestashop.core.localization.currency.middleware.installed:
         class: PrestaShop\PrestaShop\Core\Localization\Currency\DataLayer\CurrencyInstalled
