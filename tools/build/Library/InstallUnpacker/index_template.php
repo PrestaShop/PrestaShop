@@ -26,8 +26,8 @@
 
 set_time_limit(0);
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50400);
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.4');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50600);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.6');
 
 define('ZIP_NAME', 'prestashop.zip');
 define('TARGET_FOLDER', __DIR__.'/');

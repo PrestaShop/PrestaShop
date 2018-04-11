@@ -89,9 +89,9 @@ abstract class Controller extends ControllerCore
 
     private function getPhpVersionColor($version)
     {
-        if (version_compare($version, '5.3') < 0) {
+        if (version_compare($version, '5.6') < 0) {
             return '<span style="color:red">'.$version.' (Upgrade strongly recommended)</span>';
-        } elseif (version_compare($version, '5.4') < 0) {
+        } elseif (version_compare($version, '7.1') < 0) {
             return '<span style="color:#EF8B00">'.$version.' (Consider upgrading)</span>';
         }
         return '<span style="color:green">'.$version.' (OK)</span>';

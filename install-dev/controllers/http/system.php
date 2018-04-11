@@ -92,7 +92,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
                     'title' => $this->translator->trans('Required PHP parameters', array(), 'Install'),
                     'success' => 1,
                     'checks' => array(
-                        'phpversion' => $this->translator->trans('PHP 5.4 or later is not enabled', array(), 'Install'),
+                        'phpversion' => $this->translator->trans('PHP 5.6 or later is not enabled', array(), 'Install'),
                         'upload' => $this->translator->trans('Cannot upload files', array(), 'Install'),
                         'system' => $this->translator->trans('Cannot create new files and folders', array(), 'Install'),
                         'curl' => $this->translator->trans('cURL extension is not enabled', array(), 'Install'),
