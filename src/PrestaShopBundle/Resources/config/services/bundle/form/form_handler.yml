@@ -150,3 +150,9 @@ services:
               'local_units': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\LocalUnitsType'
               'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
             - 'LocalizationPage'
+
+    prestashop.admin.request_sql_settings.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlSettingsFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.admin.request_sql_settings.data_provider'

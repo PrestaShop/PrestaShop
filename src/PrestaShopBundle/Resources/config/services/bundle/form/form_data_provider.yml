@@ -88,3 +88,7 @@ services:
             - '@prestashop.adapter.geolocation_options.configuration'
             - '@prestashop.core.geolocation.geo_lite_city.checker'
             - '@prestashop.core.validation.validator'
+    prestashop.admin.request_sql_settings.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlSettingsDataProvider'
+        arguments:
+            - '@prestashop.adapter.request_sql_settings.configuration'

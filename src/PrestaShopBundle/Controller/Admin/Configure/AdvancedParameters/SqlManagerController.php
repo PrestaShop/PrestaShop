@@ -47,10 +47,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request)
     {
-        $legacyController = $request->attributes->get('_legacy_controller');
-
         $searchForm = $this->createForm(FilterRequestSqlType::class, []);
         $searchForm->handleRequest($request);
+
+        $settingsForm = $this->get('prestashop.admin.request_sql_settings.form_handler')->getForm();
 
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, [
             'limit' => 10,
@@ -64,17 +64,28 @@ class SqlManagerController extends FrameworkBundleAdminController
         $requestSqls = $repository->findByFilters($filters);
         $requestSqlsCount = $repository->getCount();
 
-        return [
-            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
+        $data = [
             'request_sqls' => $requestSqls,
             'request_sqls_count' => $requestSqlsCount,
             'order_by' => $filters['orderBy'],
             'order_way' => $filters['sortOrder'],
             'search_form' => $searchForm->createView(),
+            'settings_form' => $settingsForm->createView(),
         ];
+
+        return $this->getTemplateParams($request, true) + $data;
+    }
+
+    /**
+     * Show Request SQL create page
+     *
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
+     *
+     * @param Request $request
+     */
+    public function createAction(Request $request)
+    {
+
     }
 
     /**
@@ -85,5 +96,35 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function getRepository()
     {
         return $this->get('prestashop.core.admin.request_sql.repository');
+    }
+
+    /**
+     * @param Request $request
+     * @param bool $withHeaderBtn
+     *
+     * @return array
+     */
+    protected function getTemplateParams(Request $request, $withHeaderBtn = false)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        $params = [
+            'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+        ];
+
+        if ($withHeaderBtn) {
+            $params['layoutHeaderToolbarBtn'] = [
+                'add' => [
+                    'href' => $this->generateUrl('admin_sql_manager_create'),
+                    'desc' => $this->trans('New SQL query', 'Admin.Actions'),
+                    'icon' => 'add_circle_outline',
+                ],
+            ];
+        }
+
+        return $params;
     }
 }

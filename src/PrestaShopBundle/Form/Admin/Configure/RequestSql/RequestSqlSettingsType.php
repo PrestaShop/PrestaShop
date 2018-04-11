@@ -27,36 +27,25 @@
 namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FilterRequestSqlType extends AbstractType
+class RequestSqlSettingsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id_request_sql', TextType::class, [
-                'required' => false,
-            ])
-            ->add('name', TextType::class, [
-                'required' => false,
-            ])
-            ->add('sql', TextType::class, [
-                'required' => false,
+            ->add('default_file_encoding', ChoiceType::class, [
+                'choices' => [
+                    'utf-8' => 1,
+                    'iso-8859-1' => 2,
+                ],
             ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
-        ]);
-    }
-
     public function getBlockPrefix()
     {
-        return 'request_sql_filter_block';
+        return 'request_sql_settings_block';
     }
 }
