@@ -40,6 +40,8 @@ use TabCore as Tab;
 
 class ModuleTabRegister
 {
+    const SUFFIX = '_MTR';
+
     private $defaultParent = 'DEFAULT';
     /**
      * @var LangRepository
@@ -205,6 +207,13 @@ class ModuleTabRegister
         }, $this->getModuleAdminControllers($moduleName));
     }
 
+    /**
+     * From the name given by the module maintainer, associate a value per language
+     * installed on the shop
+     *
+     * @param mixed $names
+     * @return array Name to use for each installed language
+     */
     protected function getTabNames($names)
     {
         $translatedNames = array();
@@ -230,33 +239,24 @@ class ModuleTabRegister
      * Install a tab according to its defined structure
      *
      * @param Module $module
-     * @param ParameterBag $data The structure of the tab.
+     * @param ParameterBag $tabDetails The structure of the tab.
      *
      * @throws Exception in case of error from validation or save
      */
-    protected function registerTab(Module $module, ParameterBag $data)
+    protected function registerTab(Module $module, ParameterBag $tabDetails)
     {
-        $this->checkIsValid($module->get('name'), $data);
+        $this->checkIsValid($module->get('name'), $tabDetails);
 
         // Legacy Tab, to be replaced with Doctrine entity when right management
         // won't be directly linked to the tab creation
         // @ToDo
         $tab = new Tab();
-        $tab->active = $data->getBoolean('visible', true);
-        $tab->class_name = $data->get('class_name');
+        $tab->active = $tabDetails->getBoolean('visible', true);
+        $tab->class_name = $tabDetails->get('class_name');
         $tab->module = $module->get('name');
-        $tab->name = $this->getTabNames($data->get('name', $tab->class_name));
-        $tab->icon = $data->get('icon');
-
-        // Handle parent menu
-        $parentClassName = $data->get('parent_class_name', $data->get('ParentClassName'));
-        if (!empty($parentClassName)) {
-            $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($parentClassName);
-        } elseif (true === $tab->active) {
-            $tab->id_parent = (int)$this->tabRepository->findOneIdByClassName($this->defaultParent);
-        } else {
-            $tab->id_parent = 0;
-        }
+        $tab->name = $this->getTabNames($tabDetails->get('name', $tab->class_name));
+        $tab->icon = $tabDetails->get('icon');
+        $tab->id_parent = $this->findParentId($tabDetails);
 
         if (!$tab->save()) {
             throw new Exception(
@@ -265,5 +265,57 @@ class ModuleTabRegister
                     array('%name%' => $tab->name),
                     'Admin.Modules.Notification'));
         }
+    }
+
+    /**
+     * Find the parent ID from the given tab context
+     *
+     * @param ParameterBag $tabDetails The structure of the tab.
+     * @return int ID of the parent, 0 if none
+     */
+    protected function findParentId(ParameterBag $tabDetails)
+    {
+        $idParent = 0;
+        $parentClassName = $tabDetails->get('parent_class_name', $tabDetails->get('ParentClassName'));
+        if (!empty($parentClassName)) {
+            // Could be a previously duplicated tab
+            $idParent = $this->tabRepository->findOneIdByClassName($parentClassName.self::SUFFIX);
+            if (!$idParent) {
+                $idParent = $this->tabRepository->findOneIdByClassName($parentClassName);
+            }
+        } elseif (true === $tabDetails->getBoolean('visible', true)) {
+            $idParent = $this->tabRepository->findOneIdByClassName($this->defaultParent);
+        }
+        return $this->duplicateParentIfAlone((int) $idParent);
+    }
+
+    /**
+     * When the tab you add is the first child of a parent tab, we must duplicate it in the children
+     * or its link will be overriden.
+     *
+     * @param int $idParent
+     * @return int new parent ID
+     */
+    protected function duplicateParentIfAlone($idParent)
+    {
+        // If the given parent has already children, don't touch anything
+        if ($idParent === 0 || count($this->tabRepository->findByParentId($idParent))) {
+            return $idParent;
+        }
+
+        $currentTab = new Tab($idParent);
+        $newTab = clone($currentTab);
+        $newTab->id = 0;
+        $newTab->id_parent = $currentTab->id_parent;
+        $newTab->class_name = $currentTab->class_name.self::SUFFIX;
+        $newTab->save();
+
+        // Second save in order to get the proper position (add() resets it)
+        $newTab->position = $currentTab->position;
+        $newTab->save();
+
+        $currentTab->id_parent = $newTab->id;
+        $currentTab->save();
+        return $newTab->id;
     }
 }

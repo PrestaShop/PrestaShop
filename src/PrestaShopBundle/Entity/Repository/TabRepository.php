@@ -39,6 +39,15 @@ class TabRepository extends EntityRepository
     {
         return $this->findBy(['module' => $moduleName]);
     }
+
+    /**
+     * @param $idParent
+     * @return array
+     */
+    public function findByParentId($idParent)
+    {
+        return $this->findBy(['idParent' => $idParent]);
+    }
     
     /**
      * @param $className
