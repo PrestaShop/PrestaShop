@@ -2,6 +2,10 @@ services:
     _defaults:
         public: true
 
+    _instanceof:
+        PrestaShop\PrestaShop\Core\Form\AbstractFormHandler:
+            tags: ['prestashop.form.handler']
+
     prestashop.adapter.performance.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
@@ -151,14 +155,14 @@ services:
               'advanced': 'PrestaShopBundle\Form\Admin\Improve\International\Localization\AdvancedConfigurationType'
             - 'LocalizationPage'
 
-    prestashop.admin.request_sql_settings.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlSettingsFormHandler'
+    prestashop.admin.sql_manager_settings.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\SqlManagerSettingsFormHandler'
         arguments:
             - '@form.factory'
-            - '@prestashop.admin.request_sql_settings.data_provider'
+            - '@prestashop.admin.sql_manager_settings.form_data_provider'
 
     prestashop.admin.request_sql.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\RequestSqlFormHandler'
         arguments:
             - '@form.factory'
-            - '@prestashop.hook.dispatcher'
+            - '@prestashop.admin.request_sql.form_data_provider'
