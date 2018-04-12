@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\RequestSql\FilterRequestSqlType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -50,7 +51,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $searchForm = $this->createForm(FilterRequestSqlType::class, []);
         $searchForm->handleRequest($request);
 
-        $settingsForm = $this->get('prestashop.admin.request_sql_settings.form_handler')->getForm();
+        $settingsForm = $this->getSettingsFromHandler()->getForm();
 
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, [
             'limit' => 10,
@@ -77,6 +78,34 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
+     * Process Request SQL settings save
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processSettingsAction(Request $request)
+    {
+        $handler = $this->getSettingsFromHandler();
+        $form = $handler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if (!$errors = $handler->save($data)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_sql_manager');
+            }
+
+            $this->flashErrors($errors);
+        }
+
+        return $this->redirectToRoute('admin_sql_manager');
+    }
+
+    /**
      * Show Request SQL create page
      *
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
@@ -96,6 +125,16 @@ class SqlManagerController extends FrameworkBundleAdminController
     protected function getRepository()
     {
         return $this->get('prestashop.core.admin.request_sql.repository');
+    }
+
+    /**
+     * Get Request SQL settings form handler
+     *
+     * @return \PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlSettingsFormHandler
+     */
+    protected function getSettingsFromHandler()
+    {
+        return $this->get('prestashop.admin.request_sql_settings.form_handler');
     }
 
     /**

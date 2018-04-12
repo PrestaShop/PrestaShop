@@ -120,6 +120,13 @@ admin_sql_manager:
         _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:list'
         _legacy_controller: AdminRequestSql
 
+admin_sql_manager_process:
+    path: /sql_manager/process
+    methods: [POST]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:processSettings'
+        _legacy_controller: AdminRequestSql
+
 admin_sql_manager_create:
     path: sql_manager/new
     methods: [GET, POST]
