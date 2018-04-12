@@ -24,28 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class RequestSqlSettingsType extends AbstractType
+class SqlManagerSettingsFormDataProvider implements FormDataProviderInterface
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @var DataConfigurationInterface
+     */
+    private $dataConfiguration;
+
+    public function __construct(DataConfigurationInterface $dataConfiguration)
     {
-        $builder
-            ->add('default_file_encoding', ChoiceType::class, [
-                'choices' => [
-                    'utf-8' => 1,
-                    'iso-8859-1' => 2,
-                ],
-            ])
-        ;
+        $this->dataConfiguration = $dataConfiguration;
     }
 
-    public function getBlockPrefix()
+    /**
+     * {@inheritdoc}
+     */
+    public function getData()
     {
-        return 'request_sql_settings_block';
+        return ['settings' => $this->dataConfiguration->getConfiguration()];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setData(array $data)
+    {
+        return $this->dataConfiguration->updateConfiguration($data['settings']);
     }
 }
