@@ -24,21 +24,21 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
-class RequestSqlSettingsDataProvider implements FormDataProviderInterface
+class RequestSqlFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var DataConfigurationInterface
+     * @var RequestSqlManager
      */
-    private $dataConfiguration;
+    private $requestSqlManager;
 
-    public function __construct(DataConfigurationInterface $dataConfiguration)
+    public function __construct(RequestSqlManager $requestSqlManager)
     {
-        $this->dataConfiguration = $dataConfiguration;
+        $this->requestSqlManager = $requestSqlManager;
     }
 
     /**
@@ -46,7 +46,7 @@ class RequestSqlSettingsDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        return ['settings' => $this->dataConfiguration->getConfiguration()];
+        // TODO: Implement getData() method.
     }
 
     /**
@@ -54,6 +54,6 @@ class RequestSqlSettingsDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
-        return $this->dataConfiguration->updateConfiguration($data['settings']);
+        return $this->requestSqlManager->createOrUpdateFromData($data);
     }
 }

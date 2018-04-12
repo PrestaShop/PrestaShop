@@ -24,10 +24,9 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use PrestaShopBundle\Service\Hook\HookDispatcher;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class RequestSqlFormHandler implements FormHandlerInterface
@@ -38,16 +37,16 @@ class RequestSqlFormHandler implements FormHandlerInterface
     private $formFactory;
 
     /**
-     * @var HookDispatcher
+     * @var RequestSqlFormDataProvider
      */
-    private $hookDispatcher;
+    private $formDataProvider;
 
     public function __construct(
         FormFactoryInterface $formFactory,
-        HookDispatcher $hookDispatcher
+        RequestSqlFormDataProvider $formDataProvider
     ) {
         $this->formFactory = $formFactory;
-        $this->hookDispatcher = $hookDispatcher;
+        $this->formDataProvider = $formDataProvider;
     }
 
     /**
@@ -55,7 +54,12 @@ class RequestSqlFormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        return $this->formFactory->create(RequestSqlType::class);
+        $builder = $this->formFactory->createBuilder()
+            ->add('request_sql', RequestSqlType::class)
+            ->setData($this->formDataProvider->getData())
+        ;
+
+        return $builder->getForm();
     }
 
     /**
@@ -63,6 +67,6 @@ class RequestSqlFormHandler implements FormHandlerInterface
      */
     public function save(array $data)
     {
-
+        return $this->formDataProvider->setData($data['request_sql']);
     }
 }
