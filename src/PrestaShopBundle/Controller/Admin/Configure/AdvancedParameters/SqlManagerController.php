@@ -51,8 +51,6 @@ class SqlManagerController extends FrameworkBundleAdminController
         $searchForm = $this->createForm(FilterRequestSqlType::class, []);
         $searchForm->handleRequest($request);
 
-        $settingsForm = $this->getSettingsFromHandler()->getForm();
-
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, [
             'limit' => 10,
             'offset' => 0,
@@ -65,6 +63,8 @@ class SqlManagerController extends FrameworkBundleAdminController
         $requestSqls = $repository->findByFilters($filters);
         $requestSqlsCount = $repository->getCount();
 
+        $settingsForm = $this->getSettingsFromHandler()->getForm();
+
         $data = [
             'request_sqls' => $requestSqls,
             'request_sqls_count' => $requestSqlsCount,
@@ -74,7 +74,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'settings_form' => $settingsForm->createView(),
         ];
 
-        return $this->getTemplateParams($request, true) + $data;
+        return $this->getTemplateParams($request) + $data;
     }
 
     /**
@@ -111,10 +111,35 @@ class SqlManagerController extends FrameworkBundleAdminController
      * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
      *
      * @param Request $request
+     *
+     * @return array
      */
     public function createAction(Request $request)
     {
+        $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
 
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if (!$errors = $formHandler->save($data)) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+                //return $this->redirectToRoute('admin_sql_manager');
+            }
+
+            //$this->flashErrors($errors);
+
+            dump($data);
+        }
+
+        $params = [
+            'request_sql_form' => $form->createView(),
+        ];
+
+        return $this->getTemplateParams($request, false) + $params;
     }
 
     /**
@@ -138,16 +163,19 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
+     * Get required template parameters needed for all responses that renders content
+     *
      * @param Request $request
      * @param bool $withHeaderBtn
      *
      * @return array
      */
-    protected function getTemplateParams(Request $request, $withHeaderBtn = false)
+    protected function getTemplateParams(Request $request, $withHeaderBtn = true)
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
         $params = [
+            'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'enableSidebar' => true,
@@ -155,12 +183,10 @@ class SqlManagerController extends FrameworkBundleAdminController
         ];
 
         if ($withHeaderBtn) {
-            $params['layoutHeaderToolbarBtn'] = [
-                'add' => [
-                    'href' => $this->generateUrl('admin_sql_manager_create'),
-                    'desc' => $this->trans('New SQL query', 'Admin.Actions'),
-                    'icon' => 'add_circle_outline',
-                ],
+            $params['layoutHeaderToolbarBtn']['add'] = [
+                'href' => $this->generateUrl('admin_sql_manager_create'),
+                'desc' => $this->trans('New SQL query', 'Admin.Actions'),
+                'icon' => 'add_circle_outline',
             ];
         }
 

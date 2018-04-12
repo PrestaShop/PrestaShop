@@ -27,5 +27,40 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+            {% block sql_manager_settings_panel %}
+                {{ form_start(request_sql_form) }}
+                <div class="card">
+                    <h3 class="card-header">
+                        {{ 'Sql query'|trans }}
+                    </h3>
+                    <div class="card-block">
+                        <div class="card-text">
+                            <div class="form-group">
+                                <label for="{{ request_sql_form.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
+                                {{ form_errors(request_sql_form.name) }}
+                                {{ form_widget(request_sql_form.name) }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="" class="form-control-label">{{ 'SQL query'|trans }}</label>
+                                {{ form_errors(request_sql_form.sql) }}
+                                {{ form_widget(request_sql_form.sql) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-primary pull-right">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(request_sql_form) }}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
