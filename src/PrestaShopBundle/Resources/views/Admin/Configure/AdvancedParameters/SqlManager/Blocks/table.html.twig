@@ -84,7 +84,6 @@
                                     {{ 'Delete'|trans({}, 'Admin.Global') }}
                                 </a>
                             </div>
-
                         </div>
                     </div>
                 </td>
@@ -93,3 +92,16 @@
     </tbody>
 </table>
 {{ form_end(search_form) }}
+
+{% if request_sqls_count >= 10 %}
+    <div class="row">
+        <div class="col-md-12">
+            {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
+                'limit': filters.limit,
+                'offset': filters.offset,
+                'total': request_sqls_count,
+                'caller_route': app.request.attributes.get('_route')}))
+            }}
+        </div>
+    </div>
+{% endif %}

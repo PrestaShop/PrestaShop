@@ -70,6 +70,7 @@ class SqlManagerController extends FrameworkBundleAdminController
             'request_sqls_count' => $requestSqlsCount,
             'order_by' => $filters['orderBy'],
             'order_way' => $filters['sortOrder'],
+            'filters' => $filters,
             'search_form' => $searchForm->createView(),
             'settings_form' => $settingsForm->createView(),
         ];
