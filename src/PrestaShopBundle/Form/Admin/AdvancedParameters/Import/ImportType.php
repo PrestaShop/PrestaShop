@@ -40,6 +40,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ImportType extends TranslatorAwareType
 {
+    const DEFAULT_SEPARATOR = ';';
+    const DEFAULT_MULTIVALUE_SEPARATOR = ',';
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -64,10 +67,10 @@ class ImportType extends TranslatorAwareType
                 'choices' => $this->getLocaleChoices(),
             ])
             ->add('separator', TextType::class, [
-                'data' => ';',
+                'data' => static::DEFAULT_SEPARATOR,
             ])
             ->add('multiple_value_separator', TextType::class, [
-                'data' => ',',
+                'data' => static::DEFAULT_MULTIVALUE_SEPARATOR,
             ])
             ->add('truncate', SwitchType::class, [
                 'data' => false,

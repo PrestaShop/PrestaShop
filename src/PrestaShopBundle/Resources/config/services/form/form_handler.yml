@@ -59,3 +59,4 @@ services:
         class: 'PrestaShopBundle\Form\Admin\AdvancedParameters\Import\ImportFormHandler'
         arguments:
             - '@form.factory'
+            - '@session'

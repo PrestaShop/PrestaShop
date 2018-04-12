@@ -36,6 +36,19 @@ export default class ImportPage {
     $('#fileHistoryTable').on('click', '.js-use-file-btn', (event) => this.useFileFromFilesHistory(event));
     $('.js-change-import-file-btn').on('click', () => this.changeImportFileHandler());
     $('.js-import-file').on('change', () => this.uploadFile());
+
+    this.toggleSelectedFile();
+  }
+
+  /**
+   * Check if selected file names exists and if so, then display it
+   */
+  toggleSelectedFile() {
+    let selectFilename = $('#csv').val();
+    if (selectFilename.length > 0) {
+      this.showImportFileAlert(selectFilename);
+      this.hideFileUploadBlock();
+    }
   }
 
   changeImportFileHandler() {
