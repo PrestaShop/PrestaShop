@@ -2,6 +2,10 @@ services:
     _defaults:
         public: true
 
+    _instanceof:
+        PrestaShop\PrestaShop\Core\Form\AbstractFormHandler:
+            tags: ['prestashop.form.handler']
+
     prestashop.adapter.performance.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
@@ -231,8 +235,10 @@ services:
               'settings': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlSettingsType'
             - 'RequestSql'
 
+    # Entity form handler
     prestashop.admin.request_sql.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\RequestSql\RequestSqlFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.adapter.sql_manager.request_sql_manager'
+            - '@prestashop.adapter.sql_manager.sql_query_validator'

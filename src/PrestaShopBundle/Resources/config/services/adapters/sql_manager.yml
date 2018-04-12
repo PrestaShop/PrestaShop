@@ -1,0 +1,6 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.sql_manager.request_sql_manager:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager'
