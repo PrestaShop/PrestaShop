@@ -419,6 +419,18 @@ class ModuleController extends FrameworkBundleAdminController
     }
 
     /**
+     * @return JsonResponse with number of modules having at least one notification
+     */
+    public function notificationsCountAction()
+    {
+        $moduleManager = $this->container->get('prestashop.module.manager');
+        return new JsonResponse(array(
+            'count' => $moduleManager->countModulesWithNotifications(),
+            'target' => $this->generateUrl('admin_module_notification'),
+        ));
+    }
+
+    /**
      * @param Request $request
      * @return Response
      */
