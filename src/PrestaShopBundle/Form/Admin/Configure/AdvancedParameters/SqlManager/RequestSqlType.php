@@ -24,39 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FilterRequestSqlType extends AbstractType
+class RequestSqlType extends AbstractType
 {
+    /**
+     * {@inheritdoc}
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id_request_sql', TextType::class, [
-                'required' => false,
-            ])
-            ->add('name', TextType::class, [
-                'required' => false,
-            ])
-            ->add('sql', TextType::class, [
-                'required' => false,
-            ])
+            ->add('name', TextType::class)
+            ->add('sql', TextareaType::class)
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'Admin.Advparameters.Feature',
+            'translation_domain' => '',
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getBlockPrefix()
     {
-        return 'request_sql_filter_block';
+        return 'request_sql_block';
     }
 }
