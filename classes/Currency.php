@@ -72,7 +72,7 @@ class CurrencyCore extends ObjectModel
             'blank' =>            array('type' => self::TYPE_INT, 'validate' => 'isInt'),
             'sign' =>            array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 8),
             'format' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'decimals' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+            'decimals' =>        array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
             'conversion_rate' =>array('type' => self::TYPE_FLOAT, 'validate' => 'isUnsignedFloat', 'required' => true, 'shop' => true),
             'deleted' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'active' =>        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
