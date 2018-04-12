@@ -26,8 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Configure\RequestSql\FilterRequestSqlType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +64,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $requestSqls = $repository->findByFilters($filters);
         $requestSqlsCount = $repository->getCount();
 
-        $settingsForm = $this->getSettingsFromHandler()->getForm();
+        $settingsForm = $this->getSettingsFormHandler()->getForm();
 
         $data = [
             'request_sqls' => $requestSqls,
@@ -87,7 +88,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function processSettingsAction(Request $request)
     {
-        $handler = $this->getSettingsFromHandler();
+        $handler = $this->getSettingsFormHandler();
         $form = $handler->getForm();
         $form->handleRequest($request);
 
@@ -113,7 +114,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return array
+     * @return array|RedirectResponse
      */
     public function createAction(Request $request)
     {
@@ -128,16 +129,16 @@ class SqlManagerController extends FrameworkBundleAdminController
             if (!$errors = $formHandler->save($data)) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                //return $this->redirectToRoute('admin_sql_manager');
+                return $this->redirectToRoute('admin_sql_manager');
             }
 
-            //$this->flashErrors($errors);
-
-            dump($data);
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
+            }
         }
 
         $params = [
-            'request_sql_form' => $form->createView(),
+            'requestSqlForm' => $form->createView(),
         ];
 
         return $this->getTemplateParams($request, false) + $params;
@@ -156,11 +157,11 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Get Request SQL settings form handler
      *
-     * @return \PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlSettingsFormHandler
+     * @return FormHandlerInterface
      */
-    protected function getSettingsFromHandler()
+    protected function getSettingsFormHandler()
     {
-        return $this->get('prestashop.admin.request_sql_settings.form_handler');
+        return $this->get('prestashop.admin.sql_manager_settings.form_handler');
     }
 
     /**
