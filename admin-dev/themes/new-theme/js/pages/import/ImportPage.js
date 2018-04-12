@@ -184,7 +184,7 @@ export default class ImportPage {
       return;
     }
 
-    const data = new FormData(uploadedFile);
+    const data = new FormData();
     data.append('file', uploadedFile);
 
     const url = $('.js-import-form').data('file-upload-url');
