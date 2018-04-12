@@ -79,5 +79,34 @@ module.exports = {
           .then(() => client.checkSortDesc((parseInt((tab["modules_number"].match(/[0-9]+/g)[0])))))
       }
     });
+  },
+  clickOnReadMore: function(ModulePage, moduleName, moduleTechName) {
+    scenario('Check that the click on "Read more" button is working well', client => {
+      test('should go to "Module catalog" page', () => client.goToSubtabMenuPage(Menu.Improve.Modules.modules_menu, Menu.Improve.Modules.modules_catalog_submenu));
+      test('should search for the module "' + moduleName + '"', () => {
+        return promise
+          .then(() => client.waitAndSetValue(ModulePage.module_selection_input, moduleTechName))
+          .then(() => client.waitForExistAndClick(ModulePage.modules_search_button));
+      });
+      test('should click on "Read more" link', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.read_more_link.replace("%moduleTechName", moduleTechName)));
+      test('should check that the modal is well opened', () => client.waitForVisible(ModulePage.ReadMoreModal.overview_content.replace("%moduleTechName", moduleTechName)));
+      /**
+       * This scenario is based on the bug described in this ticket
+       * http://forge.prestashop.com/browse/BOOM-4951
+       */
+      test('should check that the content of "Overview" tab is not empty', () => client.checkTextValue(ModulePage.ReadMoreModal.overview_content.replace("%moduleTechName", moduleTechName), '', 'notequal', 1000));
+      /**
+       * End
+       */
+      test('should click on "Additional information" tab in the modal', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.module_readmore_tabs.replace("%moduleTechName", moduleTechName).replace('%NAME', 'Additional information')));
+      test('should check that the content of "Additional information" tab is not empty', () => client.checkTextValue(ModulePage.ReadMoreModal.additional_content.replace("%moduleTechName", moduleTechName), '', 'notequal', 1000));
+      test('should click on "Overview" tab in the modal', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.module_readmore_tabs.replace("%moduleTechName", moduleTechName).replace('%NAME', 'Overview')));
+      test('should check that the content of "Overview" tab is not empty', () => client.checkTextValue(ModulePage.ReadMoreModal.overview_content.replace("%moduleTechName", moduleTechName), '', 'notequal', 1000));
+      test('should click on "Features" tab in the modal', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.module_readmore_tabs.replace("%moduleTechName", moduleTechName).replace('%NAME', 'Features')));
+      test('should check that the content of "Features" tab is not empty', () => client.checkTextValue(ModulePage.ReadMoreModal.features_content.replace("%moduleTechName", moduleTechName), '', 'notequal', 1000));
+      test('should click on "Changelog" tab in the modal', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.module_readmore_tabs.replace("%moduleTechName", moduleTechName).replace('%NAME', 'Changelog')));
+      test('should check that the content of "Changelog" tab is not empty', () => client.checkTextValue(ModulePage.ReadMoreModal.changelog_content.replace("%moduleTechName", moduleTechName), '', 'notequal', 1000));
+      test('should click on "Close" button in the modal', () => client.waitForExistAndClick(ModulePage.ReadMoreModal.close_modal_button.replace("%moduleTechName", moduleTechName), 2000));
+    }, 'common_client');
   }
 };
