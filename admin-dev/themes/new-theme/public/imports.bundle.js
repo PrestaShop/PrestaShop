@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7d157c4b1497e77ae0dc"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "fdb2fff0a3e4890701b4"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -1178,7 +1178,7 @@ var ImportPage = function () {
         return;
       }
 
-      var data = new FormData(uploadedFile);
+      var data = new FormData();
       data.append('file', uploadedFile);
 
       var url = $('.js-import-form').data('file-upload-url');
