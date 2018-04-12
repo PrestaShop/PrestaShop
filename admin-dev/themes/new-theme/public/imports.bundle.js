@@ -59,7 +59,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "fdb2fff0a3e4890701b4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "aca78e3bdc7d27477487"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -985,6 +985,22 @@ var ImportPage = function () {
       $('.js-import-file').on('change', function () {
         return _this.uploadFile();
       });
+
+      this.toggleSelectedFile();
+    }
+
+    /**
+     * Check if selected file names exists and if so, then display it
+     */
+
+  }, {
+    key: 'toggleSelectedFile',
+    value: function toggleSelectedFile() {
+      var selectFilename = $('#csv').val();
+      if (selectFilename.length > 0) {
+        this.showImportFileAlert(selectFilename);
+        this.hideFileUploadBlock();
+      }
     }
   }, {
     key: 'changeImportFileHandler',
