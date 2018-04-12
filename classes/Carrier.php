@@ -1543,7 +1543,9 @@ class CarrierCore extends ObjectModel
             list($carriers, $carrier_error) = Cache::retrieve($cache_id);
         }
 
-        $error = array_merge($error, $carrier_error);
+        foreach ($carrier_error as $key => $item) {
+            $error[$key] = $item;
+        }
 
         foreach ($carriers as $carrier) {
             $available_carrier_list[$carrier['id_carrier']] = $carrier['id_carrier'];
