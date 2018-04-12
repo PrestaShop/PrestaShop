@@ -34,7 +34,7 @@ class CategoryCore extends ObjectModel
     /** @var int category ID */
     public $id_category;
 
-    /** @var string Name */
+    /** @var mixed string or array of Name */
     public $name;
 
     /** @var bool Status for display */
@@ -43,7 +43,7 @@ class CategoryCore extends ObjectModel
     /** @var  int category position */
     public $position;
 
-    /** @var string Description */
+    /** @var mixed string or array of Description */
     public $description;
 
     /** @var int Parent category ID */
@@ -61,16 +61,16 @@ class CategoryCore extends ObjectModel
     /** @var int Nested tree model "right" value */
     public $nright;
 
-    /** @var string string used in rewrited URL */
+    /** @var mixed string or array of string used in rewrited URL */
     public $link_rewrite;
 
-    /** @var string Meta title */
+    /** @var mixed string or array of Meta title */
     public $meta_title;
 
-    /** @var string Meta keywords */
+    /** @var mixed string or array of Meta keywords */
     public $meta_keywords;
 
-    /** @var string Meta description */
+    /** @var mixed string or array of Meta description */
     public $meta_description;
 
     /** @var string Object creation date */
@@ -449,7 +449,13 @@ class CategoryCore extends ObjectModel
 
         $parentCategory = new Category((int) $this->id_parent);
         if (!Validate::isLoadedObject($parentCategory)) {
-            throw new PrestaShopException('Parent category does not exist');
+            if (is_array($this->name)) {
+                $name = $this->name[Context::getContext()->language->id];
+            } else {
+                $name = $this->name;
+            }
+            throw new PrestaShopException('Parent category '.$this->id_parent.
+                ' does not exist. Current category: '.$name);
         }
 
         return (int) $parentCategory->level_depth + 1;

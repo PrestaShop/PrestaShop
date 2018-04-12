@@ -382,6 +382,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
+        gc_disable();
         if (
             !$this->isGranted(PageVoter::READ, 'ADMINPRODUCTS_')
             && !$this->isGranted(PageVoter::UPDATE, 'ADMINPRODUCTS_')
