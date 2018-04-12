@@ -156,3 +156,9 @@ services:
         arguments:
             - '@form.factory'
             - '@prestashop.admin.request_sql_settings.data_provider'
+
+    prestashop.admin.request_sql.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\Configure\RequestSql\RequestSqlFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.hook.dispatcher'
