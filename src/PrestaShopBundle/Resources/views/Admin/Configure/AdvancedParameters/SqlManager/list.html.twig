@@ -27,13 +27,39 @@
 {% trans_default_domain "Admin.Advparameters.Feature" %}
 
 {% block content %}
+    {% block sql_manager_info_block %}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-info" role="alert">
+                    <p class="alert-text">{{ 'How do I create a new SQL query?'|trans({}, 'Admin.Advparameters.Help') }}</p>
+                    <ul>
+                        <li>{{ 'Click "Add New".'|trans({}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'Fill in the fields and click "Save".'|trans({}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'You can then view the query results by clicking on the Edit action in the dropdown menu'|trans({}, 'Admin.Advparameters.Help') }}</li>
+                        <li>{{ 'You can also export the query results as a CSV file by clicking on the Export button'|trans({}, 'Admin.Advparameters.Help') }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block sql_manager_warning_block %}
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning" role="alert">
+                    <p class="alert-text">{{ 'When saving the query, only the "SELECT" SQL statement is allowed.'|trans({}, 'Admin.Advparameters.Notification') }}</p>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
     {% block sql_manager_list_panel %}
         {% include '@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/Blocks/list_panel.html.twig' %}
     {% endblock %}
 
     {% block sql_manager_settings_panel %}
         {{ form_start(settings_form, {'action': path('admin_sql_manager_process') }) }}
-        <div class="col-md-12">
+        <div class="row">
             <div class="col">
                 <div class="card">
                     <h3 class="card-header">
