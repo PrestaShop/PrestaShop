@@ -51,7 +51,7 @@ admin_module_configure_action:
     methods:  [GET, POST]
     defaults:
         _controller: PrestaShopBundle:Admin/Module:configureModule
-        _legacy_controller: AdminModulesManage
+        _legacy_controller: AdminModules
 
 admin_module_manage_action_bulk:
     path:     /manage/bulk/{action}
@@ -79,6 +79,13 @@ admin_module_notification:
     methods:  [GET]
     defaults:
         _controller: PrestaShopBundle:Admin/Module:notification
+        _legacy_controller: AdminModulesNotifications
+        
+admin_module_notification_count:
+    path:     /notifications/count
+    methods:  [GET]
+    defaults:
+        _controller: PrestaShopBundle:Admin/Module:notificationsCount
         _legacy_controller: AdminModulesNotifications
 
 admin_module_addons_store:
