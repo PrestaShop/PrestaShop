@@ -100,7 +100,6 @@ class ControllerTest extends TestCase
             array('AdminCurrenciesController'),
             array('AdminLoginController'),
             array('AdminCustomersController'),
-            array('AdminCustomerPreferencesController'),
             array('AdminLogsController'),
             array('AdminProfilesController'),
             array('AdminCustomersController'),
