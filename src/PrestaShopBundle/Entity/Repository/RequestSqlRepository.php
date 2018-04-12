@@ -96,7 +96,7 @@ class RequestSqlRepository implements RepositoryInterface
 
         $qb->select('rs.*')
             ->from($this->requestSqlTable, 'rs')
-            ->orderBy($filters['orderBy'], $filters['sortOrder'])
+            ->orderBy('`'.$filters['orderBy'].'`', $filters['sortOrder'])
             ->setFirstResult($filters['offset'])
             ->setMaxResults($filters['limit']);
 
