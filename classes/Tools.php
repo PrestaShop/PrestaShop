@@ -634,18 +634,33 @@ class ToolsCore
     /**
      * Return price with currency sign for a given product
      *
+     * @deprecated Since 1.7.4.0. Please use Locale::formatPrice() instead
+     * @see PrestaShop\PrestaShop\Core\Localization\Locale
+     *
      * @param float $price
      *  Product price
      *
-     * @param object|array $currency Current currency (object, id_currency, NULL => context currency)
+     * @param object|array $currency
+     *  Current currency (object, id_currency, NULL => context currency)
      *
-     * @return string Price correctly formated (sign, decimal separator...)
+     * @param bool $no_utf8
+     *  Not used anymore
+     *
+     * @param Context|null $context
+     *
+     * @return string Price correctly formatted (sign, decimal separator...)
      * if you modify this function, don't forget to modify the Javascript function formatCurrency (in tools.js)
      *
      * @throws LocalizationException
      */
     public static function displayPrice($price, $currency = null, $no_utf8 = false, Context $context = null)
     {
+        @trigger_error(
+            'Tools::displayPrice() is deprecated since version 1.7.4.0. '
+            . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatPrice() instead.',
+            E_USER_DEPRECATED
+        );
+
         if (!is_numeric($price)) {
             return $price;
         }
@@ -673,19 +688,29 @@ class ToolsCore
     /**
      * Returns a well formatted number
      *
-     * @deprecated Please use Locale::formatNumber() instead
+     * @deprecated Since 1.7.4.0. Please use Locale::formatNumber() instead
      * @see PrestaShop\PrestaShop\Core\Localization\Locale
      *
-     * @param float $number The number to format
-     * @param null $currency / not used anymaore
+     * @param float $number
+     *  The number to format
      *
-     * @return string The formatted number
+     * @param null $currency
+     *  not used anymore
+     *
+     * @return string
+     *  The formatted number
      *
      * @throws Exception
      * @throws LocalizationException
      */
     public static function displayNumber($number, $currency = null)
     {
+        @trigger_error(
+            'Tools::displayNumber() is deprecated since version 1.7.4.0. '
+            . 'Use PrestaShop\PrestaShop\Core\Localization\Locale::formatNumber() instead.',
+            E_USER_DEPRECATED
+        );
+
         $context   = Context::getContext();
         $container = $context->controller->getContainer();
         if (null === $container) {
