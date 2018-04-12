@@ -1,3 +1,6 @@
+imports:
+    - { resource: adapters/sql_manager.yml }
+
 parameters: ~
 
 services:
@@ -206,7 +209,7 @@ services:
         arguments:
             - '@prestashop.adapter.legacy.configuration'
 
-    prestashop.adapter.request_sql_settings.configuration:
+    prestashop.adapter.sql_manager_settings.configuration:
         class: 'PrestaShop\PrestaShop\Adapter\Configuration\RequestSqlConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'

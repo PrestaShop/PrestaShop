@@ -24,13 +24,13 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\Configure\RequestSql;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 
-class RequestSqlSettingsFormHandler implements FormHandlerInterface
+class SqlManagerSettingsFormHandler implements FormHandlerInterface
 {
     /**
      * @var FormFactoryInterface
@@ -56,7 +56,7 @@ class RequestSqlSettingsFormHandler implements FormHandlerInterface
     public function getForm()
     {
         return $this->formFactory->createBuilder()
-            ->add('settings', RequestSqlSettingsType::class)
+            ->add('settings', SqlManagerSettingsType::class)
             ->setData($this->dataProvider->getData())
             ->getForm();
     }
