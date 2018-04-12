@@ -32,7 +32,7 @@
     {% endblock %}
 
     {% block sql_manager_settings_panel %}
-        {{ form_start(settings_form) }}
+        {{ form_start(settings_form, {'action': path('admin_sql_manager_process') }) }}
         <div class="col-md-12">
             <div class="col">
                 <div class="card">
