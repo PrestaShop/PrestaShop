@@ -26,32 +26,25 @@
 
 namespace PrestaShop\PrestaShop\Adapter\SqlManager;
 
-/**
- * Class RequestSqlManager for managing legacy RequestSqlCore model
- */
-class RequestSqlManager
+class RequestSqlDataProvider
 {
     /**
-     * Create or updating existing RequestSqlCore model from given data
+     * Get Request SQL data by given id
      *
-     * @param array $data
+     * @param $id
      *
      * @return array
      */
-    public function createOrUpdateFromData(array $data)
+    public function getRequestSql($id)
     {
-        $id = isset($data['id']) ? (int) $data['id'] : null;
-
-        $requestSql = new \RequestSql($id);
-        $requestSql->name = $data['name'];
-        $requestSql->sql = $data['sql'];
-
-        if (true !== $result = $requestSql->validateFields(false, true)) {
-            return [$result];
+        if (!\Validate::isLoadedObject($requestSql = new \RequestSql($id))) {
+            return [];
         }
 
-        $requestSql->save();
-
-        return [];
+        return [
+            'id' => $requestSql->id,
+            'name' => $requestSql->name,
+            'sql' => $requestSql->sql,
+        ];
     }
 }

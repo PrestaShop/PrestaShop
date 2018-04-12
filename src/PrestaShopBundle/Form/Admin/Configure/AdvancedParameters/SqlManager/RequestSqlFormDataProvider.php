@@ -46,7 +46,6 @@ class RequestSqlFormDataProvider implements FormDataProviderInterface
      */
     public function getData()
     {
-        // TODO: Implement getData() method.
     }
 
     /**

@@ -4,3 +4,6 @@ services:
 
     prestashop.adapter.sql_manager.request_sql_manager:
         class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlManager'
+
+    prestashop.adapter.sql_manager.request_sql_data_provider:
+        class: 'PrestaShop\PrestaShop\Adapter\SqlManager\RequestSqlDataProvider'
