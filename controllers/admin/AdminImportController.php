@@ -1435,7 +1435,7 @@ class AdminImportControllerCore extends AdminController
             $category->force_id = (bool)$force_ids;
             if (!$res && !$validateOnly) {
                 $res = $category->add();
-                if ($category->id != $info['id']) {
+                if (isset($info['id']) && $category->id != $info['id']) {
                     $cat_moved[$info['id']] = $category->id;
                 }
             }
