@@ -86,7 +86,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function processSettingsAction(Request $request)
+    public function settingsAction(Request $request)
     {
         $handler = $this->getSettingsFormHandler();
         $form = $handler->getForm();
@@ -142,6 +142,48 @@ class SqlManagerController extends FrameworkBundleAdminController
         ];
 
         return $this->getTemplateParams($request, false) + $params;
+    }
+
+    /**
+     * Show Request SQL edit page
+     *
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/form.html.twig")
+     *
+     * @param int $id
+     * @param Request $request
+     *
+     * @return array|RedirectResponse
+     */
+    public function editAction($id, Request $request)
+    {
+        $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
+        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+
+        $form = $formHandler->getForm();
+        $form->setData([
+            'request_sql' => $dataProvider->getRequestSql($id),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $data = $form->getData();
+
+            if (!$errors = $formHandler->save($data)) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_sql_manager');
+            }
+
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error);
+            }
+        }
+
+        $params = [
+            'requestSqlForm' => $form->createView(),
+        ];
+
+        return $this->getTemplateParams($request) + $params;
     }
 
     /**

@@ -30,7 +30,7 @@
     <thead class="thead-default">
         <tr class="column-headers">
             <th scope="col" width="10%">
-                {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_request_sql', order_by, order_way) }}
+                {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_requestSql', order_by, order_way) }}
             </th>
             <th scope="col">
                 {{ ps.sortable_column_header('SQL query Name'|trans({}, 'Admin.Global'), 'name', order_by, order_way) }}
@@ -60,11 +60,11 @@
         </tr>
     </thead>
     <tbody>
-        {% for request_sql in request_sqls %}
+        {% for requestSql in request_sqls %}
             <tr>
-                <th scope="row">{{ request_sql.id_request_sql }}</th>
-                <td>{{ request_sql.name }}</td>
-                <td>{{ request_sql.sql }}</td>
+                <th scope="row">{{ requestSql.id_request_sql }}</th>
+                <td>{{ requestSql.name }}</td>
+                <td>{{ requestSql.sql }}</td>
                 <td>
                     <div class="btn-group-action">
                         <div class="btn-group">
@@ -82,7 +82,9 @@
                                     <i class="material-icons">remove_red_eye</i>
                                     {{ 'View'|trans({}, 'Admin.Global') }}
                                 </a>
-                                <a class="dropdown-item product-edit" href="#">
+                                <a class="dropdown-item product-edit"
+                                   href="{{ path('admin_sql_manager_edit', {'id': requestSql.id_request_sql}) }}"
+                                >
                                     <i class="material-icons">edit</i>
                                     {{ 'Edit'|trans({}, 'Admin.Global') }}
                                 </a>
