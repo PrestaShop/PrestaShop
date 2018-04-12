@@ -58,34 +58,13 @@
     {% endblock %}
 
     {% block sql_manager_settings_panel %}
-        {{ form_start(settings_form, {'action': path('admin_sql_manager_process') }) }}
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <h3 class="card-header">
-                        {{ 'Settings'|trans }}
-                    </h3>
-                    <div class="card-block">
-                        <div class="card-text">
-                            <div class="form-group row">
-                                <label class="form-control-label col-sm-2" for="form_settings_default_file_encoding">
-                                    {{ 'Select your default file encoding'|trans }}
-                                </label>
-                                <div class="col-sm-8">
-                                    {{ form_errors(settings_form.settings.default_file_encoding) }}
-                                    {{ form_widget(settings_form.settings.default_file_encoding) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary pull-right">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{ form_end(settings_form) }}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/Blocks/settings_panel.html.twig' %}
     {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('themes/new-theme/public/sql_manager.bundle.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
