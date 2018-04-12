@@ -553,7 +553,7 @@ CREATE TABLE `PREFIX_country_lang` (
 /* Currency specification */
 CREATE TABLE `PREFIX_currency` (
   `id_currency` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL, /* PLEASE do not use anymore */
+  `name` varchar(64) NOT NULL, /* Deprecated since 1.7.4.0. Use PREFIX_currency_lang.name instead. */
   `iso_code` varchar(3) NOT NULL DEFAULT '0',
   `numeric_iso_code` varchar(3),
   `precision` int(2) NOT NULL DEFAULT 6,
