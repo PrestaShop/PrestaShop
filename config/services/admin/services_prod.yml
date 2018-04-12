@@ -67,18 +67,18 @@ services:
     prestashop.core.localization.cldr.localeDataSource:
         class: PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleDataSource
         arguments:
-            - '@prestashop.core.localization.cldr.middleware.topLayer'
+            - '@prestashop.core.localization.cldr.datalayer.topLayer'
 
-    prestashop.core.localization.cldr.middleware.topLayer: '@prestashop.core.localization.cldr.middleware.localeCache'
+    prestashop.core.localization.cldr.datalayer.topLayer: '@prestashop.core.localization.cldr.datalayer.localeCache'
 
-    prestashop.core.localization.cldr.middleware.localeCache:
+    prestashop.core.localization.cldr.datalayer.localeCache:
         class: PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleCache
         arguments:
             - '@prestashop.core.localization.cldr.cache.adapter'
         calls:
-            - [ 'setLowerLayer', ["@prestashop.core.localization.cldr.middleware.localeReference"]]
+            - [ 'setLowerLayer', ["@prestashop.core.localization.cldr.datalayer.localeReference"]]
 
-    prestashop.core.localization.cldr.middleware.localeReference:
+    prestashop.core.localization.cldr.datalayer.localeReference:
         class: PrestaShop\PrestaShop\Core\Localization\CLDR\DataLayer\LocaleReference
         arguments:
             - '@prestashop.core.localization.cldr.reader'
