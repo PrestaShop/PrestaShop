@@ -48,6 +48,14 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Action') }}
                 </button>
+
+                {% if filters.filters is not empty %}
+                    <a href="{{ path('admin_sql_manager', {'offset': filters.offset, 'limit': filters.limit}) }}"
+                       class="btn btn-warning"
+                    >
+                        <i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Action') }}
+                    </a>
+                {% endif %}
             </th>
         </tr>
     </thead>
