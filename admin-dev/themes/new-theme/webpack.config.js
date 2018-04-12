@@ -57,6 +57,9 @@ let config = {
     ],
     product_preferences: [
       './js/pages/product-preferences',
+    ],
+    sql_manager: [
+      './js/pages/sql-manager',
     ]
   },
   output: {
