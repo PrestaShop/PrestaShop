@@ -49,10 +49,10 @@ script:
   - bash travis-scripts/install-prestashop
   - php bin/console lint:twig src
   - php bin/console lint:twig app
-  - composer phpunit-legacy
-  - composer phpunit-admin
-  - composer phpunit-sf
-  - composer phpunit-controllers
+  - composer phpunit-legacy --ignore-timeout
+  - composer phpunit-admin --ignore-timeout
+  - composer phpunit-sf --ignore-timeout
+  - composer phpunit-controllers --ignore-timeout
   - bash travis-scripts/install-prestashop
   - bash ./travis-scripts/run-selenium-tests
   - bash ./travis-scripts/run-functional-tests # Must run before starter theme
