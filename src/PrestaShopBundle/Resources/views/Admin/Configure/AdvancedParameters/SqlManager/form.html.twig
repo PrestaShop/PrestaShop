@@ -30,8 +30,8 @@
     <div class="container">
         <div class="row">
             <div class="col">
-            {% block sql_manager_settings_panel %}
-                {{ form_start(request_sql_form) }}
+            {% block sql_manager_form_panel %}
+                {{ form_start(requestSqlForm) }}
                 <div class="card">
                     <h3 class="card-header">
                         {{ 'Sql query'|trans }}
@@ -39,15 +39,15 @@
                     <div class="card-block">
                         <div class="card-text">
                             <div class="form-group">
-                                <label for="{{ request_sql_form.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
-                                {{ form_errors(request_sql_form.name) }}
-                                {{ form_widget(request_sql_form.name) }}
+                                <label for="{{ requestSqlForm.request_sql.name.vars.id }}" class="form-control-label">{{ 'SQL query name'|trans }}</label>
+                                {{ form_errors(requestSqlForm.request_sql.name) }}
+                                {{ form_widget(requestSqlForm.request_sql.name) }}
                             </div>
 
                             <div class="form-group">
-                                <label for="" class="form-control-label">{{ 'SQL query'|trans }}</label>
-                                {{ form_errors(request_sql_form.sql) }}
-                                {{ form_widget(request_sql_form.sql) }}
+                                <label for="{{ requestSqlForm.request_sql.sql.vars.id }}" class="form-control-label">{{ 'SQL query'|trans }}</label>
+                                {{ form_errors(requestSqlForm.request_sql.sql) }}
+                                {{ form_widget(requestSqlForm.request_sql.sql) }}
                             </div>
                         </div>
                     </div>
@@ -57,10 +57,9 @@
                         </div>
                     </div>
                 </div>
-                {{ form_end(request_sql_form) }}
+                {{ form_end(requestSqlForm) }}
             {% endblock %}
             </div>
         </div>
     </div>
-
 {% endblock %}
