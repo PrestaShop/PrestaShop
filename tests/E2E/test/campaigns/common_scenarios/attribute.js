@@ -67,10 +67,10 @@ module.exports = {
   },
   deleteAttributeValue(data) {
     scenario('Delete the created "Attribute value"', client => {
-      test('should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
+      test('Should go to "Attributes & Features" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.attributes_features_submenu));
       test('should search for the created attribute', () => client.searchByValue(AttributeSubMenu.search_input, AttributeSubMenu.search_button, data.name + date_time));
       test('should select the attribute', () => client.waitForExistAndClick(AttributeSubMenu.selected_attribute));
-      test('should delete the value of the created attribute', () => {
+      test('should delete the value of created attribute', () => {
         return promise
           .then(() => client.clickOnAction(AttributeSubMenu.value_action_group_button, AttributeSubMenu.delete_value_button, 'delete'))
           .then(() => client.deleteObjectElement(data.values, 1));

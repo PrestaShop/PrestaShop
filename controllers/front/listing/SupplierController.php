@@ -73,6 +73,8 @@ class SupplierControllerCore extends ProductListingFrontController
     public function initContent()
     {
         if (Configuration::get('PS_DISPLAY_SUPPLIERS')) {
+            parent::initContent();
+
             if (Validate::isLoadedObject($this->supplier) && $this->supplier->active && $this->supplier->isAssociatedToShop()) {
                 $this->assignSupplier();
                 $this->label = $this->trans(
@@ -93,7 +95,6 @@ class SupplierControllerCore extends ProductListingFrontController
                 );
                 $this->setTemplate('catalog/suppliers', array('entity' => 'suppliers'));
             }
-            parent::initContent();
         } else {
             $this->redirect_after = '404';
             $this->redirect();

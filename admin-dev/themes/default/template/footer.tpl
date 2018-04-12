@@ -36,6 +36,9 @@
 
 	<div class="col-sm-2 hidden-xs">
 		<div class="social-networks">
+			<a class="link-social link-youtube _blank" href="https://www.youtube.com/user/prestashop" title="Youtube">
+				<i class="icon-youtube"></i>
+			</a>
 			<a class="link-social link-twitter _blank" href="https://twitter.com/PrestaShop" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
@@ -44,9 +47,6 @@
 			</a>
 			<a class="link-social link-github _blank" href="https://www.prestashop.com/github" title="Github">
 				<i class="icon-github"></i>
-			</a>
-			<a class="link-social link-google _blank" href="https://plus.google.com/+prestashop/" title="Google">
-				<i class="icon-google-plus"></i>
 			</a>
 		</div>
 	</div>
@@ -60,6 +60,16 @@
 			<a href="http://forge.prestashop.com/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
 				<i class="icon-bug"></i>
 				{l s='Bug Tracker' d='Admin.Navigation.Footer'}
+			</a>
+			/&nbsp;
+			<a href="https://www.prestashop.com/club/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+				<i class="icon-users"></i>
+				{l s='User Club' d='Admin.Navigation.Footer'}
+			</a>
+			/&nbsp;
+			<a href="http://feedback.prestashop.com/forums/387864-prestashop-1-7-x?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
+				<i class="icon-lightbulb"></i>
+				{l s='Feature Requests' d='Admin.Navigation.Footer'}
 			</a>
 			/&nbsp;
 			<a href="http://www.prestashop.com/forums/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">

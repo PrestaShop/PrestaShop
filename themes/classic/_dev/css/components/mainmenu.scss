@@ -58,8 +58,22 @@
   margin-top: 0;
 }
 
+#_desktop_top_menu {
+  .top-menu {
+    &[data-depth="0"] {
+      li {
+        &:hover {
+          .sub-menu {
+            display: block !important;
+          }
+        }
+      }
+    }
+  }
+}
+
 #mobile_top_menu_wrapper {
-  margin-top: 0.625rem;
+  margin: .625rem 0 0;
   padding-bottom: 0.625rem;
   background: white;
   #top-menu {

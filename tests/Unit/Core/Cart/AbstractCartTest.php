@@ -53,6 +53,8 @@ abstract class AbstractCartTest extends IntegrationTestCase
         2 => array('price' => 32.388),
         3 => array('price' => 31.188),
         4 => array('price' => 35.567, 'outOfStock' => true),
+        5 => array('price' => 23.86, 'quantity' => 50),
+        6 => array('price' => 12.34, 'quantity' => 10, 'is_pack' => true, 'pack_items' => array(array('id_product_fixture' => 5, 'quantity' => 10))),
     ];
 
     const CART_RULES_FIXTURES = [
@@ -153,7 +155,8 @@ abstract class AbstractCartTest extends IntegrationTestCase
             $product           = new Product;
             $product->price    = $productFixture['price'];
             $product->name     = 'product name';
-            $product->quantity = 1000;
+            $product->quantity = !empty($productFixture['quantity']) ? $productFixture['quantity'] : 1000;
+
             if (!empty($productFixture['outOfStock'])) {
                 $product->out_of_stock = 0;
                 $product->quantity     = 0;
@@ -162,13 +165,29 @@ abstract class AbstractCartTest extends IntegrationTestCase
                 $product->id_tax_rules_group = $productFixture['taxRuleGroupId'];
             }
             $product->add();
+
+            if (isset($productFixture['is_pack'])
+                && $productFixture['is_pack'] === true
+            ) {
+                foreach ($productFixture['pack_items'] as $packItem) {
+                    \Pack::addItem(
+                        $product->id,
+                        $this->products[$packItem['id_product_fixture']]->id,
+                        $packItem['quantity']
+                    );
+                }
+            }
+
             if (!empty($productFixture['outOfStock'])) {
                 StockAvailable::setProductOutOfStock((int) $product->id, 0);
             } else {
-                StockAvailable::setQuantity((int) $product->id, 0, 1000);
+                StockAvailable::setQuantity((int) $product->id, 0, $product->quantity);
             }
             $this->products[$k] = $product;
         }
+
+        // Fix issue pack cache is set when adding products.
+        \Pack::resetStaticCache();
     }
 
     protected function addProductsToCart($productData)

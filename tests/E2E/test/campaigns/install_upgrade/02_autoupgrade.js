@@ -7,13 +7,13 @@ const {AccessPageFO} = require('../../selectors/FO/access_page');
 const {ShopParameter} = require('../../selectors/BO/shopParameters/index');
 
 const commonScenarios = require('../common_scenarios/product');
-const commonInstallation = require('./common_installation');
+const commonInstallation = require('../common_scenarios/common_installation');
 const moduleCommonScenarios = require('../common_scenarios/module');
 const orderCommonScenarios = require('../common_scenarios/order');
 
 let promise = Promise.resolve();
 
-var productData = {
+let productData = {
   name: 'UpgradeProduct',
   reference: 'product',
   quantity: "10",
@@ -31,17 +31,17 @@ scenario('The shop installation', () => {
         return promise
           .then(() => client.getRCName(rcLink))
           .then(() => client.linkAccess(rcLink))
-          .then(() => client.WaitForDownload(Installation.download_version))
+          .then(() => client.WaitForDownload(Installation.download_version));
       })
     }
     test('should go to the last stable version URL', () => client.localhost(UrlLastStableVersion));
   }, 'installation');
 
-  scenario('Installation of the last stable version of prestashop', client => {
+  scenario('Installation of the last stable version of prestashop', () => {
     commonInstallation.prestaShopInstall(Installation, "en", "france");
   }, 'installation');
 
-  scenario('Open the browser and connect to the BO', client => {
+  scenario('Open the browser and connect to the Back Office', client => {
     test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
@@ -49,7 +49,7 @@ scenario('The shop installation', () => {
     test('should close the onboarding modal', () => {
       return promise
         .then(() => client.isVisible(OnBoarding.welcome_modal))
-        .then(() => client.closeBoarding(OnBoarding.popup_close_button))
+        .then(() => client.closeBoarding(OnBoarding.popup_close_button));
     });
   }, 'installation');
 
@@ -67,11 +67,11 @@ scenario('The shop installation', () => {
 
   scenario('Install " 1-Click Upgrade " From Cross selling and configure it', client => {
     moduleCommonScenarios.installModule(client, ModulePage, AddProductPage, "autoupgrade");
-    test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.action_module_built_button));
+    test('should click on "configure" button', () => client.waitForExistAndClick(ModulePage.configure_module_button.split('%moduleTechName').join("autoupgrade")));
     test('should deactivate the shop', () => {
       return promise
         .then(() => client.waitForVisibleElement(ModulePage.confirm_maintenance_shop_icon))
-        .then(() => client.waitForExistAndClick(ModulePage.maintenance_shop))
+        .then(() => client.waitForExistAndClick(ModulePage.maintenance_shop));
     });
     if (rcLink !== "") {
       test('should copy the downloaded RC to the auto upgrade directory', () => client.copyFileToAutoUpgrade(downloadsFolderPath, filename, rcTarget + "admin-dev/autoupgrade/download"));
@@ -85,7 +85,7 @@ scenario('The shop installation', () => {
     test('should click on "refresh the page" button', () => {
       return promise
         .then(() => client.moveToObject(ModulePage.upgrade_block))
-        .then(() => client.waitForExistAndClick(ModulePage.refresh_button))
+        .then(() => client.waitForExistAndClick(ModulePage.refresh_button));
     });
     test('should click on "Upgrade PrestaShop now!" button', () => client.waitForExistAndClick(ModulePage.upgrade_button));
     test('should wait until the Upgrade is finished', () => client.waitForExist(ModulePage.loader_tag, 310000));
@@ -96,8 +96,8 @@ scenario('The shop installation', () => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'installation');
 
-  scenario('Connect to the BO', client => {
-    test('should log in successfully in BO', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
+  scenario('Connect to the Back Office', client => {
+    test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO, UrlLastStableVersion));
   }, 'installation');
 
   scenario('Enable shop in the Back Office', client => {

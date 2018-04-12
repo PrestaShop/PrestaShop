@@ -5,7 +5,7 @@ const {SearchProductPage} = require('../../../selectors/FO/search_product_page')
 const {CheckoutOrderPage} = require('../../../selectors/FO/order_page');
 const common = require('../../common_scenarios/product');
 const {productPage} = require('../../../selectors/FO/product_page');
-const common_scenarios = require('../../common_scenarios/discount');
+const commonScenarios = require('../../common_scenarios/discount');
 
 let productData = {
   name: 'SP',
@@ -69,7 +69,7 @@ scenario('Create "Catalog price rule"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  common_scenarios.createCatalogPriceRules(catalogPriceRule["name"] + date_time, catalogPriceRule["type"], catalogPriceRule["reduction"]);
+  commonScenarios.createCatalogPriceRules(catalogPriceRule["name"] + date_time, catalogPriceRule["type"], catalogPriceRule["reduction"]);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
@@ -99,7 +99,7 @@ scenario('Delete "Catalog price rule"', () => {
     test('should open the browser', () => client.open());
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'common_client');
-  common_scenarios.deleteCatalogPriceRules(catalogPriceRule["name"] + date_time);
+  commonScenarios.deleteCatalogPriceRules(catalogPriceRule["name"] + date_time);
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');

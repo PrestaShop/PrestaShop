@@ -32,15 +32,4 @@ class GroupLangCore extends DataLangCore
     protected $keys = array('id_group');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Visitor') => $this->translator->trans('Visitor', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Guest') => $this->translator->trans('Guest', array(), 'Admin.Shopparameters.Feature', $this->locale),
-                md5('Customer') => $this->translator->trans('Customer', array(), 'Admin.Shopparameters.Feature', $this->locale),
-            ),
-        );
-    }
 }

@@ -51,6 +51,7 @@ class CombinationDataProvider
 
     /**
      * Get a combination values
+     * @deprecated since 1.7.3.1 really slow, use getFormCombinations instead.
      *
      * @param int $combinationId The id_product_attribute
      *
@@ -69,6 +70,38 @@ class CombinationDataProvider
         );
     }
 
+    /**
+     * Retrieve combinations data for a specific language id.
+     * @param array $combinationIds
+     * @param int $languageId
+     * @return array a list of formatted combinations.
+     * @throws \PrestaShopDatabaseException
+     * @throws \PrestaShopException
+     */
+    public function getFormCombinations(array $combinationIds, int $languageId)
+    {
+        $productId = (new Combination($combinationIds[0]))->id_product;
+        $product = new Product($productId);
+        $combinations = array();
+
+        foreach ($combinationIds as $combinationId) {
+            $combinations[$combinationId] = $this->completeCombination(
+                $product->getAttributeCombinationsById(
+                    $combinationId,
+                    $languageId
+                ),
+                $product
+            );
+        }
+
+        return $combinations;
+    }
+
+    /**
+     * @param $attributesCombinations
+     * @param $product
+     * @return array
+     */
     public function completeCombination($attributesCombinations, $product)
     {
         $combination = $attributesCombinations[0];

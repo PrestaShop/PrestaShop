@@ -32,7 +32,7 @@
     "parsed-url": "0.0.0",
     "q": "^1.4",
     "req": "^0.1",
-    "selenium-standalone": "^6.12.0",
+    "selenium-standalone": "^6.14.0",
     "should": "^9.0",
     "webdriverio": "^4.0",
     "window": "^1.0"

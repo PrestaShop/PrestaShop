@@ -27,6 +27,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Product;
 
+use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\Operation\Rounding;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
@@ -154,11 +156,18 @@ class ProductPresenter
         }
 
         if ($product['specific_prices']) {
-            $presentedProduct['has_discount'] = (0 != $product['reduction']);
+            $presentedProduct['has_discount']  = (0 != $product['reduction']);
             $presentedProduct['discount_type'] = $product['specific_prices']['reduction_type'];
-            // TODO: format according to locale preferences
-            $presentedProduct['discount_percentage'] = -round(100 * $product['specific_prices']['reduction']).'%';
-            $presentedProduct['discount_percentage_absolute'] = round(100 * $product['specific_prices']['reduction']).'%';
+
+            $absoluteReduction     = new Number($product['specific_prices']['reduction']);
+            $absoluteReduction     = $absoluteReduction->times(new Number('100'));
+            $negativeReduction     = $absoluteReduction->toNegative();
+            $presAbsoluteReduction = $absoluteReduction->round(2, Rounding::ROUND_HALF_UP);
+            $presNegativeReduction = $negativeReduction->round(2, Rounding::ROUND_HALF_UP);
+
+            // TODO: add percent sign according to locale preferences
+            $presentedProduct['discount_percentage'] = Tools::displayNumber($presNegativeReduction) . '%';
+            $presentedProduct['discount_percentage_absolute'] = Tools::displayNumber($presAbsoluteReduction) . '%';
             // TODO: Fix issue with tax calculation
             $presentedProduct['discount_amount'] = $this->priceFormatter->format(
                 $product['reduction']
@@ -231,8 +240,10 @@ class ProductPresenter
 
         $shouldEnable = $shouldEnable && $this->shouldShowAddToCartButton($product);
 
-        if ($settings->stock_management_enabled && !$product['allow_oosp'] && isset($product['quantity_wanted']) &&
-            ($product['quantity'] <= 0 || $product['quantity'] < $product['quantity_wanted'])) {
+        if ($settings->stock_management_enabled
+            && !$product['allow_oosp']
+            && $product['quantity'] <= 0
+        ) {
             $shouldEnable = false;
         }
 
@@ -428,38 +439,37 @@ class ProductPresenter
         Language $language
     ) {
         $show_price = $this->shouldShowPrice($settings, $product);
-
         $show_availability = $show_price && $settings->stock_management_enabled;
-
         $presentedProduct['show_availability'] = $show_availability;
+        $product['quantity_wanted'] = (int) Tools::getValue('quantity_wanted', 1);
 
         if (isset($product['available_date']) && '0000-00-00' == $product['available_date']) {
             $product['available_date'] = null;
         }
 
         if ($show_availability) {
-            if ($product['quantity'] > 0) {
+            if ($product['quantity'] - $product['quantity_wanted'] >= 0) {
                 $presentedProduct['availability_date'] = $product['available_date'];
+
                 if ($product['quantity'] < $settings->lastRemainingItems) {
                     $presentedProduct = $this->applyLastItemsInStockDisplayRule($product, $settings, $presentedProduct);
                 } else {
-                    if (isset($product['quantity_wanted']) && $product['quantity_wanted'] > $product['quantity'] && !$product['allow_oosp']) {
-                        $presentedProduct['availability_message'] = $this->translator->trans(
-                            'There are not enough products in stock',
-                            array(),
-                            'Shop.Notifications.Error'
-                        );
-                        $presentedProduct['availability'] = 'unavailable';
-                    } else {
-                        $presentedProduct['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
-                        $presentedProduct['availability'] = 'available';
-                    }
+                    $presentedProduct['availability_message'] = $product['available_now'] ? $product['available_now'] : Configuration::get('PS_LABEL_IN_STOCK_PRODUCTS', $language->id);
+                    $presentedProduct['availability'] = 'available';
                 }
             } elseif ($product['allow_oosp']) {
                 $presentedProduct['availability_message'] = $product['available_later'] ? $product['available_later'] : Configuration::get('PS_LABEL_OOS_PRODUCTS_BOA', $language->id);
                 $presentedProduct['availability_date'] = $product['available_date'];
                 $presentedProduct['availability'] = 'available';
-            } elseif ($product['quantity_all_versions']) {
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] >= 0) {
+                $presentedProduct['availability_message'] = $this->translator->trans(
+                    'There are not enough products in stock',
+                    array(),
+                    'Shop.Notifications.Error'
+                );
+                $presentedProduct['availability'] = 'unavailable';
+                $presentedProduct['availability_date'] = null;
+            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $presentedProduct['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     array(),

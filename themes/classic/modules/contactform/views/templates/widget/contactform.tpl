@@ -112,6 +112,13 @@
       </section>
 
       <footer class="form-footer text-sm-right">
+        <style>
+          input[name=url] {
+            display: none !important;
+          }
+        </style>
+        <input type="text" name="url" value=""/>
+        <input type="hidden" name="token" value="{$token}" />
         <input class="btn btn-primary" type="submit" name="submitMessage" value="{l s='Send' d='Shop.Theme.Actions'}">
       </footer>
     {/if}

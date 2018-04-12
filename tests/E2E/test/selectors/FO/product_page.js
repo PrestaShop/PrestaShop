@@ -17,10 +17,13 @@ module.exports = {
     see_all_products: '//*[@id="content"]//a[contains(@class, "all-product-link")]',
     first_product_all: '(//*[@id="js-product-list"]//article//a)[1]',
     pagination_next: '//*[@id="js-product-list"]//a[contains(@class, "next")]',
+    pagination_previous: '//*[@id="js-product-list"]//a[contains(@class, "previous")]',
+    current_page: '//*[@id="js-product-list"]//ul[contains(@class, "page-list")]/li[@class="current"]/a',
     product_discount_details: '//*[@id="main"]//span[contains(@class, "discount")]',
     quick_view_add_to_cart: '//*[@id="add-to-cart-or-refresh"]//button[contains(@data-button-action, "add-to-cart")]',
     //Get the number of products in front office after clicking on "SEE ALL PRODUCTS" link
     products_number: '//*[@id="js-product-list-top"]//p',
-    offline_warning_message: '//div[contains(@class, "alert-warning")]//p'
+    offline_warning_message: '//div[contains(@class, "alert-warning")]//p',
+    product_discounts_table: '//*[@id="add-to-cart-or-refresh"]//tbody/tr[%R]/td[%D]'
   }
 };

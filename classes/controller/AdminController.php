@@ -248,16 +248,16 @@ class AdminControllerCore extends Controller
     /** @var HelperList */
     protected $helper;
 
-    /** @var array Cache for translations */
+    /** @var int DELETE access level */
     const LEVEL_DELETE = 4;
 
-    /** @var array Cache for translations */
-    const LEVEL_EDIT = 2;
-
-    /** @var array Cache for translations */
+    /** @var int ADD access level */
     const LEVEL_ADD = 3;
 
-    /** @var array Cache for translations */
+    /** @var int EDIT access level */
+    const LEVEL_EDIT = 2;
+
+    /** @var int VIEW access level */
     const LEVEL_VIEW = 1;
 
     /**
@@ -1986,32 +1986,6 @@ class AdminControllerCore extends Controller
                 continue;
             }
 
-            $img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
-            $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
-
-            // retrocompatibility : change png to gif if icon not exists
-            if (!$img_exists_cache) {
-                $img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
-            }
-
-            if ($img_exists_cache) {
-                $path_img = $img = $img_exists_cache;
-            } else {
-                $path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../img/t/'.$tab['class_name'].'.png';
-            }
-
-            if (trim($tab['module']) != '') {
-                $path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
-                // Relative link will always work, whatever the base uri set in the admin
-                $img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
-            }
-
-            // retrocompatibility
-            if (!file_exists($path_img)) {
-                $img = str_replace('png', 'gif', $img);
-            }
             // tab[class_name] does not contains the "Controller" suffix
             if (($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $this->controller_name) {
                 $tabs[$index]['current'] = true;
@@ -2019,11 +1993,10 @@ class AdminControllerCore extends Controller
             } else {
                 $tabs[$index]['current'] = false;
             }
-
-            $tabs[$index]['img'] = $img;
+            $tabs[$index]['img'] = null;
             $tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
-
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($tab['id_tab'], $level + 1));
+
             if (isset($tabs[$index]['sub_tabs'][0])) {
                 $tabs[$index]['href'] = $tabs[$index]['sub_tabs'][0]['href'];
             } elseif (0 == $tabs[$index]['id_parent'] && '' == $tabs[$index]['icon']) {

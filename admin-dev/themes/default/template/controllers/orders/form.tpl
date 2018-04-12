@@ -101,7 +101,7 @@
 					},
 					parse: function(data) {
 						if (!data.found)
-							$('#vouchers_err').html('{l s='No voucher was found' d='Admin.Orderscustomers.Notification'}').show();
+							$('#vouchers_err').html('{l s='No voucher was found' d='Admin.Orderscustomers.Notification' js=1}').show();
 						else
 							$('#vouchers_err').hide();
 						var mytab = new Array();
@@ -253,7 +253,7 @@
 		$('#customer_part').on('click','button.setup-customer',function(e){
 			e.preventDefault();
 			setupCustomer($(this).data('customer'));
-			$(this).removeClass('setup-customer').addClass('change-customer').html('<i class="icon-refresh"></i>&nbsp;{l s="Change"}').blur();
+			$(this).removeClass('setup-customer').addClass('change-customer').html('<i class="icon-refresh"></i>&nbsp;{l s="Change" js=1}').blur();
 			$(this).closest('.customerCard').addClass('selected-customer');
 			$('.selected-customer .panel-heading').prepend('<i class="icon-ok text-success"></i>');
 			$('.customerCard').not('.selected-customer').remove();
@@ -498,15 +498,15 @@
             html += '<span>' + this.email + '</span><br/>';
             html += '<span class="text-muted">' + ((this.birthday != '0000-00-00') ? this.birthday : '') + '</span><br/>';
             html += '<div class="panel-footer">';
-            html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer=' + this.id_customer + '&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global'}</a>';
-            html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right" id="choose_customer_btn"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions'}</button>';
+            html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer=' + this.id_customer + '&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details' d='Admin.Global' js=1}</a>';
+            html += '<button type="button" data-customer="' + this.id_customer + '" class="setup-customer btn btn-default pull-right" id="choose_customer_btn"><i class="icon-arrow-right"></i> {l s='Choose' d='Admin.Actions' js=1}</button>';
             html += '</div>';
             html += '</div>';
             html += '</div>';
           });
         }
         else {
-          html = '<div class="alert alert-warning">{l s='No customers found' d='Admin.Orderscustomers.Notification'}</div>';
+          html = '<div class="alert alert-warning">{l s='No customers found' d='Admin.Orderscustomers.Notification' js=1}</div>';
         }
 
         $('#customers').html(html);
@@ -558,8 +558,8 @@
 						html_carts += '<td>'+this.date_add+'</td>';
 						html_carts += '<td>'+this.total_price+'</td>';
 						html_carts += '<td class="text-right">';
-						html_carts += '<a title="{l s='View this cart' d='Admin.Orderscustomers.Feature'}" class="fancybox btn btn-default" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><i class="icon-search"></i>&nbsp;{l s='Details' d='Admin.Global' }</a>';
-						html_carts += '&nbsp;<a href="#" title="{l s='Use this cart' d='Admin.Orderscustomers.Feature'}" class="use_cart btn btn-default" rel="'+this.id_cart+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use" d='Admin.Orderscustomers.Feature'}</a>';
+						html_carts += '<a title="{l s='View this cart' d='Admin.Orderscustomers.Feature' js=1}" class="fancybox btn btn-default" href="index.php?tab=AdminCarts&id_cart='+this.id_cart+'&viewcart&token={getAdminToken tab='AdminCarts'}&liteDisplaying=1#"><i class="icon-search"></i>&nbsp;{l s='Details' d='Admin.Global' js=1}</a>';
+						html_carts += '&nbsp;<a href="#" title="{l s='Use this cart' d='Admin.Orderscustomers.Feature' js=1}" class="use_cart btn btn-default" rel="'+this.id_cart+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use" d='Admin.Orderscustomers.Feature' js=1}</a>';
 						html_carts += '</td>';
 						html_carts += '</tr>';
 					});
@@ -568,8 +568,8 @@
 						html_orders += '<tr>';
 						html_orders += '<td>'+this.id_order+'</td><td>'+this.date_add+'</td><td>'+(this.nb_products ? this.nb_products : '0')+'</td><td>'+this.total_paid_real+'</span></td><td>'+this.payment+'</td><td>'+this.order_state+'</td>';
 						html_orders += '<td class="text-right">';
-						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order' d='Admin.Orderscustomers.Feature'}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details" d='Admin.Global'}</a>';
-						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order' d='Admin.Orderscustomers.Feature'}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use" d='Admin.Orderscustomers.Feature'}</a>';
+						html_orders += '<a href="{$link->getAdminLink('AdminOrders')}&id_order='+this.id_order+'&vieworder&liteDisplaying=1#" title="{l s='View this order' d='Admin.Orderscustomers.Feature' js=1}" class="fancybox btn btn-default"><i class="icon-search"></i>&nbsp;{l s="Details" d='Admin.Global' js=1}</a>';
+						html_orders += '&nbsp;<a href="#" "title="{l s='Duplicate this order' d='Admin.Orderscustomers.Feature' js=1}" class="duplicate_order btn btn-default" rel="'+this.id_order+'"><i class="icon-arrow-right"></i>&nbsp;{l s="Use" d='Admin.Orderscustomers.Feature' js=1}</a>';
 						html_orders += '</td>';
 						html_orders += '</tr>';
 					});
@@ -603,7 +603,7 @@
 		else
 		{
 			$('#carrier_form').hide();
-			$('#carriers_err').show().html('{l s='No carrier can be applied to this order' d='Admin.Orderscustomers.Notification'}');
+			$('#carriers_err').show().html('{l s='No carrier can be applied to this order' d='Admin.Orderscustomers.Notification' js=1}');
 			$("button[name=\"submitAddOrder\"]").attr("disabled", "disabled");
 		}
 	}
@@ -639,8 +639,8 @@
 					else
 						customization_errors = false;
 					$('#products_found').show();
-					products_found += '<label class="control-label col-lg-3">{l s='Product' d='Admin.Global'}</label><div class="col-lg-6"><select id="id_product" onclick="display_product_attributes();display_product_customizations();"></div>';
-					attributes_html += '<label class="control-label col-lg-3">{l s='Combination' d='Admin.Global'}</label><div class="col-lg-6">';
+					products_found += '<label class="control-label col-lg-3">{l s='Product' d='Admin.Global' js=1}</label><div class="col-lg-6"><select id="id_product" onclick="display_product_attributes();display_product_customizations();"></div>';
+					attributes_html += '<label class="control-label col-lg-3">{l s='Combination' d='Admin.Global' js=1}</label><div class="col-lg-6">';
 					$.each(res.products, function() {
 						products_found += '<option '+(this.combinations.length > 0 ? 'rel="'+this.qty_in_stock+'"' : '')+' value="'+this.id_product+'">'+this.name+(this.combinations.length == 0 ? ' - '+this.formatted_price : '')+'</option>';
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
@@ -648,7 +648,7 @@
 						stock[id_product] = new Array();
 						if (this.customizable == '1' || this.customizable == '2')
 						{
-							customization_html += '<div class="bootstrap"><div class="panel"><div class="panel-heading">{l s='Customization' d='Admin.Catalog.Feature'}</div><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
+							customization_html += '<div class="bootstrap"><div class="panel"><div class="panel-heading">{l s='Customization' d='Admin.Catalog.Feature' js=1}</div><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
 							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'" />';
 							customization_html += '<input type="hidden" name="id_cart" value="'+id_cart+'" />';
 							customization_html += '<input type="hidden" name="action" value="updateCustomizationFields" />';
@@ -691,7 +691,7 @@
 				else
 				{
 					$('#products_found').hide();
-					$('#products_err').html('{l s='No products found' d='Admin.Orderscustomers.Notification'}');
+					$('#products_err').html('{l s='No products found' d='Admin.Orderscustomers.Notification' js=1}');
 					$('#products_err').removeClass('hide');
 				}
 				resetBind();
@@ -766,7 +766,7 @@
 
 		$.each(gifts, function() {
 			cart_content += '<tr><td><img src="'+this.image_link+'" title="'+this.name+'" /></td><td>'+this.name+'<br />'+this.attributes_small+'</td><td>'+this.reference+'</td>';
-			cart_content += '<td>{l s='Gift'}</td><td>'+this.cart_quantity+'</td><td>{l s='Gift' d='Admin.Orderscustomers.Feature'}</td></tr>';
+			cart_content += '<td>{l s='Gift' js=1}</td><td>'+this.cart_quantity+'</td><td>{l s='Gift' d='Admin.Orderscustomers.Feature' js=1}</td></tr>';
 		});
 		$('#customer_cart tbody').html(cart_content);
 	}
@@ -777,11 +777,11 @@
 		if (typeof(vouchers) == 'object')
 			$.each(vouchers, function(){
 				if (parseFloat(this.value_real) === 0 && parseInt(this.free_shipping) === 1)
-					var value = '{l s='Free shipping' d='Admin.Shipping.Feature'}';
+					var value = '{l s='Free shipping' d='Admin.Shipping.Feature' js=1}';
 				else
 					var value = this.value_real;
 
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete' d='Admin.Actions'}</a></td></tr>';
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete' d='Admin.Actions' js=1}</a></td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
@@ -1054,7 +1054,7 @@
 		});
 		if (addresses.length == 0)
 		{
-			$('#addresses_err').show().html('{l s='You must add at least one address to process the order.' d='Admin.Orderscustomers.Notification'}');
+			$('#addresses_err').show().html('{l s='You must add at least one address to process the order.' d='Admin.Orderscustomers.Notification' js=1}');
 			$('#address_delivery, #address_invoice').hide();
 		}
 		else
@@ -1104,7 +1104,7 @@
 		</div>
 		<div id="search-customer-form-group" class="form-group">
 			<label class="control-label col-lg-3">
-				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing customer by typing the first letters of his/her name.' d='Admin.Orderscustomers.Help'}">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing customer by typing the first letters of his/her name.' d='Admin.Orderscustomers.Help' js=1}">
 					{l s='Search for a customer' d='Admin.Orderscustomers.Feature'}
 				</span>
 			</label>
@@ -1195,7 +1195,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">
-				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of its name.'}">
+				<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Search for an existing product by typing the first letters of its name.' js=1}">
 					{l s='Search for a product' d='Admin.Orderscustomers.Feature'}
 				</span>
 			</label>

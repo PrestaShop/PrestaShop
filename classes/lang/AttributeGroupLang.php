@@ -32,19 +32,4 @@ class AttributeGroupLangCore extends DataLangCore
     protected $keys = array('id_attribute_group');
 
     protected $fieldsToUpdate = array('name', 'public_name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Size') => $this->translator->trans('Size', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Shoes Size') => $this->translator->trans('Shoe size', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Color') => $this->translator->trans('Color', array(), 'Shop.Demo.Catalog', $this->locale),
-            ),
-            'public_name' => array(
-                md5('Size') => $this->translator->trans('Size', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Color') => $this->translator->trans('Color', array(), 'Shop.Demo.Catalog', $this->locale),
-            ),
-        );
-    }
 }

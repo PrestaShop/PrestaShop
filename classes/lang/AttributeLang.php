@@ -32,36 +32,4 @@ class AttributeLangCore extends DataLangCore
     protected $keys = array('id_attribute');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('S') => $this->translator->trans('S', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('M') => $this->translator->trans('M', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('L') => $this->translator->trans('L', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('One size') => $this->translator->trans('One size', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Grey') => $this->translator->trans('Grey', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Taupe') => $this->translator->trans('Taupe', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Beige') => $this->translator->trans('Beige', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('White') => $this->translator->trans('White', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Off White') => $this->translator->trans('Off White', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Red') => $this->translator->trans('Red', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Black') => $this->translator->trans('Black', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Camel') => $this->translator->trans('Camel', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Orange') => $this->translator->trans('Orange', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Blue') => $this->translator->trans('Blue', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Green') => $this->translator->trans('Green', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Yellow') => $this->translator->trans('Yellow', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Brown') => $this->translator->trans('Brown', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('35') => $this->translator->trans('35', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('36') => $this->translator->trans('36', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('37') => $this->translator->trans('37', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('38') => $this->translator->trans('38', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('39') => $this->translator->trans('39', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('40') => $this->translator->trans('40', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Pink') => $this->translator->trans('Pink', array(), 'Shop.Demo.Catalog', $this->locale),
-            )
-        );
-    }
 }

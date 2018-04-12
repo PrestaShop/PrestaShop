@@ -776,7 +776,9 @@ class CartRuleCore extends ObjectModel
                 if ($otherCartRule['id_cart_rule'] == $this->id && !$alreadyInCart) {
                     return (!$display_error) ? false : $this->trans('This voucher is already in your cart', array(), 'Shop.Notifications.Error');
                 }
-                if ($otherCartRule['gift_product'] && $context->cart->containsProduct($otherCartRule['gift_product'], $otherCartRule['gift_product_attribute']) > 0) {
+                $giftProductQuantity = $context->cart->getProductQuantity($otherCartRule['gift_product'], $otherCartRule['gift_product_attribute']);
+
+                if ($otherCartRule['gift_product'] && !empty($giftProductQuantity['quantity'])) {
                     --$nb_products;
                 }
 

@@ -32,16 +32,4 @@ class RiskLangCore extends DataLangCore
     protected $keys = array('id_risk');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('None') => $this->translator->trans('None', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('Low') => $this->translator->trans('Low', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('Medium') => $this->translator->trans('Medium', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-                md5('High') => $this->translator->trans('High', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-            ),
-        );
-    }
 }

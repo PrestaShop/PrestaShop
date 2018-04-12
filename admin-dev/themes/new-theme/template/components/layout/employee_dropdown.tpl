@@ -24,8 +24,8 @@
  *}
 <div class="employee-dropdown dropdown">
   {if isset($employee)}
-    <div class="rounded-circle person" data-toggle="dropdown">
-      <i class="material-icons">person</i>
+    <div class="person" data-toggle="dropdown">
+      <i class="material-icons">account_circle</i>
     </div>
   {/if}
   <div class="dropdown-menu dropdown-menu-right">

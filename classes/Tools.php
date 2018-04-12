@@ -128,9 +128,22 @@ class ToolsCore
         return false;
     }
 
+    /**
+     * Replace text within a portion of a string
+     *
+     * Replaces a string matching a search, (optionally) string from a certain position
+     *  
+     * @param  string  $search  The string to search in the input string
+     * @param  string  $replace The replacement string
+     * @param  string  $subject The input string
+     * @param  integer $cur     Starting position cursor for the search
+     * @return string  The result string is returned.
+     */
     public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
     {
-        return (strpos($subject, $search, $cur))?substr_replace($subject, $replace, (int)strpos($subject, $search, $cur), strlen($search)):$subject;
+        $strPos = strpos($subject, $search, $cur);
+
+        return $strPos !== false ? substr_replace($subject, $replace, (int)$strPos, strlen($search)) : $subject;
     }
 
     /**
@@ -2043,14 +2056,19 @@ class ToolsCore
     /**
     * Translates a string with underscores into camel case (e.g. first_name -> firstName)
     * @prototype string public static function toCamelCase(string $str[, bool $capitalise_first_char = false])
-    */
-    public static function toCamelCase($str, $catapitalise_first_char = false)
+     *
+     * @param string $str Source string to convert in camel case
+     * @param bool $capitaliseFirstChar Optionnal parameters to transform the first letter in upper case
+     * @return string The string in camel case
+     */
+    public static function toCamelCase($str, $capitaliseFirstChar = false)
     {
         $str = Tools::strtolower($str);
-        if ($catapitalise_first_char) {
-            $str = Tools::ucfirst($str);
+        $str = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $str)) );
+        if (!$capitaliseFirstChar) {
+            $str = lcfirst($str);
         }
-        return preg_replace_callback('/_+([a-z])/', create_function('$c', 'return strtoupper($c[1]);'), $str);
+        return $str;
     }
 
     /**

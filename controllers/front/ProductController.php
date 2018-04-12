@@ -55,11 +55,11 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         if (Validate::isLoadedObject($this->product)) {
             if (!$this->product->hasCombinations()) {
                 unset($_GET['id_product_attribute']);
-            } else if (!Tools::getValue('id_product_attribute') || Tools::getValue('rewrite') !== $this->product->link_rewrite) {
+            } else if (!$this->isValidCombination(Tools::getValue('id_product_attribute'), $this->product->id)) {
                 $_GET['id_product_attribute'] = Product::getDefaultAttribute($this->product->id);
             }
 
-            $id_product_attribute = $this->getIdProductAttribute();
+            $idProductAttribute = $this->getIdProductAttribute();
             parent::canonicalRedirection($this->context->link->getProductLink(
                 $this->product,
                 null,
@@ -67,7 +67,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 null,
                 null,
                 null,
-                $id_product_attribute
+                $idProductAttribute
             ));
         }
     }
@@ -210,7 +210,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     public function initContent()
     {
         if (!$this->errors) {
-            if (Pack::isPack((int) $this->product->id) && !Pack::isInStock((int) $this->product->id)) {
+            if (Pack::isPack((int) $this->product->id)
+                && !Pack::isInStock((int) $this->product->id, $this->product->minimal_quantity, $this->context->cart)
+            ) {
                 $this->product->quantity = 0;
             }
 
@@ -1191,5 +1193,27 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $page['admin_notifications'] = array_merge($page['admin_notifications'], $this->adminNotifications);
 
         return $page;
+    }
+
+    /**
+     * Indicates if the provided combination exists and belongs to the product
+     *
+     * @param int $productAttributeId
+     * @param int $productId
+     *
+     * @return bool
+     */
+    protected function isValidCombination($productAttributeId, $productId)
+    {
+        if ($productAttributeId > 0 && $productId > 0) {
+            $combination = new Combination($productAttributeId);
+
+            return (
+                Validate::isLoadedObject($combination)
+                && $combination->id_product == $productId
+            );
+        }
+
+        return false;
     }
 }

@@ -32,30 +32,4 @@ class SupplyOrderStateLangCore extends DataLangCore
     protected $keys = array('id_supply_order_state');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('1 - Creation in progress')
-                    => $this->translator->trans('1 - Creation in progress', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
-                md5('2 - Order validated')
-                    => $this->translator->trans('2 - Order validated', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
-                md5('3 - Pending receipt')
-                    => $this->translator->trans('3 - Pending receipt', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
-                md5('4 - Order received in part')
-                    => $this->translator->trans('4 - Order received in part', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
-                md5('5 - Order received completely')
-                    => $this->translator->trans('5 - Order received completely', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
-                md5('6 - Order canceled')
-                    => $this->translator->trans('6 - Order canceled', array(), 'Admin.Orderscustomers.Feature', $this->locale),
-
-            ),
-        );
-    }
 }

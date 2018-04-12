@@ -96,7 +96,16 @@ module.exports = {
 
       scenario('Save the created product', client => {
         test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
-        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
+        test('should click on "Save" button', () => {
+          return promise
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+            .then(() => {
+              if (global.isVisible) {
+                client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+              }
+            })
+            .then(() => client.waitForExistAndClick(AddProductPage.save_product_button))
+        });
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 
@@ -121,7 +130,7 @@ module.exports = {
   sortProduct: function (selector, sortBy) {
     scenario('Check the sort of products by "' + sortBy.toUpperCase() + '"', client => {
       test('should click on "Sort by ASC" icon', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
+        for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j);
         }
         return promise
@@ -129,7 +138,7 @@ module.exports = {
       });
 
       test('should check that the products is well sorted by ASC', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
+        for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
@@ -140,7 +149,7 @@ module.exports = {
       test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc")));
 
       test('should check that the products is well sorted by DESC', () => {
-        for (let j = 0; j < global.productsNumber; j++) {
+        for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
         }
         return promise
@@ -148,5 +157,16 @@ module.exports = {
           .then(() => client.checkSortProduct())
       });
     }, 'product/product');
+  },
+
+  checkPaginationFO(client, productPage, buttonName, pageNumber) {
+    let selectorButton = buttonName === 'Next' ? productPage.pagination_next : productPage.pagination_previous;
+    test('should click on "' + buttonName + '" button', () => {
+      return promise
+        .then(() => client.isVisible(selectorButton))
+        .then(() => client.clickPageNextOrPrevious(selectorButton));
+    });
+    test('should check that the current page is equal to "' + pageNumber + '"', () => client.checkTextValue(productPage.current_page, pageNumber));
+    test('should check that the value page in URL is equal to "' + pageNumber + '"', () => client.checkParamFromURL('page', pageNumber));
   }
 };

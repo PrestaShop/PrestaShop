@@ -46,7 +46,6 @@ class CacheWarmer implements CacheWarmerInterface
             $cacheDir.DIRECTORY_SEPARATOR.'push',
             $cacheDir.DIRECTORY_SEPARATOR.'sandbox',
             $cacheDir.DIRECTORY_SEPARATOR.'tcpdf',
-            $cacheDir.DIRECTORY_SEPARATOR.'themes',
         );
 
         $this->fileSystem->mkdir($legacyDirs);

@@ -32,19 +32,4 @@ class FeatureLangCore extends DataLangCore
     protected $keys = array('id_feature');
 
     protected $fieldsToUpdate = array('name');
-
-    protected function init()
-    {
-        $this->fieldNames = array(
-            'name' => array(
-                md5('Height') => $this->translator->trans('Height', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Width') => $this->translator->trans('Width', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Depth') => $this->translator->trans('Depth', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Weight') => $this->translator->trans('Weight', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Compositions') => $this->translator->trans('Compositions', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Styles') => $this->translator->trans('Styles', array(), 'Shop.Demo.Catalog', $this->locale),
-                md5('Properties') => $this->translator->trans('Properties', array(), 'Shop.Demo.Catalog', $this->locale),
-            ),
-        );
-    }
 }

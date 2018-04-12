@@ -8,7 +8,7 @@ export default function() {
     let idsProductAttribute = $jsCombinationsList.data('ids-product-attribute').toString().split(',');
     let idsCount = idsProductAttribute.length;
     let currentCount = 0;
-    let step = 5;
+    let step = 50;
 
     let refreshImagesUrl = $jsCombinationsList.attr('data-action-refresh-images').replace(/product-form-images\/\d+/, 'product-form-images/' + $jsCombinationsList.data('id-product'));
 
