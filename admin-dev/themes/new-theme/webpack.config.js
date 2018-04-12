@@ -72,6 +72,9 @@ let config = {
     ],
     geolocation: [
       './js/pages/geolocation'
+    ],
+    sql_manager: [
+      './js/pages/sql-manager',
     ]
   },
   output: {
