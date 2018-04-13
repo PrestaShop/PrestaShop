@@ -25,3 +25,6 @@
  */
 
 define('_PS_INSTALL_VERSION_', '1.7.3.1');
+
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 50400);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '5.4');
