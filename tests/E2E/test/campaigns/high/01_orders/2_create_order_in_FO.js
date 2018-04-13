@@ -58,7 +58,7 @@ scenario('Check that Ordering more than the stock is giving a wrong message', ()
   scenario('Change configuration of  "Allow ordering of out-of-stock products" ', client => {
     test('Should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     test('Should click on "NO" button to disable ordering of out-of-stock products', () => client.scrollWaitForExistAndClick(ProductSettings.disableOrderOutOfStock_button));
-    test('Should click "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button));
+    test('Should click "Save" button', () => client.scrollWaitForExistAndClick(ProductSettings.save_button.replace('%POS', 3)));
   }, 'order');
 
   scenario('Create a product with the quantity equal to 50', () => {

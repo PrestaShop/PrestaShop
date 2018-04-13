@@ -169,7 +169,7 @@ module.exports = {
     catalog_first_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[1]/div',
     catalog_second_element_radio: '//*[@id="form_step1_categories"]/ul/li/ul/li[2]/div',
     category_radio_button: '//*[@id="form_step1_categories"]//input[@name="ignore" and @value="%VALUE"]',
-    category_radio: '//*[@id="form_step1_categories"]//label[text() = " %S"]/input[2]',
+    category_radio: '//*[@id="form_step1_categories"]//label[text()[contains(.,"%S")]]/input[2]',
     preview_buttons: '//*[@id="product_form_preview_btn"]',
     dropdown_button: '//*[@id="dropdownMenu"]',
     duplicate_button: '//*[@aria-labelledby="dropdownMenu"]//a[contains(@class, "duplicate")]',

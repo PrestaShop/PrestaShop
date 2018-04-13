@@ -25,7 +25,7 @@ scenario('Delete product', () => {
 
   scenario('Delete product "DP' + date_time + '"', client => {
     test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
-    test('should set the product name "DP' + date_time + '" in the search input', () => client.waitAndSetValue(CatalogPage.name_search_input, productData[0].name + date_time));
+    test('should set the product name "DP' + date_time + '" in the search input', () => client.waitAndSetValue(CatalogPage.name_search_input, productData.name + date_time));
     test('should click on the "ENTER" key', () => client.keys('Enter'));
     test('should click on the "dropdown" icon', () => client.waitForExistAndClick(CatalogPage.dropdown_toggle));
     test('should click on the "delete" icon', () => client.waitForExistAndClick(CatalogPage.delete_button));
@@ -33,7 +33,7 @@ scenario('Delete product', () => {
     test('should verify the appearance of the green validation message', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct successfully deleted.'));
 
     scenario('should check that the created product has been deleted', client => {
-      test('should set "copy" in the search input', () => client.waitAndSetValue(CatalogPage.name_search_input, productData[0].name + date_time));
+      test('should set "copy" in the search input', () => client.waitAndSetValue(CatalogPage.name_search_input, productData.name + date_time));
       test('should click on the "ENTER" key', () => client.keys('Enter'));
       test('should get a message indicates that no result found', () => client.checkTextValue(CatalogPage.search_result_message, 'There is no result for this search', "contain"));
       test('should click on "Reset" button', () => client.waitForVisibleAndClick(CatalogPage.reset_button));
@@ -51,7 +51,7 @@ scenario('Delete product', () => {
 
   scenario('check that the product "DP' + date_time + ' doesn\'t exist in the front office', client => {
     test('should set the shop language to "English"', () => client.changeLanguage('english'));
-    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData[0].name + date_time));
+    test('should search for the product', () => client.searchByValue(SearchProductPage.search_input, SearchProductPage.search_button, productData.name + date_time));
     test('should check that the product "DP' + date_time + '" doesn\'t exist ', () => client.isNotExisting(SearchProductPage.product_result_name));
   }, 'product/product');
 

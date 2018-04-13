@@ -32,7 +32,16 @@ scenario('Check product page buttons', client => {
     test('should set the "Quantity" of product', () => client.waitAndSetValue(AddProductPage.quantity_shortcut_input, firstProductData.quantity));
     test('should set the "Price" input', () => client.setPrice(AddProductPage.priceTE_shortcut, firstProductData.price));
     test('should upload the first product picture', () => client.uploadPicture(firstProductData.picture_name, AddProductPage.picture));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should set the product "online"', () =>  {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        })
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    });
     test('should click on "SAVE" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     test('should check that the success alert message is well displayed', () => client.waitForExistAndClick(AddProductPage.close_validation_button));
     test('should click on "Preview" button', () => client.waitForExistAndClick(AddProductPage.preview_buttons));

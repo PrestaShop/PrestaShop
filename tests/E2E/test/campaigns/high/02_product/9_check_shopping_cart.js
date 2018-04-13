@@ -94,12 +94,6 @@ scenario('Check that the shopping cart dosen\'t allow checkout of zero quantity 
           .then(() => client.isExisting(CheckoutOrderPage.alert))
           .then(() => client.checkAttributeValue(CheckoutOrderPage.proceed_to_checkout_button, 'class', 'disabled', 'contain'));
       });
-      test('should go back to the Back Office and reset the filter', () => {
-        return promise
-          .then(() => client.switchWindow(0))
-          .then(() => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu))
-          .then(() => client.waitForExistAndClick(AddProductPage.catalog_reset_filter));
-      });
     }, 'product/product');
   }, 'product/product');
 }, 'product/product', true);

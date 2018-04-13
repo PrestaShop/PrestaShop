@@ -15,7 +15,7 @@ scenario('Check that the pagination works fine on the product page in the Front 
   scenario('Edit the number of product per page', client => {
     test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     test('should set the "Products per page" input', () => client.waitAndSetValue(ProductSettings.Pagination.products_per_page_input, 6));
-    test('should click on "Save" button', () => client.waitForExistAndClick(ProductSettings.Pagination.save_button));
+    test('should click on "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button.replace("%POS", 4)));
     test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.success_panel, "The settings have been successfully updated."));
   }, 'common_client');
 

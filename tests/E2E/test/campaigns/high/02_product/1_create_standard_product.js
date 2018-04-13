@@ -28,8 +28,6 @@ scenario('Create Standard Product in the Back Office', client => {
     test('should check the existence of the second category Radio button', () => client.checkCategoryRadioButton(5));
     test('should check the existence of the third Radio button', () => client.checkCategoryRadioButton(7));
     test('should check the existence of the fourth Radio button', () => client.checkCategoryRadioButton(9));
-    test('should check the existence of the fifth category Radio button', () => client.checkCategoryRadioButton(10));
-    test('should check the existence of the sixth category Radio button', () => client.checkCategoryRadioButton(11));
     test('should choose the created category as default', () => {
       return promise
         .then(() => client.scrollTo(AddProductPage.category_radio.replace('%S', data.standard.new_category_name + date_time)))
@@ -48,7 +46,16 @@ scenario('Create Standard Product in the Back Office', client => {
     test('should click on "ADD A FEATURE" and select one', () => client.addFeatureHeight('standard'));
     test('should set the "Tax exclude" price', () => client.setPrice(AddProductPage.priceTE_shortcut, data.common.priceTE));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, data.common.product_reference));
-    test('should set the product "online"', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+    test('should switch the product online', () =>  {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        })
+        .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle))
+    });
   }, 'product/product');
 
   scenario('Edit product quantity', client => {
