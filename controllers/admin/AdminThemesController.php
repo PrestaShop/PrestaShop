@@ -209,6 +209,24 @@ class AdminThemesControllerCore extends AdminController
         }
     }
 
+    /**
+     * Ajax request handler for displaying theme catalog from the marketplace.
+     * Not used anymore.
+     *
+     * @deprecated since 1.7.4.0
+     */
+    public function ajaxProcessGetAddonsThemes()
+    {
+        $parent_domain = Tools::getHttpHost(true).substr($_SERVER['REQUEST_URI'], 0, -1 * strlen(basename($_SERVER['REQUEST_URI'])));
+        $iso_lang = $this->context->language->iso_code;
+        $iso_currency = $this->context->currency->iso_code;
+        $iso_country = $this->context->country->iso_code;
+        $activity = Configuration::get('PS_SHOP_ACTIVITY');
+        $addons_url = Tools::getCurrentUrlProtocolPrefix().'addons.prestashop.com/iframe/search-1.7.php?psVersion='._PS_VERSION_.'&onlyThemes=1&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int)$activity.'&parentUrl='.$parent_domain;
+
+        die(Tools::file_get_contents($addons_url));
+    }
+
     public function renderView()
     {
         $this->tpl_view_vars = array(
