@@ -136,7 +136,7 @@ class ToolsCore
      * Replace text within a portion of a string
      *
      * Replaces a string matching a search, (optionally) string from a certain position
-     *  
+     *
      * @param  string  $search  The string to search in the input string
      * @param  string  $replace The replacement string
      * @param  string  $subject The input string
@@ -685,15 +685,18 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance($currency);
         }
 
-        $container = $context->controller->getContainer();
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
-        }
+        $localeRepository = $context->localeRepository;
+        if (null === $localeRepository) {
+            $container = $context->controller->getContainer();
+            if (null === $container) {
+                $container = SymfonyContainer::getInstance();
+            }
 
-        /** @var LocaleRepository $localeRepository */
-        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-        $locale           = $localeRepository->getLocale((string)$context->language->locale);
-        $currencyCode     = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
+            /** @var LocaleRepository $localeRepository */
+            $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+        }
+        $locale       = $localeRepository->getLocale((string)$context->language->locale);
+        $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
         return $locale->formatPrice($price, $currencyCode);
     }
@@ -724,15 +727,19 @@ class ToolsCore
             E_USER_DEPRECATED
         );
 
-        $context   = Context::getContext();
-        $container = $context->controller->getContainer();
-        if (null === $container) {
-            $container = SymfonyContainer::getInstance();
+        $context          = Context::getContext();
+        $localeRepository = $context->localeRepository;
+        if (null === $localeRepository) {
+            $container = $context->controller->getContainer();
+            if (null === $container) {
+                $container = SymfonyContainer::getInstance();
+            }
+
+            /** @var LocaleRepository $localeRepository */
+            $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
         }
 
-        /** @var LocaleRepository $localeRepository */
-        $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
-        $locale           = $localeRepository->getLocale((string)$context->language->locale);
+        $locale = $localeRepository->getLocale((string)$context->language->locale);
 
         return $locale->formatNumber($number);
     }
