@@ -32,6 +32,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 abstract class ControllerCore
 {
+    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+
     /**
      * @var Context
      */
@@ -145,6 +147,8 @@ abstract class ControllerCore
 
     /**
      * Initialize the page
+     *
+     * @throws Exception
      */
     public function init()
     {
@@ -159,7 +163,9 @@ abstract class ControllerCore
         if (!defined('_PS_BASE_URL_SSL_')) {
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
-        $this->container = $this->buildContainer();
+
+        $this->container                 = $this->buildContainer();
+        $this->context->localeRepository = $this->get(self::SERVICE_LOCALE_REPOSITORY);
     }
 
     /**
