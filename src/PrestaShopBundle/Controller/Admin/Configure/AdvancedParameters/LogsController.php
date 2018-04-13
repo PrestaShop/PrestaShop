@@ -33,6 +33,8 @@ use PrestaShopBundle\Entity\Repository\LogRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * Responsible of "Configure > Advanced Parameters > Logs" page display
@@ -50,7 +52,22 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
-        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', array()));
+        $response = new Response();
+        $filters = [];
+
+        if ($request->query->has('reset')) {
+            $storedKey = 'filters_'.$this->getUser()->getData()->id;
+            $response->headers->setCookie(new Cookie($storedKey, ''));
+        }
+
+        if(
+            $request->cookies->has('filters_'.$this->getUser()->getData()->id)
+            && !empty($request->cookies->get('filters_'.$this->getUser()->getData()->id))
+        ) {
+            $filters = json_decode($request->cookies->get('filters_'.$this->getUser()->getData()->id));
+        }
+
+        $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class, $request->get('filters', $filters));
         $logsByEmailForm = $this->getFormHandler()->getForm();
 
         $filters = $this->get('prestashop.core.admin.search_parameters')->getFiltersFromRequest($request, array(
@@ -61,15 +78,22 @@ class LogsController extends FrameworkBundleAdminController
             'filters' => array()
         ));
 
+        if (array_key_exists('filters', $filters)) {
+            $storedKey = 'filters_'.$this->getUser()->getData()->id;
+            $storedData = json_encode($filters['filters']);
+            $response->headers->setCookie(new Cookie($storedKey, $storedData));
+        }
+
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Logs', array(), 'Admin.Navigation.Menu'),
+            'layoutTitle' => $this->trans('Logs', 'Admin.Navigation.Menu'),
             'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
             'orderBy' => $filters['orderBy'],
             'sortOrder' => $filters['sortOrder'],
+            'resetButton' => $request->cookies->has('filters_'.$this->getUser()->getData()->id),
             'help_link' => $this->generateSidebarLink('AdminLogs'),
             'logsByEmailForm' => $logsByEmailForm->createView(),
             'searchParametersForm' => $searchParametersForm->createView(),
@@ -84,7 +108,7 @@ class LogsController extends FrameworkBundleAdminController
             )),
         );
 
-        return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues);
+        return $this->render('@AdvancedParameters/LogsPage/logs.html.twig', $twigValues, $response);
     }
 
     /**
@@ -93,6 +117,7 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
+        $response = new Response();
         if ($this->isDemoModeEnabled()) {
             $this->addFlash('error', $this->getDemoModeErrorMessage());
 
@@ -101,6 +126,7 @@ class LogsController extends FrameworkBundleAdminController
 
         $searchParametersForm = $this->createForm(FilterLogsByAttributeType::class);
         $searchParametersForm->handleRequest($request);
+
         $filters = array();
 
         if (!in_array(
@@ -123,7 +149,10 @@ class LogsController extends FrameworkBundleAdminController
             $filters = $searchParametersForm->getData();
         }
 
-        return $this->redirectToRoute('admin_logs', array('filters' => $filters));
+        return $this->redirectToRoute('admin_logs', array(
+            'filters' => $filters,
+            'reset' => $request->request->has('reset'),
+        ));
     }
 
     /**

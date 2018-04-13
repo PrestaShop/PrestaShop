@@ -68,6 +68,12 @@
         <button type="submit" class="btn btn-primary">
           <i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Action') }}
         </button>
+          {% if resetButton %}
+            <br /><br />
+            <button type="submit" name="reset" class="btn btn-primary">
+              <i class="material-icons">delete</i>{{ 'Reset'|trans({}, 'Admin.Action') }}
+            </button>
+          {% endif %}
       </th>
     </tr>
   </thead>
