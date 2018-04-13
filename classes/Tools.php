@@ -685,8 +685,8 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance($currency);
         }
 
-        $localeRepository = $context->localeRepository;
-        if (null === $localeRepository) {
+        $locale = $context->currentLocale;
+        if (null === $locale) {
             $container = $context->controller->getContainer();
             if (null === $container) {
                 $container = SymfonyContainer::getInstance();
@@ -694,8 +694,8 @@ class ToolsCore
 
             /** @var LocaleRepository $localeRepository */
             $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+            $locale           = $localeRepository->getLocale((string)$context->language->locale);
         }
-        $locale       = $localeRepository->getLocale((string)$context->language->locale);
         $currencyCode = is_array($currency) ? $currency['iso_code'] : $currency->iso_code;
 
         return $locale->formatPrice($price, $currencyCode);
@@ -727,19 +727,18 @@ class ToolsCore
             E_USER_DEPRECATED
         );
 
-        $context          = Context::getContext();
-        $localeRepository = $context->localeRepository;
-        if (null === $localeRepository) {
+        $context = Context::getContext();
+        $locale  = $context->currentLocale;
+        if (null === $locale) {
             $container = $context->controller->getContainer();
             if (null === $container) {
                 $container = SymfonyContainer::getInstance();
             }
 
-            /** @var LocaleRepository $localeRepository */
-            $localeRepository = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+            /** @var LocaleRepository $localeRepo */
+            $localeRepo = $container->get(self::SERVICE_LOCALE_REPOSITORY);
+            $locale     = $localeRepo->getLocale((string)$context->language->locale);
         }
-
-        $locale = $localeRepository->getLocale((string)$context->language->locale);
 
         return $locale->formatNumber($number);
     }
