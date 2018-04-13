@@ -107,7 +107,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return $responseArray->modules;
+        return isset($responseArray->modules) ? $responseArray->modules : array();
     }
 
     public function getPreInstalledModules()
@@ -130,7 +130,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return $responseArray->modules;
+        return isset($responseArray->modules) ? $responseArray->modules : array();
     }
 
     /**
@@ -159,7 +159,7 @@ class ApiClient
 
         $responseArray = json_decode($response);
 
-        return $responseArray->services;
+        return isset($responseArray->services) ? $responseArray->services : array();
     }
 
     public function getCategories()
