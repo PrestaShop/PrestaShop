@@ -282,6 +282,7 @@ class XmlLoader
         }
 
         // Load all row for current entity and prepare data to be populated
+        $i = 0;
         foreach ($xml->entities->$entity as $node) {
             $data = array();
             $identifier = (string)$node['id'];
@@ -339,6 +340,12 @@ class XmlLoader
                 } else {
                     $this->copyImages($entity, $identifier, (string)$xml->fields['image'], $data);
                 }
+            }
+            $i++;
+
+            if ($i >= 100) {
+                $this->flushDelayedInserts();
+                $i = 0;
             }
         }
 
