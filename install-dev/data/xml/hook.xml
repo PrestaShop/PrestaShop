@@ -336,6 +336,11 @@
       <title>Administration panel hover the tabs</title>
       <description>This hook is displayed on the roll hover of the tabs within the admin panel</description>
     </hook>
+    <hook id="displayAdminEndContent">
+      <name>displayAdminEndContent</name>
+      <title>Administration end of content</title>
+      <description>This hook is displayed at the end of the main content, before the footer</description>
+    </hook>
     <hook id="displayBackOfficeFooter">
       <name>displayBackOfficeFooter</name>
       <title>Administration panel footer</title>
