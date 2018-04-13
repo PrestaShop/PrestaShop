@@ -10,8 +10,15 @@ body
 	&.mobile
 		#content.bootstrap
 			@media (max-width: $screen-lg)
-				padding-left: 0.625rem
+				padding-left: $paddingLeftMobile
 
+			.page-head
+				h2.page-title
+					padding-left: $paddingLeftMobile
+				h4.page-subtitle
+					@include left($paddingLeftMobile)
+				ul.page-breadcrumb
+					@include left($paddingLeftMobile)
 
 #main
 	z-index: 10
@@ -23,7 +30,7 @@ body
 #content.bootstrap
 	padding: 120px 10px 0 225px
 	&.with-tabs
-		padding: 150px 10px 0
+		padding-top: 150px
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
@@ -216,6 +223,15 @@ body.display-modal
 	#help-container
 		margin-top: 140px
 
-.page-sidebar-closed:not(.mobile)
-	#content
-		padding-left: 3.125rem + (1.875rem / 2)
+.page-sidebar-closed
+	&:not(.mobile)
+		#content
+			padding-left: $paddingLeftPageClosed
+
+			.page-head
+				h2.page-title
+					padding-left: $paddingLeftPageClosed
+				h4.page-subtitle
+					@include left($paddingLeftPageClosed)
+				ul.page-breadcrumb
+					@include left($paddingLeftPageClosed)
