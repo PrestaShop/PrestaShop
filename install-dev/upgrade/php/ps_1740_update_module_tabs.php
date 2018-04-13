@@ -31,8 +31,8 @@ function ps_1740_update_module_tabs()
 {
     // Add new sub menus for modules
     $moduleTabsToBeAdded = array(
-        'AdminModulesCatalog' => 'en:Selection|fr:Selection|es:Selección|de:Auswahl|it:Selezione',
         'AdminModulesManage' => 'en:Installed modules|fr:Modules installés|es:Módulos instalados|de:Installierte Module|it:Moduli installati',
+        'AdminModulesCatalog' => 'en:Selection|fr:Selection|es:Selección|de:Auswahl|it:Selezione',
         'AdminModulesNotifications' => 'en:Notifications|fr:Notifications|es:Notificaciones|de:Nachrichten|it:Notifiche'
     );
 
