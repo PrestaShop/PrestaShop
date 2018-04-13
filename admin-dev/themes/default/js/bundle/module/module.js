@@ -658,6 +658,10 @@ var AdminModuleController = function() {
       : this.moduleItemListSelector;
   };
   
+  /**
+   * Get the module notifications count and displays it as a badge on the notification tab
+   * @return void
+   */
   this.getNotificationsCount = function () {
     var token = window.location.search;
     var urlToCall = this.baseAdminDir+'module/notifications/count' + token;
