@@ -104,6 +104,7 @@
       <div class="row ">
         <div class="col-sm-12">
           {$page}
+          {hook h='displayAdminEndContent'}
         </div>
       </div>
 

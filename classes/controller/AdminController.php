@@ -2325,56 +2325,16 @@ class AdminControllerCore extends Controller
     }
 
     /**
+     * Was used to display a list of recommended modules
+     * 
      * @param string|bool $tracking_source Source information for URL used by "Install" button
-     * @return string
+     * @return string Empty
+     *
+     * @deprecated since 1.7.4.0
      */
     public function renderModulesList($tracking_source = false)
     {
-        // Load cache file modules list (natives and partners modules)
-        $xml_modules = false;
-        if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST)) {
-            $xml_modules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
-        }
-        if ($xml_modules) {
-            foreach ($xml_modules->children() as $xml_module) {
-                /** @var SimpleXMLElement $xml_module */
-                foreach ($xml_module->children() as $module) {
-                    /** @var SimpleXMLElement $module */
-                    foreach ($module->attributes() as $key => $value) {
-                        if ($xml_module->attributes() == 'native' && $key == 'name') {
-                            $this->list_natives_modules[] = (string)$value;
-                        }
-                        if ($xml_module->attributes() == 'partner' && $key == 'name') {
-                            $this->list_partners_modules[] = (string)$value;
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($this->getModulesList($this->filter_modules_list, $tracking_source)) {
-            $tmp = array();
-            foreach ($this->modules_list as $key => $module) {
-                if ($module->active) {
-                    $tmp[] = $module;
-                    unset($this->modules_list[$key]);
-                }
-            }
-
-            $this->modules_list = array_merge($tmp, $this->modules_list);
-
-            foreach ($this->modules_list as $key => $module) {
-                if (in_array($module->name, $this->list_partners_modules)) {
-                    $this->modules_list[$key]->type = 'addonsPartner';
-                }
-                if (isset($module->description_full) && trim($module->description_full) != '') {
-                    $module->show_quick_view = true;
-                    $module->optionsHtml = array($module->optionsHtml[0]);
-                }
-            }
-            $helper = new Helper();
-            return $helper->renderModulesList($this->modules_list);
-        }
+        return '';
     }
 
     /**
