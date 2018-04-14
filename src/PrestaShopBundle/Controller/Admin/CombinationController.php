@@ -41,7 +41,7 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
-        $combinations = $combinationDataProvider->getFormCombinations($combinationIds, $this->getContext()->language->id);
+        $combinations = $combinationDataProvider->getFormCombinations($combinationIds, (int) $this->getContext()->language->id);
 
         $formFactory = $this->get('form.factory');
         foreach ($combinations as $combinationId => $combination) {
