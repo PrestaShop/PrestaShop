@@ -117,7 +117,6 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $response = new Response();
         if ($this->isDemoModeEnabled()) {
             $this->addFlash('error', $this->getDemoModeErrorMessage());
 
@@ -136,8 +135,10 @@ class LogsController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_UPDATE,
                 PageVoter::LEVEL_CREATE,
                 PageVoter::LEVEL_DELETE,
+            ),
+            true
             )
-        )) {
+        ) {
             $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_logs');
