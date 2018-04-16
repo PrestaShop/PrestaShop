@@ -311,6 +311,7 @@ const CheckUpdateQuantityOperations = {
      */
     hasError = resp.hasOwnProperty('hasError');
     let errors = resp.errors || "";
+    // 1.7.2.x returns errors as string, 1.7.3.x returns array
     if (errors instanceof Array) {
       errorMsg = errors.join(" ");
     } else {
