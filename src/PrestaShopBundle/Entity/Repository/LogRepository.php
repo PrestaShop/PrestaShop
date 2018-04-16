@@ -27,12 +27,13 @@
 namespace PrestaShopBundle\Entity\Repository;
 
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Grid\DataSource\DataSourceInterface;
 use PrestaShop\PrestaShop\Core\Repository\RepositoryInterface;
 
 /**
  * Retrieve Logs data from database.
  */
-class LogRepository implements RepositoryInterface
+class LogRepository implements RepositoryInterface, DataSourceInterface
 {
     private $connection;
     private $databasePrefix;
@@ -53,6 +54,14 @@ class LogRepository implements RepositoryInterface
         $statement = $this->connection->query("SELECT l.* FROM $this->logTable l");
 
         return $statement->fetchAll();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getItems()
+    {
+        return $this->findAll();
     }
 
     /**

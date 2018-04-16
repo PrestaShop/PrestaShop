@@ -52,6 +52,7 @@ class LogsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        dump($this->get('prestashop.core.logs_grid')->getConfiguration()->getColumns());
         $response = new Response();
         $filters = [];
 
@@ -78,11 +79,11 @@ class LogsController extends FrameworkBundleAdminController
             'filters' => array()
         ));
 
-        if (array_key_exists('filters', $filters)) {
+        /*if (array_key_exists('filters', $filters)) {
             $storedKey = 'filters_'.$this->getUser()->getData()->id;
             $storedData = json_encode($filters['filters']);
             $response->headers->setCookie(new Cookie($storedKey, $storedData));
-        }
+        }*/
 
         $twigValues = array(
             'layoutHeaderToolbarBtn' => [],

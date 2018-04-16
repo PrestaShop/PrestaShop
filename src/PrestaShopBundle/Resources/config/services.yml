@@ -4,6 +4,7 @@ imports:
     - { resource: services/alias.yml }
     - { resource: services/adapters.yml }
     - { resource: services/core_services.yml }
+    - { resource: services/grids.yml }
 
 parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter

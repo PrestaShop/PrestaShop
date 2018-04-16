@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid;
 
-use PrestaShop\PrestaShop\Core\Grid\DataSource\DataSourceInterface;
-
 interface GridInterface
 {
     /**
@@ -40,9 +38,9 @@ interface GridInterface
     /**
      * Grid configuration.
      *
-     * @return PrestaShop\PrestaShop\Core\Grid\Config\ConfigInterface
+     * @return PrestaShop\PrestaShop\Core\Grid\Configuration\ConfigurationInterface
      */
-    public function getConfig();
+    public function getConfiguration();
 
     /**
      * Grid data, results array from data source.
@@ -57,13 +55,4 @@ interface GridInterface
      * @return PrestaShop\PrestaShop\Core\Grid\DataSource\DataSourceInterface
      */
     public function getDataSource();
-
-    /**
-     * Set the data source.
-     *
-     * @param DataSourceInterface $source
-     *
-     * @return PrestaShop\PrestaShop\Core\Grid\GridInterface
-     */
-    public function setDataSource(DataSourceInterface $source);
 }

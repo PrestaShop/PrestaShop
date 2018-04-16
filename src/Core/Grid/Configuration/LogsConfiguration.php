@@ -24,13 +24,36 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Config;
+namespace PrestaShop\PrestaShop\Core\Grid\Configuration;
 
-final class LogsConfiguration
+use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
+use PrestaShopBundle\Service\Hook\HookDispatcher;
+
+final class LogsConfiguration implements ConfigurationInterface
 {
-    public function __construct()
-    {
+    /**
+     * @var HookDispatcher
+     */
+    private $hookDispatcher;
 
+    /**
+     * @param string The Grid name.
+     */
+    private $name;
+
+    public function __construct(HookDispatcher $hookDispatcher)
+    {
+        $this->hookDispatcher = $hookDispatcher;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -38,7 +61,21 @@ final class LogsConfiguration
      */
     public function getColumns()
     {
+        $columns = ColumnCollection::createFromArray([
+            ['name' => 'ID'],
+            ['name' => 'Employee'],
+            ['name' => 'Severity (1-4)'],
+            ['name' => 'Message'],
+            ['name' => 'Object type'],
+            ['name' => 'Error code'],
+            ['name' => 'Date', 'type' => 'date_interval']
+        ]);
 
+        $this->hookDispatcher->dispatchForParameters("change{$this->name}Columns", [
+           'columns' => &$columns,
+        ]);
+
+        return $columns;
     }
 
     /**

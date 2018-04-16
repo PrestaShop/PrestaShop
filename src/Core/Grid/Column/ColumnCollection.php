@@ -35,11 +35,24 @@ final class ColumnCollection
      */
     private $columns;
 
+    /**
+     * Add a new Column to the collection.
+     *
+     * @param ColumnInterface $column The column.
+     * @return self
+     */
     public function add(ColumnInterface $column)
     {
         $this->columns[] = $column;
+
+        return $this;
     }
 
+    /**
+     * Remove a Column from collection by his name.
+     *
+     * @param $columnName The Column name.
+     */
     public function removeByName($columnName)
     {
         foreach ($this->columns as $key => $column) {
@@ -49,9 +62,12 @@ final class ColumnCollection
         }
     }
 
+    /**
+     * @return array the ordered list of columns by priority.
+     */
     public function all()
     {
-        return usort($this->columns, function (Column $columnA, Column $columnB) {
+        usort($this->columns, function (Column $columnA, Column $columnB) {
             $priorityA = $columnA->getPriority();
             $priorityB = $columnB->getPriority();
 
@@ -61,5 +77,35 @@ final class ColumnCollection
 
             return ($priorityA < $priorityB) ? -1 : 1;
         });
+
+        return $this->columns;
+    }
+
+    /**
+     * Helper method to ease columns creation.
+     *
+     * @param array $columns
+     *
+     * @return ColumnCollection
+     */
+    public function createFromArray(array $columns)
+    {
+        $collection = new self();
+        foreach ($columns as $column) {
+            if (array_key_exists('name', $column)) {
+                $collectionItem = new Column($column['name']);
+                if (array_key_exists('priority', $column)) {
+                    $collectionItem->setPriority($column['priority']);
+                }
+
+                if (array_key_exists('type', $column)) {
+                    $collectionItem->setType($column['type']);
+                }
+
+                $collection->add($collectionItem);
+            }
+        }
+
+        return $collection;
     }
 }

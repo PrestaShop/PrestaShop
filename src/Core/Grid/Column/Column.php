@@ -43,17 +43,17 @@ final class Column implements ColumnInterface
     private $priority;
 
     /**
-     * The Column template.
+     * The Column type.
      *
      * @var string
      */
-    private $template;
+    private $type;
 
-    public function __construct($name, $priority = 0, $template = '')
+    public function __construct($name, $priority = 0, $type = 'text')
     {
         $this->name = $name;
         $this->priority = $priority;
-        $this->template = $template;
+        $this->type = $type;
     }
 
     /**
@@ -75,8 +75,26 @@ final class Column implements ColumnInterface
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
+    public function getType()
     {
-        return $this->template;
+        return $this->type;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPriority($priority)
+    {
+        $this->priority = $priority;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

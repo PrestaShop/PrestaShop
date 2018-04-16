@@ -43,9 +43,28 @@ interface ColumnInterface
     public function getPriority();
 
     /**
-     * Template name (useful for rendering).
+     * Column type (useful for rendering).
      *
      * @return string
      */
-    public function getTemplate();
+    public function getType();
+
+    /**
+     * Changes the column priority.
+     *
+     * @param int $priority The column priority.
+     *
+     * @return ColumnInterface
+     */
+    public function setPriority($priority);
+
+    /**
+     * Changes the column type.
+     *
+     * @param string $type The column type.
+     *
+     * @return ColumnInterface
+     */
+    public function setType($type);
+
 }

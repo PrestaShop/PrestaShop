@@ -1,0 +1,12 @@
+services:
+    prestashop.core.logs_grid:
+        class: PrestaShop\PrestaShop\Core\Grid\Grid
+        arguments:
+            - 'LogsPage'
+            - '@prestashop.core.logs_grid_configuration'
+            - '@prestashop.core.admin.log.repository'
+
+    prestashop.core.logs_grid_configuration:
+        class: PrestaShop\PrestaShop\Core\Grid\Configuration\LogsConfiguration
+        arguments:
+            - '@prestashop.hook.dispatcher'
