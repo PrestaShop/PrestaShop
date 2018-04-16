@@ -142,7 +142,3 @@ services:
         class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
         arguments:
             - '@prestashop.adapter.legacy.configuration'
-
-    prestashop.adapter.memcache_server.manager:
-        class: 'PrestaShop\PrestaShop\Adapter\Cache\MemcacheServerManager'
-        arguments: ['@database_connection', '%database_prefix%']
