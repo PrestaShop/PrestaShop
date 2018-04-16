@@ -27,143 +27,46 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
-use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use PrestaShop\PrestaShop\Core\Form\FormHandler;
 
 /**
  * Class manages the data manipulated using forms
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class ProductPreferencesFormHandler implements FormHandlerInterface
+class ProductPreferencesFormHandler extends FormHandler
 {
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var FormDataProviderInterface
-     */
-    private $formDataProvider;
-
     /**
      * @var CacheClearer
      */
     private $cacheClearer;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @param FormFactoryInterface $formFactory
-     * @param FormDataProviderInterface $formDataProvider
-     * @param CacheClearer $cacheClearer
-     * @param TranslatorInterface $translator
-     */
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        FormDataProviderInterface $formDataProvider,
-        CacheClearer $cacheClearer,
-        TranslatorInterface $translator
-    ) {
-        $this->formFactory = $formFactory;
-        $this->formDataProvider = $formDataProvider;
-        $this->cacheClearer = $cacheClearer;
-        $this->translator = $translator;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getForm()
-    {
-        $builder = $this->formFactory->createBuilder()
-            ->add('general', GeneralType::class)
-            ->add('pagination', PaginationType::class)
-            ->add('page', PageType::class)
-            ->add('stock', StockType::class)
-            ->setData($this->formDataProvider->getData())
-        ;
-
-        return $builder->getForm();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function save(array $data)
     {
-        if ($errors = $this->validate($data)) {
-            return $errors;
+        $errors = $this->formDataProvider->setData($data);
+
+        if (empty($errors)) {
+            $this->cacheClearer->clearSmartyCache();
+            $this->cacheClearer->clearMediaCache();
+
+            if (!$data['stock']['stock_management']) {
+                $data['stock']['allow_ordering_oos'] = 1;
+                $data['page']['display_quantities'] = 0;
+            }
         }
 
-        $this->cacheClearer->clearSmartyCache();
-        $this->cacheClearer->clearMediaCache();
-
-        if (!$data['stock']['stock_management']) {
-            $data['stock']['allow_ordering_oos'] = 1;
-            $data['page']['display_quantities'] = 0;
-        }
-
-        return $this->formDataProvider->setData($data);
+        return parent::save($data);
     }
 
     /**
-     * Perform validation on form data before saving it
+     * Inject the cache clearer if needed.
      *
-     * @param array $data
-     *
-     * @return array Returns array of errors
+     * @param CacheClearer $cacheClearer The Cache clearer.
      */
-    protected function validate(array $data)
+    public function setCacheClearer(CacheClearer $cacheClearer)
     {
-        $invalidFields = [];
-
-        $newDaysNumber = $data['general']['new_days_number'];
-        if (!is_numeric($newDaysNumber) || 0 > $newDaysNumber) {
-            $invalidFields[] = $this->translator->trans(
-                'Number of days for which the product is considered \'new\'',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
-        }
-
-        $shortDescriptionLimit = $data['general']['short_description_limit'];
-        if (!is_numeric($shortDescriptionLimit) || 0 > $shortDescriptionLimit) {
-            $invalidFields[] = $this->translator->trans(
-                'Max size of product summary',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
-        }
-
-        $displayLastQuantities = $data['page']['display_last_quantities'];
-        if (!is_numeric($displayLastQuantities) || 0 > $displayLastQuantities) {
-            $invalidFields[] = $this->translator->trans(
-                'Display remaining quantities when the quantity is lower than',
-                [],
-                'Admin.Shopparameters.Feature'
-            );
-        }
-
-        $productsPerPage = $data['pagination']['products_per_page'];
-        if (!is_numeric($productsPerPage) || 0 >  $productsPerPage) {
-            $invalidFields[] = $this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature');
-        }
-
-        $errors = [];
-        foreach ($invalidFields as $field) {
-            $errors[] = [
-                'key' => 'The %s field is invalid.',
-                'domain' => 'Admin.Notifications.Error',
-                'parameters' => [$field],
-            ];
-        }
-
-        return $errors;
+        $this->cacheClearer = $cacheClearer;
     }
 }

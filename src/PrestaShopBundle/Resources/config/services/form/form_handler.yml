@@ -53,10 +53,19 @@ services:
     prestashop.admin.product_preferences.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.admin.product_preferences.data_provider'
-            - '@prestashop.adapter.cache_clearer'
-            - '@translator'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
+              'pagination': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType'
+              'page': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType'
+              'stock': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType'
+            - 'ProductPreferencesPage'
+        calls:
+            - method: setCacheClearer
+              arguments:
+                  - '@prestashop.adapter.cache_clearer'
 
     prestashop.adapter.preferences.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
@@ -69,13 +78,21 @@ services:
             - 'GeneralPage'
 
     prestashop.adapter.logs.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.logs.form_provider'
+            -
+              'logs_by_email': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsByEmailType'
+            - 'LogsPage'
 
     prestashop.admin.import.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
+            -
+              'import': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
+            - 'ImportPage'
