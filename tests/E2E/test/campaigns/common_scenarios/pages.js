@@ -222,7 +222,7 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       }
-      test('should set the "Page content"', () => client.setTextToEditor(Pages.Page.page_content, pageData.page_content));
+      test('should set the "Page content"', () => client.setEditorText(Pages.Page.page_content, pageData.page_content));
       test('should switch "Indexation by search engines" option to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should set the option "Displayed" to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
       test('should click on the "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));
@@ -266,7 +266,7 @@ module.exports = {
             .then(() => client.keys('Enter'));
         });
       }
-      test('should set the "Page content"', () => client.setTextToEditor(Pages.Page.page_content, newPageData.page_content));
+      test('should set the "Page content"', () => client.setEditorText(Pages.Page.page_content, newPageData.page_content));
       test('should switch the "Indexation by search engines" option to "Yes"', () => client.waitForExistAndClick(Pages.Page.enable_indexation_option));
       test('should switch the "Displayed" option to "Yes"', () => client.waitForExistAndClick(Pages.Common.enable_display_option));
       test('should click on "Save" button', () => client.waitForExistAndClick(Pages.Page.save_button));

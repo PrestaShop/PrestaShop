@@ -36,9 +36,8 @@ module.exports = {
     select_feature_created: '/html/body//span/span[1]/input',
     feature_select_button: '//*[@id="features-content"]/div/div/div[1]/fieldset/span/span[1]/span',
     result_feature_select: '//*[@id="select2-form_step1_features_%ID_feature-results"]/li',
-    add_summary_textarea_button: '//*[@id="form_step1_description_short"]/div/div/div/div/div[1]/div/div/div/div/div/div[1]/button',
-    add_summary_textarea: '/html/body/div[7]/div[2]/div[2]/div/textarea',
-    save_summary_button: '/html/body/div[7]/div[3]/div/div[2]/button',
+    summary_textarea: '(//*[@id="form_step1_description_short"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
+    description_textarea: '(//*[@id="form_step1_description"]//div[@class="mce-tinymce mce-container mce-panel"])[1]',
     tab_description: '//*[@id="tab_description"]/a',
     feature_value_select: '//*[@id="form_step1_features_0_value"]',
     product_create_category_btn: '//*[@id="add-category-button"]',
@@ -179,7 +178,9 @@ module.exports = {
     symfony_toolbar: '//*[contains (@id, "sfToolbarMainContent")]/a',
     summary_tinymce_buttons: '//*[@id="description_short"]//div[contains(@class, "mce-toolbar-grp")]',
     combination_first_table: '//*[@id="accordion_combinations"]',
-    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]'
+    combination_second_table: '//*[@id="accordion_combinations"]//tr[2]',
+    home_delete_button: '//*[@id="ps_categoryTags"]/span[1]/a',
+    created_category: '//*[@id="ps_categoryTags"]/span[2]/span'
   },
 
   ProductList: {

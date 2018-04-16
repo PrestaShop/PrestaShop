@@ -69,7 +69,7 @@ module.exports = {
     },
     ShopParameters: {
       general_form: '//*[@id="configuration_form"]',
-      order_settings_form: '//*[@id="configuration_form"]',
+      order_settings_form: '//*[@id="configuration_fieldset_general"]',
       statuses_form: '//*[@id="form-order_state"]',
       product_settings_form: '//*[@id="configuration_form"]',
       customers_form: '//*[@id="configuration_form"]',
@@ -86,8 +86,8 @@ module.exports = {
     },
     AdvancedParameters: {
       check_configuration_box: '//*[@id="checkConfiguration"]',
-      debug_mode_select: '//*[@id="form_debug_mode_debug_mode"]', // performance page
-      administration_form: '//*[@id="configuration_form"]',
+      debug_mode_select: '//form[contains(@class, "form-horizontal")]', // performance page
+      administration_form: '//form[contains(@class, "form-horizontal")]',
       mail_form: '//*[@id="form-mail"]',
       preview_import_form: '//*[@id="preview_import"]',
       employee_form: '//*[@id="form-employee"]', //team page

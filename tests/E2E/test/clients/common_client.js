@@ -5,6 +5,7 @@ let fs = require('fs');
 let pdfUtil = require('pdf-to-text');
 
 global.tab = [];
+global.isOpen = false;
 
 class CommonClient {
   constructor() {
@@ -46,8 +47,17 @@ class CommonClient {
 
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
-      .waitForExistAndClick(menuSelector)
-      .waitForVisibleAndClick(selector);
+      .isOpen(menuSelector)
+      .then(() => {
+        if (global.isOpen) {
+          this.client.waitForVisibleAndClick(selector, 2000);
+        } else {
+          this.client
+            .waitForExistAndClick(menuSelector, 2000)
+            .pause(2000)
+            .waitForVisibleAndClick(selector);
+        }})
+      .then(()=> this.client.pause(4000))
   }
 
   closeBoarding(selector) {
@@ -60,8 +70,9 @@ class CommonClient {
     }
   }
 
-  isVisible(selector) {
+  isVisible(selector, pause = 0) {
     return this.client
+      .pause(pause)
       .isVisible(selector)
       .then((isVisible) => {
         global.isVisible = isVisible;
@@ -408,8 +419,9 @@ class CommonClient {
    * @param content
    * @returns {*}
    */
-  setTextToEditor(selector, content) {
+  setEditorText(selector, content) {
     return this.client
+      .pause(1000)
       .click(selector)
       .execute(function (content) {
         return (tinyMCE.activeEditor.setContent(content));

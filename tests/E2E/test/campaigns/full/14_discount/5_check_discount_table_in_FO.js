@@ -51,7 +51,7 @@ scenario('Create "Product"', () => {
     test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
   }, 'product/product');
   scenario('Create a new product in the Back Office', client => {
-    test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
     test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData.name + date_time));
     test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, productData.reference));
@@ -83,7 +83,16 @@ scenario('Create "Product"', () => {
       });
     }, 'product/product');
     scenario('Save the created product', client => {
-      test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+      test('should switch the product online', () => {
+        return promise
+          .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+          .then(() => {
+            if (global.isVisible) {
+              client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+            }
+          })
+          .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
+      });
       test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
     }, 'product/product');
   }, 'product/product');

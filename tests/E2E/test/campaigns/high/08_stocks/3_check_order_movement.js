@@ -5,8 +5,10 @@ const {Movement} = require('../../../selectors/BO/catalogpage/stocksubmenu/movem
 const {OrderPage} = require('../../../selectors/BO/order');
 const {CreateOrder} = require('../../../selectors/BO/order');
 const orderScenarios = require('../../common_scenarios/order');
-const common_scenarios = require('../../common_scenarios/product');
 const {AddProductPage} = require('../../../selectors/BO/add_product_page');
+const {Menu} = require('../../../selectors/BO/menu.js');
+
+const common_scenarios = require('../../common_scenarios/product');
 
 let productData = {
   name: 'Mvt',
@@ -34,14 +36,14 @@ scenario('Check order movement', client => {
   orderScenarios.createOrderBO(OrderPage, CreateOrder, productData);
 
   scenario('Change order state to "Delivered"', client => {
-    test('should click on "Orders" menu', () => client.waitForExistAndClick(OrderPage.orders_subtab));
+    test('should go to "Orders" page', () => client.goToSubtabMenuPage(Menu.Sell.Orders.orders_menu, Menu.Sell.Orders.orders_submenu));
     test('should go to the first order', () => client.waitForExistAndClick(OrderPage.first_order));
     test('should change order state to "Delivered"', () => client.changeOrderState(OrderPage, 'Delivered'));
     test('should get the order quantity', () => client.getTextInVar(OrderPage.order_quantity, "orderQuantity"));
   }, 'stocks');
 
   scenario('Check order movement', client => {
-    test('should go to "Stocks"', () => client.goToSubtabMenuPage(CatalogPage.menu_button, Stock.submenu));
+    test('should go to "Stocks" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.stocks_submenu));
     test('should go to "Movements" tabs', () => client.goToStockMovements(Movement));
     test('should check the movements of the delivered product', () => client.checkMovement(Movement, 1, '4', "-", "Customer Order"));
   }, 'stocks');

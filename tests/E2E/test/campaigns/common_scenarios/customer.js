@@ -21,7 +21,7 @@ let promise = Promise.resolve();
 module.exports = {
   createCustomer: function (customerData) {
     scenario('Create "Customer"', client => {
-      test('should go to the "Customers" page', () => client.waitForExistAndClick(Menu.Sell.Customers.customers_menu));
+      test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
       test('should click on "Add new customer" button', () => client.waitForExistAndClick(Customer.new_customer_button));
       test('should choose the "Social title" radio', () => client.waitForExistAndClick(Customer.social_title_button));
       test('should set the "First name" input', () => client.waitAndSetValue(Customer.first_name_input, customerData.first_name));
@@ -56,7 +56,7 @@ module.exports = {
    */
   editCustomer: function (customerEmail, editCustomerData) {
     scenario('Edit Customer', client => {
-      test('should go to the "Customers" page', () => client.waitForExistAndClick(Menu.Sell.Customers.customers_menu));
+      test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
       test('should search for the customer email in the "Customers list"', () => {
         return promise
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
@@ -80,7 +80,7 @@ module.exports = {
   },
   deleteCustomer: function (customerEmail) {
     scenario('Delete customer', client => {
-      test('should go to the "Customers" page', () => client.waitForExistAndClick(Menu.Sell.Customers.customers_menu));
+      test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
       test('should search for the customer email in the "Customers list"', () => {
         return promise
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))
@@ -99,7 +99,7 @@ module.exports = {
   },
   deleteCustomerWithBulkActions: function (customerEmail) {
     scenario('Delete customer with bulk actions', client => {
-      test('should go to the "Customers" page', () => client.waitForExistAndClick(Menu.Sell.Customers.customers_menu));
+      test('should go to the "Customers" page', () => client.goToSubtabMenuPage(Menu.Sell.Customers.customers_menu, Menu.Sell.Customers.customers_submenu));
       test('should search for the customer email in the "Customers list"', () => {
         return promise
           .then(() => client.isVisible(Customer.customer_filter_by_email_input))

@@ -24,7 +24,7 @@ scenario('Delete product', () => {
   common_scenarios.createProduct(AddProductPage, productData);
 
   scenario('Delete product "DP' + date_time + '"', client => {
-    test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Product Settings" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should set the product name "DP' + date_time + '" in the search input', () => client.waitAndSetValue(CatalogPage.name_search_input, productData.name + date_time));
     test('should click on the "ENTER" key', () => client.keys('Enter'));
     test('should click on the "dropdown" icon', () => client.waitForExistAndClick(CatalogPage.dropdown_toggle));

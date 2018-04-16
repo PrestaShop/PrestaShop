@@ -4,18 +4,21 @@ const {AccessPageFO} = require('../../../selectors/FO/access_page');
 const {SearchProductPage} = require('../../../selectors/FO/search_product_page');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
-var data = require('./../../../datas/product-data');
+let data = require('./../../../datas/product-data');
 let promise = Promise.resolve();
 global.productVariations = [];
 
 scenario('Create product with combination in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog"', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
   test('should click on "NEW PRODUCT" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
 
   scenario('Edit Basic settings', client => {
     test('should set the "product name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, data.standard.name + 'C' + date_time));
+    test('should set the "Summary" text', () => client.setEditorText(AddProductPage.summary_textarea, data.common.summary));
+    test('should click on "Description" tab', () => client.waitForExistAndClick(AddProductPage.tab_description));
+    test('should set the "Description" text', () => client.setEditorText(AddProductPage.description_textarea, data.common.description));
     test('should select the "Pack of products"', () => client.waitForExistAndClick(AddProductPage.product_combinations));
     test('should upload the first product picture', () => client.uploadPicture('1.png', AddProductPage.picture));
     test('should upload the second product picture', () => client.uploadPicture('2.jpg', AddProductPage.picture));
@@ -25,9 +28,8 @@ scenario('Create product with combination in the Back Office', client => {
     test('open all category', () => client.openAllCategory());
     test('should choose the created category as default', () => {
       return promise
-        .then(() => client.scrollTo(AddProductPage.category_radio.replace('%S', data.standard.new_category_name + 'Combination' + date_time)))
-        .then(() => client.waitForExistAndClick(AddProductPage.category_radio.replace('%S', data.standard.new_category_name + 'Combination' + date_time), 4000));
-
+        .then(() => client.waitForVisible(AddProductPage.created_category))
+        .then(() => client.waitForExistAndClick(AddProductPage.home_delete_button));
     });
     test('should click on "ADD A BRAND" button', () => client.scrollWaitForExistAndClick(AddProductPage.product_add_brand_btn, 50));
     test('should select brand', () => {
@@ -209,7 +211,7 @@ scenario('Create product with combination in the Back Office', client => {
 scenario('Check the product creation in the Back Office', client => {
   test('should open browser', () => client.open());
   test('should log in successfully in BO', () => client.signInBO(AccessPageBO));
-  test('should go to "Catalog"', () => client.goToCatalog());
+  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
   test('should search for product by name', () => client.searchProductByName(data.standard.name + 'C' + date_time));
   test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, data.standard.name + 'C' + date_time));
   test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, data.common.product_reference));
@@ -235,12 +237,16 @@ scenario('Check the product with combination in the Front Office', () => {
     test('should check that the product color is equal to "Grey"', () => client.checkTextValue(productPage.product_color, productVariations[0][1]));
     test('should set the product size to "M"', () => client.waitAndSelectByAttribute(productPage.product_size, 'title', productVariations[1][0], 3000));
     test('should check that the product color is equal to "Beige"', () => client.checkTextValue(productPage.product_color, productVariations[1][1]));
-    test('should check that the product reference is equal to "variation_1"', () => {
-      return promise
-        .then(() => client.scrollTo(productPage.product_reference))
-        .then(() => client.checkTextValue(productPage.product_reference, 'variation_2'));
-    });
     test('should check that the product quantity us equal to "20"', () => client.checkAttributeValue(productPage.product_quantity, 'data-stock', '10'));
+    test('should check that the "summary" is equal to "' + data.common.summary + '"', () => client.checkTextValue(productPage.product_summary, data.common.summary));
+    test('should check that the "description" is equal to "' + data.common.description + '"', () => client.checkTextValue(productPage.product_description, data.common.description));
+    test('should check that the product reference is equal to "' + data.common.product_reference + '"', () => {
+      return promise
+        .then(() => client.waitForExistAndClick(productPage.product_detail_tab, 2000))
+        .then(() => client.scrollTo(productPage.product_detail_tab, 180))
+        .then(() => client.pause(2000))
+        .then(() => client.checkTextValue(productPage.product_reference, data.common.product_reference))
+    });
   }, 'product/product');
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => {

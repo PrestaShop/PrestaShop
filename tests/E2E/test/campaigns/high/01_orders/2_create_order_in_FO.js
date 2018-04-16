@@ -16,7 +16,7 @@ scenario('Create order in the Front Office', () => {
     test('should login successfully in the Front Office', () => client.signInFO(AccessPageFO));
   }, 'order');
 
-    commonOrder.createOrder();
+    commonOrder.createOrderFO();
 
   scenario('Logout from the Front Office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

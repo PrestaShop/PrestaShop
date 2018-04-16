@@ -1,6 +1,7 @@
 const {AccessPageBO} = require('../../../selectors/BO/access_page');
+const {AddProductPage} = require('../../../selectors/BO/add_product_page');
 const {ProductSettings} = require('../../../selectors/BO/shopParameters/product_settings');
-const {ShopParameter} = require('../../../selectors/BO/shopParameters/index');
+const {ShopParameters} = require('../../../selectors/BO/shopParameters/shop_parameters');
 const {TrafficAndSeo} = require('../../../selectors/BO/shopParameters/shop_parameters');
 const {productPage} = require('../../../selectors/FO/product_page');
 const {Menu} = require('../../../selectors/BO/menu.js');
@@ -16,7 +17,7 @@ scenario('Check that the pagination works fine on the product page in the Front 
     test('should go to "Product settings" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.product_settings_submenu));
     test('should set the "Products per page" input', () => client.waitAndSetValue(ProductSettings.Pagination.products_per_page_input, 6));
     test('should click on "Save" button', () => client.waitForExistAndClick(ProductSettings.save_button.replace("%POS", 4)));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.success_panel, "The settings have been successfully updated."));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_box, "Update successful"));
   }, 'common_client');
 
   /**
@@ -25,11 +26,21 @@ scenario('Check that the pagination works fine on the product page in the Front 
    **/
 
   scenario('Disable the Friendly URL', client => {
-    test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
+    test('should close symfony Profiler', () => {
+      return promise
+        .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
+        .then(() => {
+          if (global.isVisible) {
+            client.waitForExistAndClick(AddProductPage.symfony_toolbar)
+          }
+        })
+    });
+    test('should go to "Traffic & SEO" page', () => client.waitForExistAndClick(Menu.Configure.ShopParameters.traffic_seo_submenu));
     test('should disable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'off')));
     test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.success_panel, "The settings have been successfully updated."));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, "The settings have been successfully updated."));
   }, 'common_client');
+
 
   scenario('Check the pagination in the Front Office', client => {
     test('should go to the Front Office', () => {
@@ -54,10 +65,11 @@ scenario('Check that the pagination works fine on the product page in the Front 
     test('should go to "Traffic & SEO" page', () => client.goToSubtabMenuPage(Menu.Configure.ShopParameters.shop_parameters_menu, Menu.Configure.ShopParameters.traffic_seo_submenu));
     test('should enable the "Friendly URL"', () => client.waitForExistAndClick(TrafficAndSeo.SeoAndUrls.friendly_url_button.replace('%s', 'on')));
     test('should click on "Save" button', () => client.scrollWaitForExistAndClick(TrafficAndSeo.SeoAndUrls.save_button));
-    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameter.success_panel, "The settings have been successfully updated."));
+    test('should verify the appearance of the green validation', () => client.checkTextValue(ShopParameters.success_panel, "The settings have been successfully updated."));
   }, 'common_client');
 
   scenario('Logout from the Back Office', client => {
     test('should logout successfully from the Back Office', () => client.signOutBO());
   }, 'common_client');
 }, 'common_client', true);
+

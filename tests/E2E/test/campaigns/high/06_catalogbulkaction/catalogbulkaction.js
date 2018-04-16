@@ -12,7 +12,7 @@ scenario('Catalog bulk action', () => {
   }, 'catalogbulkaction');
 
   scenario('Disable the product list', client => {
-    test('should go to "Catalog" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+    test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
     test('should click on "Select all" radio', () => client.selectAllProducts(CatalogPage.select_all_product_button));
     test('should choose the "Deactivate selection" action', () => client.selectAction(CatalogPage, 2));
     test('should verify the appearance of the green validation', () => client.checkTextValue(CatalogPage.green_validation, 'close\nProduct(s) successfully deactivated.'));

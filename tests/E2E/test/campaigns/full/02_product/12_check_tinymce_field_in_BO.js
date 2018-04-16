@@ -53,7 +53,7 @@ scenario('Edit the connected employee profile in the Back Office', () => {
 scenario('Check that the TinyMCE field is well displayed in the Back Office', client => {
   test('should open the browser', () => client.open());
   test('should login successfully in the Back Office', () => client.signInBO(AccessPageBO));
-  test('should go to "Products" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
+  test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
   test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
   test('should check the appearance of the TinyMCE field', () => client.isExisting(AddProductPage.summary_tinymce_buttons, 2000));
 }, 'common_client', true);

@@ -49,14 +49,14 @@ module.exports = {
     }, 'installation');
     scenario('Step 6 : Checking installation', client => {
       test('should create file parameter', () => client.waitForVisibleElement(selector.create_file_parameter_step));
-      test('should create database', () => client.waitForVisibleElement(selector.create_database_step, 180000));
-      test('should create default shop', () => client.waitForVisibleElement(selector.create_default_shop_step));
-      test('should create database table', () => client.waitForVisibleElement(selector.create_database_table_step, 140000));
+      test('should create database', () => client.waitForVisibleElement(selector.create_database_step, 360000));
+      test('should create default shop', () => client.waitForVisibleElement(selector.create_default_shop_step, 360000));
+      test('should create database table', () => client.waitForVisibleElement(selector.create_database_table_step, 360000));
       test('should create shop information', () => client.waitForVisibleElement(selector.create_shop_informations_step));
-      test('should create demonstration data', () => client.waitForVisibleElement(selector.create_demonstration_data_step, 140000));
-      test('should create install module', () => client.waitForVisibleElement(selector.install_module_step, 140000));
-      test('should create addons modules', () => client.waitForVisibleElement(selector.install_addons_modules_step));
-      test('should create install theme', () => client.waitForVisibleElement(selector.install_theme_step));
+      test('should create demonstration data', () => client.waitForVisibleElement(selector.create_demonstration_data_step, 360000));
+      test('should create install module', () => client.waitForVisibleElement(selector.install_module_step, 360000));
+      test('should create addons modules', () => client.waitForVisibleElement(selector.install_addons_modules_step, 360000));
+      test('should create install theme', () => client.waitForVisibleElement(selector.install_theme_step, 140000));
       test('should finish installation', () => client.waitForVisibleElement(selector.finish_step));
     }, 'installation');
     scenario('Step 7 : Checking that installation finished', client => {

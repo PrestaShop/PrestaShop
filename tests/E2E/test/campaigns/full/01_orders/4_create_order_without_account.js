@@ -7,7 +7,7 @@ scenario('Create order by a guest from the Front Office', () => {
     test('should open the browser', () => client.open());
     test('should access to the Front Office', () => client.accessToFO(AccessPageFO));
   }, 'order');
-  commonOrder.createOrder("guest");
+  commonOrder.createOrderFO("guest");
 }, 'order', true);
 
 scenario('Check the created order in the Back Office', () => {

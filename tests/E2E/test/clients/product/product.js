@@ -85,15 +85,16 @@ class Product extends CommonClient {
       .scrollTo(AddProductPage.category_create_btn, 50)
       .waitForExistAndClick(AddProductPage.category_create_btn)
       .pause(4000);
+
   }
 
   searchAndAddRelatedProduct() {
     let search_products = data.common.search_related_products.split('//');
     return this.client
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[0])
-      .waitForExistAndClick(AddProductPage.related_product_item)
+      .waitForVisibleAndClick(AddProductPage.related_product_item)
       .waitAndSetValue(AddProductPage.search_add_related_product_input, search_products[1])
-      .waitForExistAndClick(AddProductPage.related_product_item);
+      .waitForVisibleAndClick(AddProductPage.related_product_item);
   }
 
   addFeatureHeight(type) {
@@ -125,8 +126,7 @@ class Product extends CommonClient {
 
   selectFeature(addProductPage, name, value) {
     return this.client
-      .moveToObject(addProductPage.feature_select)
-      .waitForExistAndClick(addProductPage.feature_select)
+      .scrollWaitForExistAndClick(addProductPage.feature_select)
       .waitAndSetValue(addProductPage.select_feature_created, name)
       .waitForExistAndClick(addProductPage.result_feature_select.replace('%ID', 0))
       .pause(2000)

@@ -126,7 +126,7 @@ scenario('The shop installation', () => {
 
   /****** END *****/
 
-  orderCommonScenarios.createOrder();
+  orderCommonScenarios.createOrderFO();
 
   scenario('Logout from the back office', client => {
     test('should logout successfully from the Front Office', () => client.signOutFO(AccessPageFO));

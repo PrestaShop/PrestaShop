@@ -97,15 +97,15 @@ module.exports = {
       scenario('Save the created product', client => {
         test('should switch the product online', () => {
           return promise
-            .then(() => client.isVisible(AddProductPage.symfony_toolbar))
+            .then(() => client.isVisible(AddProductPage.symfony_toolbar, 3000))
             .then(() => {
               if (global.isVisible) {
                 client.waitForExistAndClick(AddProductPage.symfony_toolbar)
               }
             })
-            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
+            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle, 2000));
         });
-        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button, 2000));
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 
@@ -136,7 +136,6 @@ module.exports = {
         return promise
           .then(() => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "asc")));
       });
-
       test('should check that the products is well sorted by ASC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);
@@ -145,9 +144,7 @@ module.exports = {
           .then(() => client.sortTable("ASC", sortBy))
           .then(() => client.checkSortProduct());
       });
-
       test('should click on "Sort by DESC" icon', () => client.waitForExistAndClick(ProductList.sort_by_icon.replace("%B", sortBy).replace("%W", "desc")));
-
       test('should check that the products is well sorted by DESC', () => {
         for (let j = 0; j < global.productsPageNumber; j++) {
           promise = client.getProductsInformation(selector, j, true);

@@ -11,19 +11,19 @@ const {Menu} = require('../../../selectors/BO/menu.js');
 
 let productData = [{
   name: 'A',
-  quantity: "50",
+  quantity: '50',
   price: '5',
   image_name: 'image_test.jpg',
   reference: 'a'
 }, {
-  type: "pack",
+  type: 'pack',
   name: 'B',
-  quantity: "5",
+  quantity: '5',
   price: '5',
   image_name: 'image_test.jpg',
   reference: 'b',
   product: {
-    name: "A",
+    name: 'A',
     quantity: "10"
   }
 }];
