@@ -286,7 +286,7 @@ const CheckUpdateQuantityOperations = {
     let $checkoutBtn = $('.checkout a');
 
     if ($("#notifications article.alert-danger").length 
-        || hasError
+        || hasError || '' !== errorMsg
     ) {
       $checkoutBtn.addClass('disabled');
     }
@@ -304,11 +304,20 @@ const CheckUpdateQuantityOperations = {
     }
   },
   'checkUpdateOpertation': (resp) => {
+    /*
+    resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
+    if resp.hasError=true, quantity is not updated
+     */
     hasError = resp.hasOwnProperty('hasError');
     isUpdateOperation = true;
     if (!hasError) {
       hasError = ('' !== resp.errors);
       errorMsg = resp.errors;
+    }
+    if (resp.errors instanceof Array) {
+      errorMsg = resp.errors.join(" ");
+    } else {
+      errorMsg = resp.errors || "";
     }
   }
 };
