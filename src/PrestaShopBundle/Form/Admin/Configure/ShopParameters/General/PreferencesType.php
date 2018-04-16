@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Entity\Order;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -46,14 +46,15 @@ class PreferencesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->getConfiguration();
+        $isSslEnabled = $configuration->getBoolean('PS_SSL_ENABLED');
 
-        if ($options['is_ssl_enabled']) {
+        if ($isSslEnabled) {
             $builder->add('enable_ssl', SwitchType::class);
         }
 
         $builder
             ->add('enable_ssl_everywhere', SwitchType::class, array(
-                'disabled' => !$options['is_ssl_enabled'],
+                'disabled' => !$isSslEnabled,
             ))
             ->add('enable_token', SwitchType::class)
             ->add('allow_html_iframes', SwitchType::class)
@@ -129,7 +130,6 @@ class PreferencesType extends TranslatorAwareType
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-            'is_ssl_enabled' => false,
         ));
     }
 

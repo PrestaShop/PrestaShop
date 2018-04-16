@@ -24,48 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class generates "Pagination" form
- * in "Configure > Shop Parameters > Product Settings" page.
+ * Class generates "General" form
+ * in "Configure > Shop Parameters > Customer Settings" page.
  */
-class PaginationType extends AbstractType
+class GeneralType extends TranslatorAwareType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('products_per_page', IntegerType::class)
-            ->add('default_order_by', ChoiceType::class, [
-                'choices' => [
-                    'Product name' => 0,
-                    'Product price' => 1,
-                    'Product add date' => 2,
-                    'Product modified date' => 3,
-                    'Position inside category' => 4,
-                    'Brand' => 5,
-                    'Product quantity' => 6,
-                    'Product reference' => 7,
-                ],
-                'required' => true,
+            ->add('redisplay_cart_at_login', SwitchType::class)
+            ->add('send_email_after_registration', SwitchType::class)
+            ->add('password_reset_delay', TextWithUnitType::class, [
+                'unit' => $this->trans('minutes', 'Admin.Shopparameters.Feature'),
             ])
-            ->add('default_order_way', ChoiceType::class, [
-                'choices' => [
-                    'Ascending' => 0,
-                    'Descending' => 1,
-                ],
-                'required' => true,
-                'choice_translation_domain' => 'Admin.Global',
-            ])
+            ->add('enable_b2b_mode', SwitchType::class)
+            ->add('ask_for_birthday', SwitchType::class)
+            ->add('enable_offers', SwitchType::class)
         ;
     }
 
@@ -84,6 +67,6 @@ class PaginationType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'product_preferences_pagination_block';
+        return 'customer_preferences_general_block';
     }
 }

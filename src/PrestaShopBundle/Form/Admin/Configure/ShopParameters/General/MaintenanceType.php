@@ -23,21 +23,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences;
-
+use PrestaShopBundle\Form\Admin\Type\IpAddressType;
+use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslateTextType;
+use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
+use Symfony\Component\Form\FormBuilderInterface;
 /**
- * Class generates "Products stock" form
- * in "Configure > Shop Parameters > Product Settings" page.
+ * Class returning the content of the form in the maintenance page.
+ * To be found in Configure > Shop parameters > General > Maintenance
  */
-class StockType extends TranslatorAwareType
+class MaintenanceType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -45,30 +44,24 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('allow_ordering_oos', SwitchType::class)
-            ->add('stock_management', SwitchType::class)
-            ->add('in_stock_label', TranslateTextType::class, [
+            ->add('enable_shop', SwitchType::class, array(
+                'required' => true,
+            ))
+            ->add('maintenance_ip', IpAddressType::class, array(
+                'required' => false,
+                'attr' => array(
+                    'class' => 'col-md-5',
+                ),
+            ))
+            ->add('maintenance_text', TranslateType::class, array(
+                'type' => FormattedTextareaType::class,
+                'options' => array(
+                    'required' => false,
+                ),
                 'locales' => $this->locales,
-            ])
-            ->add('oos_allowed_backorders', TranslateTextType::class, [
-                'locales' => $this->locales,
-            ])
-            ->add('oos_denied_backorders', TranslateTextType::class, [
-                'locales' => $this->locales,
-            ])
-            ->add('delivery_time', TranslateTextType::class, [
-                'locales' => $this->locales,
-            ])
-            ->add('oos_delivery_time', TranslateTextType::class, [
-                'locales' => $this->locales,
-            ])
-            ->add('pack_stock_management', ChoiceType::class, [
-                'choices' => [
-                      'Decrement pack only.' => 0,
-                      'Decrement products in pack only.' => 1,
-                      'Decrement both.' => 2,
-                ],
-            ])
+                'hideTabs' => false,
+                'required' => true,
+            ))
         ;
     }
 
@@ -77,9 +70,9 @@ class StockType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(array(
             'translation_domain' => 'Admin.Shopparameters.Feature',
-        ]);
+        ));
     }
 
     /**
@@ -87,6 +80,6 @@ class StockType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'product_preferences_stock_block';
+        return 'maintenance_general_block';
     }
 }

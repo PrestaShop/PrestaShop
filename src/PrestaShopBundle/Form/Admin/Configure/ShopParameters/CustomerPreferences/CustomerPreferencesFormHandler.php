@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandler;
 use PrestaShopBundle\Entity\Repository\TabRepository;

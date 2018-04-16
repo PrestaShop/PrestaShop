@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
