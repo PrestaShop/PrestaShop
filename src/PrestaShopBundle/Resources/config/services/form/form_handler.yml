@@ -25,7 +25,7 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.maintenance.form_provider'
             -
-              'general': 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceType'
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
             - 'MaintenancePage'
 
     prestashop.adapter.administration.form_handler:
@@ -47,11 +47,11 @@ services:
             - '@prestashop.hook.dispatcher'
             - '@prestashop.admin.customer_preferences.data_provider'
             -
-              'general': 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\GeneralType'
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
             - 'CustomerPreferencesPage'
 
     prestashop.admin.product_preferences.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
         arguments:
             - '@form.factory'
             - '@prestashop.admin.product_preferences.data_provider'
@@ -59,11 +59,14 @@ services:
             - '@translator'
 
     prestashop.adapter.preferences.form_handler:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesFormHandler'
+        class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@form.factory'
+            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.hook.dispatcher'
             - '@prestashop.adapter.preferences.form_provider'
-            - '@prestashop.adapter.legacy.configuration'
+            -
+              'general': 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
+            - 'GeneralPage'
 
     prestashop.adapter.logs.form_handler:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormHandler'

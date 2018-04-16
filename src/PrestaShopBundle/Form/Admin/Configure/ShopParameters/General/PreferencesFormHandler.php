@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
-namespace PrestaShopBundle\Form\Admin\ShopParameters\General;
+namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\General;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
@@ -31,7 +31,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 /**
  * This class manages the data manipulated using forms
- * in "Configure > Advanced Parameters > Performance" page.
+ * in "Configure > Shop Parameters > General" page.
  */
 final class PreferencesFormHandler implements FormHandlerInterface
 {

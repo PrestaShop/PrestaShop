@@ -276,14 +276,14 @@ services:
             - { name: form.type }
 
     form.type.shop_parameters.general:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\PreferencesType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\PreferencesType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.maintenance.general:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\General\MaintenanceType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\General\MaintenanceType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
@@ -314,21 +314,21 @@ services:
         abstract: true
 
     form.type.product_preferences.general:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\GeneralType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.product_preferences.stock:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\StockType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
             - { name: form.type }
 
     form.type.customer_preferences.general:
-        class: 'PrestaShopBundle\Form\Admin\ShopParameters\CustomerPreferences\GeneralType'
+        class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences\GeneralType'
         parent: 'form.type.translatable.aware'
         public: true
         tags:
