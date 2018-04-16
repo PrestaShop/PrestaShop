@@ -28,9 +28,24 @@ namespace Tests\PrestaShopBundle\Controller;
 
 use Context;
 use Controller;
+use Cookie;
+use Employee;
+use Language;
+use Link;
+use PrestaShop\PrestaShop\Adapter\EntityMapper;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
+use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Prophecy\Argument;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Shop;
+use Smarty;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\ParameterBag as HttpParameterBag;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\Translation\Translator;
 use Tools;
 
 /**
@@ -50,7 +65,7 @@ class ControllerTest extends TestCase
         $this->context = Context::getContext();
         Context::setInstanceForTesting($contextProphecy->reveal());
 
-        $containerProphecy = $this->prophesizeContainer();
+        $containerProphecy = $this->prophesizeLegacyContainer();
         ServiceLocator::setServiceContainerInstance($containerProphecy->reveal());
     }
 
@@ -64,6 +79,7 @@ class ControllerTest extends TestCase
      * @dataProvider getControllersClasses
      *
      * @param $controllerClass
+     *
      * @return mixed
      */
     public function itShouldRunTheTestedController($controllerClass)
@@ -72,6 +88,7 @@ class ControllerTest extends TestCase
          * @var Controller $testedController
          */
         $testedController = new $controllerClass();
+        $testedController->setContainer($this->prophesizeSfContainer()->reveal());
 
         if (!defined('_PS_BASE_URL_')) {
             define('_PS_BASE_URL_', '');
@@ -148,38 +165,56 @@ class ControllerTest extends TestCase
     protected function declareRequiredConstants()
     {
         $configDirectory = __DIR__ . '/../../../app/config';
-        $configuration = require_once($configDirectory . '/parameters.php');
+        $configuration   = require_once($configDirectory . '/parameters.php');
 
         if (defined('_PS_BO_ALL_THEMES_DIR_')) {
             return;
         }
 
         define('_PS_BO_ALL_THEMES_DIR_', '');
-        define('_PS_TAB_MODULE_LIST_URL_', '');
-        define('_DB_SERVER_', 'localhost');
-        define('_DB_USER_', $configuration['parameters']['database_user']);
-        define('_DB_PASSWD_', $configuration['parameters']['database_password']);
-        define('_DB_NAME_', 'test_'.$configuration['parameters']['database_name']);
-        define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
-        define('_COOKIE_KEY_', Tools::passwdGen(56));
-        define('_PS_VERSION_', '1.7');
-        define('_PS_ADMIN_DIR_', '');
+        if (!defined('_PS_TAB_MODULE_LIST_URL_')) {
+            define('_PS_TAB_MODULE_LIST_URL_', '');
+        }
+        if (!defined('_DB_SERVER_')) {
+            define('_DB_SERVER_', 'localhost');
+        }
+        if (!defined('_DB_USER_')) {
+            define('_DB_USER_', $configuration['parameters']['database_user']);
+        }
+        if (!defined('_DB_PASSWD_')) {
+            define('_DB_PASSWD_', $configuration['parameters']['database_password']);
+        }
+        if (!defined('_DB_NAME_')) {
+            define('_DB_NAME_', 'test_' . $configuration['parameters']['database_name']);
+        }
+        if (!defined('_DB_PREFIX_')) {
+            define('_DB_PREFIX_', $configuration['parameters']['database_prefix']);
+        }
+        if (!defined('_COOKIE_KEY_')) {
+            define('_COOKIE_KEY_', Tools::passwdGen(56));
+        }
+        if (!defined('_PS_VERSION_')) {
+            define('_PS_VERSION_', '1.7');
+        }
+        if (!defined('_PS_ADMIN_DIR_')) {
+            define('_PS_ADMIN_DIR_', '');
+        }
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
     protected function prophesizeTranslator()
     {
-        return $this->prophesize('\Symfony\Component\Translation\Translator');
+        return $this->prophesize(Translator::class);
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
     protected function prophesizeTemplateEngine()
     {
-        $templateEngineProphecy = $this->prophesize('\Smarty');
+        $templateEngineProphecy = $this->prophesize(Smarty::class);
 
         $templateEngineProphecy->setTemplateDir(Argument::type('array'))->willReturn(null);
         $templateEngineProphecy->assign(Argument::any(), Argument::cetera())->willReturn(null);
@@ -193,7 +228,7 @@ class ControllerTest extends TestCase
 
     protected function prophesizeEmployee()
     {
-        $employeeProphecy = $this->prophesize('\Employee');
+        $employeeProphecy = $this->prophesize(Employee::class);
         $employeeProphecy->isLoggedBack()->willReturn(true);
         $employeeProphecy->hasAuthOnShop(Argument::type('string'))->willReturn(true);
         $employeeProphecy->id_profile = 1;
@@ -207,29 +242,29 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
     protected function prophesizeLanguage()
     {
-        return $this->prophesize('\Language');
+        return $this->prophesize(Language::class);
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
     protected function prophesizeShop()
     {
-        return $this->prophesize('\Shop');
+        return $this->prophesize(Shop::class);
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
-    protected function prophesizeContainer()
+    protected function prophesizeLegacyContainer()
     {
-        $containerProphecy = $this->prophesize('\PrestaShop\PrestaShop\Core\Foundation\IoC\Container');
+        $containerProphecy = $this->prophesize(LegacyContainer::class);
 
-        $entityMapperProphecy = $this->prophesize('\PrestaShop\PrestaShop\Adapter\EntityMapper');
+        $entityMapperProphecy = $this->prophesize(EntityMapper::class);
         $entityMapperProphecy->load(Argument::any(), Argument::cetera())->willReturn(null);
 
         $containerProphecy->make(Argument::type('string'))->willReturn($entityMapperProphecy->reveal());
@@ -238,11 +273,24 @@ class ControllerTest extends TestCase
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
+     */
+    protected function prophesizeSfContainer()
+    {
+        $containerProphecy        = $this->prophesize(ContainerBuilder::class);
+        $localeRepositoryProphecy = $this->prophesizeLocaleRepository();
+        $containerProphecy->get(Argument::exact(Controller::SERVICE_LOCALE_REPOSITORY))
+            ->willReturn($localeRepositoryProphecy->reveal());
+
+        return $containerProphecy;
+    }
+
+    /**
+     * @return ObjectProphecy
      */
     protected function prophesizeContext()
     {
-        $contextProphecy = $this->prophesize('\Context');
+        $contextProphecy = $this->prophesize(Context::class);
 
         $translatorProphecy = $this->prophesizeTranslator();
         $contextProphecy->getTranslator()->willReturn($translatorProphecy->reveal());
@@ -250,30 +298,30 @@ class ControllerTest extends TestCase
 
         $templateEngineProphecy = $this->prophesizeTemplateEngine();
 
-        $contextProphecy->smarty = $templateEngineProphecy->reveal();
+        $contextProphecy->smarty   = $templateEngineProphecy->reveal();
         $contextProphecy->employee = $this->prophesizeEmployee()->reveal();
         $contextProphecy->language = $this->prophesizeLanguage()->reveal();
-        $contextProphecy->shop = $this->prophesizeShop()->reveal();
-        $contextProphecy->cookie = $this->prophesizeCookie()->reveal();
-        $contextProphecy->link = $this->prophesizeLink()->reveal();
+        $contextProphecy->shop     = $this->prophesizeShop()->reveal();
+        $contextProphecy->cookie   = $this->prophesizeCookie()->reveal();
+        $contextProphecy->link     = $this->prophesizeLink()->reveal();
 
         return $contextProphecy;
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
     protected function prophesizeCookie()
     {
-        return $this->prophesize('\Cookie');
+        return $this->prophesize(Cookie::class);
     }
 
     /**
-     * @return \Prophecy\Prophecy\ObjectProphecy
+     * @return ObjectProphecy
      */
     protected function prophesizeLink()
     {
-        $linkProphecy = $this->prophesize('\Link');
+        $linkProphecy = $this->prophesize(Link::class);
         $linkProphecy->getAdminLink(Argument::any(), Argument::cetera())->willReturn('/link');
 
         return $linkProphecy;
@@ -281,24 +329,37 @@ class ControllerTest extends TestCase
 
     /**
      * @param Controller $testedController
+     *
      * @return Tools
      */
     protected function prophesizeRequest(Controller $testedController)
     {
-        $requestParameterBagProphecy = $this->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
+        $requestParameterBagProphecy = $this->prophesize(HttpParameterBag::class);
         $requestParameterBagProphecy->get(Argument::any(), Argument::cetera())->willReturn($testedController->token);
 
-        $queryParameterBagProphecy = $this->prophesize('\Symfony\Component\HttpFoundation\ParameterBag');
+        $queryParameterBagProphecy = $this->prophesize(HttpParameterBag::class);
         $queryParameterBagProphecy->get(Argument::any(), Argument::cetera())->willReturn('');
 
-        $requestProphecy = $this->prophesize('\Symfony\Component\HttpFoundation\Request');
+        $requestProphecy          = $this->prophesize(HttpRequest::class);
         $requestProphecy->request = $requestParameterBagProphecy->reveal();
-        $requestProphecy->query = $queryParameterBagProphecy->reveal();
+        $requestProphecy->query   = $queryParameterBagProphecy->reveal();
 
         return new Tools($requestProphecy->reveal());
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass()
+    {
         Tools::resetRequest();
+    }
+
+    protected function prophesizeLocaleRepository()
+    {
+        $localeRepositoryProphecy = $this->prophesize(LocaleRepository::class);
+        $localeProphecy           = $this->prophesize(Locale::class);
+        $localeRepositoryProphecy
+            ->getLocale(Argument::any())
+            ->willReturn($localeProphecy->reveal());
+
+        return $localeRepositoryProphecy;
     }
 }
