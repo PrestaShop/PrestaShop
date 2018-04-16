@@ -283,15 +283,16 @@ $(document).ready(() => {
 
 const CheckUpdateQuantityOperations = {
   'switchErrorStat': () => {
+    /*
+    if errorMsg is not empty or if notifications are shown, we have error to display
+    if hasError is true, quantity was not updated : we don't disable checkout button
+     */
     let $checkoutBtn = $('.checkout a');
-
-    if ($("#notifications article.alert-danger").length 
-        || hasError || '' !== errorMsg
-    ) {
+    if ($("#notifications article.alert-danger").length || ('' !== errorMsg && !hasError)) {
       $checkoutBtn.addClass('disabled');
     }
 
-    if (hasError && '' !== errorMsg) {
+    if ('' !== errorMsg) {
       let strError = ' <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>' + errorMsg + '</li></ul></article>';
       $('#notifications .container').html(strError);
       errorMsg = '';
@@ -306,18 +307,15 @@ const CheckUpdateQuantityOperations = {
   'checkUpdateOpertation': (resp) => {
     /*
     resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
-    if resp.hasError=true, quantity is not updated
+    when resp.hasError=true, quantity is not updated
      */
     hasError = resp.hasOwnProperty('hasError');
-    isUpdateOperation = true;
-    if (!hasError) {
-      hasError = ('' !== resp.errors);
-      errorMsg = resp.errors;
-    }
-    if (resp.errors instanceof Array) {
-      errorMsg = resp.errors.join(" ");
+    let errors = resp.errors || "";
+    if (errors instanceof Array) {
+      errorMsg = errors.join(" ");
     } else {
-      errorMsg = resp.errors || "";
+      errorMsg = errors;
     }
+    isUpdateOperation = true;
   }
 };
