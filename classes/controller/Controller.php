@@ -164,7 +164,9 @@ abstract class ControllerCore
             define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
         }
 
-        $this->container              = $this->buildContainer();
+        if (null === $this->container) {
+            $this->container = $this->buildContainer();
+        }
         $localeRepo                   = $this->get(self::SERVICE_LOCALE_REPOSITORY);
         $this->context->currentLocale = $localeRepo->getLocale($this->context->language->locale);
     }
@@ -734,5 +736,17 @@ abstract class ControllerCore
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     *
+     * @return $this
+     */
+    public function setContainer($container)
+    {
+        $this->container = $container;
+
+        return $this;
     }
 }
