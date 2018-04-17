@@ -30,7 +30,7 @@ const {ProductList} = require('../../selectors/BO/add_product_page');
 module.exports = {
   createProduct: function (AddProductPage, productData) {
     scenario('Create a new product in the Back Office', client => {
-      test('should go to "Product Settings" page', () => client.waitForExistAndClick(Menu.Sell.Catalog.catalog_menu));
+      test('should go to "Products" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
       test('should click on "New Product" button', () => client.waitForExistAndClick(AddProductPage.new_product_button));
       test('should set the "Name" input', () => client.waitAndSetValue(AddProductPage.product_name_input, productData["name"] + date_time));
       test('should set the "Reference"', () => client.waitAndSetValue(AddProductPage.product_reference, productData["reference"]));
@@ -95,8 +95,7 @@ module.exports = {
       }
 
       scenario('Save the created product', client => {
-        test('should switch the product online', () => client.waitForExistAndClick(AddProductPage.product_online_toggle));
-        test('should click on "Save" button', () => {
+        test('should switch the product online', () => {
           return promise
             .then(() => client.isVisible(AddProductPage.symfony_toolbar))
             .then(() => {
@@ -104,8 +103,9 @@ module.exports = {
                 client.waitForExistAndClick(AddProductPage.symfony_toolbar)
               }
             })
-            .then(() => client.waitForExistAndClick(AddProductPage.save_product_button))
+            .then(() => client.waitForExistAndClick(AddProductPage.product_online_toggle));
         });
+        test('should click on "Save" button', () => client.waitForExistAndClick(AddProductPage.save_product_button));
         test('should verify the appearance of the green validation', () => client.checkTextValue(AddProductPage.validation_msg, 'Settings updated.'));
       }, 'product/product');
 
@@ -115,7 +115,7 @@ module.exports = {
 
   checkProductBO(AddProductPage, productData) {
     scenario('Check the product creation in the Back Office', client => {
-      test('should go to "Catalog"', () => client.goToCatalog());
+      test('should go to "Catalog" page', () => client.goToSubtabMenuPage(Menu.Sell.Catalog.catalog_menu, Menu.Sell.Catalog.products_submenu));
       test('should search for product by name', () => client.searchProductByName(productData.name + date_time));
       test('should check the existence of product name', () => client.checkTextValue(AddProductPage.catalog_product_name, productData.name + date_time));
       test('should check the existence of product reference', () => client.checkTextValue(AddProductPage.catalog_product_reference, productData.reference));
