@@ -46,8 +46,7 @@ class CommonClient {
 
   goToSubtabMenuPage(menuSelector, selector) {
     return this.client
-      .waitForExist(menuSelector, 90000)
-      .moveToObject(menuSelector)
+      .waitForExistAndClick(menuSelector)
       .waitForVisibleAndClick(selector);
   }
 

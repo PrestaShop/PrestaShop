@@ -9,6 +9,7 @@ module.exports = {
     search_button: '.btn.btn-primary.pull-right.search-button',
     page_loaded: '.module-search-result-wording',
     installed_modules_tabs: '(//div[@class="page-head-tabs"]/a)[2]',
+    selection_modules_tabs: '(//div[@class="page-head-tabs"]/a)[1]',
     modules_search_input: '.pstaggerAddTagInput',
     module_selection_input: '//input[contains(@class,"pstaggerAddTagInput ")]',
     modules_search_button: '//*[@id="main-div"]//button[contains(@class,"search-button")]',
