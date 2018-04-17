@@ -330,6 +330,35 @@ class CurrencyCore extends ObjectModel
     }
 
     /**
+     * Is this currency installed for a given shop ?
+     * (current shop by default)
+     *
+     * @param int|null $currencyId
+     *  The currency to look for (
+     *
+     * @param int|null $shopId
+     *  The given shop's id
+     *
+     * @return bool
+     *  True if this currency is installed for the given shop
+     */
+    public function isInstalled($currencyId = null, $shopId = null)
+    {
+        $currencyId = $currencyId ?: $this->id;
+        $shopId     = $shopId ?: Context::getContext()->shop->id;
+        $sql        = (new DbQuery)
+            ->select('1')
+            ->from('currency', 'c')
+            ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
+            ->where('c.`id_currency` = ' . (int)$currencyId)
+            ->where('cs.`id_shop` = ' . (int)$shopId)
+            ->where('c.`deleted` = 0')
+            ->where('c.`active` = 1');
+
+        return (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+    }
+
+    /**
      * Return available currencies
      *
      * @param bool $object
@@ -350,6 +379,21 @@ class CurrencyCore extends ObjectModel
             ' ORDER BY `iso_code` ASC');
 
         return self::addCldrDatasToCurrency($tab, $object);
+    }
+
+    public function getInstalledCurrencies($shopId = null)
+    {
+        $shopId = $shopId ?: Context::getContext()->shop->id;
+        $sql    = (new DbQuery)
+            ->select('c.*, cl.*')
+            ->from('currency', 'c')
+            ->innerJoin('currency_lang', 'cl', 'c.`id_currency` = cl.`id_currency`')
+            ->innerJoin('currency_shop', 'cs', 'c.`id_currency` = cs.`id_currency`')
+            ->where('cs.`id_shop` = ' . (int)$shopId)
+            ->where('c.`deleted` = 0')
+            ->where('c.`active` = 1');
+
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
     }
 
     /**
