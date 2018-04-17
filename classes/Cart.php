@@ -1185,13 +1185,10 @@ class CartCore extends ObjectModel
         $firstUnionSql .= ' AND cp.`id_product` = ' . (int) $idProduct;
         $secondUnionSql .= $commonWhere;
         $secondUnionSql .= ' AND p.`id_product_item` = ' . (int) $idProduct;
-
-        if ($productIsPack) {
-            $secondUnionSql .= ' AND (pr.`pack_stock_type` IN (' . implode(',', $packStockTypesAllowed) . ') OR (
-                pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
-                AND ' . $packStockTypesDefaultSupported . ' = 1
-            ))';
-        }
+        $secondUnionSql .= ' AND (pr.`pack_stock_type` IN (' . implode(',', $packStockTypesAllowed) . ') OR (
+            pr.`pack_stock_type` = ' . Pack::STOCK_TYPE_DEFAULT . '
+            AND ' . $packStockTypesDefaultSupported . ' = 1
+        ))';
         $parentSql = 'SELECT 
             COALESCE(SUM(first_level_quantity) + SUM(pack_quantity), 0) as deep_quantity,
             COALESCE(SUM(first_level_quantity), 0) as quantity 
