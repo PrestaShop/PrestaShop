@@ -297,6 +297,10 @@ const CheckUpdateQuantityOperations = {
       $('#notifications .container').html(strError);
       errorMsg = '';
       isUpdateOperation = false;
+      if (hasError) {
+        // if hasError is true, quantity was not updated : allow checkout
+        $checkoutBtn.removeClass('disabled');
+      }
     } else if (!hasError && isUpdateOperation) {
       hasError = false;
       isUpdateOperation = false;
