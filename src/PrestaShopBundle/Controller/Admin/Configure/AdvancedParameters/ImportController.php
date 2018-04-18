@@ -81,14 +81,11 @@ class ImportController extends FrameworkBundleAdminController
                 return $this->redirectToRoute('admin_import');
             }
 
-            if (!in_array(
-                $this->authorizationLevel($legacyController),
-                [
-                    PageVoter::LEVEL_CREATE,
-                    PageVoter::LEVEL_UPDATE,
-                    PageVoter::LEVEL_DELETE,
-                ]
-            )) {
+            if (!in_array($this->authorizationLevel($legacyController), [
+                PageVoter::LEVEL_CREATE,
+                PageVoter::LEVEL_UPDATE,
+                PageVoter::LEVEL_DELETE,
+            ])) {
                 $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_import');
@@ -114,7 +111,7 @@ class ImportController extends FrameworkBundleAdminController
     }
 
     /**
-     * Handle import file upload
+     * Handle import file upload via AJAX
      *
      * @param Request $request
      *
@@ -130,14 +127,11 @@ class ImportController extends FrameworkBundleAdminController
             ]);
         }
 
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
+        if (!in_array($this->authorizationLevel($legacyController), [
+            PageVoter::LEVEL_CREATE,
+            PageVoter::LEVEL_UPDATE,
+            PageVoter::LEVEL_DELETE,
+        ])) {
             return $this->json([
                 'error' =>  $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'),
             ]);
@@ -182,14 +176,7 @@ class ImportController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_import');
         }
 
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_DELETE,
-            ]
-        )) {
+        if (!in_array($this->authorizationLevel($legacyController), [PageVoter::LEVEL_DELETE])) {
             $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_import');
@@ -220,15 +207,12 @@ class ImportController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_import');
         }
 
-        if (!in_array(
-            $this->authorizationLevel($legacyController),
-            [
-                PageVoter::LEVEL_READ,
-                PageVoter::LEVEL_UPDATE,
-                PageVoter::LEVEL_DELETE,
-                PageVoter::LEVEL_READ,
-            ]
-        )) {
+        if (!in_array($this->authorizationLevel($legacyController), [
+            PageVoter::LEVEL_READ,
+            PageVoter::LEVEL_UPDATE,
+            PageVoter::LEVEL_DELETE,
+            PageVoter::LEVEL_READ,
+        ])) {
             $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_import');
@@ -238,10 +222,7 @@ class ImportController extends FrameworkBundleAdminController
             $importDirectory = $this->get('prestashop.core.import.dir');
 
             $response = new BinaryFileResponse($importDirectory.$filename);
-            $response->setContentDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $filename
-            );
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
 
             return $response;
         }
