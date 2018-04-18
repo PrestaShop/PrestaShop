@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;

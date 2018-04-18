@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
+namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Class ImportFormDataProvider is responsible for providing Import's 1st step form data
  */
-class ImportFormDataProvider implements FormDataProviderInterface
+final class ImportFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var SessionInterface
