@@ -2557,6 +2557,9 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/themes/*/assets/cache/*.js',
+            '*/themes/*/assets/cache/*.css',
+            '*/themes/*/assets/css/*',
         );
 
         // Directories
