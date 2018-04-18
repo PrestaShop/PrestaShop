@@ -105,6 +105,7 @@ $(document).ready(() => {
             reason: {
               idProduct: resp.id_product,
               idProductAttribute: resp.id_product_attribute,
+              idCustomization: resp.id_customization,
               linkAction: 'add-to-cart',
               cart: resp.cart
             },

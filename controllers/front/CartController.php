@@ -132,6 +132,7 @@ class CartControllerCore extends FrontController
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
+                'id_customization' => $this->customization_id,
                 'quantity' => $productQuantity,
                 'cart' => $cartPresenter->present($this->context->cart),
                 'errors' => empty($this->updateOperationError) ? '' : reset($this->updateOperationError),
