@@ -611,6 +611,12 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        // Import form is reworked in Symfony.
+        // If user tries to access legacy form directly,
+        // we redirect him to new form.
+        $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
+        Tools::redirectAdmin($symfonyImportForm);
+
         if (!is_dir(AdminImportController::getPath())) {
             return !($this->errors[] = $this->trans('The import directory doesn\'t exist. Please check your file path.', array(), 'Admin.Advparameters.Notification'));
         }
