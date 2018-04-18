@@ -66,12 +66,8 @@ class ImportType extends TranslatorAwareType
             ->add('iso_lang', ChoiceType::class, [
                 'choices' => $this->getLocaleChoices(),
             ])
-            ->add('separator', TextType::class, [
-                'data' => static::DEFAULT_SEPARATOR,
-            ])
-            ->add('multiple_value_separator', TextType::class, [
-                'data' => static::DEFAULT_MULTIVALUE_SEPARATOR,
-            ])
+            ->add('separator', TextType::class)
+            ->add('multiple_value_separator', TextType::class)
             ->add('truncate', SwitchType::class, [
                 'data' => false,
             ])

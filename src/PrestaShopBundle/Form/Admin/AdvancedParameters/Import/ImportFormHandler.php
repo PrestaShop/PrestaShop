@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 
+use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * This class manages the data submitted in first step of import
@@ -42,14 +42,14 @@ final class ImportFormHandler implements FormHandlerInterface
     private $formFactory;
 
     /**
-     * @var SessionInterface
+     * @var FormDataProviderInterface
      */
-    private $session;
+    private $formDataProvider;
 
-    public function __construct(FormFactoryInterface $formFactory, SessionInterface $session)
+    public function __construct(FormFactoryInterface $formFactory, FormDataProviderInterface $formDataProvider)
     {
         $this->formFactory = $formFactory;
-        $this->session = $session;
+        $this->formDataProvider = $formDataProvider;
     }
 
     /**
@@ -57,43 +57,14 @@ final class ImportFormHandler implements FormHandlerInterface
      */
     public function getForm()
     {
-        $data = [
-            'csv' => $this->session->get('csv'),
-            'entity' => $this->session->get('entity'),
-            'iso_lang' => $this->session->get('iso_lang'),
-            'separator' => $this->session->get('separator', ImportType::DEFAULT_SEPARATOR),
-            'multiple_value_separator' =>
-                $this->session->get('multiple_value_separator', ImportType::DEFAULT_MULTIVALUE_SEPARATOR),
-        ];
-
-        return $this->formFactory->createNamed('', ImportType::class, $data);
+        return $this->formFactory->createNamed('', ImportType::class, $this->formDataProvider->getData());
     }
 
     /**
-     * Performs some checked on data that is being passed to legacy controller
-     *
-     * @param array $data   Form data
-     *
-     * @return array        Errors if any or empty array if no errors occured
+     * {@inheritdoc}
      */
     public function save(array $data)
     {
-        $errors = [];
-
-        if (!isset($data['csv']) || empty($data['csv'])) {
-            $errors[] = [
-                'key' => 'To proceed, please upload a file first.',
-                'domain' => 'Admin.Advparameters.Notification',
-                'parameters' => [],
-            ];
-        }
-
-        $this->session->set('csv', $data['csv']);
-        $this->session->set('entity', $data['entity']);
-        $this->session->set('iso_lang', $data['iso_lang']);
-        $this->session->set('separator', $data['separator']);
-        $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
-
-        return $errors;
+        return $this->formDataProvider->setData($data);
     }
 }
