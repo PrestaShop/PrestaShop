@@ -45,7 +45,7 @@ final class CustomerPreferencesFormHandler extends FormHandler
      */
     public function save(array $data)
     {
-        if (!$errors = $this->dataProvider->setData($data)) {
+        if (empty($this->dataProvider->setData($data))) {
             $this->handleB2bUpdate($data['general']['enable_b2b_mode']);
         }
 
