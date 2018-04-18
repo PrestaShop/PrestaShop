@@ -51,8 +51,8 @@
         <div class="card-text">
             <div class="form-group">
                 <label class="form-control-label">{{ 'What do you want to import?'|trans }}</label>
-                {{ form_errors(importForm.import.entity) }}
-                {{ form_widget(importForm.import.entity, {'attr': {'class': 'js-entity-select'}}) }}
+                {{ form_errors(importForm.entity) }}
+                {{ form_widget(importForm.entity, {'attr': {'class': 'js-entity-select'}}) }}
             </div>
 
             <div class="alert alert-warning js-entity-alert" role="alert">
@@ -65,14 +65,14 @@
             <hr>
 
             <div class="form-group hidden-xs-up">
-                {{ form_errors(importForm.import.csv) }}
-                {{ form_widget(importForm.import.csv, {'attr': {'class': 'js-import-file-input'}}) }}
+                {{ form_errors(importForm.csv) }}
+                {{ form_widget(importForm.csv, {'attr': {'class': 'js-import-file-input'}}) }}
             </div>
 
             <div class="form-group js-file-upload-form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
-                {{ form_errors(importForm.import.file) }}
-                {{ form_widget(importForm.import.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
+                {{ form_errors(importForm.file) }}
+                {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
                 <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
                 <button type="button"
                         class="btn btn-outline-primary btn-sm js-from-files-history-btn"
@@ -110,21 +110,21 @@
 
             <div class="form-group">
                 {{ ps.label_with_help(('Language of the file'|trans), ('The locale must be installed'|trans({}, 'Admin.Advparameters.Notifications'))) }}
-                {{ form_errors(importForm.import.iso_lang) }}
-                {{ form_widget(importForm.import.iso_lang) }}
+                {{ form_errors(importForm.iso_lang) }}
+                {{ form_widget(importForm.iso_lang) }}
             </div>
 
             <div class="form-group">
                 <label class="form-control-label">{{ 'Field separator'|trans }}</label>
-                {{ form_errors(importForm.import.separator) }}
-                {{ form_widget(importForm.import.separator) }}
+                {{ form_errors(importForm.separator) }}
+                {{ form_widget(importForm.separator) }}
                 <small class="form-text">{{ 'e.g. '|trans({}, 'Admin.Advparameters.Help') }} 1; Blouse; 129.90; 5</small>
             </div>
 
             <div class="form-group">
                 <label class="form-control-label">{{ 'Multiple value separator'|trans }}</label>
-                {{ form_errors(importForm.import.multiple_value_separator) }}
-                {{ form_widget(importForm.import.multiple_value_separator) }}
+                {{ form_errors(importForm.multiple_value_separator) }}
+                {{ form_widget(importForm.multiple_value_separator) }}
                 <small class="form-text">{{ 'e.g. '|trans({}, 'Admin.Advparameters.Help') }} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</small>
             </div>
 
@@ -134,32 +134,32 @@
                 <label class="form-control-label">
                     {{ 'Delete all [1]categories[/1] before import'|trans({'[1]': '<span class="js-entity-name">', '[/1]': '</span>'})|raw }}
                 </label>
-                {{ form_errors(importForm.import.truncate) }}
-                {{ form_widget(importForm.import.truncate) }}
+                {{ form_errors(importForm.truncate) }}
+                {{ form_widget(importForm.truncate) }}
             </div>
 
             <div class="form-group js-match-ref-form-group">
                 {{ ps.label_with_help(('Use product reference as key'|trans), ('If enabled, the product\'s reference number MUST be unique!'|trans({}, 'Admin.Advparameters.Help'))) }}
-                {{ form_errors(importForm.import.match_ref) }}
-                {{ form_widget(importForm.import.match_ref) }}
+                {{ form_errors(importForm.match_ref) }}
+                {{ form_widget(importForm.match_ref) }}
             </div>
 
             <div class="form-group js-regenerate-form-group">
                 <label class="form-control-label">{{ 'Skip thumbnails regeneration'|trans }}</label>
-                {{ form_errors(importForm.import.regenerate) }}
-                {{ form_widget(importForm.import.regenerate) }}
+                {{ form_errors(importForm.regenerate) }}
+                {{ form_widget(importForm.regenerate) }}
             </div>
 
             <div class="form-group js-force-ids-form-group">
                 {{ ps.label_with_help(('Force all ID numbers'|trans), ('If you enable this option, your imported items ID number will be used as is. If you do not enable this option, the imported ID numbers will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'|trans({}, 'Admin.Advparameters.Help'))) }}
-                {{ form_errors(importForm.import.forceIDs) }}
-                {{ form_widget(importForm.import.forceIDs) }}
+                {{ form_errors(importForm.forceIDs) }}
+                {{ form_widget(importForm.forceIDs) }}
             </div>
 
             <div class="form-group">
                 {{ ps.label_with_help(('Send notification email'|trans), ('Sends an email to let you know your import is complete. It can be useful when handling large files, as the import may take some time.'|trans({}, 'Admin.Advparameters.Help'))) }}
-                {{ form_errors(importForm.import.sendemail) }}
-                {{ form_widget(importForm.import.sendemail) }}
+                {{ form_errors(importForm.sendemail) }}
+                {{ form_widget(importForm.sendemail) }}
             </div>
         </div>
     </div>

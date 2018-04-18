@@ -90,9 +90,8 @@ services:
     prestashop.admin.import.form_handler:
         class: 'PrestaShop\PrestaShop\Core\Form\FormHandler'
         arguments:
-            - '@=service("form.factory").createBuilder()'
+            - '@prestashop.admin.import.form_builder'
             - '@prestashop.hook.dispatcher'
             - '@prestashop.admin.import.form_data_provider'
-            -
-              'import': 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
+            - []
             - 'ImportPage'
