@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
+use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -184,6 +185,38 @@ class SqlManagerController extends FrameworkBundleAdminController
         ];
 
         return $this->getTemplateParams($request) + $params;
+    }
+
+    /**
+     * Delete selected Request SQL
+     *
+     * @param int $id           ID of selected Request SQL
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction($id, Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        if ($this->isDemoModeEnabled()) {
+            $this->addFlash('error', $this->getDemoModeErrorMessage());
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
+
+        if ($this->authorizationLevel($legacyController) != PageVoter::LEVEL_DELETE) {
+            $this->addFlash('error', $this->trans('You do not have permission to delete this.', 'Admin.Notifications.Error'));
+
+            return $this->redirectToRoute('admin_sql_manager');
+        }
+
+        $requestSqlManager = $this->get('prestashop.adapter.sql_manager.request_sql_manager');
+        $requestSqlManager->delete($id);
+
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+
+        return $this->redirectToRoute('admin_sql_manager');
     }
 
     /**
