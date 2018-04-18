@@ -1,5 +1,5 @@
 /**
- * 2007-2017 PrestaShop
+ * 2007-2018 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -18,23 +18,29 @@
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2017 PrestaShop SA
+ * @copyright 2007-2018 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import TableSorting from '../../app/utils/table-sorting';
-import ConfirmationAlert from '../../components/confirmation-alert';
+const $ = window.$;
 
-class SqlManagerPage {
+/**
+ * Display confirmation alert with provided message.
+ */
+export default class ConfirmationAlert {
     init() {
-        const $sortableTables = $('table.table');
+        $(document).on('click', '.js-confirm-btn', (event) => {
+            const $btn = $(event.currentTarget);
+            const message = $btn.data('confirm-message');
 
-        new TableSorting($sortableTables).attach();
-        new ConfirmationAlert().init();
+            let confirmed = confirm(message);
+            if (confirmed) {
+                return true;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+        });
     }
 }
-
-$(document).ready(() => {
-    new SqlManagerPage().init();
-});
