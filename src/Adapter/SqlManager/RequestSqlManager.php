@@ -54,4 +54,18 @@ class RequestSqlManager
 
         return [];
     }
+
+    /**
+     * Delete Request SQL
+     *
+     * @param int $id   ID of Request SQL
+     *
+     * @return bool     True on success or False otherwise
+     */
+    public function delete($id)
+    {
+        $requestSql = new \RequestSql($id);
+
+        return $requestSql->delete();
+    }
 }
