@@ -78,18 +78,21 @@
                             >
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(86px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
-                                <a class="dropdown-item product-edit" href="http://localhost/PrestaShopMigration/SqlManager/home-accessories/19-customizable-mug.html" target="_blank">
+                                <a class="dropdown-item" href="http://localhost/PrestaShopMigration/SqlManager/home-accessories/19-customizable-mug.html" target="_blank">
                                     <i class="material-icons">remove_red_eye</i>
                                     {{ 'View'|trans({}, 'Admin.Global') }}
                                 </a>
-                                <a class="dropdown-item product-edit"
+                                <a class="dropdown-item"
                                    href="{{ path('admin_sql_manager_edit', {'id': requestSql.id_request_sql}) }}"
                                 >
                                     <i class="material-icons">edit</i>
                                     {{ 'Edit'|trans({}, 'Admin.Global') }}
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item product-edit" href="#">
+                                <a class="dropdown-item js-confirm-btn"
+                                   href="{{ path('admin_sql_manager_delete', {'id': requestSql.id_request_sql}) }}"
+                                   data-confirm-message="{{ 'Delete selected item?'|trans({}, 'Admin.Notifications.Warning') }}"
+                                >
                                     <i class="material-icons">delete</i>
                                     {{ 'Delete'|trans({}, 'Admin.Global') }}
                                 </a>

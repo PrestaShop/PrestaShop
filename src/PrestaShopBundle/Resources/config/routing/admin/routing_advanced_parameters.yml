@@ -172,3 +172,12 @@ admin_sql_manager_edit:
         _legacy_controller: AdminRequestSql
     requirements:
         id: \d+
+
+admin_sql_manager_delete:
+    path: sql_manager/delete/{id}
+    methods: [GET]
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Configure\AdvancedParameters\SqlManager:delete'
+        _legacy_controller: AdminRequestSql
+    requirements:
+        id: \d+
