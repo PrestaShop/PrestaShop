@@ -47,3 +47,9 @@ services:
         class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Logs\LogsFormDataProvider'
         arguments:
             - '@prestashop.adapter.logs.configuration'
+
+    prestashop.admin.import.form_data_provider:
+        class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportFormDataProvider'
+        arguments:
+            - '@session'
+            - '@prestashop.core.import.file_finder'

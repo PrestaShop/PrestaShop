@@ -611,6 +611,12 @@ class AdminImportControllerCore extends AdminController
 
     public function renderForm()
     {
+        // Import form is reworked in Symfony.
+        // If user tries to access legacy form directly,
+        // we redirect him to new form.
+        $symfonyImportForm = $this->context->link->getAdminLink('AdminImport');
+        Tools::redirectAdmin($symfonyImportForm);
+
         if (!is_dir(AdminImportController::getPath())) {
             return !($this->errors[] = $this->trans('The import directory doesn\'t exist. Please check your file path.', array(), 'Admin.Advparameters.Notification'));
         }
@@ -996,7 +1002,7 @@ class AdminImportControllerCore extends AdminController
                 $fields[$i - 1] = '<div>'.$this->available_fields[$keys[$i - 1]]['label'].'<br/>&nbsp;&nbsp;<i>'.$this->trans('or', array(), 'Admin.Advparameters.Help').'</i>&nbsp;&nbsp; '.$field['label'].'</div>';
             } else {
                 if (isset($field['help'])) {
-                    $html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';
+                    $html = '&nbsp;<span class="help-box" data-toggle="popover" data-content="'.$field['help'].'"></span>';
                 } else {
                     $html = '';
                 }

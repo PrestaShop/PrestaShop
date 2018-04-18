@@ -3,6 +3,7 @@ imports:
     - { resource: services/form_services.yml }
     - { resource: services/alias.yml }
     - { resource: services/adapters.yml }
+    - { resource: services/core_services.yml }
 
 parameters:
     prestashop.security.voter.product.class: PrestaShopBundle\Security\Voter\PageVoter
@@ -538,6 +539,22 @@ services:
           - ["setKernel", ["@kernel"]]
         tags:
           - {name: data_collector, template: "@PrestaShop/Admin/WebProfiler/config.html.twig", id: "config", priority: "-255"}
+
+    prestashop.admin.product_preferences.form_handler:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormHandler'
+        arguments:
+            - '@form.factory'
+            - '@prestashop.admin.product_preferences.data_provider'
+            - '@prestashop.adapter.cache_clearer'
+            - '@translator'
+
+    prestashop.admin.product_preferences.data_provider:
+        class: 'PrestaShopBundle\Form\Admin\ShopParameters\ProductPreferences\ProductPreferencesFormDataProvider'
+        arguments:
+            - '@prestashop.adapter.product_general.configuration'
+            - '@prestashop.adapter.product_pagination.configuration'
+            - '@prestashop.adapter.product_page.configuration'
+            - '@prestashop.adapter.product_stock.configuration'
 
     # Localization
     prestashop.core.localization.cache.adapter:

@@ -62,4 +62,20 @@ abstract class TranslatorAwareType extends CommonAbstractType
     {
         return $this->translator->trans($key, $parameters, $domain);
     }
+
+    /**
+     * Get locales to be used in form type
+     *
+     * @return array
+     */
+    protected function getLocaleChoices()
+    {
+        $locales = [];
+
+        foreach ($this->locales as $locale) {
+            $locales[$locale['name']] = $locale['iso_code'];
+        }
+
+        return $locales;
+    }
 }

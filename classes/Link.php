@@ -744,6 +744,7 @@ class LinkCore
                     'AdminPPreferences' => 'admin_product_preferences',
                     'AdminPreferences' => 'admin_preferences',
                     'AdminCustomerPreferences' => 'admin_customer_preferences',
+                    'AdminImport' => 'admin_import',
                 );
 
                 if (isset($routes[$controller])) {
