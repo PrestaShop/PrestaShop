@@ -27,8 +27,12 @@
 namespace PrestaShopBundle\Form\Admin\AdvancedParameters\Import;
 
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShop\PrestaShop\Core\Import\File\FileFinder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+/**
+ * Class ImportFormDataProvider is responsible for providing Import's 1st step form data
+ */
 class ImportFormDataProvider implements FormDataProviderInterface
 {
     /**
@@ -36,9 +40,15 @@ class ImportFormDataProvider implements FormDataProviderInterface
      */
     private $session;
 
-    public function __construct(SessionInterface $session)
+    /**
+     * @var FileFinder
+     */
+    private $importFileFinder;
+
+    public function __construct(SessionInterface $session, FileFinder $importFileFinder)
     {
         $this->session = $session;
+        $this->importFileFinder = $importFileFinder;
     }
 
     /**
@@ -47,7 +57,7 @@ class ImportFormDataProvider implements FormDataProviderInterface
     public function getData()
     {
         return [
-            'csv' => $this->session->get('csv'),
+            'csv' => $this->getSelectedFile(),
             'entity' => $this->session->get('entity'),
             'iso_lang' => $this->session->get('iso_lang'),
             'separator' => $this->session->get('separator', ImportType::DEFAULT_SEPARATOR),
@@ -83,5 +93,24 @@ class ImportFormDataProvider implements FormDataProviderInterface
         $this->session->set('multiple_value_separator', $data['multiple_value_separator']);
 
         return $errors;
+    }
+
+    /**
+     * Get selected file from session if it exists
+     * and check if file is available in file system.
+     *
+     * @return string|null
+     */
+    protected function getSelectedFile()
+    {
+        $importFiles = $this->importFileFinder->getImportFileNames();
+        $selectedFile = $this->session->get('csv');
+
+        if ($selectedFile && !in_array($selectedFile, $importFiles)) {
+            $this->session->remove('csv');
+            $selectedFile = null;
+        }
+
+        return $selectedFile;
     }
 }
