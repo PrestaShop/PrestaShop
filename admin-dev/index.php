@@ -79,7 +79,7 @@ $debugMode = null;
 $psEnv = _PS_MODE_DEV_ ? 'dev' : 'prod';
 
 $env = Environment::getEnvironment($psEnv);
-$debugMode = Environment::getDebugMode(_PS_MODE_DEV_);
+$debugMode = Environment::isDebugModeEnabled(_PS_MODE_DEV_);
 
 $kernel = new AppKernel($env, $debugMode);
 if (PHP_VERSION_ID < 70000) {

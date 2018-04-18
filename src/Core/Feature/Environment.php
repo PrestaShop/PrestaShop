@@ -51,11 +51,11 @@ final class Environment
      *
      * @return bool
      */
-    public static function getDebugMode($defaultMode)
+    public static function isDebugModeEnabled($defaultMode)
     {
         $fromEnv = getenv(self::ENV_VAR);
 
-        if (null !== $fromEnv)  {
+        if (null !== $fromEnv) {
             return $fromEnv !== 'prod';
         }
 
