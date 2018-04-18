@@ -238,7 +238,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = 4;
+/******/ 			var chunkId = 3;
 /******/ 			{ // eslint-disable-line no-lone-blocks
 /******/ 				/*globals chunkId */
 /******/ 				hotEnsureUpdateChunk(chunkId);
@@ -706,19 +706,25 @@
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire(449)(__webpack_require__.s = 449);
+/******/ 	return hotCreateRequire(446)(__webpack_require__.s = 446);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 226:
+/***/ 223:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImportPage__ = __webpack_require__(263);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_datepicker__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_sql_manager__ = __webpack_require__(254);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /**
- * 2007-2018 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -737,31 +743,111 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
 
 
-var $ = window.$;
+
+
+var $ = global.$;
+
+var LogsPage = function () {
+  function LogsPage() {
+    _classCallCheck(this, LogsPage);
+  }
+
+  _createClass(LogsPage, [{
+    key: 'init',
+    value: function init() {
+      var $sortableTables = $('table.table');
+      var $deleteAllLogsButton = $('#logs-deleteAll');
+      var $refreshButton = $('#logs-refresh');
+      var $showSqlQueryButton = $('#logs-showSqlQuery');
+      var $exportSqlManagerButton = $('#logs-exportSqlManager');
+
+      this.sqlManager = new __WEBPACK_IMPORTED_MODULE_2__utils_sql_manager__["a" /* default */]();
+
+      new __WEBPACK_IMPORTED_MODULE_0__utils_table_sorting__["a" /* default */]($sortableTables).attach();
+      __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__utils_datepicker__["a" /* default */])();
+
+      $deleteAllLogsButton.on('click', this._onDeleteAllLogsClick.bind(this));
+      $refreshButton.on('click', this._onRefreshClick.bind(this));
+      $showSqlQueryButton.on('click', this._onShowSqlQueryClick.bind(this));
+      $exportSqlManagerButton.on('click', this._onExportSqlManagerClick.bind(this));
+    }
+
+    /**
+     * Invoked when clicking on the "delete all logs" toolbar button
+     * @param {jQuery.Event} event
+     * @private
+     */
+
+  }, {
+    key: '_onDeleteAllLogsClick',
+    value: function _onDeleteAllLogsClick(event) {
+      var clickedButton = $(event.delegateTarget);
+      var confirmationMessage = clickedButton.data('confirmMessage');
+      var form = clickedButton.closest('form');
+      if (global.confirm(confirmationMessage)) {
+        form.submit();
+      }
+    }
+
+    /**
+     * Invoked when clicking on the "reload" toolbar button
+     * @private
+     */
+
+  }, {
+    key: '_onRefreshClick',
+    value: function _onRefreshClick() {
+      location.reload();
+    }
+
+    /**
+     * Invoked when clicking on the "show sql query" toolbar button
+     * @private
+     */
+
+  }, {
+    key: '_onShowSqlQueryClick',
+    value: function _onShowSqlQueryClick() {
+      this.sqlManager.showLastSqlQuery();
+    }
+
+    /**
+     * Invoked when clicking on the "export to the sql query" toolbar button
+     * @private
+     */
+
+  }, {
+    key: '_onExportSqlManagerClick',
+    value: function _onExportSqlManagerClick() {
+      this.sqlManager.sendLastSqlQuery(this.sqlManager.createSqlQueryName());
+    }
+  }]);
+
+  return LogsPage;
+}();
 
 $(function () {
-  new __WEBPACK_IMPORTED_MODULE_0__ImportPage__["a" /* default */]().init();
+  new LogsPage().init();
 });
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
 
-/***/ 262:
+/***/ 253:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_url_polyfill__ = __webpack_require__(365);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_url_polyfill___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_url_polyfill__);
 /**
- * 2007-2018 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -780,157 +866,142 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-var $ = window.$;
 
-var entityCategories = 0;
-var entityProducts = 1;
-var entityCombinations = 2;
-var entityCustomers = 3;
-var entityAddresses = 4;
-var entityBrands = 5;
-var entitySuppliers = 6;
-var entityAlias = 7;
-var entityStoreContacts = 8;
+var $ = global.$;
 
-var FormFieldToggle = function () {
-  function FormFieldToggle() {
-    _classCallCheck(this, FormFieldToggle);
+/**
+ * Enable all datepickers.
+ */
+var init = function initDatePickers() {
+  $('.datepicker').datetimepicker({
+    locale: global.full_language_code,
+    format: 'YYYY-MM-DD'
+  });
+};
+
+/* harmony default export */ __webpack_exports__["a"] = (init);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
+
+/***/ }),
+
+/***/ 254:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * 2007-2017 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2017 PrestaShop SA
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ */
+
+var $ = global.$;
+
+/**
+ * Allow to display the last SQL query in a modal and redirect to SQL Manager.
+ */
+
+var SqlManager = function () {
+  function SqlManager() {
+    _classCallCheck(this, SqlManager);
   }
 
-  _createClass(FormFieldToggle, [{
-    key: 'init',
-    value: function init() {
-      $('.js-entity-select').on('change', this.toggleForm.bind(this));
-
-      this.toggleForm();
-    }
-  }, {
-    key: 'toggleForm',
-    value: function toggleForm() {
-      var selectedOption = $('#entity').find('option:selected');
-      var selectedEntity = parseInt(selectedOption.val());
-      var entityName = selectedOption.text().toLowerCase();
-
-      this.toggleEntityAlert(selectedEntity);
-      this.toggleFields(selectedEntity, entityName);
-      this.loadAvailableFields(selectedEntity);
-    }
-
-    /**
-     * Toggle alert warning for selected import entity
-     *
-     * @param {int} selectedEntity
-     */
-
-  }, {
-    key: 'toggleEntityAlert',
-    value: function toggleEntityAlert(selectedEntity) {
-      var $alert = $('.js-entity-alert');
-
-      if ([entityCategories, entityProducts].includes(selectedEntity)) {
-        $alert.show();
-      } else {
-        $alert.hide();
-      }
-    }
-
-    /**
-     * Toggle available options for selected entity
-     *
-     * @param {int} selectedEntity
-     * @param {string} entityName
-     */
-
-  }, {
-    key: 'toggleFields',
-    value: function toggleFields(selectedEntity, entityName) {
-      var $truncateFormGroup = $('.js-truncate-form-group');
-      var $matchRefFormGroup = $('.js-match-ref-form-group');
-      var $regenerateFormGroup = $('.js-regenerate-form-group');
-      var $forceIdsFormGroup = $('.js-force-ids-form-group');
-      var $entityNamePlaceholder = $('.js-entity-name');
-
-      if (entityStoreContacts === selectedEntity) {
-        $truncateFormGroup.hide();
-      } else {
-        $truncateFormGroup.show();
-      }
-
-      if ([entityProducts, entityCombinations].includes(selectedEntity)) {
-        $matchRefFormGroup.show();
-      } else {
-        $matchRefFormGroup.hide();
-      }
-
-      if ([entityCategories, entityProducts, entityBrands, entitySuppliers, entityStoreContacts].includes(selectedEntity)) {
-        $regenerateFormGroup.show();
-      } else {
-        $regenerateFormGroup.hide();
-      }
-
-      if ([entityCategories, entityProducts, entityCustomers, entityAddresses, entityBrands, entitySuppliers, entityStoreContacts, entityAlias].includes(selectedEntity)) {
-        $forceIdsFormGroup.show();
-      } else {
-        $forceIdsFormGroup.hide();
-      }
-
-      $entityNamePlaceholder.html(entityName);
-    }
-
-    /**
-     * Load available fields for given entity
-     *
-     * @param {int} entity
-     */
-
-  }, {
-    key: 'loadAvailableFields',
-    value: function loadAvailableFields(entity) {
-      $.ajax({
-        url: '../../../ajax.php',
-        data: {
-          getAvailableFields: 1,
-          entity: entity
-        },
-        dataType: 'json'
-      }).then(function (response) {
-        var fields = '';
-        var $availableFields = $('.js-available-fields');
-        $availableFields.empty();
-
-        for (var i = 0; i < response.length; i++) {
-          fields += response[i].field;
-        }
-
-        $availableFields.html(fields);
-        $availableFields.find('[data-toggle="popover"]').popover();
+  _createClass(SqlManager, [{
+    key: 'showLastSqlQuery',
+    value: function showLastSqlQuery() {
+      $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+      $('#catalog_sql_query_modal .btn-sql-submit').click(function () {
+        $('#catalog_sql_query_modal_content').submit();
       });
+      $('#catalog_sql_query_modal').modal('show');
+    }
+  }, {
+    key: 'sendLastSqlQuery',
+    value: function sendLastSqlQuery(name) {
+      $('#catalog_sql_query_modal_content textarea[name="sql"]').val($('tbody.sql-manager').data('query'));
+      $('#catalog_sql_query_modal_content input[name="name"]').val(name);
+      $('#catalog_sql_query_modal_content').submit();
+    }
+  }, {
+    key: 'createSqlQueryName',
+    value: function createSqlQueryName() {
+      var container = false;
+      var current = false;
+      if ($('.breadcrumb')) {
+        container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ').trim();
+        current = $('.breadcrumb li').eq(-1).text().replace(/\s+/g, ' ').trim();
+      }
+      var title = false;
+      if ($('h2.title')) {
+        title = $('h2.title').first().text().replace(/\s+/g, ' ').trim();
+      }
+
+      var name = false;
+      if (container && current && container != current) {
+        name = container + ' > ' + current;
+      } else if (container) {
+        name = container;
+      } else if (current) {
+        name = current;
+      }
+
+      if (title && title != current && title != container) {
+        if (name) {
+          name = name + ' > ' + title;
+        } else {
+          name = title;
+        }
+      }
+
+      return name.trim();
     }
   }]);
 
-  return FormFieldToggle;
+  return SqlManager;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (FormFieldToggle);
+/* harmony default export */ __webpack_exports__["a"] = (SqlManager);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
 
-/***/ 263:
+/***/ 32:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__ = __webpack_require__(262);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+/* WEBPACK VAR INJECTION */(function(global) {var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * 2007-2018 PrestaShop
+ * 2007-2017 PrestaShop
  *
  * NOTICE OF LICENSE
  *
@@ -949,323 +1020,483 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * needs please refer to http://www.prestashop.com for more information.
  *
  * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @copyright 2007-2017 PrestaShop SA
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+var $ = global.$;
 
+/**
+ * Makes a table sortable by columns.
+ * This forces a page reload with more query parameters.
+ */
 
-var $ = window.$;
+var TableSorting = function () {
 
-var ImportPage = function () {
-  function ImportPage() {
-    _classCallCheck(this, ImportPage);
+  /**
+   * @param {jQuery} table
+   */
+  function TableSorting(table) {
+    _classCallCheck(this, TableSorting);
+
+    this.selector = '.ps-sortable-column';
+    this.columns = $(table).find(this.selector);
   }
 
-  _createClass(ImportPage, [{
-    key: 'init',
-    value: function init() {
+  /**
+   * Attaches the listeners
+   */
+
+
+  _createClass(TableSorting, [{
+    key: 'attach',
+    value: function attach() {
       var _this = this;
 
-      new __WEBPACK_IMPORTED_MODULE_0__FormFieldToggle__["a" /* default */]().init();
-
-      $('.js-from-files-history-btn').on('click', function () {
-        return _this.showFilesHistoryHandler();
+      this.columns.on('click', function (e) {
+        var $column = $(e.delegateTarget);
+        _this._sortByColumn($column, _this._getToggledSortDirection($column));
       });
-      $('.js-close-files-history-block-btn').on('click', function () {
-        return _this.closeFilesHistoryHandler();
-      });
-      $('#fileHistoryTable').on('click', '.js-use-file-btn', function (event) {
-        return _this.useFileFromFilesHistory(event);
-      });
-      $('.js-change-import-file-btn').on('click', function () {
-        return _this.changeImportFileHandler();
-      });
-      $('.js-import-file').on('change', function () {
-        return _this.uploadFile();
-      });
-
-      this.toggleSelectedFile();
     }
 
     /**
-     * Check if selected file names exists and if so, then display it
+     * Sort using a column name
+     * @param {string} columnName
+     * @param {string} direction "asc" or "desc"
      */
 
   }, {
-    key: 'toggleSelectedFile',
-    value: function toggleSelectedFile() {
-      var selectFilename = $('#csv').val();
-      if (selectFilename.length > 0) {
-        this.showImportFileAlert(selectFilename);
-        this.hideFileUploadBlock();
-      }
-    }
-  }, {
-    key: 'changeImportFileHandler',
-    value: function changeImportFileHandler() {
-      this.hideImportFileAlert();
-      this.showFileUploadBlock();
-    }
-
-    /**
-     * Show files history event handler
-     */
-
-  }, {
-    key: 'showFilesHistoryHandler',
-    value: function showFilesHistoryHandler() {
-      this.showFilesHistory();
-      this.hideFileUploadBlock();
-    }
-
-    /**
-     * Close files history event handler
-     */
-
-  }, {
-    key: 'closeFilesHistoryHandler',
-    value: function closeFilesHistoryHandler() {
-      this.closeFilesHistory();
-      this.showFileUploadBlock();
-    }
-
-    /**
-     * Show files history block
-     */
-
-  }, {
-    key: 'showFilesHistory',
-    value: function showFilesHistory() {
-      $('.js-files-history-block').removeClass('d-none');
-    }
-
-    /**
-     * Hide files history block
-     */
-
-  }, {
-    key: 'closeFilesHistory',
-    value: function closeFilesHistory() {
-      $('.js-files-history-block').addClass('d-none');
-    }
-
-    /**
-     *  Prefill hidden file input with selected file name from history
-     */
-
-  }, {
-    key: 'useFileFromFilesHistory',
-    value: function useFileFromFilesHistory(event) {
-      var filename = $(event.target).closest('.btn-group').data('file');
-
-      $('.js-import-file-input').val(filename);
-
-      this.showImportFileAlert(filename);
-      this.closeFilesHistory();
-    }
-
-    /**
-     * Show alert with imported file name
-     */
-
-  }, {
-    key: 'showImportFileAlert',
-    value: function showImportFileAlert(filename) {
-      $('.js-import-file-alert').removeClass('d-none');
-      $('.js-import-file').text(filename);
-    }
-
-    /**
-     * Hides selected import file alert
-     */
-
-  }, {
-    key: 'hideImportFileAlert',
-    value: function hideImportFileAlert() {
-      $('.js-import-file-alert').addClass('d-none');
-    }
-
-    /**
-     * Hides import file upload block
-     */
-
-  }, {
-    key: 'hideFileUploadBlock',
-    value: function hideFileUploadBlock() {
-      $('.js-file-upload-form-group').addClass('d-none');
-    }
-
-    /**
-     * Hides import file upload block
-     */
-
-  }, {
-    key: 'showFileUploadBlock',
-    value: function showFileUploadBlock() {
-      $('.js-file-upload-form-group').removeClass('d-none');
-    }
-
-    /**
-     * Make file history button clickable
-     */
-
-  }, {
-    key: 'enableFilesHistoryBtn',
-    value: function enableFilesHistoryBtn() {
-      $('.js-from-files-history-btn').removeAttr('disabled');
-    }
-
-    /**
-     * Show error message if file uploading failed
-     *
-     * @param {string} fileName
-     * @param {integer} fileSize
-     * @param {string} message
-     */
-
-  }, {
-    key: 'showImportFileError',
-    value: function showImportFileError(fileName, fileSize, message) {
-      var $alert = $('.js-import-file-error');
-
-      var fileData = fileName + ' (' + this.humanizeSize(fileSize) + ')';
-
-      $alert.find('.js-file-data').html(fileData);
-      $alert.find('.js-error-message').html(message);
-      $alert.removeClass('d-none');
-    }
-
-    /**
-     * Hide file uploading error
-     */
-
-  }, {
-    key: 'hideImportFileError',
-    value: function hideImportFileError() {
-      var $alert = $('.js-import-file-error');
-      $alert.addClass('d-none');
-    }
-
-    /**
-     * Show file size in human readable format
-     *
-     * @param {int} bytes
-     *
-     * @returns {string}
-     */
-
-  }, {
-    key: 'humanizeSize',
-    value: function humanizeSize(bytes) {
-      if (typeof bytes !== 'number') {
-        return '';
+    key: 'sortBy',
+    value: function sortBy(columnName, direction) {
+      var $column = this.columns.is('[data-sort-col-name="' + columnName + '"]');
+      if (!$column) {
+        throw new Error('Cannot sort by "' + columnName + '": invalid column');
       }
 
-      if (bytes >= 1000000000) {
-        return (bytes / 1000000000).toFixed(2) + ' GB';
-      }
-
-      if (bytes >= 1000000) {
-        return (bytes / 1000000).toFixed(2) + ' MB';
-      }
-
-      return (bytes / 1000).toFixed(2) + ' KB';
+      this._sortByColumn($column, direction);
     }
 
     /**
-     * Upload selected import file
+     * Sort using a column element
+     * @param {jQuery} column
+     * @param {string} direction "asc" or "desc"
+     * @private
      */
 
   }, {
-    key: 'uploadFile',
-    value: function uploadFile() {
-      var _this2 = this;
-
-      this.hideImportFileError();
-
-      var $input = $('#file');
-      var uploadedFile = $input.prop('files')[0];
-
-      var maxUploadSize = $input.data('max-file-upload-size');
-      if (maxUploadSize < uploadedFile.size) {
-        this.showImportFileError(uploadedFile.name, uploadedFile.size, 'File is too large');
-        return;
-      }
-
-      var data = new FormData();
-      data.append('file', uploadedFile);
-
-      var url = $('.js-import-form').data('file-upload-url');
-
-      $.ajax({
-        type: 'POST',
-        url: url,
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false
-      }).then(function (response) {
-        if (response.error) {
-          _this2.showImportFileError(uploadedFile.name, uploadedFile.size, response.error);
-          return;
-        }
-
-        var filename = response.file.name;
-
-        $('.js-import-file-input').val(filename);
-
-        _this2.showImportFileAlert(filename);
-        _this2.hideFileUploadBlock();
-        _this2.addFileToHistoryTable(filename);
-        _this2.enableFilesHistoryBtn();
-      });
+    key: '_sortByColumn',
+    value: function _sortByColumn(column, direction) {
+      window.location = this._getUrl(column.data('sortColName'), direction === 'desc' ? 'desc' : 'asc');
     }
 
     /**
-     * Renders new row in files history table
-     *
-     * @param {string} filename
+     * Returns the inverted direction to sort according to the column's current one
+     * @param {jQuery} column
+     * @return {string}
+     * @private
      */
 
   }, {
-    key: 'addFileToHistoryTable',
-    value: function addFileToHistoryTable(filename) {
-      var $table = $('#fileHistoryTable');
+    key: '_getToggledSortDirection',
+    value: function _getToggledSortDirection(column) {
+      return column.data('sortDirection') === 'asc' ? 'desc' : 'asc';
+    }
 
-      var baseDeleteUrl = $table.data('delete-file-url');
-      var deleteUrl = baseDeleteUrl + '&filename=' + encodeURIComponent(filename);
+    /**
+     * Returns the url for the sorted table
+     * @param {string} colName
+     * @param {string} direction
+     * @return {string}
+     * @private
+     */
 
-      var baseDownloadUrl = $table.data('download-file-url');
-      var downloadUrl = baseDownloadUrl + '&filename=' + encodeURIComponent(filename);
+  }, {
+    key: '_getUrl',
+    value: function _getUrl(colName, direction) {
+      var url = new URL(window.location.href);
+      var params = url.searchParams;
 
-      var $template = $table.find('tr:first').clone();
+      params.set('orderBy', colName);
+      params.set('sortOrder', direction);
 
-      $template.removeClass('d-none');
-      $template.find('td:first').text(filename);
-      $template.find('.btn-group').attr('data-file', filename);
-      $template.find('.js-delete-file-btn').attr('href', deleteUrl);
-      $template.find('.js-download-file-btn').attr('href', downloadUrl);
-
-      $table.find('tbody').append($template);
-
-      var filesNumber = $table.find('tr').length - 1;
-      $('.js-files-history-number').text(filesNumber);
+      return url.toString();
     }
   }]);
 
-  return ImportPage;
+  return TableSorting;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (ImportPage);
+/* harmony default export */ __webpack_exports__["a"] = (TableSorting);
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
 
 /***/ }),
 
-/***/ 449:
+/***/ 365:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(226);
+/* WEBPACK VAR INJECTION */(function(global) {(function(global) {
+  /**
+   * Polyfill URLSearchParams
+   *
+   * Inspired from : https://github.com/WebReflection/url-search-params/blob/master/src/url-search-params.js
+   */
+
+  var checkIfIteratorIsSupported = function() {
+    try {
+      return !!Symbol.iterator;
+    } catch(error) {
+      return false;
+    }
+  };
+
+
+  var iteratorSupported = checkIfIteratorIsSupported();
+
+  var createIterator = function(items) {
+    var iterator = {
+      next: function() {
+        var value = items.shift();
+        return { done: value === void 0, value: value };
+      }
+    };
+
+    if(iteratorSupported) {
+      iterator[Symbol.iterator] = function() {
+        return iterator;
+      };
+    }
+
+    return iterator;
+  };
+
+  var polyfillURLSearchParams= function() {
+
+    var URLSearchParams = function(searchString) {
+      Object.defineProperty(this, '_entries', { value: {} });
+
+      if(typeof searchString === 'string') {
+        if(searchString !== '') {
+          searchString = searchString.replace(/^\?/, '');
+          var attributes = searchString.split('&');
+          var attribute;
+          for(var i = 0; i < attributes.length; i++) {
+            attribute = attributes[i].split('=');
+            this.append(
+              decodeURIComponent(attribute[0]),
+              (attribute.length > 1) ? decodeURIComponent(attribute[1]) : ''
+            );
+          }
+        }
+      } else if(searchString instanceof URLSearchParams) {
+        var _this = this;
+        searchString.forEach(function(value, name) {
+          _this.append(value, name);
+        });
+      }
+    };
+
+    var proto = URLSearchParams.prototype;
+
+    proto.append = function(name, value) {
+      if(name in this._entries) {
+        this._entries[name].push(value.toString());
+      } else {
+        this._entries[name] = [value.toString()];
+      }
+    };
+
+    proto.delete = function(name) {
+      delete this._entries[name];
+    };
+
+    proto.get = function(name) {
+      return (name in this._entries) ? this._entries[name][0] : null;
+    };
+
+    proto.getAll = function(name) {
+      return (name in this._entries) ? this._entries[name].slice(0) : [];
+    };
+
+    proto.has = function(name) {
+      return (name in this._entries);
+    };
+
+    proto.set = function(name, value) {
+      this._entries[name] = [value.toString()];
+    };
+
+    proto.forEach = function(callback, thisArg) {
+      var entries;
+      for(var name in this._entries) {
+        if(this._entries.hasOwnProperty(name)) {
+          entries = this._entries[name];
+          for(var i = 0; i < entries.length; i++) {
+            callback.call(thisArg, entries[i], name, this);
+          }
+        }
+      }
+    };
+
+    proto.keys = function() {
+      var items = [];
+      this.forEach(function(value, name) { items.push(name); });
+      return createIterator(items);
+    };
+
+    proto.values = function() {
+      var items = [];
+      this.forEach(function(value) { items.push(value); });
+      return createIterator(items);
+    };
+
+    proto.entries = function() {
+      var items = [];
+      this.forEach(function(value, name) { items.push([name, value]); });
+      return createIterator(items);
+    };
+
+    if(iteratorSupported) {
+      proto[Symbol.iterator] = proto.entries;
+    }
+
+    proto.toString = function() {
+      var searchString = '';
+      this.forEach(function(value, name) {
+        if(searchString.length > 0) searchString+= '&';
+        searchString += encodeURIComponent(name) + '=' + encodeURIComponent(value);
+      });
+      return searchString;
+    };
+
+    global.URLSearchParams = URLSearchParams;
+  };
+
+  if(!('URLSearchParams' in global) || (new URLSearchParams('?a=1').toString() !== 'a=1')) {
+    polyfillURLSearchParams();
+  }
+
+  // HTMLAnchorElement
+
+})(
+  (typeof global !== 'undefined') ? global
+    : ((typeof window !== 'undefined') ? window
+    : ((typeof self !== 'undefined') ? self : this))
+);
+
+(function(global) {
+  /**
+   * Polyfill URL
+   *
+   * Inspired from : https://github.com/arv/DOM-URL-Polyfill/blob/master/src/url.js
+   */
+
+  var checkIfURLIsSupported = function() {
+    try {
+      var u = new URL('b', 'http://a');
+      u.pathname = 'c%20d';
+      return (u.href === 'http://a/c%20d') && u.searchParams;
+    } catch(e) {
+      return false;
+    }
+  };
+
+
+  var polyfillURL = function() {
+    var _URL = global.URL;
+
+    var URL = function(url, base) {
+      if(typeof url !== 'string') url = String(url);
+
+      var doc = document.implementation.createHTMLDocument('');
+      window.doc = doc;
+      if(base) {
+        var baseElement = doc.createElement('base');
+        baseElement.href = base;
+        doc.head.appendChild(baseElement);
+      }
+
+      var anchorElement = doc.createElement('a');
+      anchorElement.href = url;
+      doc.body.appendChild(anchorElement);
+      anchorElement.href = anchorElement.href; // force href to refresh
+
+      if(anchorElement.protocol === ':' || !/:/.test(anchorElement.href)) {
+        throw new TypeError('Invalid URL');
+      }
+
+      Object.defineProperty(this, '_anchorElement', {
+        value: anchorElement
+      });
+    };
+
+    var proto = URL.prototype;
+
+    var linkURLWithAnchorAttribute = function(attributeName) {
+      Object.defineProperty(proto, attributeName, {
+        get: function() {
+          return this._anchorElement[attributeName];
+        },
+        set: function(value) {
+          this._anchorElement[attributeName] = value;
+        },
+        enumerable: true
+      });
+    };
+
+    ['hash', 'host', 'hostname', 'port', 'protocol', 'search']
+    .forEach(function(attributeName) {
+      linkURLWithAnchorAttribute(attributeName);
+    });
+
+    Object.defineProperties(proto, {
+
+      'toString': {
+        get: function() {
+          var _this = this;
+          return function() {
+            return _this.href;
+          };
+        }
+      },
+
+      'href' : {
+        get: function() {
+          return this._anchorElement.href.replace(/\?$/,'');
+        },
+        set: function(value) {
+          this._anchorElement.href = value;
+        },
+        enumerable: true
+      },
+
+      'pathname' : {
+        get: function() {
+          return this._anchorElement.pathname.replace(/(^\/?)/,'/');
+        },
+        set: function(value) {
+          this._anchorElement.pathname = value;
+        },
+        enumerable: true
+      },
+
+      'origin': {
+        get: function() {
+          return this._anchorElement.protocol + '//' + this._anchorElement.hostname + (this._anchorElement.port ? (':' + this._anchorElement.port) : '');
+        },
+        enumerable: true
+      },
+
+      'password': { // TODO
+        get: function() {
+          return '';
+        },
+        set: function(value) {
+        },
+        enumerable: true
+      },
+
+      'username': { // TODO
+        get: function() {
+          return '';
+        },
+        set: function(value) {
+        },
+        enumerable: true
+      },
+
+      'searchParams': {
+        get: function() {
+          var searchParams = new URLSearchParams(this.search);
+          var _this = this;
+          ['append', 'delete', 'set'].forEach(function(methodName) {
+            var method = searchParams[methodName];
+            searchParams[methodName] = function() {
+              method.apply(searchParams, arguments);
+              _this.search = searchParams.toString();
+            };
+          });
+          return searchParams;
+        },
+        enumerable: true
+      }
+    });
+
+    URL.createObjectURL = function(blob) {
+      return _URL.createObjectURL.apply(_URL, arguments);
+    };
+
+    URL.revokeObjectURL = function(url) {
+      return _URL.revokeObjectURL.apply(_URL, arguments);
+    };
+
+    global.URL = URL;
+
+  };
+
+  if(!checkIfURLIsSupported()) {
+    polyfillURL();
+  }
+
+  if((global.location !== void 0) && !('origin' in global.location)) {
+    var getOrigin = function() {
+      return global.location.protocol + '//' + global.location.hostname + (global.location.port ? (':' + global.location.port) : '');
+    };
+
+    try {
+      Object.defineProperty(global.location, 'origin', {
+        get: getOrigin,
+        enumerable: true
+      });
+    } catch(e) {
+      setInterval(function() {
+        global.location.origin = getOrigin();
+      }, 100);
+    }
+  }
+
+})(
+  (typeof global !== 'undefined') ? global
+    : ((typeof window !== 'undefined') ? window
+    : ((typeof self !== 'undefined') ? self : this))
+);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ }),
+
+/***/ 4:
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 446:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(223);
 
 
 /***/ })
