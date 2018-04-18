@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Import\File;
 
 use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use PrestaShopBundle\Exception\FileUploadException;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -80,10 +81,16 @@ final class FileUploader
             $uploadedFile->getClientOriginalName()
         );
 
-        $file = $uploadedFile->move(
-            $this->importDirectory,
-            $uploadedFileName
-        );
+        try {
+            $file = $uploadedFile->move(
+                $this->importDirectory,
+                $uploadedFileName
+            );
+        } catch (FileException $e) {
+            $error = $this->translator->trans('An error occurred while uploading / copying the file.', [], 'Admin.Advparameters.Notification');
+
+            throw new FileUploadException($error);
+        }
 
         return $file;
     }

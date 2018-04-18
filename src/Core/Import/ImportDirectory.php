@@ -27,9 +27,10 @@
 namespace PrestaShop\PrestaShop\Core\Import;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * ImportDirectory class is responsible for returning import directory
+ * ImportDirectory class is responsible for returning import directory & data related to it
  */
 final class ImportDirectory
 {
@@ -56,6 +57,36 @@ final class ImportDirectory
         return ($this->configuration->get('_PS_HOST_MODE_') ?
                 $this->configuration->get('_PS_ROOT_DIR_') :
                 $this->configuration->get('_PS_ADMIN_DIR_')).DIRECTORY_SEPARATOR.'import'.DIRECTORY_SEPARATOR;
+    }
+
+    /**
+     * Check if import directory exists
+     *
+     * @return bool
+     */
+    public function exists()
+    {
+        return (new Filesystem())->exists($this->getDir());
+    }
+
+    /**
+     * Check if import directory is writable
+     *
+     * @return bool
+     */
+    public function isWritable()
+    {
+        return is_writable($this->getDir());
+    }
+
+    /**
+     * Check if import directory is readable
+     *
+     * @return bool
+     */
+    public function isReadable()
+    {
+        return is_readable($this->getDir());
     }
 
     /**

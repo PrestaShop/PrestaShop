@@ -27,6 +27,7 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
+    {% if importForm is defined %}
     <div class="container">
         <div class="row">
             <div class="col-8">
@@ -46,6 +47,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

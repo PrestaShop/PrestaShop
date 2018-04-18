@@ -25,9 +25,7 @@
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
-{% set importForm = form %}
-
-{{ form_start(form, {'attr': { 'data-file-upload-url': file_upload_url, 'class': 'js-import-form' }}) }}
+{{ form_start(importForm, {'attr': { 'data-file-upload-url': importFileUploadUrl, 'class': 'js-import-form' }}) }}
 <div class="card">
     <h3 class="card-header">
         <i class="material-icons">import_export</i> {{ 'Import'|trans({}, 'Admin.Actions') }}
@@ -74,18 +72,18 @@
             <div class="form-group js-file-upload-form-group">
                 <label class="form-control-label">{{ 'Select a file to import'|trans }}</label>
                 {{ form_errors(importForm.file) }}
-                {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': max_file_upload_size }}) }}
+                {{ form_widget(importForm.file, {'attr': {'class': 'js-import-file', 'data-max-file-upload-size': maxFileUploadSize }}) }}
                 <span>{{ 'or'|trans({}, 'Admin.Global') }}</span>
                 <button type="button"
                         class="btn btn-outline-primary btn-sm js-from-files-history-btn"
-                        {% if import_file_names is empty %}disabled{% endif %}
+                        {% if importFileNames is empty %}disabled{% endif %}
                 >
-                    <span class="badge badge-primary js-files-history-number">{{ import_file_names|length }}</span>
+                    <span class="badge badge-primary js-files-history-number">{{ importFileNames|length }}</span>
                     {{ 'Choose from history / FTP'|trans({}, 'Admin.Advparameters.Feature') }}
                 </button>
                 <small class="form-text">{{ 'Allowed formats: .csv, .xls, .xlsx, .xlst, .ods, .ots'|trans({}, 'Admin.Advparameters.Help') }}</small>
                 <small class="form-text">{{ 'Only UTF-8 and ISO 8859-1 encodings are allowed'|trans({}, 'Admin.Advparameters.Help') }}</small>
-                <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({'%s': import_dir}, 'Admin.Advparameters.Help') }}</small>
+                <small class="form-text">{{ 'You can also upload your file via FTP to the following directory: %s .'|trans({'%s': importDirectory}, 'Admin.Advparameters.Help') }}</small>
             </div>
 
             <div class="alert alert-danger d-none js-import-file-error" role="alert">
@@ -175,4 +173,4 @@
         </div>
     </div>
 </div>
-{{ form_end(form) }}
+{{ form_end(importForm) }}

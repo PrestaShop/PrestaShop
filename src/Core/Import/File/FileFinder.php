@@ -51,6 +51,10 @@ final class FileFinder
      */
     public function getImportFileNames()
     {
+        if (!$this->importDirectory->isReadable()) {
+            return [];
+        }
+
         $finder = new Finder();
         $finder
             ->files()

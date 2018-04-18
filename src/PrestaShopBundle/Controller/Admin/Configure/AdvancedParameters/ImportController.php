@@ -56,6 +56,17 @@ class ImportController extends FrameworkBundleAdminController
     {
         $legacyController = $request->attributes->get('_legacy_controller');
 
+        $importDir = $this->get('prestashop.core.import.dir');
+        if (!$importDir->exists()) {
+            $this->addFlash('error', $this->trans('The import directory doesn\'t exist. Please check your file path.', 'Admin.Advparameters.Notification'));
+
+            return $this->getTemplateParams($request);
+        }
+
+        if (!$importDir->isWritable()) {
+            $this->addFlash('warning', $this->trans('The import directory must be writable (CHMOD 755 / 777).', 'Admin.Advparameters.Notification'));
+        }
+
         $formHandler = $this->get('prestashop.admin.import.form_handler');
         $finder = $this->get('prestashop.core.import.file_finder');
         $iniConfiguration = $this->get('prestashop.core.configuration.ini_configuration');
@@ -65,10 +76,7 @@ class ImportController extends FrameworkBundleAdminController
 
         if ($form->isSubmitted()) {
             if ($this->isDemoModeEnabled()) {
-                $this->addFlash(
-                    'error',
-                    $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error')
-                );
+                $this->addFlash('error', $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_import');
             }
@@ -81,10 +89,7 @@ class ImportController extends FrameworkBundleAdminController
                     PageVoter::LEVEL_DELETE,
                 ]
             )) {
-                $this->addFlash(
-                    'error',
-                    $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
-                );
+                $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
                 return $this->redirectToRoute('admin_import');
             }
@@ -97,20 +102,15 @@ class ImportController extends FrameworkBundleAdminController
             $this->flashErrors($errors);
         }
 
-        return [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
-            'requireBulkActions' => false,
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink($legacyController),
-            'form' => $form->createView(),
-            'file_upload_url' => $this->generateUrl('admin_import_file_upload'),
-            'import_file_names' => $finder->getImportFileNames(),
-            'import_dir' => $this->get('prestashop.core.import.dir')->getDir(),
-            'max_file_upload_size' => $iniConfiguration->getPostMaxSizeInBytes(),
+        $params = [
+            'importForm' => $form->createView(),
+            'importFileUploadUrl' => $this->generateUrl('admin_import_file_upload'),
+            'importFileNames' => $finder->getImportFileNames(),
+            'importDirectory' => $this->get('prestashop.core.import.dir')->getDir(),
+            'maxFileUploadSize' => $iniConfiguration->getPostMaxSizeInBytes(),
         ];
+
+        return $this->getTemplateParams($request) + $params;
     }
 
     /**
@@ -177,10 +177,7 @@ class ImportController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         if ($this->isDemoModeEnabled()) {
-            $this->addFlash(
-                'error',
-                $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error')
-            );
+            $this->addFlash('error', $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_import');
         }
@@ -193,10 +190,7 @@ class ImportController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_DELETE,
             ]
         )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
-            );
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_import');
         }
@@ -221,10 +215,7 @@ class ImportController extends FrameworkBundleAdminController
         $legacyController = $request->attributes->get('_legacy_controller');
 
         if ($this->isDemoModeEnabled()) {
-            $this->addFlash(
-                'error',
-                $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error')
-            );
+            $this->addFlash('error', $this->trans('This functionality has been disabled.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_import');
         }
@@ -238,10 +229,7 @@ class ImportController extends FrameworkBundleAdminController
                 PageVoter::LEVEL_READ,
             ]
         )) {
-            $this->addFlash(
-                'error',
-                $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error')
-            );
+            $this->addFlash('error', $this->trans('You do not have permission to update this.', 'Admin.Notifications.Error'));
 
             return $this->redirectToRoute('admin_import');
         }
@@ -259,6 +247,28 @@ class ImportController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_import');
+    }
+
+    /**
+     * Get generic template parameters
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function getTemplateParams(Request $request)
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+
+        return [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
+            'requireAddonsSearch' => true,
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+        ];
     }
 
     /**
