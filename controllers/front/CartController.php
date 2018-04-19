@@ -486,7 +486,7 @@ class CartControllerCore extends FrontController
                     );
                 } elseif (!$update_quantity) {
                     array_push(
-                        $this->{$ErrorKey},
+                        $this->errors,
                         $this->trans(
                             'You already have the maximum quantity available for this product.',
                             array(),

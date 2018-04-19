@@ -1322,11 +1322,11 @@ class CartCore extends ObjectModel
                     $updateQuantity = '+ ' . $quantity;
                     $newProductQuantity = $productQuantity - $quantity;
 
-                    if ($newProductQuantity < 0 && !$availableOutOfStock) {
+                    if ($newProductQuantity < 0 && !$availableOutOfStock && !$skipAvailabilityCheckOutOfStock) {
                         return false;
                     }
                 } else if ($operator == 'down') {
-                    $cartFirstLevelProductQuantity = $this->getProductQuantity((int) $id_product, (int) $id_product_attribute);
+                    $cartFirstLevelProductQuantity = $this->getProductQuantity((int) $id_product, (int) $id_product_attribute, $id_customization);
                     $updateQuantity = '- ' . $quantity;
                     $newProductQuantity = $productQuantity + $quantity;
 
@@ -1360,7 +1360,7 @@ class CartCore extends ObjectModel
                     $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
                 }
 
-                if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock'])) {
+                if (!Product::isAvailableWhenOutOfStock((int)$result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
                     if ((int)$quantity > $result2['quantity']) {
                         return false;
                     }
