@@ -1,0 +1,36 @@
+
+<table class="table">
+    <thead class="thead-default">
+    <tr class="column-headers">
+        {% for tableColumn in table.getColumns() %}
+            <th scope="col" width="10%">
+                {% if tableColumn.is_sortable %}
+                    {{ ps.sortable_column_header(tableColumn.name, 'id_requestSql', '', 'asc') }}
+                {% else %}
+                    {{ tableColumn.name }}
+                {% endif %}
+            </th>
+        {% endfor %}
+    </tr>
+    {#<tr class="column-filters">#}
+        {#<th>{{ form_widget(search_form.id_request_sql) }}</th>#}
+        {#<th>{{ form_widget(search_form.name) }}</th>#}
+        {#<th>{{ form_widget(search_form.sql) }}</th>#}
+        {#<th>#}
+            {#<button type="submit" class="btn btn-primary">#}
+                {#<i class="material-icons">search</i>{{ 'Search'|trans({}, 'Admin.Shopparameters.Feature') }}#}
+            {#</button>#}
+
+            {#{% if filters.filters is not empty %}#}
+                {#<a href="{{ path('admin_sql_manager', {'offset': filters.offset, 'limit': filters.limit}) }}"#}
+                   {#class="btn btn-warning"#}
+                {#>#}
+                    {#<i class="material-icons">clear</i>{{ 'Reset'|trans({}, 'Admin.Actions') }}#}
+                {#</a>#}
+            {#{% endif %}#}
+        {#</th>#}
+    {#</tr>#}
+    </thead>
+    <tbody>
+    </tbody>
+</table>

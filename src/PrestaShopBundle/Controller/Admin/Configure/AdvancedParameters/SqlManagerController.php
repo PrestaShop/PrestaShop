@@ -27,10 +27,15 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Table\Column;
+use PrestaShop\PrestaShop\Core\Table\Factory\TableViewFactory;
+use PrestaShop\PrestaShop\Core\Table\RowAction;
+use PrestaShop\PrestaShop\Core\Table\Table;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +67,20 @@ class SqlManagerController extends FrameworkBundleAdminController
             'filters' => $searchForm->getData(),
         ]);
 
+        $a = new class () {
+            public function test()
+            {
+                return 'ok';
+            }
+        };
+
+        $b = function (callable $c) {
+            dump(is_callable($c));
+            dump(call_user_func($c));
+        };
+
+        $b([$a, 'test']);
+
         $repository = $this->getRepository();
         $requestSqls = $repository->findByFilters($filters);
         $requestSqlsCount = $repository->getCount();
@@ -79,6 +98,60 @@ class SqlManagerController extends FrameworkBundleAdminController
         ];
 
         return $this->getTemplateParams($request) + $data;
+    }
+
+    /**
+     * @Template("@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/table.html.twig")
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function tableAction(Request $request)
+    {
+        $dispatcher = $this->get('prestashop.hook.dispatcher');
+
+        $rowsTotal = 10;
+        $rows = [
+            [
+                'id_request_sql' => 1,
+                'name' => 'First query',
+                'sql' => 'SELECT nothing from nothing',
+            ],
+            [
+                'id_request_sql' => 2,
+                'name' => 'Second query',
+                'sql' => 'SELECT everything from everywhere',
+            ],
+        ];
+
+        $table = new Table();
+
+        $idColumn = new Column('request_sql_id', 'ID');
+        $idColumn->setFormType(TextType::class);
+        $nameColumn = new Column('name', 'SQL query Name');
+        $queryColumn = new Column('sql', 'SQL query');
+
+        $table
+            ->addColumn($idColumn)
+            ->addColumn($nameColumn)
+            ->addColumn($queryColumn);
+
+        $table->setRows($rows);
+        $table->setRowsTotal($rowsTotal);
+
+        $editRowAction = new RowAction('edit', 'Edit', function($row) {
+            return 'http://some.url.generated.from.row.data';
+        }, 'some-icon');
+
+        $table->addRowAction($editRowAction);
+
+        $tableViewFactory = new TableViewFactory();
+        $tableView = $tableViewFactory->createViewFromTable($table);
+
+        return [
+            'table' => $table->createView(),
+        ];
     }
 
     /**
