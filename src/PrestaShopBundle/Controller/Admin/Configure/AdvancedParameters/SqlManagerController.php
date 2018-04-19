@@ -26,11 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\SqlManager\FilterRequestSqlType;
+use PrestaShopBundle\Form\Admin\Type\DatabaseTableType;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -120,6 +123,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     public function createAction(Request $request)
     {
         $formHandler = $this->get('prestashop.admin.request_sql.form_handler');
+        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
@@ -140,6 +144,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $params = [
             'requestSqlForm' => $form->createView(),
+            'dbTableNames' => $dataProvider->getTables(),
         ];
 
         return $this->getTemplateParams($request, false) + $params;
@@ -161,9 +166,7 @@ class SqlManagerController extends FrameworkBundleAdminController
         $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
 
         $form = $formHandler->getForm();
-        $form->setData([
-            'request_sql' => $dataProvider->getRequestSql($id),
-        ]);
+        $form->setData(['request_sql' => $dataProvider->getRequestSql($id)]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -182,6 +185,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
         $params = [
             'requestSqlForm' => $form->createView(),
+            'dbTableNames' => $dataProvider->getTables(),
         ];
 
         return $this->getTemplateParams($request) + $params;
@@ -217,6 +221,31 @@ class SqlManagerController extends FrameworkBundleAdminController
         $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_sql_manager');
+    }
+
+    /**
+     * Get table columns data
+     *
+     * @param string $table     Database tabe name
+     *
+     * @return JsonResponse
+     */
+    public function tableColumnsAction($table)
+    {
+        $dataProvider = $this->get('prestashop.adapter.sql_manager.request_sql_data_provider');
+
+        $columns = [];
+
+        //@todo: handle table does  not exists
+        $tableColumns = $dataProvider->getTableColumns($table);
+        foreach ($tableColumns as $tableColumn) {
+            $columns[] = [
+                'name' => $tableColumn['Field'],
+                'type' => $tableColumn['Type'],
+            ];
+        }
+
+        return $this->json(['columns' => $columns]);
     }
 
     /**

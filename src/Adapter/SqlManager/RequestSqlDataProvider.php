@@ -47,4 +47,30 @@ class RequestSqlDataProvider
             'sql' => $requestSql->sql,
         ];
     }
+
+    /**
+     * Get all database tables
+     *
+     * @return array
+     */
+    public function getTables()
+    {
+        $tables = (new \RequestSql())->getTables();
+
+        return $tables;
+    }
+
+    /**
+     * Get table's columns data
+     *
+     * @param string $table     Database table name
+     *
+     * @return array
+     */
+    public function getTableColumns($table)
+    {
+        $columns = (new \RequestSql())->getAttributesByTable($table);
+
+        return $columns;
+    }
 }

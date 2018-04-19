@@ -61,5 +61,16 @@
             {% endblock %}
             </div>
         </div>
+
+        {% block sql_manager_db_tables_panel %}
+            {% include '@PrestaShop/Admin/Configure/AdvancedParameters/SqlManager/Blocks/db_tables_panel.html.twig' %}
+        {% endblock %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('themes/new-theme/public/sql_manager.bundle.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}
