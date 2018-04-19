@@ -26,15 +26,51 @@
 import TableSorting from '../../app/utils/table-sorting';
 import ConfirmationAlert from '../../components/confirmation-alert';
 
-class SqlManagerPage {
-    init() {
-        const $sortableTables = $('table.table');
+const $ = window.$;
 
-        new TableSorting($sortableTables).attach();
-        new ConfirmationAlert().init();
-    }
+class SqlManagerPage {
+  init() {
+    const $sortableTables = $('table.table');
+
+    new TableSorting($sortableTables).attach();
+    new ConfirmationAlert().init();
+
+    $(document).on('change', '.js-db-tables-select', () => this.reloadDbTableColumns());
+  }
+
+  /**
+   * Reload database table columns
+   */
+  reloadDbTableColumns() {
+    const $selectedOption = $('.js-db-tables-select').find('option:selected');
+
+    $.ajax($selectedOption.data('table-columns-url'))
+      .then((response) => {
+        $('.js-table-alert').addClass('d-none');
+
+        const columns = response.columns;
+
+        const $table = $('.js-table-columns');
+        $table.removeClass('d-none');
+        $table.find('tbody').empty();
+
+        columns.forEach((column) => {
+          const $row = $('<tr>')
+            .append($('<td>').html(column.name))
+            .append($('<td>').html(column.type))
+            .append($('<td>').addClass('text-right')
+              .append($('<button>')
+                .addClass('btn btn-sm btn-outline-secondary')
+                .html($table.data('action-btn'))
+              )
+            );
+
+          $table.find('tbody').append($row);
+        });
+      });
+  }
 }
 
 $(document).ready(() => {
-    new SqlManagerPage().init();
+  new SqlManagerPage().init();
 });
